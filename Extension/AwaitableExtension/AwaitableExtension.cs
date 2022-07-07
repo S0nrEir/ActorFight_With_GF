@@ -8,7 +8,6 @@ using GameFramework.Resource;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using Entity = UnityGameFramework.Runtime.Entity;
 
 namespace UGFExtensions.Await
 {
@@ -41,23 +40,23 @@ namespace UGFExtensions.Await
         /// </summary>
         public static void SubscribeEvent()
         {
-            MRG.GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
-            MRG.GameEntry.Event.Subscribe(OpenUIFormFailureEventArgs.EventId, OnOpenUIFormFailure);
+            Aquila.GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
+            Aquila.GameEntry.Event.Subscribe(OpenUIFormFailureEventArgs.EventId, OnOpenUIFormFailure);
 
-            MRG.GameEntry.Event.Subscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
-            MRG.GameEntry.Event.Subscribe(ShowEntityFailureEventArgs.EventId, OnShowEntityFailure);
+            Aquila.GameEntry.Event.Subscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
+            Aquila.GameEntry.Event.Subscribe(ShowEntityFailureEventArgs.EventId, OnShowEntityFailure);
 
-            MRG.GameEntry.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
-            MRG.GameEntry.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
+            Aquila.GameEntry.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
+            Aquila.GameEntry.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
+            
+            Aquila.GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
+            Aquila.GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
 
-            MRG.GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
-            MRG.GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
-
-            MRG.GameEntry.Event.Subscribe(WebRequestSuccessEventArgs.EventId, OnWebRequestSuccess);
-            MRG.GameEntry.Event.Subscribe(WebRequestFailureEventArgs.EventId, OnWebRequestFailure);
-
-            MRG.GameEntry.Event.Subscribe(DownloadSuccessEventArgs.EventId, OnDownloadSuccess);
-            MRG.GameEntry.Event.Subscribe(DownloadFailureEventArgs.EventId, OnDownloadFailure);
+            Aquila.GameEntry.Event.Subscribe(WebRequestSuccessEventArgs.EventId, OnWebRequestSuccess);
+            Aquila.GameEntry.Event.Subscribe(WebRequestFailureEventArgs.EventId, OnWebRequestFailure);
+            
+            Aquila.GameEntry.Event.Subscribe(DownloadSuccessEventArgs.EventId, OnDownloadSuccess);
+            Aquila.GameEntry.Event.Subscribe(DownloadFailureEventArgs.EventId, OnDownloadFailure);
 #if UNITY_EDITOR
             s_IsSubscribeEvent = true;
 #endif
@@ -131,7 +130,7 @@ namespace UGFExtensions.Await
 #if UNITY_EDITOR
             TipsSubscribeEvent();
 #endif
-            int? serialId = MRG.GameEntry.UI.OpenUIFormById((int)uiFormId, userData);
+            int? serialId = Aquila.GameEntry.UI.OpenUIFormById((int)uiFormId, userData);
             if (serialId == null)
             {
                 return Task.FromResult((UIForm) null);
@@ -151,7 +150,7 @@ namespace UGFExtensions.Await
 #if UNITY_EDITOR
             TipsSubscribeEvent();
 #endif
-            int? serialId = MRG.GameEntry.UI.OpenUIFormById(uiFormId, userData);
+            int? serialId = Aquila.GameEntry.UI.OpenUIFormById(uiFormId, userData);
             if (serialId == null)
             {
                 return Task.FromResult((UIForm) null);
@@ -269,7 +268,7 @@ namespace UGFExtensions.Await
 #endif
             var tcs = new TaskCompletionSource<bool>();
             s_SceneTcs.Add(sceneAssetName, tcs);
-            MRG.GameEntry.Scene.LoadScene(sceneAssetName);
+            Aquila.GameEntry.Scene.LoadScene(sceneAssetName);
             return tcs.Task;
         }
 
@@ -306,7 +305,7 @@ namespace UGFExtensions.Await
             TipsSubscribeEvent();
 #endif
             TaskCompletionSource<T> loadAssetTcs = new TaskCompletionSource<T>();
-            MRG.GameEntry.Resource.LoadAsset(assetName, new LoadAssetCallbacks(
+            Aquila.GameEntry.Resource.LoadAsset(assetName, new LoadAssetCallbacks(
                 (tempAssetName, asset, duration, userdata) =>
                 {
                     var source = loadAssetTcs;

@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
-using MRG.Fight.Addon;
+using Aquila.Config;
+using Aquila.Event;
 
 namespace Aquila.Fight.Actor
 {
@@ -83,7 +84,8 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public bool IsMine()
         {
-            return HostID == GameFrameworkMode.GetModule<AccountModule>().Guid && HostID != GlobeVar.INVALID_GUID;
+            //return HostID == GameFrameworkMode.GetModule<AccountModule>().Guid && HostID != GlobalVar.INVALID_GUID;
+            return true;
         }
 
         #endregion
@@ -96,12 +98,7 @@ namespace Aquila.Fight.Actor
         public void SetLayer()
         {
 
-        }
-
-        /// <summary>
-        /// 设置隐藏标记
-        /// </summary>
-        public void SetHideFlag( bool isHideImmidiate ) => HideImmidiate = isHideImmidiate;
+        }   
 
         /// <summary>
         /// 设置ActorID
@@ -143,7 +140,15 @@ namespace Aquila.Fight.Actor
             if ( CachedTransform == null )
                 return;
 
-            SetWorldPosition( new Vector3( posToSet.x, Utils.FightScene.TerrainPositionY( posToSet.x, posToSet.y ), posToSet.y ) );
+            SetWorldPosition
+                ( 
+                    new Vector3
+                        ( 
+                            posToSet.x, 
+                            Utils.FightScene.TerrainPositionY( posToSet.x, posToSet.y ), 
+                            posToSet.y 
+                        ) 
+                );
         }
 
         /// <summary>
@@ -162,34 +167,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SetHostID( ulong hostID ) => HostID = hostID;
 
-        /// <summary>
-        /// 设置阵营
-        /// </summary>
-        public void SetForceType( int type )
-        {
-            if ( type < ( int ) ForceTypeEnum.Zero || type >= ( int ) ForceTypeEnum.Maximun )
-            {
-                Log.Error( "type < ForceTypeEnum.Zero || type >= ForceTypeEnum.Maximun" );
-                return;
-            }
-
-            ForceType = type;
-        }
-
-        /// <summary>
-        /// 设置index
-        /// </summary
-        public void SetIndex( int idx )
-        {
-            idx = Index;
-
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector != null )
-                inspector.SetIndex( idx );
-#endif
-        }
-
         public void Setup
             (
                 string tag,
@@ -203,12 +180,6 @@ namespace Aquila.Fight.Actor
             Setup( tag, index, actorID, hostID, forceType );
             SetDataID( dataID );
             Reset();
-
-            //↓↓↓ for test ↓↓↓//
-#if UNITY_EDITOR
-            var inspector = gameObject.GetOrAddComponent<ActorInspector>();
-            inspector.Setup( this, dataID );
-#endif
         }
 
         /// <summary>
@@ -216,37 +187,12 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void Setup( string tag, int index, int actorID, ulong hostID, int forceType = -1 )
         {
-            SetTag( tag );
-            SetIndex( index );
-            SetActorID( actorID );
-            SetHostID( hostID );
-            SetForceType( forceType );
-            SetHideFlag( false );
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector == null )
-                inspector = gameObject.AddComponent<ActorInspector>();
 
-            inspector.Setup( this, -1 );
-#endif
         }
 
         public void Setup( string tag, int index, int actorID, ulong hostID )
         {
-            SetTag( tag );
-            SetIndex( index );
-            SetActorID( actorID );
-            SetHostID( hostID );
-            SetForceType( -1 );
-            SetHideFlag( false );
 
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector == null )
-                inspector = gameObject.AddComponent<ActorInspector>();
-
-            inspector.Setup( this, -1 );
-#endif
         }
 
         public virtual void SetDataID( int roleBaseID )
@@ -259,13 +205,6 @@ namespace Aquila.Fight.Actor
                 throw new GameFrameworkException( "meta is null" );
 
             _dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
-            //ResetData();
-
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector != null )
-                inspector.SetDataID( meta.Id );
-#endif
         }
 
         #endregion
@@ -291,18 +230,7 @@ namespace Aquila.Fight.Actor
         {
             base.OnRecycle();
             UnRegister();
-
-            //if (_addonDic != null)
-            //{
-            //    var iter = _addonDic.GetEnumerator();
-            //    while (iter.MoveNext())
-            //        iter.Current.Value?.Dispose();
-            //}
-
-            Index = -1;
-            HostID = GlobeVar.INVALID_GUID;
-            ForceType = -1;
-            Area = -1;
+            HostID = GlobalVar.INVALID_GUID;
         }
 
         protected override void OnInit( object userData )
@@ -324,7 +252,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void Register()
         {
-            GameEntry.Event.Subscribe( ActorDieEventArgs.EventId, OnOtherActorDie );
         }
 
         /// <summary>
@@ -332,7 +259,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void UnRegister()
         {
-            GameEntry.Event.Unsubscribe( ActorDieEventArgs.EventId, OnOtherActorDie );
         }
 
         /// <summary>
@@ -357,7 +283,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public virtual void Reset()
         {
-            SetHideFlag( false );
             ResetData();
             if ( _addonDic != null )
             {
@@ -372,11 +297,6 @@ namespace Aquila.Fight.Actor
         /// 重置数据,setDataID(),Reset时调用
         /// </summary> 
         protected virtual void ResetData()
-        {
-
-        }
-
-        protected virtual void OnOtherActorDie( object sender, GameEventArgs e )
         {
 
         }
@@ -406,18 +326,6 @@ namespace Aquila.Fight.Actor
                 void ShowHP()
                 {
                     boardAddon.ChangeHPValue( ( float ) newHP / maxHP, newHP );
-                    //Log.Info( $"<color=green>set currHp:</color>,value:{newHP},actorID:{ActorID}" );
-                    //if ( boardAddon.HPBarInitFlag )
-                    //{
-                    //    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, oldHp == -1 ? -1 : newHP );
-                    //    Log.Info( $"<color=green>set currHp:</color>,value:{newHP},actorID:{ActorID}" );
-                    //}
-                    //else
-                    //{
-                    //    boardAddon.SetHPFlagDone();
-                    //    boardAddon.ShowHPBarItem( true );
-                    //    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, -1 );
-                    //}
                 }
             }
 
@@ -446,23 +354,7 @@ namespace Aquila.Fight.Actor
                     speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
                     navAddon.SetSpeed( speed );
                 }
-
-#if UNITY_EDITOR
-                var inspector = gameObject.GetComponent<ActorInspector>();
-                if ( inspector != null )
-                    inspector.Attr_Speed = speed;
-#endif
             }
-        }
-
-        public virtual void SyncAttrByPak( GC_SYN_OBJ_ATTR pak )
-        {
-            if ( pak is null )
-                return;
-
-            var cache = ReferencePool.Acquire<ActorAttrCache>();
-            cache.Set( pak );
-            SyncAttrByCache( cache );
         }
 
         #endregion
@@ -480,7 +372,7 @@ namespace Aquila.Fight.Actor
             }
 
             addonToAdd = new T();
-            addonToAdd.Init( this, GO, CachedTransform );
+            addonToAdd.Init( this, gameObject , CachedTransform );
             _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
 
             addonToAdd.OnAdd();
@@ -520,22 +412,6 @@ namespace Aquila.Fight.Actor
         #region fields
 
         /// <summary>
-        /// 持有的go对象//TODO
-        /// </summary>
-        public GameObject GO
-        {
-            get => gameObject;
-        }
-
-        /// <summary>
-        /// 朝向
-        /// </summary>
-        public (float faceX, float faceZ) FaceDir
-        {
-            get => (CachedTransform.forward.x, CachedTransform.forward.z);
-        }
-
-        /// <summary>
         /// actor类型
         /// </summary>
         public abstract ActorTypeEnum ActorType { get; }
@@ -546,34 +422,14 @@ namespace Aquila.Fight.Actor
         public int ActorID { get; private set; } = -1;
 
         /// <summary>
-        /// 立即隐藏标记，在受到delObj的时候会被立即隐藏而不做延时
-        /// </summary>
-        public bool HideImmidiate { get; private set; } = false;
-
-        /// <summary>
         /// 组件初始化标记
         /// </summary>
         public bool AddonInitFlag => _allAddonInitDone;
 
         /// <summary>
-        /// 区域
-        /// </summary>
-        public int Area { get; private set; } = -1;
-
-        /// <summary>
-        /// 对应服务器的objIndex
-        /// </summary>
-        public int Index { get; private set; } = -1;
-
-        /// <summary>
         /// 宿主ID
         /// </summary>
-        public ulong HostID { get; private set; } = GlobeVar.INVALID_GUID;
-
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int ForceType { get; private set; } = -1;
+        public ulong HostID { get; private set; } = GlobalVar.INVALID_GUID;
 
         /// <summary>
         /// 组件初始化标记
@@ -595,65 +451,65 @@ namespace Aquila.Fight.Actor
     }
 
 
-    #region ActorInspector
-    /// <summary>
-    /// 用于记录actor信息，抽时间写成inspector
-    /// </summary>
-    internal class ActorInspector : MonoBehaviour
-    {
-        public void Setup( TActorBase actor, int dataID )
-        {
-            if ( actor is null )
-                return;
+    //#region ActorInspector
+    ///// <summary>
+    ///// 用于记录actor信息，抽时间写成inspector
+    ///// </summary>
+    //internal class ActorInspector : MonoBehaviour
+    //{
+    //    public void Setup( TActorBase actor, int dataID )
+    //    {
+    //        if ( actor is null )
+    //            return;
 
-            Actor_Obj_ID = actor.ActorID.ToString();
-            Entity_Group = actor.Entity.EntityGroup.Name;
-            Index = actor.Index;
-            Host_GUID = actor.HostID;
-            Force_Type = actor.ForceType;
-            Data_ID = dataID;
-            Model_Path = actor.Entity.EntityAssetName;
-            _tactor = actor;
-            if ( _tactor.TryGetAddon<DataAddon>( out _dataAddon ) )
-            {
-                var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE);
-                if ( meta != null )
-                    Configure_Speed = meta.MoveSpeed;
-            }
-        }
+    //        Actor_Obj_ID = actor.ActorID.ToString();
+    //        Entity_Group = actor.Entity.EntityGroup.Name;
+    //        Index = actor.Index;
+    //        Host_GUID = actor.HostID;
+    //        Force_Type = actor.ForceType;
+    //        Data_ID = dataID;
+    //        Model_Path = actor.Entity.EntityAssetName;
+    //        _tactor = actor;
+    //        if ( _tactor.TryGetAddon<DataAddon>( out _dataAddon ) )
+    //        {
+    //            var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE);
+    //            if ( meta != null )
+    //                Configure_Speed = meta.MoveSpeed;
+    //        }
+    //    }
 
-        private void Update()
-        {
-            curr_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP ).ToString();
-            max_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP ).ToString();
-        }
+    //    private void Update()
+    //    {
+    //        curr_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP ).ToString();
+    //        max_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP ).ToString();
+    //    }
 
-        /// <summary>
-        /// 设置状态
-        /// </summary>
-        public void SetState( string state ) => CURR_STATE = state;
+    //    /// <summary>
+    //    /// 设置状态
+    //    /// </summary>
+    //    public void SetState( string state ) => CURR_STATE = state;
 
-        /// <summary>
-        /// 设置dataID
-        /// </summary>
-        public void SetDataID( int dataID ) => Data_ID = dataID;
-        public void SetIndex( int idx ) => Index = idx;
-        public float Attr_Speed = -1;
-        public float Configure_Speed = -1;
-        public string Actor_Obj_ID = string.Empty;
-        public string Entity_Group = string.Empty;
-        public int Index = -1;
-        public ulong Host_GUID = GlobeVar.INVALID_GUID;
-        public int Force_Type = -1;
-        public int Data_ID = -1;
-        public string Model_Path = string.Empty;
-        public string CURR_STATE = string.Empty;
+    //    /// <summary>
+    //    /// 设置dataID
+    //    /// </summary>
+    //    public void SetDataID( int dataID ) => Data_ID = dataID;
+    //    public void SetIndex( int idx ) => Index = idx;
+    //    public float Attr_Speed = -1;
+    //    public float Configure_Speed = -1;
+    //    public string Actor_Obj_ID = string.Empty;
+    //    public string Entity_Group = string.Empty;
+    //    public int Index = -1;
+    //    public ulong Host_GUID = GlobeVar.INVALID_GUID;
+    //    public int Force_Type = -1;
+    //    public int Data_ID = -1;
+    //    public string Model_Path = string.Empty;
+    //    public string CURR_STATE = string.Empty;
 
-        public string curr_HP_Field = string.Empty;
-        public string max_HP_Field = string.Empty;
+    //    public string curr_HP_Field = string.Empty;
+    //    public string max_HP_Field = string.Empty;
 
-        private TActorBase _tactor = null;
-        private DataAddon _dataAddon = null;
-    }
-    #endregion
+    //    private TActorBase _tactor = null;
+    //    private DataAddon _dataAddon = null;
+    //}
+    //#endregion
 }
