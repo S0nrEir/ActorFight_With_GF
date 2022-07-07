@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
 using Aquila.Config;
+using Aquila.Event;
 
 namespace Aquila.Fight.Actor
 {
@@ -97,12 +98,7 @@ namespace Aquila.Fight.Actor
         public void SetLayer()
         {
 
-        }
-
-        /// <summary>
-        /// 设置隐藏标记
-        /// </summary>
-        public void SetHideFlag( bool isHideImmidiate ) => HideImmidiate = isHideImmidiate;
+        }   
 
         /// <summary>
         /// 设置ActorID
@@ -171,34 +167,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SetHostID( ulong hostID ) => HostID = hostID;
 
-        /// <summary>
-        /// 设置阵营
-        /// </summary>
-        public void SetForceType( int type )
-        {
-            if ( type < ( int ) ForceTypeEnum.Zero || type >= ( int ) ForceTypeEnum.Maximun )
-            {
-                Log.Error( "type < ForceTypeEnum.Zero || type >= ForceTypeEnum.Maximun" );
-                return;
-            }
-
-            ForceType = type;
-        }
-
-        /// <summary>
-        /// 设置index
-        /// </summary
-        public void SetIndex( int idx )
-        {
-            idx = Index;
-
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector != null )
-                inspector.SetIndex( idx );
-#endif
-        }
-
         public void Setup
             (
                 string tag,
@@ -212,12 +180,6 @@ namespace Aquila.Fight.Actor
             Setup( tag, index, actorID, hostID, forceType );
             SetDataID( dataID );
             Reset();
-
-            //↓↓↓ for test ↓↓↓//
-#if UNITY_EDITOR
-            var inspector = gameObject.GetOrAddComponent<ActorInspector>();
-            inspector.Setup( this, dataID );
-#endif
         }
 
         /// <summary>
@@ -243,13 +205,6 @@ namespace Aquila.Fight.Actor
                 throw new GameFrameworkException( "meta is null" );
 
             _dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
-            //ResetData();
-
-#if UNITY_EDITOR
-            var inspector = gameObject.GetComponent<ActorInspector>();
-            if ( inspector != null )
-                inspector.SetDataID( meta.Id );
-#endif
         }
 
         #endregion
@@ -275,18 +230,7 @@ namespace Aquila.Fight.Actor
         {
             base.OnRecycle();
             UnRegister();
-
-            //if (_addonDic != null)
-            //{
-            //    var iter = _addonDic.GetEnumerator();
-            //    while (iter.MoveNext())
-            //        iter.Current.Value?.Dispose();
-            //}
-
-            Index = -1;
             HostID = GlobalVar.INVALID_GUID;
-            ForceType = -1;
-            Area = -1;
         }
 
         protected override void OnInit( object userData )
@@ -308,7 +252,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void Register()
         {
-            GameEntry.Event.Subscribe( ActorDieEventArgs.EventId, OnOtherActorDie );
         }
 
         /// <summary>
@@ -316,7 +259,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void UnRegister()
         {
-            GameEntry.Event.Unsubscribe( ActorDieEventArgs.EventId, OnOtherActorDie );
         }
 
         /// <summary>
@@ -341,7 +283,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public virtual void Reset()
         {
-            SetHideFlag( false );
             ResetData();
             if ( _addonDic != null )
             {
@@ -356,11 +297,6 @@ namespace Aquila.Fight.Actor
         /// 重置数据,setDataID(),Reset时调用
         /// </summary> 
         protected virtual void ResetData()
-        {
-
-        }
-
-        protected virtual void OnOtherActorDie( object sender, GameEventArgs e )
         {
 
         }
@@ -390,18 +326,6 @@ namespace Aquila.Fight.Actor
                 void ShowHP()
                 {
                     boardAddon.ChangeHPValue( ( float ) newHP / maxHP, newHP );
-                    //Log.Info( $"<color=green>set currHp:</color>,value:{newHP},actorID:{ActorID}" );
-                    //if ( boardAddon.HPBarInitFlag )
-                    //{
-                    //    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, oldHp == -1 ? -1 : newHP );
-                    //    Log.Info( $"<color=green>set currHp:</color>,value:{newHP},actorID:{ActorID}" );
-                    //}
-                    //else
-                    //{
-                    //    boardAddon.SetHPFlagDone();
-                    //    boardAddon.ShowHPBarItem( true );
-                    //    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, -1 );
-                    //}
                 }
             }
 
@@ -430,23 +354,7 @@ namespace Aquila.Fight.Actor
                     speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
                     navAddon.SetSpeed( speed );
                 }
-
-#if UNITY_EDITOR
-                var inspector = gameObject.GetComponent<ActorInspector>();
-                if ( inspector != null )
-                    inspector.Attr_Speed = speed;
-#endif
             }
-        }
-
-        public virtual void SyncAttrByPak( GC_SYN_OBJ_ATTR pak )
-        {
-            if ( pak is null )
-                return;
-
-            var cache = ReferencePool.Acquire<ActorAttrCache>();
-            cache.Set( pak );
-            SyncAttrByCache( cache );
         }
 
         #endregion
@@ -522,11 +430,6 @@ namespace Aquila.Fight.Actor
         /// 宿主ID
         /// </summary>
         public ulong HostID { get; private set; } = GlobalVar.INVALID_GUID;
-
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int ForceType { get; private set; } = -1;
 
         /// <summary>
         /// 组件初始化标记
