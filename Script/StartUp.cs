@@ -1,4 +1,5 @@
-﻿using GameFramework;
+﻿using Aquila;
+using GameFramework;
 using UnityEngine;
 
 public class StartUp : MonoBehaviour
@@ -8,7 +9,7 @@ public class StartUp : MonoBehaviour
         if ( _gameEntry == null )
             throw new GameFrameworkException( "GameEntry is null!" );
 
-        Aquila.Utility.SetActive( _gameEntry, true );
+        Tools.SetActive( _gameEntry, true );
     }
 
     [SerializeField] private GameObject _gameEntry = null;

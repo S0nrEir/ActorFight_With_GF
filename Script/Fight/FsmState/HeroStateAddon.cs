@@ -1,9 +1,5 @@
-﻿using GameFramework;
-using MRG.Fight.Addon;
+﻿using Aquila.Fight.Addon;
 using System.Collections.Generic;
-using UnityEngine;
-using GameFramework;
-using Aquila.Fight.Addon;
 
 namespace Aquila.Fight.FSM
 {
@@ -20,12 +16,12 @@ namespace Aquila.Fight.FSM
             new HeroDieState((int)ActorStateTypeEnum.DIE_STATE),
         };
 
-        public override void Reset ()
+        public override void Reset()
         {
             base.Reset();
         }
 
-        public override void Dispose ()
+        public override void Dispose()
         {
             base.Dispose();
         }
@@ -37,7 +33,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroIdleState : ActorIdleStateBase
     {
-        public HeroIdleState ( int stateID ) : base( stateID )
+        public HeroIdleState( int stateID ) : base( stateID )
         { }
     }
 
@@ -46,7 +42,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroMoveState : ActorMoveStateBase
     {
-        public HeroMoveState ( int stateID ) : base( stateID )
+        public HeroMoveState( int stateID ) : base( stateID )
         {
 
         }
@@ -57,7 +53,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroAbilityState : ActorAbilityStateBase
     {
-        public HeroAbilityState ( int stateID ) : base( stateID )
+        public HeroAbilityState( int stateID ) : base( stateID )
         {
         }
     }
@@ -67,7 +63,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroDieState : ActorDieStateBase
     {
-        public HeroDieState ( int stateID ) : base( stateID )
+        public HeroDieState( int stateID ) : base( stateID )
         {
         }
     }
