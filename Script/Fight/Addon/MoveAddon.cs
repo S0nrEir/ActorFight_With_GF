@@ -1,0 +1,348 @@
+﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Addon;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Aquila.Fight.Addon
+{
+    /// <summary>
+    /// 移动组件 负责处理位移 by yhc
+    /// </summary>
+    public class MoveAddon : AddonBase
+    {
+        public void SetSpeed ( float speed )
+        {
+            _speed = speed;
+        }
+
+        /// <summary>
+        /// stop
+        /// </summary>
+        public void Stop ()
+        {
+            _controller.Move( Vector3.zero );
+            _pathIndex = 0;
+            _pathList?.Clear();
+            Actor.Trigger( ActorEventEnum.MOVE_TO_FINAL_POINT );
+        }
+
+        public void SetPathList ( List<Vector2> pathArr )
+        {
+            if (pathArr is null || pathArr.Count == 0)
+                return;
+
+            _pathList.Clear();
+            _pathList = pathArr;
+            if (Actor.TryGetAddon<DataAddon>( out var addon ))
+            {
+                //_speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 );
+                SetSpeed( addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) );
+                //_speed /= 1000f;
+                //_speed = meta is null ? 1f : meta.MoveSpeed;
+            }
+        }
+
+        public void SetTargetPahtList ( List<Vector2> pathArr )
+        {
+            if (pathArr is null || pathArr.Count == 0)
+                return;
+
+            _pathList.Clear();
+            _pathList = pathArr;
+            if (Actor.TryGetAddon<DataAddon>( out var addon ))
+            {
+                _speed = (float)addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 );
+            }
+            _pathIndex = 0;
+        }
+
+        /// <summary>
+        /// 是否到达了最后一个路点，是返回true
+        /// </summary>
+        public bool IsReachedFinalPoint ()
+        {
+            return _pathIndex >= _pathList.Count;
+        }
+
+        public bool IsReachedFinalTarget()
+        {
+            return _pathIndex >= _pathList.Count;
+        }
+
+        public void TargetNext ( float elapsedSeconds )
+        {
+            if (_pathList.Count == 0)
+                return;
+
+            if (IsReachedFinalPoint())
+            {
+                Stop();
+                return;
+            }
+
+            var nextPos = Vector3.zero;
+            nextPos.x = _pathList[_pathIndex].x;
+            nextPos.z = _pathList[_pathIndex].y;
+            nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
+            var actorPos = Actor.CachedTransform.position;
+
+            Rotate( _pathList[_pathIndex] );
+            var dis = Mathf.Abs( Vector3.Distance( actorPos, nextPos ) );
+            if (dis <= .1f)
+            {
+                Actor.SetWorldPosition( nextPos );
+                SetToNextPathPoint( true );
+                return;
+            }
+
+            Actor.SetWorldPosition( actorPos + ( nextPos - actorPos ).normalized * _speed * elapsedSeconds );
+
+            #region nouse
+            //if (_pathList.Count == 0)
+            //    return;
+
+            //if (IsReachedFinalPoint())
+            //{
+            //    Stop();
+            //    return;
+            //}
+
+            //var currPos = Actor.CachedTransform.position;
+            //Vector3 nextPos = Vector3.zero;
+            //nextPos.x = _pathList[_pathIndex].x;
+            //nextPos.z = _pathList[_pathIndex].y;
+            //nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
+
+            //Rotate( _pathList[_pathIndex] );
+            //var dis = Vector3.Distance( currPos, nextPos );
+            //if (dis <= 0.1f)
+            //{
+            //    SetToNextPathPoint( true );
+            //    Actor.SetWorldPosition( nextPos );
+            //    return;
+            //}
+
+            //_cachedTargetPos.x = _pathList[_pathIndex].x;
+            //_cachedTargetPos.z = _pathList[_pathIndex].y;
+            //_cachedTargetPos.y = Utils.FightScene.TerrainPositionY( _cachedTargetPos.x, _cachedTargetPos.z, 0f );
+
+            //Actor.SetWorldPosition( currPos + ( _cachedTargetPos - currPos ).normalized * _speed * elapsedSeconds );
+            #endregion
+        }
+
+        public void Next ( float elapsedSeconds )
+        {
+            if (_pathList.Count == 0)
+                return;
+
+            if (IsReachedFinalPoint())
+            {
+                Stop();
+                return;
+            }
+
+            Vector3 nextPos = Vector3.zero;
+            nextPos.x = _pathList[_pathIndex + 1].x;
+            nextPos.z = _pathList[_pathIndex + 1].y;
+            nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
+
+            _cachedTargetPos.x = _pathList[_pathIndex].x;
+            _cachedTargetPos.z = _pathList[_pathIndex].y;
+            _cachedTargetPos.y = Utils.FightScene.TerrainPositionY( _cachedTargetPos.x, _cachedTargetPos.z, 0f );
+
+            var dis = Vector3.Distance( Actor.CachedTransform.position, nextPos );
+            if (dis <= 0.1f)
+            {
+                SetToNextPathPoint( true );
+                Actor.SetWorldPosition( _cachedTargetPos );
+                return;
+            }
+
+            var currPos = Actor.CachedTransform.position;
+            var moveTo = currPos + ( _cachedTargetPos - Actor.CachedTransform.position ).normalized * 1f * elapsedSeconds;
+
+            if((moveTo - currPos).sqrMagnitude >= (nextPos - currPos).magnitude)
+            {
+                SetToNextPathPoint( true );
+                Actor.SetWorldPosition( _cachedTargetPos );
+                return;
+            }
+
+            Actor.SetWorldPosition( currPos + ( _cachedTargetPos - Actor.CachedTransform.position ).normalized * _speed * elapsedSeconds );
+        }
+
+
+        public void MoveTo ( Vector3 start, Vector3 target, float elapsedSeconds )
+        {
+            //Rotate( target );
+            //Log.Info( $"ActorID:{Actor.ActorID},pos:{Actor.CachedTransform.position}" );
+            Actor.SetWorldPosition( Actor.CachedTransform.position + ( target - start ).normalized * _speed * elapsedSeconds );
+
+            Actor.CachedTransform.rotation = Quaternion.Slerp
+                (
+                    Actor.CachedTransform.rotation,
+                    Quaternion.LookRotation( target - Actor.CachedTransform.position ),
+                    .8f
+                );
+        }
+
+        /// <summary>
+        /// move actor
+        /// </summary>
+        public CollisionFlags Move ( Vector3 direction, float time, float speed )
+        {
+            //direction = new Vector3( direction.x, SceneConfig.SCENE_LAND_Y, direction.z );
+            CollisionFlag = _controller.Move( direction * speed * time );
+
+            return CollisionFlag;
+        }
+
+        public CollisionFlags MoveByElapesedTime ( float elapsedSeconds, Vector3 direction, float speed )
+        {
+            //direction = new Vector3( direction.x, SceneConfig.SCENE_LAND_Y, direction.z );
+            CollisionFlag = _controller.Move( direction * speed * elapsedSeconds );
+
+            return CollisionFlag;
+        }
+
+        /// <summary>
+        /// Move
+        /// </summary>
+        public override AddonTypeEnum AddonType => AddonTypeEnum.MOVE;
+
+        public override void OnAdd ()
+        {
+            _pathList = new List<Vector2>();
+            //if (Actor.TryGetAddon<DataAddon>( out var addon ))
+            //    SetSpeed( (float)addon.GetFloatDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1f ) / 1000f );
+            SetSpeed( 1f );
+        }
+
+        public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        {
+            base.Init( actor, targetGameObject, targetTransform );
+            _controller = Utils.GetComponent<CharacterController>( Actor.gameObject );
+
+            if (_controller == null)
+            {
+                //Debug.LogError( "_controller == null" );
+                _controller = Actor.gameObject.AddComponent<CharacterController>();
+            }
+        }
+
+        public override void Dispose ()
+        {
+            base.Dispose();
+            _pathList = null;
+            _pathIndex = 0;
+        }
+
+        public override void Reset ()
+        {
+            base.Reset();
+            CollisionFlag = CollisionFlags.None;
+            _pathIndex = 0;
+            SetSpeed( 1f );
+        }
+
+        /// <summary>
+        /// 设置到下一个路点，成功返回false，每次前往下一个路点的时候是否自动将角色转向
+        /// </summary>
+        private bool SetToNextPathPoint ( bool needToRotate )
+        {
+            if (_pathList is null || _pathList.Count == 0)
+                return false;
+
+            //if (IsReachedFinalPoint())
+            //    return false;
+
+            if (IsReachedFinalTarget())
+                return false;
+
+            _pathIndex++;
+            //需要旋转且朝向不等，才做旋转，否则不做处理
+            if (needToRotate && _pathIndex < _pathList.Count)
+                Rotate( _pathList[_pathIndex] );
+
+            return true;
+        }
+
+        /// <summary>
+        /// 根据自身当前位置转向下一个位置
+        /// </summary>
+        private void Rotate ( Vector3 target )
+        {
+            var currPos = Actor.CachedTransform.position;
+            var angleOfL = Mathf.Atan2( ( target.x - currPos.x ), ( target.z - currPos.z ) ) * Mathf.Rad2Deg;
+            if (angleOfL < 0)
+                angleOfL += 360;
+            //角度差距过小，不做转向
+            var tempEuler = Actor.CachedTransform.localEulerAngles;
+            if (Mathf.Abs( tempEuler.y - angleOfL ) < 15)
+                return;
+
+            if (angleOfL + tempEuler.y > 360)
+                angleOfL = 360 - tempEuler.y;
+
+            Actor.CachedTransform.localEulerAngles = new Vector3( tempEuler.x, tempEuler.y + angleOfL, tempEuler.z );
+        }
+
+        private void Rotate ( Vector2 target )
+        {
+            var currPos = Actor.CachedTransform.position;
+            var angleOfL = Mathf.Atan2( ( target.x - currPos.x ), ( target.y - currPos.z ) ) * Mathf.Rad2Deg;
+            if (angleOfL < 0)
+                angleOfL += 360;
+            //角度差距过小，不做转向
+            var tempEuler = Actor.CachedTransform.localEulerAngles;
+            if (Mathf.Abs( tempEuler.y - angleOfL ) < 15)
+                return;
+
+            if (angleOfL + tempEuler.y > 360)
+                angleOfL = 360 - tempEuler.y;
+
+            Actor.CachedTransform.localEulerAngles = new Vector3( tempEuler.x, tempEuler.y + angleOfL, tempEuler.z );
+        }
+
+        public override void SetEnable ( bool enable )
+        {
+            _controller.enabled = enable;
+            _enable = _controller.enabled;
+        }
+
+        /// <summary>
+        /// 碰撞标识
+        /// </summary>
+        public CollisionFlags CollisionFlag { get; private set; } = CollisionFlags.None;
+
+        /// <summary>
+        /// controller
+        /// </summary>
+        private CharacterController _controller = null;
+
+        /// <summary>
+        /// 从寻路获取的路点信息集合，以此为据进行移动处理
+        /// </summary>
+        private List<Vector2> _pathList = null;
+
+        /// <summary>
+        /// 路点信息索引下标
+        /// </summary>
+        private int _pathIndex = 0;
+
+        /// <summary>
+        /// 目标位置
+        /// </summary>
+        private Vector3 _cachedTargetPos = Vector3.zero;
+
+        /// <summary>
+        /// 当前index的寻路目标点
+        /// </summary>
+        private Vector3 _currStepTargetPos;
+
+        /// <summary>
+        /// 速度
+        /// </summary>
+        private float _speed = 1f;
+    }
+}
