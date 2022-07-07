@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
-using MRG.Fight.Addon;
+using Aquila.Config;
 
 namespace Aquila.Fight.Actor
 {
@@ -83,7 +83,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public bool IsMine()
         {
-            return HostID == GameFrameworkMode.GetModule<AccountModule>().Guid && HostID != GlobeVar.INVALID_GUID;
+            return HostID == GameFrameworkMode.GetModule<AccountModule>().Guid && HostID != GlobalVar.INVALID_GUID;
         }
 
         #endregion
@@ -300,7 +300,7 @@ namespace Aquila.Fight.Actor
             //}
 
             Index = -1;
-            HostID = GlobeVar.INVALID_GUID;
+            HostID = GlobalVar.INVALID_GUID;
             ForceType = -1;
             Area = -1;
         }
@@ -568,7 +568,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 宿主ID
         /// </summary>
-        public ulong HostID { get; private set; } = GlobeVar.INVALID_GUID;
+        public ulong HostID { get; private set; } = GlobalVar.INVALID_GUID;
 
         /// <summary>
         /// 阵营
