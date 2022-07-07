@@ -8,7 +8,6 @@ using GameFramework.Resource;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using MRG;
 using Entity = UnityGameFramework.Runtime.Entity;
 
 namespace UGFExtensions.Await
