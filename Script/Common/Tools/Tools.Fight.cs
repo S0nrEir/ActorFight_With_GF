@@ -27,11 +27,12 @@ namespace Aquila
                 return defaultValue;
             }
 
-
             /// <summary>
-            /// 设置一个fight effect的transform信息到actor
+            /// 绑定一个特效到actor上
             /// </summary>
-            public static void SetEffectActorTran( ActorEffectEntityData effectEntityData, ActorEffect effect )
+            /// <param name="effectEntityData">特效实体数据</param>
+            /// <param name="effect">特效实体</param>
+            public static void BindEffect( ActorEffectEntityData effectEntityData, ActorEffect effect )
             {
                 var actor = effect.Actor;
                 if ( actor == null || effectEntityData is null )
