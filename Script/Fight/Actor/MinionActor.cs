@@ -2,6 +2,8 @@
 using GameFramework.Event;
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
+using MRG.Fight.FSM;
+using MRG.Fight.Addon;
 
 namespace Aquila.Fight.Actor
 {
@@ -20,16 +22,12 @@ namespace Aquila.Fight.Actor
         //#todo抽离setup
         public void Setup (int roleBaseID)
         {
-            //#todo改成随从表
-            _dataAddon.SetObjectDataValue(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE,TableManager.GetRoleBaseAttrByID(roleBaseID) );
-
-            ResetData();
         }
 
         #endregion
 
         #region impl
-        public void DoAbilityAction ( GC_Skill_Info_Stct stct )
+        public void DoAbilityAction ( )
         {
         }
 
@@ -84,21 +82,6 @@ namespace Aquila.Fight.Actor
             base.OnHide( isShutdown, userData );
         }
 
-        /// <summary>
-        /// 当其他actor死亡
-        /// </summary>
-        protected override void OnOtherActorDie ( object sender, GameEventArgs e )
-        {
-            //switch (_FsmAddon.CurrState)
-            //{
-            //    //索敌或攻击的时候敌人死了，停止，回到idleState状态
-            //    case ActorStateTypeEnum.SEARCHING_STATE:
-            //    case ActorStateTypeEnum.ABILITY_STATE:
-            //        SwitchTo( ActorStateTypeEnum.IDLE_STATE, null, null );
-            //        break;
-            //}
-        }
-
         protected override void Register ()
         {
             base.Register();
@@ -112,26 +95,26 @@ namespace Aquila.Fight.Actor
         protected override void ResetData ()
         {
             base.ResetData();
-            if (_dataAddon is null)
-                throw new GameFrameworkException( "MINION (_DataAddon is null)" );
+            //if (_dataAddon is null)
+            //    throw new GameFrameworkException( "MINION (_DataAddon is null)" );
 
-            //#todo添加数据
-            var roleBaseData = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE);
-            if (roleBaseData is null)
-                throw new GameFrameworkException( "roleBaseData is null" );
+            ////#todo添加数据
+            //var roleBaseData = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE);
+            //if (roleBaseData is null)
+            //    throw new GameFrameworkException( "roleBaseData is null" );
 
-            // 血量上限
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, roleBaseData.MaxHP );
-            //当前血量
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, roleBaseData.MaxHP );
-            //移速
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, roleBaseData.MoveSpeed );
-            //攻
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_ACK, roleBaseData.Attack );
-            //防
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_DEF, roleBaseData.Defense );
-            //警戒范围
-            _dataAddon.SetFloatDataValue( DataAddonFieldTypeEnum.FLOAT_ALERT_RADIUS, roleBaseData.AlertRadius );
+            //// 血量上限
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, roleBaseData.MaxHP );
+            ////当前血量
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, roleBaseData.MaxHP );
+            ////移速
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, roleBaseData.MoveSpeed );
+            ////攻
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_ACK, roleBaseData.Attack );
+            ////防
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_DEF, roleBaseData.Defense );
+            ////警戒范围
+            //_dataAddon.SetFloatDataValue( DataAddonFieldTypeEnum.FLOAT_ALERT_RADIUS, roleBaseData.AlertRadius );
         }
 
         public override ActorTypeEnum ActorType => ActorTypeEnum.MINION;
