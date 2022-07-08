@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Aquila
 {
     /// <summary>
     /// 工具类
     /// </summary>
-    public class Tools
+    public static partial class Tools
     {
         /// <summary>
         /// 名称转层级

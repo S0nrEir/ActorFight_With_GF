@@ -145,7 +145,7 @@ namespace Aquila.Fight.Actor
                     new Vector3
                         ( 
                             posToSet.x, 
-                            Utils.FightScene.TerrainPositionY( posToSet.x, posToSet.y ), 
+                            Tools.Fight.TerrainPositionY(string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
                             posToSet.y 
                         ) 
                 );
@@ -299,62 +299,6 @@ namespace Aquila.Fight.Actor
         protected virtual void ResetData()
         {
 
-        }
-
-        /// <summary>
-        /// 同步属性
-        /// </summary>
-        public virtual void SyncAttrByCache( ActorAttrCache cache )
-        {
-            if ( !TryGetAddon<DataAddon>( out var addon ) )
-                return;
-
-            if ( cache.HasMaxHP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, cache.MaxHP );//最大血量
-
-            InfoBoardAddon boardAddon = null;
-            if ( cache.HasCurHP )
-            {
-                var oldHp = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, -1 );
-                var newHP = cache.CurHP;
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, newHP );//当前血量
-                var maxHP = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, -1 );
-
-                if ( TryGetAddon<InfoBoardAddon>( out boardAddon ) && maxHP != -1 )
-                    ShowHP();
-
-                void ShowHP()
-                {
-                    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, newHP );
-                }
-            }
-
-            if ( cache.HasCurMP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_MP, cache.CurMP );//当前蓝
-
-            if ( cache.HasMaxMP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_MP, cache.MaxMP );//最大蓝
-
-            if ( cache.HasShield )
-            {
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_SHIELD, cache.Shield );
-                var shield = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_SHIELD, 0 );
-                if ( boardAddon != null )
-                    boardAddon.SetShieldValue( shield, addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, 0 ), addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, 0 ) );
-            }
-
-            //移速
-            if ( cache.HasMoveSpeed )
-            {
-                //Debug.Log( "----------->move speed:" + cache.MoveSpeed );
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, cache.MoveSpeed );
-                var speed = 1f;
-                if ( TryGetAddon<NavAddon>( out var navAddon ) )
-                {
-                    speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
-                    navAddon.SetSpeed( speed );
-                }
-            }
         }
 
         #endregion
