@@ -33,17 +33,17 @@ namespace Aquila.Fight.Actor
 
         public void MoveTo ( float targetX, float targetZ )
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public void SwitchTo ( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public void TakeDamage ( int dmg )
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
 
