@@ -31,6 +31,28 @@ namespace Aquila
         }
 
         /// <summary>
+        /// 为一个transform添加一个child gameObject
+        /// </summary>
+        /// <param name="parent">父节点</param>
+        /// <param name="child">自节点</param>
+        /// <returns>添加的child gameObject，失败返回null</returns>
+        public static Transform AddChild( Transform parent )
+        {
+            if ( parent == null )
+                return null;
+
+            var go = new GameObject();
+            Transform t = go.transform;
+            t.parent = parent.transform;
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            t.localScale = Vector3.one;
+            go.layer = parent.gameObject.layer;
+
+            return go.transform;
+        }
+
+        /// <summary>
         /// 设置一个gameObject的active
         /// </summary>
         public static void SetActive(GameObject go,bool active)

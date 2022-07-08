@@ -23,11 +23,14 @@ namespace Aquila.Fight.Addon
         /// <param name="assetPath">资源路径</param>
         /// <param name="duration">持续时间，0为一直显示</param>
         /// <param name="callBack">回调</param>
-        public async void ShowBuffEffectAsync( int effectID, string assetPath, float duration , Action<EffectData, ActorEffect> callBack )
+        public async void ShowEffectAsync( int effectID, string assetPath, float duration , Action<ActorEffectEntityData, ActorEffect> callBack )
         {
             if ( string.IsNullOrEmpty( assetPath ) )
                 return;
 
+            var effectEntityData = new ActorEffectEntityData(effectID);
+            effectEntityData._duration = duration;
+            effectEntityData.ModelPath = assetPath;
             var task = await AwaitableExtension.ShowEntity
                 (
                     Aquila.GameEntry.Entity,
@@ -36,7 +39,7 @@ namespace Aquila.Fight.Addon
                     assetPath,
                     GameConfig.Entity.GROUP_ActorEffect,
                     GameConfig.Entity.Priority_Effect,
-                    new ActorEffectData( effectID )
+                    effectEntityData
                 );
 
             var actorEffect = task.Logic as ActorEffect;
@@ -46,10 +49,9 @@ namespace Aquila.Fight.Addon
                 return;
             }
 
-            var effectData = ReferencePool.Acquire<EffectData>();
             actorEffect.Setup( effectID, duration, Actor, duration <= 0 );
             Add( actorEffect.ID, actorEffect );
-            callBack?.Invoke( effectData, actorEffect );
+            callBack?.Invoke( effectEntityData, actorEffect );
         }
 
         #endregion
@@ -177,25 +179,28 @@ namespace Aquila.Fight.Addon
         #endregion
     }
 
-    public class ActorEffectData : EntityData
+    /// <summary>
+    /// 特效实体数据
+    /// </summary>
+    public class ActorEffectEntityData : EntityData
     {
-        public ActorEffectData( int entityID ) : base( entityID, typeof( ActorEffectData ).GetHashCode() )
+        public ActorEffectEntityData( int entityID ) : base( entityID, typeof( ActorEffectEntityData ).GetHashCode() )
         {
         }
-    }
 
-    /// <summary>
-    /// actor特效数据信息
-    /// </summary>
-    public class EffectData : IReference
-    {
-        public string _assetPath = string.Empty;
+        /// <summary>
+        /// 特效持续时间
+        /// </summary>
         public float _duration = 0f;
 
-        public void Clear()
-        {
-            _assetPath = string.Empty;
-            _duration = 0f;
-        }
+        /// <summary>
+        /// 特效节点#todo改成读取配置
+        /// </summary>
+        public string _effectPointName = "EffectPotin";
+
+        /// <summary>
+        /// 位置偏移
+        /// </summary>
+        public Vector3 _localPositionOffset = Vector3.zero;
     }
 }
