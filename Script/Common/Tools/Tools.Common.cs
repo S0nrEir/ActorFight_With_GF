@@ -25,9 +25,12 @@ namespace Aquila
 
             GO.tag = tag;
             var tran = GO.transform;
-            var childCnt = tran.childCount;
-            for ( var i = 0; i < childCnt; i++ )
-                SetTag( tag, tran.GetChild( i ).gameObject, loopSet );
+            if ( loopSet )
+            {
+                var childCnt = tran.childCount;
+                for ( var i = 0; i < childCnt; i++ )
+                    SetTag( tag, tran.GetChild( i ).gameObject, loopSet );
+            }
         }
 
         /// <summary>
@@ -55,7 +58,7 @@ namespace Aquila
         /// <summary>
         /// 设置一个gameObject的active
         /// </summary>
-        public static void SetActive(GameObject go,bool active)
+        public static void SetActive( GameObject go, bool active )
         {
             if ( go == null )
                 return;

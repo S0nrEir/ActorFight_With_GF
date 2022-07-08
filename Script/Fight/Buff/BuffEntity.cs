@@ -1,11 +1,10 @@
 ﻿using GameFramework;
-using GCGame.Table;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace MRG.Fight.Buff
+namespace Aquila.Fight.Buff
 {
     /// <summary>
     /// buff实例
@@ -20,26 +19,18 @@ namespace MRG.Fight.Buff
             Clear();
             ActorID = actorID;
             EffectActorID = effectActorID;
-            EffectMeta = TableManager.GetEffectByID( effectMetaID, 0 );
+            //#todo分离Effect表数据
+            //EffectMeta = TableManager.GetEffectByID( effectMetaID, 0 );
+            //EffectMeta = null;
             ImpactID = impactID;
-            //if (EffectMeta is null)
-            //    Log.Error( $"<color=red>EffectMeta is null</color>" );
         }
 
         public void Clear ()
         {
             EffectActorID = -1;
             ActorID = -1;
-            EffectMeta = null;
+            //EffectMeta = null;
             _remainTime = 0f;
-            //GC_UPDATE_NEEDIMPACTINFO pak = null;
-            //required int32  objId = 1;//objId
-            //repeated int32  impactId = 2;//Buff Id
-            //repeated int32  impactLogicId = 3;//Buff 逻辑ID
-            //repeated int32  isForever = 4;//Buff 是否永久
-            //repeated int32  remainTime = 5;//Buff 剩余时间
-            //repeated int32  isAdd = 6;//添加或删除 0删除 1添加
-
         }
 
         /// <summary>
@@ -55,7 +46,7 @@ namespace MRG.Fight.Buff
         /// <summary>
         /// 特效
         /// </summary>
-        public Tab_Effect EffectMeta { get; private set; } = null;
+        //public Tab_Effect EffectMeta { get; private set; } = null;
 
         /// <summary>
         /// 所属的impactID

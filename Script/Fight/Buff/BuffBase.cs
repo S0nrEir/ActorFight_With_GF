@@ -2,10 +2,10 @@
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
-namespace MRG.Fight.Buff
+namespace Aquila.Fight.Buff
 {
     /// <summary>
-    /// buff类
+    /// Buff基类
     /// </summary>
     public class BuffBase : IReference
     {
@@ -14,12 +14,6 @@ namespace MRG.Fight.Buff
 
         public bool Setup ( int id )
         {
-            //Meta = TableManager.GetImpactByID( id, 0 );
-            //if (Meta is null)
-            //    return false;
-
-            //_entityDic = new Dictionary<int, BuffEntity>();
-            //_cache = new Dictionary<int, List<BuffEntity>>();
             return true;
         }
 
@@ -110,7 +104,7 @@ namespace MRG.Fight.Buff
                 //show effect
                 if (entity.EffectMeta != null)
                 {
-                    addon.ShowBuffEffectAsync
+                    addon.ShowEffectAsync
                         (
                             entity.EffectActorID,
                             entity.EffectMeta,
@@ -133,12 +127,6 @@ namespace MRG.Fight.Buff
         private BuffEntity GenEntityInfo ( Tab_Impact impactMeta, int objID, int impactID )
         {
             var effectActorID = ACTOR_ID_POOL.Gen();
-            //var effectMeta = TableManager.GetEffectByID( impactMeta.EffectId, 0 );
-            //if (impactMeta.EffectId == -1)
-            //{
-            //    Log.Error( $"<color=yellow>effect meta is null,impact id:{impactMeta.ImpactID},effect id:{impactMeta.EffectId}</color>" );
-            //    //return null;
-            //}
             var entity = BuffEntity.Gen( objID, effectActorID, impactMeta.EffectId, impactID );
             return entity;
         }
@@ -151,11 +139,11 @@ namespace MRG.Fight.Buff
             if (!actor.TryGetAddon<EffectAddon>( out var addon ))
                 return;
 
-            addon.ShowBuffEffectAsync
+            addon.ShowEffectAsync
                 (
                     entity.EffectActorID,
                     entity.EffectMeta,
-                    ( effectMeta, effect ) => Utils.Fight.SetEffectActorTran( effectMeta, effect )
+                    ( effectMeta, effect ) => Tools.Fight.BindEffect( effectMeta, effect )
                 );
         }
 
@@ -163,7 +151,7 @@ namespace MRG.Fight.Buff
 
         public void Clear ()
         {
-            Meta = null;
+            //Meta = null;
             _entityDic?.Clear();
             _entityDic = null;
             _cache?.Clear();
@@ -183,7 +171,7 @@ namespace MRG.Fight.Buff
         /// <summary>
         /// 表数据
         /// </summary>
-        public Tab_Impact Meta { get; private set; } = null;
+        //public Tab_Impact Meta { get; private set; } = null;
 
         /// <summary>
         /// 实例列表，key = actorID,v=buffEntity

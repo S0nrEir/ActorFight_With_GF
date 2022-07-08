@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using Aquila.Fight.Addon;
+using Aquila.Fight;
 
 namespace MRG.Fight.Addon
 {
