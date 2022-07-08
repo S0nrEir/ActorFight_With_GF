@@ -1,5 +1,6 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Actor;
+using GameFramework;
 using System;
 using System.Collections.Generic;
 using UGFExtensions.Await;
@@ -16,63 +17,41 @@ namespace Aquila.Fight.Addon
         #region public
 
         /// <summary>
-        /// buff特效，永久显示直到buff消退或角色死亡
+        /// 显示一个特效
         /// </summary>
-        public async void ShowBuffEffectAsync (int effectID ,Tab_Effect meta ,Action<Tab_Effect, ActorEffect> callBack)
+        /// <param name="effectID">特效ID</param>
+        /// <param name="assetPath">资源路径</param>
+        /// <param name="duration">持续时间，0为一直显示</param>
+        /// <param name="callBack">回调</param>
+        public async void ShowEffectAsync( int effectID, string assetPath, float duration , Action<ActorEffectEntityData, ActorEffect> callBack )
         {
-            if (meta is null || string.IsNullOrEmpty( meta.Path ))
+            if ( string.IsNullOrEmpty( assetPath ) )
                 return;
 
+            var effectEntityData = new ActorEffectEntityData(effectID);
+            effectEntityData._duration = duration;
+            effectEntityData.ModelPath = assetPath;
             var task = await AwaitableExtension.ShowEntity
                 (
-                    MRG.GameEntry.Entity,
-                    effectID,
-                    typeof( ActorEffect ),
-                    meta.Path,
-                    GameConfig.Entity.GROUP_ActorEffect,
-                    GameConfig.Entity.Priority_Effect,
-                    new ActorEffectData( effectID )
-                );
-
-            var actorEffect = task.Logic as ActorEffect;
-            if (actorEffect is null)
-            {
-                Log.Error( $"create actor effect faild--->id:{effectID}" );
-                return;
-            }
-
-            actorEffect.Setup( effectID, meta.Duration, Actor, meta.Duration <= 0 );
-            Add( actorEffect.ID, actorEffect );
-            callBack?.Invoke( meta, actorEffect );
-        }
-
-        /// <summary>
-        /// 加载特效，此乃异步操作
-        /// </summary>
-        public async void ShowAsync ( string assetPath, float duration ,Action<string,ActorEffect> callBack)
-        {
-            var effectID = ACTOR_ID_POOL.Gen();
-            var task = await AwaitableExtension.ShowEntity
-                (
-                    MRG.GameEntry.Entity,
+                    Aquila.GameEntry.Entity,
                     effectID,
                     typeof( ActorEffect ),
                     assetPath,
                     GameConfig.Entity.GROUP_ActorEffect,
                     GameConfig.Entity.Priority_Effect,
-                    new ActorEffectData(effectID)
+                    effectEntityData
                 );
 
             var actorEffect = task.Logic as ActorEffect;
-            if (actorEffect is null)
+            if ( actorEffect is null )
             {
                 Log.Error( $"create actor effect faild--->id:{effectID}" );
                 return;
             }
 
-            actorEffect.Setup( effectID, duration, Actor );
+            actorEffect.Setup( effectID, duration, Actor, duration <= 0 );
             Add( actorEffect.ID, actorEffect );
-            callBack?.Invoke( assetPath, actorEffect );
+            callBack?.Invoke( effectEntityData, actorEffect );
         }
 
         #endregion
@@ -82,9 +61,9 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 添加到集合中
         /// </summary>
-        private bool Add (int effectID,ActorEffect effect)
+        private bool Add( int effectID, ActorEffect effect )
         {
-            if (_releasedEffectDic.ContainsKey( effectID ))
+            if ( _releasedEffectDic.ContainsKey( effectID ) )
                 return false;
 
             _releasedEffectDic.Add( effectID, effect );
@@ -94,16 +73,16 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 隐藏
         /// </summary>
-        public bool Hide ( int effectID )
+        public bool Hide( int effectID )
         {
-            MRG.GameEntry.Entity.HideEntity( effectID );
+            Aquila.GameEntry.Entity.HideEntity( effectID );
             return Remove( effectID );
         }
 
         /// <summary>
         /// 隐藏
         /// </summary
-        public bool Hide ( ActorEffect effect )
+        public bool Hide( ActorEffect effect )
         {
             return effect != null && Hide( effect.ID );
         }
@@ -111,20 +90,20 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 隐藏所有
         /// </summary>
-        public bool HideAll ()
+        public bool HideAll()
         {
-            if (_releasedEffectDic.Count == 0)
+            if ( _releasedEffectDic.Count == 0 )
                 return false;
 
             var iter = _releasedEffectDic.GetEnumerator();
             ActorEffect effect = null;
-            while (iter.MoveNext())
+            while ( iter.MoveNext() )
             {
                 effect = iter.Current.Value;
-                if (effect == null)
+                if ( effect == null )
                     return false;
 
-                if (!Hide( effect ))
+                if ( !Hide( effect ) )
                     return false;
             }
             return true;
@@ -133,17 +112,17 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 从集合中移除
         /// </summary>
-        private bool Remove (int effectID)
+        private bool Remove( int effectID )
         {
-            if (_releasedEffectDic is null || _releasedEffectDic.Count == 0)
+            if ( _releasedEffectDic is null || _releasedEffectDic.Count == 0 )
                 return false;
 
             return _releasedEffectDic.Remove( effectID );
         }
 
-        private ActorEffect Get(int effectID)
+        private ActorEffect Get( int effectID )
         {
-            if (_releasedEffectDic.TryGetValue( effectID, out var effect ))
+            if ( _releasedEffectDic.TryGetValue( effectID, out var effect ) )
                 return effect;
 
             return null;
@@ -154,32 +133,32 @@ namespace Aquila.Fight.Addon
         #region override
         public override AddonTypeEnum AddonType => AddonTypeEnum.EFFECT;
 
-        public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
         {
             base.Init( actor, targetGameObject, targetTransform );
         }
 
-        public override void Dispose ()
+        public override void Dispose()
         {
             base.Dispose();
             _onShowSuccCallBack = null;
             _releasedEffectDic = null;
         }
 
-        public override void OnAdd ()
+        public override void OnAdd()
         {
             _onShowSuccCallBack = null;
-            _releasedEffectDic = new Dictionary<int, ActorEffect>(0x2);
+            _releasedEffectDic = new Dictionary<int, ActorEffect>( 0x2 );
         }
 
-        public override void Reset ()
+        public override void Reset()
         {
             base.Reset();
             _onShowSuccCallBack = null;
             _releasedEffectDic?.Clear();
         }
 
-        public override void SetEnable ( bool enable )
+        public override void SetEnable( bool enable )
         {
             _enable = enable;
         }
@@ -200,11 +179,28 @@ namespace Aquila.Fight.Addon
         #endregion
     }
 
-    public class ActorEffectData : EntityData
+    /// <summary>
+    /// 特效实体数据
+    /// </summary>
+    public class ActorEffectEntityData : EntityData
     {
-        public ActorEffectData ( int entityID ) : base( entityID, typeof( ActorEffectData ).GetHashCode() )
-        { 
+        public ActorEffectEntityData( int entityID ) : base( entityID, typeof( ActorEffectEntityData ).GetHashCode() )
+        {
         }
-    }
 
+        /// <summary>
+        /// 特效持续时间
+        /// </summary>
+        public float _duration = 0f;
+
+        /// <summary>
+        /// 特效节点#todo改成读取配置
+        /// </summary>
+        public string _effectPointName = "EffectPotin";
+
+        /// <summary>
+        /// 位置偏移
+        /// </summary>
+        public Vector3 _localPositionOffset = Vector3.zero;
+    }
 }
