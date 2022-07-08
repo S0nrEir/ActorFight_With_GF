@@ -1,4 +1,5 @@
-﻿using GameFramework.Event;
+﻿using Aquila.Fight.Addon;
+using GameFramework.Event;
 using MRG.Fight.Addon;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -23,16 +24,6 @@ namespace Aquila.Fight.Actor
         }
 
         #region override
-
-        protected override void OnOtherActorDie ( object sender, GameEventArgs e )
-        {
-            var param = e as ActorDieEventArgs;
-            if (param is null || param.Actor is null)
-                return;
-
-            if (param.Actor.ActorID == _targetActorID)
-                Hide();
-        }
 
         protected virtual void OnColliderTriggerCountLmt ( int evnetID, object[] param )
         {
