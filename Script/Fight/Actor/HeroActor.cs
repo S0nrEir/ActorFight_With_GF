@@ -123,13 +123,13 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 使用ability行动
         /// </summary>
-        public void DoAbilityAction ( GC_Skill_Info_Stct stct )
+        public void DoAbilityAction ( )
         {
-            if (!base.OnPreAbilityAction( stct.skillID ))
-                return;
+            //if (!base.OnPreAbilityAction( stct.skillID ))
+            //    return;
 
             //stct装箱了
-            _FsmAddon?.SwitchTo( ActorStateTypeEnum.ABILITY_STATE, stct, null );
+            //_FsmAddon?.SwitchTo( ActorStateTypeEnum.ABILITY_STATE, stct, null );
         }
 
         #endregion
@@ -222,35 +222,35 @@ namespace Aquila.Fight.Actor
             base.Reset();
 
             //_HPAddon.AddType( ObjectPoolItemTypeEnum.HEAD_INFO );
-            _HPAddon.AddType( ObjectPoolItemTypeEnum.HP_BAR );
+            //_HPAddon.AddType( ObjectPoolItemTypeEnum.HP_BAR );
         }
 
         protected override void ResetData ()
         {
-            if (_dataAddon is null)
-                return;
+            //if (_dataAddon is null)
+            //    return;
 
-            var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE );
+            //var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE );
 
-            if (meta == null)
-                Debug.LogError( "meta is null" );
+            //if (meta == null)
+            //    Debug.LogError( "meta is null" );
 
-            // 血量上限
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxHP );
-            //当前血量
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, meta.MaxHP );
-            //蓝上限
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxMP );
-            //当前蓝
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_MP, meta.MaxMP );
-            //移速
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, meta.MoveSpeed );
-            //攻
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_ACK, meta.Attack );
-            //防
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_DEF, meta.Defense );
-            //警戒范围
-            _dataAddon.SetFloatDataValue( DataAddonFieldTypeEnum.FLOAT_ALERT_RADIUS, meta.AlertRadius );
+            //// 血量上限
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxHP );
+            ////当前血量
+            ////_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, meta.MaxHP );
+            ////蓝上限
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxMP );
+            ////当前蓝
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_MP, meta.MaxMP );
+            ////移速
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, meta.MoveSpeed );
+            ////攻
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_ACK, meta.Attack );
+            ////防
+            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_DEF, meta.Defense );
+            ////警戒范围
+            //_dataAddon.SetFloatDataValue( DataAddonFieldTypeEnum.FLOAT_ALERT_RADIUS, meta.AlertRadius );
         }
 
         protected override void OnShow ( object userData )

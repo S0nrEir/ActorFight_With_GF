@@ -19,20 +19,20 @@ namespace Aquila.Fight.Actor
     {
         public async void ProjectileTest( Transform target )
         {
-            var entityID = ACTOR_ID_POOL.Gen();
-            var task = await AwaitableExtension.ShowEntity
-                (
-                    MRG.GameEntry.Entity,
-                    entityID,
-                    typeof( ProjectileActor ),
-                    @"Assets/Res_MS/Effects/prefab/TempProjectile.prefab",
-                    GameConfig.Entity.GROUP_Other,
-                    GameConfig.Entity.Priority_Actor,
-                    new ProjectileActorEntityData( entityID )
-                );
+            //var entityID = ACTOR_ID_POOL.Gen();
+            //var task = await AwaitableExtension.ShowEntity
+            //    (
+            //        Aquila.GameEntry.Entity,
+            //        entityID,
+            //        typeof( ProjectileActor ),
+            //        @"Assets/Res_MS/Effects/prefab/TempProjectile.prefab",
+            //        GameConfig.Entity.GROUP_Other,
+            //        GameConfig.Entity.Priority_Actor,
+            //        new ProjectileActorEntityData( entityID )
+            //    );
 
-            if ( !OnShowProjectileSucc( task.Logic, target ) )
-                Log.Error( $"TowerActor.DoAbilityAction---->CreateFaild!" );
+            //if ( !OnShowProjectileSucc( task.Logic, target ) )
+            //    Log.Error( $"TowerActor.DoAbilityAction---->CreateFaild!" );
         }
 
         #region private 
@@ -42,21 +42,21 @@ namespace Aquila.Fight.Actor
         /// </summary>
         private bool OnShowProjectileSucc( EntityLogic logic, Transform target )
         {
-            if ( target == null )
-                return false;
+            //if ( target == null )
+            //    return false;
 
-            var projectileActor = logic as ProjectileActor;
-            if ( projectileActor is null )
-                return false;
+            //var projectileActor = logic as ProjectileActor;
+            //if ( projectileActor is null )
+            //    return false;
 
-            projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.position, .1f ) );
-            projectileActor.Setup( "TowerActor", -1, logic.Entity.Id, GlobeVar.INVALID_GUID, ForceType );
-            projectileActor.SetDataID( -1 );
+            //projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.position, .1f ) );
+            //projectileActor.Setup( "TowerActor", -1, logic.Entity.Id, GlobalVar.INVALID_GUID, ForceType );
+            //projectileActor.SetDataID( -1 );
 
-            //set
-            projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.position, .1f ) );
-            var targetID = target.GetComponent<HeroActor>() != null ? target.GetComponent<HeroActor>().ActorID : -1;
-            projectileActor.SetTarget( target, targetID );
+            ////set
+            //projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.position, .1f ) );
+            //var targetID = target.GetComponent<HeroActor>() != null ? target.GetComponent<HeroActor>().ActorID : -1;
+            //projectileActor.SetTarget( target, targetID );
 
             return true;
         }
@@ -64,26 +64,8 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 投射物创建回调
         /// </summary>
-        private bool OnShowProjectileSucc( EntityLogic logic, GC_Skill_Info_Stct stct )
+        private bool OnShowProjectileSucc()
         {
-            var projectileActor = logic as ProjectileActor;
-            if ( projectileActor is null )
-                return false;
-
-            var target = GameFrameworkMode.GetModule<FightModule>().GetCachedActor<TActorBase>( stct.targetID, out var isMine );
-            if ( target is null )
-                return false;
-
-            projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.CachedTransform.position, .1f ) );
-            projectileActor.Setup( "Actor", -1, logic.Entity.Id, HostID, ForceType, -1 );
-            //projectileActor.Setup( "Actor", -1, logic.Entity.Id, GlobeVar.INVALID_GUID, ForceType );
-            //projectileActor.SetDataID( -1 );
-            //projectileActor.Reset();
-
-            //set
-            projectileActor.SetWorldPosition( Vector3.Lerp( CachedTransform.position, target.CachedTransform.position, .1f ) );
-            projectileActor.SetTarget( target.CachedTransform, target.ActorID );
-
             return true;
         }
         #endregion
@@ -103,16 +85,6 @@ namespace Aquila.Fight.Actor
         public override void Reset()
         {
             base.Reset();
-
-            var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE );
-            if ( meta != null )
-                _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, meta.MaxHP );
-
-            //_HPSliderAddon.AddType( ObjectPoolItemTypeEnum.HEAD_INFO );
-            _HPSliderAddon.AddType( ObjectPoolItemTypeEnum.HP_BAR );
-            //水晶是特殊的，创建后显示出来
-            _HPSliderAddon.ShowHPBarItem( true );
-            _HPSliderAddon.ChangeHPValue( 1, meta.MaxHP );
         }
 
         protected override void ResetData()
@@ -142,27 +114,8 @@ namespace Aquila.Fight.Actor
 
         }
 
-        public async void DoAbilityAction( GC_Skill_Info_Stct stct )
+        public async void DoAbilityAction(  )
         {
-            if ( !base.OnPreAbilityAction( stct.skillID ) )
-                return;
-
-            //#todo待测试代码，做完了还没测过
-            return;
-            var entityID = ACTOR_ID_POOL.Gen();
-            var task = await AwaitableExtension.ShowEntity
-                (
-                    MRG.GameEntry.Entity,
-                    entityID,
-                    typeof( ProjectileActor ),
-                    @"Assets/Res_MS/Effects/prefab/TempProjectile.prefab",
-                    GameConfig.Entity.GROUP_Other,
-                    GameConfig.Entity.Priority_Actor,
-                    new ProjectileActorEntityData( entityID )
-                );
-
-            if ( !OnShowProjectileSucc( task.Logic, stct ) )
-                Log.Error( $"TowerActor.DoAbilityAction---->CreateFaild!" );
         }
 
         public void SwitchTo( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
