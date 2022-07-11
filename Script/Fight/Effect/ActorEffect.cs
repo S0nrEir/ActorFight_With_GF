@@ -1,5 +1,6 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Actor;
+using Aquila.Fight.Addon;
 using MRG.Fight.Addon;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -26,7 +27,7 @@ namespace Aquila.Fight
             if (_inspector == null)
                 _inspector = gameObject.AddComponent<ActorEffectInspector>();
 
-            _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : GlobeVar.INVALID_ID, Entity.EntityAssetName );
+            _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : GlobalVar.INVALID_ID, Entity.EntityAssetName );
 #endif
         }
 
@@ -69,7 +70,7 @@ namespace Aquila.Fight
         protected override void OnShow ( object userData )
         {
             base.OnShow( userData );
-            Utils.SetActive( gameObject, true );
+            Tools.SetActive( gameObject, true );
         }
 
         protected override void OnRecycle ()

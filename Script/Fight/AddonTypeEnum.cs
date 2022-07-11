@@ -41,12 +41,12 @@ namespace Aquila.Fight.Addon
             DATA = 5,
 
             /// <summary>
-            /// HP
+            /// 信息板组件
             /// </summary>
-            HEALTH_BAR = 6,
+            INFO_BOARD = 6,
 
             /// <summary>
-            /// 寻路
+            /// 寻路组件
             /// </summary>
             PATH_FINDER = 7,
 

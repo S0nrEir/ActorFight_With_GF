@@ -1,4 +1,5 @@
 ﻿using Aquila.Fight.Addon;
+using GameFramework;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -43,7 +44,7 @@ namespace Aquila.Fight.Addon
             //if (!isFoundPath)
             //    return;
 
-            ////因为初始化位置的关系，一开始可能不在navMesh上，所以要重新开关一下
+
             if ( !_agent.isOnNavMesh )
             {
                 _agent.enabled = false;
@@ -119,11 +120,11 @@ namespace Aquila.Fight.Addon
 
         public override void OnAdd()
         {
-            _agent = Utils.GetComponent<NavMeshAgent>( Actor.gameObject );
+            _agent = Tools.GetComponent<NavMeshAgent>( Actor.gameObject );
             if ( _agent == null )
             {
-                if ( !Utils.TryAddComponent<NavMeshAgent>( Actor.gameObject, out _agent ) )
-                    Debug.LogError( "faild to add navMeshAgent to go!!!" );
+                if ( !Tools.TryAddComponent<NavMeshAgent>( Actor.gameObject, out _agent ) )
+                    throw new GameFrameworkException( $"faild to add navMeshAgent to actor:{Actor.ActorID}" );
             }
             //初始参数设置
             _agent.enabled = true;

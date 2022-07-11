@@ -31,7 +31,7 @@ namespace Aquila.Fight.Addon
             var effectEntityData = new ActorEffectEntityData(effectID);
             effectEntityData._duration = duration;
             effectEntityData.ModelPath = assetPath;
-            var task = await AwaitableExtension.ShowEntity
+            var task = await AwaitableExtensions.ShowEntity
                 (
                     Aquila.GameEntry.Entity,
                     effectID,
@@ -141,20 +141,17 @@ namespace Aquila.Fight.Addon
         public override void Dispose()
         {
             base.Dispose();
-            _onShowSuccCallBack = null;
             _releasedEffectDic = null;
         }
 
         public override void OnAdd()
         {
-            _onShowSuccCallBack = null;
             _releasedEffectDic = new Dictionary<int, ActorEffect>( 0x2 );
         }
 
         public override void Reset()
         {
             base.Reset();
-            _onShowSuccCallBack = null;
             _releasedEffectDic?.Clear();
         }
 
@@ -165,11 +162,6 @@ namespace Aquila.Fight.Addon
         #endregion
 
         #region fields
-
-        /// <summary>
-        /// 加载成功回调
-        /// </summary>
-        private Action<string, ActorEffect> _onShowSuccCallBack = null;
 
         /// <summary>
         /// 放出的特效集合

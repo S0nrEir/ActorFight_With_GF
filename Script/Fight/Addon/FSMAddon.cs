@@ -30,11 +30,11 @@ namespace Aquila.Fight.Addon
 
             ActorFsm.SwitchTo( targetStateID, enterParam, exitParam );
 
-#if UNITY_EDITOR
-            var inspector = Actor.gameObject.GetComponent<ActorInspector>();
-            if ( inspector != null )
-                inspector.SetState( ( ( ActorStateTypeEnum ) targetStateID ).ToString() );
-#endif
+//#if UNITY_EDITOR
+//            var inspector = Actor.gameObject.GetComponent<ActorInspector>();
+//            if ( inspector != null )
+//                inspector.SetState( ( ( ActorStateTypeEnum ) targetStateID ).ToString() );
+//#endif
             return true;
         }
 

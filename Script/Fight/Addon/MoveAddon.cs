@@ -83,7 +83,7 @@ namespace Aquila.Fight.Addon
             var nextPos = Vector3.zero;
             nextPos.x = _pathList[_pathIndex].x;
             nextPos.z = _pathList[_pathIndex].y;
-            nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
+            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//#todo修改layer
             var actorPos = Actor.CachedTransform.position;
 
             Rotate( _pathList[_pathIndex] );
@@ -144,11 +144,11 @@ namespace Aquila.Fight.Addon
             Vector3 nextPos = Vector3.zero;
             nextPos.x = _pathList[_pathIndex + 1].x;
             nextPos.z = _pathList[_pathIndex + 1].y;
-            nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
+            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//#todo修改layer
 
             _cachedTargetPos.x = _pathList[_pathIndex].x;
             _cachedTargetPos.z = _pathList[_pathIndex].y;
-            _cachedTargetPos.y = Utils.FightScene.TerrainPositionY( _cachedTargetPos.x, _cachedTargetPos.z, 0f );
+            _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z, 0f );//#todo修改layer
 
             var dis = Vector3.Distance( Actor.CachedTransform.position, nextPos );
             if (dis <= 0.1f)
@@ -221,7 +221,7 @@ namespace Aquila.Fight.Addon
         public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
         {
             base.Init( actor, targetGameObject, targetTransform );
-            _controller = Utils.GetComponent<CharacterController>( Actor.gameObject );
+            _controller = Tools.GetComponent<CharacterController>( Actor.gameObject );
 
             if (_controller == null)
             {

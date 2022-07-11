@@ -197,14 +197,14 @@ namespace Aquila.Fight.Actor
 
         public virtual void SetDataID( int roleBaseID )
         {
-            if ( _dataAddon is null )
-                return;
+            //if ( _dataAddon is null )
+            //    return;
 
-            var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
-            if ( meta is null )
-                throw new GameFrameworkException( "meta is null" );
+            //var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
+            //if ( meta is null )
+            //    throw new GameFrameworkException( "meta is null" );
 
-            _dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
+            //_dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
         }
 
         #endregion
@@ -308,36 +308,51 @@ namespace Aquila.Fight.Actor
         /// </summary>                                                 
         protected T AddAddon<T>() where T : AddonBase, new()
         {
-            var addonToAdd = GetAddon<T>();
-            if ( addonToAdd != null )
+            //var addonToAdd = GetAddon<T>();
+            if ( TryGetAddon<T>( out var addonToAdd ) )
             {
                 Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
                 return addonToAdd;
             }
+            else
+            {
+                addonToAdd = new T();
+                addonToAdd.Init( this, gameObject, CachedTransform );
+                _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
 
-            addonToAdd = new T();
-            addonToAdd.Init( this, gameObject , CachedTransform );
-            _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+                addonToAdd.OnAdd();
+                return addonToAdd;
+            }
 
-            addonToAdd.OnAdd();
-            return addonToAdd;
+            //if ( addonToAdd != null )
+            //{
+            //    Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
+            //    return addonToAdd;
+            //}
+
+            //addonToAdd = new T();
+            //addonToAdd.Init( this, gameObject , CachedTransform );
+            //_addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+
+            //addonToAdd.OnAdd();
+            //return addonToAdd;
         }
 
         /// <summary>
         /// 获取自身的addon，没有返回空
         /// </summary>
-        [Obsolete( "推荐使用TryGetAddon<T>" )]
-        public T GetAddon<T>() where T : AddonBase
-        {
-            if ( _addonDic is null )
-                _addonDic = new Dictionary<int, AddonBase>();
+        //[Obsolete( "推荐使用TryGetAddon<T>" )]
+        //public T GetAddon<T>() where T : AddonBase
+        //{
+        //    if ( _addonDic is null )
+        //        _addonDic = new Dictionary<int, AddonBase>();
 
-            if ( _addonDic.Count == 0 )
-                return null;
+        //    if ( _addonDic.Count == 0 )
+        //        return null;
 
-            _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
-            return addon as T;
-        }
+        //    _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
+        //    return addon as T;
+        //}
 
         /// <summary>
         /// 初始化自己的Addons
@@ -345,7 +360,6 @@ namespace Aquila.Fight.Actor
         protected virtual void InitAddons()
         {
             _eventAddon = AddAddon<EventAddon>();
-            _dataAddon = AddAddon<DataAddon>();
         }
 
         protected TActorBase()

@@ -1,4 +1,5 @@
-﻿using Aquila.Fight.Actor;
+﻿using Aquila.Event;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
@@ -195,7 +196,7 @@ namespace Aquila.Fight.FSM
         {
             //_actor.SetWorldPosition( new Vector3( xList[0], Utils.FightScene.TerrainPositionY( xList[0], zList[0], 0f ), zList[0] ) );
             //_navAddon.SamplePosition(_actor.CachedTransform.position);
-            _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Utils.FightScene.TerrainPositionY ( xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );
+            _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Tools.Fight.TerrainPositionY (string.Empty, xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );//#todo修改layer
         }
 
         /// <summary>
@@ -203,7 +204,7 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private void OnMoveAddonEnter ( IList<float> xList, IList<float> zList )
         {
-            _actor.SetWorldPosition ( new Vector3 ( xList[0], Utils.FightScene.TerrainPositionY ( xList[0], zList[0], 0f ), zList[0] ) );
+            _actor.SetWorldPosition ( new Vector3 ( xList[0], Tools.Fight.TerrainPositionY (string.Empty,  xList[0], zList[0], 0f ), zList[0] ) );
 
             var xCnt = xList.Count;
             var zCnt = zList.Count;
@@ -298,8 +299,8 @@ namespace Aquila.Fight.FSM
 
             if ( _actor.TryGetAddon<InfoBoardAddon> ( out var sliderAddon ) )
             {
-                sliderAddon.ChangeHPValue ( 0 );
-                sliderAddon.HideAll ();
+                //sliderAddon.ChangeHPValue ( 0 );
+                //sliderAddon.HideAll ();
             }
 
             GameEntry.Event.Fire ( this, ReferencePool.Acquire<ActorDieEventArgs> ().Fill ( _actor ) );
