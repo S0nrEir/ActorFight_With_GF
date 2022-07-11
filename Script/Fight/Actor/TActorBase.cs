@@ -341,18 +341,18 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 获取自身的addon，没有返回空
         /// </summary>
-        [Obsolete( "推荐使用TryGetAddon<T>" )]
-        public T GetAddon<T>() where T : AddonBase
-        {
-            if ( _addonDic is null )
-                _addonDic = new Dictionary<int, AddonBase>();
+        //[Obsolete( "推荐使用TryGetAddon<T>" )]
+        //public T GetAddon<T>() where T : AddonBase
+        //{
+        //    if ( _addonDic is null )
+        //        _addonDic = new Dictionary<int, AddonBase>();
 
-            if ( _addonDic.Count == 0 )
-                return null;
+        //    if ( _addonDic.Count == 0 )
+        //        return null;
 
-            _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
-            return addon as T;
-        }
+        //    _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
+        //    return addon as T;
+        //}
 
         /// <summary>
         /// 初始化自己的Addons
