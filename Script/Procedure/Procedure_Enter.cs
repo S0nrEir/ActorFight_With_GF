@@ -3,6 +3,7 @@ using GameFramework.Procedure;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -19,6 +20,7 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
+            Log.Info( "Procedure_Enter--->OnEnter" );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
