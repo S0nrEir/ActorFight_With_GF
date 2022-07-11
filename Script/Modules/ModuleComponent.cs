@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityGameFramework.Runtime;
 
-namespace Aquila
+namespace Aquila.Module
 {
-    public sealed class ModuleComponent : GameFrameworkComponent
+    public sealed class GameFrameworkModule
     {
         #region 外部接口
         /// <summary>
@@ -12,7 +12,7 @@ namespace Aquila
         /// </summary>
         /// <typeparam name="T">游戏模块</typeparam>
         /// <returns></returns>
-        public T GetModule<T>() where T : GameFrameworkModuleBase, new()
+        public static T GetModule<T>() where T : GameFrameworkModuleBase, new()
         {
             return (T)GetModule(typeof(T));
         }
@@ -20,7 +20,7 @@ namespace Aquila
         /// <summary>
         /// 渲染帧
         /// </summary>
-        public void Update()
+        public static void Update()
         {
 			for (int i = 0; i < _allUpdates.Count; i++)
 				_allUpdates[i].OnUpdate();
@@ -29,7 +29,7 @@ namespace Aquila
         /// <summary>
         /// 固定帧
         /// </summary>
-        public void FixedUpdate()
+        public static void FixedUpdate()
         {
             foreach (var item in _allFixedUpdates)
                 item.OnFixedUpdate();
@@ -38,7 +38,7 @@ namespace Aquila
         /// <summary>
         /// 关闭游戏的所有模块
         /// </summary>
-        public void ShutDown ()
+        public static void ShutDown ()
         {
             foreach (var item in _allGameModules.Values)
                 item.OnClose();
@@ -51,7 +51,7 @@ namespace Aquila
         /// <summary>
         /// 关闭指定类型的GameModule
         /// </summary>
-        public void ShutDown (Type[] moduleTypes)
+        public static void ShutDown (Type[] moduleTypes)
         {
             var hashCode = 0;
             GameFrameworkModuleBase module = null;
@@ -69,7 +69,7 @@ namespace Aquila
         #region 内部函数
 
         //获取模块
-        public GameFrameworkModuleBase GetModule(Type type)
+        public static GameFrameworkModuleBase GetModule(Type type)
         {
             int hashCode = type.GetHashCode();
             GameFrameworkModuleBase module = null;
@@ -82,7 +82,7 @@ namespace Aquila
         }
 
         //创建模块
-        private GameFrameworkModuleBase CreateModule(Type type)
+        private static GameFrameworkModuleBase CreateModule(Type type)
         {
             int hashCode = type.GetHashCode();
             GameFrameworkModuleBase module = ( GameFrameworkModuleBase ) Activator.CreateInstance(type);

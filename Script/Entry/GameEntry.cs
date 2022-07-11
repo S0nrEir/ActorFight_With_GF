@@ -1,4 +1,5 @@
-﻿using UGFExtensions.Await;
+﻿using Aquila.Module;
+using UGFExtensions.Await;
 using UnityEngine;
 
 namespace Aquila
@@ -18,7 +19,12 @@ namespace Aquila
 
         void Update()
         {
+            GameFrameworkModule.Update();
+        }
 
+        private void FixedUpdate()
+        {
+            GameFrameworkModule.FixedUpdate();
         }
     }
 

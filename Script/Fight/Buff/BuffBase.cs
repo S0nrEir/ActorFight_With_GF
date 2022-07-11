@@ -1,5 +1,6 @@
 ﻿using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using GameFramework;
 using System.Collections.Generic;
 namespace Aquila.Fight.Buff
@@ -65,7 +66,7 @@ namespace Aquila.Fight.Buff
                 return false;
 
             var entity = _entityDic[objID];
-            var actor = GameEntry.Module.GetModule<ActorModule>().GetActor( objID);
+            var actor = GameFrameworkModule.GetModule<ActorModule>().GetActor( objID);
             if (actor is null)
                 return false;
 
