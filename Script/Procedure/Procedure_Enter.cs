@@ -20,8 +20,7 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            Log.Info( "Procedure_Enter--->OnEnter" );
-            //Debug.Log( "Procedure_Enter--->OnEnter" );
+            Log.Info( "Procedure--->OnEnter", LogColorTypeEnum.White );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
