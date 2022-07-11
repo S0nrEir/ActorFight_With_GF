@@ -4,7 +4,7 @@ using GameFramework;
 using System.Collections.Generic;
 using UnityGameFramework.Runtime;
 
-namespace MRG
+namespace Aquila.Fight.Buff
 {
     /// <summary>
     /// buff组件

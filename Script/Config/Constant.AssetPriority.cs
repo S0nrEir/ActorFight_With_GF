@@ -7,6 +7,9 @@
 
 namespace Aquila.Config
 {
+    /// <summary>
+    /// GF常量类
+    /// </summary>
     public static partial class Constant
     {
         /// <summary>

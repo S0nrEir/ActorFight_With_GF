@@ -3,7 +3,7 @@
 namespace Aquila.Config
 {
     /// <summary>
-    /// 客户端通用配置类
+    /// 游戏业务相关配置类
     /// </summary>
     public class GameConfig
     {

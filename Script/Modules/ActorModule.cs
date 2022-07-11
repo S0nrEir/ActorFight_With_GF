@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Aquila
+namespace Aquila.Module
 {
     /// <summary>
     /// Actor模块类型，管理actor
