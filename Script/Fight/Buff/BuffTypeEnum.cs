@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MRG.Fight.Buff
+namespace Aquila.Fight.Buff
 {
 
     /// <summary>
