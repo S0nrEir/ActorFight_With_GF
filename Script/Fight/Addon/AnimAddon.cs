@@ -153,7 +153,7 @@ namespace Aquila.Fight.Addon
         {
             base.Init( actor, targetGameObject, targetTransform );
             //动画机是挂在GameObject上的,制作GameObject的时候手动加上去，这里只尝试获取
-            _animator = Utils.GetComponent<Animator>( Actor.gameObject );
+            _animator = Tools.GetComponent<Animator>( Actor.gameObject );
 
             if (_animator == null)
             {

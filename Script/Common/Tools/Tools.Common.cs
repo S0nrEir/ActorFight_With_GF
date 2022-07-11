@@ -99,6 +99,23 @@ namespace Aquila
 
             return go.GetComponent<T>();
         }
+
+        /// <summary>
+        /// 给一个GO上添加Component
+        /// </summary>
+        /// <typeparam name="T">指定类型</typeparam>
+        /// <param name="go">要添加到的gameObject</param>
+        /// <param name="comp">添加的组件</param>
+        /// <returns>成功返回true</returns>
+        public static bool TryAddComponent<T>( GameObject go, out T comp ) where T : Component
+        {
+            comp = null;
+            if ( go == null )
+                return false;
+
+            comp = go.AddComponent<T>();
+            return true;
+        }
     }
 
 

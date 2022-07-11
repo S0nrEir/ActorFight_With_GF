@@ -31,7 +31,7 @@ namespace Aquila.Fight.Addon
             var effectEntityData = new ActorEffectEntityData(effectID);
             effectEntityData._duration = duration;
             effectEntityData.ModelPath = assetPath;
-            var task = await AwaitableExtension.ShowEntity
+            var task = await AwaitableExtensions.ShowEntity
                 (
                     Aquila.GameEntry.Entity,
                     effectID,

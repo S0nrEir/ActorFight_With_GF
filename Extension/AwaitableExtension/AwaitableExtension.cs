@@ -114,6 +114,21 @@ namespace UGFExtensions.Await
         }
 
         /// <summary>
+        /// 显示实体（可等待）(扩展AwaitableExtension)
+        /// </summary>
+        public static Task<Entity> ShowEntity( this EntityComponent entityComponent, int entityID, Type logicType, string assetPath, string entityGroup, int priority, object userData )
+        {
+#if UNITY_EDITOR
+            TipsSubscribeEvent();
+#endif
+            var tcs = new TaskCompletionSource<Entity>();
+            s_EntityTcs.Add( entityID, tcs );
+
+            entityComponent.ShowEntity( entityID, logicType, assetPath, entityGroup, priority, userData );
+            return tcs.Task;
+        }
+
+        /// <summary>
         /// 显示实体（可等待）
         /// </summary>
         public static Task<Entity> ShowEntityAsync( this EntityComponent entityComponent, int entityId,

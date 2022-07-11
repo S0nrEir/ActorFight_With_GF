@@ -1,7 +1,6 @@
 ﻿using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using MRG.Fight.Addon;
-using MRG.Fight.FSM;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 

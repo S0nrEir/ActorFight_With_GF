@@ -197,14 +197,14 @@ namespace Aquila.Fight.Actor
 
         public virtual void SetDataID( int roleBaseID )
         {
-            if ( _dataAddon is null )
-                return;
+            //if ( _dataAddon is null )
+            //    return;
 
-            var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
-            if ( meta is null )
-                throw new GameFrameworkException( "meta is null" );
+            //var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
+            //if ( meta is null )
+            //    throw new GameFrameworkException( "meta is null" );
 
-            _dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
+            //_dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
         }
 
         #endregion
@@ -345,7 +345,6 @@ namespace Aquila.Fight.Actor
         protected virtual void InitAddons()
         {
             _eventAddon = AddAddon<EventAddon>();
-            _dataAddon = AddAddon<DataAddon>();
         }
 
         protected TActorBase()

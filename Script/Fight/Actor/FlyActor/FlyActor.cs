@@ -9,8 +9,7 @@ namespace Aquila.Fight.Actor
     /// <summary>
     /// 飞行类actor
     /// </summary>
-    public abstract class FlyActor : 
-        DynamicActor
+    public abstract class FlyActor : TActorBase
     {
         public virtual void Setup (int actorID)
         {
