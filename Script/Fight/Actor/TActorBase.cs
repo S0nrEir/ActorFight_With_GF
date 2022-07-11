@@ -308,19 +308,34 @@ namespace Aquila.Fight.Actor
         /// </summary>                                                 
         protected T AddAddon<T>() where T : AddonBase, new()
         {
-            var addonToAdd = GetAddon<T>();
-            if ( addonToAdd != null )
+            //var addonToAdd = GetAddon<T>();
+            if ( TryGetAddon<T>( out var addonToAdd ) )
             {
                 Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
                 return addonToAdd;
             }
+            else
+            {
+                addonToAdd = new T();
+                addonToAdd.Init( this, gameObject, CachedTransform );
+                _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
 
-            addonToAdd = new T();
-            addonToAdd.Init( this, gameObject , CachedTransform );
-            _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+                addonToAdd.OnAdd();
+                return addonToAdd;
+            }
 
-            addonToAdd.OnAdd();
-            return addonToAdd;
+            //if ( addonToAdd != null )
+            //{
+            //    Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
+            //    return addonToAdd;
+            //}
+
+            //addonToAdd = new T();
+            //addonToAdd.Init( this, gameObject , CachedTransform );
+            //_addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+
+            //addonToAdd.OnAdd();
+            //return addonToAdd;
         }
 
         /// <summary>
