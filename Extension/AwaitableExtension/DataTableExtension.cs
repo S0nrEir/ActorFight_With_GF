@@ -1,4 +1,5 @@
-﻿using GameFramework.DataTable;
+﻿using Aquila.Config;
+using GameFramework.DataTable;
 using System;
 using UnityEngine;
 using UnityGameFramework.Runtime;

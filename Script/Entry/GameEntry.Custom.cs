@@ -7,8 +7,6 @@ namespace Aquila
     /// </summary>
     public partial class GameEntry
     {
-
-
         /// <summary>
         /// 初始化自定义组件
         /// </summary>

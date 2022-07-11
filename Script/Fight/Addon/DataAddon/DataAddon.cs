@@ -37,8 +37,7 @@ namespace Aquila.Fight.Addon
             if (
                 intDataDic.Count == 0 ||
                 floatDataDic.Count == 0 ||
-                _objectDataDic.Count == 0 ||
-                _stringDataDic.Count == 0
+                _objectDataDic.Count == 0 /*|| _stringDataDic.Count == 0*/
                 )
             {
                 return AddonValidErrorCodeEnum.ZERO_DATA_COUNT;
@@ -217,7 +216,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// string数据字段集合
         /// </summary>
-        private Dictionary<int, string> _stringDataDic;
+        //private Dictionary<int, string> _stringDataDic;
     }
 
     /// <summary>

@@ -1,7 +1,5 @@
 ﻿using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
-using MRG.Fight.Addon;
-using MRG.Fight.FSM;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -18,14 +16,15 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 触发
         /// </summary>
-        public void Trigger (Tab_Effect meta)
+        public void Trigger( string assetPath,float duration )
         {
-            _effectAddon.ShowBuffEffectAsync
+            _effectAddon.ShowEffectAsync
                 (
                     ACTOR_ID_POOL.Gen(),
-                    meta,
-                    ( effectMeta, effect ) => Utils.Fight.SetEffectActorTran( effectMeta, effect )
-                ) ;
+                    assetPath,
+                    duration,
+                    ( effectEntityData, effect ) => Tools.Fight.BindEffect( effectEntityData, effect )
+                );
         }
 
         /// <summary>
@@ -157,9 +156,6 @@ namespace Aquila.Fight.Actor
         public Vector3 centerPos = Vector3.zero;
         public int index = -1;
         public (float x, float y) stepWH;
-
-
-
 
         public TriggerActorEntityData ( int entityID ) : base ( entityID,typeof ( TriggerActor ).GetHashCode() )
         { 

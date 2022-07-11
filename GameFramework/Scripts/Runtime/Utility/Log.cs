@@ -7,6 +7,7 @@
 
 using GameFramework;
 using System.Diagnostics;
+using UnityEngine;
 
 namespace UnityGameFramework.Runtime
 {
@@ -112,6 +113,47 @@ namespace UnityGameFramework.Runtime
         public static void Info(object message)
         {
             GameFrameworkLog.Info(message);
+        }
+
+        /// <summary>
+        /// 自用扩展_打印信息级别日志，用于记录程序正常运行日志信息。
+        /// </summary>
+        /// <param name="message">日志内容</param>
+        /// <remarks>仅在带有 ENABLE_LOG、ENABLE_INFO_LOG、ENABLE_DEBUG_AND_ABOVE_LOG 或 ENABLE_INFO_AND_ABOVE_LOG 预编译选项时生效。</remarks>
+        [Conditional( "ENABLE_LOG" )]
+        [Conditional( "ENABLE_INFO_LOG" )]
+        [Conditional( "ENABLE_DEBUG_AND_ABOVE_LOG" )]
+        [Conditional( "ENABLE_INFO_AND_ABOVE_LOG" )]
+        public static void Info( string message,LogColorTypeEnum color)
+        {
+            switch ( color )
+            {
+                case LogColorTypeEnum.White:
+                    message = $"<color=white>{message}</color>";
+                    break;
+
+                case LogColorTypeEnum.Yellow:
+                    message = $"<color=yellow>{message}</color>";
+                    break;
+
+                case LogColorTypeEnum.Red:
+                    message = $"<color=yellow>{message}</color>";
+                    break;
+
+                case LogColorTypeEnum.Purple:
+                    message = $"<color=purple>{message}</color>";
+                    break;
+
+                case LogColorTypeEnum.Orange:
+                    message = $"<color=orange>{message}</color>";
+                    break;
+
+                case LogColorTypeEnum.Green:
+                    message = $"<color=green>{message}</color>";
+                    break;
+            }
+
+            GameFrameworkLog.Info( message );
         }
 
         /// <summary>
@@ -499,5 +541,18 @@ namespace UnityGameFramework.Runtime
         {
             GameFrameworkLog.Fatal(format, args);
         }
+    }
+
+    /// <summary>
+    /// 自用扩展_log颜色类型
+    /// </summary>
+    public enum LogColorTypeEnum
+    {
+        White = 0,
+        Red = 1,
+        Orange = 2,
+        Yellow = 3,
+        Green = 4,
+        Purple = 5,
     }
 }

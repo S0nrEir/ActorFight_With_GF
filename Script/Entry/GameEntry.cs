@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Aquila.Module;
+using UGFExtensions.Await;
 using UnityEngine;
 
 namespace Aquila
@@ -12,15 +12,19 @@ namespace Aquila
             InitBuiltinComponents();
             //自定义组件初始化
             InitCustomComponents();
-            //GF扩展初始化
-            UGFExtensions.Await.AwaitableExtension.SubscribeEvent();
+            //扩展初始化
+            AwaitableExtensions.SubscribeEvent();
             DontDestroyOnLoad( this );
         }
 
-        // Update is called once per frame
         void Update()
         {
+            GameFrameworkModule.Update();
+        }
 
+        private void FixedUpdate()
+        {
+            GameFrameworkModule.FixedUpdate();
         }
     }
 

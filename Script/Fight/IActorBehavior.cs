@@ -55,7 +55,8 @@ namespace Aquila.Fight
     /// </summary>
     public interface IDoAbilityBehavior
     {
-        void DoAbilityAction ( GC_Skill_Info_Stct stct);
+        //#todo技能使用接口待修改
+        void DoAbilityAction ();
     }
 
     /// <summary>

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace MRG.Fight
+﻿namespace Aquila.Fight
 {
     /// <summary>
     /// 枚举类型表示的方向

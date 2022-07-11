@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using Aquila.Fight.Addon;
+using Aquila.Fight;
 
-namespace MRG.Fight.Addon
+namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 碰撞检测触发类addon，比较特殊的addon，因为要依赖于monobehavior的回调做碰撞检测。

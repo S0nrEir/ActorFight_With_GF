@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Aquila
 {
     /// <summary>
     /// 工具类
     /// </summary>
-    public class Tools
+    public static partial class Tools
     {
         /// <summary>
         /// 名称转层级
@@ -27,15 +25,40 @@ namespace Aquila
 
             GO.tag = tag;
             var tran = GO.transform;
-            var childCnt = tran.childCount;
-            for ( var i = 0; i < childCnt; i++ )
-                SetTag( tag, tran.GetChild( i ).gameObject, loopSet );
+            if ( loopSet )
+            {
+                var childCnt = tran.childCount;
+                for ( var i = 0; i < childCnt; i++ )
+                    SetTag( tag, tran.GetChild( i ).gameObject, loopSet );
+            }
+        }
+
+        /// <summary>
+        /// 为一个transform添加一个child gameObject
+        /// </summary>
+        /// <param name="parent">父节点</param>
+        /// <param name="child">自节点</param>
+        /// <returns>添加的child gameObject，失败返回null</returns>
+        public static Transform AddChild( Transform parent )
+        {
+            if ( parent == null )
+                return null;
+
+            var go = new GameObject();
+            Transform t = go.transform;
+            t.parent = parent.transform;
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            t.localScale = Vector3.one;
+            go.layer = parent.gameObject.layer;
+
+            return go.transform;
         }
 
         /// <summary>
         /// 设置一个gameObject的active
         /// </summary>
-        public static void SetActive(GameObject go,bool active)
+        public static void SetActive( GameObject go, bool active )
         {
             if ( go == null )
                 return;
@@ -75,6 +98,23 @@ namespace Aquila
                 return null;
 
             return go.GetComponent<T>();
+        }
+
+        /// <summary>
+        /// 给一个GO上添加Component
+        /// </summary>
+        /// <typeparam name="T">指定类型</typeparam>
+        /// <param name="go">要添加到的gameObject</param>
+        /// <param name="comp">添加的组件</param>
+        /// <returns>成功返回true</returns>
+        public static bool TryAddComponent<T>( GameObject go, out T comp ) where T : Component
+        {
+            comp = null;
+            if ( go == null )
+                return false;
+
+            comp = go.AddComponent<T>();
+            return true;
         }
     }
 

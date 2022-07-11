@@ -145,7 +145,7 @@ namespace Aquila.Fight.Actor
                     new Vector3
                         ( 
                             posToSet.x, 
-                            Utils.FightScene.TerrainPositionY( posToSet.x, posToSet.y ), 
+                            Tools.Fight.TerrainPositionY(string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
                             posToSet.y 
                         ) 
                 );
@@ -197,14 +197,14 @@ namespace Aquila.Fight.Actor
 
         public virtual void SetDataID( int roleBaseID )
         {
-            if ( _dataAddon is null )
-                return;
+            //if ( _dataAddon is null )
+            //    return;
 
-            var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
-            if ( meta is null )
-                throw new GameFrameworkException( "meta is null" );
+            //var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
+            //if ( meta is null )
+            //    throw new GameFrameworkException( "meta is null" );
 
-            _dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
+            //_dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
         }
 
         #endregion
@@ -301,62 +301,6 @@ namespace Aquila.Fight.Actor
 
         }
 
-        /// <summary>
-        /// 同步属性
-        /// </summary>
-        public virtual void SyncAttrByCache( ActorAttrCache cache )
-        {
-            if ( !TryGetAddon<DataAddon>( out var addon ) )
-                return;
-
-            if ( cache.HasMaxHP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, cache.MaxHP );//最大血量
-
-            InfoBoardAddon boardAddon = null;
-            if ( cache.HasCurHP )
-            {
-                var oldHp = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, -1 );
-                var newHP = cache.CurHP;
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, newHP );//当前血量
-                var maxHP = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, -1 );
-
-                if ( TryGetAddon<InfoBoardAddon>( out boardAddon ) && maxHP != -1 )
-                    ShowHP();
-
-                void ShowHP()
-                {
-                    boardAddon.ChangeHPValue( ( float ) newHP / maxHP, newHP );
-                }
-            }
-
-            if ( cache.HasCurMP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_MP, cache.CurMP );//当前蓝
-
-            if ( cache.HasMaxMP )
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_MP, cache.MaxMP );//最大蓝
-
-            if ( cache.HasShield )
-            {
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_SHIELD, cache.Shield );
-                var shield = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_SHIELD, 0 );
-                if ( boardAddon != null )
-                    boardAddon.SetShieldValue( shield, addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, 0 ), addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, 0 ) );
-            }
-
-            //移速
-            if ( cache.HasMoveSpeed )
-            {
-                //Debug.Log( "----------->move speed:" + cache.MoveSpeed );
-                addon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, cache.MoveSpeed );
-                var speed = 1f;
-                if ( TryGetAddon<NavAddon>( out var navAddon ) )
-                {
-                    speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
-                    navAddon.SetSpeed( speed );
-                }
-            }
-        }
-
         #endregion
 
         /// <summary>
@@ -364,36 +308,51 @@ namespace Aquila.Fight.Actor
         /// </summary>                                                 
         protected T AddAddon<T>() where T : AddonBase, new()
         {
-            var addonToAdd = GetAddon<T>();
-            if ( addonToAdd != null )
+            //var addonToAdd = GetAddon<T>();
+            if ( TryGetAddon<T>( out var addonToAdd ) )
             {
                 Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
                 return addonToAdd;
             }
+            else
+            {
+                addonToAdd = new T();
+                addonToAdd.Init( this, gameObject, CachedTransform );
+                _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
 
-            addonToAdd = new T();
-            addonToAdd.Init( this, gameObject , CachedTransform );
-            _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+                addonToAdd.OnAdd();
+                return addonToAdd;
+            }
 
-            addonToAdd.OnAdd();
-            return addonToAdd;
+            //if ( addonToAdd != null )
+            //{
+            //    Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
+            //    return addonToAdd;
+            //}
+
+            //addonToAdd = new T();
+            //addonToAdd.Init( this, gameObject , CachedTransform );
+            //_addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+
+            //addonToAdd.OnAdd();
+            //return addonToAdd;
         }
 
         /// <summary>
         /// 获取自身的addon，没有返回空
         /// </summary>
-        [Obsolete( "推荐使用TryGetAddon<T>" )]
-        public T GetAddon<T>() where T : AddonBase
-        {
-            if ( _addonDic is null )
-                _addonDic = new Dictionary<int, AddonBase>();
+        //[Obsolete( "推荐使用TryGetAddon<T>" )]
+        //public T GetAddon<T>() where T : AddonBase
+        //{
+        //    if ( _addonDic is null )
+        //        _addonDic = new Dictionary<int, AddonBase>();
 
-            if ( _addonDic.Count == 0 )
-                return null;
+        //    if ( _addonDic.Count == 0 )
+        //        return null;
 
-            _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
-            return addon as T;
-        }
+        //    _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
+        //    return addon as T;
+        //}
 
         /// <summary>
         /// 初始化自己的Addons
@@ -401,7 +360,6 @@ namespace Aquila.Fight.Actor
         protected virtual void InitAddons()
         {
             _eventAddon = AddAddon<EventAddon>();
-            _dataAddon = AddAddon<DataAddon>();
         }
 
         protected TActorBase()

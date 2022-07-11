@@ -1,11 +1,12 @@
 ﻿using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using GameFramework;
 using System.Collections.Generic;
-namespace MRG.Fight.Buff
+namespace Aquila.Fight.Buff
 {
     /// <summary>
-    /// buff类
+    /// Buff基类
     /// </summary>
     public class BuffBase : IReference
     {
@@ -14,12 +15,6 @@ namespace MRG.Fight.Buff
 
         public bool Setup ( int id )
         {
-            //Meta = TableManager.GetImpactByID( id, 0 );
-            //if (Meta is null)
-            //    return false;
-
-            //_entityDic = new Dictionary<int, BuffEntity>();
-            //_cache = new Dictionary<int, List<BuffEntity>>();
             return true;
         }
 
@@ -71,7 +66,7 @@ namespace MRG.Fight.Buff
                 return false;
 
             var entity = _entityDic[objID];
-            var actor = GameFrameworkMode.GetModule<FightModule>().GetCachedActor<TActorBase>( objID, out var _ );
+            var actor = GameFrameworkModule.GetModule<ActorModule>().GetActor( objID);
             if (actor is null)
                 return false;
 
@@ -92,55 +87,53 @@ namespace MRG.Fight.Buff
         public BuffEntity Add ( int objID, int impactID, out bool createSucc )
         {
             createSucc = false;
-            var impactMeta = TableManager.GetImpactByID( impactID, 0 );
-            if (impactMeta is null)
-                return null;
+            //var impactMeta = TableManager.GetImpactByID( impactID, 0 );
+            //if (impactMeta is null)
+            //    return null;
 
-            //创建effectActor
-            var actor = GameFrameworkMode.GetModule<FightModule>().GetCachedActor<TActorBase>( objID, out var _ );
+            ////创建effectActor
+            //var actor = GameEntry.Module.GetModule<ActorModule>().GetActor( objID,);
 
-            BuffEntity entity = GenEntityInfo( impactMeta, objID, impactID );
-            //能拿到actor，直接创建
-            if (actor != null)
-            {
-                if (!actor.TryGetAddon<EffectAddon>( out var addon ))
-                    return null;
+            //BuffEntity entity = GenEntityInfo( impactMeta, objID, impactID );
+            ////能拿到actor，直接创建
+            //if (actor != null)
+            //{
+            //    if (!actor.TryGetAddon<EffectAddon>( out var addon ))
+            //        return null;
 
-                createSucc = true;
-                //show effect
-                if (entity.EffectMeta != null)
-                {
-                    addon.ShowBuffEffectAsync
-                        (
-                            entity.EffectActorID,
-                            entity.EffectMeta,
-                            ( effectMeta, effect ) => Utils.Fight.SetEffectActorTran( effectMeta, effect )
-                        );
-                }
-            }
-            //拿不到先缓存
-            else
-            {
-                Cache( objID, entity );
-            }
-            _entityDic.Add( objID, entity );
-            return entity;
+            //    createSucc = true;
+            //    //show effect
+            //    if (entity.EffectMeta != null)
+            //    {
+            //        addon.ShowEffectAsync
+            //            (
+            //                entity.EffectActorID,
+            //                entity.EffectMeta,
+            //                ( effectMeta, effect ) => Utils.Fight.SetEffectActorTran( effectMeta, effect )
+            //            );
+            //    }
+            //}
+            ////拿不到先缓存
+            //else
+            //{
+            //    Cache( objID, entity );
+            //}
+            //_entityDic.Add( objID, entity );
+            //return entity;
+            //#todo增加配表buff
+            return null;
         }
 
         /// <summary>
         /// 生成buffEntity信息
         /// </summary>
-        private BuffEntity GenEntityInfo ( Tab_Impact impactMeta, int objID, int impactID )
+        private BuffEntity GenEntityInfo ( int objID, int impactID )
         {
-            var effectActorID = ACTOR_ID_POOL.Gen();
-            //var effectMeta = TableManager.GetEffectByID( impactMeta.EffectId, 0 );
-            //if (impactMeta.EffectId == -1)
-            //{
-            //    Log.Error( $"<color=yellow>effect meta is null,impact id:{impactMeta.ImpactID},effect id:{impactMeta.EffectId}</color>" );
-            //    //return null;
-            //}
-            var entity = BuffEntity.Gen( objID, effectActorID, impactMeta.EffectId, impactID );
-            return entity;
+            //var effectActorID = ACTOR_ID_POOL.Gen();
+            //var entity = BuffEntity.Gen( objID, effectActorID, impactMeta.EffectId, impactID );
+            //return entity;
+            //#todo---effect和impact表
+            return null;
         }
 
         /// <summary>
@@ -148,22 +141,22 @@ namespace MRG.Fight.Buff
         /// </summary>
         public void CreateEffect ( TActorBase actor, BuffEntity entity )
         {
-            if (!actor.TryGetAddon<EffectAddon>( out var addon ))
-                return;
+            //if (!actor.TryGetAddon<EffectAddon>( out var addon ))
+            //    return;
 
-            addon.ShowBuffEffectAsync
-                (
-                    entity.EffectActorID,
-                    entity.EffectMeta,
-                    ( effectMeta, effect ) => Utils.Fight.SetEffectActorTran( effectMeta, effect )
-                );
+            //addon.ShowEffectAsync
+            //    (
+            //        entity.EffectActorID,
+            //        entity.EffectMeta,
+            //        ( effectMeta, effect ) => Tools.Fight.BindEffect( effectMeta, effect )
+            //    );
         }
 
         public bool Contains ( int objID ) => _entityDic.ContainsKey( objID );
 
         public void Clear ()
         {
-            Meta = null;
+            //Meta = null;
             _entityDic?.Clear();
             _entityDic = null;
             _cache?.Clear();
@@ -183,7 +176,7 @@ namespace MRG.Fight.Buff
         /// <summary>
         /// 表数据
         /// </summary>
-        public Tab_Impact Meta { get; private set; } = null;
+        //public Tab_Impact Meta { get; private set; } = null;
 
         /// <summary>
         /// 实例列表，key = actorID,v=buffEntity
