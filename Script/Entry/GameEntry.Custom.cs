@@ -1,4 +1,5 @@
 ﻿using Aquila.Extension;
+using Aquila.Extension.Component;
 using UnityGameFramework.Runtime;
 
 namespace Aquila
@@ -8,6 +9,12 @@ namespace Aquila
     /// </summary>
     public partial class GameEntry
     {
+        public static LuBanCompoent DataTable
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 计时器组件
         /// </summary>
@@ -23,6 +30,7 @@ namespace Aquila
         private static void InitCustomComponents()
         {
             Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<TimerComponent>();
+            DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<LuBanCompoent>();
         }
     }
 }
