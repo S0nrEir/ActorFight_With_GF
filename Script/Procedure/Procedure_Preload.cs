@@ -1,8 +1,6 @@
 ﻿using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -19,6 +17,11 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
+            //加载数据表
+            if ( !GameEntry.DataTable.LoadDataTable() )
+                Log.Error( "load data table faild!" );
+
+
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )

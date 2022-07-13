@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Aquila
 {
+    /// <summary>
+    /// 游戏业务入口
+    /// </summary>
     public partial class GameEntry : MonoBehaviour
     {
         private /*IEnumerator*/ void Start()
