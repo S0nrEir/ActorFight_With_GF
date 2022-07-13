@@ -1,8 +1,5 @@
 ﻿using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
@@ -21,6 +18,7 @@ namespace Aquila.Procedure
         {
             base.OnEnter( procedureOwner );
             Log.Info( "Procedure--->OnEnter", LogColorTypeEnum.White );
+            ChangeState<Procedure_Prelaod>( procedureOwner );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )

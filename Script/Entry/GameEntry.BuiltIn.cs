@@ -28,20 +28,20 @@ namespace Aquila
         /// <summary>
         /// 获取数据结点组件。
         /// </summary>
-        public static DataNodeComponent DataNode
-        {
-            get;
-            private set;
-        }
+        //public static DataNodeComponent DataNode
+        //{
+        //    get;
+        //    private set;
+        //}
 
         /// <summary>
         /// 获取数据表组件。
         /// </summary>
-        public static DataTableComponent DataTable
-        {
-            get;
-            private set;
-        }
+        //public static DataTableComponent DataTable
+        //{
+        //    get;
+        //    private set;
+        //}
 
         /// <summary>
         /// 获取调试组件。
@@ -178,12 +178,15 @@ namespace Aquila
             private set;
         }
 
+        /// <summary>
+        /// 初始化内置组件
+        /// </summary>
         private static void InitBuiltinComponents()
         {
             Base = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
             Config = UnityGameFramework.Runtime.GameEntry.GetComponent<ConfigComponent>();
-            DataNode = UnityGameFramework.Runtime.GameEntry.GetComponent<DataNodeComponent>();
-            DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
+            //DataNode = UnityGameFramework.Runtime.GameEntry.GetComponent<DataNodeComponent>();
+            //DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
             Debugger = UnityGameFramework.Runtime.GameEntry.GetComponent<DebuggerComponent>();
             Download = UnityGameFramework.Runtime.GameEntry.GetComponent<DownloadComponent>();
             Entity = UnityGameFramework.Runtime.GameEntry.GetComponent<EntityComponent>();
