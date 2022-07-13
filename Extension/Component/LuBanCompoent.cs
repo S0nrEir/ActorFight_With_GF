@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila.Extension.Component
+namespace Aquila.Extension
 {
     /// <summary>
     /// LuBan扩展组件
@@ -36,7 +36,6 @@ namespace Aquila.Extension.Component
              {
                  return new ByteBuf( File.ReadAllBytes( $"{_bytesPath}{file}{_fileExtension}" ) );
              } );
-
             Tables = ( cfg.Tables ) tableCtor.Invoke( new object[] { loader } );
             _loadFlag = true;
             return _loadFlag;

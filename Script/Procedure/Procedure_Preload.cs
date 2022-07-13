@@ -20,6 +20,8 @@ namespace Aquila.Procedure
             //加载数据表
             if ( !GameEntry.DataTable.LoadDataTable() )
                 Log.Error( "load data table faild!" );
+
+
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )

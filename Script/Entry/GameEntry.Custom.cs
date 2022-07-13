@@ -1,6 +1,4 @@
 ﻿using Aquila.Extension;
-using Aquila.Extension.Component;
-using UnityGameFramework.Runtime;
 
 namespace Aquila
 {
@@ -18,7 +16,7 @@ namespace Aquila
         /// <summary>
         /// 计时器组件
         /// </summary>
-        public static TimerComponent Timer 
+        public static TimerComponent Timer
         {
             get;
             private set;
