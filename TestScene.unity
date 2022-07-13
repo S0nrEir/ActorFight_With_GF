@@ -298,7 +298,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &1488570140
+--- !u!1001 &1977227993
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -307,7 +307,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1645709215248364, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_Name
-      value: TestObject
+      value: Aquila_001
       objectReference: {fileID: 0}
     - target: {fileID: 6364357377572718967, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_LocalPosition.x
