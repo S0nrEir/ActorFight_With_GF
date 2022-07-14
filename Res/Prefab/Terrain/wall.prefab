@@ -52,7 +52,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -106,7 +105,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9098136991457901459}
-  - component: {fileID: -4452404130613646709}
   m_Layer: 0
   m_Name: wall
   m_TagString: Untagged
@@ -129,41 +127,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-4452404130613646709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8994664508236041754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f6be16025ec88e4c88efb60e6a61e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allowOverlap: 1
-  offsetPosition: {x: 0, y: 0, z: 0}
-  rotationStep: {x: 0, y: 90, z: 0}
-  paintAreaStretch: 0
-  placementRaycast:
-    useRaycast: 0
-    direction: 1
-    startOffset: {x: 0, y: 0, z: 0}
-  randomizer:
-    useRandomizer: 0
-    allowReplacement: 0
-    replacementID: 0
-    replacementWeight: 0
-    allowSequentialRepeat: 0
-    rotateMin: {x: 0, y: -180, z: 0}
-    rotateMax: {x: 0, y: 180, z: 0}
-    rotateStep: {x: 1, y: 1, z: 1}
-    scaleMin: {x: 0.75, y: 0.75, z: 0.75}
-    scaleMax: {x: 1.25, y: 1.25, z: 1.25}
-    scaleLock: 1
-    flipX: 0
-    flipY: 0
-    flipZ: 0
-    posMin: {x: -0.5, y: -0.1, z: -0.5}
-    posMax: {x: 0.5, y: 0.1, z: 0.5}
-  includeInMerge: 1
