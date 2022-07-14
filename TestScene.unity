@@ -309,6 +309,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Aquila_001
       objectReference: {fileID: 0}
+    - target: {fileID: 2717024809938790939, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
+      propertyPath: m_MaskInteraction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2717024809938790939, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6364357377572718967, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -352,6 +360,14 @@ PrefabInstance:
     - target: {fileID: 6364357377572718967, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8177952951235594190, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8177952951235594190, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
