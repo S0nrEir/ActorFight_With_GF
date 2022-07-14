@@ -8,6 +8,14 @@ namespace Aquila
     public static partial class Tools
     {
         /// <summary>
+        /// 返回一个指定类型的对象池对象
+        /// </summary>
+        public static T GenObject<T>() where T : GameFramework.ObjectPool.ObjectBase
+        {
+            return null;
+        }
+
+        /// <summary>
         /// 名称转层级
         /// </summary>
         public static int NameToLayer( string name )
