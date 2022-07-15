@@ -75,6 +75,18 @@ namespace Aquila
                 go.SetActive( active );
         }
 
+
+        /// <summary>
+        /// 获取某个GameObject上指定子路径的组件，拿不到返回空
+        /// </summary>
+        public static T GetComponent<T>( GameObject go, string childPath ) where T : class
+        {
+            if ( go == null )
+                return null;
+
+            return GetComponent<T>( go.transform.Find( childPath ) );
+        }
+
         /// <summary>
         /// 获取某个Transform上指定子路径的组件，拿不到返回空
         /// </summary>
