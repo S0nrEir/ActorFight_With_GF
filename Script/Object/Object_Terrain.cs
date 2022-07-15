@@ -1,4 +1,5 @@
-﻿using GameFramework.ObjectPool;
+﻿using GameFramework;
+using GameFramework.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,16 @@ namespace Aquila.ObjectPool
         protected override void OnSpawn()
         {
             base.OnSpawn();
+            _mesh_render = Tools.GetComponent<MeshRenderer>( Target_GO, "Mesh" );
+            if ( _mesh_render == null )
+            {
+                var child = Target_GO.transform.Find( "Mesh" );
+                if ( child == null )
+                    throw new GameFrameworkException( "faild to get Mesh child!" );
+
+                if(!Tools.TryAddComponent<MeshRenderer>( child.gameObject ,out _mesh_render))
+                    throw new GameFrameworkException( "faild to add Mesh child!" );
+            }
         }
 
         /// <summary>
@@ -31,11 +42,15 @@ namespace Aquila.ObjectPool
         /// </summary>
         protected override void Release( bool isShutdown )
         {
+            _mesh_render = null;
             base.Release( isShutdown );
         }
 
 
-
+        /// <summary>
+        /// 缓存网格渲染器
+        /// </summary>
+        private MeshRenderer _mesh_render = null;
     }
 
 }
