@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Aquila.Config
 {
@@ -7,6 +8,8 @@ namespace Aquila.Config
     /// </summary>
     public class GameConfig
     {
+
+
         /// <summary>
         /// 实体相关
         /// </summary>
@@ -16,16 +19,6 @@ namespace Aquila.Config
             /// 英雄类actor组
             /// </summary>
             public const string GROUP_HeroActor = "HeroActor";
-
-            /// <summary>
-            /// 防御塔类actor组
-            /// </summary>
-            public const string GROUP_TowerActor = "TowerActor";
-
-            /// <summary>
-            /// 随从类actor组
-            /// </summary>
-            public const string GROUP_MinionActor = "MinionActor";
 
             /// <summary>
             /// 特效类actor组
@@ -74,11 +67,6 @@ namespace Aquila.Config
             public const string LAYER_NAME_DEFAULT = "Default";
 
             /// <summary>
-            /// 卡牌放置层级
-            /// </summary>
-            public const string LAYER_NAME_CARD_AREA = "CardArea";
-
-            /// <summary>
             /// 后处理层级
             /// </summary>
             public const string LAYER_NAME_POST_PROCESSING = "PostProcessing";
@@ -89,74 +77,34 @@ namespace Aquila.Config
         /// </summary>
         public class Scene
         {
-            //下面这些都走静态表
+            /// <summary>
+            /// 单个地块的默认偏移距离
+            /// </summary>
+            public float TERRAIN_BLOCK_OFFSET_DISTANCE = .9f;
 
             /// <summary>
-            /// 每行区域地块数量
+            /// 主相机默认旋转角度
             /// </summary>
-            public const int PARCEL_COUNT = 4;
+            public static Vector3 MAIN_CAMERA_DEFAULT_ROTATION { get; } = new Vector3( 36f, 45f, 0 );
 
             /// <summary>
-            /// 区域数量上限范围
+            /// 主相机默认世界空间坐标位置
             /// </summary>
-            public const int AREA_COUNT = 4;
+            public static Vector3 MAIN_CAMERA_DEFAULT_POSITION { get; } = new Vector3( -2.75f,5.95f,-3.91f );
 
-            /// <summary>
-            /// 阶段3到达时间,五分钟三百秒
-            /// </summary>
-            public const float STAGE_3_ARRIVE_TIME = 300f;
-
-            /// <summary>
-            /// 阶段2到达时间,三分钟一百八十秒
-            /// </summary>
-            public const float STAGE_2_ARRIVE_TIME = 180f;
-
-            /// <summary>
-            /// 阶段3费用每秒上涨速率
-            /// </summary>
-            public const float STAGE_3_COST_INCREASE_RATE = .8f;
-
-            /// <summary>
-            /// 阶段2费用每秒上涨速率
-            /// </summary>
-            public const float STAGE_2_COST_INCREASE_RATE = .8f;
-
-            /// <summary>
-            /// 阶段1费用每秒上涨速率
-            /// </summary>
-            public const float STAGE_1_COST_INCREASE_RATE = .5f;
-
-            /// <summary>
-            /// 固定点的周围8方向点的偏移，itme1=x,item2=y
-            /// </summary>
-            public static Tuple<int, int>[] _8WaysOffset = new Tuple<int, int>[]
-            {
-                Tuple.Create(1,0),//右
-                Tuple.Create(1,1),//右上
-                Tuple.Create(0,1),//上
-                Tuple.Create(-1,1),//左上
-                Tuple.Create(-1,0),//左
-                Tuple.Create(-1,-1),//左下
-                Tuple.Create(0,-1),//下
-                Tuple.Create(1,-1),//右下
-            };  
-
-            /// <summary>
-            /// 默认坐标点的寻路代价
-            /// </summary>
-            public const int DEFAULT_COST = 1;
-
-            /// <summary>
-            /// 不可寻寻路的寻路代价值
-            /// </summary>
-            public const int UN_TRAVELABLE_COST = -1;
-
-            /// <summary>
-            /// 最大场景单位范围，最多支持5位数坐标，即最大(999,999)
-            /// </summary>
-            public const int MAX_SCENE_RANGE = 1000;
         }
 
+
+        /// <summary>
+        /// 全局配置Tags类
+        /// </summary>
+        public static class Tags
+        {
+            /// <summary>
+            /// 战斗地块根节点
+            /// </summary>
+            public static string TERRAIN_ROOT = "TerrainRoot";
+        }
     }
 
 }
