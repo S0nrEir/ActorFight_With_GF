@@ -8,6 +8,14 @@ namespace Aquila
     public static partial class Tools
     {
         /// <summary>
+        /// 返回一个指定类型的对象池对象
+        /// </summary>
+        public static T GenObject<T>() where T : GameFramework.ObjectPool.ObjectBase
+        {
+            return null;
+        }
+
+        /// <summary>
         /// 名称转层级
         /// </summary>
         public static int NameToLayer( string name )
@@ -65,6 +73,18 @@ namespace Aquila
 
             if ( go.activeSelf != active )
                 go.SetActive( active );
+        }
+
+
+        /// <summary>
+        /// 获取某个GameObject上指定子路径的组件，拿不到返回空
+        /// </summary>
+        public static T GetComponent<T>( GameObject go, string childPath ) where T : class
+        {
+            if ( go == null )
+                return null;
+
+            return GetComponent<T>( go.transform.Find( childPath ) );
         }
 
         /// <summary>
