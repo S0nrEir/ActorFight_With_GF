@@ -521,8 +521,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 216134153}
   - {fileID: 1314827378}
+  - {fileID: 216134153}
   - {fileID: 957904702}
   - {fileID: 747517919}
   - {fileID: 1230075693}
@@ -657,6 +657,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1236116510}
     m_Modifications:
+    - target: {fileID: 2882847430686232879, guid: 3bf0728b524a18743bc16d4746941d20, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2882847430686232879, guid: 3bf0728b524a18743bc16d4746941d20, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6184181066050764957, guid: 3bf0728b524a18743bc16d4746941d20, type: 3}
       propertyPath: m_Name
       value: EmptyTerrain
@@ -691,7 +699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6287864278673159444, guid: 3bf0728b524a18743bc16d4746941d20, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6287864278673159444, guid: 3bf0728b524a18743bc16d4746941d20, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -761,7 +769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6364357377572718967, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6364357377572718967, guid: c4a95396e4dcc8c42a5bccd64c9d372e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
