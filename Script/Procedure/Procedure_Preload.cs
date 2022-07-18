@@ -73,7 +73,7 @@ namespace Aquila.Procedure
                     temp_go = Object.Instantiate( go );
                     temp_go.tag = GameConfig.Tags.TERRAIN_BLOCK;
                     temp_go.transform.SetParent( root_go.transform );
-                    pool.Register( Object_Terrain.Gen( temp_go ) , false );
+                    pool.Register( Object_Terrain.Gen( temp_go ), false );
                     temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
                 }
                 obj_arr[i] = temp_obj;
