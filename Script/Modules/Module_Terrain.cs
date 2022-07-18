@@ -1,4 +1,5 @@
-﻿using GameFramework;
+﻿using Aquila.Config;
+using GameFramework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,11 +39,11 @@ namespace Aquila.Module
                 if ( _root_go == null )
                 {
                     //拿不到就找
-                    _root_go = GameObject.FindGameObjectWithTag( "TerrainRoot" );
+                    _root_go = GameObject.FindGameObjectWithTag( GameConfig.Tags.TERRAIN_ROOT );
                     //找不到就创建
                     if ( _root_go == null )
                     {
-                        _root_go = new GameObject( "TerrainRoot" );
+                        _root_go = new GameObject( GameConfig.Tags.TERRAIN_ROOT );
                         _root_go.transform.position = Vector3.zero;
                         _root_go.transform.localScale = Vector3.one;
                         _root_go.transform.eulerAngles = Vector3.zero;

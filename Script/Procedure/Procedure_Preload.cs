@@ -16,6 +16,7 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
+            _load_terrain_callBack = new GameFramework.Resource.LoadAssetCallbacks( LoadTerrainSuccCallBack, LoadAssetFaildCallBack );
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -42,16 +43,16 @@ namespace Aquila.Procedure
                 (
                     //#todo这里的路径看配置成常量静态内部表
                     @"Assets/Res/Prefab/Terrain/EmptyTerrain.prefab",
-                    new GameFramework.Resource.LoadAssetCallbacks(
-                    //succ callBack
-                    ( assetName, asset, duration, userData ) => LoadTerrain(asset as GameObject),
-                    //faild callBack
-                    LoadAssetFaildCallBack )
+                    _load_terrain_callBack
                 );
         }
 
-        private void LoadTerrain(GameObject go)
+        /// <summary>
+        /// 加载地块成功回调
+        /// </summary>
+        private void LoadTerrainSuccCallBack( string assetName, object asset, float duration, object userData )
         {
+            var go = asset as GameObject;
             if ( go == null )
                 throw new GameFrameworkException( "terrain game object is null!" );
 
@@ -70,9 +71,10 @@ namespace Aquila.Procedure
                 if ( temp_obj == null )
                 {
                     temp_go = Object.Instantiate( go );
+                    temp_go.tag = GameConfig.Tags.TERRAIN_BLOCK;
+                    temp_go.transform.SetParent( root_go.transform );
                     pool.Register( Object_Terrain.Gen( temp_go ) , false );
                     temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
-                    temp_go.transform.SetParent( root_go.transform );
                 }
                 obj_arr[i] = temp_obj;
             }
@@ -85,10 +87,9 @@ namespace Aquila.Procedure
         /// <summary>
         /// 加载资源失败回调
         /// </summary>
-        private void LoadAssetFaildCallBack( string assetName, GameFramework.Resource.LoadResourceStatus status, string errorMessage, object userData )
-        {
-            throw new GameFrameworkException( $"Load asset {assetName} faild!" );
-        }
+        private void LoadAssetFaildCallBack( string assetName, GameFramework.Resource.LoadResourceStatus status, string errorMessage, object userData ) => throw new GameFrameworkException( $"Load asset {assetName} faild!" );
+
+        private GameFramework.Resource.LoadAssetCallbacks _load_terrain_callBack = null;
     }
 
 }

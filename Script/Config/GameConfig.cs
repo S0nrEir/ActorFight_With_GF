@@ -113,6 +113,11 @@ namespace Aquila.Config
             /// 战斗地块根节点
             /// </summary>
             public static string TERRAIN_ROOT = "TerrainRoot";
+
+            /// <summary>
+            /// 地块节点
+            /// </summary>
+            public static string TERRAIN_BLOCK = "TerrainBlock";
         }
     }
 
