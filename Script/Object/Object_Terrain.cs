@@ -1,4 +1,5 @@
-﻿using GameFramework;
+﻿using Aquila.Config;
+using GameFramework;
 using GameFramework.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,17 @@ namespace Aquila.ObjectPool
     /// 地块对象
     /// </summary>
     public class Object_Terrain : Aquila_Object_Base
-    { 
+    {
+        /// <summary>
+        /// 生成一个object
+        /// </summary>
+        public static Object_Terrain Gen( GameObject go )
+        {
+            var obj = ReferencePool.Acquire<Object_Terrain>();
+            obj.Initialize( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, go );
+            return obj;
+        }
+
         /// <summary>
         /// 获取对象
         /// </summary>

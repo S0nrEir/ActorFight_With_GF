@@ -8,10 +8,19 @@ namespace Aquila.Config
     /// </summary>
     public class GameConfig
     {
-
+        /// <summary>
+        /// 对象池配置相关
+        /// </summary>
+        public static class ObjectPool
+        {
+            /// <summary>
+            /// 地块对象池名称
+            /// </summary>
+            public const string OBJECT_POOL_TERRAIN_NAME = "Object_Terrain";
+        }
 
         /// <summary>
-        /// 实体相关
+        /// 实体配置相关
         /// </summary>
         public static class Entity
         {
@@ -52,7 +61,7 @@ namespace Aquila.Config
         }
 
         /// <summary>
-        /// 层级相关
+        /// 层级配置相关
         /// </summary>
         public static class Layer
         {

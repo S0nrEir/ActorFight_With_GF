@@ -31,7 +31,7 @@ namespace Aquila.Module
         /// <summary>
         /// 所有地块的根节点
         /// </summary>
-        private GameObject Root_GO
+        public GameObject Root_GO
         {
             get
             {
@@ -46,6 +46,7 @@ namespace Aquila.Module
                         _root_go.transform.position = Vector3.zero;
                         _root_go.transform.localScale = Vector3.one;
                         _root_go.transform.eulerAngles = Vector3.zero;
+                        Object.DontDestroyOnLoad( _root_go );
                     }
                 }
                 return _root_go;
