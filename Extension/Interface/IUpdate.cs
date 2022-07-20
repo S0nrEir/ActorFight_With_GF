@@ -2,6 +2,6 @@
 {
     public interface IUpdate
     {
-        void OnUpdate();
+        void OnUpdate(float deltaTime);
     }
 }
