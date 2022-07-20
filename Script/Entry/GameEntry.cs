@@ -1,4 +1,5 @@
-﻿using Aquila.Module;
+﻿using Aquila.Config;
+using Aquila.Module;
 using UGFExtensions.Await;
 using UnityEngine;
 
@@ -17,6 +18,9 @@ namespace Aquila
             InitCustomComponents();
             //扩展初始化
             AwaitableExtensions.SubscribeEvent();
+            //初始化相机
+            GlobalVar.GetMainCamera();
+            
             DontDestroyOnLoad( this );
         }
 

@@ -1,8 +1,8 @@
-﻿using Aquila.Fight;
+﻿using Aquila.Config;
+using Aquila.Fight;
 using Aquila.Fight.Addon;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila
 {
@@ -13,6 +13,38 @@ namespace Aquila
         /// </summary>
         public static class Fight
         {
+            /// <summary>
+            /// 获取一个xz坐标的坐标key，失败返回-1
+            /// </summary>
+            /// <param name="x">x坐标</param>
+            /// <param name="z">z坐标</param>
+            /// <returns>失败返回-1</returns>
+            public static int Coord2UniqueKey( int x, int z )
+            {
+                var result = x * GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION + z;
+                if ( result > GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_RANGE )
+                {
+                    Log.Error( $"terrain range wrong!,value is :{result}" );
+                    return -1;
+                }
+                return result;
+            }
+
+            /// <summary>
+            /// 获取一个坐标key对应的xz坐标值，失败返回vector2Int.zero
+            /// </summary>
+            /// <param name="key">key</param>
+            /// <returns>失败返回-1</returns>
+            public static Vector2Int UniqueKey2Coord( int key )
+            {
+                if ( key <= 0 )
+                    return Vector2Int.zero;
+
+                var x = key / GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION;
+                var y = key - ( x * GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION );
+                return new Vector2Int( x, y );
+            }
+
             /// <summary>
             /// 获取指定layer的y值，拿不到返回默认值
             /// </summary>
@@ -48,9 +80,9 @@ namespace Aquila
                     effectPoint = Tools.AddChild( actor.CachedTransform );
                     effectPoint.gameObject.name = effectEntityData._effectPointName;
 
-                    effectPoint.localScale       = UnityEngine.Vector3.one;
+                    effectPoint.localScale = UnityEngine.Vector3.one;
                     effectPoint.localEulerAngles = UnityEngine.Vector3.zero;
-                    effectPoint.localPosition    = UnityEngine.Vector3.zero;
+                    effectPoint.localPosition = UnityEngine.Vector3.zero;
                     effectPoint.SetAsFirstSibling();
                 }
 
@@ -58,7 +90,6 @@ namespace Aquila
                 effectPoint.SetParent( actor.CachedTransform );
 
                 effect.CachedTransform.SetParent( effectPoint );
-                effect.CachedTransform.localPosition = UnityEngine.Vector3.zero;
                 effect.CachedTransform.localScale = UnityEngine.Vector3.one;
 
                 effect.CachedTransform.localPosition = effectEntityData._localPositionOffset;

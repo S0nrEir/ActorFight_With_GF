@@ -1,7 +1,5 @@
 ﻿using GameFramework;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Aquila.Config
@@ -24,22 +22,23 @@ namespace Aquila.Config
         /// <summary>
         /// 场景主相机
         /// </summary>
-        public static Camera Main_Camera
-        {
-            get
-            {
-                if ( _main_camera == null )
-                {
-                    var cameraGO = GameObject.FindGameObjectWithTag( "MainCamera" );
-                    if ( cameraGO == null )
-                        throw new GameFrameworkException( "faild to find MainCamera GameObject!" );
+        public static Camera Main_Camera => _main_camera ?? GetMainCamera();
 
-                    _main_camera = cameraGO.GetComponent<Camera>();
-                    if(_main_camera == null)
-                        throw new GameFrameworkException( "faild to get MainCamera!" );
-                }
-                return _main_camera;
-            }
+        /// <summary>
+        /// 获取主相机
+        /// </summary>
+        public static Camera GetMainCamera()
+        {
+            var cameraGO = GameObject.FindGameObjectWithTag( "MainCamera" );
+            if ( cameraGO == null )
+                throw new GameFrameworkException( "faild to find MainCamera GameObject!" );
+
+            _main_camera = cameraGO.GetComponent<Camera>();
+            if ( _main_camera == null )
+                throw new GameFrameworkException( "faild to get MainCamera!" );
+
+            UnityEngine.Object.DontDestroyOnLoad( cameraGO );
+            return _main_camera;
         }
 
         /// <summary>

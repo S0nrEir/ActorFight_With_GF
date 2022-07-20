@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityGameFramework.Runtime;
+using UnityEngine;
 
 namespace Aquila.Module
 {
@@ -14,7 +14,7 @@ namespace Aquila.Module
         /// <returns></returns>
         public static T GetModule<T>() where T : GameFrameworkModuleBase, new()
         {
-            return (T)GetModule(typeof(T));
+            return ( T ) GetModule( typeof( T ) );
         }
 
         /// <summary>
@@ -22,8 +22,8 @@ namespace Aquila.Module
         /// </summary>
         public static void Update()
         {
-			for (int i = 0; i < _allUpdates.Count; i++)
-				_allUpdates[i].OnUpdate();
+            for ( int i = 0; i < _allUpdates.Count; i++ )
+                _allUpdates[i].OnUpdate( Time.deltaTime );
         }
 
         /// <summary>
@@ -31,16 +31,16 @@ namespace Aquila.Module
         /// </summary>
         public static void FixedUpdate()
         {
-            foreach (var item in _allFixedUpdates)
+            foreach ( var item in _allFixedUpdates )
                 item.OnFixedUpdate();
         }
 
         /// <summary>
         /// 关闭游戏的所有模块
         /// </summary>
-        public static void ShutDown ()
+        public static void ShutDown()
         {
-            foreach (var item in _allGameModules.Values)
+            foreach ( var item in _allGameModules.Values )
                 item.OnClose();
 
             _allUpdates.Clear();
@@ -51,14 +51,14 @@ namespace Aquila.Module
         /// <summary>
         /// 关闭指定类型的GameModule
         /// </summary>
-        public static void ShutDown (Type[] moduleTypes)
+        public static void ShutDown( Type[] moduleTypes )
         {
             var hashCode = 0;
             GameFrameworkModuleBase module = null;
-            foreach (var type in moduleTypes)
+            foreach ( var type in moduleTypes )
             {
                 hashCode = type.GetHashCode();
-                if (_allGameModules.TryGetValue( hashCode, out module ))
+                if ( _allGameModules.TryGetValue( hashCode, out module ) )
                     module.OnClose();
             }
         }
@@ -69,32 +69,32 @@ namespace Aquila.Module
         #region 内部函数
 
         //获取模块
-        public static GameFrameworkModuleBase GetModule(Type type)
+        public static GameFrameworkModuleBase GetModule( Type type )
         {
             int hashCode = type.GetHashCode();
             GameFrameworkModuleBase module = null;
-            if (_allGameModules.TryGetValue(hashCode, out module))
+            if ( _allGameModules.TryGetValue( hashCode, out module ) )
                 return module;
 
-            module = CreateModule(type);
+            module = CreateModule( type );
             module.EnsureInit();
             return module;
         }
 
         //创建模块
-        private static GameFrameworkModuleBase CreateModule(Type type)
+        private static GameFrameworkModuleBase CreateModule( Type type )
         {
             int hashCode = type.GetHashCode();
-            GameFrameworkModuleBase module = ( GameFrameworkModuleBase ) Activator.CreateInstance(type);
+            GameFrameworkModuleBase module = ( GameFrameworkModuleBase ) Activator.CreateInstance( type );
             _allGameModules[hashCode] = module;
             //整理含IUpdate的模块
             var update = module as IUpdate;
-            if (update != null)
-                _allUpdates.Add(update);
+            if ( update != null )
+                _allUpdates.Add( update );
             //整理含IFixed的模块
             var fixedUpdate = module as IFixedUpdate;
-            if (fixedUpdate != null)
-                _allFixedUpdates.Add(fixedUpdate);
+            if ( fixedUpdate != null )
+                _allFixedUpdates.Add( fixedUpdate );
             return module;
         }
 
