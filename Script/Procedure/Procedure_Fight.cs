@@ -16,19 +16,20 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
+            _terrain_module = GameFrameworkModule.GetModule<Module_Terrain>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            GameFrameworkModule.GetModule<Module_Terrain>().GenerateFightSceneTerrain( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
+            _terrain_module.Start( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
             MainCameraInitializeSetting();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             base.OnLeave( procedureOwner, isShutdown );
-            GameFrameworkModule.GetModule<Module_Terrain>().RemoveAll();
+            _terrain_module.End();
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace Aquila.Procedure
         /// 场景主相机
         /// </summary>
         private Camera _main_camera = null;
+        private Module_Terrain _terrain_module = null;
     }
 
 }

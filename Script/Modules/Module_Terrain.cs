@@ -15,11 +15,28 @@ namespace Aquila.Module
         //#todo所有的地块获取，都要从对象池里拿TerrainObject
 
         /// <summary>
+        /// 地块模块战斗相关初始化和启动
+        /// </summary>
+        public void Start( int x_width, int z_width )
+        {
+            GenerateFightSceneTerrain( x_width, z_width );
+        }
+
+        /// <summary>
+        /// 地块模块关闭
+        /// </summary>
+        public void End()
+        {
+            RemoveAll();
+        }
+
+        //固定地块加载用嵌入实现
+        /// <summary>
         /// 生成战斗地块场景
         /// </summary>
         /// <param name="x_width">x方向上的长度</param>
         /// <param name="y_width">z方向上的长度</param>
-        public void GenerateFightSceneTerrain( int x_width, int z_width )
+        private void GenerateFightSceneTerrain( int x_width, int z_width )
         {
             if ( _generate_flag )
             {
@@ -61,7 +78,7 @@ namespace Aquila.Module
         /// <summary>
         /// 移除所有地块
         /// </summary>
-        public void RemoveAll()
+        private void RemoveAll()
         {
             if ( _terrain_cache_dic is null || _terrain_cache_dic.Count == 0 )
                 return;
