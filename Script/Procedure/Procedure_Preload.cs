@@ -5,6 +5,7 @@ using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -13,25 +14,52 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_Prelaod : ProcedureBase
     {
+        /// <summary>
+        /// 当任意模块资源预加载完成
+        /// </summary>
+        private void OnPreLoadFinished()
+        {
+            if ( _preload_flags != _preload_state_finish )
+                return;
+
+            //#todo_switchToNextProcedure
+            Log.Info( "preload finished!", LogColorTypeEnum.White );
+            System.GC.Collect();
+            ChangeState<Procedure_Fight>( _procedure_owner );
+        }
+
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
             _load_terrain_callBack = new GameFramework.Resource.LoadAssetCallbacks( LoadTerrainSuccCallBack, LoadAssetFaildCallBack );
+            _procedure_owner = procedureOwner;
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            //加载数据表
-            if ( !GameEntry.DataTable.LoadDataTable() )
-                throw new GameFrameworkException( "load data table faild!" );
+            _preload_flags = _preload_state_init;
 
+            PreLoadTables();
             PreLoadObejct();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             base.OnLeave( procedureOwner, isShutdown );
+        }
+
+        /// <summary>
+        /// 预加载数据表
+        /// </summary>
+        private void PreLoadTables()
+        {
+            //加载数据表
+            if ( !GameEntry.DataTable.LoadDataTable() )
+                throw new GameFrameworkException( "load data table faild!" );
+
+            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
+            OnPreLoadFinished();
         }
 
         /// <summary>
@@ -57,7 +85,7 @@ namespace Aquila.Procedure
                 throw new GameFrameworkException( "terrain game object is null!" );
 
             //默认的地块创建数量
-            var default_create_count = 40;
+            var default_create_count = GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH * GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH + 10;
             //默认创建四十个地块
             var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
 
@@ -82,6 +110,8 @@ namespace Aquila.Procedure
                 pool.Unspawn( obj.Target );
 
             obj_arr = null;
+            _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit, false );
+            OnPreLoadFinished();
         }
 
         /// <summary>
@@ -89,7 +119,40 @@ namespace Aquila.Procedure
         /// </summary>
         private void LoadAssetFaildCallBack( string assetName, GameFramework.Resource.LoadResourceStatus status, string errorMessage, object userData ) => throw new GameFrameworkException( $"Load asset {assetName} faild!" );
 
+        /// <summary>
+        /// 地块资源加载回调
+        /// </summary>
         private GameFramework.Resource.LoadAssetCallbacks _load_terrain_callBack = null;
+
+        /// <summary>
+        /// 各个资源模块的加载标记
+        /// </summary>
+        private int _preload_flags = 0;
+
+        /// <summary>
+        /// 数据表加载标记位
+        /// </summary>
+        private const ushort _table_load_flag_bit = 0;
+
+        /// <summary>
+        /// 地块加载标记位
+        /// </summary>
+        private const ushort _terrain_load_flag_bit = 1;
+
+        /// <summary>
+        /// 加载完成状态
+        /// </summary>
+        private const int _preload_state_finish = 0;
+
+        /// <summary>
+        /// 预加载初始化标记
+        /// </summary>
+        private const int _preload_state_init = 0b_0000_0000_0011;
+
+        /// <summary>
+        /// 状态机拥有者
+        /// </summary>
+        private IFsm<IProcedureManager> _procedure_owner = null;
     }
 
 }
