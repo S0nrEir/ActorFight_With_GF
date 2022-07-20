@@ -1,8 +1,5 @@
 ﻿using Aquila.Config;
 using GameFramework;
-using GameFramework.ObjectPool;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Aquila.ObjectPool
@@ -12,6 +9,54 @@ namespace Aquila.ObjectPool
     /// </summary>
     public class Object_Terrain : Aquila_Object_Base
     {
+
+
+        /// <summary>
+        /// 设置父节点
+        /// </summary>
+        public void SetParent( Transform parent )
+        {
+            Tools.SetParent( Target_GO.transform, parent );
+        }
+
+        /// <summary>
+        /// 设置地块的世界位置
+        /// </summary>
+        public void SetPosition( float x, float z )
+        {
+            Target_GO.transform.localPosition = new Vector3( x, 0, z );
+        }
+
+        /// <summary>
+        /// 设置坐标
+        /// </summary>
+        /// <param name="x">x坐标</param>
+        /// <param name="y">y坐标</param>
+        public void SetCoordinate( int x, int y )
+        {
+            Coordinate = new Vector3Int( x, 0, y );
+            UniqueKey = Tools.Fight.Coord2UniqueKey( Coordinate.x, Coordinate.y );
+            Target_GO.name = $"{x}_{y}";
+        }
+
+        /// <summary>
+        /// 设置地块高度，默认0
+        /// </summary>
+        public void SetHeight( int height )
+        {
+            Coordinate.Set( Coordinate.x, height, Coordinate.z );
+        }
+
+        /// <summary>
+        /// 坐标位置，y=地块高度
+        /// </summary>
+        public Vector3Int Coordinate { get; private set; } = Vector3Int.zero;
+
+        /// <summary>
+        /// 坐标key
+        /// </summary>
+        public int UniqueKey { get; private set; } = 0;
+
         /// <summary>
         /// 生成一个object
         /// </summary>
@@ -22,6 +67,7 @@ namespace Aquila.ObjectPool
             return obj;
         }
 
+        #region
         /// <summary>
         /// 获取对象
         /// </summary>
@@ -35,7 +81,7 @@ namespace Aquila.ObjectPool
                 if ( child == null )
                     throw new GameFrameworkException( "faild to get Mesh child!" );
 
-                if(!Tools.TryAddComponent<MeshRenderer>( child.gameObject ,out _mesh_render))
+                if ( !Tools.TryAddComponent<MeshRenderer>( child.gameObject, out _mesh_render ) )
                     throw new GameFrameworkException( "faild to add Mesh child!" );
             }
         }
@@ -56,7 +102,7 @@ namespace Aquila.ObjectPool
             _mesh_render = null;
             base.Release( isShutdown );
         }
-
+        #endregion
 
         /// <summary>
         /// 缓存网格渲染器

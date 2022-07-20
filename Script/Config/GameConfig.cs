@@ -89,18 +89,37 @@ namespace Aquila.Config
             /// <summary>
             /// 单个地块的默认偏移距离
             /// </summary>
-            public float TERRAIN_BLOCK_OFFSET_DISTANCE = .9f;
+            public const float TERRAIN_BLOCK_OFFSET_DISTANCE = .9f;
 
             /// <summary>
             /// 主相机默认旋转角度
             /// </summary>
-            public static Vector3 MAIN_CAMERA_DEFAULT_ROTATION { get; } = new Vector3( 36f, 45f, 0 );
+            public static Vector3 MAIN_CAMERA_DEFAULT_EULER { get; } = new Vector3( 36f, 45f, 0 );
 
             /// <summary>
             /// 主相机默认世界空间坐标位置
             /// </summary>
             public static Vector3 MAIN_CAMERA_DEFAULT_POSITION { get; } = new Vector3( -2.75f,5.95f,-3.91f );
 
+            /// <summary>
+            /// 战斗场景地块默认x方向长度
+            /// </summary>
+            public const int FIGHT_SCENE_DEFAULT_X_WIDTH = 10;
+
+            /// <summary>
+            /// 战斗场景地块默认z方向长度
+            /// </summary>
+            public const int FIGHT_SCENE_DEFAULT_Y_WIDTH = 10;
+
+            /// <summary>
+            /// 场景地块两位坐标精度总范围
+            /// </summary>
+            public const int FIGHT_SCENE_TERRAIN_COORDINATE_RANGE = 9999;
+
+            /// <summary>
+            /// 场景地块两位坐标精度系数
+            /// </summary>
+            public const int FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION = 100;
         }
 
 
