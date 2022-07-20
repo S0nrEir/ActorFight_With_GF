@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Aquila
 {
@@ -7,12 +8,12 @@ namespace Aquila
     /// </summary>
     public static partial class Tools
     {
-        /// <summary>
-        /// 返回一个指定类型的对象池对象
-        /// </summary>
-        public static T GenObject<T>() where T : GameFramework.ObjectPool.ObjectBase
+        public static void SetParent( Transform child, Transform parent )
         {
-            return null;
+            if ( child.parent == parent )
+                return;
+
+            child.SetParent( parent );
         }
 
         /// <summary>
@@ -52,13 +53,13 @@ namespace Aquila
             if ( parent == null )
                 return null;
 
-            var go = new GameObject();
-            Transform t = go.transform;
-            t.parent = parent.transform;
+            var go          = new GameObject();
+            Transform t     = go.transform;
+            t.parent        = parent.transform;
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
-            t.localScale = Vector3.one;
-            go.layer = parent.gameObject.layer;
+            t.localScale    = Vector3.one;
+            go.layer        = parent.gameObject.layer;
 
             return go.transform;
         }
@@ -136,8 +137,37 @@ namespace Aquila
             comp = go.AddComponent<T>();
             return true;
         }
+
+
+        /// <summary>
+        /// 返回Int数据中某一位是否为1
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
+        /// <returns>true表示该位为1，false表示该位为0</returns>
+        public static bool GetBitValue( int value, ushort index )
+        {
+            if ( index > 31 )
+                throw new ArgumentOutOfRangeException( "index" ); //索引出错
+
+            var val = 1 << index;
+            return ( value & val ) == val;
+        }
+
+        /// <summary>
+        /// 设定Int数据中某一位的值
+        /// </summary>
+        /// <param name="value">位设定前的值</param>
+        /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
+        /// <param name="bitValue">true设该位为1,false设为0</param>
+        /// <returns>返回位设定后的值</returns>
+        public static int SetBitValue( int value, ushort index, bool bitValue )
+        {
+            if ( index > 31 )
+                throw new ArgumentOutOfRangeException( "index" ); //索引出错
+
+            var val = 1 << index;
+            return bitValue ? ( value | val ) : ( value & ~val );
+        }
     }
-
-
-
 }
