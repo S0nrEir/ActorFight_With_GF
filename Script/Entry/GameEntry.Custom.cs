@@ -7,7 +7,7 @@ namespace Aquila
     /// </summary>
     public partial class GameEntry
     {
-        public static LuBanCompoent DataTable
+        public static Component_LuBan DataTable
         {
             get;
             private set;
@@ -16,7 +16,16 @@ namespace Aquila
         /// <summary>
         /// 计时器组件
         /// </summary>
-        public static TimerComponent Timer
+        public static Component_Timer Timer
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 脚本组件
+        /// </summary>
+        public static Component_Lua Lua
         {
             get;
             private set;
@@ -27,8 +36,9 @@ namespace Aquila
         /// </summary>
         private static void InitCustomComponents()
         {
-            Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<TimerComponent>();
-            DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<LuBanCompoent>();
+            Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
+            DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
+            Lua = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
         }
     }
 }
