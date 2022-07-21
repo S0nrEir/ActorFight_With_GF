@@ -17,7 +17,6 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            Log.Info( "Procedure--->OnEnter", LogColorTypeEnum.White );
             ChangeState<Procedure_Prelaod>( procedureOwner );
         }
 

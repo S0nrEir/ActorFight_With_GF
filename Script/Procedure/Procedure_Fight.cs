@@ -2,8 +2,6 @@
 using Aquila.Module;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Aquila.Procedure
@@ -24,6 +22,7 @@ namespace Aquila.Procedure
             base.OnEnter( procedureOwner );
             _terrain_module.Start( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
             MainCameraInitializeSetting();
+            GameEntry.Lua.LoadScript( @"SceneModifier/Modifier_01", "Modifier_01" );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
