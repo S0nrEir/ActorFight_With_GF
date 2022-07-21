@@ -10,7 +10,7 @@ namespace Aquila.Extension
     /// 一个简易的计时器
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class TimerComponent : GameFrameworkComponent
+    public sealed class Component_Timer : GameFrameworkComponent
     {
         public Timer StartTick( float n, Action<float> callBack )
         {

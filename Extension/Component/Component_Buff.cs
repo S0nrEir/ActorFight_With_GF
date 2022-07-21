@@ -7,7 +7,7 @@ namespace Aquila.Fight.Buff
     /// <summary>
     /// buff组件
     /// </summary>
-    public class BuffComponent : GameFrameworkComponent
+    public class Component_Buff : GameFrameworkComponent
     {
         protected override void Awake()
         {

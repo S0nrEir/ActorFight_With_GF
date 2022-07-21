@@ -9,7 +9,7 @@ namespace Aquila.Extension
     /// <summary>
     /// LuBan扩展组件
     /// </summary>
-    public class LuBanCompoent : GameFrameworkComponent
+    public class Component_LuBan : GameFrameworkComponent
     {
         /// <summary>
         /// 表数据
@@ -45,6 +45,7 @@ namespace Aquila.Extension
         {
             base.Awake();
             _bytesPath = $"{Application.dataPath}/Res/DataTables/";
+            LoadDataTable();
         }
 
 
