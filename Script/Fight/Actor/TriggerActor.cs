@@ -79,7 +79,7 @@ namespace Aquila.Fight.Actor
                 (float x, float z) wh
             )
         {
-            Setup( tag, actor_id );
+            Setup( tag );
             _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
         }
 

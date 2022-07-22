@@ -153,12 +153,11 @@ namespace Aquila.Fight.Actor
 
         public void Setup
             (
-                string tag,
-                int actor_id
+                string tag
             )
         {
             SetTag( tag );
-            SetActorID( actor_id );
+            //SetActorID( actor_id );
             Reset();
         }
 
@@ -167,7 +166,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SetActorID( int actor_id )
         {
-            ActorID = actor_id;
+            //ActorID = actor_id;
         }
 
         /// <summary>
@@ -322,7 +321,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// ActorID(ObjID)
         /// </summary>
-        public int ActorID { get; private set; } = -1;
+        public int ActorID => Entity.Id;
 
         /// <summary>
         /// 组件初始化标记

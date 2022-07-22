@@ -380,9 +380,8 @@ namespace XLua.CSObjectWrap
                 
                 {
                     string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _actor_id = LuaAPI.xlua_tointeger(L, 3);
                     
-                    gen_to_be_invoked.Setup( _tag, _actor_id );
+                    gen_to_be_invoked.Setup( _tag );
                     
                     
                     
