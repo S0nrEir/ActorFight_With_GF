@@ -9,7 +9,22 @@ namespace Aquila.ObjectPool
     /// </summary>
     public class Object_Terrain : Aquila_Object_Base
     {
+        public bool SetNameTest( string name )
+        {
+            if(string.IsNullOrEmpty(name))
+                return false;
 
+            Target_GO.name = name;
+            return true;
+        }
+
+        /// <summary>
+        /// 测试函数
+        /// </summary>
+        public void SetName( string name )
+        {
+            Target_GO.name = name;
+        }
 
         /// <summary>
         /// 设置父节点

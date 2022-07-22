@@ -35,12 +35,6 @@ namespace Aquila.Fight.Actor
 
         #region impl
 
-        public override void SetDataID ( int roleBaseID )
-        {
-            //#todo投射物先不走正常逻辑，配表还不完全
-            //base.SetDataID( roleBaseID );
-        }
-
         public void MoveTo ( float targetX, float targetZ )
         {
             _moveAddon.MoveTo( CachedTransform.position, _targetTransform.position, _elapsedSeconds );

@@ -16,7 +16,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 触发
         /// </summary>
-        public void Trigger( string assetPath,float duration )
+        public void Trigger( string assetPath, float duration )
         {
             _effectAddon.ShowEffectAsync
                 (
@@ -30,7 +30,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 取消
         /// </summary>
-        public void Leave ()
+        public void Leave()
         {
             _effectAddon.HideAll();
         }
@@ -38,7 +38,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 别的object进入trigger
         /// </summary>
-        private void ColliderTriggerHit ( int evnetID, object[] param )
+        private void ColliderTriggerHit( int evnetID, object[] param )
         {
             Log.Info( $"<color=white>TriggerActor---->ColliderTriggerHit<color=white>" );
         }
@@ -46,21 +46,21 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 特效时间到了
         /// </summary>
-        private void OnEffectTimsUp ( int eventID, object[] param )
+        private void OnEffectTimsUp( int eventID, object[] param )
         {
             Log.Info( $"<color=white>TriggerActor---->OnEffectTimsUp<color=white>" );
         }
 
         #region impl
-        public bool HitCorrectTarget ( object obj )
+        public bool HitCorrectTarget( object obj )
         {
             return true;
         }
-        
+
         /// <summary>
         /// 状态切换
         /// </summary>
-        public void SwitchTo ( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
+        public void SwitchTo( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
         {
             Log.Info( $"<color=white>TriggerActor--->SwitchTo,ActorID:{ActorID}<color>" );
         }
@@ -75,21 +75,17 @@ namespace Aquila.Fight.Actor
         public void Setup
             (
                 string tag,
-                int index,
-                int actorID,
-                ulong hostID,
-                int forceType,
-                int dataID,
-                (float x,float z) wh
-            ) 
+                int actor_id,
+                (float x, float z) wh
+            )
         {
-            Setup( tag, index, actorID, hostID, forceType, dataID );
+            Setup( tag );
             _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
         }
 
-        public void SetSize ( (float x, float z) wh )
+        public void SetSize( (float x, float z) wh )
         {
-            if (_triggerAddon != null)
+            if ( _triggerAddon != null )
                 return;
 
             _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
@@ -97,37 +93,37 @@ namespace Aquila.Fight.Actor
 
         public override ActorTypeEnum ActorType => ActorTypeEnum.Trigger;
 
-        protected override void OnShow ( object userData )
+        protected override void OnShow( object userData )
         {
             base.OnShow( userData );
         }
 
-        protected override void OnRecycle ()
+        protected override void OnRecycle()
         {
             base.OnRecycle();
         }
 
-        protected override void Register ()
+        protected override void Register()
         {
             base.Register();
             RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
             RegisterActorEvent( ActorEventEnum.EFFECT_TIMES_UP, OnEffectTimsUp );
         }
 
-        protected override void UnRegister ()
+        protected override void UnRegister()
         {
             base.UnRegister();
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
             UnRegisterActorEvent( ActorEventEnum.EFFECT_TIMES_UP );
         }
 
-        public override void Reset ()
+        public override void Reset()
         {
             base.Reset();
             _triggerAddon.SetTriggerLmt( int.MaxValue );
         }
 
-        protected override void InitAddons ()
+        protected override void InitAddons()
         {
             base.InitAddons();
             _triggerAddon = AddAddon<ColliderTriggerAddon>();
@@ -157,8 +153,8 @@ namespace Aquila.Fight.Actor
         public int index = -1;
         public (float x, float y) stepWH;
 
-        public TriggerActorEntityData ( int entityID ) : base ( entityID,typeof ( TriggerActor ).GetHashCode() )
-        { 
+        public TriggerActorEntityData( int entityID ) : base( entityID, typeof( TriggerActor ).GetHashCode() )
+        {
         }
     }
 

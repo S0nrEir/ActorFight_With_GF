@@ -1,0 +1,8 @@
+{
+    "Lua.diagnostics.globals": [
+        "CS",
+        "on_start_lua",
+        "on_timer_tick_lua",
+        "on_finish_lua"
+    ]
+}

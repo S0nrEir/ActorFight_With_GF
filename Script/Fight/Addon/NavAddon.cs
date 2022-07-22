@@ -138,7 +138,7 @@ namespace Aquila.Fight.Addon
             _agent.radius = 0.1f;
             _agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             if ( Actor.TryGetAddon<DataAddon>( out var dataAddon ) )
-                _agent.speed = dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
+                _agent.speed = dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
             else
                 _agent.speed = 1f;
         }
@@ -166,7 +166,7 @@ namespace Aquila.Fight.Addon
                 _agent.speed = 1f;
             else
             {
-                _agent.speed = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) / 1000f;
+                _agent.speed = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
             }
         }
 

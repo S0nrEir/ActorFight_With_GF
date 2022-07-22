@@ -1,17 +1,26 @@
 ﻿namespace Aquila.Module
 {
     /// <summary>
-    /// 战斗模块
+    /// 战斗模块，管理战斗的主要流程，规则
     /// </summary>
     public class Module_Fight : GameFrameworkModuleBase, IUpdate
     {
         /// <summary>
-        /// 开始
+        /// 开始战斗
         /// </summary>
         public void Start()
         {
             _fight_flag = true;
             _actor_module = GameFrameworkModule.GetModule<Module_Actor>();
+        }
+
+        /// <summary>
+        /// 结束战斗
+        /// </summary>
+        public void End()
+        {
+            _actor_module = null;
+            _fight_flag = false;
         }
 
         public override void OnClose()
@@ -25,7 +34,6 @@
             _fight_flag = false;
         }
 
-
         /// <summary>
         /// 刷帧处理选定逻辑
         /// </summary>
@@ -33,8 +41,6 @@
         {
 
         }
-
-
 
         /// <summary>
         /// actor模块
