@@ -1,4 +1,5 @@
-﻿using GameFramework.Resource;
+﻿using Aquila.Config;
+using GameFramework.Resource;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,8 +62,17 @@ namespace Aquila.Extension
                 return null;
             }
 
-            //#todo
-            return _lua_env.DoString( bytes, script_info.chunk_name, script_info._table );
+            var obj_arr = _lua_env.DoString( bytes, script_info.chunk_name, script_info._table );
+            if ( script_info._table != null )
+            {
+                var table = script_info._table;
+                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_START,  out _lua_on_start );
+                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_UPDATE, out _lua_on_update );
+                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_TICK,   out _lua_on_timer_tick );
+                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_FINISH, out _lua_on_finish );
+            }
+            _lua_on_start?.Invoke();
+            return obj_arr;
         }
 
         /// <summary>
@@ -78,13 +88,11 @@ namespace Aquila.Extension
             }
 
             _lua_env = new LuaEnv();
-            _lua_env.AddLoader(ScriptLoader);
+            _lua_env.AddLoader( ScriptLoader );
 
             _meta_table = _lua_env.NewTable();
             _meta_table.Set( "__index", _lua_env.Global );
         }
-
-
 
         /// <summary>
         /// 提供一个luaTable
@@ -105,9 +113,6 @@ namespace Aquila.Extension
 
             var table = _lua_env.NewTable();
             table.SetMetaTable( _meta_table );
-
-            
-
             return table;
         }
 
@@ -207,7 +212,7 @@ namespace Aquila.Extension
             Log.Error( errorMessage );
         }
 
-        private byte[] ScriptLoader(ref string script_name)
+        private byte[] ScriptLoader( ref string script_name )
         {
             if ( !_script_cache_dic.TryGetValue( script_name.GetHashCode(), out var bytes ) )
             {
@@ -266,12 +271,22 @@ namespace Aquila.Extension
         /// <summary>
         /// 刷帧
         /// </summary>
-        private Action<float, float> _lua_on_update = null;
+        private Action<float> _lua_on_update = null;
+
+        /// <summary>
+        /// 时间回调
+        /// </summary>
+        private Action<float> _lua_on_timer_tick = null;
 
         /// <summary>
         /// 脚本结束
         /// </summary>
         private Action _lua_on_finish = null;
+
+        /// <summary>
+        /// luaGC时长
+        /// </summary>
+        private const float LUA_INTERNAL_GC = 1f;
     }
 
     /// <summary>

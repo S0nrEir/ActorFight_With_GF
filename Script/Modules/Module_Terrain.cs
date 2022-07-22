@@ -28,6 +28,7 @@ namespace Aquila.Module
         public void End()
         {
             RemoveAll();
+            _generate_flag = false;
         }
 
         //固定地块加载用嵌入实现

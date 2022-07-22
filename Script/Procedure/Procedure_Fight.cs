@@ -27,8 +27,8 @@ namespace Aquila.Procedure
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
-            base.OnLeave( procedureOwner, isShutdown );
             _terrain_module.End();
+            base.OnLeave( procedureOwner, isShutdown );
         }
 
         /// <summary>
