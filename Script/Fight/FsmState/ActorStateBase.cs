@@ -295,7 +295,7 @@ namespace Aquila.Fight.FSM
                 _animAddon.PlayDieAnim();
 
             if ( _actor.TryGetAddon<DataAddon> ( out var dataAddon ) )
-                dataAddon.SetIntDataValue ( DataAddonFieldTypeEnum.INT_CURR_HP, 0 );
+                dataAddon.SetNumricValue ( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
 
             if ( _actor.TryGetAddon<InfoBoardAddon> ( out var sliderAddon ) )
             {

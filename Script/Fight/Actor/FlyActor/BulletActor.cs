@@ -38,9 +38,9 @@ namespace Aquila.Fight.Actor
         {
             var x = direction.x * DIRECTION_OFFSET;
             var z = direction.z * DIRECTION_OFFSET;
-            var speed = _dataAddon.GetIntDataValue( Addon.DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1000 );
+            var speed = _dataAddon.GetNumricValue( Addon.DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1000f );
             _moveAddon.SetSpeed( speed / ( float ) 1000 );
-            var radius = _dataAddon.GetFloatDataValue( Addon.DataAddonFieldTypeEnum.FLOAT_RADIUS, 1f );
+            var radius = _dataAddon.GetNumricValue( Addon.DataAddonFieldTypeEnum.NUM_RADIUS, 1f );
             _triggerAddon.SetSize( new Vector3( radius, radius, radius ) );
             _targetPos = CachedTransform.position + new Vector3( x, 0, z );
             _readyFlag = true;
