@@ -123,11 +123,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void DoAbilityAction()
         {
-            //if (!base.OnPreAbilityAction( stct.skillID ))
-            //    return;
-
-            //stct装箱了
-            //_FsmAddon?.SwitchTo( ActorStateTypeEnum.ABILITY_STATE, stct, null );
         }
 
         #endregion
