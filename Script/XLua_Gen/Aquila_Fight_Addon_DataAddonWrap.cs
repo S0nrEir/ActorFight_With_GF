@@ -21,17 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Fight.Addon.DataAddon);
-			Utils.BeginObjectRegister(type, L, translator, 0, 11, 1, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 9, 1, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnAdd", _m_OnAdd);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Dispose", _m_Dispose);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Valid", _m_Valid);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Init", _m_Init);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetIntDataValue", _m_GetIntDataValue);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetIntDataValue", _m_SetIntDataValue);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetFloatDataValue", _m_GetFloatDataValue);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetFloatDataValue", _m_SetFloatDataValue);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetNumricValue", _m_GetNumricValue);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetNumricValue", _m_SetNumricValue);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetObjectDataValue", _m_SetObjectDataValue);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetEnable", _m_SetEnable);
 			
@@ -223,121 +221,7 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_GetIntDataValue(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Aquila.Fight.Addon.DataAddon gen_to_be_invoked = (Aquila.Fight.Addon.DataAddon)translator.FastGetCSObj(L, 1);
-            
-            
-			    int gen_param_count = LuaAPI.lua_gettop(L);
-            
-                if(gen_param_count == 3&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
-                {
-                    int _type = LuaAPI.xlua_tointeger(L, 2);
-                    int _defaultValue = LuaAPI.xlua_tointeger(L, 3);
-                    
-                        var gen_ret = gen_to_be_invoked.GetIntDataValue( _type, _defaultValue );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                if(gen_param_count == 2&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)) 
-                {
-                    int _type = LuaAPI.xlua_tointeger(L, 2);
-                    
-                        var gen_ret = gen_to_be_invoked.GetIntDataValue( _type );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                if(gen_param_count == 3&& translator.Assignable<Aquila.Fight.Addon.DataAddonFieldTypeEnum>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
-                {
-                    Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
-                    int _defaultValue = LuaAPI.xlua_tointeger(L, 3);
-                    
-                        var gen_ret = gen_to_be_invoked.GetIntDataValue( _type, _defaultValue );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                if(gen_param_count == 2&& translator.Assignable<Aquila.Fight.Addon.DataAddonFieldTypeEnum>(L, 2)) 
-                {
-                    Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
-                    
-                        var gen_ret = gen_to_be_invoked.GetIntDataValue( _type );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.GetIntDataValue!");
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetIntDataValue(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Aquila.Fight.Addon.DataAddon gen_to_be_invoked = (Aquila.Fight.Addon.DataAddon)translator.FastGetCSObj(L, 1);
-            
-            
-			    int gen_param_count = LuaAPI.lua_gettop(L);
-            
-                if(gen_param_count == 3&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
-                {
-                    int _type = LuaAPI.xlua_tointeger(L, 2);
-                    int _value = LuaAPI.xlua_tointeger(L, 3);
-                    
-                        var gen_ret = gen_to_be_invoked.SetIntDataValue( _type, _value );
-                        LuaAPI.lua_pushboolean(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                if(gen_param_count == 3&& translator.Assignable<Aquila.Fight.Addon.DataAddonFieldTypeEnum>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
-                {
-                    Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
-                    int _value = LuaAPI.xlua_tointeger(L, 3);
-                    
-                        var gen_ret = gen_to_be_invoked.SetIntDataValue( _type, _value );
-                        LuaAPI.lua_pushboolean(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.SetIntDataValue!");
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_GetFloatDataValue(RealStatePtr L)
+        static int _m_GetNumricValue(RealStatePtr L)
         {
 		    try {
             
@@ -354,7 +238,7 @@ namespace XLua.CSObjectWrap
                     int _type = LuaAPI.xlua_tointeger(L, 2);
                     float _defaultValue = (float)LuaAPI.lua_tonumber(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.GetFloatDataValue( _type, _defaultValue );
+                        var gen_ret = gen_to_be_invoked.GetNumricValue( _type, _defaultValue );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -365,7 +249,7 @@ namespace XLua.CSObjectWrap
                 {
                     int _type = LuaAPI.xlua_tointeger(L, 2);
                     
-                        var gen_ret = gen_to_be_invoked.GetFloatDataValue( _type );
+                        var gen_ret = gen_to_be_invoked.GetNumricValue( _type );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -377,7 +261,7 @@ namespace XLua.CSObjectWrap
                     Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
                     float _defaultValue = (float)LuaAPI.lua_tonumber(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.GetFloatDataValue( _type, _defaultValue );
+                        var gen_ret = gen_to_be_invoked.GetNumricValue( _type, _defaultValue );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -388,7 +272,7 @@ namespace XLua.CSObjectWrap
                 {
                     Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
                     
-                        var gen_ret = gen_to_be_invoked.GetFloatDataValue( _type );
+                        var gen_ret = gen_to_be_invoked.GetNumricValue( _type );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -400,12 +284,12 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.GetFloatDataValue!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.GetNumricValue!");
             
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetFloatDataValue(RealStatePtr L)
+        static int _m_SetNumricValue(RealStatePtr L)
         {
 		    try {
             
@@ -422,7 +306,7 @@ namespace XLua.CSObjectWrap
                     int _type = LuaAPI.xlua_tointeger(L, 2);
                     float _value = (float)LuaAPI.lua_tonumber(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.SetFloatDataValue( _type, _value );
+                        var gen_ret = gen_to_be_invoked.SetNumricValue( _type, _value );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -434,7 +318,7 @@ namespace XLua.CSObjectWrap
                     Aquila.Fight.Addon.DataAddonFieldTypeEnum _type;translator.Get(L, 2, out _type);
                     float _value = (float)LuaAPI.lua_tonumber(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.SetFloatDataValue( _type, _value );
+                        var gen_ret = gen_to_be_invoked.SetNumricValue( _type, _value );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -446,7 +330,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.SetFloatDataValue!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Addon.DataAddon.SetNumricValue!");
             
         }
         

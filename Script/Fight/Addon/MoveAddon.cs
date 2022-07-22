@@ -35,10 +35,7 @@ namespace Aquila.Fight.Addon
             _pathList = pathArr;
             if (Actor.TryGetAddon<DataAddon>( out var addon ))
             {
-                //_speed = addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 );
-                SetSpeed( addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 ) );
-                //_speed /= 1000f;
-                //_speed = meta is null ? 1f : meta.MoveSpeed;
+                SetSpeed( addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1 ) );
             }
         }
 
@@ -51,7 +48,7 @@ namespace Aquila.Fight.Addon
             _pathList = pathArr;
             if (Actor.TryGetAddon<DataAddon>( out var addon ))
             {
-                _speed = (float)addon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1 );
+                _speed = (float)addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f );
             }
             _pathIndex = 0;
         }
@@ -96,38 +93,6 @@ namespace Aquila.Fight.Addon
             }
 
             Actor.SetWorldPosition( actorPos + ( nextPos - actorPos ).normalized * _speed * elapsedSeconds );
-
-            #region nouse
-            //if (_pathList.Count == 0)
-            //    return;
-
-            //if (IsReachedFinalPoint())
-            //{
-            //    Stop();
-            //    return;
-            //}
-
-            //var currPos = Actor.CachedTransform.position;
-            //Vector3 nextPos = Vector3.zero;
-            //nextPos.x = _pathList[_pathIndex].x;
-            //nextPos.z = _pathList[_pathIndex].y;
-            //nextPos.y = Utils.FightScene.TerrainPositionY( nextPos.x, nextPos.z, 0f );
-
-            //Rotate( _pathList[_pathIndex] );
-            //var dis = Vector3.Distance( currPos, nextPos );
-            //if (dis <= 0.1f)
-            //{
-            //    SetToNextPathPoint( true );
-            //    Actor.SetWorldPosition( nextPos );
-            //    return;
-            //}
-
-            //_cachedTargetPos.x = _pathList[_pathIndex].x;
-            //_cachedTargetPos.z = _pathList[_pathIndex].y;
-            //_cachedTargetPos.y = Utils.FightScene.TerrainPositionY( _cachedTargetPos.x, _cachedTargetPos.z, 0f );
-
-            //Actor.SetWorldPosition( currPos + ( _cachedTargetPos - currPos ).normalized * _speed * elapsedSeconds );
-            #endregion
         }
 
         public void Next ( float elapsedSeconds )

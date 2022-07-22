@@ -66,10 +66,10 @@ namespace Aquila.Fight.Actor
 
         public void TakeDamage( int dmg )
         {
-            var currHp = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, 0 );
+            var currHp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
             currHp -= dmg;
             //写入当前hp
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, currHp );
+            _dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, currHp );
             if ( currHp <= 0 )
             {
                 SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
@@ -138,11 +138,11 @@ namespace Aquila.Fight.Actor
         /// <summary>y
         /// 扣血
         /// </summary>
-        public int Minus( int dmg )
+        public float Minus( int dmg )
         {
-            var hp = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP );
+            var hp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP);
             hp -= dmg;
-            _dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, hp );
+            _dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, hp );
             return hp;
         }
 
@@ -218,37 +218,10 @@ namespace Aquila.Fight.Actor
         public override void Reset()
         {
             base.Reset();
-
-            //_HPAddon.AddType( ObjectPoolItemTypeEnum.HEAD_INFO );
-            //_HPAddon.AddType( ObjectPoolItemTypeEnum.HP_BAR );
         }
 
         protected override void ResetData()
         {
-            //if (_dataAddon is null)
-            //    return;
-
-            //var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE );
-
-            //if (meta == null)
-            //    Debug.LogError( "meta is null" );
-
-            //// 血量上限
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxHP );
-            ////当前血量
-            ////_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP, meta.MaxHP );
-            ////蓝上限
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP, meta.MaxMP );
-            ////当前蓝
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_MP, meta.MaxMP );
-            ////移速
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, meta.MoveSpeed );
-            ////攻
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_ACK, meta.Attack );
-            ////防
-            //_dataAddon.SetIntDataValue( DataAddonFieldTypeEnum.INT_DEF, meta.Defense );
-            ////警戒范围
-            //_dataAddon.SetFloatDataValue( DataAddonFieldTypeEnum.FLOAT_ALERT_RADIUS, meta.AlertRadius );
         }
 
         protected override void OnShow( object userData )
@@ -258,8 +231,6 @@ namespace Aquila.Fight.Actor
             RegisterActorEvent( ActorEventEnum.MOVE_TO_FINAL_POINT, OnArriveFinalPoint );
             RegisterActorEvent( ActorEventEnum.ABILITY_FINISH, OnAbilityFinish );
             RegisterActorEvent( ActorEventEnum.EFFECT_TIMES_UP, OnEffectTimsUp );
-
-            //_HPAddon.SetEnable( true );
         }
 
         protected override void OnHide( bool isShutdown, object userData )

@@ -13,31 +13,26 @@ namespace Aquila.Fight.Addon
 
         public override void OnAdd ()
         {
-            intDataDic = new Dictionary<int, int>();
-            floatDataDic = new Dictionary<int, float>();
-            _objectDataDic = new Dictionary<int, object>();
+            _numric_data_dic = new Dictionary<int, float>();
+            _object_data_dic = new Dictionary<int, object>();
         }
 
         public override void Dispose ()
         {
             base.Dispose();
 
-            intDataDic?.Clear();
-            intDataDic = null;
+            _numric_data_dic?.Clear();
+            _numric_data_dic = null;
 
-            floatDataDic?.Clear();
-            floatDataDic = null;
-
-            _objectDataDic?.Clear();
-            _objectDataDic = null;
+            _object_data_dic?.Clear();
+            _object_data_dic = null;
         }
 
         public override uint Valid ()
         {
             if (
-                intDataDic.Count == 0 ||
-                floatDataDic.Count == 0 ||
-                _objectDataDic.Count == 0 /*|| _stringDataDic.Count == 0*/
+                _numric_data_dic.Count == 0 ||
+                _object_data_dic.Count == 0 /*|| _stringDataDic.Count == 0*/
                 )
             {
                 return AddonValidErrorCodeEnum.ZERO_DATA_COUNT;
@@ -48,9 +43,6 @@ namespace Aquila.Fight.Addon
         public override void Reset ()
         {
             base.Reset();
-            //intDataDic?.Clear();
-            //floatDataDic?.Clear();
-            //_objectDataDic?.Clear();
         }
 
         public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
@@ -58,104 +50,54 @@ namespace Aquila.Fight.Addon
             base.Init( actor, targetGameObject, targetTransform );
         }
 
-        /// <summary>EN
-        /// 获取int型的字段，获取失败返回默认值
+        /// <summary>
+        /// 获取数字型的数据字段，获取失败返回默认值
         /// </summary>
-        public int GetIntDataValue ( int type ,int defaultValue = 0)
+        public float GetNumricValue ( int type, float defaultValue = 0)
         {
-            if (intDataDic is null || intDataDic.Count == 0)
+            if (_numric_data_dic is null || _numric_data_dic.Count == 0)
                 return defaultValue;
 
-            if (!intDataDic.TryGetValue( (int)type, out var value ))
-                return defaultValue;
-
-            return value;
-        }
-
-        /// <summary>
-        /// 获取int型的字段，获取失败返回默认值
-        /// </summary>
-        public int GetIntDataValue ( DataAddonFieldTypeEnum type, int defaultValue = 0)
-        {
-            return GetIntDataValue( (int)type, defaultValue );
-        }
-
-        /// <summary>
-        /// 设置int型的字段，如果是没有的字段则会自动添加，已有的覆盖
-        /// </summary>
-        public bool SetIntDataValue ( int type, int value )
-        {
-            if (intDataDic is null)
-                return false;
-
-            var intType = (int)type;
-            if (!intDataDic.ContainsKey( intType ))
-            {
-                intDataDic.Add( intType, value );
-                return true;
-            }
-
-            //已有的直接覆盖
-            intDataDic[intType] = value;
-            return true;
-        }
-
-        /// <summary>
-        /// 设置int型的字段，如果是没有的字段则会自动添加，已有的覆盖
-        /// </summary>
-        public bool SetIntDataValue ( DataAddonFieldTypeEnum type, int value )
-        {
-            return  SetIntDataValue( (int)type, value );
-        }
-
-        /// <summary>
-        /// 获取float型的字段，获取失败返回默认值
-        /// </summary>
-        public float GetFloatDataValue ( int type, float defaultValue = 0)
-        {
-            if (floatDataDic is null || floatDataDic.Count == 0)
-                return defaultValue;
-
-            if (!floatDataDic.TryGetValue( (int)type, out var value ))
+            if (!_numric_data_dic.TryGetValue( (int)type, out var value ))
                 return defaultValue;
 
             return value;
         }
 
         /// <summary>
-        /// 获取float型的字段，获取失败返回默认值
+        /// 获取数字型的数据字段，获取失败返回默认值
         /// </summary>
-        public float GetFloatDataValue ( DataAddonFieldTypeEnum type, float defaultValue = 0)
+        public float GetNumricValue ( DataAddonFieldTypeEnum type, float defaultValue = 0)
         {
-            return GetFloatDataValue( (int)type, defaultValue );
+            return GetNumricValue( (int)type, defaultValue );
         }
 
         /// <summary>
-        /// 设置float型的字段，如果是没有的字段则会自动添加，已有的覆盖
+        /// 设置数字型的数据字段，如果是没有的字段则会自动添加，已有的覆盖
         /// </summary>
-        public bool SetFloatDataValue ( int type, float value )
+        public bool SetNumricValue ( int type, float value )
         {
-            if (floatDataDic is null)
+            if (_numric_data_dic is null)
                 return false;
 
             var intType = (int)type;
-            if (!floatDataDic.ContainsKey( intType ))
+            if (!_numric_data_dic.ContainsKey( intType ))
             {
-                floatDataDic.Add( intType, value );
+                _numric_data_dic.Add( intType, value );
                 return true;
             }
 
             //已有的直接覆盖
-            floatDataDic[intType] = value;
+            _numric_data_dic[intType] = value;
             return true;
         }
 
         /// <summary>
         /// 设置float型的字段，如果是没有的字段则会自动添加，已有的覆盖
         /// </summary>
-        public bool SetFloatDataValue ( DataAddonFieldTypeEnum type, float value )
+        public bool SetNumricValue( DataAddonFieldTypeEnum type, float value )
         {
-            return SetFloatDataValue( (int)type, value );
+            return SetNumricValue( (int)type, value );
         }
 
         /// <summary>
@@ -163,18 +105,18 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SetObjectDataValue ( DataAddonFieldTypeEnum type, object objData )
         {
-            if (_objectDataDic is null)
+            if (_object_data_dic is null)
                 return false;
 
             var intType = (int)type;
-            if (!_objectDataDic.ContainsKey( intType ))
+            if (!_object_data_dic.ContainsKey( intType ))
             {
-                _objectDataDic.Add( intType, objData );
+                _object_data_dic.Add( intType, objData );
                 return true;
             }
 
             //已有的直接覆盖
-            _objectDataDic[intType] = objData;
+            _object_data_dic[intType] = objData;
             return true;
         }
 
@@ -183,10 +125,10 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public T GetObjectDataValue<T> ( DataAddonFieldTypeEnum type ) where T : class , new()
         {
-            if (_objectDataDic is null || _objectDataDic.Count == 0)
+            if (_object_data_dic is null || _object_data_dic.Count == 0)
                 return null;
 
-            if (!_objectDataDic.TryGetValue( (int)type, out var value ))
+            if (!_object_data_dic.TryGetValue( (int)type, out var value ))
                 return null;
 
             return value as T;
@@ -197,26 +139,15 @@ namespace Aquila.Fight.Addon
             _enable = enable;
         }
 
-
         /// <summary>
-        /// int型数据字段集合
+        /// 数字型字段数据集合
         /// </summary>
-        private Dictionary<int, int> intDataDic;
-
-        /// <summary>
-        /// float型字段数据集合
-        /// </summary>
-        private Dictionary<int, float> floatDataDic;
+        private Dictionary<int, float> _numric_data_dic;
 
         /// <summary>
         /// object数据字段集合
         /// </summary>
-        private Dictionary<int, object> _objectDataDic;
-
-        /// <summary>
-        /// string数据字段集合
-        /// </summary>
-        //private Dictionary<int, string> _stringDataDic;
+        private Dictionary<int, object> _object_data_dic;
     }
 
     /// <summary>
@@ -227,57 +158,57 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 血量上限
         /// </summary>
-        INT_MAX_HP = 1,
+        NUM_MAX_HP = 1,
 
         /// <summary>
         /// 当前血量
         /// </summary>
-        INT_CURR_HP,
+        NUM_CURR_HP,
 
         /// <summary>
         /// 当前血量
         /// </summary>
-        INT_CURR_MP,
+        NUM_CURR_MP,
 
         /// <summary>
         /// 当前血量
         /// </summary>
-        INT_MAX_MP,
+        NUM_MAX_MP,
 
         /// <summary>
         /// 移速
         /// </summary>
-        INT_MOVE_SPEED,
+        NUM_MOVE_SPEED,
 
         /// <summary>
         /// 攻
         /// </summary>
-        INT_ACK,
+        NUM_ACK,
 
         /// <summary>
         /// 防
         /// </summary>
-        INT_DEF,
+        NUM_DEF,
 
         /// <summary>
         /// 护盾
         /// </summary>
-        INT_SHIELD,
+        NUM_SHIELD,
 
         /// <summary>
         /// 表id
         /// </summary>
-        INT_META_ID,
+        NUM_META_ID,
 
         /// <summary>
         /// 警戒范围
         /// </summary>
-        FLOAT_ALERT_RADIUS,
+        NUM_ALERT_RADIUS,
 
         /// <summary>
         /// 伤害半径
         /// </summary>
-        FLOAT_RADIUS,
+        NUM_RADIUS,
 
         /// <summary>
         /// ROLEBase表数据

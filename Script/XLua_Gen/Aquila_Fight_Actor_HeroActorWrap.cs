@@ -267,7 +267,7 @@ namespace XLua.CSObjectWrap
                     int _dmg = LuaAPI.xlua_tointeger(L, 2);
                     
                         var gen_ret = gen_to_be_invoked.Minus( _dmg );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                        LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
                     
