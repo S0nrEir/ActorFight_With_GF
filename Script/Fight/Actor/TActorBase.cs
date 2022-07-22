@@ -98,12 +98,7 @@ namespace Aquila.Fight.Actor
         public void SetLayer()
         {
 
-        }   
-
-        /// <summary>
-        /// 设置ActorID
-        /// </summary>
-        public virtual void SetActorID( int id ) => ActorID = id;
+        }
 
 
         public void SetQuaternion( Quaternion rotationToSet )
@@ -152,17 +147,6 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 设置tag
-        /// </summary>
-        public void SetTag( string tag )
-        {
-            if ( tag.Equals( gameObject.tag ) )
-                return;
-
-            Tools.SetTag( tag, gameObject, true );
-        }
-
-        /// <summary>
         /// 设置hostID
         /// </summary>
         public void SetHostID( ulong hostID ) => HostID = hostID;
@@ -170,41 +154,31 @@ namespace Aquila.Fight.Actor
         public void Setup
             (
                 string tag,
-                int index,
-                int actorID,
-                ulong hostID,
-                int forceType,
-                int dataID
+                int actor_id
             )
         {
-            Setup( tag, index, actorID, hostID, forceType );
-            SetDataID( dataID );
+            SetTag( tag );
+            SetActorID( actor_id );
             Reset();
         }
 
         /// <summary>
-        /// 设置actor的基本信息
+        /// 设置actor的ID
         /// </summary>
-        public void Setup( string tag, int index, int actorID, ulong hostID, int forceType = -1 )
+        public void SetActorID( int actor_id )
         {
-
+            ActorID = actor_id;
         }
 
-        public void Setup( string tag, int index, int actorID, ulong hostID )
+        /// <summary>
+        /// 设置actor的Tag
+        /// </summary>
+        private void SetTag( string tag )
         {
+            if ( gameObject.tag.Equals( tag ) )
+                return;
 
-        }
-
-        public virtual void SetDataID( int roleBaseID )
-        {
-            //if ( _dataAddon is null )
-            //    return;
-
-            //var meta = TableManager.GetRoleBaseAttrByID( roleBaseID, 0 );
-            //if ( meta is null )
-            //    throw new GameFrameworkException( "meta is null" );
-
-            //_dataAddon.SetObjectDataValue( DataAddonFieldTypeEnum.OBJ_META_ROLEBASE, meta );
+            gameObject.tag = tag;
         }
 
         #endregion
@@ -323,36 +297,7 @@ namespace Aquila.Fight.Actor
                 addonToAdd.OnAdd();
                 return addonToAdd;
             }
-
-            //if ( addonToAdd != null )
-            //{
-            //    Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
-            //    return addonToAdd;
-            //}
-
-            //addonToAdd = new T();
-            //addonToAdd.Init( this, gameObject , CachedTransform );
-            //_addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
-
-            //addonToAdd.OnAdd();
-            //return addonToAdd;
         }
-
-        /// <summary>
-        /// 获取自身的addon，没有返回空
-        /// </summary>
-        //[Obsolete( "推荐使用TryGetAddon<T>" )]
-        //public T GetAddon<T>() where T : AddonBase
-        //{
-        //    if ( _addonDic is null )
-        //        _addonDic = new Dictionary<int, AddonBase>();
-
-        //    if ( _addonDic.Count == 0 )
-        //        return null;
-
-        //    _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon );
-        //    return addon as T;
-        //}
 
         /// <summary>
         /// 初始化自己的Addons

@@ -21,10 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Fight.Actor.ProjectileActor);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 2, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 2, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetTarget", _m_SetTarget);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetDataID", _m_SetDataID);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MoveTo", _m_MoveTo);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "HitCorrectTarget", _m_HitCorrectTarget);
@@ -95,34 +94,6 @@ namespace XLua.CSObjectWrap
                     int _targetID = LuaAPI.xlua_tointeger(L, 3);
                     
                     gen_to_be_invoked.SetTarget( _targetTransform, _targetID );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetDataID(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Aquila.Fight.Actor.ProjectileActor gen_to_be_invoked = (Aquila.Fight.Actor.ProjectileActor)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    int _roleBaseID = LuaAPI.xlua_tointeger(L, 2);
-                    
-                    gen_to_be_invoked.SetDataID( _roleBaseID );
                     
                     
                     

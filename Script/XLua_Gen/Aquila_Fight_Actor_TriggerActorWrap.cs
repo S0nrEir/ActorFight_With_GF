@@ -208,14 +208,10 @@ namespace XLua.CSObjectWrap
                 
                 {
                     string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _index = LuaAPI.xlua_tointeger(L, 3);
-                    int _actorID = LuaAPI.xlua_tointeger(L, 4);
-                    ulong _hostID = LuaAPI.lua_touint64(L, 5);
-                    int _forceType = LuaAPI.xlua_tointeger(L, 6);
-                    int _dataID = LuaAPI.xlua_tointeger(L, 7);
-                    System.ValueTuple<float, float> _wh;translator.Get(L, 8, out _wh);
+                    int _actor_id = LuaAPI.xlua_tointeger(L, 3);
+                    System.ValueTuple<float, float> _wh;translator.Get(L, 4, out _wh);
                     
-                    gen_to_be_invoked.Setup( _tag, _index, _actorID, _hostID, _forceType, _dataID, _wh );
+                    gen_to_be_invoked.Setup( _tag, _actor_id, _wh );
                     
                     
                     

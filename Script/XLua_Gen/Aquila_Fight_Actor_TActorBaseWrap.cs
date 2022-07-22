@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Fight.Actor.TActorBase);
-			Utils.BeginObjectRegister(type, L, translator, 0, 15, 4, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 13, 4, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Trigger", _m_Trigger);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Valid", _m_Valid);
@@ -29,14 +29,12 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "UnRegisterActorEvent", _m_UnRegisterActorEvent);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsMine", _m_IsMine);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLayer", _m_SetLayer);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetActorID", _m_SetActorID);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetQuaternion", _m_SetQuaternion);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLocalPosition", _m_SetLocalPosition);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetWorldPosition", _m_SetWorldPosition);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetTag", _m_SetTag);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetHostID", _m_SetHostID);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Setup", _m_Setup);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetDataID", _m_SetDataID);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetActorID", _m_SetActorID);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			
 			
@@ -243,34 +241,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetActorID(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Aquila.Fight.Actor.TActorBase gen_to_be_invoked = (Aquila.Fight.Actor.TActorBase)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    int _id = LuaAPI.xlua_tointeger(L, 2);
-                    
-                    gen_to_be_invoked.SetActorID( _id );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SetQuaternion(RealStatePtr L)
         {
 		    try {
@@ -369,34 +339,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetTag(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Aquila.Fight.Actor.TActorBase gen_to_be_invoked = (Aquila.Fight.Actor.TActorBase)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    string _tag = LuaAPI.lua_tostring(L, 2);
-                    
-                    gen_to_be_invoked.SetTag( _tag );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SetHostID(RealStatePtr L)
         {
 		    try {
@@ -435,58 +377,12 @@ namespace XLua.CSObjectWrap
                 Aquila.Fight.Actor.TActorBase gen_to_be_invoked = (Aquila.Fight.Actor.TActorBase)translator.FastGetCSObj(L, 1);
             
             
-			    int gen_param_count = LuaAPI.lua_gettop(L);
-            
-                if(gen_param_count == 5&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& (LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) || LuaAPI.lua_isuint64(L, 5))) 
+                
                 {
                     string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _index = LuaAPI.xlua_tointeger(L, 3);
-                    int _actorID = LuaAPI.xlua_tointeger(L, 4);
-                    ulong _hostID = LuaAPI.lua_touint64(L, 5);
+                    int _actor_id = LuaAPI.xlua_tointeger(L, 3);
                     
-                    gen_to_be_invoked.Setup( _tag, _index, _actorID, _hostID );
-                    
-                    
-                    
-                    return 0;
-                }
-                if(gen_param_count == 6&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& (LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) || LuaAPI.lua_isuint64(L, 5))&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)) 
-                {
-                    string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _index = LuaAPI.xlua_tointeger(L, 3);
-                    int _actorID = LuaAPI.xlua_tointeger(L, 4);
-                    ulong _hostID = LuaAPI.lua_touint64(L, 5);
-                    int _forceType = LuaAPI.xlua_tointeger(L, 6);
-                    
-                    gen_to_be_invoked.Setup( _tag, _index, _actorID, _hostID, _forceType );
-                    
-                    
-                    
-                    return 0;
-                }
-                if(gen_param_count == 5&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& (LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) || LuaAPI.lua_isuint64(L, 5))) 
-                {
-                    string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _index = LuaAPI.xlua_tointeger(L, 3);
-                    int _actorID = LuaAPI.xlua_tointeger(L, 4);
-                    ulong _hostID = LuaAPI.lua_touint64(L, 5);
-                    
-                    gen_to_be_invoked.Setup( _tag, _index, _actorID, _hostID );
-                    
-                    
-                    
-                    return 0;
-                }
-                if(gen_param_count == 7&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& (LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) || LuaAPI.lua_isuint64(L, 5))&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 7)) 
-                {
-                    string _tag = LuaAPI.lua_tostring(L, 2);
-                    int _index = LuaAPI.xlua_tointeger(L, 3);
-                    int _actorID = LuaAPI.xlua_tointeger(L, 4);
-                    ulong _hostID = LuaAPI.lua_touint64(L, 5);
-                    int _forceType = LuaAPI.xlua_tointeger(L, 6);
-                    int _dataID = LuaAPI.xlua_tointeger(L, 7);
-                    
-                    gen_to_be_invoked.Setup( _tag, _index, _actorID, _hostID, _forceType, _dataID );
+                    gen_to_be_invoked.Setup( _tag, _actor_id );
                     
                     
                     
@@ -497,12 +393,10 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Fight.Actor.TActorBase.Setup!");
-            
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetDataID(RealStatePtr L)
+        static int _m_SetActorID(RealStatePtr L)
         {
 		    try {
             
@@ -514,9 +408,9 @@ namespace XLua.CSObjectWrap
             
                 
                 {
-                    int _roleBaseID = LuaAPI.xlua_tointeger(L, 2);
+                    int _actor_id = LuaAPI.xlua_tointeger(L, 2);
                     
-                    gen_to_be_invoked.SetDataID( _roleBaseID );
+                    gen_to_be_invoked.SetActorID( _actor_id );
                     
                     
                     
