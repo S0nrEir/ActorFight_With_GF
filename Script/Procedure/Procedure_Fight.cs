@@ -24,14 +24,16 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
+            _procedure_owner = procedureOwner;
             if ( !InitializeData( procedureOwner ) )
             {
-                Log.Error( "procedure data initialize faild!" );
-                return;
+                Log.Error( "procedure data initialize Failed!" );
+                return; 
             }
+
             _terrain_module.Start( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
             MainCameraInitializeSetting();
-            GameEntry.Lua.LoadScript( @"SceneModifier/Modifier_01", "Modifier_01" );
+            GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
             _fight_module.Start();
         }
 
@@ -39,21 +41,25 @@ namespace Aquila.Procedure
         {
             _terrain_module.End();
             _fight_module.End();
+            _procedure_owner = null;
+            if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
+                Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
+
             base.OnLeave( procedureOwner, isShutdown );
         }
 
         /// <summary>
-        /// 初始化流程数据
+        /// 初始化流程数据，失败返回false
         /// </summary>
-        private bool InitializeData(IFsm<IProcedureManager> owner)
+        private bool InitializeData( IFsm<IProcedureManager> owner )
         {
             var name = typeof( Procedure_Fight_Variable ).Name;
             if ( !owner.HasData( name ) )
                 return false;
 
-            var data = owner.GetData( name );
+            var variable = owner.GetData( name );
             _data = null;
-            _data = data.GetValue() as Procedure_Fight_Data;
+            _data = variable.GetValue() as Procedure_Fight_Data;
             if ( _data is null )
             {
                 Log.Error( "_data is null!" );
@@ -91,13 +97,26 @@ namespace Aquila.Procedure
         /// 战斗阶段状态数据
         /// </summary>
         private Procedure_Fight_Data _data = null;
+
+        /// <summary>
+        /// 流程持有者
+        /// </summary>
+        private IFsm<IProcedureManager> _procedure_owner = null;
     }
 
     internal class Procedure_Fight_Data : IReference
     {
         public void Clear()
         {
+            SceneScriptName = string.Empty;
+            SceneScriptChunkName = string.Empty;
         }
+
+        /// <summary>
+        /// 场景脚本名称
+        /// </summary>
+        public string SceneScriptName = string.Empty;
+        public string SceneScriptChunkName = string.Empty;
     }
 
     /// <summary>
@@ -110,6 +129,8 @@ namespace Aquila.Procedure
         {
             base.SetValue( value );
         }
+
+        //orginal code:
         //public override void SetValue( object value )
         //{
         //    m_Value = ( T ) value;
@@ -120,6 +141,7 @@ namespace Aquila.Procedure
             return base.GetValue();
         }
 
+        //orginal code:
         //public override void Clear()
         //{
         //    m_Value = default( T );
@@ -130,6 +152,7 @@ namespace Aquila.Procedure
             return base.ToString();
         }
 
+        //orginal code:
         //public override string ToString()
         //{
         //    return ( m_Value != null ) ? m_Value.ToString() : "<Null>";
@@ -143,6 +166,8 @@ namespace Aquila.Procedure
             Value = null;
             //base.Clear();
         }
+
+        //orginal code:
         //public override void Clear()
         //{
         //    m_Value = default( T );
