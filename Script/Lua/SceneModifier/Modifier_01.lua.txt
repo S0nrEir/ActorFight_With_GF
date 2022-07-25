@@ -22,3 +22,8 @@ end
 function on_finish_lua()
     
 end
+
+--刷帧
+function on_update_lua()
+
+end

@@ -27,7 +27,7 @@ namespace Aquila.Procedure
             System.GC.Collect();
 
             var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-            procedure_variable.SetValue( new Procedure_Fight_Data() { SceneScriptName = @"SceneModifier/Modifier_01" , "Modifier_01" } );
+            procedure_variable.SetValue( new Procedure_Fight_Data() { SceneScriptName = @"SceneModifier/Modifier_01" , SceneScriptChunkName = "Modifier_01"} );
             _procedure_owner.SetData<Procedure_Fight_Variable>( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
             ChangeState<Procedure_Fight>( _procedure_owner );
         }
