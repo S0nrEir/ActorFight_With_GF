@@ -6,7 +6,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace cfg.item
+namespace Cfg.item
 {
     public enum EQuality
     {

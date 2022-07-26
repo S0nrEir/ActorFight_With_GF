@@ -21,8 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Extension.Component_LuBan);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 1, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 2, 1, 0);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Test", _m_Test);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadDataTable", _m_LoadDataTable);
 			
 			
@@ -72,6 +73,33 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_Test(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Aquila.Extension.Component_LuBan gen_to_be_invoked = (Aquila.Extension.Component_LuBan)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.Test(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_LoadDataTable(RealStatePtr L)

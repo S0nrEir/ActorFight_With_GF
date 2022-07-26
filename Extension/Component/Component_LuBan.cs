@@ -11,10 +11,24 @@ namespace Aquila.Extension
     /// </summary>
     public class Component_LuBan : GameFrameworkComponent
     {
+        public void Test()
+        {
+            var meta = Tables.TB_RoleBaseAttr.GetOrDefault( 0 );
+            if ( meta is null )
+                Debug.Log( "meta is nulll" );
+
+            if ( meta.Class == Cfg.Enum.Role_Class.Warior )
+            {
+                //to xxx
+            }
+
+            return;
+        }
+
         /// <summary>
         /// 表数据
         /// </summary>
-        public cfg.Tables Tables
+        public Cfg.Tables Tables
         {
             get;
             private set;
@@ -27,16 +41,16 @@ namespace Aquila.Extension
         {
             if ( _loadFlag )
                 throw new GameFrameworkException( "data table has been loaded!" );
-
+             
             if ( string.IsNullOrEmpty( _bytesPath ) )
                 throw new GameFrameworkException( "bytesPath is null or empty!" );
 
-            var tableCtor = typeof( cfg.Tables ).GetConstructors()[0];
+            var tableCtor = typeof( Cfg.Tables ).GetConstructors()[0];
             var loader = new System.Func<string, ByteBuf>( ( file ) =>
              {
                  return new ByteBuf( File.ReadAllBytes( $"{_bytesPath}{file}{_fileExtension}" ) );
              } );
-            Tables = ( cfg.Tables ) tableCtor.Invoke( new object[] { loader } );
+            Tables = ( Cfg.Tables ) tableCtor.Invoke( new object[] { loader } );
             _loadFlag = true;
             return _loadFlag;
         }

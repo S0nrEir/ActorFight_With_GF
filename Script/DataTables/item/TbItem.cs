@@ -8,7 +8,7 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace cfg.item
+namespace Cfg.item
 {
    
 public partial class TbItem

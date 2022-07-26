@@ -21,9 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Module.Module_Fight);
-			Utils.BeginObjectRegister(type, L, translator, 0, 4, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 5, 0, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Start", _m_Start);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "End", _m_End);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnClose", _m_OnClose);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnsureInit", _m_EnsureInit);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnUpdate", _m_OnUpdate);
@@ -90,6 +91,33 @@ namespace XLua.CSObjectWrap
                 {
                     
                     gen_to_be_invoked.Start(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_End(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Aquila.Module.Module_Fight gen_to_be_invoked = (Aquila.Module.Module_Fight)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.End(  );
                     
                     
                     

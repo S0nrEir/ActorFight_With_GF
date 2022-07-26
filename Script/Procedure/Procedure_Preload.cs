@@ -46,6 +46,8 @@ namespace Aquila.Procedure
 
             PreLoadTables();
             PreLoadObejct();
+            //测试配表
+            GameEntry.DataTable.Test();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
