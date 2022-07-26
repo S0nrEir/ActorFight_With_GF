@@ -23,10 +23,12 @@
 		<type fullname="Bright.Serialization.ByteBuf" preserve="all"/>
 		<type fullname="Bright.Serialization.ByteBufExtensions" preserve="all"/>
 		<type fullname="Bright.Config.BeanBase" preserve="all"/>
-		<type fullname="cfg.Tables" preserve="all"/>
-		<type fullname="cfg.item.Item" preserve="all"/>
-		<type fullname="cfg.item.ItemExchange" preserve="all"/>
-		<type fullname="cfg.item.TbItem" preserve="all"/>
+		<type fullname="Cfg.Tables" preserve="all"/>
+		<type fullname="Cfg.role.RoleBaseAttr" preserve="all"/>
+		<type fullname="Cfg.role.TB_RoleBaseAttr" preserve="all"/>
+		<type fullname="Cfg.item.Item" preserve="all"/>
+		<type fullname="Cfg.item.ItemExchange" preserve="all"/>
+		<type fullname="Cfg.item.TbItem" preserve="all"/>
 		<type fullname="Aquila.EntityData" preserve="all"/>
 		<type fullname="Aquila.Tools" preserve="all"/>
 		<type fullname="Aquila.GameEntry" preserve="all"/>

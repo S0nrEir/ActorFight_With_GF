@@ -8,27 +8,32 @@
 using Bright.Serialization;
 
 
-namespace cfg
+namespace Cfg
 {
    
 public partial class Tables
 {
     public item.TbItem TbItem {get; }
+    public role.TB_RoleBaseAttr TB_RoleBaseAttr {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
         var tables = new System.Collections.Generic.Dictionary<string, object>();
         TbItem = new item.TbItem(loader("item_tbitem")); 
         tables.Add("item.TbItem", TbItem);
+        TB_RoleBaseAttr = new role.TB_RoleBaseAttr(loader("role_tb_rolebaseattr")); 
+        tables.Add("role.TB_RoleBaseAttr", TB_RoleBaseAttr);
 
         PostInit();
         TbItem.Resolve(tables); 
+        TB_RoleBaseAttr.Resolve(tables); 
         PostResolve();
     }
 
     public void TranslateText(System.Func<string, string, string> translator)
     {
         TbItem.TranslateText(translator); 
+        TB_RoleBaseAttr.TranslateText(translator); 
     }
     
     partial void PostInit();

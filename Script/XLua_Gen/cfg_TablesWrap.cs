@@ -15,18 +15,19 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class cfgTablesWrap 
+    public class CfgTablesWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(cfg.Tables);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 1, 0);
+			System.Type type = typeof(Cfg.Tables);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 2, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "TranslateText", _m_TranslateText);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "TbItem", _g_get_TbItem);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TB_RoleBaseAttr", _g_get_TB_RoleBaseAttr);
             
 			
 			
@@ -53,7 +54,7 @@ namespace XLua.CSObjectWrap
 				{
 					System.Func<string, Bright.Serialization.ByteBuf> _loader = translator.GetDelegate<System.Func<string, Bright.Serialization.ByteBuf>>(L, 2);
 					
-					var gen_ret = new cfg.Tables(_loader);
+					var gen_ret = new Cfg.Tables(_loader);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -63,7 +64,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to cfg.Tables constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Cfg.Tables constructor!");
             
         }
         
@@ -82,7 +83,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.Tables gen_to_be_invoked = (cfg.Tables)translator.FastGetCSObj(L, 1);
+                Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -111,8 +112,22 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.Tables gen_to_be_invoked = (cfg.Tables)translator.FastGetCSObj(L, 1);
+                Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.TbItem);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_TB_RoleBaseAttr(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.TB_RoleBaseAttr);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

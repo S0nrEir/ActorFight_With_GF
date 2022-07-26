@@ -8,35 +8,35 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace Cfg.item
+namespace Cfg.role
 {
    
-public partial class TbItem
+public partial class TB_RoleBaseAttr
 {
-    private readonly Dictionary<int, item.Item> _dataMap;
-    private readonly List<item.Item> _dataList;
+    private readonly Dictionary<int, role.RoleBaseAttr> _dataMap;
+    private readonly List<role.RoleBaseAttr> _dataList;
     
-    public TbItem(ByteBuf _buf)
+    public TB_RoleBaseAttr(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, item.Item>();
-        _dataList = new List<item.Item>();
+        _dataMap = new Dictionary<int, role.RoleBaseAttr>();
+        _dataList = new List<role.RoleBaseAttr>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            item.Item _v;
-            _v = item.Item.DeserializeItem(_buf);
+            role.RoleBaseAttr _v;
+            _v = role.RoleBaseAttr.DeserializeRoleBaseAttr(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, item.Item> DataMap => _dataMap;
-    public List<item.Item> DataList => _dataList;
+    public Dictionary<int, role.RoleBaseAttr> DataMap => _dataMap;
+    public List<role.RoleBaseAttr> DataList => _dataList;
 
-    public item.Item GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public item.Item Get(int key) => _dataMap[key];
-    public item.Item this[int key] => _dataMap[key];
+    public role.RoleBaseAttr GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public role.RoleBaseAttr Get(int key) => _dataMap[key];
+    public role.RoleBaseAttr this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

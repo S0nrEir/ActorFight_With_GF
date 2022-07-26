@@ -6,18 +6,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace cfg.test
+namespace Cfg.Enum
 {
-    [System.Flags]
-    public enum AccessFlag
+    /// <summary>
+    /// 角色职业
+    /// </summary>
+    public enum Role_Class
     {
-        WRITE = 1,
-        READ = 2,
-        TRUNCATE = 4,
-        NEW = 8,
         /// <summary>
-        /// 位标记使用示例
+        /// 战士
         /// </summary>
-        READ_WRITE = WRITE|READ,
+        Warior = 1,
+        /// <summary>
+        /// 术士
+        /// </summary>
+        Warlock = 2,
+        /// <summary>
+        /// 猎人
+        /// </summary>
+        Hunter = 3,
+        /// <summary>
+        /// 法师
+        /// </summary>
+        Mage = 4,
     }
 }

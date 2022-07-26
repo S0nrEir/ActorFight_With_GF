@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class cfgitemItemExchangeWrap 
+    public class CfgitemItemExchangeWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(cfg.item.ItemExchange);
+			System.Type type = typeof(Cfg.item.ItemExchange);
 			Utils.BeginObjectRegister(type, L, translator, 0, 4, 2, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTypeId", _m_GetTypeId);
@@ -41,7 +41,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "DeserializeItemExchange", _m_DeserializeItemExchange_xlua_st_);
             
 			
-            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "__ID__", cfg.item.ItemExchange.__ID__);
+            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "__ID__", Cfg.item.ItemExchange.__ID__);
             
 			
 			
@@ -59,7 +59,7 @@ namespace XLua.CSObjectWrap
 				{
 					Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 2, typeof(Bright.Serialization.ByteBuf));
 					
-					var gen_ret = new cfg.item.ItemExchange(__buf);
+					var gen_ret = new Cfg.item.ItemExchange(__buf);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -69,7 +69,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to cfg.item.ItemExchange constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Cfg.item.ItemExchange constructor!");
             
         }
         
@@ -93,7 +93,7 @@ namespace XLua.CSObjectWrap
                 {
                     Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 1, typeof(Bright.Serialization.ByteBuf));
                     
-                        var gen_ret = cfg.item.ItemExchange.DeserializeItemExchange( __buf );
+                        var gen_ret = Cfg.item.ItemExchange.DeserializeItemExchange( __buf );
                         translator.Push(L, gen_ret);
                     
                     
@@ -115,7 +115,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -143,7 +143,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -171,7 +171,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -199,7 +199,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -228,7 +228,7 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
                 LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Id);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -242,7 +242,7 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.ItemExchange gen_to_be_invoked = (cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
                 LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Num);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

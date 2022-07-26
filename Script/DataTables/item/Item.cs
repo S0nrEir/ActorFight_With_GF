@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 
 
-namespace cfg.item
+namespace Cfg.item
 {
 
 public sealed partial class Item :  Bright.Config.BeanBase 
