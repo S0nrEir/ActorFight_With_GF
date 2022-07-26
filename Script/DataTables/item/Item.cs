@@ -10,37 +10,24 @@ using System.Collections.Generic;
 
 
 
-namespace cfg.item
+namespace Cfg.item
 {
 
-/// <summary>
-/// 道具
-/// </summary>
 public sealed partial class Item :  Bright.Config.BeanBase 
 {
     public Item(ByteBuf _buf) 
     {
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
-        MajorType = (item.EMajorType)_buf.ReadInt();
-        MinorType = (item.EMinorType)_buf.ReadInt();
-        MaxPileNum = _buf.ReadInt();
-        Quality = (item.EItemQuality)_buf.ReadInt();
-        Icon = _buf.ReadString();
-        IconBackgroud = _buf.ReadString();
-        IconMask = _buf.ReadString();
         Desc = _buf.ReadString();
-        ShowOrder = _buf.ReadInt();
-        Quantifier = _buf.ReadString();
-        ShowInBag = _buf.ReadBool();
-        MinShowLevel = _buf.ReadInt();
-        BatchUsable = _buf.ReadBool();
-        ProgressTimeWhenUse = _buf.ReadFloat();
-        ShowHintWhenUse = _buf.ReadBool();
-        Droppable = _buf.ReadBool();
-        if(_buf.ReadBool()){ Price = _buf.ReadInt(); } else { Price = null; }
-        UseType = (item.EUseType)_buf.ReadInt();
-        if(_buf.ReadBool()){ LevelUpId = _buf.ReadInt(); } else { LevelUpId = null; }
+        Price = _buf.ReadInt();
+        UpgradeToItemId = _buf.ReadInt();
+        if(_buf.ReadBool()){ ExpireTime = _buf.ReadInt(); } else { ExpireTime = null; }
+        BatchUseable = _buf.ReadBool();
+        Quality = (item.EQuality)_buf.ReadInt();
+        ExchangeStream = item.ItemExchange.DeserializeItemExchange(_buf);
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(n);for(var i = 0 ; i < n ; i++) { item.ItemExchange _e;  _e = item.ItemExchange.DeserializeItemExchange(_buf); ExchangeList.Add(_e);}}
+        ExchangeColumn = item.ItemExchange.DeserializeItemExchange(_buf);
         PostInit();
     }
 
@@ -50,40 +37,65 @@ public sealed partial class Item :  Bright.Config.BeanBase
     }
 
     /// <summary>
-    /// 道具id
+    /// 这是id
     /// </summary>
     public int Id { get; private set; }
+    /// <summary>
+    /// 名字
+    /// </summary>
     public string Name { get; private set; }
-    public item.EMajorType MajorType { get; private set; }
-    public item.EMinorType MinorType { get; private set; }
-    public int MaxPileNum { get; private set; }
-    public item.EItemQuality Quality { get; private set; }
-    public string Icon { get; private set; }
-    public string IconBackgroud { get; private set; }
-    public string IconMask { get; private set; }
+    /// <summary>
+    /// 描述
+    /// </summary>
     public string Desc { get; private set; }
-    public int ShowOrder { get; private set; }
-    public string Quantifier { get; private set; }
-    public bool ShowInBag { get; private set; }
-    public int MinShowLevel { get; private set; }
-    public bool BatchUsable { get; private set; }
-    public float ProgressTimeWhenUse { get; private set; }
-    public bool ShowHintWhenUse { get; private set; }
-    public bool Droppable { get; private set; }
-    public int? Price { get; private set; }
-    public item.EUseType UseType { get; private set; }
-    public int? LevelUpId { get; private set; }
+    /// <summary>
+    /// 价格
+    /// </summary>
+    public int Price { get; private set; }
+    /// <summary>
+    /// 引用当前表
+    /// </summary>
+    public int UpgradeToItemId { get; private set; }
+    public item.Item UpgradeToItemId_Ref { get; private set; }
+    /// <summary>
+    /// 过期时间
+    /// </summary>
+    public int? ExpireTime { get; private set; }
+    /// <summary>
+    /// 能否批量使用
+    /// </summary>
+    public bool BatchUseable { get; private set; }
+    /// <summary>
+    /// 品质
+    /// </summary>
+    public item.EQuality Quality { get; private set; }
+    /// <summary>
+    /// 道具兑换配置
+    /// </summary>
+    public item.ItemExchange ExchangeStream { get; private set; }
+    public System.Collections.Generic.List<item.ItemExchange> ExchangeList { get; private set; }
+    /// <summary>
+    /// 道具兑换配置
+    /// </summary>
+    public item.ItemExchange ExchangeColumn { get; private set; }
 
     public const int __ID__ = 2107285806;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        this.UpgradeToItemId_Ref = (_tables["item.TbItem"] as item.TbItem).GetOrDefault(UpgradeToItemId);
+        ExchangeStream?.Resolve(_tables);
+        foreach(var _e in ExchangeList) { _e?.Resolve(_tables); }
+        ExchangeColumn?.Resolve(_tables);
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        ExchangeStream?.TranslateText(translator);
+        foreach(var _e in ExchangeList) { _e?.TranslateText(translator); }
+        ExchangeColumn?.TranslateText(translator);
     }
 
     public override string ToString()
@@ -91,25 +103,15 @@ public sealed partial class Item :  Bright.Config.BeanBase
         return "{ "
         + "Id:" + Id + ","
         + "Name:" + Name + ","
-        + "MajorType:" + MajorType + ","
-        + "MinorType:" + MinorType + ","
-        + "MaxPileNum:" + MaxPileNum + ","
-        + "Quality:" + Quality + ","
-        + "Icon:" + Icon + ","
-        + "IconBackgroud:" + IconBackgroud + ","
-        + "IconMask:" + IconMask + ","
         + "Desc:" + Desc + ","
-        + "ShowOrder:" + ShowOrder + ","
-        + "Quantifier:" + Quantifier + ","
-        + "ShowInBag:" + ShowInBag + ","
-        + "MinShowLevel:" + MinShowLevel + ","
-        + "BatchUsable:" + BatchUsable + ","
-        + "ProgressTimeWhenUse:" + ProgressTimeWhenUse + ","
-        + "ShowHintWhenUse:" + ShowHintWhenUse + ","
-        + "Droppable:" + Droppable + ","
         + "Price:" + Price + ","
-        + "UseType:" + UseType + ","
-        + "LevelUpId:" + LevelUpId + ","
+        + "UpgradeToItemId:" + UpgradeToItemId + ","
+        + "ExpireTime:" + ExpireTime + ","
+        + "BatchUseable:" + BatchUseable + ","
+        + "Quality:" + Quality + ","
+        + "ExchangeStream:" + ExchangeStream + ","
+        + "ExchangeList:" + Bright.Common.StringUtil.CollectionToString(ExchangeList) + ","
+        + "ExchangeColumn:" + ExchangeColumn + ","
         + "}";
     }
     

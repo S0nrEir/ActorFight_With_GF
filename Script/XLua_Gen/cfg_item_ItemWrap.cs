@@ -15,13 +15,13 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class cfgitemItemWrap 
+    public class CfgitemItemWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(cfg.item.Item);
-			Utils.BeginObjectRegister(type, L, translator, 0, 4, 21, 0);
+			System.Type type = typeof(Cfg.item.Item);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 12, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTypeId", _m_GetTypeId);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Resolve", _m_Resolve);
@@ -31,25 +31,16 @@ namespace XLua.CSObjectWrap
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Id", _g_get_Id);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "Name", _g_get_Name);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "MajorType", _g_get_MajorType);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "MinorType", _g_get_MinorType);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "MaxPileNum", _g_get_MaxPileNum);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Quality", _g_get_Quality);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Icon", _g_get_Icon);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "IconBackgroud", _g_get_IconBackgroud);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "IconMask", _g_get_IconMask);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "Desc", _g_get_Desc);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ShowOrder", _g_get_ShowOrder);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Quantifier", _g_get_Quantifier);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ShowInBag", _g_get_ShowInBag);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "MinShowLevel", _g_get_MinShowLevel);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "BatchUsable", _g_get_BatchUsable);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ProgressTimeWhenUse", _g_get_ProgressTimeWhenUse);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ShowHintWhenUse", _g_get_ShowHintWhenUse);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Droppable", _g_get_Droppable);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "Price", _g_get_Price);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "UseType", _g_get_UseType);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "LevelUpId", _g_get_LevelUpId);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "UpgradeToItemId", _g_get_UpgradeToItemId);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "UpgradeToItemId_Ref", _g_get_UpgradeToItemId_Ref);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExpireTime", _g_get_ExpireTime);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "BatchUseable", _g_get_BatchUseable);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Quality", _g_get_Quality);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeStream", _g_get_ExchangeStream);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeList", _g_get_ExchangeList);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeColumn", _g_get_ExchangeColumn);
             
 			
 			
@@ -60,7 +51,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "DeserializeItem", _m_DeserializeItem_xlua_st_);
             
 			
-            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "__ID__", cfg.item.Item.__ID__);
+            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "__ID__", Cfg.item.Item.__ID__);
             
 			
 			
@@ -78,7 +69,7 @@ namespace XLua.CSObjectWrap
 				{
 					Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 2, typeof(Bright.Serialization.ByteBuf));
 					
-					var gen_ret = new cfg.item.Item(__buf);
+					var gen_ret = new Cfg.item.Item(__buf);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -88,7 +79,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to cfg.item.Item constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Cfg.item.Item constructor!");
             
         }
         
@@ -112,7 +103,7 @@ namespace XLua.CSObjectWrap
                 {
                     Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 1, typeof(Bright.Serialization.ByteBuf));
                     
-                        var gen_ret = cfg.item.Item.DeserializeItem( __buf );
+                        var gen_ret = Cfg.item.Item.DeserializeItem( __buf );
                         translator.Push(L, gen_ret);
                     
                     
@@ -134,7 +125,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -162,7 +153,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -190,7 +181,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -218,7 +209,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -247,7 +238,7 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
                 LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Id);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -261,106 +252,8 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
                 LuaAPI.lua_pushstring(L, gen_to_be_invoked.Name);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_MajorType(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.MajorType);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_MinorType(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.MinorType);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_MaxPileNum(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.MaxPileNum);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Quality(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.Quality);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Icon(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Icon);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_IconBackgroud(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.IconBackgroud);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_IconMask(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.IconMask);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -373,120 +266,8 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
                 LuaAPI.lua_pushstring(L, gen_to_be_invoked.Desc);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ShowOrder(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.ShowOrder);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Quantifier(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Quantifier);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ShowInBag(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.ShowInBag);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_MinShowLevel(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.MinShowLevel);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_BatchUsable(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.BatchUsable);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ProgressTimeWhenUse(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushnumber(L, gen_to_be_invoked.ProgressTimeWhenUse);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ShowHintWhenUse(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.ShowHintWhenUse);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Droppable(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.Droppable);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -499,8 +280,8 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.PushAny(L, gen_to_be_invoked.Price);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Price);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -508,13 +289,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_UseType(RealStatePtr L)
+        static int _g_get_UpgradeToItemId(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.UseType);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.UpgradeToItemId);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -522,13 +303,97 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_LevelUpId(RealStatePtr L)
+        static int _g_get_UpgradeToItemId_Ref(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                cfg.item.Item gen_to_be_invoked = (cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.PushAny(L, gen_to_be_invoked.LevelUpId);
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.UpgradeToItemId_Ref);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_ExpireTime(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.PushAny(L, gen_to_be_invoked.ExpireTime);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_BatchUseable(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.BatchUseable);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_Quality(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.Quality);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_ExchangeStream(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.ExchangeStream);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_ExchangeList(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.ExchangeList);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_ExchangeColumn(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.ExchangeColumn);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

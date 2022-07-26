@@ -8,12 +8,9 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace cfg.item
+namespace Cfg.item
 {
    
-/// <summary>
-/// 道具表
-/// </summary>
 public partial class TbItem
 {
     private readonly Dictionary<int, item.Item> _dataMap;
