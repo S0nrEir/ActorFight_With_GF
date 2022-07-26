@@ -5,3 +5,4 @@
 unity GameFrameWork前端框架 [GameFramework](https://github.com/EllanJiang/GameFramework)<br />
 FingerCaster基于GF的扩展[GameFrameworkExtension](https://github.com/FingerCaster/UGFExtensions)<br />
 XLua[XLua](https://github.com/Tencent/xLua)
+LuBan[LuBan](https://github.com/focus-creative-games/luban)
