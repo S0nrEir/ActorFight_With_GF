@@ -31,7 +31,8 @@ namespace Aquila.Procedure
                 return; 
             }
 
-            _terrain_module.Start( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
+            var scene_config = Tools.Table.GetSceneConfig();
+            _terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
             GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
             _fight_module.Start();
@@ -74,7 +75,9 @@ namespace Aquila.Procedure
         private void MainCameraInitializeSetting()
         {
             _main_camera = GlobalVar.Main_Camera;
-            _main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
+            var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
+            _main_camera.transform.eulerAngles = scene_config.Main_Camera_Default_Euler;
+            //_main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
             _main_camera.transform.position = GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION;
         }
 

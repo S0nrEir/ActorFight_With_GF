@@ -96,7 +96,8 @@ namespace Aquila.Procedure
                 throw new GameFrameworkException( "terrain game object is null!" );
 
             //默认的地块创建数量
-            var default_create_count = GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH * GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH + 10;
+            var scene_config = Tools.Table.GetSceneConfig();
+            var default_create_count = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width + 10;
             //默认创建四十个地块
             var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
 

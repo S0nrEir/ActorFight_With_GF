@@ -26,7 +26,7 @@ public partial class TB_RoleBaseAttr
             role.RoleBaseAttr _v;
             _v = role.RoleBaseAttr.DeserializeRoleBaseAttr(_buf);
             _dataList.Add(_v);
-            _dataMap.Add(_v.Id, _v);
+            _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }

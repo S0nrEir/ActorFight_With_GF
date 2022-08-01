@@ -15,33 +15,31 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class CfgitemItemExchangeWrap 
+    public class CfgcommonTB_ScriptsWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Cfg.item.ItemExchange);
+			System.Type type = typeof(Cfg.common.TB_Scripts);
 			Utils.BeginObjectRegister(type, L, translator, 0, 4, 2, 0);
 			
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTypeId", _m_GetTypeId);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetOrDefault", _m_GetOrDefault);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Get", _m_Get);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Resolve", _m_Resolve);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "TranslateText", _m_TranslateText);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ToString", _m_ToString);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "id", _g_get_id);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "num", _g_get_num);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "DataMap", _g_get_DataMap);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "DataList", _g_get_DataList);
             
 			
 			
-			Utils.EndObjectRegister(type, L, translator, null, null,
+			Utils.EndObjectRegister(type, L, translator, __CSIndexer, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 0, 0);
-			Utils.RegisterFunc(L, Utils.CLS_IDX, "DeserializeItemExchange", _m_DeserializeItemExchange_xlua_st_);
-            
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 0, 0);
 			
-            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "__ID__", Cfg.item.ItemExchange.__ID__);
+			
             
 			
 			
@@ -59,7 +57,7 @@ namespace XLua.CSObjectWrap
 				{
 					Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 2, typeof(Bright.Serialization.ByteBuf));
 					
-					var gen_ret = new Cfg.item.ItemExchange(__buf);
+					var gen_ret = new Cfg.common.TB_Scripts(__buf);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -69,10 +67,35 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to Cfg.item.ItemExchange constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Cfg.common.TB_Scripts constructor!");
             
         }
         
+		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        public static int __CSIndexer(RealStatePtr L)
+        {
+			try {
+			    ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+				
+				if (translator.Assignable<Cfg.common.TB_Scripts>(L, 1) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2))
+				{
+					
+					Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
+					int index = LuaAPI.xlua_tointeger(L, 2);
+					LuaAPI.lua_pushboolean(L, true);
+					translator.Push(L, gen_to_be_invoked[index]);
+					return 2;
+				}
+				
+			}
+			catch(System.Exception gen_e) {
+				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+			}
+			
+            LuaAPI.lua_pushboolean(L, false);
+			return 1;
+        }
 		
         
 		
@@ -81,19 +104,21 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_DeserializeItemExchange_xlua_st_(RealStatePtr L)
+        static int _m_GetOrDefault(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
+            
             
                 
                 {
-                    Bright.Serialization.ByteBuf __buf = (Bright.Serialization.ByteBuf)translator.GetObject(L, 1, typeof(Bright.Serialization.ByteBuf));
+                    int _key = LuaAPI.xlua_tointeger(L, 2);
                     
-                        var gen_ret = Cfg.item.ItemExchange.DeserializeItemExchange( __buf );
+                        var gen_ret = gen_to_be_invoked.GetOrDefault( _key );
                         translator.Push(L, gen_ret);
                     
                     
@@ -108,21 +133,22 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_GetTypeId(RealStatePtr L)
+        static int _m_Get(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
+                    int _key = LuaAPI.xlua_tointeger(L, 2);
                     
-                        var gen_ret = gen_to_be_invoked.GetTypeId(  );
-                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                        var gen_ret = gen_to_be_invoked.Get( _key );
+                        translator.Push(L, gen_ret);
                     
                     
                     
@@ -143,7 +169,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -171,7 +197,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -191,45 +217,17 @@ namespace XLua.CSObjectWrap
             
         }
         
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_ToString(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    
-                        var gen_ret = gen_to_be_invoked.ToString(  );
-                        LuaAPI.lua_pushstring(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
         
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_id(RealStatePtr L)
+        static int _g_get_DataMap(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.id);
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.DataMap);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -237,13 +235,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_num(RealStatePtr L)
+        static int _g_get_DataList(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                Cfg.item.ItemExchange gen_to_be_invoked = (Cfg.item.ItemExchange)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.num);
+                Cfg.common.TB_Scripts gen_to_be_invoked = (Cfg.common.TB_Scripts)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.DataList);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

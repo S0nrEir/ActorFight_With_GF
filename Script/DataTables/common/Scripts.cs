@@ -10,33 +10,38 @@ using System.Collections.Generic;
 
 
 
-namespace Cfg.item
+namespace Cfg.common
 {
 
-public sealed partial class ItemExchange :  Bright.Config.BeanBase 
+public sealed partial class Scripts :  Bright.Config.BeanBase 
 {
-    public ItemExchange(ByteBuf _buf) 
+    public Scripts(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        num = _buf.ReadInt();
+        AssetPath = _buf.ReadString();
+        Type = (Enum.Script_Type)_buf.ReadInt();
         PostInit();
     }
 
-    public static ItemExchange DeserializeItemExchange(ByteBuf _buf)
+    public static Scripts DeserializeScripts(ByteBuf _buf)
     {
-        return new item.ItemExchange(_buf);
+        return new common.Scripts(_buf);
     }
 
     /// <summary>
-    /// 道具id
+    /// id
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// 道具数量
+    /// 脚本路径
     /// </summary>
-    public int num { get; private set; }
+    public string AssetPath { get; private set; }
+    /// <summary>
+    /// 注入脚本类型
+    /// </summary>
+    public Enum.Script_Type Type { get; private set; }
 
-    public const int __ID__ = 1814660465;
+    public const int __ID__ = -1856307227;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
@@ -52,7 +57,8 @@ public sealed partial class ItemExchange :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "num:" + num + ","
+        + "AssetPath:" + AssetPath + ","
+        + "Type:" + Type + ","
         + "}";
     }
     

@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaConfigGameConfigSceneWrap 
+    public class AquilaToolsTableWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Config.GameConfig.Scene);
+			System.Type type = typeof(Aquila.Tools.Table);
 			Utils.BeginObjectRegister(type, L, translator, 0, 0, 0, 0);
 			
 			
@@ -31,12 +31,12 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 1, 0);
-			
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "GetSceneConfig", _m_GetSceneConfig_xlua_st_);
+            
 			
             
-			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "MAIN_CAMERA_DEFAULT_POSITION", _g_get_MAIN_CAMERA_DEFAULT_POSITION);
-            
+			
 			
 			
 			Utils.EndClassRegister(type, L, translator);
@@ -45,47 +45,44 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            
-			try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-				if(LuaAPI.lua_gettop(L) == 1)
-				{
-					
-					var gen_ret = new Aquila.Config.GameConfig.Scene();
-					translator.Push(L, gen_ret);
-                    
-					return 1;
-				}
-				
-			}
-			catch(System.Exception gen_e) {
-				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-			}
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Config.GameConfig.Scene constructor!");
-            
+            return LuaAPI.luaL_error(L, "Aquila.Tools.Table does not have a constructor!");
         }
         
 		
         
 		
-        
-        
-        
         
         
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_MAIN_CAMERA_DEFAULT_POSITION(RealStatePtr L)
+        static int _m_GetSceneConfig_xlua_st_(RealStatePtr L)
         {
 		    try {
+            
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    translator.PushUnityEngineVector3(L, Aquila.Config.GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION);
+            
+            
+            
+                
+                {
+                    
+                        var gen_ret = Aquila.Tools.Table.GetSceneConfig(  );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
-            return 1;
+            
         }
+        
+        
+        
         
         
         

@@ -24,11 +24,15 @@
 		<type fullname="Bright.Serialization.ByteBufExtensions" preserve="all"/>
 		<type fullname="Bright.Config.BeanBase" preserve="all"/>
 		<type fullname="Cfg.Tables" preserve="all"/>
+		<type fullname="Cfg.single.SceneConfig" preserve="all"/>
+		<type fullname="Cfg.single.TB_SceneConfig" preserve="all"/>
 		<type fullname="Cfg.role.RoleBaseAttr" preserve="all"/>
 		<type fullname="Cfg.role.TB_RoleBaseAttr" preserve="all"/>
 		<type fullname="Cfg.item.Item" preserve="all"/>
 		<type fullname="Cfg.item.ItemExchange" preserve="all"/>
 		<type fullname="Cfg.item.TbItem" preserve="all"/>
+		<type fullname="Cfg.common.Scripts" preserve="all"/>
+		<type fullname="Cfg.common.TB_Scripts" preserve="all"/>
 		<type fullname="Aquila.EntityData" preserve="all"/>
 		<type fullname="Aquila.Tools" preserve="all"/>
 		<type fullname="Aquila.GameEntry" preserve="all"/>
@@ -95,6 +99,7 @@
 		<type fullname="UGFExtensions.Await.DownLoadResult" preserve="all"/>
 		<type fullname="UGFExtensions.Await.WebResult" preserve="all"/>
 		<type fullname="Tutorial.CSCallLua+DClass" preserve="all"/>
+		<type fullname="Aquila.Tools+Table" preserve="all"/>
 		<type fullname="Aquila.Tools+Fight" preserve="all"/>
 		<type fullname="Aquila.Tools+Lua" preserve="all"/>
 		<type fullname="Aquila.Config.Constant+AssetPriority" preserve="all"/>

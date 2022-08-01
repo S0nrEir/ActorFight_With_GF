@@ -52,13 +52,14 @@ namespace Aquila.Module
             var pool = GameEntry.ObjectPool.GetObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
             var x_offset = 0f;
             var z_offset = 0f;
+            var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
             for ( int z = 0; z < z_width; z++ )
             {
-                z_offset = GameConfig.Scene.TERRAIN_BLOCK_OFFSET_DISTANCE * z;
+                z_offset = scene_config.Terrain_Block_Offset_Distance * z;
                 x_offset = 0f;
                 for ( int x = 0; x < x_width; x++ )
                 {
-                    x_offset = GameConfig.Scene.TERRAIN_BLOCK_OFFSET_DISTANCE * x;
+                    x_offset = scene_config.Terrain_Block_Offset_Distance * x;
                     terrain = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
                     //safety chk
                     if ( terrain == null )

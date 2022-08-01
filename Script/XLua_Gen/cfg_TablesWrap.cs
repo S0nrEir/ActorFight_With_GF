@@ -21,13 +21,15 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Cfg.Tables);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 2, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 4, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "TranslateText", _m_TranslateText);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "TbItem", _g_get_TbItem);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "TB_RoleBaseAttr", _g_get_TB_RoleBaseAttr);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TB_SceneConfig", _g_get_TB_SceneConfig);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TB_Scripts", _g_get_TB_Scripts);
             
 			
 			
@@ -128,6 +130,34 @@ namespace XLua.CSObjectWrap
 			
                 Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.TB_RoleBaseAttr);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_TB_SceneConfig(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.TB_SceneConfig);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_TB_Scripts(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Cfg.Tables gen_to_be_invoked = (Cfg.Tables)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.TB_Scripts);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

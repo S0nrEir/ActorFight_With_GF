@@ -17,12 +17,17 @@ namespace Aquila.Extension
             if ( meta is null )
                 Debug.Log( "meta is nulll" );
 
-            if ( meta.Class == Cfg.Enum.Role_Class.Warior )
+            if ( meta.RoleClass == Cfg.Enum.Role_Class.Warior )
             {
                 //to xxx
             }
 
             return;
+        }
+
+        public void GetTable(System.Type type)
+        {
+
         }
 
         /// <summary>

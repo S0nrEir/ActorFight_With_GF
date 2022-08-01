@@ -1392,6 +1392,12 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Cfg.Tables), CfgTablesWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(Cfg.single.SceneConfig), CfgsingleSceneConfigWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Cfg.single.TB_SceneConfig), CfgsingleTB_SceneConfigWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(Cfg.role.RoleBaseAttr), CfgroleRoleBaseAttrWrap.__Register);
         
         
@@ -1407,6 +1413,12 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Cfg.item.TbItem), CfgitemTbItemWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(Cfg.common.Scripts), CfgcommonScriptsWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Cfg.common.TB_Scripts), CfgcommonTB_ScriptsWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(Aquila.EntityData), AquilaEntityDataWrap.__Register);
         
         
@@ -1418,6 +1430,10 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.Procedure.Procedure_Enter), AquilaProcedureProcedure_EnterWrap.__Register);
         
+        }
+        
+        static void wrapInit9(LuaEnv luaenv, ObjectTranslator translator)
+        {
         
             translator.DelayWrapLoader(typeof(Aquila.Procedure.Procedure_Fight), AquilaProcedureProcedure_FightWrap.__Register);
         
@@ -1430,10 +1446,6 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.ObjectPool.Object_Terrain), AquilaObjectPoolObject_TerrainWrap.__Register);
         
-        }
-        
-        static void wrapInit9(LuaEnv luaenv, ObjectTranslator translator)
-        {
         
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Actor), AquilaModuleModule_ActorWrap.__Register);
         
@@ -1575,6 +1587,10 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Actor.TActorBase), AquilaFightActorTActorBaseWrap.__Register);
         
+        }
+        
+        static void wrapInit10(LuaEnv luaenv, ObjectTranslator translator)
+        {
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Actor.TriggerActor), AquilaFightActorTriggerActorWrap.__Register);
         
@@ -1587,10 +1603,6 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Buff.Component_Buff), AquilaFightBuffComponent_BuffWrap.__Register);
         
-        }
-        
-        static void wrapInit10(LuaEnv luaenv, ObjectTranslator translator)
-        {
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Buff.BuffBase), AquilaFightBuffBuffBaseWrap.__Register);
         
@@ -1611,6 +1623,9 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Tutorial.CSCallLua.DClass), TutorialCSCallLuaDClassWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.Tools.Table), AquilaToolsTableWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Tools.Fight), AquilaToolsFightWrap.__Register);

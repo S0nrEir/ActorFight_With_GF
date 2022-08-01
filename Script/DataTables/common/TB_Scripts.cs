@@ -8,35 +8,35 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace Cfg.item
+namespace Cfg.common
 {
    
-public partial class TbItem
+public partial class TB_Scripts
 {
-    private readonly Dictionary<int, item.Item> _dataMap;
-    private readonly List<item.Item> _dataList;
+    private readonly Dictionary<int, common.Scripts> _dataMap;
+    private readonly List<common.Scripts> _dataList;
     
-    public TbItem(ByteBuf _buf)
+    public TB_Scripts(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, item.Item>();
-        _dataList = new List<item.Item>();
+        _dataMap = new Dictionary<int, common.Scripts>();
+        _dataList = new List<common.Scripts>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            item.Item _v;
-            _v = item.Item.DeserializeItem(_buf);
+            common.Scripts _v;
+            _v = common.Scripts.DeserializeScripts(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, item.Item> DataMap => _dataMap;
-    public List<item.Item> DataList => _dataList;
+    public Dictionary<int, common.Scripts> DataMap => _dataMap;
+    public List<common.Scripts> DataList => _dataList;
 
-    public item.Item GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public item.Item Get(int key) => _dataMap[key];
-    public item.Item this[int key] => _dataMap[key];
+    public common.Scripts GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public common.Scripts Get(int key) => _dataMap[key];
+    public common.Scripts this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

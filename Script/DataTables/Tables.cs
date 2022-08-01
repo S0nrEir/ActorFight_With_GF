@@ -15,6 +15,8 @@ public partial class Tables
 {
     public item.TbItem TbItem {get; }
     public role.TB_RoleBaseAttr TB_RoleBaseAttr {get; }
+    public single.TB_SceneConfig TB_SceneConfig {get; }
+    public common.TB_Scripts TB_Scripts {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -23,10 +25,16 @@ public partial class Tables
         tables.Add("item.TbItem", TbItem);
         TB_RoleBaseAttr = new role.TB_RoleBaseAttr(loader("role_tb_rolebaseattr")); 
         tables.Add("role.TB_RoleBaseAttr", TB_RoleBaseAttr);
+        TB_SceneConfig = new single.TB_SceneConfig(loader("single_tb_sceneconfig")); 
+        tables.Add("single.TB_SceneConfig", TB_SceneConfig);
+        TB_Scripts = new common.TB_Scripts(loader("common_tb_scripts")); 
+        tables.Add("common.TB_Scripts", TB_Scripts);
 
         PostInit();
         TbItem.Resolve(tables); 
         TB_RoleBaseAttr.Resolve(tables); 
+        TB_SceneConfig.Resolve(tables); 
+        TB_Scripts.Resolve(tables); 
         PostResolve();
     }
 
@@ -34,6 +42,8 @@ public partial class Tables
     {
         TbItem.TranslateText(translator); 
         TB_RoleBaseAttr.TranslateText(translator); 
+        TB_SceneConfig.TranslateText(translator); 
+        TB_Scripts.TranslateText(translator); 
     }
     
     partial void PostInit();

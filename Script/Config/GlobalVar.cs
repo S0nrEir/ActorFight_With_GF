@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Aquila.Config
 {
     /// <summary>
-    /// 全局变量类
+    /// 全局实例
     /// </summary>
     public static class GlobalVar
     {
