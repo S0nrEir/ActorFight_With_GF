@@ -13,7 +13,7 @@ namespace Aquila.Extension
     {
         public void Test()
         {
-            var meta = Tables.TB_RoleBaseAttr.GetOrDefault( 0 );
+            var meta = Tables.TB_RoleBaseAttr.GetOrDefault( 10001 );
             if ( meta is null )
                 Debug.Log( "meta is nulll" );
 

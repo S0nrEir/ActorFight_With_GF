@@ -103,7 +103,7 @@ namespace Aquila.Procedure
             Aquila_Object_Base[] obj_arr = new Aquila_Object_Base[default_create_count];
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
-            var root_go = GameFrameworkModule.GetModule<Module_Terrain>().Root_GO;
+            var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;
             for ( var i = 0; i < default_create_count; i++ )
             {
                 temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );

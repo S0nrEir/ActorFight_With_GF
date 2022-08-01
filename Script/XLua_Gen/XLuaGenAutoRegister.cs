@@ -1416,9 +1416,6 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.GameEntry), AquilaGameEntryWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.GameFrameworkModuleBase), AquilaGameFrameworkModuleBaseWrap.__Register);
-        
-        
             translator.DelayWrapLoader(typeof(Aquila.Procedure.Procedure_Enter), AquilaProcedureProcedure_EnterWrap.__Register);
         
         
@@ -1430,16 +1427,13 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.Procedure.Procedure_Start), AquilaProcedureProcedure_StartWrap.__Register);
         
+        
+            translator.DelayWrapLoader(typeof(Aquila.ObjectPool.Object_Terrain), AquilaObjectPoolObject_TerrainWrap.__Register);
+        
         }
         
         static void wrapInit9(LuaEnv luaenv, ObjectTranslator translator)
         {
-        
-            translator.DelayWrapLoader(typeof(Aquila.ObjectPool.Object_Terrain), AquilaObjectPoolObject_TerrainWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(Aquila.Module.GameFrameworkModule), AquilaModuleGameFrameworkModuleWrap.__Register);
-        
         
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Actor), AquilaModuleModule_ActorWrap.__Register);
         
@@ -1469,6 +1463,12 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Lua), AquilaExtensionComponent_LuaWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Module), AquilaExtensionComponent_ModuleWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.Extension.GameFrameworkModuleBase), AquilaExtensionGameFrameworkModuleBaseWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Timer), AquilaExtensionComponent_TimerWrap.__Register);

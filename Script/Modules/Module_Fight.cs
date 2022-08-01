@@ -1,4 +1,6 @@
-﻿namespace Aquila.Module
+﻿using Aquila.Extension;
+
+namespace Aquila.Module
 {
     /// <summary>
     /// 战斗模块，管理战斗的主要流程，规则
@@ -11,7 +13,7 @@
         public void Start()
         {
             _fight_flag = true;
-            _actor_module = GameFrameworkModule.GetModule<Module_Actor>();
+            _actor_module = GameEntry.Module.GetModule<Module_Actor>();
         }
 
         /// <summary>

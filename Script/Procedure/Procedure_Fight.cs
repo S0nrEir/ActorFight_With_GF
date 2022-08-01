@@ -17,8 +17,8 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
-            _terrain_module = GameFrameworkModule.GetModule<Module_Terrain>();
-            _fight_module = GameFrameworkModule.GetModule<Module_Fight>();
+            _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            _fight_module = GameEntry.Module.GetModule<Module_Fight>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )

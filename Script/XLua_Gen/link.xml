@@ -32,13 +32,11 @@
 		<type fullname="Aquila.EntityData" preserve="all"/>
 		<type fullname="Aquila.Tools" preserve="all"/>
 		<type fullname="Aquila.GameEntry" preserve="all"/>
-		<type fullname="Aquila.GameFrameworkModuleBase" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Enter" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Fight" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Prelaod" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Start" preserve="all"/>
 		<type fullname="Aquila.ObjectPool.Object_Terrain" preserve="all"/>
-		<type fullname="Aquila.Module.GameFrameworkModule" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Actor" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Fight" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Terrain" preserve="all"/>
@@ -49,6 +47,8 @@
 		<type fullname="Aquila.Config.GlobalVar" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_LuBan" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Lua" preserve="all"/>
+		<type fullname="Aquila.Extension.Component_Module" preserve="all"/>
+		<type fullname="Aquila.Extension.GameFrameworkModuleBase" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Timer" preserve="all"/>
 		<type fullname="Aquila.Fight.ActorEffect" preserve="all"/>
 		<type fullname="Aquila.Fight.FightPrcd" preserve="all"/>
