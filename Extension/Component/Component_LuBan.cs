@@ -11,6 +11,8 @@ namespace Aquila.Extension
     /// </summary>
     public class Component_LuBan : GameFrameworkComponent
     {
+
+        [XLua.DoNotGen]
         public void Test()
         {
             var meta = Tables.TB_RoleBaseAttr.GetOrDefault( 10001 );
