@@ -21,7 +21,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 渲染帧
         /// </summary>
-        public static void Update()
+        public void Update()
         {
             for ( int i = 0; i < _allUpdates.Count; i++ )
                 _allUpdates[i].OnUpdate( Time.deltaTime );
@@ -111,9 +111,6 @@ namespace Aquila.Extension
         //所有的固定帧函数
         private static List<IFixedUpdate> _allFixedUpdates = new List<IFixedUpdate>();
         #endregion
-
-
-
     }
 
     /// <summary>

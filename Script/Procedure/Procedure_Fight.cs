@@ -34,7 +34,7 @@ namespace Aquila.Procedure
             var scene_config = Tools.Table.GetSceneConfig();
             _terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
-            GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
+            //GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
             _fight_module.Start();
         }
 

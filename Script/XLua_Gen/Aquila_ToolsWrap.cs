@@ -31,9 +31,10 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 8, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 9, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "SetParent", _m_SetParent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "NameToLayer", _m_NameToLayer_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "SetLayer", _m_SetLayer_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SetTag", _m_SetTag_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddChild", _m_AddChild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SetActive", _m_SetActive_xlua_st_);
@@ -110,6 +111,49 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetLayer_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 3&& (LuaAPI.lua_isnil(L, 1) || LuaAPI.lua_type(L, 1) == LuaTypes.LUA_TSTRING)&& translator.Assignable<UnityEngine.GameObject>(L, 2)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 3)) 
+                {
+                    string _layer = LuaAPI.lua_tostring(L, 1);
+                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
+                    bool _loop_set = LuaAPI.lua_toboolean(L, 3);
+                    
+                    Aquila.Tools.SetLayer( _layer, _go, _loop_set );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& (LuaAPI.lua_isnil(L, 1) || LuaAPI.lua_type(L, 1) == LuaTypes.LUA_TSTRING)&& translator.Assignable<UnityEngine.GameObject>(L, 2)) 
+                {
+                    string _layer = LuaAPI.lua_tostring(L, 1);
+                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
+                    
+                    Aquila.Tools.SetLayer( _layer, _go );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Tools.SetLayer!");
             
         }
         

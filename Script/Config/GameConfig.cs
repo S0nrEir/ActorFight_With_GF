@@ -92,6 +92,11 @@ namespace Aquila.Config
         public static class Layer
         {
             /// <summary>
+            /// 地块层级
+            /// </summary>
+            public const string LAYER_TERRAIN_BLOCK = "TerrainBlock";
+
+            /// <summary>
             /// floor层级
             /// </summary>
             public const string LAYER_NAME_FLOOR = "Floor";

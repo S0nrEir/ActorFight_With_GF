@@ -169,6 +169,17 @@ namespace XLua.CSObjectWrap
                     
                     return 1;
                 }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.GameObject>(L, 2)) 
+                {
+                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
+                    
+                        var gen_ret = gen_to_be_invoked.Get( _go );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

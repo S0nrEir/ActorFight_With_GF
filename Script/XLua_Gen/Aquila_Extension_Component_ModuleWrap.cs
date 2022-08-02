@@ -21,8 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Extension.Component_Module);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 0, 0);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Update", _m_Update);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "FixedUpdate", _m_FixedUpdate);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ShutDown", _m_ShutDown);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetModule", _m_GetModule);
@@ -34,9 +35,8 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
-			Utils.RegisterFunc(L, Utils.CLS_IDX, "Update", _m_Update_xlua_st_);
-            
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 0, 0);
+			
 			
             
 			
@@ -76,16 +76,20 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_Update_xlua_st_(RealStatePtr L)
+        static int _m_Update(RealStatePtr L)
         {
 		    try {
             
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Aquila.Extension.Component_Module gen_to_be_invoked = (Aquila.Extension.Component_Module)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
                     
-                    Aquila.Extension.Component_Module.Update(  );
+                    gen_to_be_invoked.Update(  );
                     
                     
                     

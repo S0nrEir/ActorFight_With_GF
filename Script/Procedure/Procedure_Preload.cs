@@ -45,6 +45,7 @@ namespace Aquila.Procedure
             _preload_flags = _preload_state_init;
 
             PreLoadTables();
+
             PreLoadObejct();
             //测试配表
             GameEntry.DataTable.Test();
