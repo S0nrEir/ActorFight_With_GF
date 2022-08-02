@@ -1,5 +1,6 @@
 ﻿using Aquila.Config;
 using Aquila.Module;
+using Cfg.common;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -34,7 +35,13 @@ namespace Aquila.Procedure
             var scene_config = Tools.Table.GetSceneConfig();
             _terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
-            //GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
+
+            //do lua script
+            if ( _data._scene_script_meta != null )
+            {
+                var meta = _data._scene_script_meta;
+                GameEntry.Lua.LoadScript( meta.AssetPath, _data._chunk_name, meta.Type );
+            }
             _fight_module.Start();
         }
 
@@ -111,15 +118,19 @@ namespace Aquila.Procedure
     {
         public void Clear()
         {
-            SceneScriptName = string.Empty;
-            SceneScriptChunkName = string.Empty;
+            _chunk_name = string.Empty;
+            _scene_script_meta = null;
         }
 
         /// <summary>
-        /// 场景脚本名称
+        /// 模块名称
         /// </summary>
-        public string SceneScriptName = string.Empty;
-        public string SceneScriptChunkName = string.Empty;
+        public string _chunk_name = string.Empty;
+
+        /// <summary>
+        /// 场景脚本表数据
+        /// </summary>
+        public Cfg.common.Scripts _scene_script_meta = null;
     }
 
     /// <summary>

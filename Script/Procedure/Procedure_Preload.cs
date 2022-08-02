@@ -27,8 +27,13 @@ namespace Aquila.Procedure
             System.GC.Collect();
 
             var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-            procedure_variable.SetValue( new Procedure_Fight_Data() { SceneScriptName = @"SceneModifier/Modifier_01" , SceneScriptChunkName = "Modifier_01"} );
-            _procedure_owner.SetData<Procedure_Fight_Variable>( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
+            var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
+            procedure_variable.SetValue( new Procedure_Fight_Data()
+            {
+                _scene_script_meta = scene_script_meta,
+                _chunk_name = Tools.Lua.GetChunkName(scene_script_meta.AssetPath)
+            } ) ;
+            _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
             ChangeState<Procedure_Fight>( _procedure_owner );
         }
 

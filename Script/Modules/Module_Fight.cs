@@ -53,7 +53,7 @@ namespace Aquila.Module
             if ( !Physics.Raycast( ray, out hit, 10000f, 256 ) )
                 return;
 
-            Log.Info( "raycast hitted!", LogColorTypeEnum.White );
+            //Log.Info( "raycast hitted!", LogColorTypeEnum.White );
             OnRaycastHit( hit );
         }
 
