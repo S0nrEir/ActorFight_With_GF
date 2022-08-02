@@ -1,6 +1,10 @@
 ﻿using Bright.Serialization;
+using Cfg.role;
+using Cfg.single;
 using GameFramework;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -15,21 +19,29 @@ namespace Aquila.Extension
         [XLua.DoNotGen]
         public void Test()
         {
-            var meta = Tables.TB_RoleBaseAttr.GetOrDefault( 10001 );
-            if ( meta is null )
-                Debug.Log( "meta is nulll" );
-
-            if ( meta.RoleClass == Cfg.Enum.Role_Class.Warior )
-            {
-                //to xxx
-            }
-
-            return;
+            var meta = GetTable<TB_RoleBaseAttr>().Get(10001);
         }
 
-        public void GetTable(System.Type type)
+        /// <summary>
+        /// 获取指定类型的表实例
+        /// </summary>
+        public T GetTable<T>() where T : class
         {
+            if ( !_is_custom_cache_tables )
+                return null;
 
+            if ( !_loadFlag || Tables is null )
+                return null;
+
+            if ( _custom_table_cache is null || _custom_table_cache.Count == 0 )
+                return null;
+
+
+            var code = typeof( T ).GetHashCode();
+            if(!_custom_table_cache.TryGetValue( code, out var field_value ))
+                return null;
+
+            return field_value as T;
         }
 
         /// <summary>
@@ -48,7 +60,7 @@ namespace Aquila.Extension
         {
             if ( _loadFlag )
                 throw new GameFrameworkException( "data table has been loaded!" );
-             
+
             if ( string.IsNullOrEmpty( _bytesPath ) )
                 throw new GameFrameworkException( "bytesPath is null or empty!" );
 
@@ -58,6 +70,24 @@ namespace Aquila.Extension
                  return new ByteBuf( File.ReadAllBytes( $"{_bytesPath}{file}{_fileExtension}" ) );
              } );
             Tables = ( Cfg.Tables ) tableCtor.Invoke( new object[] { loader } );
+
+            if ( _is_custom_cache_tables )
+            {
+                if ( _custom_table_cache is null )
+                    _custom_table_cache = new Dictionary<int, object>();
+
+                _custom_table_cache.Clear();
+                var properties = Tables.GetType().GetProperties( BindingFlags.Public | BindingFlags.Instance );
+                int hashCode;
+                object temp;
+                foreach ( var property in properties )
+                {
+                    hashCode = property.PropertyType.GetHashCode();
+                    temp = property.GetValue( Tables );
+                    _custom_table_cache.Add( hashCode, temp );
+                }
+            }
+
             _loadFlag = true;
             return _loadFlag;
         }
@@ -69,6 +99,15 @@ namespace Aquila.Extension
             LoadDataTable();
         }
 
+        /// <summary>
+        /// 使用自定义缓存表数据
+        /// </summary>
+        [SerializeField] private bool _is_custom_cache_tables = false;
+
+        /// <summary>
+        /// 自定义缓存表集合
+        /// </summary>
+        private Dictionary<int, object> _custom_table_cache = null;
 
         /// <summary>
         /// bytes文件路径

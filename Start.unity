@@ -516,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a27284d324191468dab3e00f4e2b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _is_custom_cache_tables: 1
 --- !u!1 &1612427239
 GameObject:
   m_ObjectHideFlags: 0
