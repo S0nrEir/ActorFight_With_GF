@@ -29,14 +29,14 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ToString", _m_ToString);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Id", _g_get_Id);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Name", _g_get_Name);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Desc", _g_get_Desc);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Class", _g_get_Class);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TestBoolean", _g_get_TestBoolean);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TestMap", _g_get_TestMap);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TestVector", _g_get_TestVector);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "TestArr", _g_get_TestArr);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "id", _g_get_id);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "name", _g_get_name);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "desc", _g_get_desc);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "RoleClass", _g_get_RoleClass);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "test_boolean", _g_get_test_boolean);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "test_map", _g_get_test_map);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "test_vector", _g_get_test_vector);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "test_arr", _g_get_test_arr);
             
 			
 			
@@ -229,13 +229,13 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Id(RealStatePtr L)
+        static int _g_get_id(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Id);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.id);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -243,13 +243,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Name(RealStatePtr L)
+        static int _g_get_name(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Name);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.name);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -257,13 +257,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Desc(RealStatePtr L)
+        static int _g_get_desc(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Desc);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.desc);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -271,13 +271,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Class(RealStatePtr L)
+        static int _g_get_RoleClass(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.Class);
+                translator.Push(L, gen_to_be_invoked.RoleClass);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -285,13 +285,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_TestBoolean(RealStatePtr L)
+        static int _g_get_test_boolean(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.TestBoolean);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.test_boolean);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -299,13 +299,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_TestMap(RealStatePtr L)
+        static int _g_get_test_map(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.TestMap);
+                translator.Push(L, gen_to_be_invoked.test_map);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -313,13 +313,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_TestVector(RealStatePtr L)
+        static int _g_get_test_vector(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                translator.PushUnityEngineVector3(L, gen_to_be_invoked.TestVector);
+                translator.PushUnityEngineVector3(L, gen_to_be_invoked.test_vector);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -327,13 +327,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_TestArr(RealStatePtr L)
+        static int _g_get_test_arr(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.role.RoleBaseAttr gen_to_be_invoked = (Cfg.role.RoleBaseAttr)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.TestArr);
+                translator.Push(L, gen_to_be_invoked.test_arr);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

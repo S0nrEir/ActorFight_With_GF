@@ -26,12 +26,12 @@ namespace Aquila
 
         void Update()
         {
-            GameFrameworkModule.Update();
+            Module.Update();
         }
 
         private void FixedUpdate()
         {
-            GameFrameworkModule.FixedUpdate();
+            //GameFrameworkModule.FixedUpdate();
         }
     }
 

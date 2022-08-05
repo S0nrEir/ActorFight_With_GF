@@ -1,4 +1,5 @@
 ﻿using Aquila.Config;
+using Cfg.Enum;
 using GameFramework.Resource;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 加载一个lua脚本
         /// </summary>
-        public void LoadScript( string script_name, string chunk_name )
+        public void LoadScript( string script_name, string chunk_name ,Script_Type script_type)
         {
             if ( string.IsNullOrEmpty( script_name ) )
             {
@@ -32,11 +33,13 @@ namespace Aquila.Extension
             }
 
             //构建脚本信息类
+            //#todo这里改成引用池
             var script_info = new ScriptInfo()
             {
                 script_name = Tools.Lua.GetScriptName( asset_name ),
                 chunk_name = chunk_name,
-                _table = ObtainTable()
+                _table = ObtainTable(),
+                _type = script_type
             };
 
             if ( GameEntry.Base.EditorResourceMode )
@@ -72,6 +75,9 @@ namespace Aquila.Extension
                 table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_FINISH, out _lua_on_finish );
             }
             _lua_on_start?.Invoke();
+            if ( script_info._type == Script_Type.On_Start )
+                script_info._table.Dispose();
+
             return obj_arr;
         }
 
@@ -294,8 +300,24 @@ namespace Aquila.Extension
     /// </summary>
     internal class ScriptInfo
     {
+        /// <summary>
+        /// 脚本路径
+        /// </summary>
         public string script_name = string.Empty;
+
+        /// <summary>
+        /// chunkName
+        /// </summary>
         public string chunk_name = string.Empty;
+
+        /// <summary>
+        /// 对应的luaTable
+        /// </summary>
         public LuaTable _table = null;
+
+        /// <summary>
+        /// 脚本周期
+        /// </summary>
+        public Cfg.Enum.Script_Type _type = Cfg.Enum.Script_Type.On_Start;
     }
 }

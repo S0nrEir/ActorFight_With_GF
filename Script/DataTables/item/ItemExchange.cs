@@ -17,8 +17,8 @@ public sealed partial class ItemExchange :  Bright.Config.BeanBase
 {
     public ItemExchange(ByteBuf _buf) 
     {
-        Id = _buf.ReadInt();
-        Num = _buf.ReadInt();
+        id = _buf.ReadInt();
+        num = _buf.ReadInt();
         PostInit();
     }
 
@@ -30,11 +30,11 @@ public sealed partial class ItemExchange :  Bright.Config.BeanBase
     /// <summary>
     /// 道具id
     /// </summary>
-    public int Id { get; private set; }
+    public int id { get; private set; }
     /// <summary>
     /// 道具数量
     /// </summary>
-    public int Num { get; private set; }
+    public int num { get; private set; }
 
     public const int __ID__ = 1814660465;
     public override int GetTypeId() => __ID__;
@@ -51,8 +51,8 @@ public sealed partial class ItemExchange :  Bright.Config.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "Id:" + Id + ","
-        + "Num:" + Num + ","
+        + "id:" + id + ","
+        + "num:" + num + ","
         + "}";
     }
     

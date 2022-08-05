@@ -17,17 +17,17 @@ public sealed partial class Item :  Bright.Config.BeanBase
 {
     public Item(ByteBuf _buf) 
     {
-        Id = _buf.ReadInt();
-        Name = _buf.ReadString();
-        Desc = _buf.ReadString();
-        Price = _buf.ReadInt();
-        UpgradeToItemId = _buf.ReadInt();
-        if(_buf.ReadBool()){ ExpireTime = _buf.ReadInt(); } else { ExpireTime = null; }
-        BatchUseable = _buf.ReadBool();
-        Quality = (item.EQuality)_buf.ReadInt();
-        ExchangeStream = item.ItemExchange.DeserializeItemExchange(_buf);
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);ExchangeList = new System.Collections.Generic.List<item.ItemExchange>(n);for(var i = 0 ; i < n ; i++) { item.ItemExchange _e;  _e = item.ItemExchange.DeserializeItemExchange(_buf); ExchangeList.Add(_e);}}
-        ExchangeColumn = item.ItemExchange.DeserializeItemExchange(_buf);
+        id = _buf.ReadInt();
+        name = _buf.ReadString();
+        desc = _buf.ReadString();
+        price = _buf.ReadInt();
+        upgrade_to_item_id = _buf.ReadInt();
+        if(_buf.ReadBool()){ expire_time = _buf.ReadInt(); } else { expire_time = null; }
+        batch_useable = _buf.ReadBool();
+        quality = (item.EQuality)_buf.ReadInt();
+        exchange_stream = item.ItemExchange.DeserializeItemExchange(_buf);
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);exchange_list = new System.Collections.Generic.List<item.ItemExchange>(n);for(var i = 0 ; i < n ; i++) { item.ItemExchange _e;  _e = item.ItemExchange.DeserializeItemExchange(_buf); exchange_list.Add(_e);}}
+        exchange_column = item.ItemExchange.DeserializeItemExchange(_buf);
         PostInit();
     }
 
@@ -39,79 +39,79 @@ public sealed partial class Item :  Bright.Config.BeanBase
     /// <summary>
     /// 这是id
     /// </summary>
-    public int Id { get; private set; }
+    public int id { get; private set; }
     /// <summary>
     /// 名字
     /// </summary>
-    public string Name { get; private set; }
+    public string name { get; private set; }
     /// <summary>
     /// 描述
     /// </summary>
-    public string Desc { get; private set; }
+    public string desc { get; private set; }
     /// <summary>
     /// 价格
     /// </summary>
-    public int Price { get; private set; }
+    public int price { get; private set; }
     /// <summary>
     /// 引用当前表
     /// </summary>
-    public int UpgradeToItemId { get; private set; }
-    public item.Item UpgradeToItemId_Ref { get; private set; }
+    public int upgrade_to_item_id { get; private set; }
+    public item.Item upgrade_to_item_id_Ref { get; private set; }
     /// <summary>
     /// 过期时间
     /// </summary>
-    public int? ExpireTime { get; private set; }
+    public int? expire_time { get; private set; }
     /// <summary>
     /// 能否批量使用
     /// </summary>
-    public bool BatchUseable { get; private set; }
+    public bool batch_useable { get; private set; }
     /// <summary>
     /// 品质
     /// </summary>
-    public item.EQuality Quality { get; private set; }
+    public item.EQuality quality { get; private set; }
     /// <summary>
     /// 道具兑换配置
     /// </summary>
-    public item.ItemExchange ExchangeStream { get; private set; }
-    public System.Collections.Generic.List<item.ItemExchange> ExchangeList { get; private set; }
+    public item.ItemExchange exchange_stream { get; private set; }
+    public System.Collections.Generic.List<item.ItemExchange> exchange_list { get; private set; }
     /// <summary>
     /// 道具兑换配置
     /// </summary>
-    public item.ItemExchange ExchangeColumn { get; private set; }
+    public item.ItemExchange exchange_column { get; private set; }
 
     public const int __ID__ = 2107285806;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
-        this.UpgradeToItemId_Ref = (_tables["item.TbItem"] as item.TbItem).GetOrDefault(UpgradeToItemId);
-        ExchangeStream?.Resolve(_tables);
-        foreach(var _e in ExchangeList) { _e?.Resolve(_tables); }
-        ExchangeColumn?.Resolve(_tables);
+        this.upgrade_to_item_id_Ref = (_tables["item.TbItem"] as item.TbItem).GetOrDefault(upgrade_to_item_id);
+        exchange_stream?.Resolve(_tables);
+        foreach(var _e in exchange_list) { _e?.Resolve(_tables); }
+        exchange_column?.Resolve(_tables);
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
-        ExchangeStream?.TranslateText(translator);
-        foreach(var _e in ExchangeList) { _e?.TranslateText(translator); }
-        ExchangeColumn?.TranslateText(translator);
+        exchange_stream?.TranslateText(translator);
+        foreach(var _e in exchange_list) { _e?.TranslateText(translator); }
+        exchange_column?.TranslateText(translator);
     }
 
     public override string ToString()
     {
         return "{ "
-        + "Id:" + Id + ","
-        + "Name:" + Name + ","
-        + "Desc:" + Desc + ","
-        + "Price:" + Price + ","
-        + "UpgradeToItemId:" + UpgradeToItemId + ","
-        + "ExpireTime:" + ExpireTime + ","
-        + "BatchUseable:" + BatchUseable + ","
-        + "Quality:" + Quality + ","
-        + "ExchangeStream:" + ExchangeStream + ","
-        + "ExchangeList:" + Bright.Common.StringUtil.CollectionToString(ExchangeList) + ","
-        + "ExchangeColumn:" + ExchangeColumn + ","
+        + "id:" + id + ","
+        + "name:" + name + ","
+        + "desc:" + desc + ","
+        + "price:" + price + ","
+        + "upgrade_to_item_id:" + upgrade_to_item_id + ","
+        + "expire_time:" + expire_time + ","
+        + "batch_useable:" + batch_useable + ","
+        + "quality:" + quality + ","
+        + "exchange_stream:" + exchange_stream + ","
+        + "exchange_list:" + Bright.Common.StringUtil.CollectionToString(exchange_list) + ","
+        + "exchange_column:" + exchange_column + ","
         + "}";
     }
     

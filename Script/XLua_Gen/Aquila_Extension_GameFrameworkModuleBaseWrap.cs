@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaGameFrameworkModuleBaseWrap 
+    public class AquilaExtensionGameFrameworkModuleBaseWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.GameFrameworkModuleBase);
+			System.Type type = typeof(Aquila.Extension.GameFrameworkModuleBase);
 			Utils.BeginObjectRegister(type, L, translator, 0, 2, 0, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OnClose", _m_OnClose);
@@ -46,7 +46,7 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            return LuaAPI.luaL_error(L, "Aquila.GameFrameworkModuleBase does not have a constructor!");
+            return LuaAPI.luaL_error(L, "Aquila.Extension.GameFrameworkModuleBase does not have a constructor!");
         }
         
 		
@@ -64,7 +64,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.GameFrameworkModuleBase gen_to_be_invoked = (Aquila.GameFrameworkModuleBase)translator.FastGetCSObj(L, 1);
+                Aquila.Extension.GameFrameworkModuleBase gen_to_be_invoked = (Aquila.Extension.GameFrameworkModuleBase)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -91,7 +91,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.GameFrameworkModuleBase gen_to_be_invoked = (Aquila.GameFrameworkModuleBase)translator.FastGetCSObj(L, 1);
+                Aquila.Extension.GameFrameworkModuleBase gen_to_be_invoked = (Aquila.Extension.GameFrameworkModuleBase)translator.FastGetCSObj(L, 1);
             
             
                 

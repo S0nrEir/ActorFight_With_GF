@@ -82,6 +82,7 @@ public static class ExampleConfig
                 "System.Action<float>",
                 "System.Action<float,float>",
                 "Aquila.ObjectPool",
+                "Aquila.GameEntry"
             };
             var unityTypes = ( from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                where !( assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder )

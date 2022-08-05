@@ -5,6 +5,7 @@ using GameFramework;
 using Aquila.Module;
 using Aquila;
 using UnityGameFramework.Runtime;
+using Aquila.Extension;
 
 namespace Aquila.Module
 {

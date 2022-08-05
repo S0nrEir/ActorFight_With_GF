@@ -21,8 +21,8 @@ namespace Aquila
             /// <returns>失败返回-1</returns>
             public static int Coord2UniqueKey( int x, int z )
             {
-                var result = x * GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION + z;
-                if ( result > GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_RANGE )
+                var result = x * Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Precision + z;
+                if ( result > Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Range )
                 {
                     Log.Error( $"terrain range wrong!,value is :{result}" );
                     return -1;
@@ -40,8 +40,9 @@ namespace Aquila
                 if ( key <= 0 )
                     return Vector2Int.zero;
 
-                var x = key / GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION;
-                var y = key - ( x * GameConfig.Scene.FIGHT_SCENE_TERRAIN_COORDINATE_PRECISION );
+                var scene_config = Table.GetSceneConfig();
+                var x = key / scene_config.Fight_Scene_Terrain_Coordinate_Precision;
+                var y = key - ( x * scene_config.Fight_Scene_Terrain_Coordinate_Precision );
                 return new Vector2Int( x, y );
             }
 
