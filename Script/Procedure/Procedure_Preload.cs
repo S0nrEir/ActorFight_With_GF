@@ -27,8 +27,13 @@ namespace Aquila.Procedure
             System.GC.Collect();
 
             var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-            procedure_variable.SetValue( new Procedure_Fight_Data() { SceneScriptName = @"SceneModifier/Modifier_01" , SceneScriptChunkName = "Modifier_01"} );
-            _procedure_owner.SetData<Procedure_Fight_Variable>( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
+            var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
+            procedure_variable.SetValue( new Procedure_Fight_Data()
+            {
+                _scene_script_meta = scene_script_meta,
+                _chunk_name = Tools.Lua.GetChunkName(scene_script_meta.AssetPath)
+            } ) ;
+            _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
             ChangeState<Procedure_Fight>( _procedure_owner );
         }
 
@@ -45,6 +50,7 @@ namespace Aquila.Procedure
             _preload_flags = _preload_state_init;
 
             PreLoadTables();
+
             PreLoadObejct();
             //测试配表
             GameEntry.DataTable.Test();
@@ -96,14 +102,15 @@ namespace Aquila.Procedure
                 throw new GameFrameworkException( "terrain game object is null!" );
 
             //默认的地块创建数量
-            var default_create_count = GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH * GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH + 10;
+            var scene_config = Tools.Table.GetSceneConfig();
+            var default_create_count = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width + 10;
             //默认创建四十个地块
             var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
 
             Aquila_Object_Base[] obj_arr = new Aquila_Object_Base[default_create_count];
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
-            var root_go = GameFrameworkModule.GetModule<Module_Terrain>().Root_GO;
+            var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;
             for ( var i = 0; i < default_create_count; i++ )
             {
                 temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );

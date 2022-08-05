@@ -31,9 +31,10 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 4, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 5, 0, 0);
 			
 			
+            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "LAYER_TERRAIN_BLOCK", Aquila.Config.GameConfig.Layer.LAYER_TERRAIN_BLOCK);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "LAYER_NAME_FLOOR", Aquila.Config.GameConfig.Layer.LAYER_NAME_FLOOR);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "LAYER_NAME_DEFAULT", Aquila.Config.GameConfig.Layer.LAYER_NAME_DEFAULT);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "LAYER_NAME_POST_PROCESSING", Aquila.Config.GameConfig.Layer.LAYER_NAME_POST_PROCESSING);

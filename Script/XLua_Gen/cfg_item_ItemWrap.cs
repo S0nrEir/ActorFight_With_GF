@@ -29,18 +29,18 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ToString", _m_ToString);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Id", _g_get_Id);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Name", _g_get_Name);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Desc", _g_get_Desc);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Price", _g_get_Price);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "UpgradeToItemId", _g_get_UpgradeToItemId);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "UpgradeToItemId_Ref", _g_get_UpgradeToItemId_Ref);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExpireTime", _g_get_ExpireTime);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "BatchUseable", _g_get_BatchUseable);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Quality", _g_get_Quality);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeStream", _g_get_ExchangeStream);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeList", _g_get_ExchangeList);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "ExchangeColumn", _g_get_ExchangeColumn);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "id", _g_get_id);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "name", _g_get_name);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "desc", _g_get_desc);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "price", _g_get_price);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgrade_to_item_id", _g_get_upgrade_to_item_id);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "upgrade_to_item_id_Ref", _g_get_upgrade_to_item_id_Ref);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "expire_time", _g_get_expire_time);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "batch_useable", _g_get_batch_useable);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "quality", _g_get_quality);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "exchange_stream", _g_get_exchange_stream);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "exchange_list", _g_get_exchange_list);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "exchange_column", _g_get_exchange_column);
             
 			
 			
@@ -233,13 +233,13 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Id(RealStatePtr L)
+        static int _g_get_id(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Id);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.id);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -247,13 +247,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Name(RealStatePtr L)
+        static int _g_get_name(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Name);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.name);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -261,13 +261,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Desc(RealStatePtr L)
+        static int _g_get_desc(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushstring(L, gen_to_be_invoked.Desc);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.desc);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -275,13 +275,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Price(RealStatePtr L)
+        static int _g_get_price(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.Price);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.price);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -289,13 +289,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_UpgradeToItemId(RealStatePtr L)
+        static int _g_get_upgrade_to_item_id(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.UpgradeToItemId);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.upgrade_to_item_id);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -303,13 +303,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_UpgradeToItemId_Ref(RealStatePtr L)
+        static int _g_get_upgrade_to_item_id_Ref(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.UpgradeToItemId_Ref);
+                translator.Push(L, gen_to_be_invoked.upgrade_to_item_id_Ref);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -317,13 +317,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ExpireTime(RealStatePtr L)
+        static int _g_get_expire_time(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.PushAny(L, gen_to_be_invoked.ExpireTime);
+                translator.PushAny(L, gen_to_be_invoked.expire_time);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -331,13 +331,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_BatchUseable(RealStatePtr L)
+        static int _g_get_batch_useable(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.BatchUseable);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.batch_useable);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -345,13 +345,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Quality(RealStatePtr L)
+        static int _g_get_quality(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.Quality);
+                translator.Push(L, gen_to_be_invoked.quality);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -359,13 +359,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ExchangeStream(RealStatePtr L)
+        static int _g_get_exchange_stream(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.ExchangeStream);
+                translator.Push(L, gen_to_be_invoked.exchange_stream);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -373,13 +373,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ExchangeList(RealStatePtr L)
+        static int _g_get_exchange_list(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.ExchangeList);
+                translator.Push(L, gen_to_be_invoked.exchange_list);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -387,13 +387,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_ExchangeColumn(RealStatePtr L)
+        static int _g_get_exchange_column(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Cfg.item.Item gen_to_be_invoked = (Cfg.item.Item)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.ExchangeColumn);
+                translator.Push(L, gen_to_be_invoked.exchange_column);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

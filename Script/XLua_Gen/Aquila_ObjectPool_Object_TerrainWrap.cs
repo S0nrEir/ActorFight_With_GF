@@ -208,9 +208,9 @@ namespace XLua.CSObjectWrap
                 
                 {
                     int _x = LuaAPI.xlua_tointeger(L, 2);
-                    int _y = LuaAPI.xlua_tointeger(L, 3);
+                    int _z = LuaAPI.xlua_tointeger(L, 3);
                     
-                    gen_to_be_invoked.SetCoordinate( _x, _y );
+                    gen_to_be_invoked.SetCoordinate( _x, _z );
                     
                     
                     

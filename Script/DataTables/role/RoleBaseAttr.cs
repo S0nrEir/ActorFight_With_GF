@@ -17,14 +17,14 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
 {
     public RoleBaseAttr(ByteBuf _buf) 
     {
-        Id = _buf.ReadInt();
-        Name = _buf.ReadString();
-        Desc = _buf.ReadString();
-        Class = (Enum.Role_Class)_buf.ReadInt();
-        TestBoolean = _buf.ReadBool();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);TestMap = new System.Collections.Generic.Dictionary<int, int>(n * 3 / 2);for(var i = 0 ; i < n ; i++) { int _k;  _k = _buf.ReadInt(); int _v;  _v = _buf.ReadInt();     TestMap.Add(_k, _v);}}
-        TestVector = _buf.ReadUnityVector3();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);TestArr = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); TestArr[i] = _e;}}
+        id = _buf.ReadInt();
+        name = _buf.ReadString();
+        desc = _buf.ReadString();
+        RoleClass = (Enum.Role_Class)_buf.ReadInt();
+        test_boolean = _buf.ReadBool();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_map = new System.Collections.Generic.Dictionary<int, int>(n * 3 / 2);for(var i = 0 ; i < n ; i++) { int _k;  _k = _buf.ReadInt(); int _v;  _v = _buf.ReadInt();     test_map.Add(_k, _v);}}
+        test_vector = _buf.ReadUnityVector3();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_arr = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); test_arr[i] = _e;}}
         PostInit();
     }
 
@@ -36,35 +36,35 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
     /// <summary>
     /// 这是id
     /// </summary>
-    public int Id { get; private set; }
+    public int id { get; private set; }
     /// <summary>
     /// 名字
     /// </summary>
-    public string Name { get; private set; }
+    public string name { get; private set; }
     /// <summary>
     /// 描述
     /// </summary>
-    public string Desc { get; private set; }
+    public string desc { get; private set; }
     /// <summary>
     /// 职业
     /// </summary>
-    public Enum.Role_Class Class { get; private set; }
+    public Enum.Role_Class RoleClass { get; private set; }
     /// <summary>
     /// 测试布尔值
     /// </summary>
-    public bool TestBoolean { get; private set; }
+    public bool test_boolean { get; private set; }
     /// <summary>
     /// 测试键值对
     /// </summary>
-    public System.Collections.Generic.Dictionary<int, int> TestMap { get; private set; }
+    public System.Collections.Generic.Dictionary<int, int> test_map { get; private set; }
     /// <summary>
     /// 测试向量
     /// </summary>
-    public UnityEngine.Vector3 TestVector { get; private set; }
+    public UnityEngine.Vector3 test_vector { get; private set; }
     /// <summary>
     /// 测试数组或集合
     /// </summary>
-    public int[] TestArr { get; private set; }
+    public int[] test_arr { get; private set; }
 
     public const int __ID__ = -876445296;
     public override int GetTypeId() => __ID__;
@@ -81,14 +81,14 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "Id:" + Id + ","
-        + "Name:" + Name + ","
-        + "Desc:" + Desc + ","
-        + "Class:" + Class + ","
-        + "TestBoolean:" + TestBoolean + ","
-        + "TestMap:" + Bright.Common.StringUtil.CollectionToString(TestMap) + ","
-        + "TestVector:" + TestVector + ","
-        + "TestArr:" + Bright.Common.StringUtil.CollectionToString(TestArr) + ","
+        + "id:" + id + ","
+        + "name:" + name + ","
+        + "desc:" + desc + ","
+        + "RoleClass:" + RoleClass + ","
+        + "test_boolean:" + test_boolean + ","
+        + "test_map:" + Bright.Common.StringUtil.CollectionToString(test_map) + ","
+        + "test_vector:" + test_vector + ","
+        + "test_arr:" + Bright.Common.StringUtil.CollectionToString(test_arr) + ","
         + "}";
     }
     

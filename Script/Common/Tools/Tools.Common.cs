@@ -25,6 +25,24 @@ namespace Aquila
         }
 
         /// <summary>
+        /// 设置一个物体的层级
+        /// </summary>
+        public static void SetLayer( string layer, GameObject go, bool loop_set = false )
+        {
+            if ( go == null )
+                return;
+
+            go.layer = LayerMask.NameToLayer( layer );
+            var tran = go.transform;
+            if ( loop_set )
+            {
+                var child_count = tran.childCount;
+                for ( int i = 0; i < child_count; i++ )
+                    SetLayer( layer, tran.GetChild( i ).gameObject, loop_set );
+            }
+        }
+
+        /// <summary>
         /// 设置一个gameObject的tag
         /// </summary>
         public static void SetTag( string tag, GameObject GO, bool loopSet = false )
@@ -53,13 +71,13 @@ namespace Aquila
             if ( parent == null )
                 return null;
 
-            var go          = new GameObject();
-            Transform t     = go.transform;
-            t.parent        = parent.transform;
+            var go = new GameObject();
+            Transform t = go.transform;
+            t.parent = parent.transform;
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
-            t.localScale    = Vector3.one;
-            go.layer        = parent.gameObject.layer;
+            t.localScale = Vector3.one;
+            go.layer = parent.gameObject.layer;
 
             return go.transform;
         }

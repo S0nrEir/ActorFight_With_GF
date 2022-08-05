@@ -89,8 +89,9 @@ namespace XLua.CSObjectWrap
                 {
                     string _script_name = LuaAPI.lua_tostring(L, 2);
                     string _chunk_name = LuaAPI.lua_tostring(L, 3);
+                    Cfg.Enum.Script_Type _script_type;translator.Get(L, 4, out _script_type);
                     
-                    gen_to_be_invoked.LoadScript( _script_name, _chunk_name );
+                    gen_to_be_invoked.LoadScript( _script_name, _chunk_name, _script_type );
                     
                     
                     

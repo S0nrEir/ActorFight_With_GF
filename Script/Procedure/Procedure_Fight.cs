@@ -1,5 +1,6 @@
 ﻿using Aquila.Config;
 using Aquila.Module;
+using Cfg.common;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -17,8 +18,8 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
-            _terrain_module = GameFrameworkModule.GetModule<Module_Terrain>();
-            _fight_module = GameFrameworkModule.GetModule<Module_Fight>();
+            _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            _fight_module = GameEntry.Module.GetModule<Module_Fight>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -31,9 +32,16 @@ namespace Aquila.Procedure
                 return; 
             }
 
-            _terrain_module.Start( GameConfig.Scene.FIGHT_SCENE_DEFAULT_X_WIDTH, GameConfig.Scene.FIGHT_SCENE_DEFAULT_Y_WIDTH );
+            var scene_config = Tools.Table.GetSceneConfig();
+            _terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
-            GameEntry.Lua.LoadScript( _data.SceneScriptName, _data.SceneScriptChunkName );
+
+            //do lua script
+            if ( _data._scene_script_meta != null )
+            {
+                var meta = _data._scene_script_meta;
+                GameEntry.Lua.LoadScript( meta.AssetPath, _data._chunk_name, meta.Type );
+            }
             _fight_module.Start();
         }
 
@@ -74,7 +82,9 @@ namespace Aquila.Procedure
         private void MainCameraInitializeSetting()
         {
             _main_camera = GlobalVar.Main_Camera;
-            _main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
+            var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
+            _main_camera.transform.eulerAngles = scene_config.Main_Camera_Default_Euler;
+            //_main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
             _main_camera.transform.position = GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION;
         }
 
@@ -108,15 +118,19 @@ namespace Aquila.Procedure
     {
         public void Clear()
         {
-            SceneScriptName = string.Empty;
-            SceneScriptChunkName = string.Empty;
+            _chunk_name = string.Empty;
+            _scene_script_meta = null;
         }
 
         /// <summary>
-        /// 场景脚本名称
+        /// 模块名称
         /// </summary>
-        public string SceneScriptName = string.Empty;
-        public string SceneScriptChunkName = string.Empty;
+        public string _chunk_name = string.Empty;
+
+        /// <summary>
+        /// 场景脚本表数据
+        /// </summary>
+        public Cfg.common.Scripts _scene_script_meta = null;
     }
 
     /// <summary>

@@ -47,11 +47,11 @@ namespace Aquila.ObjectPool
         /// </summary>
         /// <param name="x">x坐标</param>
         /// <param name="y">y坐标</param>
-        public void SetCoordinate( int x, int y )
+        public void SetCoordinate( int x, int z )
         {
-            Coordinate = new Vector3Int( x, 0, y );
-            UniqueKey = Tools.Fight.Coord2UniqueKey( Coordinate.x, Coordinate.y );
-            Target_GO.name = $"{x}_{y}";
+            Coordinate = new Vector3Int( x, 0, z );
+            UniqueKey = Tools.Fight.Coord2UniqueKey( Coordinate.x, Coordinate.z );
+            Target_GO.name = $"{x}_{z}";
         }
 
         /// <summary>
@@ -89,6 +89,8 @@ namespace Aquila.ObjectPool
         protected override void OnSpawn()
         {
             base.OnSpawn();
+            Tools.SetTag( GameConfig.Tags.TERRAIN_BLOCK, Target_GO, true );
+            Tools.SetLayer( GameConfig.Layer.LAYER_TERRAIN_BLOCK, Target_GO, true );
             _mesh_render = Tools.GetComponent<MeshRenderer>( Target_GO, "Mesh" );
             if ( _mesh_render == null )
             {

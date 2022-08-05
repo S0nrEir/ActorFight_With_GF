@@ -31,8 +31,9 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "GetScriptName", _m_GetScriptName_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "GetChunkName", _m_GetChunkName_xlua_st_);
             
 			
             
@@ -67,6 +68,31 @@ namespace XLua.CSObjectWrap
                     string _asset_path = LuaAPI.lua_tostring(L, 1);
                     
                         var gen_ret = Aquila.Tools.Lua.GetScriptName( _asset_path );
+                        LuaAPI.lua_pushstring(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetChunkName_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+            
+            
+                
+                {
+                    string _asset_path = LuaAPI.lua_tostring(L, 1);
+                    
+                        var gen_ret = Aquila.Tools.Lua.GetChunkName( _asset_path );
                         LuaAPI.lua_pushstring(L, gen_ret);
                     
                     

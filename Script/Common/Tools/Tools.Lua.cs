@@ -25,6 +25,18 @@ namespace Aquila
 
                 return temp[temp.Length - 1];
             }
+
+            /// <summary>
+            /// 获取一段lua脚本的chunk name
+            /// </summary>
+            public static string GetChunkName(string asset_path)
+            {
+                if ( string.IsNullOrEmpty( asset_path ) )
+                    return $"empty_chunk_name";
+
+                var arr = asset_path.Split('/' );
+                return arr[arr.Length - 1];
+            }
         }
     }
 }
