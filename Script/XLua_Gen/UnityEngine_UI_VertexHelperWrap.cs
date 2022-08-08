@@ -259,11 +259,11 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
-                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector2>(L, 4)) 
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector4>(L, 4)) 
                 {
                     UnityEngine.Vector3 _position;translator.Get(L, 2, out _position);
                     UnityEngine.Color32 _color;translator.Get(L, 3, out _color);
-                    UnityEngine.Vector2 _uv0;translator.Get(L, 4, out _uv0);
+                    UnityEngine.Vector4 _uv0;translator.Get(L, 4, out _uv0);
                     
                     gen_to_be_invoked.AddVert( _position, _color, _uv0 );
                     
@@ -271,12 +271,12 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
-                if(gen_param_count == 7&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector2>(L, 4)&& translator.Assignable<UnityEngine.Vector2>(L, 5)&& translator.Assignable<UnityEngine.Vector3>(L, 6)&& translator.Assignable<UnityEngine.Vector4>(L, 7)) 
+                if(gen_param_count == 7&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector4>(L, 4)&& translator.Assignable<UnityEngine.Vector4>(L, 5)&& translator.Assignable<UnityEngine.Vector3>(L, 6)&& translator.Assignable<UnityEngine.Vector4>(L, 7)) 
                 {
                     UnityEngine.Vector3 _position;translator.Get(L, 2, out _position);
                     UnityEngine.Color32 _color;translator.Get(L, 3, out _color);
-                    UnityEngine.Vector2 _uv0;translator.Get(L, 4, out _uv0);
-                    UnityEngine.Vector2 _uv1;translator.Get(L, 5, out _uv1);
+                    UnityEngine.Vector4 _uv0;translator.Get(L, 4, out _uv0);
+                    UnityEngine.Vector4 _uv1;translator.Get(L, 5, out _uv1);
                     UnityEngine.Vector3 _normal;translator.Get(L, 6, out _normal);
                     UnityEngine.Vector4 _tangent;translator.Get(L, 7, out _tangent);
                     
@@ -286,14 +286,14 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
-                if(gen_param_count == 9&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector2>(L, 4)&& translator.Assignable<UnityEngine.Vector2>(L, 5)&& translator.Assignable<UnityEngine.Vector2>(L, 6)&& translator.Assignable<UnityEngine.Vector2>(L, 7)&& translator.Assignable<UnityEngine.Vector3>(L, 8)&& translator.Assignable<UnityEngine.Vector4>(L, 9)) 
+                if(gen_param_count == 9&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Color32>(L, 3)&& translator.Assignable<UnityEngine.Vector4>(L, 4)&& translator.Assignable<UnityEngine.Vector4>(L, 5)&& translator.Assignable<UnityEngine.Vector4>(L, 6)&& translator.Assignable<UnityEngine.Vector4>(L, 7)&& translator.Assignable<UnityEngine.Vector3>(L, 8)&& translator.Assignable<UnityEngine.Vector4>(L, 9)) 
                 {
                     UnityEngine.Vector3 _position;translator.Get(L, 2, out _position);
                     UnityEngine.Color32 _color;translator.Get(L, 3, out _color);
-                    UnityEngine.Vector2 _uv0;translator.Get(L, 4, out _uv0);
-                    UnityEngine.Vector2 _uv1;translator.Get(L, 5, out _uv1);
-                    UnityEngine.Vector2 _uv2;translator.Get(L, 6, out _uv2);
-                    UnityEngine.Vector2 _uv3;translator.Get(L, 7, out _uv3);
+                    UnityEngine.Vector4 _uv0;translator.Get(L, 4, out _uv0);
+                    UnityEngine.Vector4 _uv1;translator.Get(L, 5, out _uv1);
+                    UnityEngine.Vector4 _uv2;translator.Get(L, 6, out _uv2);
+                    UnityEngine.Vector4 _uv3;translator.Get(L, 7, out _uv3);
                     UnityEngine.Vector3 _normal;translator.Get(L, 8, out _normal);
                     UnityEngine.Vector4 _tangent;translator.Get(L, 9, out _tangent);
                     

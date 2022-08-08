@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.CapsulecastCommand);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 6, 6);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 7, 7);
 			
 			
 			
@@ -31,6 +31,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "direction", _g_get_direction);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "distance", _g_get_distance);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "layerMask", _g_get_layerMask);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "physicsScene", _g_get_physicsScene);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "point1", _s_set_point1);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "point2", _s_set_point2);
@@ -38,6 +39,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "direction", _s_set_direction);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "distance", _s_set_distance);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "layerMask", _s_set_layerMask);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "physicsScene", _s_set_physicsScene);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -95,6 +97,48 @@ namespace XLua.CSObjectWrap
 					UnityEngine.Vector3 _direction;translator.Get(L, 5, out _direction);
 					
 					var gen_ret = new UnityEngine.CapsulecastCommand(_p1, _p2, _radius, _direction);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 8 && translator.Assignable<UnityEngine.PhysicsScene>(L, 2) && translator.Assignable<UnityEngine.Vector3>(L, 3) && translator.Assignable<UnityEngine.Vector3>(L, 4) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) && translator.Assignable<UnityEngine.Vector3>(L, 6) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 7) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 8))
+				{
+					UnityEngine.PhysicsScene _physicsScene;translator.Get(L, 2, out _physicsScene);
+					UnityEngine.Vector3 _p1;translator.Get(L, 3, out _p1);
+					UnityEngine.Vector3 _p2;translator.Get(L, 4, out _p2);
+					float _radius = (float)LuaAPI.lua_tonumber(L, 5);
+					UnityEngine.Vector3 _direction;translator.Get(L, 6, out _direction);
+					float _distance = (float)LuaAPI.lua_tonumber(L, 7);
+					int _layerMask = LuaAPI.xlua_tointeger(L, 8);
+					
+					var gen_ret = new UnityEngine.CapsulecastCommand(_physicsScene, _p1, _p2, _radius, _direction, _distance, _layerMask);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 7 && translator.Assignable<UnityEngine.PhysicsScene>(L, 2) && translator.Assignable<UnityEngine.Vector3>(L, 3) && translator.Assignable<UnityEngine.Vector3>(L, 4) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) && translator.Assignable<UnityEngine.Vector3>(L, 6) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 7))
+				{
+					UnityEngine.PhysicsScene _physicsScene;translator.Get(L, 2, out _physicsScene);
+					UnityEngine.Vector3 _p1;translator.Get(L, 3, out _p1);
+					UnityEngine.Vector3 _p2;translator.Get(L, 4, out _p2);
+					float _radius = (float)LuaAPI.lua_tonumber(L, 5);
+					UnityEngine.Vector3 _direction;translator.Get(L, 6, out _direction);
+					float _distance = (float)LuaAPI.lua_tonumber(L, 7);
+					
+					var gen_ret = new UnityEngine.CapsulecastCommand(_physicsScene, _p1, _p2, _radius, _direction, _distance);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 6 && translator.Assignable<UnityEngine.PhysicsScene>(L, 2) && translator.Assignable<UnityEngine.Vector3>(L, 3) && translator.Assignable<UnityEngine.Vector3>(L, 4) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5) && translator.Assignable<UnityEngine.Vector3>(L, 6))
+				{
+					UnityEngine.PhysicsScene _physicsScene;translator.Get(L, 2, out _physicsScene);
+					UnityEngine.Vector3 _p1;translator.Get(L, 3, out _p1);
+					UnityEngine.Vector3 _p2;translator.Get(L, 4, out _p2);
+					float _radius = (float)LuaAPI.lua_tonumber(L, 5);
+					UnityEngine.Vector3 _direction;translator.Get(L, 6, out _direction);
+					
+					var gen_ret = new UnityEngine.CapsulecastCommand(_physicsScene, _p1, _p2, _radius, _direction);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -255,6 +299,20 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_physicsScene(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.CapsulecastCommand gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                translator.Push(L, gen_to_be_invoked.physicsScene);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -353,6 +411,24 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.CapsulecastCommand gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 gen_to_be_invoked.layerMask = LuaAPI.xlua_tointeger(L, 2);
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_physicsScene(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.CapsulecastCommand gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                UnityEngine.PhysicsScene gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.physicsScene = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
             

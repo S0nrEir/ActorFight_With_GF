@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 51, 31, 30);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 52, 31, 30);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "Simulate", _m_Simulate_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SyncTransforms", _m_SyncTransforms_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "IgnoreCollision", _m_IgnoreCollision_xlua_st_);
@@ -84,6 +84,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "IgnoreRaycastLayer", UnityEngine.Physics2D.IgnoreRaycastLayer);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "DefaultRaycastLayers", UnityEngine.Physics2D.DefaultRaycastLayers);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "AllLayers", UnityEngine.Physics2D.AllLayers);
+            Utils.RegisterObject(L, translator, Utils.CLS_IDX, "MaxPolygonShapeVertices", UnityEngine.Physics2D.MaxPolygonShapeVertices);
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultPhysicsScene", _g_get_defaultPhysicsScene);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "velocityIterations", _g_get_velocityIterations);

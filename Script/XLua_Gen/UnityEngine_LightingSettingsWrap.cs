@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.LightingSettings);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 42, 42);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 45, 45);
 			
 			
 			
@@ -36,7 +36,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "lightmapMaxSize", _g_get_lightmapMaxSize);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "lightmapResolution", _g_get_lightmapResolution);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "lightmapPadding", _g_get_lightmapPadding);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "compressLightmaps", _g_get_compressLightmaps);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "lightmapCompression", _g_get_lightmapCompression);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "ao", _g_get_ao);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "aoMaxDistance", _g_get_aoMaxDistance);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "aoExponentIndirect", _g_get_aoExponentIndirect);
@@ -46,11 +46,14 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "exportTrainingData", _g_get_exportTrainingData);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "trainingDataDestination", _g_get_trainingDataDestination);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "indirectResolution", _g_get_indirectResolution);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "finalGather", _g_get_finalGather);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "finalGatherRayCount", _g_get_finalGatherRayCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "finalGatherFiltering", _g_get_finalGatherFiltering);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sampling", _g_get_sampling);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "directSampleCount", _g_get_directSampleCount);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "indirectSampleCount", _g_get_indirectSampleCount);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "bounces", _g_get_bounces);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "russianRouletteStartBounce", _g_get_russianRouletteStartBounce);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxBounces", _g_get_maxBounces);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "minBounces", _g_get_minBounces);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "prioritizeView", _g_get_prioritizeView);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "filteringMode", _g_get_filteringMode);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "denoiserTypeDirect", _g_get_denoiserTypeDirect);
@@ -79,7 +82,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "lightmapMaxSize", _s_set_lightmapMaxSize);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "lightmapResolution", _s_set_lightmapResolution);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "lightmapPadding", _s_set_lightmapPadding);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "compressLightmaps", _s_set_compressLightmaps);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "lightmapCompression", _s_set_lightmapCompression);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "ao", _s_set_ao);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "aoMaxDistance", _s_set_aoMaxDistance);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "aoExponentIndirect", _s_set_aoExponentIndirect);
@@ -89,11 +92,14 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "exportTrainingData", _s_set_exportTrainingData);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "trainingDataDestination", _s_set_trainingDataDestination);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "indirectResolution", _s_set_indirectResolution);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "finalGather", _s_set_finalGather);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "finalGatherRayCount", _s_set_finalGatherRayCount);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "finalGatherFiltering", _s_set_finalGatherFiltering);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "sampling", _s_set_sampling);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "directSampleCount", _s_set_directSampleCount);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "indirectSampleCount", _s_set_indirectSampleCount);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "bounces", _s_set_bounces);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "russianRouletteStartBounce", _s_set_russianRouletteStartBounce);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxBounces", _s_set_maxBounces);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "minBounces", _s_set_minBounces);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "prioritizeView", _s_set_prioritizeView);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "filteringMode", _s_set_filteringMode);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "denoiserTypeDirect", _s_set_denoiserTypeDirect);
@@ -313,13 +319,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_compressLightmaps(RealStatePtr L)
+        static int _g_get_lightmapCompression(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.compressLightmaps);
+                translator.Push(L, gen_to_be_invoked.lightmapCompression);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -453,6 +459,48 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_finalGather(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.finalGather);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_finalGatherRayCount(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushnumber(L, gen_to_be_invoked.finalGatherRayCount);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_finalGatherFiltering(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.finalGatherFiltering);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_sampling(RealStatePtr L)
         {
 		    try {
@@ -495,13 +543,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_bounces(RealStatePtr L)
+        static int _g_get_maxBounces(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.bounces);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.maxBounces);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -509,13 +557,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_russianRouletteStartBounce(RealStatePtr L)
+        static int _g_get_minBounces(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.russianRouletteStartBounce);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.minBounces);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -916,13 +964,14 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_compressLightmaps(RealStatePtr L)
+        static int _s_set_lightmapCompression(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.compressLightmaps = LuaAPI.lua_toboolean(L, 2);
+                UnityEngine.LightmapCompression gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.lightmapCompression = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -1067,6 +1116,51 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_finalGather(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.finalGather = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_finalGatherRayCount(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.finalGatherRayCount = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_finalGatherFiltering(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.finalGatherFiltering = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_sampling(RealStatePtr L)
         {
 		    try {
@@ -1113,13 +1207,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_bounces(RealStatePtr L)
+        static int _s_set_maxBounces(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.bounces = LuaAPI.xlua_tointeger(L, 2);
+                gen_to_be_invoked.maxBounces = LuaAPI.xlua_tointeger(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -1128,13 +1222,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_russianRouletteStartBounce(RealStatePtr L)
+        static int _s_set_minBounces(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.LightingSettings gen_to_be_invoked = (UnityEngine.LightingSettings)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.russianRouletteStartBounce = LuaAPI.xlua_tointeger(L, 2);
+                gen_to_be_invoked.minBounces = LuaAPI.xlua_tointeger(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

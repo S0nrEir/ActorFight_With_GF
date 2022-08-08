@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ComputeShader);
-			Utils.BeginObjectRegister(type, L, translator, 0, 21, 1, 1);
+			Utils.BeginObjectRegister(type, L, translator, 0, 23, 3, 2);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "FindKernel", _m_FindKernel);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "HasKernel", _m_HasKernel);
@@ -34,21 +34,26 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetTexture", _m_SetTexture);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetTextureFromGlobal", _m_SetTextureFromGlobal);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetBuffer", _m_SetBuffer);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetConstantBuffer", _m_SetConstantBuffer);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetKernelThreadGroupSizes", _m_GetKernelThreadGroupSizes);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Dispatch", _m_Dispatch);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnableKeyword", _m_EnableKeyword);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DisableKeyword", _m_DisableKeyword);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsKeywordEnabled", _m_IsKeywordEnabled);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetKeyword", _m_SetKeyword);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsSupported", _m_IsSupported);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetFloats", _m_SetFloats);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetInts", _m_SetInts);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetBool", _m_SetBool);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetConstantBuffer", _m_SetConstantBuffer);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DispatchIndirect", _m_DispatchIndirect);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "shaderKeywords", _g_get_shaderKeywords);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "keywordSpace", _g_get_keywordSpace);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "shaderKeywords", _g_get_shaderKeywords);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "enabledKeywords", _g_get_enabledKeywords);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "shaderKeywords", _s_set_shaderKeywords);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "enabledKeywords", _s_set_enabledKeywords);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -616,37 +621,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_SetConstantBuffer(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    int _nameID = LuaAPI.xlua_tointeger(L, 2);
-                    UnityEngine.ComputeBuffer _buffer = (UnityEngine.ComputeBuffer)translator.GetObject(L, 3, typeof(UnityEngine.ComputeBuffer));
-                    int _offset = LuaAPI.xlua_tointeger(L, 4);
-                    int _size = LuaAPI.xlua_tointeger(L, 5);
-                    
-                    gen_to_be_invoked.SetConstantBuffer( _nameID, _buffer, _offset, _size );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_GetKernelThreadGroupSizes(RealStatePtr L)
         {
 		    try {
@@ -725,7 +699,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)) 
                 {
                     string _keyword = LuaAPI.lua_tostring(L, 2);
                     
@@ -735,10 +711,25 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Rendering.LocalKeyword>(L, 2)) 
+                {
+                    UnityEngine.Rendering.LocalKeyword _keyword;translator.Get(L, 2, out _keyword);
+                    
+                    gen_to_be_invoked.EnableKeyword( _keyword );
+                    translator.Push(L, _keyword);
+                        translator.Update(L, 2, _keyword);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ComputeShader.EnableKeyword!");
             
         }
         
@@ -753,7 +744,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)) 
                 {
                     string _keyword = LuaAPI.lua_tostring(L, 2);
                     
@@ -763,10 +756,25 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Rendering.LocalKeyword>(L, 2)) 
+                {
+                    UnityEngine.Rendering.LocalKeyword _keyword;translator.Get(L, 2, out _keyword);
+                    
+                    gen_to_be_invoked.DisableKeyword( _keyword );
+                    translator.Push(L, _keyword);
+                        translator.Update(L, 2, _keyword);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ComputeShader.DisableKeyword!");
             
         }
         
@@ -781,11 +789,90 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)) 
                 {
                     string _keyword = LuaAPI.lua_tostring(L, 2);
                     
                         var gen_ret = gen_to_be_invoked.IsKeywordEnabled( _keyword );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Rendering.LocalKeyword>(L, 2)) 
+                {
+                    UnityEngine.Rendering.LocalKeyword _keyword;translator.Get(L, 2, out _keyword);
+                    
+                        var gen_ret = gen_to_be_invoked.IsKeywordEnabled( _keyword );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    translator.Push(L, _keyword);
+                        translator.Update(L, 2, _keyword);
+                        
+                    
+                    
+                    
+                    return 2;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ComputeShader.IsKeywordEnabled!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetKeyword(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.Rendering.LocalKeyword _keyword;translator.Get(L, 2, out _keyword);
+                    bool _value = LuaAPI.lua_toboolean(L, 3);
+                    
+                    gen_to_be_invoked.SetKeyword( _keyword, _value );
+                    translator.Push(L, _keyword);
+                        translator.Update(L, 2, _keyword);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_IsSupported(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _kernelIndex = LuaAPI.xlua_tointeger(L, 2);
+                    
+                        var gen_ret = gen_to_be_invoked.IsSupported( _kernelIndex );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -932,6 +1019,80 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetConstantBuffer(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 5&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& translator.Assignable<UnityEngine.ComputeBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    int _nameID = LuaAPI.xlua_tointeger(L, 2);
+                    UnityEngine.ComputeBuffer _buffer = (UnityEngine.ComputeBuffer)translator.GetObject(L, 3, typeof(UnityEngine.ComputeBuffer));
+                    int _offset = LuaAPI.xlua_tointeger(L, 4);
+                    int _size = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    gen_to_be_invoked.SetConstantBuffer( _nameID, _buffer, _offset, _size );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 5&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    int _nameID = LuaAPI.xlua_tointeger(L, 2);
+                    UnityEngine.GraphicsBuffer _buffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _offset = LuaAPI.xlua_tointeger(L, 4);
+                    int _size = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    gen_to_be_invoked.SetConstantBuffer( _nameID, _buffer, _offset, _size );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 5&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& translator.Assignable<UnityEngine.ComputeBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    string _name = LuaAPI.lua_tostring(L, 2);
+                    UnityEngine.ComputeBuffer _buffer = (UnityEngine.ComputeBuffer)translator.GetObject(L, 3, typeof(UnityEngine.ComputeBuffer));
+                    int _offset = LuaAPI.xlua_tointeger(L, 4);
+                    int _size = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    gen_to_be_invoked.SetConstantBuffer( _name, _buffer, _offset, _size );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 5&& (LuaAPI.lua_isnil(L, 2) || LuaAPI.lua_type(L, 2) == LuaTypes.LUA_TSTRING)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    string _name = LuaAPI.lua_tostring(L, 2);
+                    UnityEngine.GraphicsBuffer _buffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _offset = LuaAPI.xlua_tointeger(L, 4);
+                    int _size = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    gen_to_be_invoked.SetConstantBuffer( _name, _buffer, _offset, _size );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ComputeShader.SetConstantBuffer!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_DispatchIndirect(RealStatePtr L)
         {
 		    try {
@@ -1003,6 +1164,20 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_keywordSpace(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.keywordSpace);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_shaderKeywords(RealStatePtr L)
         {
 		    try {
@@ -1010,6 +1185,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.shaderKeywords);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_enabledKeywords(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.enabledKeywords);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -1026,6 +1215,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.shaderKeywords = (string[])translator.GetObject(L, 2, typeof(string[]));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_enabledKeywords(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ComputeShader gen_to_be_invoked = (UnityEngine.ComputeShader)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.enabledKeywords = (UnityEngine.Rendering.LocalKeyword[])translator.GetObject(L, 2, typeof(UnityEngine.Rendering.LocalKeyword[]));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

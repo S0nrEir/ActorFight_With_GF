@@ -21,11 +21,12 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ParticleSystem.MainModule);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 43, 43);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 44, 44);
 			
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "duration", _g_get_duration);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "emitterVelocity", _g_get_emitterVelocity);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "duration", _g_get_duration);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "loop", _g_get_loop);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "prewarm", _g_get_prewarm);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "startDelay", _g_get_startDelay);
@@ -69,7 +70,8 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "ringBufferLoopRange", _g_get_ringBufferLoopRange);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "cullingMode", _g_get_cullingMode);
             
-			Utils.RegisterFunc(L, Utils.SETTER_IDX, "duration", _s_set_duration);
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "emitterVelocity", _s_set_emitterVelocity);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "duration", _s_set_duration);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "loop", _s_set_loop);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "prewarm", _s_set_prewarm);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "startDelay", _s_set_startDelay);
@@ -157,6 +159,20 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_emitterVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystem.MainModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                translator.PushUnityEngineVector3(L, gen_to_be_invoked.emitterVelocity);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_duration(RealStatePtr L)
@@ -761,6 +777,24 @@ namespace XLua.CSObjectWrap
         }
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_emitterVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystem.MainModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                UnityEngine.Vector3 gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.emitterVelocity = gen_value;
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_duration(RealStatePtr L)

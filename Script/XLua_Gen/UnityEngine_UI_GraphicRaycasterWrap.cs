@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.UI.GraphicRaycaster);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 5, 2);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 6, 3);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Raycast", _m_Raycast);
 			
@@ -30,10 +30,12 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "renderOrderPriority", _g_get_renderOrderPriority);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "ignoreReversedGraphics", _g_get_ignoreReversedGraphics);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "blockingObjects", _g_get_blockingObjects);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "blockingMask", _g_get_blockingMask);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "eventCamera", _g_get_eventCamera);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "ignoreReversedGraphics", _s_set_ignoreReversedGraphics);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "blockingObjects", _s_set_blockingObjects);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "blockingMask", _s_set_blockingMask);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -151,6 +153,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_blockingMask(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.GraphicRaycaster gen_to_be_invoked = (UnityEngine.UI.GraphicRaycaster)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.blockingMask);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_eventCamera(RealStatePtr L)
         {
 		    try {
@@ -190,6 +206,22 @@ namespace XLua.CSObjectWrap
                 UnityEngine.UI.GraphicRaycaster gen_to_be_invoked = (UnityEngine.UI.GraphicRaycaster)translator.FastGetCSObj(L, 1);
                 UnityEngine.UI.GraphicRaycaster.BlockingObjects gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.blockingObjects = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_blockingMask(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.GraphicRaycaster gen_to_be_invoked = (UnityEngine.UI.GraphicRaycaster)translator.FastGetCSObj(L, 1);
+                UnityEngine.LayerMask gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.blockingMask = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

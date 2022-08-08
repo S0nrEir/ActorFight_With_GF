@@ -21,8 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.SpriteRenderer);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 10, 10);
+			Utils.BeginObjectRegister(type, L, translator, 0, 2, 10, 10);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "RegisterSpriteChangeCallback", _m_RegisterSpriteChangeCallback);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "UnregisterSpriteChangeCallback", _m_UnregisterSpriteChangeCallback);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "sprite", _g_get_sprite);
@@ -90,6 +92,62 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RegisterSpriteChangeCallback(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.SpriteRenderer gen_to_be_invoked = (UnityEngine.SpriteRenderer)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer> _callback = translator.GetDelegate<UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer>>(L, 2);
+                    
+                    gen_to_be_invoked.RegisterSpriteChangeCallback( _callback );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_UnregisterSpriteChangeCallback(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.SpriteRenderer gen_to_be_invoked = (UnityEngine.SpriteRenderer)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer> _callback = translator.GetDelegate<UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer>>(L, 2);
+                    
+                    gen_to_be_invoked.UnregisterSpriteChangeCallback( _callback );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         
         

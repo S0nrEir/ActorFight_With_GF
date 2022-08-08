@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Rigidbody2D);
-			Utils.BeginObjectRegister(type, L, translator, 0, 26, 23, 21);
+			Utils.BeginObjectRegister(type, L, translator, 0, 27, 23, 21);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetRotation", _m_SetRotation);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MovePosition", _m_MovePosition);
@@ -49,6 +49,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetContacts", _m_GetContacts);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetAttachedColliders", _m_GetAttachedColliders);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Cast", _m_Cast);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetShapes", _m_GetShapes);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "position", _g_get_position);
@@ -1211,6 +1212,35 @@ namespace XLua.CSObjectWrap
             }
             
             return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Rigidbody2D.Cast!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetShapes(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Rigidbody2D gen_to_be_invoked = (UnityEngine.Rigidbody2D)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.PhysicsShapeGroup2D _physicsShapeGroup = (UnityEngine.PhysicsShapeGroup2D)translator.GetObject(L, 2, typeof(UnityEngine.PhysicsShapeGroup2D));
+                    
+                        var gen_ret = gen_to_be_invoked.GetShapes( _physicsShapeGroup );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
             
         }
         

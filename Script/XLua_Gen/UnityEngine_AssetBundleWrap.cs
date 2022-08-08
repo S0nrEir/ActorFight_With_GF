@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.AssetBundle);
-			Utils.BeginObjectRegister(type, L, translator, 0, 10, 1, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 11, 1, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Contains", _m_Contains);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadAsset", _m_LoadAsset);
@@ -31,6 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadAllAssets", _m_LoadAllAssets);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadAllAssetsAsync", _m_LoadAllAssetsAsync);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Unload", _m_Unload);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "UnloadAsync", _m_UnloadAsync);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetAllAssetNames", _m_GetAllAssetNames);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetAllScenePaths", _m_GetAllScenePaths);
 			
@@ -42,7 +43,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 10, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 10, 1, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "UnloadAllAssetBundles", _m_UnloadAllAssetBundles_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetAllLoadedAssetBundles", _m_GetAllLoadedAssetBundles_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "LoadFromFileAsync", _m_LoadFromFileAsync_xlua_st_);
@@ -55,8 +56,10 @@ namespace XLua.CSObjectWrap
             
 			
             
-			
-			
+			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "memoryBudgetKB", _g_get_memoryBudgetKB);
+            
+			Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "memoryBudgetKB", _s_set_memoryBudgetKB);
+            
 			
 			Utils.EndClassRegister(type, L, translator);
         }
@@ -758,6 +761,35 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_UnloadAsync(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AssetBundle gen_to_be_invoked = (UnityEngine.AssetBundle)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    bool _unloadAllLoadedObjects = LuaAPI.lua_toboolean(L, 2);
+                    
+                        var gen_ret = gen_to_be_invoked.UnloadAsync( _unloadAllLoadedObjects );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_GetAllAssetNames(RealStatePtr L)
         {
 		    try {
@@ -892,7 +924,32 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_memoryBudgetKB(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.xlua_pushuint(L, UnityEngine.AssetBundle.memoryBudgetKB);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
         
+        
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_memoryBudgetKB(RealStatePtr L)
+        {
+		    try {
+                
+			    UnityEngine.AssetBundle.memoryBudgetKB = LuaAPI.xlua_touint(L, 1);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
 		
 		

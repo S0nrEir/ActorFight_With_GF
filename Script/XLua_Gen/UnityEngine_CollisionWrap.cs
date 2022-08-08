@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Collision);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 8, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 2, 10, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetContact", _m_GetContact);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetContacts", _m_GetContacts);
@@ -29,6 +29,8 @@ namespace XLua.CSObjectWrap
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "relativeVelocity", _g_get_relativeVelocity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "rigidbody", _g_get_rigidbody);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "articulationBody", _g_get_articulationBody);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "body", _g_get_body);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "collider", _g_get_collider);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "transform", _g_get_transform);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "gameObject", _g_get_gameObject);
@@ -179,6 +181,34 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Collision gen_to_be_invoked = (UnityEngine.Collision)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.rigidbody);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_articulationBody(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Collision gen_to_be_invoked = (UnityEngine.Collision)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.articulationBody);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_body(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Collision gen_to_be_invoked = (UnityEngine.Collision)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.body);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

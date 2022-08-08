@@ -21,8 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ParticleSystem.CollisionModule);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 23, 22);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 23, 22);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddPlane", _m_AddPlane);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "RemovePlane", _m_RemovePlane);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPlane", _m_SetPlane);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPlane", _m_GetPlane);
 			
@@ -49,7 +51,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "multiplyColliderForceByCollisionAngle", _g_get_multiplyColliderForceByCollisionAngle);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "multiplyColliderForceByParticleSpeed", _g_get_multiplyColliderForceByParticleSpeed);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "multiplyColliderForceByParticleSize", _g_get_multiplyColliderForceByParticleSize);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxPlaneCount", _g_get_maxPlaneCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "planeCount", _g_get_planeCount);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "enabled", _s_set_enabled);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "type", _s_set_type);
@@ -115,6 +117,82 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_AddPlane(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystem.CollisionModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    UnityEngine.Transform _transform = (UnityEngine.Transform)translator.GetObject(L, 2, typeof(UnityEngine.Transform));
+                    
+                    gen_to_be_invoked.AddPlane( _transform );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RemovePlane(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystem.CollisionModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)) 
+                {
+                    int _index = LuaAPI.xlua_tointeger(L, 2);
+                    
+                    gen_to_be_invoked.RemovePlane( _index );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Transform>(L, 2)) 
+                {
+                    UnityEngine.Transform _transform = (UnityEngine.Transform)translator.GetObject(L, 2, typeof(UnityEngine.Transform));
+                    
+                    gen_to_be_invoked.RemovePlane( _transform );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ParticleSystem.CollisionModule.RemovePlane!");
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SetPlane(RealStatePtr L)
@@ -490,13 +568,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_maxPlaneCount(RealStatePtr L)
+        static int _g_get_planeCount(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.ParticleSystem.CollisionModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.maxPlaneCount);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.planeCount);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

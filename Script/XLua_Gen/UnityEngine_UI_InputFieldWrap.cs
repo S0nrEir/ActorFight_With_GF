@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.UI.InputField);
-			Utils.BeginObjectRegister(type, L, translator, 0, 21, 34, 23);
+			Utils.BeginObjectRegister(type, L, translator, 0, 21, 36, 25);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetTextWithoutNotify", _m_SetTextWithoutNotify);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MoveTextEnd", _m_MoveTextEnd);
@@ -47,6 +47,7 @@ namespace XLua.CSObjectWrap
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "shouldHideMobileInput", _g_get_shouldHideMobileInput);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "shouldActivateOnSelect", _g_get_shouldActivateOnSelect);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "text", _g_get_text);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isFocused", _g_get_isFocused);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "caretBlinkRate", _g_get_caretBlinkRate);
@@ -57,6 +58,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "customCaretColor", _g_get_customCaretColor);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "selectionColor", _g_get_selectionColor);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "onEndEdit", _g_get_onEndEdit);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "onSubmit", _g_get_onSubmit);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "onValueChanged", _g_get_onValueChanged);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "onValidateInput", _g_get_onValidateInput);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "characterLimit", _g_get_characterLimit);
@@ -82,6 +84,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "layoutPriority", _g_get_layoutPriority);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "shouldHideMobileInput", _s_set_shouldHideMobileInput);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "shouldActivateOnSelect", _s_set_shouldActivateOnSelect);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "text", _s_set_text);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "caretBlinkRate", _s_set_caretBlinkRate);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "caretWidth", _s_set_caretWidth);
@@ -91,6 +94,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "customCaretColor", _s_set_customCaretColor);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "selectionColor", _s_set_selectionColor);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "onEndEdit", _s_set_onEndEdit);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "onSubmit", _s_set_onSubmit);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "onValueChanged", _s_set_onValueChanged);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "onValidateInput", _s_set_onValidateInput);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "characterLimit", _s_set_characterLimit);
@@ -731,6 +735,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_shouldActivateOnSelect(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.shouldActivateOnSelect);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_text(RealStatePtr L)
         {
 		    try {
@@ -864,6 +882,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.onEndEdit);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_onSubmit(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.onSubmit);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -1210,6 +1242,21 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_shouldActivateOnSelect(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.shouldActivateOnSelect = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_text(RealStatePtr L)
         {
 		    try {
@@ -1338,7 +1385,22 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.onEndEdit = (UnityEngine.UI.InputField.SubmitEvent)translator.GetObject(L, 2, typeof(UnityEngine.UI.InputField.SubmitEvent));
+                gen_to_be_invoked.onEndEdit = (UnityEngine.UI.InputField.EndEditEvent)translator.GetObject(L, 2, typeof(UnityEngine.UI.InputField.EndEditEvent));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_onSubmit(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.InputField gen_to_be_invoked = (UnityEngine.UI.InputField)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.onSubmit = (UnityEngine.UI.InputField.SubmitEvent)translator.GetObject(L, 2, typeof(UnityEngine.UI.InputField.SubmitEvent));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

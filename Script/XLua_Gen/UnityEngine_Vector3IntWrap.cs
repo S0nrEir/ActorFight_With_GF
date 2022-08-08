@@ -51,7 +51,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, __CSIndexer, __NewIndexer,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 8, 6, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 8, 8, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "Distance", _m_Distance_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Min", _m_Min_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Max", _m_Max_xlua_st_);
@@ -68,6 +68,8 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "down", _g_get_down);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "left", _g_get_left);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "right", _g_get_right);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "forward", _g_get_forward);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "back", _g_get_back);
             
 			
 			
@@ -80,6 +82,16 @@ namespace XLua.CSObjectWrap
             
 			try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+				if(LuaAPI.lua_gettop(L) == 3 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3))
+				{
+					int _x = LuaAPI.xlua_tointeger(L, 2);
+					int _y = LuaAPI.xlua_tointeger(L, 3);
+					
+					var gen_ret = new UnityEngine.Vector3Int(_x, _y);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
 				if(LuaAPI.lua_gettop(L) == 4 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4))
 				{
 					int _x = LuaAPI.xlua_tointeger(L, 2);
@@ -895,6 +907,30 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    translator.Push(L, UnityEngine.Vector3Int.right);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_forward(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    translator.Push(L, UnityEngine.Vector3Int.forward);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_back(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    translator.Push(L, UnityEngine.Vector3Int.back);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

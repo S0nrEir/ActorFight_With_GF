@@ -43,13 +43,14 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 2, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 3, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "RelativeMouseAt", _m_RelativeMouseAt_xlua_st_);
             
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "onDisplaysUpdated", _e_onDisplaysUpdated);
 			
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "main", _g_get_main);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "activeEditorGameViewTarget", _g_get_activeEditorGameViewTarget);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "displays", _g_get_displays);
             
 			Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "displays", _s_set_displays);
@@ -336,6 +337,18 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    translator.Push(L, UnityEngine.Display.main);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_activeEditorGameViewTarget(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.xlua_pushinteger(L, UnityEngine.Display.activeEditorGameViewTarget);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

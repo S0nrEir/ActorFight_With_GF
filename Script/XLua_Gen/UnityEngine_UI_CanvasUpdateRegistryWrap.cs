@@ -31,12 +31,13 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 8, 1, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 9, 1, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "RegisterCanvasElementForLayoutRebuild", _m_RegisterCanvasElementForLayoutRebuild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "TryRegisterCanvasElementForLayoutRebuild", _m_TryRegisterCanvasElementForLayoutRebuild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "RegisterCanvasElementForGraphicRebuild", _m_RegisterCanvasElementForGraphicRebuild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "TryRegisterCanvasElementForGraphicRebuild", _m_TryRegisterCanvasElementForGraphicRebuild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "UnRegisterCanvasElementForRebuild", _m_UnRegisterCanvasElementForRebuild_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "DisableCanvasElementForRebuild", _m_DisableCanvasElementForRebuild_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "IsRebuildingLayout", _m_IsRebuildingLayout_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "IsRebuildingGraphics", _m_IsRebuildingGraphics_xlua_st_);
             
@@ -182,6 +183,32 @@ namespace XLua.CSObjectWrap
                     UnityEngine.UI.ICanvasElement _element = (UnityEngine.UI.ICanvasElement)translator.GetObject(L, 1, typeof(UnityEngine.UI.ICanvasElement));
                     
                     UnityEngine.UI.CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild( _element );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_DisableCanvasElementForRebuild_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.UI.ICanvasElement _element = (UnityEngine.UI.ICanvasElement)translator.GetObject(L, 1, typeof(UnityEngine.UI.ICanvasElement));
+                    
+                    UnityEngine.UI.CanvasUpdateRegistry.DisableCanvasElementForRebuild( _element );
                     
                     
                     

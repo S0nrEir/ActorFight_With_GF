@@ -21,18 +21,20 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.UI.Navigation);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 5, 5);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 6, 6);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Equals", _m_Equals);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "mode", _g_get_mode);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "wrapAround", _g_get_wrapAround);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "selectOnUp", _g_get_selectOnUp);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "selectOnDown", _g_get_selectOnDown);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "selectOnLeft", _g_get_selectOnLeft);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "selectOnRight", _g_get_selectOnRight);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "mode", _s_set_mode);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "wrapAround", _s_set_wrapAround);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "selectOnUp", _s_set_selectOnUp);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "selectOnDown", _s_set_selectOnDown);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "selectOnLeft", _s_set_selectOnLeft);
@@ -130,6 +132,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_wrapAround(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.Navigation gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.wrapAround);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_selectOnUp(RealStatePtr L)
         {
 		    try {
@@ -208,6 +224,23 @@ namespace XLua.CSObjectWrap
                 UnityEngine.UI.Navigation gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 UnityEngine.UI.Navigation.Mode gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.mode = gen_value;
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_wrapAround(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.UI.Navigation gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                gen_to_be_invoked.wrapAround = LuaAPI.lua_toboolean(L, 2);
             
                 translator.Update(L, 1, gen_to_be_invoked);
             

@@ -1573,6 +1573,22 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 8&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Quaternion>(L, 3)&& translator.Assignable<UnityEngine.AvatarTarget>(L, 4)&& translator.Assignable<UnityEngine.MatchTargetWeightMask>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 7)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 8)) 
+                {
+                    UnityEngine.Vector3 _matchPosition;translator.Get(L, 2, out _matchPosition);
+                    UnityEngine.Quaternion _matchRotation;translator.Get(L, 3, out _matchRotation);
+                    UnityEngine.AvatarTarget _targetBodyPart;translator.Get(L, 4, out _targetBodyPart);
+                    UnityEngine.MatchTargetWeightMask _weightMask;translator.Get(L, 5, out _weightMask);
+                    float _startNormalizedTime = (float)LuaAPI.lua_tonumber(L, 6);
+                    float _targetNormalizedTime = (float)LuaAPI.lua_tonumber(L, 7);
+                    bool _completeMatch = LuaAPI.lua_toboolean(L, 8);
+                    
+                    gen_to_be_invoked.MatchTarget( _matchPosition, _matchRotation, _targetBodyPart, _weightMask, _startNormalizedTime, _targetNormalizedTime, _completeMatch );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Matrix4x4);
-			Utils.BeginObjectRegister(type, L, translator, 2, 13, 23, 16);
+			Utils.BeginObjectRegister(type, L, translator, 2, 14, 23, 16);
 			Utils.RegisterFunc(L, Utils.OBJ_META_IDX, "__mul", __MulMeta);
             Utils.RegisterFunc(L, Utils.OBJ_META_IDX, "__eq", __EqMeta);
             
@@ -31,6 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Equals", _m_Equals);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetColumn", _m_GetColumn);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetRow", _m_GetRow);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPosition", _m_GetPosition);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetColumn", _m_SetColumn);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetRow", _m_SetRow);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "MultiplyPoint", _m_MultiplyPoint);
@@ -730,6 +731,36 @@ namespace XLua.CSObjectWrap
                     
                         var gen_ret = gen_to_be_invoked.GetRow( _index );
                         translator.PushUnityEngineVector4(L, gen_ret);
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetPosition(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Matrix4x4 gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.GetPosition(  );
+                        translator.PushUnityEngineVector3(L, gen_ret);
                     
                     
                         translator.Update(L, 1, gen_to_be_invoked);
