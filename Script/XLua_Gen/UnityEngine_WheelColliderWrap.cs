@@ -21,8 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.WheelCollider);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 16, 13);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 16, 14);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ResetSprungMasses", _m_ResetSprungMasses);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ConfigureVehicleSubsteps", _m_ConfigureVehicleSubsteps);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetWorldPose", _m_GetWorldPose);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetGroundHit", _m_GetGroundHit);
@@ -58,6 +59,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "motorTorque", _s_set_motorTorque);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "brakeTorque", _s_set_brakeTorque);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "steerAngle", _s_set_steerAngle);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "sprungMass", _s_set_sprungMass);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -102,6 +104,33 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_ResetSprungMasses(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.WheelCollider gen_to_be_invoked = (UnityEngine.WheelCollider)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.ResetSprungMasses(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_ConfigureVehicleSubsteps(RealStatePtr L)
@@ -618,6 +647,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.WheelCollider gen_to_be_invoked = (UnityEngine.WheelCollider)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.steerAngle = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_sprungMass(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.WheelCollider gen_to_be_invoked = (UnityEngine.WheelCollider)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.sprungMass = (float)LuaAPI.lua_tonumber(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

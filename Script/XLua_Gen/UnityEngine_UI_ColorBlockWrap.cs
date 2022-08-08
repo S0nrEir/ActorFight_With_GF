@@ -48,13 +48,14 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 1, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 1, 1);
 			
 			
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultColorBlock", _g_get_defaultColorBlock);
             
-			
+			Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "defaultColorBlock", _s_set_defaultColorBlock);
+            
 			
 			Utils.EndClassRegister(type, L, translator);
         }
@@ -423,6 +424,20 @@ namespace XLua.CSObjectWrap
                 gen_to_be_invoked.fadeDuration = (float)LuaAPI.lua_tonumber(L, 2);
             
                 translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_defaultColorBlock(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			UnityEngine.UI.ColorBlock gen_value;translator.Get(L, 1, out gen_value);
+				UnityEngine.UI.ColorBlock.defaultColorBlock = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

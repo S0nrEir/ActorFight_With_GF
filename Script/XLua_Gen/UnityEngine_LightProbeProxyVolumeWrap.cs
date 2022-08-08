@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.LightProbeProxyVolume);
-			Utils.BeginObjectRegister(type, L, translator, 0, 1, 12, 11);
+			Utils.BeginObjectRegister(type, L, translator, 0, 1, 13, 12);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Update", _m_Update);
 			
@@ -38,6 +38,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "probePositionMode", _g_get_probePositionMode);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "refreshMode", _g_get_refreshMode);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "qualityMode", _g_get_qualityMode);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "dataFormat", _g_get_dataFormat);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "sizeCustom", _s_set_sizeCustom);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "originCustom", _s_set_originCustom);
@@ -50,6 +51,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "probePositionMode", _s_set_probePositionMode);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "refreshMode", _s_set_refreshMode);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "qualityMode", _s_set_qualityMode);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "dataFormat", _s_set_dataFormat);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -306,6 +308,20 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_dataFormat(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightProbeProxyVolume gen_to_be_invoked = (UnityEngine.LightProbeProxyVolume)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.dataFormat);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -473,6 +489,22 @@ namespace XLua.CSObjectWrap
                 UnityEngine.LightProbeProxyVolume gen_to_be_invoked = (UnityEngine.LightProbeProxyVolume)translator.FastGetCSObj(L, 1);
                 UnityEngine.LightProbeProxyVolume.QualityMode gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.qualityMode = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_dataFormat(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.LightProbeProxyVolume gen_to_be_invoked = (UnityEngine.LightProbeProxyVolume)translator.FastGetCSObj(L, 1);
+                UnityEngine.LightProbeProxyVolume.DataFormat gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.dataFormat = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

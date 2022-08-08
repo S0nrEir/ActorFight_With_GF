@@ -21,8 +21,13 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.AudioSource);
-			Utils.BeginObjectRegister(type, L, translator, 0, 17, 28, 26);
+			Utils.BeginObjectRegister(type, L, translator, 0, 22, 29, 27);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "PlayOnGamepad", _m_PlayOnGamepad);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DisableGamepadOutput", _m_DisableGamepadOutput);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetGamepadSpeakerMixLevel", _m_SetGamepadSpeakerMixLevel);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetGamepadSpeakerMixLevelDefault", _m_SetGamepadSpeakerMixLevelDefault);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetGamepadSpeakerRestrictedAudio", _m_SetGamepadSpeakerRestrictedAudio);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Play", _m_Play);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "PlayDelayed", _m_PlayDelayed);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "PlayScheduled", _m_PlayScheduled);
@@ -48,6 +53,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "timeSamples", _g_get_timeSamples);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "clip", _g_get_clip);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "outputAudioMixerGroup", _g_get_outputAudioMixerGroup);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "gamepadSpeakerOutputType", _g_get_gamepadSpeakerOutputType);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isPlaying", _g_get_isPlaying);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isVirtual", _g_get_isVirtual);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "loop", _g_get_loop);
@@ -77,6 +83,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "timeSamples", _s_set_timeSamples);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "clip", _s_set_clip);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "outputAudioMixerGroup", _s_set_outputAudioMixerGroup);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "gamepadSpeakerOutputType", _s_set_gamepadSpeakerOutputType);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "loop", _s_set_loop);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "ignoreListenerVolume", _s_set_ignoreListenerVolume);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "playOnAwake", _s_set_playOnAwake);
@@ -102,8 +109,9 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
-			Utils.RegisterFunc(L, Utils.CLS_IDX, "PlayClipAtPoint", _m_PlayClipAtPoint_xlua_st_);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 0, 0);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "GamepadSpeakerSupportsOutputType", _m_GamepadSpeakerSupportsOutputType_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "PlayClipAtPoint", _m_PlayClipAtPoint_xlua_st_);
             
 			
             
@@ -142,6 +150,179 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_PlayOnGamepad(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _slot = LuaAPI.xlua_tointeger(L, 2);
+                    
+                        var gen_ret = gen_to_be_invoked.PlayOnGamepad( _slot );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_DisableGamepadOutput(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.DisableGamepadOutput(  );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetGamepadSpeakerMixLevel(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _slot = LuaAPI.xlua_tointeger(L, 2);
+                    int _mixLevel = LuaAPI.xlua_tointeger(L, 3);
+                    
+                        var gen_ret = gen_to_be_invoked.SetGamepadSpeakerMixLevel( _slot, _mixLevel );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetGamepadSpeakerMixLevelDefault(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _slot = LuaAPI.xlua_tointeger(L, 2);
+                    
+                        var gen_ret = gen_to_be_invoked.SetGamepadSpeakerMixLevelDefault( _slot );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetGamepadSpeakerRestrictedAudio(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    int _slot = LuaAPI.xlua_tointeger(L, 2);
+                    bool _restricted = LuaAPI.lua_toboolean(L, 3);
+                    
+                        var gen_ret = gen_to_be_invoked.SetGamepadSpeakerRestrictedAudio( _slot, _restricted );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GamepadSpeakerSupportsOutputType_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.GamepadSpeakerOutputType _outputType;translator.Get(L, 1, out _outputType);
+                    
+                        var gen_ret = UnityEngine.AudioSource.GamepadSpeakerSupportsOutputType( _outputType );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_Play(RealStatePtr L)
@@ -792,6 +973,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_gamepadSpeakerOutputType(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.gamepadSpeakerOutputType);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_isPlaying(RealStatePtr L)
         {
 		    try {
@@ -1184,6 +1379,22 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.outputAudioMixerGroup = (UnityEngine.Audio.AudioMixerGroup)translator.GetObject(L, 2, typeof(UnityEngine.Audio.AudioMixerGroup));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_gamepadSpeakerOutputType(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.AudioSource gen_to_be_invoked = (UnityEngine.AudioSource)translator.FastGetCSObj(L, 1);
+                UnityEngine.GamepadSpeakerOutputType gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.gamepadSpeakerOutputType = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

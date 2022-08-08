@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 36, 18, 17);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 38, 19, 18);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "IgnoreCollision", _m_IgnoreCollision_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "IgnoreLayerCollision", _m_IgnoreLayerCollision_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetIgnoreLayerCollision", _m_GetIgnoreLayerCollision_xlua_st_);
@@ -65,6 +65,8 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_IDX, "RebuildBroadphaseRegions", _m_RebuildBroadphaseRegions_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "BakeMesh", _m_BakeMesh_xlua_st_);
             
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "ContactModifyEvent", _e_ContactModifyEvent);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "ContactModifyEventCCD", _e_ContactModifyEventCCD);
 			
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "IgnoreRaycastLayer", UnityEngine.Physics.IgnoreRaycastLayer);
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "DefaultRaycastLayers", UnityEngine.Physics.DefaultRaycastLayers);
@@ -80,6 +82,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultSolverIterations", _g_get_defaultSolverIterations);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultSolverVelocityIterations", _g_get_defaultSolverVelocityIterations);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultMaxAngularSpeed", _g_get_defaultMaxAngularSpeed);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "improvedPatchFriction", _g_get_improvedPatchFriction);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "defaultPhysicsScene", _g_get_defaultPhysicsScene);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "autoSimulation", _g_get_autoSimulation);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "autoSyncTransforms", _g_get_autoSyncTransforms);
@@ -99,6 +102,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "defaultSolverIterations", _s_set_defaultSolverIterations);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "defaultSolverVelocityIterations", _s_set_defaultSolverVelocityIterations);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "defaultMaxAngularSpeed", _s_set_defaultMaxAngularSpeed);
+            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "improvedPatchFriction", _s_set_improvedPatchFriction);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "autoSimulation", _s_set_autoSimulation);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "autoSyncTransforms", _s_set_autoSyncTransforms);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "reuseCollisionCallbacks", _s_set_reuseCollisionCallbacks);
@@ -2966,6 +2970,18 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_improvedPatchFriction(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.Physics.improvedPatchFriction);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_defaultPhysicsScene(RealStatePtr L)
         {
 		    try {
@@ -3195,6 +3211,19 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_improvedPatchFriction(RealStatePtr L)
+        {
+		    try {
+                
+			    UnityEngine.Physics.improvedPatchFriction = LuaAPI.lua_toboolean(L, 1);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_autoSimulation(RealStatePtr L)
         {
 		    try {
@@ -3290,5 +3319,63 @@ namespace XLua.CSObjectWrap
 		
 		
 		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_ContactModifyEvent(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>> gen_delegate = translator.GetDelegate<System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.Physics.ContactModifyEvent += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.Physics.ContactModifyEvent -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Physics.ContactModifyEvent!");
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_ContactModifyEventCCD(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>> gen_delegate = translator.GetDelegate<System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.Physics.ContactModifyEventCCD += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.Physics.ContactModifyEventCCD -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Physics.ContactModifyEventCCD!");
+        }
+        
     }
 }

@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ReflectionProbe);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 23, 20);
+			Utils.BeginObjectRegister(type, L, translator, 0, 3, 24, 21);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "RenderProbe", _m_RenderProbe);
@@ -35,6 +35,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "intensity", _g_get_intensity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "bounds", _g_get_bounds);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "hdr", _g_get_hdr);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "renderDynamicObjects", _g_get_renderDynamicObjects);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "shadowDistance", _g_get_shadowDistance);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "resolution", _g_get_resolution);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "cullingMask", _g_get_cullingMask);
@@ -58,6 +59,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "farClipPlane", _s_set_farClipPlane);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "intensity", _s_set_intensity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "hdr", _s_set_hdr);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "renderDynamicObjects", _s_set_renderDynamicObjects);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "shadowDistance", _s_set_shadowDistance);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "resolution", _s_set_resolution);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "cullingMask", _s_set_cullingMask);
@@ -77,11 +79,12 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 4, 4, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 5, 4, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "BlendCubemap", _m_BlendCubemap_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "UpdateCachedState", _m_UpdateCachedState_xlua_st_);
             
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "reflectionProbeChanged", _e_reflectionProbeChanged);
-			Utils.RegisterFunc(L, Utils.CLS_IDX, "defaultReflectionSet", _e_defaultReflectionSet);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "defaultReflectionTexture", _e_defaultReflectionTexture);
 			
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "minBakedCubemapResolution", _g_get_minBakedCubemapResolution);
@@ -253,6 +256,29 @@ namespace XLua.CSObjectWrap
             
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_UpdateCachedState_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+            
+            
+                
+                {
+                    
+                    UnityEngine.ReflectionProbe.UpdateCachedState(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
         
         
         
@@ -348,6 +374,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.ReflectionProbe gen_to_be_invoked = (UnityEngine.ReflectionProbe)translator.FastGetCSObj(L, 1);
                 LuaAPI.lua_pushboolean(L, gen_to_be_invoked.hdr);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_renderDynamicObjects(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ReflectionProbe gen_to_be_invoked = (UnityEngine.ReflectionProbe)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.renderDynamicObjects);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -721,6 +761,21 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_renderDynamicObjects(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ReflectionProbe gen_to_be_invoked = (UnityEngine.ReflectionProbe)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.renderDynamicObjects = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_shadowDistance(RealStatePtr L)
         {
 		    try {
@@ -969,32 +1024,32 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _e_defaultReflectionSet(RealStatePtr L)
+        static int _e_defaultReflectionTexture(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    int gen_param_count = LuaAPI.lua_gettop(L);
-                System.Action<UnityEngine.Cubemap> gen_delegate = translator.GetDelegate<System.Action<UnityEngine.Cubemap>>(L, 2);
+                System.Action<UnityEngine.Texture> gen_delegate = translator.GetDelegate<System.Action<UnityEngine.Texture>>(L, 2);
                 if (gen_delegate == null) {
-                    return LuaAPI.luaL_error(L, "#2 need System.Action<UnityEngine.Cubemap>!");
+                    return LuaAPI.luaL_error(L, "#2 need System.Action<UnityEngine.Texture>!");
                 }
                 
 				
 				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
-					UnityEngine.ReflectionProbe.defaultReflectionSet += gen_delegate;
+					UnityEngine.ReflectionProbe.defaultReflectionTexture += gen_delegate;
 					return 0;
 				} 
 				
 				
 				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
-					UnityEngine.ReflectionProbe.defaultReflectionSet -= gen_delegate;
+					UnityEngine.ReflectionProbe.defaultReflectionTexture -= gen_delegate;
 					return 0;
 				} 
 				
 			} catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
-			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ReflectionProbe.defaultReflectionSet!");
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ReflectionProbe.defaultReflectionTexture!");
         }
         
     }

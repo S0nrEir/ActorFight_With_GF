@@ -276,9 +276,33 @@ namespace XLua.CSObjectWrap
                 UnityEngine.TrailRenderer gen_to_be_invoked = (UnityEngine.TrailRenderer)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3[]>(L, 2)) 
                 {
                     UnityEngine.Vector3[] _positions = (UnityEngine.Vector3[])translator.GetObject(L, 2, typeof(UnityEngine.Vector3[]));
+                    
+                        var gen_ret = gen_to_be_invoked.GetPositions( _positions );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 2;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeArray<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeArray<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
+                    
+                        var gen_ret = gen_to_be_invoked.GetPositions( _positions );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 2;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeSlice<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeSlice<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
                     
                         var gen_ret = gen_to_be_invoked.GetPositions( _positions );
                         LuaAPI.xlua_pushinteger(L, gen_ret);
@@ -291,6 +315,8 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.TrailRenderer.GetPositions!");
             
         }
         
@@ -305,9 +331,31 @@ namespace XLua.CSObjectWrap
                 UnityEngine.TrailRenderer gen_to_be_invoked = (UnityEngine.TrailRenderer)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3[]>(L, 2)) 
                 {
                     UnityEngine.Vector3[] _positions = (UnityEngine.Vector3[])translator.GetObject(L, 2, typeof(UnityEngine.Vector3[]));
+                    
+                    gen_to_be_invoked.SetPositions( _positions );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeArray<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeArray<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
+                    
+                    gen_to_be_invoked.SetPositions( _positions );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeSlice<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeSlice<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
                     
                     gen_to_be_invoked.SetPositions( _positions );
                     
@@ -319,6 +367,8 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.TrailRenderer.SetPositions!");
             
         }
         
@@ -361,7 +411,29 @@ namespace XLua.CSObjectWrap
                 UnityEngine.TrailRenderer gen_to_be_invoked = (UnityEngine.TrailRenderer)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeArray<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeArray<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
+                    
+                    gen_to_be_invoked.AddPositions( _positions );
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Unity.Collections.NativeSlice<UnityEngine.Vector3>>(L, 2)) 
+                {
+                    Unity.Collections.NativeSlice<UnityEngine.Vector3> _positions;translator.Get(L, 2, out _positions);
+                    
+                    gen_to_be_invoked.AddPositions( _positions );
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3[]>(L, 2)) 
                 {
                     UnityEngine.Vector3[] _positions = (UnityEngine.Vector3[])translator.GetObject(L, 2, typeof(UnityEngine.Vector3[]));
                     
@@ -375,6 +447,8 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.TrailRenderer.AddPositions!");
             
         }
         

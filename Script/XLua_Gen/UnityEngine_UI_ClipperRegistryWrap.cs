@@ -32,9 +32,10 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 3, 1, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 4, 1, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "Register", _m_Register_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Unregister", _m_Unregister_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "Disable", _m_Disable_xlua_st_);
             
 			
             
@@ -125,6 +126,32 @@ namespace XLua.CSObjectWrap
                     UnityEngine.UI.IClipper _c = (UnityEngine.UI.IClipper)translator.GetObject(L, 1, typeof(UnityEngine.UI.IClipper));
                     
                     UnityEngine.UI.ClipperRegistry.Unregister( _c );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_Disable_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.UI.IClipper _c = (UnityEngine.UI.IClipper)translator.GetObject(L, 1, typeof(UnityEngine.UI.IClipper));
+                    
+                    UnityEngine.UI.ClipperRegistry.Disable( _c );
                     
                     
                     

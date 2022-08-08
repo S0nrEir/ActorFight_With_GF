@@ -617,7 +617,7 @@ namespace XLua.CSObjectWrap
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    UnityEngine.RenderSettings.customReflection = (UnityEngine.Cubemap)translator.GetObject(L, 1, typeof(UnityEngine.Cubemap));
+			    UnityEngine.RenderSettings.customReflection = (UnityEngine.Texture)translator.GetObject(L, 1, typeof(UnityEngine.Texture));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

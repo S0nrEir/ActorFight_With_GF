@@ -328,7 +328,7 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp14(UnityEngine.AsyncOperation p0)
+		public void __Gen_Delegate_Imp14(UnityEngine.Texture p0)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -350,7 +350,7 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp15(UnityEngine.RectTransform p0)
+		public void __Gen_Delegate_Imp15(UnityEngine.CustomRenderTexture p0)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -372,7 +372,30 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp16(UnityEngine.Font p0)
+		public void __Gen_Delegate_Imp16(UnityEngine.CustomRenderTexture p0, int p1)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                LuaAPI.xlua_pushinteger(L, p1);
+                
+                PCall(L, 2, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp17(UnityEngine.AsyncOperation p0)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -394,7 +417,96 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp17(bool p0, bool p1, int p2)
+		public void __Gen_Delegate_Imp18(UnityEngine.RectTransform p0)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                
+                PCall(L, 1, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp19(UnityEngine.SpriteRenderer p0)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                
+                PCall(L, 1, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp20(UnityEngine.PhysicsScene p0, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair> p1)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                translator.Push(L, p1);
+                
+                PCall(L, 2, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp21(UnityEngine.Font p0)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                
+                PCall(L, 1, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp22(bool p0, bool p1, int p2)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -418,7 +530,7 @@ namespace XLua
 #endif
 		}
         
-		public char __Gen_Delegate_Imp18(string p0, int p1, char p2)
+		public char __Gen_Delegate_Imp23(string p0, int p1, char p2)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -442,7 +554,7 @@ namespace XLua
 #endif
 		}
         
-		public float __Gen_Delegate_Imp19(UnityEngine.UI.ILayoutElement p0)
+		public float __Gen_Delegate_Imp24(UnityEngine.UI.ILayoutElement p0)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -464,7 +576,7 @@ namespace XLua
 #endif
 		}
         
-		public string __Gen_Delegate_Imp20(byte[] p0, int p1, int p2)
+		public string __Gen_Delegate_Imp25(byte[] p0, int p1, int p2)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -488,7 +600,7 @@ namespace XLua
 #endif
 		}
         
-		public string __Gen_Delegate_Imp21(string p0, string p1)
+		public string __Gen_Delegate_Imp26(string p0, string p1)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -511,7 +623,7 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp22(float p0)
+		public void __Gen_Delegate_Imp27(float p0)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -533,7 +645,7 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp23(Aquila.Fight.Addon.ActorEffectEntityData p0, Aquila.Fight.ActorEffect p1)
+		public void __Gen_Delegate_Imp28(Aquila.Fight.Addon.ActorEffectEntityData p0, Aquila.Fight.ActorEffect p1)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -556,7 +668,7 @@ namespace XLua
 #endif
 		}
         
-		public void __Gen_Delegate_Imp24(int p0, object[] p1)
+		public void __Gen_Delegate_Imp29(int p0, object[] p1)
 		{
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnv.luaEnvLock)
@@ -698,59 +810,84 @@ namespace XLua
 			    return new System.Action<UnityEngine.Cubemap>(__Gen_Delegate_Imp13);
 			}
 		
+		    if (type == typeof(System.Action<UnityEngine.Texture>))
+			{
+			    return new System.Action<UnityEngine.Texture>(__Gen_Delegate_Imp14);
+			}
+		
+		    if (type == typeof(System.Action<UnityEngine.CustomRenderTexture>))
+			{
+			    return new System.Action<UnityEngine.CustomRenderTexture>(__Gen_Delegate_Imp15);
+			}
+		
+		    if (type == typeof(System.Action<UnityEngine.CustomRenderTexture, int>))
+			{
+			    return new System.Action<UnityEngine.CustomRenderTexture, int>(__Gen_Delegate_Imp16);
+			}
+		
 		    if (type == typeof(System.Action<UnityEngine.AsyncOperation>))
 			{
-			    return new System.Action<UnityEngine.AsyncOperation>(__Gen_Delegate_Imp14);
+			    return new System.Action<UnityEngine.AsyncOperation>(__Gen_Delegate_Imp17);
 			}
 		
 		    if (type == typeof(UnityEngine.RectTransform.ReapplyDrivenProperties))
 			{
-			    return new UnityEngine.RectTransform.ReapplyDrivenProperties(__Gen_Delegate_Imp15);
+			    return new UnityEngine.RectTransform.ReapplyDrivenProperties(__Gen_Delegate_Imp18);
+			}
+		
+		    if (type == typeof(UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer>))
+			{
+			    return new UnityEngine.Events.UnityAction<UnityEngine.SpriteRenderer>(__Gen_Delegate_Imp19);
+			}
+		
+		    if (type == typeof(System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>))
+			{
+			    return new System.Action<UnityEngine.PhysicsScene, Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>(__Gen_Delegate_Imp20);
 			}
 		
 		    if (type == typeof(System.Action<UnityEngine.Font>))
 			{
-			    return new System.Action<UnityEngine.Font>(__Gen_Delegate_Imp16);
+			    return new System.Action<UnityEngine.Font>(__Gen_Delegate_Imp21);
 			}
 		
 		    if (type == typeof(System.Action<bool, bool, int>))
 			{
-			    return new System.Action<bool, bool, int>(__Gen_Delegate_Imp17);
+			    return new System.Action<bool, bool, int>(__Gen_Delegate_Imp22);
 			}
 		
 		    if (type == typeof(UnityEngine.UI.InputField.OnValidateInput))
 			{
-			    return new UnityEngine.UI.InputField.OnValidateInput(__Gen_Delegate_Imp18);
+			    return new UnityEngine.UI.InputField.OnValidateInput(__Gen_Delegate_Imp23);
 			}
 		
 		    if (type == typeof(System.Func<UnityEngine.UI.ILayoutElement, float>))
 			{
-			    return new System.Func<UnityEngine.UI.ILayoutElement, float>(__Gen_Delegate_Imp19);
+			    return new System.Func<UnityEngine.UI.ILayoutElement, float>(__Gen_Delegate_Imp24);
 			}
 		
 		    if (type == typeof(System.Func<byte[], int, int, string>))
 			{
-			    return new System.Func<byte[], int, int, string>(__Gen_Delegate_Imp20);
+			    return new System.Func<byte[], int, int, string>(__Gen_Delegate_Imp25);
 			}
 		
 		    if (type == typeof(System.Func<string, string, string>))
 			{
-			    return new System.Func<string, string, string>(__Gen_Delegate_Imp21);
+			    return new System.Func<string, string, string>(__Gen_Delegate_Imp26);
 			}
 		
 		    if (type == typeof(System.Action<float>))
 			{
-			    return new System.Action<float>(__Gen_Delegate_Imp22);
+			    return new System.Action<float>(__Gen_Delegate_Imp27);
 			}
 		
 		    if (type == typeof(System.Action<Aquila.Fight.Addon.ActorEffectEntityData, Aquila.Fight.ActorEffect>))
 			{
-			    return new System.Action<Aquila.Fight.Addon.ActorEffectEntityData, Aquila.Fight.ActorEffect>(__Gen_Delegate_Imp23);
+			    return new System.Action<Aquila.Fight.Addon.ActorEffectEntityData, Aquila.Fight.ActorEffect>(__Gen_Delegate_Imp28);
 			}
 		
 		    if (type == typeof(System.Action<int, object[]>))
 			{
-			    return new System.Action<int, object[]>(__Gen_Delegate_Imp24);
+			    return new System.Action<int, object[]>(__Gen_Delegate_Imp29);
 			}
 		
 		    return null;

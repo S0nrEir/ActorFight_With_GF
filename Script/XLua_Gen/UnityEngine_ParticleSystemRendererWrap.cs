@@ -21,10 +21,12 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ParticleSystemRenderer);
-			Utils.BeginObjectRegister(type, L, translator, 0, 6, 23, 20);
+			Utils.BeginObjectRegister(type, L, translator, 0, 8, 24, 21);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetMeshes", _m_GetMeshes);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetMeshes", _m_SetMeshes);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetMeshWeightings", _m_GetMeshWeightings);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetMeshWeightings", _m_SetMeshWeightings);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "BakeMesh", _m_BakeMesh);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "BakeTrailsMesh", _m_BakeTrailsMesh);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetActiveVertexStreams", _m_SetActiveVertexStreams);
@@ -33,6 +35,7 @@ namespace XLua.CSObjectWrap
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "alignment", _g_get_alignment);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "renderMode", _g_get_renderMode);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "meshDistribution", _g_get_meshDistribution);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sortMode", _g_get_sortMode);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "lengthScale", _g_get_lengthScale);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "velocityScale", _g_get_velocityScale);
@@ -57,6 +60,7 @@ namespace XLua.CSObjectWrap
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "alignment", _s_set_alignment);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "renderMode", _s_set_renderMode);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "meshDistribution", _s_set_meshDistribution);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "sortMode", _s_set_sortMode);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "lengthScale", _s_set_lengthScale);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "velocityScale", _s_set_velocityScale);
@@ -189,6 +193,78 @@ namespace XLua.CSObjectWrap
             }
             
             return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ParticleSystemRenderer.SetMeshes!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetMeshWeightings(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    float[] _weightings = (float[])translator.GetObject(L, 2, typeof(float[]));
+                    
+                        var gen_ret = gen_to_be_invoked.GetMeshWeightings( _weightings );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 2;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetMeshWeightings(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<float[]>(L, 2)) 
+                {
+                    float[] _weightings = (float[])translator.GetObject(L, 2, typeof(float[]));
+                    
+                    gen_to_be_invoked.SetMeshWeightings( _weightings );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 3&& translator.Assignable<float[]>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
+                {
+                    float[] _weightings = (float[])translator.GetObject(L, 2, typeof(float[]));
+                    int _size = LuaAPI.xlua_tointeger(L, 3);
+                    
+                    gen_to_be_invoked.SetMeshWeightings( _weightings, _size );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ParticleSystemRenderer.SetMeshWeightings!");
             
         }
         
@@ -405,6 +481,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.renderMode);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_meshDistribution(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.meshDistribution);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -732,6 +822,22 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
                 UnityEngine.ParticleSystemRenderMode gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.renderMode = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_meshDistribution(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystemRenderer gen_to_be_invoked = (UnityEngine.ParticleSystemRenderer)translator.FastGetCSObj(L, 1);
+                UnityEngine.ParticleSystemMeshDistribution gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.meshDistribution = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

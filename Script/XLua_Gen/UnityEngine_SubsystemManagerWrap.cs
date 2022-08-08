@@ -31,9 +31,11 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 4, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 6, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "GetAllSubsystemDescriptors", _m_GetAllSubsystemDescriptors_xlua_st_);
             
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "beforeReloadSubsystems", _e_beforeReloadSubsystems);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "afterReloadSubsystems", _e_afterReloadSubsystems);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "reloadSubsytemsStarted", _e_reloadSubsytemsStarted);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "reloadSubsytemsCompleted", _e_reloadSubsytemsCompleted);
 			
@@ -92,6 +94,64 @@ namespace XLua.CSObjectWrap
 		
 		
 		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_beforeReloadSubsystems(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action gen_delegate = translator.GetDelegate<System.Action>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.SubsystemManager.beforeReloadSubsystems += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.SubsystemManager.beforeReloadSubsystems -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.SubsystemManager.beforeReloadSubsystems!");
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_afterReloadSubsystems(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action gen_delegate = translator.GetDelegate<System.Action>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.SubsystemManager.afterReloadSubsystems += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.SubsystemManager.afterReloadSubsystems -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.SubsystemManager.afterReloadSubsystems!");
+        }
+        
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _e_reloadSubsytemsStarted(RealStatePtr L)
         {

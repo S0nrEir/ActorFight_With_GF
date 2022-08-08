@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Canvas);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 19, 14);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 20, 14);
 			
 			
 			
@@ -42,6 +42,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "additionalShaderChannels", _g_get_additionalShaderChannels);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sortingLayerName", _g_get_sortingLayerName);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "rootCanvas", _g_get_rootCanvas);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "renderingDisplaySize", _g_get_renderingDisplaySize);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "worldCamera", _g_get_worldCamera);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "normalizedSortingGridSize", _g_get_normalizedSortingGridSize);
             
@@ -64,11 +65,12 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 5, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 6, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "GetDefaultCanvasMaterial", _m_GetDefaultCanvasMaterial_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetETC1SupportedCanvasMaterial", _m_GetETC1SupportedCanvasMaterial_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ForceUpdateCanvases", _m_ForceUpdateCanvases_xlua_st_);
             
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "preWillRenderCanvases", _e_preWillRenderCanvases);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "willRenderCanvases", _e_willRenderCanvases);
 			
             
@@ -425,6 +427,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_renderingDisplaySize(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Canvas gen_to_be_invoked = (UnityEngine.Canvas)translator.FastGetCSObj(L, 1);
+                translator.PushUnityEngineVector2(L, gen_to_be_invoked.renderingDisplaySize);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_worldCamera(RealStatePtr L)
         {
 		    try {
@@ -670,6 +686,35 @@ namespace XLua.CSObjectWrap
 		
 		
 		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_preWillRenderCanvases(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                UnityEngine.Canvas.WillRenderCanvases gen_delegate = translator.GetDelegate<UnityEngine.Canvas.WillRenderCanvases>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need UnityEngine.Canvas.WillRenderCanvases!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.Canvas.preWillRenderCanvases += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.Canvas.preWillRenderCanvases -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Canvas.preWillRenderCanvases!");
+        }
+        
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _e_willRenderCanvases(RealStatePtr L)
         {

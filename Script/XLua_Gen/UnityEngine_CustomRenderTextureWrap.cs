@@ -21,12 +21,14 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.CustomRenderTexture);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 12, 12);
+			Utils.BeginObjectRegister(type, L, translator, 0, 7, 13, 13);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Update", _m_Update);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Initialize", _m_Initialize);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ClearUpdateZones", _m_ClearUpdateZones);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetUpdateZones", _m_GetUpdateZones);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDoubleBufferRenderTexture", _m_GetDoubleBufferRenderTexture);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnsureDoubleBufferConsistency", _m_EnsureDoubleBufferConsistency);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetUpdateZones", _m_SetUpdateZones);
 			
 			
@@ -42,6 +44,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "cubemapFaceMask", _g_get_cubemapFaceMask);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "doubleBuffered", _g_get_doubleBuffered);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "wrapUpdateZones", _g_get_wrapUpdateZones);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "updatePeriod", _g_get_updatePeriod);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "material", _s_set_material);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "initializationMaterial", _s_set_initializationMaterial);
@@ -55,6 +58,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "cubemapFaceMask", _s_set_cubemapFaceMask);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "doubleBuffered", _s_set_doubleBuffered);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "wrapUpdateZones", _s_set_wrapUpdateZones);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "updatePeriod", _s_set_updatePeriod);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -271,6 +275,61 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDoubleBufferRenderTexture(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.CustomRenderTexture gen_to_be_invoked = (UnityEngine.CustomRenderTexture)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.GetDoubleBufferRenderTexture(  );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_EnsureDoubleBufferConsistency(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.CustomRenderTexture gen_to_be_invoked = (UnityEngine.CustomRenderTexture)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.EnsureDoubleBufferConsistency(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SetUpdateZones(RealStatePtr L)
         {
 		    try {
@@ -469,6 +528,20 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_updatePeriod(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.CustomRenderTexture gen_to_be_invoked = (UnityEngine.CustomRenderTexture)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushnumber(L, gen_to_be_invoked.updatePeriod);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -649,6 +722,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.CustomRenderTexture gen_to_be_invoked = (UnityEngine.CustomRenderTexture)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.wrapUpdateZones = LuaAPI.lua_toboolean(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_updatePeriod(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.CustomRenderTexture gen_to_be_invoked = (UnityEngine.CustomRenderTexture)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.updatePeriod = (float)LuaAPI.lua_tonumber(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

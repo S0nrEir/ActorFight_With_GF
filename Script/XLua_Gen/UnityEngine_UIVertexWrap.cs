@@ -153,7 +153,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                translator.PushUnityEngineVector2(L, gen_to_be_invoked.uv0);
+                translator.PushUnityEngineVector4(L, gen_to_be_invoked.uv0);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -167,7 +167,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                translator.PushUnityEngineVector2(L, gen_to_be_invoked.uv1);
+                translator.PushUnityEngineVector4(L, gen_to_be_invoked.uv1);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -181,7 +181,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                translator.PushUnityEngineVector2(L, gen_to_be_invoked.uv2);
+                translator.PushUnityEngineVector4(L, gen_to_be_invoked.uv2);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -195,7 +195,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                translator.PushUnityEngineVector2(L, gen_to_be_invoked.uv3);
+                translator.PushUnityEngineVector4(L, gen_to_be_invoked.uv3);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -295,7 +295,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                UnityEngine.Vector2 gen_value;translator.Get(L, 2, out gen_value);
+                UnityEngine.Vector4 gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.uv0 = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
@@ -313,7 +313,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                UnityEngine.Vector2 gen_value;translator.Get(L, 2, out gen_value);
+                UnityEngine.Vector4 gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.uv1 = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
@@ -331,7 +331,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                UnityEngine.Vector2 gen_value;translator.Get(L, 2, out gen_value);
+                UnityEngine.Vector4 gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.uv2 = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
@@ -349,7 +349,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.UIVertex gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                UnityEngine.Vector2 gen_value;translator.Get(L, 2, out gen_value);
+                UnityEngine.Vector4 gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.uv3 = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);

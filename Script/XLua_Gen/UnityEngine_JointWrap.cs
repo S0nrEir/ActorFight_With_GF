@@ -21,11 +21,12 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Joint);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 13, 11);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 14, 12);
 			
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "connectedBody", _g_get_connectedBody);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "connectedArticulationBody", _g_get_connectedArticulationBody);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "axis", _g_get_axis);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "anchor", _g_get_anchor);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "connectedAnchor", _g_get_connectedAnchor);
@@ -40,6 +41,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "currentTorque", _g_get_currentTorque);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "connectedBody", _s_set_connectedBody);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "connectedArticulationBody", _s_set_connectedArticulationBody);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "axis", _s_set_axis);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "anchor", _s_set_anchor);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "connectedAnchor", _s_set_connectedAnchor);
@@ -106,6 +108,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Joint gen_to_be_invoked = (UnityEngine.Joint)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.connectedBody);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_connectedArticulationBody(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Joint gen_to_be_invoked = (UnityEngine.Joint)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.connectedArticulationBody);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -290,6 +306,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Joint gen_to_be_invoked = (UnityEngine.Joint)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.connectedBody = (UnityEngine.Rigidbody)translator.GetObject(L, 2, typeof(UnityEngine.Rigidbody));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_connectedArticulationBody(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Joint gen_to_be_invoked = (UnityEngine.Joint)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.connectedArticulationBody = (UnityEngine.ArticulationBody)translator.GetObject(L, 2, typeof(UnityEngine.ArticulationBody));
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

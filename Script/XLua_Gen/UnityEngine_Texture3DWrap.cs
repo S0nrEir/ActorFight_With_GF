@@ -21,8 +21,9 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Texture3D);
-			Utils.BeginObjectRegister(type, L, translator, 0, 8, 3, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 9, 3, 0);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "UpdateExternalTexture", _m_UpdateExternalTexture);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPixels", _m_GetPixels);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPixels32", _m_GetPixels32);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPixels", _m_SetPixels);
@@ -42,8 +43,9 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 0, 0);
-			
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "CreateExternalTexture", _m_CreateExternalTexture_xlua_st_);
+            
 			
             
 			
@@ -111,6 +113,20 @@ namespace XLua.CSObjectWrap
                     
 					return 1;
 				}
+				if(LuaAPI.lua_gettop(L) == 7 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4) && translator.Assignable<UnityEngine.TextureFormat>(L, 5) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6) && LuaTypes.LUA_TLIGHTUSERDATA == LuaAPI.lua_type(L, 7))
+				{
+					int _width = LuaAPI.xlua_tointeger(L, 2);
+					int _height = LuaAPI.xlua_tointeger(L, 3);
+					int _depth = LuaAPI.xlua_tointeger(L, 4);
+					UnityEngine.TextureFormat _textureFormat;translator.Get(L, 5, out _textureFormat);
+					int _mipCount = LuaAPI.xlua_tointeger(L, 6);
+					System.IntPtr _nativeTex = LuaAPI.lua_touserdata(L, 7);
+					
+					var gen_ret = new UnityEngine.Texture3D(_width, _height, _depth, _textureFormat, _mipCount, _nativeTex);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
 				if(LuaAPI.lua_gettop(L) == 6 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4) && translator.Assignable<UnityEngine.TextureFormat>(L, 5) && LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 6))
 				{
 					int _width = LuaAPI.xlua_tointeger(L, 2);
@@ -120,6 +136,20 @@ namespace XLua.CSObjectWrap
 					bool _mipChain = LuaAPI.lua_toboolean(L, 6);
 					
 					var gen_ret = new UnityEngine.Texture3D(_width, _height, _depth, _textureFormat, _mipChain);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 7 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4) && translator.Assignable<UnityEngine.TextureFormat>(L, 5) && LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 6) && LuaTypes.LUA_TLIGHTUSERDATA == LuaAPI.lua_type(L, 7))
+				{
+					int _width = LuaAPI.xlua_tointeger(L, 2);
+					int _height = LuaAPI.xlua_tointeger(L, 3);
+					int _depth = LuaAPI.xlua_tointeger(L, 4);
+					UnityEngine.TextureFormat _textureFormat;translator.Get(L, 5, out _textureFormat);
+					bool _mipChain = LuaAPI.lua_toboolean(L, 6);
+					System.IntPtr _nativeTex = LuaAPI.lua_touserdata(L, 7);
+					
+					var gen_ret = new UnityEngine.Texture3D(_width, _height, _depth, _textureFormat, _mipChain, _nativeTex);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -139,6 +169,34 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_UpdateExternalTexture(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Texture3D gen_to_be_invoked = (UnityEngine.Texture3D)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.IntPtr _nativeTex = LuaAPI.lua_touserdata(L, 2);
+                    
+                    gen_to_be_invoked.UpdateExternalTexture( _nativeTex );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_GetPixels(RealStatePtr L)
@@ -309,6 +367,38 @@ namespace XLua.CSObjectWrap
             }
             
             return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Texture3D.SetPixels32!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_CreateExternalTexture_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    int _width = LuaAPI.xlua_tointeger(L, 1);
+                    int _height = LuaAPI.xlua_tointeger(L, 2);
+                    int _depth = LuaAPI.xlua_tointeger(L, 3);
+                    UnityEngine.TextureFormat _format;translator.Get(L, 4, out _format);
+                    bool _mipChain = LuaAPI.lua_toboolean(L, 5);
+                    System.IntPtr _nativeTex = LuaAPI.lua_touserdata(L, 6);
+                    
+                        var gen_ret = UnityEngine.Texture3D.CreateExternalTexture( _width, _height, _depth, _format, _mipChain, _nativeTex );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
             
         }
         

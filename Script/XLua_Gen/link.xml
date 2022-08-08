@@ -49,8 +49,8 @@
 		<type fullname="Aquila.Config.Constant" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig" preserve="all"/>
 		<type fullname="Aquila.Config.GlobalVar" preserve="all"/>
-		<type fullname="Aquila.Extension.Component_LuBan" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Lua" preserve="all"/>
+		<type fullname="Aquila.Extension.Component_LuBan" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Module" preserve="all"/>
 		<type fullname="Aquila.Extension.GameFrameworkModuleBase" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Timer" preserve="all"/>
@@ -79,7 +79,6 @@
 		<type fullname="Aquila.Fight.Addon.NavAddon" preserve="all"/>
 		<type fullname="Aquila.Fight.Addon.ProcessorAddon" preserve="all"/>
 		<type fullname="Aquila.Fight.Addon.AddonBase" preserve="all"/>
-		<type fullname="Aquila.Fight.Actor.ACTOR_ID_POOL" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.BulletActor" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.BulletActorEntityData" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.FlyActor" preserve="all"/>
@@ -91,6 +90,7 @@
 		<type fullname="Aquila.Fight.Actor.TriggerActor" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.TriggerActorEntityData" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.RoleBaseSubTypeEnum" preserve="all"/>
+		<type fullname="Aquila.Fight.Actor.ACTOR_ID_POOL" preserve="all"/>
 		<type fullname="Aquila.Fight.Buff.Component_Buff" preserve="all"/>
 		<type fullname="Aquila.Fight.Buff.BuffBase" preserve="all"/>
 		<type fullname="Aquila.Fight.Buff.BuffEntity" preserve="all"/>
@@ -198,6 +198,7 @@
 		<type fullname="UnityEngine.Caching" preserve="all"/>
 		<type fullname="UnityEngine.Camera" preserve="all"/>
 		<type fullname="UnityEngine.Camera+GateFitParameters" preserve="all"/>
+		<type fullname="UnityEngine.Camera+RenderRequest" preserve="all"/>
 		<type fullname="UnityEngine.BoundingSphere" preserve="all"/>
 		<type fullname="UnityEngine.CullingGroupEvent" preserve="all"/>
 		<type fullname="UnityEngine.CullingGroup" preserve="all"/>
@@ -219,7 +220,10 @@
 		<type fullname="UnityEngine.LightingSettings" preserve="all"/>
 		<type fullname="UnityEngine.BillboardAsset" preserve="all"/>
 		<type fullname="UnityEngine.BillboardRenderer" preserve="all"/>
+		<type fullname="UnityEngine.CustomRenderTextureManager" preserve="all"/>
 		<type fullname="UnityEngine.Display" preserve="all"/>
+		<type fullname="UnityEngine.RefreshRate" preserve="all"/>
+		<type fullname="UnityEngine.DisplayInfo" preserve="all"/>
 		<type fullname="UnityEngine.SleepTimeout" preserve="all"/>
 		<type fullname="UnityEngine.Screen" preserve="all"/>
 		<type fullname="UnityEngine.RenderBuffer" preserve="all"/>
@@ -234,6 +238,7 @@
 		<type fullname="UnityEngine.HDROutputSettings" preserve="all"/>
 		<type fullname="UnityEngine.Resolution" preserve="all"/>
 		<type fullname="UnityEngine.RenderTargetSetup" preserve="all"/>
+		<type fullname="UnityEngine.RenderParams" preserve="all"/>
 		<type fullname="UnityEngine.QualitySettings" preserve="all"/>
 		<type fullname="UnityEngine.RendererExtensions" preserve="all"/>
 		<type fullname="UnityEngine.ImageEffectTransformsToLDR" preserve="all"/>
@@ -253,6 +258,8 @@
 		<type fullname="UnityEngine.RenderSettings" preserve="all"/>
 		<type fullname="UnityEngine.Material" preserve="all"/>
 		<type fullname="UnityEngine.GraphicsBuffer" preserve="all"/>
+		<type fullname="UnityEngine.GraphicsBuffer+IndirectDrawArgs" preserve="all"/>
+		<type fullname="UnityEngine.GraphicsBuffer+IndirectDrawIndexedArgs" preserve="all"/>
 		<type fullname="UnityEngine.OcclusionPortal" preserve="all"/>
 		<type fullname="UnityEngine.OcclusionArea" preserve="all"/>
 		<type fullname="UnityEngine.Flare" preserve="all"/>
@@ -307,6 +314,7 @@
 		<type fullname="UnityEngine.Random" preserve="all"/>
 		<type fullname="UnityEngine.Random+State" preserve="all"/>
 		<type fullname="UnityEngine.ResourceRequest" preserve="all"/>
+		<type fullname="UnityEngine.ResourcesAPI" preserve="all"/>
 		<type fullname="UnityEngine.Resources" preserve="all"/>
 		<type fullname="UnityEngine.AsyncOperation" preserve="all"/>
 		<type fullname="UnityEngine.ExecuteAlways" preserve="all"/>
@@ -345,6 +353,7 @@
 		<type fullname="UnityEngine.Time" preserve="all"/>
 		<type fullname="UnityEngine.UnityEventQueueSystem" preserve="all"/>
 		<type fullname="UnityEngine.Pose" preserve="all"/>
+		<type fullname="UnityEngine.FrameDebugger" preserve="all"/>
 		<type fullname="UnityEngine.DrivenRectTransformTracker" preserve="all"/>
 		<type fullname="UnityEngine.RectTransform" preserve="all"/>
 		<type fullname="UnityEngine.Transform" preserve="all"/>
@@ -397,6 +406,8 @@
 		<type fullname="UnityEngine.ParticleSystem+MainModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+EmissionModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+ShapeModule" preserve="all"/>
+		<type fullname="UnityEngine.ParticleSystem+CollisionModule" preserve="all"/>
+		<type fullname="UnityEngine.ParticleSystem+TriggerModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+SubEmittersModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+TextureSheetAnimationModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+Particle" preserve="all"/>
@@ -405,6 +416,7 @@
 		<type fullname="UnityEngine.ParticleSystem+EmitParams" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+PlaybackState" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+Trails" preserve="all"/>
+		<type fullname="UnityEngine.ParticleSystem+ColliderData" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+VelocityOverLifetimeModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+LimitVelocityOverLifetimeModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+InheritVelocityModule" preserve="all"/>
@@ -418,8 +430,6 @@
 		<type fullname="UnityEngine.ParticleSystem+RotationBySpeedModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+ExternalForcesModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+NoiseModule" preserve="all"/>
-		<type fullname="UnityEngine.ParticleSystem+CollisionModule" preserve="all"/>
-		<type fullname="UnityEngine.ParticleSystem+TriggerModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+LightsModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+TrailModule" preserve="all"/>
 		<type fullname="UnityEngine.ParticleSystem+CustomDataModule" preserve="all"/>
@@ -440,6 +450,13 @@
 		<type fullname="UnityEngine.JointLimits" preserve="all"/>
 		<type fullname="UnityEngine.ControllerColliderHit" preserve="all"/>
 		<type fullname="UnityEngine.Collision" preserve="all"/>
+		<type fullname="UnityEngine.ArticulationDrive" preserve="all"/>
+		<type fullname="UnityEngine.ArticulationReducedSpace" preserve="all"/>
+		<type fullname="UnityEngine.ArticulationJacobian" preserve="all"/>
+		<type fullname="UnityEngine.ArticulationBody" preserve="all"/>
+		<type fullname="UnityEngine.Physics" preserve="all"/>
+		<type fullname="UnityEngine.ModifiableContactPair" preserve="all"/>
+		<type fullname="UnityEngine.ModifiableMassProperties" preserve="all"/>
 		<type fullname="UnityEngine.PhysicMaterial" preserve="all"/>
 		<type fullname="UnityEngine.RaycastHit" preserve="all"/>
 		<type fullname="UnityEngine.Rigidbody" preserve="all"/>
@@ -459,10 +476,6 @@
 		<type fullname="UnityEngine.ContactPoint" preserve="all"/>
 		<type fullname="UnityEngine.PhysicsScene" preserve="all"/>
 		<type fullname="UnityEngine.PhysicsSceneExtensions" preserve="all"/>
-		<type fullname="UnityEngine.ArticulationDrive" preserve="all"/>
-		<type fullname="UnityEngine.ArticulationReducedSpace" preserve="all"/>
-		<type fullname="UnityEngine.ArticulationBody" preserve="all"/>
-		<type fullname="UnityEngine.Physics" preserve="all"/>
 		<type fullname="UnityEngine.RaycastCommand" preserve="all"/>
 		<type fullname="UnityEngine.SpherecastCommand" preserve="all"/>
 		<type fullname="UnityEngine.CapsulecastCommand" preserve="all"/>
@@ -474,6 +487,8 @@
 	    <type fullname="UnityEngine.PhysicsScene2D" preserve="all"/>
 		<type fullname="UnityEngine.PhysicsSceneExtensions2D" preserve="all"/>
 		<type fullname="UnityEngine.Physics2D" preserve="all"/>
+		<type fullname="UnityEngine.PhysicsShape2D" preserve="all"/>
+		<type fullname="UnityEngine.PhysicsShapeGroup2D" preserve="all"/>
 		<type fullname="UnityEngine.ColliderDistance2D" preserve="all"/>
 		<type fullname="UnityEngine.ContactFilter2D" preserve="all"/>
 		<type fullname="UnityEngine.Collision2D" preserve="all"/>
@@ -486,6 +501,7 @@
 		<type fullname="UnityEngine.PhysicsJobOptions2D" preserve="all"/>
 		<type fullname="UnityEngine.Rigidbody2D" preserve="all"/>
 		<type fullname="UnityEngine.Collider2D" preserve="all"/>
+		<type fullname="UnityEngine.CustomCollider2D" preserve="all"/>
 		<type fullname="UnityEngine.CircleCollider2D" preserve="all"/>
 		<type fullname="UnityEngine.CapsuleCollider2D" preserve="all"/>
 		<type fullname="UnityEngine.EdgeCollider2D" preserve="all"/>
@@ -531,16 +547,17 @@
 	</assembly>
 
 	<assembly fullname="UnityEngine.SubsystemsModule">
-	    <type fullname="UnityEngine.IntegratedSubsystemDescriptor" preserve="all"/>
+	    <type fullname="UnityEngine.IntegratedSubsystem" preserve="all"/>
+		<type fullname="UnityEngine.IntegratedSubsystemDescriptor" preserve="all"/>
+		<type fullname="UnityEngine.Subsystem" preserve="all"/>
 		<type fullname="UnityEngine.SubsystemDescriptor" preserve="all"/>
 		<type fullname="UnityEngine.SubsystemManager" preserve="all"/>
-		<type fullname="UnityEngine.IntegratedSubsystem" preserve="all"/>
-		<type fullname="UnityEngine.Subsystem" preserve="all"/>
 		
 	</assembly>
 
 	<assembly fullname="UnityEngine.TerrainModule">
 	    <type fullname="UnityEngine.PatchExtents" preserve="all"/>
+		<type fullname="UnityEngine.DetailInstanceTransform" preserve="all"/>
 		
 	</assembly>
 
@@ -619,13 +636,13 @@
 		<type fullname="UnityEngine.UI.LayoutUtility" preserve="all"/>
 		<type fullname="UnityEngine.UI.VerticalLayoutGroup" preserve="all"/>
 		<type fullname="UnityEngine.UI.Mask" preserve="all"/>
-		<type fullname="UnityEngine.UI.MaskUtilities" preserve="all"/>
 		<type fullname="UnityEngine.UI.MaskableGraphic" preserve="all"/>
+		<type fullname="UnityEngine.UI.MaskUtilities" preserve="all"/>
 		<type fullname="UnityEngine.UI.Navigation" preserve="all"/>
 		<type fullname="UnityEngine.UI.RawImage" preserve="all"/>
 		<type fullname="UnityEngine.UI.RectMask2D" preserve="all"/>
-		<type fullname="UnityEngine.UI.ScrollRect" preserve="all"/>
 		<type fullname="UnityEngine.UI.Scrollbar" preserve="all"/>
+		<type fullname="UnityEngine.UI.ScrollRect" preserve="all"/>
 		<type fullname="UnityEngine.UI.Selectable" preserve="all"/>
 		<type fullname="UnityEngine.UI.Slider" preserve="all"/>
 		<type fullname="UnityEngine.UI.SpriteState" preserve="all"/>
@@ -644,10 +661,11 @@
 		<type fullname="UnityEngine.UI.Dropdown+OptionDataList" preserve="all"/>
 		<type fullname="UnityEngine.UI.Dropdown+DropdownEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.InputField+SubmitEvent" preserve="all"/>
+		<type fullname="UnityEngine.UI.InputField+EndEditEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.InputField+OnChangeEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.MaskableGraphic+CullStateChangedEvent" preserve="all"/>
-		<type fullname="UnityEngine.UI.ScrollRect+ScrollRectEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.Scrollbar+ScrollEvent" preserve="all"/>
+		<type fullname="UnityEngine.UI.ScrollRect+ScrollRectEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.Slider+SliderEvent" preserve="all"/>
 		<type fullname="UnityEngine.UI.Toggle+ToggleEvent" preserve="all"/>
 		

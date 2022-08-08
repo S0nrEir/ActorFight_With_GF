@@ -31,14 +31,16 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 9, 78, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 11, 84, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "SupportsRenderTextureFormat", _m_SupportsRenderTextureFormat_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SupportsBlendingOnRenderTextureFormat", _m_SupportsBlendingOnRenderTextureFormat_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "SupportsRandomWriteOnRenderTextureFormat", _m_SupportsRandomWriteOnRenderTextureFormat_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SupportsTextureFormat", _m_SupportsTextureFormat_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "SupportsVertexAttributeFormat", _m_SupportsVertexAttributeFormat_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "IsFormatSupported", _m_IsFormatSupported_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetCompatibleFormat", _m_GetCompatibleFormat_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetGraphicsFormat", _m_GetGraphicsFormat_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "GetRenderTextureSupportedMSAASampleCount", _m_GetRenderTextureSupportedMSAASampleCount_xlua_st_);
             
 			
             Utils.RegisterObject(L, translator, Utils.CLS_IDX, "unsupportedIdentifier", UnityEngine.SystemInfo.unsupportedIdentifier);
@@ -83,9 +85,9 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsCubemapArrayTextures", _g_get_supportsCubemapArrayTextures);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "copyTextureSupport", _g_get_copyTextureSupport);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsComputeShaders", _g_get_supportsComputeShaders);
-            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsConservativeRaster", _g_get_supportsConservativeRaster);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsGeometryShaders", _g_get_supportsGeometryShaders);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsTessellationShaders", _g_get_supportsTessellationShaders);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsRenderTargetArrayIndexFromVertexShader", _g_get_supportsRenderTargetArrayIndexFromVertexShader);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsInstancing", _g_get_supportsInstancing);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsHardwareQuadTopology", _g_get_supportsHardwareQuadTopology);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supports32bitsIndexBuffer", _g_get_supports32bitsIndexBuffer);
@@ -94,6 +96,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsSeparatedRenderTargetsBlend", _g_get_supportsSeparatedRenderTargetsBlend);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportedRandomWriteTargetCount", _g_get_supportedRandomWriteTargetCount);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMultisampledTextures", _g_get_supportsMultisampledTextures);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMultisampled2DArrayTextures", _g_get_supportsMultisampled2DArrayTextures);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMultisampleAutoResolve", _g_get_supportsMultisampleAutoResolve);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsTextureWrapMirrorOnce", _g_get_supportsTextureWrapMirrorOnce);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "usesReversedZBuffer", _g_get_usesReversedZBuffer);
@@ -116,11 +119,16 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsAsyncGPUReadback", _g_get_supportsAsyncGPUReadback);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsRayTracing", _g_get_supportsRayTracing);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsSetConstantBuffer", _g_get_supportsSetConstantBuffer);
-            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "minConstantBufferOffsetAlignment", _g_get_minConstantBufferOffsetAlignment);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "constantBufferOffsetAlignment", _g_get_constantBufferOffsetAlignment);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "maxGraphicsBufferSize", _g_get_maxGraphicsBufferSize);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "hasMipMaxLevel", _g_get_hasMipMaxLevel);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMipStreaming", _g_get_supportsMipStreaming);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "usesLoadStoreActions", _g_get_usesLoadStoreActions);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "hdrDisplaySupportFlags", _g_get_hdrDisplaySupportFlags);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsConservativeRaster", _g_get_supportsConservativeRaster);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMultiview", _g_get_supportsMultiview);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsStoreAndResolveAction", _g_get_supportsStoreAndResolveAction);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "supportsMultisampleResolveDepth", _g_get_supportsMultisampleResolveDepth);
             
 			
 			
@@ -198,6 +206,33 @@ namespace XLua.CSObjectWrap
                     UnityEngine.RenderTextureFormat _format;translator.Get(L, 1, out _format);
                     
                         var gen_ret = UnityEngine.SystemInfo.SupportsBlendingOnRenderTextureFormat( _format );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SupportsRandomWriteOnRenderTextureFormat_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.RenderTextureFormat _format;translator.Get(L, 1, out _format);
+                    
+                        var gen_ret = UnityEngine.SystemInfo.SupportsRandomWriteOnRenderTextureFormat( _format );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -337,6 +372,33 @@ namespace XLua.CSObjectWrap
                     
                         var gen_ret = UnityEngine.SystemInfo.GetGraphicsFormat( _format );
                         translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetRenderTextureSupportedMSAASampleCount_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.RenderTextureDescriptor _desc;translator.Get(L, 1, out _desc);
+                    
+                        var gen_ret = UnityEngine.SystemInfo.GetRenderTextureSupportedMSAASampleCount( _desc );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
                     
@@ -833,18 +895,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_supportsConservativeRaster(RealStatePtr L)
-        {
-		    try {
-            
-			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsConservativeRaster);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_supportsGeometryShaders(RealStatePtr L)
         {
 		    try {
@@ -862,6 +912,18 @@ namespace XLua.CSObjectWrap
 		    try {
             
 			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsTessellationShaders);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsRenderTargetArrayIndexFromVertexShader(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsRenderTargetArrayIndexFromVertexShader);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -958,6 +1020,18 @@ namespace XLua.CSObjectWrap
 		    try {
             
 			    LuaAPI.xlua_pushinteger(L, UnityEngine.SystemInfo.supportsMultisampledTextures);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsMultisampled2DArrayTextures(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsMultisampled2DArrayTextures);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -1229,11 +1303,23 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_minConstantBufferOffsetAlignment(RealStatePtr L)
+        static int _g_get_constantBufferOffsetAlignment(RealStatePtr L)
         {
 		    try {
             
-			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.minConstantBufferOffsetAlignment);
+			    LuaAPI.xlua_pushinteger(L, UnityEngine.SystemInfo.constantBufferOffsetAlignment);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_maxGraphicsBufferSize(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushint64(L, UnityEngine.SystemInfo.maxGraphicsBufferSize);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -1282,6 +1368,54 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			    translator.Push(L, UnityEngine.SystemInfo.hdrDisplaySupportFlags);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsConservativeRaster(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsConservativeRaster);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsMultiview(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsMultiview);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsStoreAndResolveAction(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsStoreAndResolveAction);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_supportsMultisampleResolveDepth(RealStatePtr L)
+        {
+		    try {
+            
+			    LuaAPI.lua_pushboolean(L, UnityEngine.SystemInfo.supportsMultisampleResolveDepth);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

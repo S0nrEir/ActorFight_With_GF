@@ -21,11 +21,14 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Mesh.MeshData);
-			Utils.BeginObjectRegister(type, L, translator, 0, 13, 4, 1);
+			Utils.BeginObjectRegister(type, L, translator, 0, 16, 4, 1);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertexBufferStride", _m_GetVertexBufferStride);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "HasVertexAttribute", _m_HasVertexAttribute);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertexAttributeDimension", _m_GetVertexAttributeDimension);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertexAttributeFormat", _m_GetVertexAttributeFormat);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertexAttributeStream", _m_GetVertexAttributeStream);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertexAttributeOffset", _m_GetVertexAttributeOffset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetVertices", _m_GetVertices);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetNormals", _m_GetNormals);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetTangents", _m_GetTangents);
@@ -86,6 +89,37 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetVertexBufferStride(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Mesh.MeshData gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    int _stream = LuaAPI.xlua_tointeger(L, 2);
+                    
+                        var gen_ret = gen_to_be_invoked.GetVertexBufferStride( _stream );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_HasVertexAttribute(RealStatePtr L)
@@ -166,6 +200,68 @@ namespace XLua.CSObjectWrap
                     
                         var gen_ret = gen_to_be_invoked.GetVertexAttributeFormat( _attr );
                         translator.Push(L, gen_ret);
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetVertexAttributeStream(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Mesh.MeshData gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    UnityEngine.Rendering.VertexAttribute _attr;translator.Get(L, 2, out _attr);
+                    
+                        var gen_ret = gen_to_be_invoked.GetVertexAttributeStream( _attr );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetVertexAttributeOffset(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Mesh.MeshData gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    UnityEngine.Rendering.VertexAttribute _attr;translator.Get(L, 2, out _attr);
+                    
+                        var gen_ret = gen_to_be_invoked.GetVertexAttributeOffset( _attr );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
                         translator.Update(L, 1, gen_to_be_invoked);
@@ -388,10 +484,25 @@ namespace XLua.CSObjectWrap
                 UnityEngine.Mesh.MeshData gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count >= 2&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& (LuaTypes.LUA_TNONE == LuaAPI.lua_type(L, 3) || translator.Assignable<UnityEngine.Rendering.VertexAttributeDescriptor>(L, 3))) 
                 {
                     int _vertexCount = LuaAPI.xlua_tointeger(L, 2);
                     UnityEngine.Rendering.VertexAttributeDescriptor[] _attributes = translator.GetParams<UnityEngine.Rendering.VertexAttributeDescriptor>(L, 3);
+                    
+                    gen_to_be_invoked.SetVertexBufferParams( _vertexCount, _attributes );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 3&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& translator.Assignable<Unity.Collections.NativeArray<UnityEngine.Rendering.VertexAttributeDescriptor>>(L, 3)) 
+                {
+                    int _vertexCount = LuaAPI.xlua_tointeger(L, 2);
+                    Unity.Collections.NativeArray<UnityEngine.Rendering.VertexAttributeDescriptor> _attributes;translator.Get(L, 3, out _attributes);
                     
                     gen_to_be_invoked.SetVertexBufferParams( _vertexCount, _attributes );
                     
@@ -405,6 +516,8 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Mesh.MeshData.SetVertexBufferParams!");
             
         }
         
