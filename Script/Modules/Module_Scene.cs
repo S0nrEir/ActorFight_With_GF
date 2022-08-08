@@ -22,13 +22,25 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 开始战斗
+        /// 场景初始化
         /// </summary>
-        public void Start( int x_width, int z_width )
+        public bool Start( Module_Scene_Param param )
         {
-            _fight_flag = true;
-            Terrain_Module.Start( x_width, z_width );
+            if ( param is null )
+                return _fight_flag;
+
+            if ( !param.FieldValid() )
+                return _fight_flag;
+
+            _param = param;
+
+            //module
+            Terrain_Module.Start( param.x_width,param.z_width );
             _actor_module = GameEntry.Module.GetModule<Module_Actor>();
+
+            //script
+            _fight_flag = true;
+            return _fight_flag;
         }
 
         /// <summary>
@@ -38,9 +50,12 @@ namespace Aquila.Module
         {
             Terrain_Module.End();
             //_actor_module = null;
+            ReferencePool.Release( _param );
+            _param = null;
             _fight_flag = false;
         }
 
+        #region override
         public override void OnClose()
         {
             _fight_flag = false;
@@ -69,20 +84,20 @@ namespace Aquila.Module
                 _sub_module_dic = new Dictionary<System.Type, IModule_Fighting_SubModule>();
 
             //添加sub module
-            Terrain_Module = ReferencePool.Acquire<Module_Fighting_Terrain>();
-            _sub_module_dic.Add( typeof( Module_Fighting_Terrain ), Terrain_Module );
+            Terrain_Module = ReferencePool.Acquire<Module_Scene_Terrain>();
+            _sub_module_dic.Add( typeof( Module_Scene_Terrain ), Terrain_Module );
 
             var iter = _sub_module_dic.GetEnumerator();
             while ( iter.MoveNext() )
                 iter.Current.Value.EnsureInit();
         }
+        #endregion
 
         /// <summary>
         /// 刷帧处理选定逻辑
         /// </summary>
         public void OnUpdate( float deltaTime )
         {
-            return;
             if ( !_fight_flag )
                 return;
 
@@ -130,7 +145,7 @@ namespace Aquila.Module
         /// 地块模块
         /// </summary>
         //private Module_Fighting_Terrain _terrain_module = null;
-        public Module_Fighting_Terrain Terrain_Module { get; private set; }
+        public Module_Scene_Terrain Terrain_Module { get; private set; }
 
         /// <summary>
         /// 子模块集合
@@ -141,6 +156,11 @@ namespace Aquila.Module
         /// 开始标记
         /// </summary>
         private bool _fight_flag = false;
+
+        /// <summary>
+        /// 场景参数
+        /// </summary>
+        private Module_Scene_Param _param = null;
     }
 
     public interface IModule_Fighting_SubModule
@@ -148,6 +168,32 @@ namespace Aquila.Module
         public void EnsureInit();
         public void OnClose();
         public void End();
+    }
+
+    /// <summary>
+    /// 场景参数
+    /// </summary>
+    public class Module_Scene_Param : IReference
+    {
+        public int x_width = 0;
+        public int z_width = 0;
+        public Cfg.common.Scripts _scene_script_meta = null;
+
+        /// <summary>
+        /// 检查字段有效性
+        /// </summary>
+        public bool FieldValid()
+        {
+            return z_width > 0 &&
+                   x_width > 0;
+        }
+
+        public void Clear()
+        {
+            x_width = 0;
+            z_width = 0;
+            _scene_script_meta = null;
+        }
     }
 
 }

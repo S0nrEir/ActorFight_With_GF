@@ -1,6 +1,5 @@
 ﻿using Aquila.Config;
 using Aquila.Module;
-using Cfg.common;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -29,25 +28,22 @@ namespace Aquila.Procedure
             if ( !InitializeData( procedureOwner ) )
             {
                 Log.Error( "procedure data initialize Failed!" );
-                return; 
+                return;
             }
 
             var scene_config = Tools.Table.GetSceneConfig();
             //_terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
 
-            _scene_module.Start
-                (
-                    scene_config.Fight_Scene_Default_X_Width, 
-                    scene_config.Fight_Scene_Default_Y_Width
-                );
+            var param = ReferencePool.Acquire<Module_Scene_Param>();
+            param.x_width = scene_config.Fight_Scene_Default_X_Width;
+            param.z_width = scene_config.Fight_Scene_Default_Y_Width;
+            param._scene_script_meta = _data._scene_script_meta;
 
-            //do lua script
-            if ( _data._scene_script_meta != null )
-            {
-                var meta = _data._scene_script_meta;
-                GameEntry.Lua.LoadScript( meta.AssetPath, _data._chunk_name, meta.Type );
-            }
+            if ( !_scene_module.Start( param ) )
+                Log.Error( "scene_module start faild" );
+
+            GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ) );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
