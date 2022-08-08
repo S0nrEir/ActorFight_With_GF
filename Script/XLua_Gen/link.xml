@@ -42,8 +42,7 @@
 		<type fullname="Aquila.Procedure.Procedure_Start" preserve="all"/>
 		<type fullname="Aquila.ObjectPool.Object_Terrain" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Actor" preserve="all"/>
-		<type fullname="Aquila.Module.Module_Fight" preserve="all"/>
-		<type fullname="Aquila.Module.Module_Terrain" preserve="all"/>
+		<type fullname="Aquila.Module.Module_Scene" preserve="all"/>
 		<type fullname="Aquila.Module.Module_UI" preserve="all"/>
 		<type fullname="Aquila.Event.ActorDieEventArgs" preserve="all"/>
 		<type fullname="Aquila.Config.Constant" preserve="all"/>
@@ -102,6 +101,7 @@
 		<type fullname="Aquila.Tools+Table" preserve="all"/>
 		<type fullname="Aquila.Tools+Fight" preserve="all"/>
 		<type fullname="Aquila.Tools+Lua" preserve="all"/>
+		<type fullname="Aquila.Module.Module_Scene+Module_Fighting_Terrain" preserve="all"/>
 		<type fullname="Aquila.Config.Constant+AssetPriority" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+Lua" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+ObjectPool" preserve="all"/>

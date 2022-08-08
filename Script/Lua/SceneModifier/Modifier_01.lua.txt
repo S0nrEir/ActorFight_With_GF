@@ -1,4 +1,5 @@
-local terrain_module = CS.Aquila.GameEntry.Module:GetModule(typeof(CS.Aquila.Module.Module_Terrain))
+local _fighting_module = CS.Aquila.GameEntry.Module:GetModule(typeof(CS.Aquila.Module.Module_Scene))
+local _terrain_module = _fighting_module.Terrain_Module
 local Debug = CS.UnityEngine.Debug
 
 
@@ -6,7 +7,7 @@ local Debug = CS.UnityEngine.Debug
 function on_start_lua()
 
     Debug.Log("Into lua")
-    local terrain = terrain_module:Get(0,0)
+    local terrain = _terrain_module:Get(0,0)
     if(terrain ~= nil) then
         Debug.Log("terrain is not null")
         terrain:SetName("call_from_lua")
