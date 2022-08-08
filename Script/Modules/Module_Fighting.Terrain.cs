@@ -12,7 +12,7 @@ namespace Aquila.Module
         /// <summary>
         /// 战斗模块，地块类
         /// </summary>
-        public class Module_Fighting_Terrain : IReference,IModule_Fighting_SubModule
+        public class Module_Fighting_Terrain : IReference, IModule_Fighting_SubModule
         {
             #region public
             //#todo所有的地块获取，都要从对象池里拿TerrainObject
@@ -23,6 +23,7 @@ namespace Aquila.Module
             public void Start( int x_width, int z_width )
             {
                 GenerateFightSceneTerrain( x_width, z_width );
+                _generate_flag = true;
             }
 
             /// <summary>
@@ -78,7 +79,6 @@ namespace Aquila.Module
                         AddToCache( terrain );
                     }
                 }//end for
-                _generate_flag = true;
             }
 
             /// <summary>
@@ -98,6 +98,7 @@ namespace Aquila.Module
                         key = iter.Current.Key;
                         RemoveFromCache( key );
                     }
+                    _terrain_cache_dic.Clear();
                 }
             }
 
@@ -192,7 +193,9 @@ namespace Aquila.Module
             {
                 _root_go = null;
                 _terrain_cache_dic?.Clear();
+                Log.Info( "_terrain_cache_dic?.Clear()", LogColorTypeEnum.White );
                 _terrain_cache_dic = null;
+
                 _terrain_go_cache_dic?.Clear();
                 _terrain_go_cache_dic = null;
 
@@ -226,7 +229,7 @@ namespace Aquila.Module
                             _root_go = new GameObject( GameConfig.Tags.TERRAIN_ROOT );
                             _root_go.transform.position = Vector3.zero;
                             _root_go.transform.localScale = Vector3.one;
-                            _root_go.transform.eulerAngles = Vector3.zero;
+                            _root_go.transform.rotation = Quaternion.Euler( Vector3.zero );
                             Object.DontDestroyOnLoad( _root_go );
                         }
                     }

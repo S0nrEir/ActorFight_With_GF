@@ -36,17 +36,18 @@ namespace Aquila.Procedure
             //_terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
 
+            _scene_module.Start
+                (
+                    scene_config.Fight_Scene_Default_X_Width, 
+                    scene_config.Fight_Scene_Default_Y_Width
+                );
+
             //do lua script
             if ( _data._scene_script_meta != null )
             {
                 var meta = _data._scene_script_meta;
                 GameEntry.Lua.LoadScript( meta.AssetPath, _data._chunk_name, meta.Type );
             }
-            _scene_module.Start
-                (
-                    scene_config.Fight_Scene_Default_X_Width, 
-                    scene_config.Fight_Scene_Default_Y_Width
-                );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )

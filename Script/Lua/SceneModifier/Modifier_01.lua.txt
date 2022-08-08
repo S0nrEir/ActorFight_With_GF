@@ -1,13 +1,16 @@
-local _fighting_module = CS.Aquila.GameEntry.Module:GetModule(typeof(CS.Aquila.Module.Module_Scene))
-local _terrain_module = _fighting_module.Terrain_Module
+local _scene_module = CS.Aquila.GameEntry.Module:GetModule(typeof(CS.Aquila.Module.Module_Scene))
 local Debug = CS.UnityEngine.Debug
 
-
---- 启动函数
 function on_start_lua()
-
     Debug.Log("Into lua")
-    local terrain = _terrain_module:Get(0,0)
+
+    -- if(_terrain_module == nil) then
+    --     Debug.Log("_terrain_module is null")
+    -- else
+    --     Debug.Log("_terrain_module is not null")
+    -- end
+
+    local terrain = _scene_module.Terrain_Module:Get(1,1)
     if(terrain ~= nil) then
         Debug.Log("terrain is not null")
         terrain:SetName("call_from_lua")
@@ -15,17 +18,14 @@ function on_start_lua()
     
 end
 
---- 计时回调
 function on_timer_tick_lua(delta_time)
     
 end
 
---- 结束回调
 function on_finish_lua()
     
 end
 
---刷帧
 function on_update_lua()
 
 end

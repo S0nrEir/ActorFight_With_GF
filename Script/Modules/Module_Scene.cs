@@ -82,6 +82,7 @@ namespace Aquila.Module
         /// </summary>
         public void OnUpdate( float deltaTime )
         {
+            return;
             if ( !_fight_flag )
                 return;
 
