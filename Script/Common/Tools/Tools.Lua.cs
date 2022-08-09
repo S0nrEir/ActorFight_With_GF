@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila
+namespace Aquila.ToolKit
 {
     public static partial class Tools
     {

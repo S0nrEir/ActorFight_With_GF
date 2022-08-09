@@ -12,15 +12,6 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_Scene : GameFrameworkModuleBase, IUpdate
     {
-        public T GetSubModule<T>( System.Type type ) where T : class, IModule_Fighting_SubModule
-        {
-            if ( _sub_module_dic is null || _sub_module_dic.Count == 0 )
-                return null;
-
-            _sub_module_dic.TryGetValue( type, out var sub_module );
-            return sub_module as T;
-        }
-
         /// <summary>
         /// 场景初始化
         /// </summary>
@@ -59,37 +50,17 @@ namespace Aquila.Module
         public override void OnClose()
         {
             _fight_flag = false;
-
             Terrain_Module = null;
-
-            if ( _sub_module_dic != null )
-            {
-                var iter = _sub_module_dic.GetEnumerator();
-                while ( iter.MoveNext() )
-                {
-                    var value = iter.Current.Value;
-                    value.OnClose();
-                    ReferencePool.Release( value as IReference );
-                }
-                _sub_module_dic.Clear();
-            }
-            _sub_module_dic = null;
+            base.OnClose();
         }
 
         public override void EnsureInit()
         {
             base.EnsureInit();
             _fight_flag = false;
-            if ( _sub_module_dic is null )
-                _sub_module_dic = new Dictionary<System.Type, IModule_Fighting_SubModule>();
 
             //添加sub module
-            Terrain_Module = ReferencePool.Acquire<Module_Scene_Terrain>();
-            _sub_module_dic.Add( typeof( Module_Scene_Terrain ), Terrain_Module );
-
-            var iter = _sub_module_dic.GetEnumerator();
-            while ( iter.MoveNext() )
-                iter.Current.Value.EnsureInit();
+            Terrain_Module = AddSubModule<Module_Scene_Terrain>();
         }
         #endregion
 
@@ -148,11 +119,6 @@ namespace Aquila.Module
         public Module_Scene_Terrain Terrain_Module { get; private set; }
 
         /// <summary>
-        /// 子模块集合
-        /// </summary>
-        private Dictionary<System.Type, IModule_Fighting_SubModule> _sub_module_dic = null;
-
-        /// <summary>
         /// 开始标记
         /// </summary>
         private bool _fight_flag = false;
@@ -161,6 +127,8 @@ namespace Aquila.Module
         /// 场景参数
         /// </summary>
         private Module_Scene_Param _param = null;
+
+        protected override bool Contains_Sub_Module => true;
     }
 
     public interface IModule_Fighting_SubModule

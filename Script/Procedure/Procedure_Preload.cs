@@ -1,6 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Module;
 using Aquila.ObjectPool;
+using Aquila.ToolKit;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -72,11 +73,11 @@ namespace Aquila.Procedure
 
             //---------------------------废弃代码----------------------------------
             //加载数据表
-            if ( !GameEntry.DataTable.LoadDataTable() )
-                throw new GameFrameworkException( "load data table faild!" );
+            //if ( !GameEntry.DataTable.LoadDataTable() )
+            //    throw new GameFrameworkException( "load data table faild!" );
 
-            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
-            OnPreLoadFinished();
+            //_preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
+            //OnPreLoadFinished();
         }
 
         /// <summary>
