@@ -13,7 +13,7 @@ namespace Aquila.Module
     /// <summary>
     /// 战斗模块，地块类
     /// </summary>
-    public class Module_Scene_Terrain : GameFrameworkModuleBase
+    public class Module_Terrain : GameFrameworkModuleBase
     {
         #region public
         //#todo所有的地块获取，都要从对象池里拿TerrainObject
@@ -198,6 +198,7 @@ namespace Aquila.Module
 
             _generate_flag = false;
         }
+
 
         /// <summary>
         /// 地块缓存

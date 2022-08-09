@@ -1507,7 +1507,7 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene_Param), AquilaModuleModule_Scene_ParamWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene_Terrain), AquilaModuleModule_Scene_TerrainWrap.__Register);
+            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Terrain), AquilaModuleModule_TerrainWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_UI), AquilaModuleModule_UIWrap.__Register);

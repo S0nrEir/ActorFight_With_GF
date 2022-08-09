@@ -27,7 +27,6 @@ namespace Aquila.Module
 
             //module
             Terrain_Module.Start( param.x_width,param.z_width );
-            _actor_module = GameEntry.Module.GetModule<Module_Actor>();
 
             //script
             _fight_flag = true;
@@ -60,7 +59,8 @@ namespace Aquila.Module
             _fight_flag = false;
 
             //添加sub module
-            Terrain_Module = AddSubModule<Module_Scene_Terrain>();
+            Terrain_Module = AddSubModule<Module_Terrain>();
+            Actor_Module = AddSubModule<Module_Actor>();
         }
         #endregion
 
@@ -110,13 +110,14 @@ namespace Aquila.Module
         /// <summary>
         /// actor模块
         /// </summary>
-        private Module_Actor _actor_module = null;
+        //private Module_Actor _actor_module = null;
+        public Module_Actor Actor_Module = null;
 
         /// <summary>
         /// 地块模块
         /// </summary>
-        //private Module_Fighting_Terrain _terrain_module = null;
-        public Module_Scene_Terrain Terrain_Module { get; private set; }
+        //private Module_Scene_Terrain _terrain_module = null;
+        public Module_Terrain Terrain_Module { get; private set; }
 
         /// <summary>
         /// 开始标记
@@ -129,13 +130,6 @@ namespace Aquila.Module
         private Module_Scene_Param _param = null;
 
         protected override bool Contains_Sub_Module => true;
-    }
-
-    public interface IModule_Fighting_SubModule
-    {
-        public void EnsureInit();
-        public void OnClose();
-        public void End();
     }
 
     /// <summary>

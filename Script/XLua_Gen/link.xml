@@ -43,7 +43,7 @@
 		<type fullname="Aquila.Module.Module_Actor" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Scene" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Scene_Param" preserve="all"/>
-		<type fullname="Aquila.Module.Module_Scene_Terrain" preserve="all"/>
+		<type fullname="Aquila.Module.Module_Terrain" preserve="all"/>
 		<type fullname="Aquila.Module.Module_UI" preserve="all"/>
 		<type fullname="Aquila.Event.ActorDieEventArgs" preserve="all"/>
 		<type fullname="Aquila.Config.Constant" preserve="all"/>

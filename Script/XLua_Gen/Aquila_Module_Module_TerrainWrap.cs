@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaModuleModule_Scene_TerrainWrap 
+    public class AquilaModuleModule_TerrainWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Module.Module_Scene_Terrain);
+			System.Type type = typeof(Aquila.Module.Module_Terrain);
 			Utils.BeginObjectRegister(type, L, translator, 0, 5, 1, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Start", _m_Start);
@@ -56,7 +56,7 @@ namespace XLua.CSObjectWrap
 				if(LuaAPI.lua_gettop(L) == 1)
 				{
 					
-					var gen_ret = new Aquila.Module.Module_Scene_Terrain();
+					var gen_ret = new Aquila.Module.Module_Terrain();
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -66,7 +66,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Module.Module_Scene_Terrain constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Module.Module_Terrain constructor!");
             
         }
         
@@ -85,7 +85,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -114,7 +114,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -141,7 +141,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
             
             
 			    int gen_param_count = LuaAPI.lua_gettop(L);
@@ -185,7 +185,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Module.Module_Scene_Terrain.Get!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Module.Module_Terrain.Get!");
             
         }
         
@@ -197,7 +197,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -224,7 +224,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
             
             
                 
@@ -252,7 +252,7 @@ namespace XLua.CSObjectWrap
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                Aquila.Module.Module_Scene_Terrain gen_to_be_invoked = (Aquila.Module.Module_Scene_Terrain)translator.FastGetCSObj(L, 1);
+                Aquila.Module.Module_Terrain gen_to_be_invoked = (Aquila.Module.Module_Terrain)translator.FastGetCSObj(L, 1);
                 translator.Push(L, gen_to_be_invoked.Root_GO);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
