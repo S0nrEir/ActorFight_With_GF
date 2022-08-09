@@ -1,4 +1,5 @@
-﻿using UnityGameFramework.Runtime;
+﻿using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila
 {
@@ -37,6 +38,24 @@ namespace Aquila
                 var arr = asset_path.Split('/' );
                 return arr[arr.Length - 1];
             }
+
+            /// <summary>
+            /// 获取脚本的资源路径
+            /// </summary>
+            public static string GetScriptAssetPath(string meta_asset_path)
+            {
+                return $"{SCRIPT_PATH}{meta_asset_path}{SCRIPT_SUFFIX}";
+            }
+
+            /// <summary>
+            /// 脚本资产路径
+            /// </summary>
+            private static string SCRIPT_PATH = $"{Application.dataPath}/Script/Lua/";
+
+            /// <summary>
+            /// 脚本资产后缀名
+            /// </summary>
+            private static string SCRIPT_SUFFIX = ".lua.txt";
         }
     }
 }

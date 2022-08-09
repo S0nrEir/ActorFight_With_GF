@@ -88,40 +88,6 @@ namespace Aquila.Extension
             }
             return result;
         }
-
-        /// <summary>
-        /// 加载一个lua脚本
-        /// </summary>
-        //public void LoadScript( string script_name, string chunk_name, Script_Type script_type )
-        //{
-        //    if ( string.IsNullOrEmpty( script_name ) )
-        //    {
-        //        Log.Warning( $"Lua script name is invalid,name:{script_name}" );
-        //        return;
-        //    }
-        //    var asset_name = $"{_lua_root_path}{script_name}.lua.txt";
-        //    if ( string.IsNullOrEmpty( asset_name ) )
-        //    {
-        //        Log.Warning( $"Lua asset name is invalid,name:{asset_name}" );
-        //        return;
-        //    }
-
-        //    //构建脚本信息类
-        //    //#todo这里改成引用池
-        //    var script_info = new ScriptInfo()
-        //    {
-        //        script_name = Tools.Lua.GetScriptName( asset_name ),
-        //        chunk_name = chunk_name,
-        //        _table = ObtainTable(),
-        //        _type = script_type
-        //    };
-
-        //    if ( GameEntry.Base.EditorResourceMode )
-        //        EditorModeLoad( asset_name, script_info );
-        //    else
-        //        ResourceModeLoad( asset_name, script_info );
-        //}
-
         /// <summary>
         /// 启动一个lua虚拟机
         /// </summary>
@@ -255,13 +221,9 @@ namespace Aquila.Extension
                 return;
             }
 
-            if ( ScriptIsCached( data.Asset_Path ) )
-            {
-                DoString( text_asset.bytes, data );
-                return;
-            }
+            if ( !ScriptIsCached( data.Asset_Path ) )
+                Cache( data.Asset_Path, text_asset.bytes );
 
-            Cache( data.Asset_Path, text_asset.bytes );
             DoString( text_asset.bytes, data );
         }
 
@@ -329,26 +291,6 @@ namespace Aquila.Extension
         /// 脚本路径根节点
         /// </summary>
         private static string _lua_root_path = string.Empty;
-
-        /// <summary>
-        /// 脚本开始
-        /// </summary>
-        private Action _lua_on_start = null;
-
-        /// <summary>
-        /// 刷帧
-        /// </summary>
-        private Action<float> _lua_on_update = null;
-
-        /// <summary>
-        /// 时间回调
-        /// </summary>
-        private Action<float> _lua_on_timer_tick = null;
-
-        /// <summary>
-        /// 脚本结束
-        /// </summary>
-        private Action _lua_on_finish = null;
 
         /// <summary>
         /// luaGC时长

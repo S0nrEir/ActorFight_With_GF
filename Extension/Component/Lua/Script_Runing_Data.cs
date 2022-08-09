@@ -79,7 +79,7 @@ namespace Aquila.Extension
             {
                 _script_meta = meta;
                 Script_Name = Tools.Lua.GetScriptName( _script_meta.AssetPath );
-                Asset_Path = $"{Application.dataPath}/Script/Lua/{_script_meta.AssetPath}.lua.txt";
+                Asset_Path = Tools.Lua.GetScriptAssetPath(_script_meta.AssetPath);
                 Chunk_Name = Tools.Lua.GetChunkName( Script_Name );
                 Lua_Table = table;
 
