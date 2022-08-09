@@ -8,6 +8,7 @@ using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
 using Aquila.Config;
 using Aquila.Event;
+using Aquila.ToolKit;
 
 namespace Aquila.Fight.Actor
 {

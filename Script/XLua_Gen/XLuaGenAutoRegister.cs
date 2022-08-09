@@ -1480,9 +1480,6 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.EntityData), AquilaEntityDataWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Tools), AquilaToolsWrap.__Register);
-        
-        
             translator.DelayWrapLoader(typeof(Aquila.GameEntry), AquilaGameEntryWrap.__Register);
         
         
@@ -1510,7 +1507,7 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene_Param), AquilaModuleModule_Scene_ParamWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene_Terrain), AquilaModuleModule_Scene_TerrainWrap.__Register);
+            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Terrain), AquilaModuleModule_TerrainWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_UI), AquilaModuleModule_UIWrap.__Register);
@@ -1526,6 +1523,9 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Aquila.Config.GlobalVar), AquilaConfigGlobalVarWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools), AquilaToolKitToolsWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_LuBan), AquilaExtensionComponent_LuBanWrap.__Register);
@@ -1682,15 +1682,6 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Tutorial.CSCallLua.DClass), TutorialCSCallLuaDClassWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Table), AquilaToolsTableWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Fight), AquilaToolsFightWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Lua), AquilaToolsLuaWrap.__Register);
-        
-        
             translator.DelayWrapLoader(typeof(Aquila.Config.Constant.AssetPriority), AquilaConfigConstantAssetPriorityWrap.__Register);
         
         
@@ -1710,6 +1701,15 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Aquila.Config.GameConfig.Tags), AquilaConfigGameConfigTagsWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Table), AquilaToolKitToolsTableWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Fight), AquilaToolKitToolsFightWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Lua), AquilaToolKitToolsLuaWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Timer.Timer), AquilaExtensionComponent_TimerTimerWrap.__Register);

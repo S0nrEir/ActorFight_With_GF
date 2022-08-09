@@ -34,7 +34,6 @@
 		<type fullname="Cfg.common.Scripts" preserve="all"/>
 		<type fullname="Cfg.common.TB_Scripts" preserve="all"/>
 		<type fullname="Aquila.EntityData" preserve="all"/>
-		<type fullname="Aquila.Tools" preserve="all"/>
 		<type fullname="Aquila.GameEntry" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Enter" preserve="all"/>
 		<type fullname="Aquila.Procedure.Procedure_Fight" preserve="all"/>
@@ -44,12 +43,13 @@
 		<type fullname="Aquila.Module.Module_Actor" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Scene" preserve="all"/>
 		<type fullname="Aquila.Module.Module_Scene_Param" preserve="all"/>
-		<type fullname="Aquila.Module.Module_Scene_Terrain" preserve="all"/>
+		<type fullname="Aquila.Module.Module_Terrain" preserve="all"/>
 		<type fullname="Aquila.Module.Module_UI" preserve="all"/>
 		<type fullname="Aquila.Event.ActorDieEventArgs" preserve="all"/>
 		<type fullname="Aquila.Config.Constant" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig" preserve="all"/>
 		<type fullname="Aquila.Config.GlobalVar" preserve="all"/>
+		<type fullname="Aquila.ToolKit.Tools" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_LuBan" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Module" preserve="all"/>
 		<type fullname="Aquila.Extension.GameFrameworkModuleBase" preserve="all"/>
@@ -100,9 +100,6 @@
 		<type fullname="UGFExtensions.Await.DownLoadResult" preserve="all"/>
 		<type fullname="UGFExtensions.Await.WebResult" preserve="all"/>
 		<type fullname="Tutorial.CSCallLua+DClass" preserve="all"/>
-		<type fullname="Aquila.Tools+Table" preserve="all"/>
-		<type fullname="Aquila.Tools+Fight" preserve="all"/>
-		<type fullname="Aquila.Tools+Lua" preserve="all"/>
 		<type fullname="Aquila.Config.Constant+AssetPriority" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+Lua" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+ObjectPool" preserve="all"/>
@@ -110,6 +107,9 @@
 		<type fullname="Aquila.Config.GameConfig+Layer" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+Scene" preserve="all"/>
 		<type fullname="Aquila.Config.GameConfig+Tags" preserve="all"/>
+		<type fullname="Aquila.ToolKit.Tools+Table" preserve="all"/>
+		<type fullname="Aquila.ToolKit.Tools+Fight" preserve="all"/>
+		<type fullname="Aquila.ToolKit.Tools+Lua" preserve="all"/>
 		<type fullname="Aquila.Extension.Component_Timer+Timer" preserve="all"/>
 		<type fullname="Aquila.Fight.Addon.AddonBase+AddonValidErrorCodeEnum" preserve="all"/>
 		<type fullname="Aquila.Fight.Actor.RoleBaseSubTypeEnum+Minion" preserve="all"/>
