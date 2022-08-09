@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Module.Module_Scene);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 2, 1);
+			Utils.BeginObjectRegister(type, L, translator, 0, 5, 1, 0);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Start", _m_Start);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "End", _m_End);
@@ -31,10 +31,8 @@ namespace XLua.CSObjectWrap
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "Terrain_Module", _g_get_Terrain_Module);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "Actor_Module", _g_get_Actor_Module);
             
-			Utils.RegisterFunc(L, Utils.SETTER_IDX, "Actor_Module", _s_set_Actor_Module);
-            
+			
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
@@ -234,36 +232,7 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_Actor_Module(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                Aquila.Module.Module_Scene gen_to_be_invoked = (Aquila.Module.Module_Scene)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.Actor_Module);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
         
-        
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_Actor_Module(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                Aquila.Module.Module_Scene gen_to_be_invoked = (Aquila.Module.Module_Scene)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.Actor_Module = (Aquila.Module.Module_Actor)translator.GetObject(L, 2, typeof(Aquila.Module.Module_Actor));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
         
 		
 		

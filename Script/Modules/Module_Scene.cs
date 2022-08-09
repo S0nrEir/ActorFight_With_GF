@@ -27,7 +27,6 @@ namespace Aquila.Module
 
             //module
             Terrain_Module.Start( param.x_width,param.z_width );
-            _actor_module = GameEntry.Module.GetModule<Module_Actor>();
 
             //script
             _fight_flag = true;
