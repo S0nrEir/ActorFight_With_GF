@@ -1,5 +1,6 @@
 ﻿using Aquila.Config;
 using Cfg.Enum;
+using GameFramework;
 using GameFramework.Resource;
 using System;
 using System.Collections.Generic;
@@ -13,45 +14,48 @@ namespace Aquila.Extension
     /// <summary>
     /// lua环境组件
     /// </summary>
-    public class Component_Lua : GameFrameworkComponent
+    public partial class Component_Lua : GameFrameworkComponent
     {
         /// <summary>
-        /// 加载一个lua脚本
+        /// 加载一个脚本实例//#todo__lua的执行结果返回参数怎么获得,尤其是在resourceModeLoad下
         /// </summary>
-        public void LoadScript( string script_name, string chunk_name ,Script_Type script_type)
+        public void Load( Cfg.common.Scripts meta )
         {
-            if ( string.IsNullOrEmpty( script_name ) )
+            if ( meta is null )
             {
-                Log.Warning( $"Lua script name is invalid,name:{script_name}" );
-                return;
-            }
-            var asset_name = $"{_lua_root_path}{script_name}.lua.txt";
-            if ( string.IsNullOrEmpty( asset_name ) )
-            {
-                Log.Warning( $"Lua asset name is invalid,name:{asset_name}" );
+                Log.Error( "Compoent_Lua--->Load faild! meta is null" );
                 return;
             }
 
-            //构建脚本信息类
-            //#todo这里改成引用池
-            var script_info = new ScriptInfo()
+            if ( _script_running_dic.ContainsKey( meta.AssetPath ) )
             {
-                script_name = Tools.Lua.GetScriptName( asset_name ),
-                chunk_name = chunk_name,
-                _table = ObtainTable(),
-                _type = script_type
-            };
+                Log.Info( $"_script_running_dic.ContainsKey:{meta.AssetPath}" );
+                return;
+            }
+
+            var data = ReferencePool.Acquire<Script_Running_Data>();
+            data.SetUp( meta, ObtainTable() );
 
             if ( GameEntry.Base.EditorResourceMode )
-                EditorModeLoad( asset_name, script_info );
+                EditorModeLoad( data );
             else
-                ResourceModeLoad( asset_name, script_info );
+                ResourceModeLoad(data);
         }
 
         /// <summary>
-        /// 以bytes的形式读入一段脚本
+        /// 移除一个脚本实例
         /// </summary>
-        private object[] DoString( byte[] bytes, ScriptInfo script_info )
+        public bool Remove( string script_name )
+        {
+            if ( !_script_running_dic.TryGetValue( script_name, out var data ) )
+                return false;
+
+            data.ExecFinishFunc();
+            ReferencePool.Release( data );
+            return _script_running_dic.Remove( script_name );
+        }
+
+        private object[] DoString( byte[] bytes, Script_Running_Data data )
         {
             if ( _lua_env is null )
             {
@@ -59,28 +63,31 @@ namespace Aquila.Extension
                 return null;
             }
 
-            if ( bytes is null )
+            if ( bytes is null || bytes.Length == 0 )
             {
                 Log.Error( "lua bytes is null!" );
                 return null;
             }
 
-            var obj_arr = _lua_env.DoString( bytes, script_info.chunk_name, script_info._table );
-            if ( script_info._table != null )
+            var result = _lua_env.DoString( bytes, data.Chunk_Name, data.Lua_Table );
+            switch ( data._script_meta.Type )
             {
-                var table = script_info._table;
-                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_START,  out _lua_on_start );
-                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_UPDATE, out _lua_on_update );
-                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_TICK,   out _lua_on_timer_tick );
-                table.Get( GameConfig.Lua.LUA_FUNCTION_NAME_ON_FINISH, out _lua_on_finish );
+                //只有开始，不用进缓存，跑一遍就结束了
+                case Script_Type.On_Start:
+                    {
+                        data.SetStartFunc();
+                        data.ExecStartFunc();
+                        ReferencePool.Release( data );
+                        return result;
+                    }
+
+                //默认
+                default:
+                    RunningCache( data.Script_Name, data );
+                    break;
             }
-            _lua_on_start?.Invoke();
-            if ( script_info._type == Script_Type.On_Start )
-                script_info._table.Dispose();
-
-            return obj_arr;
+            return result;
         }
-
         /// <summary>
         /// 启动一个lua虚拟机
         /// </summary>
@@ -125,39 +132,37 @@ namespace Aquila.Extension
         /// <summary>
         /// 资源模式加载
         /// </summary>
-        private void ResourceModeLoad( string asset_name, ScriptInfo script_info )
+        private void ResourceModeLoad( Script_Running_Data data )
         {
-            if ( !ScriptIsCached( script_info.script_name ) )
-            {
-                GameEntry.Resource.LoadAsset( asset_name, _load_asset_callbacks, script_info );
-            }
+            if ( !ScriptIsCached( data.Asset_Path) )
+                GameEntry.Resource.LoadAsset( data.Asset_Path, _load_asset_callbacks, data );
             else
-                DoString( GetFromCache( script_info.script_name ), script_info );
+                DoString( GetFromCache( data.Asset_Path ), data );
         }
 
         /// <summary>
         /// 编辑器模式加载
         /// </summary>
-        private void EditorModeLoad( string asset_name, ScriptInfo script_info )
+        private void EditorModeLoad( Script_Running_Data data )
         {
-            if ( !File.Exists( @asset_name ) )
+            if ( !File.Exists( @data.Asset_Path ) )
             {
-                Log.Warning( $"lua asset doesnt exist,name:{asset_name}" );
+                Log.Warning( $"lua asset doesnt exist,name:{data.Asset_Path}" );
                 return;
             }
 
-            if ( !ScriptIsCached( script_info.script_name ) )
-                Cache( script_info.script_name, asset_name, File.ReadAllBytes( asset_name ) );
+            if ( !ScriptIsCached( data.Asset_Path ) )
+                Cache( data.Asset_Path, File.ReadAllBytes( data.Asset_Path ) );
 
-            DoString( GetFromCache( script_info.script_name ), script_info );
+            DoString( GetFromCache( data.Asset_Path ), data );
         }
 
         /// <summary>
         /// 从缓存中获取指定的脚本字节流
         /// </summary>
-        public byte[] GetFromCache( string script_name )
+        public byte[] GetFromCache( string asset_path )
         {
-            _script_cache_dic.TryGetValue( script_name.GetHashCode(), out var bytes );
+            _script_cache_dic.TryGetValue( asset_path.GetHashCode(), out var bytes );
             return bytes;
         }
 
@@ -170,9 +175,21 @@ namespace Aquila.Extension
         }
 
         /// <summary>
+        /// 缓存运行脚本
+        /// </summary>
+        private bool RunningCache( string script_name, Script_Running_Data data )
+        {
+            if ( _script_running_dic.ContainsKey( script_name ) )
+                return false;
+
+            _script_running_dic.Add( script_name, data );
+            return true;
+        }
+
+        /// <summary>
         /// 缓存脚本
         /// </summary>
-        private void Cache( string script_name, string asset_name, byte[] bytes )
+        private void Cache( string script_name, byte[] bytes )
         {
             var hashCode = script_name.GetHashCode();
             if ( _script_cache_dic.ContainsKey( hashCode ) )
@@ -188,10 +205,10 @@ namespace Aquila.Extension
         /// <summary>
         /// 脚本加载完成
         /// </summary>
-        private void OnScriptLoadSucc( string assetName, object asset, float duration, object userData )
+        private void OnScriptLoadSucc( string asset_name, object asset, float duration, object userData )
         {
-            var script_info = userData as ScriptInfo;
-            if ( script_info is null )
+            var data = userData as Script_Running_Data;
+            if ( data is null )
             {
                 Log.Warning( $"cast script info faild" );
                 return;
@@ -200,14 +217,14 @@ namespace Aquila.Extension
             var text_asset = asset as TextAsset;
             if ( text_asset is null )
             {
-                Log.Warning( $"cast text asset {assetName} faild" );
+                Log.Warning( $"cast text asset {asset_name} faild" );
                 return;
             }
 
-            if ( ScriptIsCached( script_info.script_name ) )
-                return;
+            if ( !ScriptIsCached( data.Asset_Path ) )
+                Cache( data.Asset_Path, text_asset.bytes );
 
-            Cache( script_info.script_name, assetName, text_asset.bytes );
+            DoString( text_asset.bytes, data );
         }
 
         /// <summary>
@@ -239,8 +256,9 @@ namespace Aquila.Extension
             base.Awake();
             _lua_root_path = $"{Application.dataPath}/Script/Lua/";
             //#todo给个初始capcity
-            _script_cache_dic = new Dictionary<int, byte[]>();
             _load_asset_callbacks = new LoadAssetCallbacks( OnScriptLoadSucc, OnScriptLoadFaild );
+            _script_cache_dic = new Dictionary<int, byte[]>();
+            _script_running_dic = new Dictionary<string, Script_Running_Data>();
             StartVM();
         }
 
@@ -253,6 +271,11 @@ namespace Aquila.Extension
         /// 脚本缓存
         /// </summary>
         private Dictionary<int, byte[]> _script_cache_dic = null;
+
+        /// <summary>
+        /// 脚本运行时实例集合
+        /// </summary>
+        private Dictionary<string, Script_Running_Data> _script_running_dic = null;
 
         /// <summary>
         /// lua环境
@@ -268,26 +291,6 @@ namespace Aquila.Extension
         /// 脚本路径根节点
         /// </summary>
         private static string _lua_root_path = string.Empty;
-
-        /// <summary>
-        /// 脚本开始
-        /// </summary>
-        private Action _lua_on_start = null;
-
-        /// <summary>
-        /// 刷帧
-        /// </summary>
-        private Action<float> _lua_on_update = null;
-
-        /// <summary>
-        /// 时间回调
-        /// </summary>
-        private Action<float> _lua_on_timer_tick = null;
-
-        /// <summary>
-        /// 脚本结束
-        /// </summary>
-        private Action _lua_on_finish = null;
 
         /// <summary>
         /// luaGC时长

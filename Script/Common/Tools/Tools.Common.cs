@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Aquila
+namespace Aquila.ToolKit
 {
     /// <summary>
     /// 工具类

@@ -21,9 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Aquila.Extension.Component_Lua);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 0, 0);
 			
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadScript", _m_LoadScript);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Load", _m_Load);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Remove", _m_Remove);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "StartVM", _m_StartVM);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetFromCache", _m_GetFromCache);
 			
@@ -75,7 +76,35 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_LoadScript(RealStatePtr L)
+        static int _m_Load(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Aquila.Extension.Component_Lua gen_to_be_invoked = (Aquila.Extension.Component_Lua)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    Cfg.common.Scripts _meta = (Cfg.common.Scripts)translator.GetObject(L, 2, typeof(Cfg.common.Scripts));
+                    
+                    gen_to_be_invoked.Load( _meta );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_Remove(RealStatePtr L)
         {
 		    try {
             
@@ -88,14 +117,13 @@ namespace XLua.CSObjectWrap
                 
                 {
                     string _script_name = LuaAPI.lua_tostring(L, 2);
-                    string _chunk_name = LuaAPI.lua_tostring(L, 3);
-                    Cfg.Enum.Script_Type _script_type;translator.Get(L, 4, out _script_type);
                     
-                    gen_to_be_invoked.LoadScript( _script_name, _chunk_name, _script_type );
-                    
+                        var gen_ret = gen_to_be_invoked.Remove( _script_name );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
-                    return 0;
+                    
+                    return 1;
                 }
                 
             } catch(System.Exception gen_e) {
@@ -144,9 +172,9 @@ namespace XLua.CSObjectWrap
             
                 
                 {
-                    string _script_name = LuaAPI.lua_tostring(L, 2);
+                    string _asset_path = LuaAPI.lua_tostring(L, 2);
                     
-                        var gen_ret = gen_to_be_invoked.GetFromCache( _script_name );
+                        var gen_ret = gen_to_be_invoked.GetFromCache( _asset_path );
                         LuaAPI.lua_pushstring(L, gen_ret);
                     
                     

@@ -1480,9 +1480,6 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.EntityData), AquilaEntityDataWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Tools), AquilaToolsWrap.__Register);
-        
-        
             translator.DelayWrapLoader(typeof(Aquila.GameEntry), AquilaGameEntryWrap.__Register);
         
         
@@ -1504,7 +1501,10 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Actor), AquilaModuleModule_ActorWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Fight), AquilaModuleModule_FightWrap.__Register);
+            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene), AquilaModuleModule_SceneWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.Module.Module_Scene_Param), AquilaModuleModule_Scene_ParamWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Module.Module_Terrain), AquilaModuleModule_TerrainWrap.__Register);
@@ -1525,7 +1525,7 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Aquila.Config.GlobalVar), AquilaConfigGlobalVarWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Lua), AquilaExtensionComponent_LuaWrap.__Register);
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools), AquilaToolKitToolsWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_LuBan), AquilaExtensionComponent_LuBanWrap.__Register);
@@ -1538,6 +1538,9 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Timer), AquilaExtensionComponent_TimerWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Lua), AquilaExtensionComponent_LuaWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.ActorEffect), AquilaFightActorEffectWrap.__Register);
@@ -1584,13 +1587,13 @@ namespace XLua.CSObjectWrap
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Addon.ColliderTriggerAddon), AquilaFightAddonColliderTriggerAddonWrap.__Register);
         
-        
-            translator.DelayWrapLoader(typeof(Aquila.Fight.Addon.DataAddon), AquilaFightAddonDataAddonWrap.__Register);
-        
         }
         
         static void wrapInit10(LuaEnv luaenv, ObjectTranslator translator)
         {
+        
+            translator.DelayWrapLoader(typeof(Aquila.Fight.Addon.DataAddon), AquilaFightAddonDataAddonWrap.__Register);
+        
         
             translator.DelayWrapLoader(typeof(Aquila.Fight.Addon.EffectAddon), AquilaFightAddonEffectAddonWrap.__Register);
         
@@ -1679,15 +1682,6 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(Tutorial.CSCallLua.DClass), TutorialCSCallLuaDClassWrap.__Register);
         
         
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Table), AquilaToolsTableWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Fight), AquilaToolsFightWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(Aquila.Tools.Lua), AquilaToolsLuaWrap.__Register);
-        
-        
             translator.DelayWrapLoader(typeof(Aquila.Config.Constant.AssetPriority), AquilaConfigConstantAssetPriorityWrap.__Register);
         
         
@@ -1707,6 +1701,15 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(Aquila.Config.GameConfig.Tags), AquilaConfigGameConfigTagsWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Table), AquilaToolKitToolsTableWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Fight), AquilaToolKitToolsFightWrap.__Register);
+        
+        
+            translator.DelayWrapLoader(typeof(Aquila.ToolKit.Tools.Lua), AquilaToolKitToolsLuaWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(Aquila.Extension.Component_Timer.Timer), AquilaExtensionComponent_TimerTimerWrap.__Register);

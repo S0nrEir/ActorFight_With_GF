@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaToolsTableWrap 
+    public class AquilaToolKitToolsTableWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Tools.Table);
+			System.Type type = typeof(Aquila.ToolKit.Tools.Table);
 			Utils.BeginObjectRegister(type, L, translator, 0, 0, 0, 0);
 			
 			
@@ -45,7 +45,7 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            return LuaAPI.luaL_error(L, "Aquila.Tools.Table does not have a constructor!");
+            return LuaAPI.luaL_error(L, "Aquila.ToolKit.Tools.Table does not have a constructor!");
         }
         
 		
@@ -67,7 +67,7 @@ namespace XLua.CSObjectWrap
                 
                 {
                     
-                        var gen_ret = Aquila.Tools.Table.GetSceneConfig(  );
+                        var gen_ret = Aquila.ToolKit.Tools.Table.GetSceneConfig(  );
                         translator.Push(L, gen_ret);
                     
                     
