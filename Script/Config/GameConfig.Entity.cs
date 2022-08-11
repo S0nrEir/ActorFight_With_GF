@@ -14,7 +14,7 @@ namespace Aquila.Config
             /// <summary>
             /// 英雄类actor组
             /// </summary>
-            public const string GROUP_HeroActor = "HeroActor";
+            public const string GROUP_HERO_ACTOR = "HeroActor";
 
             /// <summary>
             /// 特效类actor组
@@ -39,7 +39,7 @@ namespace Aquila.Config
             /// <summary>
             /// actor
             /// </summary>
-            public const int Priority_Actor = 1;
+            public const int PRIORITY_ACTOR = 1;
 
             /// <summary>
             /// 特效

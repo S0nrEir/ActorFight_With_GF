@@ -2,7 +2,6 @@ using Aquila.Config;
 using Aquila.ToolKit;
 using GameFramework;
 using System;
-using UnityEngine;
 using XLua;
 
 namespace Aquila.Extension
@@ -76,11 +75,15 @@ namespace Aquila.Extension
                 _lua_on_update?.Invoke( delta_time );
             }
 
-            public bool SetUp( Cfg.common.Scripts meta, LuaTable table )
+            /// <summary>
+            /// 设置脚本运行时参数
+            /// </summary>
+            public bool SetUp( Cfg.common.Scripts meta, LuaTable table, string type_name )
             {
+                Type_Name = type_name;
                 _script_meta = meta;
                 Script_Name = Tools.Lua.GetScriptName( _script_meta.AssetPath );
-                Asset_Path = Tools.Lua.GetScriptAssetPath(_script_meta.AssetPath);
+                Asset_Path = Tools.Lua.GetScriptAssetPath( _script_meta.AssetPath );
                 Chunk_Name = Tools.Lua.GetChunkName( Script_Name );
                 Lua_Table = table;
 
@@ -92,6 +95,11 @@ namespace Aquila.Extension
             /// 脚本表格数据
             /// </summary>
             public Cfg.common.Scripts _script_meta = null;
+
+            /// <summary>
+            /// 脚本key
+            /// </summary>
+            public string Type_Name { get; private set; } = string.Empty;
 
             /// <summary>
             /// 资源路径
@@ -136,16 +144,17 @@ namespace Aquila.Extension
 
             public void Clear()
             {
-                Script_Name        = string.Empty;
-                Chunk_Name         = string.Empty;
-                Asset_Path         = string.Empty;
+                Script_Name = string.Empty;
+                Chunk_Name = string.Empty;
+                Asset_Path = string.Empty;
                 Lua_Table.Dispose();
-                Lua_Table          = null;
-                _lua_on_start      = null;
-                _lua_on_finish     = null;
+                Lua_Table = null;
+                _lua_on_start = null;
+                _lua_on_finish = null;
                 _lua_on_timer_tick = null;
-                _lua_on_update     = null;
-                _script_meta       = null;
+                _lua_on_update = null;
+                _script_meta = null;
+                Type_Name = null;
             }
 
         }//end class

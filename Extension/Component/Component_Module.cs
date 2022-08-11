@@ -118,6 +118,16 @@ namespace Aquila.Extension
     /// </summary>
     public abstract class GameFrameworkModuleBase
     {
+        public virtual void Start(object param)
+        {
+            _open_flag = true;
+        }
+
+        public virtual void End()
+        {
+            _open_flag = false;
+        }
+
         /// <summary>
         /// 关闭当前模块
         /// </summary>
@@ -208,6 +218,11 @@ namespace Aquila.Extension
         {
             return (GameFrameworkModuleBase) Activator.CreateInstance<T>();
         }
+
+        /// <summary>
+        /// 开启标记
+        /// </summary>
+        protected bool _open_flag = false;
 
         /// <summary>
         /// 是否包含子模块

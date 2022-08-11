@@ -1,9 +1,9 @@
 ﻿using Aquila.Extension;
 using Aquila.Fight.Actor;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UGFExtensions.Await;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -12,76 +12,83 @@ namespace Aquila.Module
     /// </summary>
     public class Module_Actor : GameFrameworkModuleBase
     {
-        #region show
+
+        #region public
 
         /// <summary>
-        /// 显示一个英雄actor
+        /// 获取一个actor
         /// </summary>
-        //public async Task<bool> ShowHeroActor()
-        //{
-        //    var entityID = ACTOR_ID_POOL.Gen();
-        //    var task = await AwaitableExtensions.ShowEntity
-        //        (
+        public TActorBase GetActor( int actor_id )
+        {
+            if ( !_open_flag )
+            {
+                Log.Error( "!_open_flag" );
+                return null;
+            }
 
-        //        )
+            return null;
+        }
 
-        //    return true;
-        //}
+        /// <summary>
+        /// 异步显示一个actor
+        /// </summary>
+        public async Task<Entity> ShowActorAsync<T>
+            (
+                int actor_id,
+                string asset_path,
+                int grid_x,
+                int grid_z,
+                object user_data
+            ) where T : TActorBase
+        {
+            var result = await AwaitableExtensions.ShowEntityAsync
+                (
+                    GameEntry.Entity,
+                    actor_id,
+                    typeof( T ),
+                    asset_path,
+                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
+                    Config.GameConfig.Entity.PRIORITY_ACTOR,
+                    user_data
+                );
+
+            OnActorShowSucc( result.Logic as TActorBase, grid_x, grid_z );
+            return result;
+        }
 
         #endregion
 
-        public void HideActor(int id)
-        {
-            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-                return;
+        #region 
 
+        private void OnActorShowSucc( TActorBase actor, int grid_x, int grid_z )
+        {
 
         }
 
-        /// <summary>
-        /// 隐藏所有actor，并且清空缓存
-        /// </summary>
-        public void HideAllActor()
+        #endregion
+
+        public override void Start( object param )
         {
-            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-                return;
-
-            var iter = _actor_cache_dic.GetEnumerator();
-            TActorBase actor = null;
-            while ( iter.MoveNext() )
-            {
-                actor = iter.Current.Value;
-                if(actor is null)
-                    continue;
-
-                GameEntry.Entity.HideEntity( actor.ActorID );
-            }
-            _actor_cache_dic.Clear();
+            base.Start( param );
+            var actor = ShowActorAsync<HeroActor>
+                ( 
+                    ACTOR_ID_POOL.Gen(),
+                    @"Assets/Res/Prefab/Aquila_001.prefab",
+                    0,
+                    0,
+                    null 
+                ).Result;
+            Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
 
-        /// <summary>
-        /// 返回指定类型的actor，转换失败或拿不到返回null
-        /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="id">actorID</param>
-        /// <returns>返回指定类型的actor</returns>
-        public T GetActor<T>( int id ) where T : TActorBase
+        public override void End()
         {
-            return GetActor( id ) as T;
-        }
-
-        /// <summary>
-        /// 根据一个ActorID返回一个Actor，拿不到返回空
-        /// </summary>
-        public TActorBase GetActor( int id )
-        {
-            _actor_cache_dic.TryGetValue( id, out var actor );
-            return actor;
+            base.End();
         }
 
         public override void OnClose()
         {
-            if( _actor_cache_dic != null)
+            if ( _actor_cache_dic != null )
                 _actor_cache_dic?.Clear();
 
             _actor_cache_dic = null;

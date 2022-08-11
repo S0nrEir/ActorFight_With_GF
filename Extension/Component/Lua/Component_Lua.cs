@@ -1,8 +1,6 @@
-﻿using Aquila.Config;
-using Cfg.Enum;
+﻿using Cfg.Enum;
 using GameFramework;
 using GameFramework.Resource;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -19,7 +17,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 加载一个脚本实例//#todo__lua的执行结果返回参数怎么获得,尤其是在resourceModeLoad下
         /// </summary>
-        public void Load( Cfg.common.Scripts meta )
+        public void Load( Cfg.common.Scripts meta, string type_name )
         {
             if ( meta is null )
             {
@@ -27,32 +25,32 @@ namespace Aquila.Extension
                 return;
             }
 
-            if ( _script_running_dic.ContainsKey( meta.AssetPath ) )
+            if ( _script_running_dic.ContainsKey( type_name ) )
             {
-                Log.Info( $"_script_running_dic.ContainsKey:{meta.AssetPath}" );
+                Log.Info( $"_script_running_dic.ContainsKey:{type_name}" );
                 return;
             }
 
             var data = ReferencePool.Acquire<Script_Running_Data>();
-            data.SetUp( meta, ObtainTable() );
+            data.SetUp( meta, ObtainTable(), type_name );
 
             if ( GameEntry.Base.EditorResourceMode )
                 EditorModeLoad( data );
             else
-                ResourceModeLoad(data);
+                ResourceModeLoad( data );
         }
 
         /// <summary>
         /// 移除一个脚本实例
         /// </summary>
-        public bool Remove( string script_name )
+        public bool UnLoad( string type_name )
         {
-            if ( !_script_running_dic.TryGetValue( script_name, out var data ) )
+            if ( !_script_running_dic.TryGetValue( type_name, out var data ) )
                 return false;
 
             data.ExecFinishFunc();
             ReferencePool.Release( data );
-            return _script_running_dic.Remove( script_name );
+            return _script_running_dic.Remove( type_name );
         }
 
         private object[] DoString( byte[] bytes, Script_Running_Data data )
@@ -83,7 +81,7 @@ namespace Aquila.Extension
 
                 //默认
                 default:
-                    RunningCache( data.Script_Name, data );
+                    RunningCache( data.Type_Name, data );
                     break;
             }
             return result;
@@ -134,7 +132,7 @@ namespace Aquila.Extension
         /// </summary>
         private void ResourceModeLoad( Script_Running_Data data )
         {
-            if ( !ScriptIsCached( data.Asset_Path) )
+            if ( !ScriptIsCached( data.Asset_Path ) )
                 GameEntry.Resource.LoadAsset( data.Asset_Path, _load_asset_callbacks, data );
             else
                 DoString( GetFromCache( data.Asset_Path ), data );
@@ -177,12 +175,12 @@ namespace Aquila.Extension
         /// <summary>
         /// 缓存运行脚本
         /// </summary>
-        private bool RunningCache( string script_name, Script_Running_Data data )
+        private bool RunningCache( string type_name, Script_Running_Data data )
         {
-            if ( _script_running_dic.ContainsKey( script_name ) )
+            if ( _script_running_dic.ContainsKey( type_name ) )
                 return false;
 
-            _script_running_dic.Add( script_name, data );
+            _script_running_dic.Add( type_name , data );
             return true;
         }
 
@@ -301,26 +299,26 @@ namespace Aquila.Extension
     /// <summary>
     /// 脚本信息类，包含了脚本的一些基本信息
     /// </summary>
-    internal class ScriptInfo
-    {
-        /// <summary>
-        /// 脚本路径
-        /// </summary>
-        public string script_name = string.Empty;
+    //internal class ScriptInfo
+    //{
+    //    /// <summary>
+    //    /// 脚本路径
+    //    /// </summary>
+    //    public string script_name = string.Empty;
 
-        /// <summary>
-        /// chunkName
-        /// </summary>
-        public string chunk_name = string.Empty;
+    //    /// <summary>
+    //    /// chunkName
+    //    /// </summary>
+    //    public string chunk_name = string.Empty;
 
-        /// <summary>
-        /// 对应的luaTable
-        /// </summary>
-        public LuaTable _table = null;
+    //    /// <summary>
+    //    /// 对应的luaTable
+    //    /// </summary>
+    //    public LuaTable _table = null;
 
-        /// <summary>
-        /// 脚本周期
-        /// </summary>
-        public Cfg.Enum.Script_Type _type = Cfg.Enum.Script_Type.On_Start;
-    }
+    //    /// <summary>
+    //    /// 脚本周期
+    //    /// </summary>
+    //    public Cfg.Enum.Script_Type _type = Cfg.Enum.Script_Type.On_Start;
+    //}
 }

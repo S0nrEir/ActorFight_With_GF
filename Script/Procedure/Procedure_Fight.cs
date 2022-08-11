@@ -20,6 +20,8 @@ namespace Aquila.Procedure
             base.OnInit( procedureOwner );
             //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
             _scene_module = GameEntry.Module.GetModule<Module_Scene>();
+            _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            _actor_module = GameEntry.Module.GetModule<Module_Actor>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -33,24 +35,27 @@ namespace Aquila.Procedure
             }
 
             var scene_config = Tools.Table.GetSceneConfig();
-            //_terrain_module.Start( scene_config.Fight_Scene_Default_X_Width, scene_config.Fight_Scene_Default_Y_Width );
             MainCameraInitializeSetting();
 
-            var param = ReferencePool.Acquire<Module_Scene_Param>();
+            var param = ReferencePool.Acquire<Fight_Param>();
             param.x_width = scene_config.Fight_Scene_Default_X_Width;
             param.z_width = scene_config.Fight_Scene_Default_Y_Width;
             param._scene_script_meta = _data._scene_script_meta;
 
-            if ( !_scene_module.Start( param ) )
-                Log.Error( "scene_module start faild" );
+            //if ( !_scene_module.Start( param ) )
+            //    Log.Error( "scene_module start failed" );
 
-            GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ) );
+            _scene_module.Start( param );
+            _terrain_module.Start( param );
+            _actor_module.Start( param );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             //_terrain_module.End();
             _scene_module.End();
+            _terrain_module.End();
+            _actor_module.End();
             _procedure_owner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
                 Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
@@ -99,6 +104,16 @@ namespace Aquila.Procedure
         /// 战斗模块
         /// </summary>
         private Module_Scene _scene_module = null;
+
+        /// <summary>
+        /// 地块模块
+        /// </summary>
+        private Module_Terrain _terrain_module = null;
+
+        /// <summary>
+        /// actor模块
+        /// </summary>
+        private Module_Actor _actor_module = null;
 
         /// <summary>
         /// 地块模块

@@ -12,36 +12,28 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_Scene : GameFrameworkModuleBase, IUpdate
     {
+
         /// <summary>
         /// 场景初始化
         /// </summary>
-        public bool Start( Module_Scene_Param param )
+        public override void Start( object param )
         {
-            if ( param is null )
-                return _fight_flag;
+            base.Start( param );
+            var temp = param as Fight_Param;
+            if ( temp is null || !temp.FieldValid() )
+                throw new GameFrameworkException( "start scene module faild" );
 
-            if ( !param.FieldValid() )
-                return _fight_flag;
-
-            _param = param;
-
-            //module
-            Terrain_Module.Start( param.x_width,param.z_width );
-
-            //script
-            _fight_flag = true;
-            return _fight_flag;
+            _param = temp;
         }
 
         /// <summary>
         /// 结束战斗
         /// </summary>
-        public void End()
+        public override void End()
         {
-            Terrain_Module.End();
             ReferencePool.Release( _param );
             _param = null;
-            _fight_flag = false;
+            base.End();
         }
 
         #region override
@@ -128,7 +120,7 @@ namespace Aquila.Module
         /// <summary>
         /// 场景参数
         /// </summary>
-        private Module_Scene_Param _param = null;
+        private Fight_Param _param = null;
     }
 
     public interface IModule_Fighting_SubModule
@@ -141,7 +133,7 @@ namespace Aquila.Module
     /// <summary>
     /// 场景参数
     /// </summary>
-    public class Module_Scene_Param : IReference
+    public class Fight_Param : IReference
     {
         public int x_width = 0;
         public int z_width = 0;

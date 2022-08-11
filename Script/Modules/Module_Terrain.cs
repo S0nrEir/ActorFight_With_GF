@@ -18,22 +18,20 @@ namespace Aquila.Module
         #region public
         //#todo所有的地块获取，都要从对象池里拿TerrainObject
 
-        /// <summary>
-        /// 地块模块战斗相关初始化和启动
-        /// </summary>
-        public void Start( int x_width, int z_width )
+        public override void Start( object param )
         {
-            GenerateFightSceneTerrain( x_width, z_width );
-            _generate_flag = true;
+            base.Start( param );
+            var temp = param as Fight_Param;
+            GenerateFightSceneTerrain( temp.x_width,temp.z_width );
+            //地形设置在地块加载之后
+            GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ), GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
         }
 
-        /// <summary>
-        /// 地块模块关闭
-        /// </summary>
-        public void End()
+        public override void End()
         {
             RemoveAll();
-            _generate_flag = false;
+            GameEntry.Lua.UnLoad( GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
+            base.End();
         }
 
         //固定地块加载用嵌入实现
@@ -44,7 +42,7 @@ namespace Aquila.Module
         /// <param name="y_width">z方向上的长度</param>
         private void GenerateFightSceneTerrain( int x_width, int z_width )
         {
-            if ( _generate_flag )
+            if ( _open_flag )
             {
                 Log.Info( $"already generate terrain!", LogColorTypeEnum.Orange );
                 return;
@@ -181,9 +179,6 @@ namespace Aquila.Module
 
             _terrain_go_cache_dic?.Clear();
             _terrain_go_cache_dic = null;
-
-            _generate_flag = false;
-            //base.OnClose();
         }
 
         public override void EnsureInit()
@@ -195,10 +190,7 @@ namespace Aquila.Module
 
             if ( _terrain_go_cache_dic is null )
                 _terrain_go_cache_dic = new Dictionary<GameObject, Object_Terrain>( size );
-
-            _generate_flag = false;
         }
-
 
         /// <summary>
         /// 地块缓存
@@ -239,10 +231,5 @@ namespace Aquila.Module
         /// 地块根节点
         /// </summary>
         private GameObject _root_go = null;
-
-        /// <summary>
-        /// 生成标记
-        /// </summary>
-        private bool _generate_flag = false;
     }//end of class
 }
