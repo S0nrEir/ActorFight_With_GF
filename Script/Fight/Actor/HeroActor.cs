@@ -153,7 +153,7 @@ namespace Aquila.Fight.Actor
         {
             base.InitAddons();
             _FsmAddon          = AddAddon<HeroStateAddon>();
-            _ProcessorAddon    = AddAddon<ProcessorAddon>();
+            //_ProcessorAddon    = AddAddon<ProcessorAddon>();
             _AnimAddon         = AddAddon<AnimAddon>();
             _MoveAddon         = AddAddon<MoveAddon>();
             _HPAddon           = AddAddon<InfoBoardAddon>();
@@ -239,7 +239,7 @@ namespace Aquila.Fight.Actor
         #region addon
 
         private FSMAddon _FsmAddon { get; set; } = null;
-        private ProcessorAddon _ProcessorAddon { get; set; } = null;
+        //private ProcessorAddon _ProcessorAddon { get; set; } = null;
         private AnimAddon _AnimAddon { get; set; } = null;
         private MoveAddon _MoveAddon { get; set; } = null;
         private InfoBoardAddon _HPAddon { get; set; } = null;
