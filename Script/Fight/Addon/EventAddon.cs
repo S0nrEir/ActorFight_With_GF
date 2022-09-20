@@ -114,6 +114,17 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public enum ActorEventEnum
     {
+        
+        /// <summary>
+        /// 减少生命值
+        /// </summary>
+        MINUS_HP,
+
+        /// <summary>
+        /// 减少MP
+        /// </summary>
+        MINUS_MP,
+
         /// <summary>
         /// 导航组件到达目标点
         /// </summary>

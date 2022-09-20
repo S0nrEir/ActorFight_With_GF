@@ -12,14 +12,14 @@ function on_start_lua()
     
 end
 
--- function on_timer_tick_lua(delta_time)
+function on_timer_tick_lua(delta_time)
     
--- end
+end
 
--- function on_finish_lua()
+function on_finish_lua()
     
--- end
+end
 
--- function on_update_lua()
+function on_update_lua()
 
--- end
+end

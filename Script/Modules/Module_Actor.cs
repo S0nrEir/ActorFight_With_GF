@@ -67,17 +67,22 @@ namespace Aquila.Module
 
         #endregion
 
-        public override void Start( object param )
+        public override async void Start( object param )
         {
             base.Start( param );
-            var actor = ShowActorAsync<HeroActor>
-                ( 
-                    ACTOR_ID_POOL.Gen(),
-                    @"Assets/Res/Prefab/Aquila_001.prefab",
-                    0,
-                    0,
-                    null 
-                ).Result;
+            LoadActor();
+        }
+
+        private async void LoadActor()
+        {
+            var actor = await ShowActorAsync<HeroActor>
+                   (
+                       ACTOR_ID_POOL.Gen(),
+                       @"Assets/Res/Prefab/Aquila_001.prefab",
+                       0,
+                       0,
+                       null
+                   );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
 

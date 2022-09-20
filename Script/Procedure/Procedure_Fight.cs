@@ -19,9 +19,9 @@ namespace Aquila.Procedure
         {
             base.OnInit( procedureOwner );
             //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _scene_module = GameEntry.Module.GetModule<Module_Scene>();
+            _scene_module   = GameEntry.Module.GetModule<Module_Scene>();
             _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _actor_module = GameEntry.Module.GetModule<Module_Actor>();
+            _actor_module   = GameEntry.Module.GetModule<Module_Actor>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -45,9 +45,9 @@ namespace Aquila.Procedure
             //if ( !_scene_module.Start( param ) )
             //    Log.Error( "scene_module start failed" );
 
-            _scene_module.Start( param );
+            _scene_module  .Start( param );
             _terrain_module.Start( param );
-            _actor_module.Start( param );
+            _actor_module  .Start( param );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )

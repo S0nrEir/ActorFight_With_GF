@@ -25,12 +25,14 @@ namespace Aquila.Module
             GenerateFightSceneTerrain( temp.x_width,temp.z_width );
             //地形设置在地块加载之后
             GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ), GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
+            _gen_flag = true;
         }
 
         public override void End()
         {
             RemoveAll();
             GameEntry.Lua.UnLoad( GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
+            _gen_flag = false;
             base.End();
         }
 
@@ -38,11 +40,9 @@ namespace Aquila.Module
         /// <summary>
         /// 生成战斗地块场景
         /// </summary>
-        /// <param name="x_width">x方向上的长度</param>
-        /// <param name="y_width">z方向上的长度</param>
         private void GenerateFightSceneTerrain( int x_width, int z_width )
         {
-            if ( _open_flag )
+            if ( _gen_flag )
             {
                 Log.Info( $"already generate terrain!", LogColorTypeEnum.Orange );
                 return;
@@ -90,13 +90,9 @@ namespace Aquila.Module
 
             if ( _terrain_cache_dic != null )
             {
-                int key = 0;
-                var iter = _terrain_cache_dic.GetEnumerator();
-                while ( iter.MoveNext() )
-                {
-                    key = iter.Current.Key;
-                    RemoveFromCache( key );
-                }
+                foreach( var kv in _terrain_cache_dic )
+                    RemoveFromCache( kv.Key );
+
                 _terrain_cache_dic.Clear();
             }
         }
@@ -231,5 +227,10 @@ namespace Aquila.Module
         /// 地块根节点
         /// </summary>
         private GameObject _root_go = null;
+
+        /// <summary>
+        /// 生成标记
+        /// </summary>
+        private bool _gen_flag = false;
     }//end of class
 }
