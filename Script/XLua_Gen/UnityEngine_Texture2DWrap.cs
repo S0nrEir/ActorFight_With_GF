@@ -38,7 +38,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPixelBilinear", _m_GetPixelBilinear);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadRawTextureData", _m_LoadRawTextureData);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Apply", _m_Apply);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Resize", _m_Resize);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reinitialize", _m_Reinitialize);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ReadPixels", _m_ReadPixels);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPixels32", _m_SetPixels32);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EncodeToTGA", _m_EncodeToTGA);
@@ -875,7 +875,7 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_Resize(RealStatePtr L)
+        static int _m_Reinitialize(RealStatePtr L)
         {
 		    try {
             
@@ -892,7 +892,7 @@ namespace XLua.CSObjectWrap
                     int _width = LuaAPI.xlua_tointeger(L, 2);
                     int _height = LuaAPI.xlua_tointeger(L, 3);
                     
-                        var gen_ret = gen_to_be_invoked.Resize( _width, _height );
+                        var gen_ret = gen_to_be_invoked.Reinitialize( _width, _height );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -906,7 +906,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.TextureFormat _format;translator.Get(L, 4, out _format);
                     bool _hasMipMap = LuaAPI.lua_toboolean(L, 5);
                     
-                        var gen_ret = gen_to_be_invoked.Resize( _width, _height, _format, _hasMipMap );
+                        var gen_ret = gen_to_be_invoked.Reinitialize( _width, _height, _format, _hasMipMap );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -920,7 +920,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.Experimental.Rendering.GraphicsFormat _format;translator.Get(L, 4, out _format);
                     bool _hasMipMap = LuaAPI.lua_toboolean(L, 5);
                     
-                        var gen_ret = gen_to_be_invoked.Resize( _width, _height, _format, _hasMipMap );
+                        var gen_ret = gen_to_be_invoked.Reinitialize( _width, _height, _format, _hasMipMap );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -932,7 +932,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Texture2D.Resize!");
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Texture2D.Reinitialize!");
             
         }
         

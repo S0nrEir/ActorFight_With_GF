@@ -4,7 +4,7 @@ using Aquila.Fight.Addon;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila
+namespace Aquila.ToolKit
 {
     public static partial class Tools
     {
@@ -28,6 +28,15 @@ namespace Aquila
                     return -1;
                 }
                 return result;
+            }
+
+            /// <summary>
+            /// 坐标key转xz坐标值
+            /// </summary>
+            public static (int x, int z) UniqueKey2CoordTuple( int key )
+            {
+                var vec = UniqueKey2Coord( key );
+                return (vec.x, vec.y);
             }
 
             /// <summary>

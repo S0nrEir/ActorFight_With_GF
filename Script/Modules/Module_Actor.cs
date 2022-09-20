@@ -1,9 +1,10 @@
 ﻿using Aquila.Extension;
 using Aquila.Fight.Actor;
-using System.Collections;
+using Aquila.ToolKit;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UGFExtensions.Await;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -12,76 +13,112 @@ namespace Aquila.Module
     /// </summary>
     public class Module_Actor : GameFrameworkModuleBase
     {
-        #region show
+        #region public
 
         /// <summary>
-        /// 显示一个英雄actor
+        /// 获取一个actor
         /// </summary>
-        //public async Task<bool> ShowHeroActor()
-        //{
-        //    var entityID = ACTOR_ID_POOL.Gen();
-        //    var task = await AwaitableExtensions.ShowEntity
-        //        (
+        public T GetActor<T>( int actor_id ) where T: TActorBase
+        {
+            if ( !_open_flag )
+            {
+                Log.Error( "!_open_flag" );
+                return null;
+            }
 
-        //        )
+            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
+                return null;
 
-        //    return true;
-        //}
+            _actor_cache_dic.TryGetValue( actor_id, out var actor );
+            return actor as T;
+        }
+
+        /// <summary>
+        /// 异步显示一个actor
+        /// </summary>
+        public async Task<Entity> ShowActorAsync<T>
+            (
+                int actor_id,
+                string asset_path,
+                int grid_x,
+                int grid_z,
+                object user_data
+            ) where T : TActorBase
+        {
+            var result = await AwaitableExtensions.ShowEntityAsync
+                (
+                    GameEntry.Entity,
+                    actor_id,
+                    typeof( T ),
+                    asset_path,
+                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
+                    Config.GameConfig.Entity.PRIORITY_ACTOR,
+                    user_data
+                );
+
+            OnShowActorSuccBasedTerrain( result.Logic as TActorBase, grid_x, grid_z );
+            return result;
+        }
 
         #endregion
 
-        public void HideActor(int id)
-        {
-            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-                return;
-
-
-        }
+        #region 
 
         /// <summary>
-        /// 隐藏所有actor，并且清空缓存
+        /// 基于地块的actor生成后处理
         /// </summary>
-        public void HideAllActor()
+        private void OnShowActorSuccBasedTerrain( TActorBase actor, int grid_x, int grid_z )
         {
-            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-                return;
-
-            var iter = _actor_cache_dic.GetEnumerator();
-            TActorBase actor = null;
-            while ( iter.MoveNext() )
+            var terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            var terrain = terrain_module.Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
+            //拿不到地块
+            if ( terrain is null )
             {
-                actor = iter.Current.Value;
-                if(actor is null)
-                    continue;
-
-                GameEntry.Entity.HideEntity( actor.ActorID );
+                Log.Info( "terrain is null", LogColorTypeEnum.Red );
+                return;
             }
-            _actor_cache_dic.Clear();
+
+            if ( terrain.State != ObjectPool.TerrainStateTypeEnum.NONE )
+            {
+                Log.Info( "terrain.State != ObjectPool.TerrainStateTypeEnum.NONE", LogColorTypeEnum.Red );
+                return;
+            }
+            actor.SetCoordAndPosition( grid_x, grid_z );
         }
 
         /// <summary>
-        /// 返回指定类型的actor，转换失败或拿不到返回null
+        /// 加载对应的actor
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="id">actorID</param>
-        /// <returns>返回指定类型的actor</returns>
-        public T GetActor<T>( int id ) where T : TActorBase
+        private async void LoadActor()
         {
-            return GetActor( id ) as T;
+            var entity_id = ACTOR_ID_POOL.Gen();
+            var actor = await ShowActorAsync<HeroActor>
+                   (
+                       entity_id,
+                       @"Assets/Res/Prefab/Aquila_001.prefab",
+                       0,
+                       0,
+                       new HeroActorEntityData( entity_id )
+                   );
+            Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
 
-        /// <summary>
-        /// 根据一个ActorID返回一个Actor，拿不到返回空
-        /// </summary>
-        public TActorBase GetActor( int id )
+        #endregion
+
+        public override void Start( object param )
         {
-            _actor_cache_dic.TryGetValue( id, out var actor );
-            return actor;
+            base.Start( param );
+            LoadActor();
+        }
+
+        public override void End()
+        {
+            base.End();
         }
 
         public override void OnClose()
         {
-            if( _actor_cache_dic != null)
+            if ( _actor_cache_dic != null )
                 _actor_cache_dic?.Clear();
 
             _actor_cache_dic = null;
@@ -92,7 +129,7 @@ namespace Aquila.Module
             if ( _actor_cache_dic is null )
                 _actor_cache_dic = new Dictionary<int, TActorBase>();
         }
-
+        
         /// <summary>
         /// actor缓存
         /// </summary>

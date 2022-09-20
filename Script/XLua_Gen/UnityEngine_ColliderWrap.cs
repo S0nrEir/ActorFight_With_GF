@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Collider);
-			Utils.BeginObjectRegister(type, L, translator, 0, 3, 8, 5);
+			Utils.BeginObjectRegister(type, L, translator, 0, 3, 9, 6);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ClosestPoint", _m_ClosestPoint);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Raycast", _m_Raycast);
@@ -34,12 +34,14 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isTrigger", _g_get_isTrigger);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "contactOffset", _g_get_contactOffset);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "bounds", _g_get_bounds);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "hasModifiableContacts", _g_get_hasModifiableContacts);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sharedMaterial", _g_get_sharedMaterial);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "material", _g_get_material);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "enabled", _s_set_enabled);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "isTrigger", _s_set_isTrigger);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "contactOffset", _s_set_contactOffset);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "hasModifiableContacts", _s_set_hasModifiableContacts);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "sharedMaterial", _s_set_sharedMaterial);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "material", _s_set_material);
             
@@ -266,6 +268,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_hasModifiableContacts(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Collider gen_to_be_invoked = (UnityEngine.Collider)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.hasModifiableContacts);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_sharedMaterial(RealStatePtr L)
         {
 		    try {
@@ -333,6 +349,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Collider gen_to_be_invoked = (UnityEngine.Collider)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.contactOffset = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_hasModifiableContacts(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Collider gen_to_be_invoked = (UnityEngine.Collider)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.hasModifiableContacts = LuaAPI.lua_toboolean(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

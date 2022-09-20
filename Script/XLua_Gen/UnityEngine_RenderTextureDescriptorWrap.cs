@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.RenderTextureDescriptor);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 20, 19);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 21, 20);
 			
 			
 			
@@ -32,6 +32,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "mipCount", _g_get_mipCount);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "graphicsFormat", _g_get_graphicsFormat);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "stencilFormat", _g_get_stencilFormat);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "depthStencilFormat", _g_get_depthStencilFormat);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "colorFormat", _g_get_colorFormat);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sRGB", _g_get_sRGB);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "depthBufferBits", _g_get_depthBufferBits);
@@ -53,6 +54,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "mipCount", _s_set_mipCount);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "graphicsFormat", _s_set_graphicsFormat);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "stencilFormat", _s_set_stencilFormat);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "depthStencilFormat", _s_set_depthStencilFormat);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "colorFormat", _s_set_colorFormat);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "sRGB", _s_set_sRGB);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "depthBufferBits", _s_set_depthBufferBits);
@@ -153,6 +155,31 @@ namespace XLua.CSObjectWrap
 					int _mipCount = LuaAPI.xlua_tointeger(L, 6);
 					
 					var gen_ret = new UnityEngine.RenderTextureDescriptor(_width, _height, _colorFormat, _depthBufferBits, _mipCount);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 5 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && translator.Assignable<UnityEngine.Experimental.Rendering.GraphicsFormat>(L, 4) && translator.Assignable<UnityEngine.Experimental.Rendering.GraphicsFormat>(L, 5))
+				{
+					int _width = LuaAPI.xlua_tointeger(L, 2);
+					int _height = LuaAPI.xlua_tointeger(L, 3);
+					UnityEngine.Experimental.Rendering.GraphicsFormat _colorFormat;translator.Get(L, 4, out _colorFormat);
+					UnityEngine.Experimental.Rendering.GraphicsFormat _depthStencilFormat;translator.Get(L, 5, out _depthStencilFormat);
+					
+					var gen_ret = new UnityEngine.RenderTextureDescriptor(_width, _height, _colorFormat, _depthStencilFormat);
+					translator.Push(L, gen_ret);
+                    
+					return 1;
+				}
+				if(LuaAPI.lua_gettop(L) == 6 && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3) && translator.Assignable<UnityEngine.Experimental.Rendering.GraphicsFormat>(L, 4) && translator.Assignable<UnityEngine.Experimental.Rendering.GraphicsFormat>(L, 5) && LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6))
+				{
+					int _width = LuaAPI.xlua_tointeger(L, 2);
+					int _height = LuaAPI.xlua_tointeger(L, 3);
+					UnityEngine.Experimental.Rendering.GraphicsFormat _colorFormat;translator.Get(L, 4, out _colorFormat);
+					UnityEngine.Experimental.Rendering.GraphicsFormat _depthStencilFormat;translator.Get(L, 5, out _depthStencilFormat);
+					int _mipCount = LuaAPI.xlua_tointeger(L, 6);
+					
+					var gen_ret = new UnityEngine.RenderTextureDescriptor(_width, _height, _colorFormat, _depthStencilFormat, _mipCount);
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -274,6 +301,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.RenderTextureDescriptor gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 translator.Push(L, gen_to_be_invoked.stencilFormat);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_depthStencilFormat(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.RenderTextureDescriptor gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                translator.Push(L, gen_to_be_invoked.depthStencilFormat);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -576,6 +617,24 @@ namespace XLua.CSObjectWrap
                 UnityEngine.RenderTextureDescriptor gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 UnityEngine.Experimental.Rendering.GraphicsFormat gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.stencilFormat = gen_value;
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_depthStencilFormat(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.RenderTextureDescriptor gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                UnityEngine.Experimental.Rendering.GraphicsFormat gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.depthStencilFormat = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
             

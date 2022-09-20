@@ -1,5 +1,6 @@
 ﻿using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
+using Aquila.ToolKit;
 using GameFramework.Event;
 using System.Collections.Generic;
 using UnityEngine;
@@ -151,13 +152,13 @@ namespace Aquila.Fight.Actor
         protected override void InitAddons()
         {
             base.InitAddons();
-            _FsmAddon = AddAddon<HeroStateAddon>();
-            _ProcessorAddon = AddAddon<ProcessorAddon>();
-            _AnimAddon = AddAddon<AnimAddon>();
-            _MoveAddon = AddAddon<MoveAddon>();
-            _HPAddon = AddAddon<InfoBoardAddon>();
-            _NavAddon = AddAddon<NavAddon>();
-            _EffectAddon = AddAddon<EffectAddon>();
+            _FsmAddon          = AddAddon<HeroStateAddon>();
+            //_ProcessorAddon    = AddAddon<ProcessorAddon>();
+            _AnimAddon         = AddAddon<AnimAddon>();
+            _MoveAddon         = AddAddon<MoveAddon>();
+            _HPAddon           = AddAddon<InfoBoardAddon>();
+            _NavAddon          = AddAddon<NavAddon>();
+            _EffectAddon       = AddAddon<EffectAddon>();
             //_MapAddon        = AddAddon<MapAddon>();
 
         }
@@ -238,7 +239,7 @@ namespace Aquila.Fight.Actor
         #region addon
 
         private FSMAddon _FsmAddon { get; set; } = null;
-        private ProcessorAddon _ProcessorAddon { get; set; } = null;
+        //private ProcessorAddon _ProcessorAddon { get; set; } = null;
         private AnimAddon _AnimAddon { get; set; } = null;
         private MoveAddon _MoveAddon { get; set; } = null;
         private InfoBoardAddon _HPAddon { get; set; } = null;

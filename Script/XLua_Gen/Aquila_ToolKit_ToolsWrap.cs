@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaToolsWrap 
+    public class AquilaToolKitToolsWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Tools);
+			System.Type type = typeof(Aquila.ToolKit.Tools);
 			Utils.BeginObjectRegister(type, L, translator, 0, 0, 0, 0);
 			
 			
@@ -52,7 +52,7 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            return LuaAPI.luaL_error(L, "Aquila.Tools does not have a constructor!");
+            return LuaAPI.luaL_error(L, "Aquila.ToolKit.Tools does not have a constructor!");
         }
         
 		
@@ -76,7 +76,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.Transform _child = (UnityEngine.Transform)translator.GetObject(L, 1, typeof(UnityEngine.Transform));
                     UnityEngine.Transform _parent = (UnityEngine.Transform)translator.GetObject(L, 2, typeof(UnityEngine.Transform));
                     
-                    Aquila.Tools.SetParent( _child, _parent );
+                    Aquila.ToolKit.Tools.SetParent( _child, _parent );
                     
                     
                     
@@ -100,7 +100,7 @@ namespace XLua.CSObjectWrap
                 {
                     string _name = LuaAPI.lua_tostring(L, 1);
                     
-                        var gen_ret = Aquila.Tools.NameToLayer( _name );
+                        var gen_ret = Aquila.ToolKit.Tools.NameToLayer( _name );
                         LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
@@ -131,7 +131,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
                     bool _loop_set = LuaAPI.lua_toboolean(L, 3);
                     
-                    Aquila.Tools.SetLayer( _layer, _go, _loop_set );
+                    Aquila.ToolKit.Tools.SetLayer( _layer, _go, _loop_set );
                     
                     
                     
@@ -142,7 +142,7 @@ namespace XLua.CSObjectWrap
                     string _layer = LuaAPI.lua_tostring(L, 1);
                     UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
                     
-                    Aquila.Tools.SetLayer( _layer, _go );
+                    Aquila.ToolKit.Tools.SetLayer( _layer, _go );
                     
                     
                     
@@ -153,7 +153,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Tools.SetLayer!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.ToolKit.Tools.SetLayer!");
             
         }
         
@@ -174,7 +174,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.GameObject _GO = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
                     bool _loopSet = LuaAPI.lua_toboolean(L, 3);
                     
-                    Aquila.Tools.SetTag( _tag, _GO, _loopSet );
+                    Aquila.ToolKit.Tools.SetTag( _tag, _GO, _loopSet );
                     
                     
                     
@@ -185,7 +185,7 @@ namespace XLua.CSObjectWrap
                     string _tag = LuaAPI.lua_tostring(L, 1);
                     UnityEngine.GameObject _GO = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
                     
-                    Aquila.Tools.SetTag( _tag, _GO );
+                    Aquila.ToolKit.Tools.SetTag( _tag, _GO );
                     
                     
                     
@@ -196,7 +196,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Tools.SetTag!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.ToolKit.Tools.SetTag!");
             
         }
         
@@ -213,7 +213,7 @@ namespace XLua.CSObjectWrap
                 {
                     UnityEngine.Transform _parent = (UnityEngine.Transform)translator.GetObject(L, 1, typeof(UnityEngine.Transform));
                     
-                        var gen_ret = Aquila.Tools.AddChild( _parent );
+                        var gen_ret = Aquila.ToolKit.Tools.AddChild( _parent );
                         translator.Push(L, gen_ret);
                     
                     
@@ -241,7 +241,7 @@ namespace XLua.CSObjectWrap
                     UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 1, typeof(UnityEngine.GameObject));
                     bool _active = LuaAPI.lua_toboolean(L, 2);
                     
-                    Aquila.Tools.SetActive( _go, _active );
+                    Aquila.ToolKit.Tools.SetActive( _go, _active );
                     
                     
                     
@@ -266,7 +266,7 @@ namespace XLua.CSObjectWrap
                     int _value = LuaAPI.xlua_tointeger(L, 1);
                     ushort _index = (ushort)LuaAPI.xlua_tointeger(L, 2);
                     
-                        var gen_ret = Aquila.Tools.GetBitValue( _value, _index );
+                        var gen_ret = Aquila.ToolKit.Tools.GetBitValue( _value, _index );
                         LuaAPI.lua_pushboolean(L, gen_ret);
                     
                     
@@ -293,7 +293,7 @@ namespace XLua.CSObjectWrap
                     ushort _index = (ushort)LuaAPI.xlua_tointeger(L, 2);
                     bool _bitValue = LuaAPI.lua_toboolean(L, 3);
                     
-                        var gen_ret = Aquila.Tools.SetBitValue( _value, _index, _bitValue );
+                        var gen_ret = Aquila.ToolKit.Tools.SetBitValue( _value, _index, _bitValue );
                         LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     

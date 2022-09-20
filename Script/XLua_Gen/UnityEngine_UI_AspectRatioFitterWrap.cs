@@ -21,10 +21,12 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.UI.AspectRatioFitter);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 2, 2);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 2, 2);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLayoutHorizontal", _m_SetLayoutHorizontal);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLayoutVertical", _m_SetLayoutVertical);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsComponentValidOnObject", _m_IsComponentValidOnObject);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsAspectModeValid", _m_IsAspectModeValid);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "aspectMode", _g_get_aspectMode);
@@ -106,6 +108,62 @@ namespace XLua.CSObjectWrap
                     
                     
                     return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_IsComponentValidOnObject(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.UI.AspectRatioFitter gen_to_be_invoked = (UnityEngine.UI.AspectRatioFitter)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.IsComponentValidOnObject(  );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_IsAspectModeValid(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.UI.AspectRatioFitter gen_to_be_invoked = (UnityEngine.UI.AspectRatioFitter)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.IsAspectModeValid(  );
+                        LuaAPI.lua_pushboolean(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
                 }
                 
             } catch(System.Exception gen_e) {

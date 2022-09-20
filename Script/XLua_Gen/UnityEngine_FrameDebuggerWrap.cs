@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaToolsTableWrap 
+    public class UnityEngineFrameDebuggerWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Tools.Table);
+			System.Type type = typeof(UnityEngine.FrameDebugger);
 			Utils.BeginObjectRegister(type, L, translator, 0, 0, 0, 0);
 			
 			
@@ -31,12 +31,12 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 2, 0, 0);
-			Utils.RegisterFunc(L, Utils.CLS_IDX, "GetSceneConfig", _m_GetSceneConfig_xlua_st_);
-            
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 1, 0);
+			
 			
             
-			
+			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "enabled", _g_get_enabled);
+            
 			
 			
 			Utils.EndClassRegister(type, L, translator);
@@ -45,44 +45,30 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            return LuaAPI.luaL_error(L, "Aquila.Tools.Table does not have a constructor!");
+            return LuaAPI.luaL_error(L, "UnityEngine.FrameDebugger does not have a constructor!");
         }
         
 		
         
 		
+        
+        
+        
         
         
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_GetSceneConfig_xlua_st_(RealStatePtr L)
+        static int _g_get_enabled(RealStatePtr L)
         {
 		    try {
             
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-            
-                
-                {
-                    
-                        var gen_ret = Aquila.Tools.Table.GetSceneConfig(  );
-                        translator.Push(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
-                }
-                
+			    LuaAPI.lua_pushboolean(L, UnityEngine.FrameDebugger.enabled);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
-            
+            return 1;
         }
-        
-        
-        
         
         
         

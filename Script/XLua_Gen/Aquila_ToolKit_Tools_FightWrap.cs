@@ -15,12 +15,12 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class AquilaToolsFightWrap 
+    public class AquilaToolKitToolsFightWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(Aquila.Tools.Fight);
+			System.Type type = typeof(Aquila.ToolKit.Tools.Fight);
 			Utils.BeginObjectRegister(type, L, translator, 0, 0, 0, 0);
 			
 			
@@ -48,7 +48,7 @@ namespace XLua.CSObjectWrap
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int __CreateInstance(RealStatePtr L)
         {
-            return LuaAPI.luaL_error(L, "Aquila.Tools.Fight does not have a constructor!");
+            return LuaAPI.luaL_error(L, "Aquila.ToolKit.Tools.Fight does not have a constructor!");
         }
         
 		
@@ -70,7 +70,7 @@ namespace XLua.CSObjectWrap
                     int _x = LuaAPI.xlua_tointeger(L, 1);
                     int _z = LuaAPI.xlua_tointeger(L, 2);
                     
-                        var gen_ret = Aquila.Tools.Fight.Coord2UniqueKey( _x, _z );
+                        var gen_ret = Aquila.ToolKit.Tools.Fight.Coord2UniqueKey( _x, _z );
                         LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
@@ -97,7 +97,7 @@ namespace XLua.CSObjectWrap
                 {
                     int _key = LuaAPI.xlua_tointeger(L, 1);
                     
-                        var gen_ret = Aquila.Tools.Fight.UniqueKey2Coord( _key );
+                        var gen_ret = Aquila.ToolKit.Tools.Fight.UniqueKey2Coord( _key );
                         translator.Push(L, gen_ret);
                     
                     
@@ -127,7 +127,7 @@ namespace XLua.CSObjectWrap
                     float _z = (float)LuaAPI.lua_tonumber(L, 3);
                     float _defaultValue = (float)LuaAPI.lua_tonumber(L, 4);
                     
-                        var gen_ret = Aquila.Tools.Fight.TerrainPositionY( _layer, _x, _z, _defaultValue );
+                        var gen_ret = Aquila.ToolKit.Tools.Fight.TerrainPositionY( _layer, _x, _z, _defaultValue );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -140,7 +140,7 @@ namespace XLua.CSObjectWrap
                     float _x = (float)LuaAPI.lua_tonumber(L, 2);
                     float _z = (float)LuaAPI.lua_tonumber(L, 3);
                     
-                        var gen_ret = Aquila.Tools.Fight.TerrainPositionY( _layer, _x, _z );
+                        var gen_ret = Aquila.ToolKit.Tools.Fight.TerrainPositionY( _layer, _x, _z );
                         LuaAPI.lua_pushnumber(L, gen_ret);
                     
                     
@@ -152,7 +152,7 @@ namespace XLua.CSObjectWrap
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
             
-            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.Tools.Fight.TerrainPositionY!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Aquila.ToolKit.Tools.Fight.TerrainPositionY!");
             
         }
         
@@ -170,7 +170,7 @@ namespace XLua.CSObjectWrap
                     Aquila.Fight.Addon.ActorEffectEntityData _effectEntityData = (Aquila.Fight.Addon.ActorEffectEntityData)translator.GetObject(L, 1, typeof(Aquila.Fight.Addon.ActorEffectEntityData));
                     Aquila.Fight.ActorEffect _effect = (Aquila.Fight.ActorEffect)translator.GetObject(L, 2, typeof(Aquila.Fight.ActorEffect));
                     
-                    Aquila.Tools.Fight.BindEffect( _effectEntityData, _effect );
+                    Aquila.ToolKit.Tools.Fight.BindEffect( _effectEntityData, _effect );
                     
                     
                     

@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ArticulationBody);
-			Utils.BeginObjectRegister(type, L, translator, 0, 14, 37, 32);
+			Utils.BeginObjectRegister(type, L, translator, 0, 29, 42, 38);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddForce", _m_AddForce);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddRelativeForce", _m_AddRelativeForce);
@@ -37,6 +37,21 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetClosestPoint", _m_GetClosestPoint);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetRelativePointVelocity", _m_GetRelativePointVelocity);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetPointVelocity", _m_GetPointVelocity);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDenseJacobian", _m_GetDenseJacobian);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetJointPositions", _m_GetJointPositions);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetJointPositions", _m_SetJointPositions);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetJointVelocities", _m_GetJointVelocities);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetJointVelocities", _m_SetJointVelocities);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetJointAccelerations", _m_GetJointAccelerations);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetJointAccelerations", _m_SetJointAccelerations);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetJointForces", _m_GetJointForces);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetJointForces", _m_SetJointForces);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDriveTargets", _m_GetDriveTargets);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetDriveTargets", _m_SetDriveTargets);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDriveTargetVelocities", _m_GetDriveTargetVelocities);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetDriveTargetVelocities", _m_SetDriveTargetVelocities);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDofStartIndices", _m_GetDofStartIndices);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SnapAnchorToClosestContact", _m_SnapAnchorToClosestContact);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "jointType", _g_get_jointType);
@@ -45,6 +60,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "anchorRotation", _g_get_anchorRotation);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "parentAnchorRotation", _g_get_parentAnchorRotation);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "isRoot", _g_get_isRoot);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "matchAnchors", _g_get_matchAnchors);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "linearLockX", _g_get_linearLockX);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "linearLockY", _g_get_linearLockY);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "linearLockZ", _g_get_linearLockZ);
@@ -70,18 +86,23 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "solverIterations", _g_get_solverIterations);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "solverVelocityIterations", _g_get_solverVelocityIterations);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxAngularVelocity", _g_get_maxAngularVelocity);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxLinearVelocity", _g_get_maxLinearVelocity);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxJointVelocity", _g_get_maxJointVelocity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxDepenetrationVelocity", _g_get_maxDepenetrationVelocity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "jointPosition", _g_get_jointPosition);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "jointVelocity", _g_get_jointVelocity);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "jointAcceleration", _g_get_jointAcceleration);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "jointForce", _g_get_jointForce);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "dofCount", _g_get_dofCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "index", _g_get_index);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "collisionDetectionMode", _g_get_collisionDetectionMode);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointType", _s_set_jointType);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "anchorPosition", _s_set_anchorPosition);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "parentAnchorPosition", _s_set_parentAnchorPosition);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "anchorRotation", _s_set_anchorRotation);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "parentAnchorRotation", _s_set_parentAnchorRotation);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "matchAnchors", _s_set_matchAnchors);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "linearLockX", _s_set_linearLockX);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "linearLockY", _s_set_linearLockY);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "linearLockZ", _s_set_linearLockZ);
@@ -96,6 +117,8 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "linearDamping", _s_set_linearDamping);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "angularDamping", _s_set_angularDamping);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointFriction", _s_set_jointFriction);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "velocity", _s_set_velocity);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "angularVelocity", _s_set_angularVelocity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "mass", _s_set_mass);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "centerOfMass", _s_set_centerOfMass);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "inertiaTensor", _s_set_inertiaTensor);
@@ -104,11 +127,14 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "solverIterations", _s_set_solverIterations);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "solverVelocityIterations", _s_set_solverVelocityIterations);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxAngularVelocity", _s_set_maxAngularVelocity);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxLinearVelocity", _s_set_maxLinearVelocity);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxJointVelocity", _s_set_maxJointVelocity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "maxDepenetrationVelocity", _s_set_maxDepenetrationVelocity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointPosition", _s_set_jointPosition);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointVelocity", _s_set_jointVelocity);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointAcceleration", _s_set_jointAcceleration);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "jointForce", _s_set_jointForce);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "collisionDetectionMode", _s_set_collisionDetectionMode);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -165,7 +191,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3>(L, 2)) 
                 {
                     UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
                     
@@ -175,10 +203,23 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.ForceMode>(L, 3)) 
+                {
+                    UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
+                    UnityEngine.ForceMode _mode;translator.Get(L, 3, out _mode);
+                    
+                    gen_to_be_invoked.AddForce( _force, _mode );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ArticulationBody.AddForce!");
             
         }
         
@@ -193,7 +234,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3>(L, 2)) 
                 {
                     UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
                     
@@ -203,10 +246,23 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.ForceMode>(L, 3)) 
+                {
+                    UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
+                    UnityEngine.ForceMode _mode;translator.Get(L, 3, out _mode);
+                    
+                    gen_to_be_invoked.AddRelativeForce( _force, _mode );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ArticulationBody.AddRelativeForce!");
             
         }
         
@@ -221,7 +277,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3>(L, 2)) 
                 {
                     UnityEngine.Vector3 _torque;translator.Get(L, 2, out _torque);
                     
@@ -231,10 +289,23 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.ForceMode>(L, 3)) 
+                {
+                    UnityEngine.Vector3 _torque;translator.Get(L, 2, out _torque);
+                    UnityEngine.ForceMode _mode;translator.Get(L, 3, out _mode);
+                    
+                    gen_to_be_invoked.AddTorque( _torque, _mode );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ArticulationBody.AddTorque!");
             
         }
         
@@ -249,7 +320,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Vector3>(L, 2)) 
                 {
                     UnityEngine.Vector3 _torque;translator.Get(L, 2, out _torque);
                     
@@ -259,10 +332,23 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.ForceMode>(L, 3)) 
+                {
+                    UnityEngine.Vector3 _torque;translator.Get(L, 2, out _torque);
+                    UnityEngine.ForceMode _mode;translator.Get(L, 3, out _mode);
+                    
+                    gen_to_be_invoked.AddRelativeTorque( _torque, _mode );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ArticulationBody.AddRelativeTorque!");
             
         }
         
@@ -277,7 +363,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Vector3>(L, 3)) 
                 {
                     UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
                     UnityEngine.Vector3 _position;translator.Get(L, 3, out _position);
@@ -288,10 +376,24 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Vector3>(L, 2)&& translator.Assignable<UnityEngine.Vector3>(L, 3)&& translator.Assignable<UnityEngine.ForceMode>(L, 4)) 
+                {
+                    UnityEngine.Vector3 _force;translator.Get(L, 2, out _force);
+                    UnityEngine.Vector3 _position;translator.Get(L, 3, out _position);
+                    UnityEngine.ForceMode _mode;translator.Get(L, 4, out _mode);
+                    
+                    gen_to_be_invoked.AddForceAtPosition( _force, _position, _mode );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ArticulationBody.AddForceAtPosition!");
             
         }
         
@@ -547,6 +649,436 @@ namespace XLua.CSObjectWrap
             
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDenseJacobian(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    UnityEngine.ArticulationJacobian _jacobian;translator.Get(L, 2, out _jacobian);
+                    
+                        var gen_ret = gen_to_be_invoked.GetDenseJacobian( ref _jacobian );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    translator.Push(L, _jacobian);
+                        translator.Update(L, 2, _jacobian);
+                        
+                    
+                    
+                    
+                    return 2;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetJointPositions(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _positions = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetJointPositions( _positions );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetJointPositions(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _positions = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetJointPositions( _positions );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetJointVelocities(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _velocities = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetJointVelocities( _velocities );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetJointVelocities(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _velocities = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetJointVelocities( _velocities );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetJointAccelerations(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _accelerations = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetJointAccelerations( _accelerations );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetJointAccelerations(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _accelerations = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetJointAccelerations( _accelerations );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetJointForces(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _forces = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetJointForces( _forces );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetJointForces(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _forces = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetJointForces( _forces );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDriveTargets(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _targets = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetDriveTargets( _targets );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetDriveTargets(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _targets = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetDriveTargets( _targets );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDriveTargetVelocities(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _targetVelocities = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetDriveTargetVelocities( _targetVelocities );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetDriveTargetVelocities(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<float> _targetVelocities = (System.Collections.Generic.List<float>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<float>));
+                    
+                    gen_to_be_invoked.SetDriveTargetVelocities( _targetVelocities );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDofStartIndices(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    System.Collections.Generic.List<int> _dofStartIndices = (System.Collections.Generic.List<int>)translator.GetObject(L, 2, typeof(System.Collections.Generic.List<int>));
+                    
+                        var gen_ret = gen_to_be_invoked.GetDofStartIndices( _dofStartIndices );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SnapAnchorToClosestContact(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                    gen_to_be_invoked.SnapAnchorToClosestContact(  );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
         
         
         
@@ -628,6 +1160,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
                 LuaAPI.lua_pushboolean(L, gen_to_be_invoked.isRoot);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_matchAnchors(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.matchAnchors);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -985,6 +1531,34 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_maxLinearVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushnumber(L, gen_to_be_invoked.maxLinearVelocity);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_maxJointVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushnumber(L, gen_to_be_invoked.maxJointVelocity);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_maxDepenetrationVelocity(RealStatePtr L)
         {
 		    try {
@@ -1068,6 +1642,34 @@ namespace XLua.CSObjectWrap
             return 1;
         }
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_index(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.index);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_collisionDetectionMode(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.collisionDetectionMode);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
@@ -1143,6 +1745,21 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
                 UnityEngine.Quaternion gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.parentAnchorRotation = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_matchAnchors(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.matchAnchors = LuaAPI.lua_toboolean(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
@@ -1370,6 +1987,38 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_velocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                UnityEngine.Vector3 gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.velocity = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_angularVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                UnityEngine.Vector3 gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.angularVelocity = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_mass(RealStatePtr L)
         {
 		    try {
@@ -1493,6 +2142,36 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_maxLinearVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.maxLinearVelocity = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_maxJointVelocity(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.maxJointVelocity = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _s_set_maxDepenetrationVelocity(RealStatePtr L)
         {
 		    try {
@@ -1564,6 +2243,22 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
                 UnityEngine.ArticulationReducedSpace gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.jointForce = gen_value;
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_collisionDetectionMode(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ArticulationBody gen_to_be_invoked = (UnityEngine.ArticulationBody)translator.FastGetCSObj(L, 1);
+                UnityEngine.CollisionDetectionMode gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.collisionDetectionMode = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

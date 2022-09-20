@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Aquila
+namespace Aquila.ToolKit
 {
     public static partial class Tools
     {

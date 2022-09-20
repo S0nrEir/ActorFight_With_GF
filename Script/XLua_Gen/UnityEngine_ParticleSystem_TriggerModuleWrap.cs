@@ -21,8 +21,10 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.ParticleSystem.TriggerModule);
-			Utils.BeginObjectRegister(type, L, translator, 0, 2, 7, 6);
+			Utils.BeginObjectRegister(type, L, translator, 0, 4, 8, 7);
 			
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddCollider", _m_AddCollider);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "RemoveCollider", _m_RemoveCollider);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetCollider", _m_SetCollider);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetCollider", _m_GetCollider);
 			
@@ -32,14 +34,16 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "outside", _g_get_outside);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "enter", _g_get_enter);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "exit", _g_get_exit);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "colliderQueryMode", _g_get_colliderQueryMode);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "radiusScale", _g_get_radiusScale);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "maxColliderCount", _g_get_maxColliderCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "colliderCount", _g_get_colliderCount);
             
 			Utils.RegisterFunc(L, Utils.SETTER_IDX, "enabled", _s_set_enabled);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "inside", _s_set_inside);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "outside", _s_set_outside);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "enter", _s_set_enter);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "exit", _s_set_exit);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "colliderQueryMode", _s_set_colliderQueryMode);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "radiusScale", _s_set_radiusScale);
             
 			
@@ -83,6 +87,82 @@ namespace XLua.CSObjectWrap
         
         
         
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_AddCollider(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+                
+                {
+                    UnityEngine.Component _collider = (UnityEngine.Component)translator.GetObject(L, 2, typeof(UnityEngine.Component));
+                    
+                    gen_to_be_invoked.AddCollider( _collider );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RemoveCollider(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)) 
+                {
+                    int _index = LuaAPI.xlua_tointeger(L, 2);
+                    
+                    gen_to_be_invoked.RemoveCollider( _index );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.Component>(L, 2)) 
+                {
+                    UnityEngine.Component _collider = (UnityEngine.Component)translator.GetObject(L, 2, typeof(UnityEngine.Component));
+                    
+                    gen_to_be_invoked.RemoveCollider( _collider );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ParticleSystem.TriggerModule.RemoveCollider!");
+            
+        }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SetCollider(RealStatePtr L)
@@ -220,6 +300,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_colliderQueryMode(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                translator.Push(L, gen_to_be_invoked.colliderQueryMode);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_radiusScale(RealStatePtr L)
         {
 		    try {
@@ -234,13 +328,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_maxColliderCount(RealStatePtr L)
+        static int _g_get_colliderCount(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
-                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.maxColliderCount);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.colliderCount);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -329,6 +423,24 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
                 UnityEngine.ParticleSystemOverlapAction gen_value;translator.Get(L, 2, out gen_value);
 				gen_to_be_invoked.exit = gen_value;
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_colliderQueryMode(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.ParticleSystem.TriggerModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                UnityEngine.ParticleSystemColliderQueryMode gen_value;translator.Get(L, 2, out gen_value);
+				gen_to_be_invoked.colliderQueryMode = gen_value;
             
                 translator.Update(L, 1, gen_to_be_invoked);
             

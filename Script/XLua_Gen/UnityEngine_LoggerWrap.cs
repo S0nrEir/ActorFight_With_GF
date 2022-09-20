@@ -27,8 +27,8 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Log", _m_Log);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LogWarning", _m_LogWarning);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LogError", _m_LogError);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LogFormat", _m_LogFormat);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LogException", _m_LogException);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LogFormat", _m_LogFormat);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "logHandler", _g_get_logHandler);
@@ -307,6 +307,49 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LogException(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Logger gen_to_be_invoked = (UnityEngine.Logger)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<System.Exception>(L, 2)) 
+                {
+                    System.Exception _exception = (System.Exception)translator.GetObject(L, 2, typeof(System.Exception));
+                    
+                    gen_to_be_invoked.LogException( _exception );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 3&& translator.Assignable<System.Exception>(L, 2)&& translator.Assignable<UnityEngine.Object>(L, 3)) 
+                {
+                    System.Exception _exception = (System.Exception)translator.GetObject(L, 2, typeof(System.Exception));
+                    UnityEngine.Object _context = (UnityEngine.Object)translator.GetObject(L, 3, typeof(UnityEngine.Object));
+                    
+                    gen_to_be_invoked.LogException( _exception, _context );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Logger.LogException!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_LogFormat(RealStatePtr L)
         {
 		    try {
@@ -350,49 +393,6 @@ namespace XLua.CSObjectWrap
             }
             
             return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Logger.LogFormat!");
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_LogException(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                UnityEngine.Logger gen_to_be_invoked = (UnityEngine.Logger)translator.FastGetCSObj(L, 1);
-            
-            
-			    int gen_param_count = LuaAPI.lua_gettop(L);
-            
-                if(gen_param_count == 2&& translator.Assignable<System.Exception>(L, 2)) 
-                {
-                    System.Exception _exception = (System.Exception)translator.GetObject(L, 2, typeof(System.Exception));
-                    
-                    gen_to_be_invoked.LogException( _exception );
-                    
-                    
-                    
-                    return 0;
-                }
-                if(gen_param_count == 3&& translator.Assignable<System.Exception>(L, 2)&& translator.Assignable<UnityEngine.Object>(L, 3)) 
-                {
-                    System.Exception _exception = (System.Exception)translator.GetObject(L, 2, typeof(System.Exception));
-                    UnityEngine.Object _context = (UnityEngine.Object)translator.GetObject(L, 3, typeof(UnityEngine.Object));
-                    
-                    gen_to_be_invoked.LogException( _exception, _context );
-                    
-                    
-                    
-                    return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Logger.LogException!");
             
         }
         

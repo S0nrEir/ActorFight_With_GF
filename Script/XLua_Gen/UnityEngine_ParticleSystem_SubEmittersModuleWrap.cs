@@ -144,7 +144,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.ParticleSystem.SubEmittersModule gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)) 
                 {
                     int _index = LuaAPI.xlua_tointeger(L, 2);
                     
@@ -156,10 +158,24 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.ParticleSystem>(L, 2)) 
+                {
+                    UnityEngine.ParticleSystem _subEmitter = (UnityEngine.ParticleSystem)translator.GetObject(L, 2, typeof(UnityEngine.ParticleSystem));
+                    
+                    gen_to_be_invoked.RemoveSubEmitter( _subEmitter );
+                    
+                    
+                        translator.Update(L, 1, gen_to_be_invoked);
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.ParticleSystem.SubEmittersModule.RemoveSubEmitter!");
             
         }
         

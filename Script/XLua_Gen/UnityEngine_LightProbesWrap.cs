@@ -36,12 +36,14 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 5, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 7, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "Tetrahedralize", _m_Tetrahedralize_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "TetrahedralizeAsync", _m_TetrahedralizeAsync_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetInterpolatedProbe", _m_GetInterpolatedProbe_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CalculateInterpolatedLightAndOcclusionProbes", _m_CalculateInterpolatedLightAndOcclusionProbes_xlua_st_);
             
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "tetrahedralizationCompleted", _e_tetrahedralizationCompleted);
+			Utils.RegisterFunc(L, Utils.CLS_IDX, "needsRetetrahedralization", _e_needsRetetrahedralization);
 			
             
 			
@@ -263,5 +265,63 @@ namespace XLua.CSObjectWrap
 		
 		
 		
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_tetrahedralizationCompleted(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action gen_delegate = translator.GetDelegate<System.Action>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.LightProbes.tetrahedralizationCompleted += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.LightProbes.tetrahedralizationCompleted -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.LightProbes.tetrahedralizationCompleted!");
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _e_needsRetetrahedralization(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+                System.Action gen_delegate = translator.GetDelegate<System.Action>(L, 2);
+                if (gen_delegate == null) {
+                    return LuaAPI.luaL_error(L, "#2 need System.Action!");
+                }
+                
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "+")) {
+					UnityEngine.LightProbes.needsRetetrahedralization += gen_delegate;
+					return 0;
+				} 
+				
+				
+				if (gen_param_count == 2 && LuaAPI.xlua_is_eq_str(L, 1, "-")) {
+					UnityEngine.LightProbes.needsRetetrahedralization -= gen_delegate;
+					return 0;
+				} 
+				
+			} catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+			return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.LightProbes.needsRetetrahedralization!");
+        }
+        
     }
 }

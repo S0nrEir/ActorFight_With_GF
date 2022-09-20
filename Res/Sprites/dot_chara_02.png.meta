@@ -108,7 +108,7 @@ TextureImporter:
       213: 21300068
     second: dot_chara_02_34
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -128,6 +128,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -137,8 +139,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -159,11 +161,15 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
-  - serializedVersion: 2
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
     resizeAlgorithm: 0
@@ -174,7 +180,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 1024
     resizeAlgorithm: 0
@@ -185,7 +192,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -196,7 +204,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -207,7 +216,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -218,6 +228,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -966,6 +977,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      dot_chara_02_5: 21300010
+      dot_chara_02_34: 21300068
+      dot_chara_02_22: 21300044
+      dot_chara_02_32: 21300064
+      dot_chara_02_3: 21300006
+      dot_chara_02_9: 21300018
+      dot_chara_02_31: 21300062
+      dot_chara_02_10: 21300020
+      dot_chara_02_27: 21300054
+      dot_chara_02_21: 21300042
+      dot_chara_02_29: 21300058
+      dot_chara_02_14: 21300028
+      dot_chara_02_23: 21300046
+      dot_chara_02_13: 21300026
+      dot_chara_02_11: 21300022
+      dot_chara_02_25: 21300050
+      dot_chara_02_1: 21300002
+      dot_chara_02_6: 21300012
+      dot_chara_02_17: 21300034
+      dot_chara_02_7: 21300014
+      dot_chara_02_15: 21300030
+      dot_chara_02_8: 21300016
+      dot_chara_02_20: 21300040
+      dot_chara_02_0: 21300000
+      dot_chara_02_16: 21300032
+      dot_chara_02_28: 21300056
+      dot_chara_02_19: 21300038
+      dot_chara_02_26: 21300052
+      dot_chara_02_2: 21300004
+      dot_chara_02_30: 21300060
+      dot_chara_02_24: 21300048
+      dot_chara_02_33: 21300066
+      dot_chara_02_12: 21300024
+      dot_chara_02_4: 21300008
+      dot_chara_02_18: 21300036
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

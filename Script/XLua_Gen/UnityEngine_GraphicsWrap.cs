@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 23, 5, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 31, 6, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "ClearRandomWriteTargets", _m_ClearRandomWriteTargets_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ExecuteCommandBuffer", _m_ExecuteCommandBuffer_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ExecuteCommandBufferAsync", _m_ExecuteCommandBufferAsync_xlua_st_);
@@ -42,7 +42,15 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CreateAsyncGraphicsFence", _m_CreateAsyncGraphicsFence_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CreateGraphicsFence", _m_CreateGraphicsFence_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "WaitOnAsyncGraphicsFence", _m_WaitOnAsyncGraphicsFence_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "CopyBuffer", _m_CopyBuffer_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "DrawTexture", _m_DrawTexture_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderMesh", _m_RenderMesh_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderMeshIndirect", _m_RenderMeshIndirect_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderMeshPrimitives", _m_RenderMeshPrimitives_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderPrimitives", _m_RenderPrimitives_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderPrimitivesIndexed", _m_RenderPrimitivesIndexed_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderPrimitivesIndirect", _m_RenderPrimitivesIndirect_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "RenderPrimitivesIndexedIndirect", _m_RenderPrimitivesIndexedIndirect_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "DrawMeshNow", _m_DrawMeshNow_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "DrawMesh", _m_DrawMesh_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "DrawMeshInstanced", _m_DrawMeshInstanced_xlua_st_);
@@ -60,6 +68,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "activeColorGamut", _g_get_activeColorGamut);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "activeTier", _g_get_activeTier);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "preserveFramebufferAlpha", _g_get_preserveFramebufferAlpha);
+            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "minOpenGLESVersion", _g_get_minOpenGLESVersion);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "activeColorBuffer", _g_get_activeColorBuffer);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "activeDepthBuffer", _g_get_activeDepthBuffer);
             
@@ -626,6 +635,33 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_CopyBuffer_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.GraphicsBuffer _source = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 1, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _dest = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 2, typeof(UnityEngine.GraphicsBuffer));
+                    
+                    UnityEngine.Graphics.CopyBuffer( _source, _dest );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_DrawTexture_xlua_st_(RealStatePtr L)
         {
 		    try {
@@ -831,6 +867,439 @@ namespace XLua.CSObjectWrap
             }
             
             return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.DrawTexture!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderMesh_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& translator.Assignable<UnityEngine.Matrix4x4>(L, 4)&& translator.Assignable<System.Nullable<UnityEngine.Matrix4x4>>(L, 5)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    int _submeshIndex = LuaAPI.xlua_tointeger(L, 3);
+                    UnityEngine.Matrix4x4 _objectToWorld;translator.Get(L, 4, out _objectToWorld);
+                    System.Nullable<UnityEngine.Matrix4x4> _prevObjectToWorld;translator.Get(L, 5, out _prevObjectToWorld);
+                    
+                    UnityEngine.Graphics.RenderMesh( _rparams, _mesh, _submeshIndex, _objectToWorld, _prevObjectToWorld );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& translator.Assignable<UnityEngine.Matrix4x4>(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    int _submeshIndex = LuaAPI.xlua_tointeger(L, 3);
+                    UnityEngine.Matrix4x4 _objectToWorld;translator.Get(L, 4, out _objectToWorld);
+                    
+                    UnityEngine.Graphics.RenderMesh( _rparams, _mesh, _submeshIndex, _objectToWorld );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderMesh!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderMeshIndirect_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 4);
+                    int _startCommand = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    UnityEngine.Graphics.RenderMeshIndirect( _rparams, _mesh, _commandBuffer, _commandCount, _startCommand );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                    UnityEngine.Graphics.RenderMeshIndirect( _rparams, _mesh, _commandBuffer, _commandCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    
+                    UnityEngine.Graphics.RenderMeshIndirect( _rparams, _mesh, _commandBuffer );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderMeshIndirect!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderMeshPrimitives_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    int _submeshIndex = LuaAPI.xlua_tointeger(L, 3);
+                    int _instanceCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                    UnityEngine.Graphics.RenderMeshPrimitives( _rparams, _mesh, _submeshIndex, _instanceCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.Mesh>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.Mesh _mesh = (UnityEngine.Mesh)translator.GetObject(L, 2, typeof(UnityEngine.Mesh));
+                    int _submeshIndex = LuaAPI.xlua_tointeger(L, 3);
+                    
+                    UnityEngine.Graphics.RenderMeshPrimitives( _rparams, _mesh, _submeshIndex );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderMeshPrimitives!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderPrimitives_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    int _vertexCount = LuaAPI.xlua_tointeger(L, 3);
+                    int _instanceCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                    UnityEngine.Graphics.RenderPrimitives( _rparams, _topology, _vertexCount, _instanceCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    int _vertexCount = LuaAPI.xlua_tointeger(L, 3);
+                    
+                    UnityEngine.Graphics.RenderPrimitives( _rparams, _topology, _vertexCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderPrimitives!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderPrimitivesIndexed_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 6&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _indexCount = LuaAPI.xlua_tointeger(L, 4);
+                    int _startIndex = LuaAPI.xlua_tointeger(L, 5);
+                    int _instanceCount = LuaAPI.xlua_tointeger(L, 6);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexed( _rparams, _topology, _indexBuffer, _indexCount, _startIndex, _instanceCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _indexCount = LuaAPI.xlua_tointeger(L, 4);
+                    int _startIndex = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexed( _rparams, _topology, _indexBuffer, _indexCount, _startIndex );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _indexCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexed( _rparams, _topology, _indexBuffer, _indexCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderPrimitivesIndexed!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderPrimitivesIndirect_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 4);
+                    int _startCommand = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndirect( _rparams, _topology, _commandBuffer, _commandCount, _startCommand );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndirect( _rparams, _topology, _commandBuffer, _commandCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndirect( _rparams, _topology, _commandBuffer );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderPrimitivesIndirect!");
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_RenderPrimitivesIndexedIndirect_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 6&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 5);
+                    int _startCommand = LuaAPI.xlua_tointeger(L, 6);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexedIndirect( _rparams, _topology, _indexBuffer, _commandBuffer, _commandCount, _startCommand );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _commandCount = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexedIndirect( _rparams, _topology, _indexBuffer, _commandBuffer, _commandCount );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.RenderParams>(L, 1)&& translator.Assignable<UnityEngine.MeshTopology>(L, 2)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)) 
+                {
+                    UnityEngine.RenderParams _rparams;translator.Get(L, 1, out _rparams);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 2, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 3, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _commandBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    
+                    UnityEngine.Graphics.RenderPrimitivesIndexedIndirect( _rparams, _topology, _indexBuffer, _commandBuffer );
+                    translator.Push(L, _rparams);
+                        translator.Update(L, 1, _rparams);
+                        
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Graphics.RenderPrimitivesIndexedIndirect!");
             
         }
         
@@ -2713,6 +3182,118 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 10&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& translator.Assignable<UnityEngine.Camera>(L, 6)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 7)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 8)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 9)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 10)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 6, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 7, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 8, out _castShadows);
+                    bool _receiveShadows = LuaAPI.lua_toboolean(L, 9);
+                    int _layer = LuaAPI.xlua_tointeger(L, 10);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows, _receiveShadows, _layer );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 9&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& translator.Assignable<UnityEngine.Camera>(L, 6)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 7)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 8)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 9)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 6, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 7, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 8, out _castShadows);
+                    bool _receiveShadows = LuaAPI.lua_toboolean(L, 9);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows, _receiveShadows );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 8&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& translator.Assignable<UnityEngine.Camera>(L, 6)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 7)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 8)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 6, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 7, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 8, out _castShadows);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 7&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& translator.Assignable<UnityEngine.Camera>(L, 6)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 7)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 6, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 7, typeof(UnityEngine.MaterialPropertyBlock));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset, _camera, _properties );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 6&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& translator.Assignable<UnityEngine.Camera>(L, 6)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 6, typeof(UnityEngine.Camera));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset, _camera );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 5);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs, _argsOffset );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _bufferWithArgs );
+                    
+                    
+                    
+                    return 0;
+                }
                 if(gen_param_count == 11&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.ComputeBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 8)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 9)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 10)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 11)) 
                 {
                     UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
@@ -2825,6 +3406,125 @@ namespace XLua.CSObjectWrap
                     UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
                     UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
                     UnityEngine.ComputeBuffer _bufferWithArgs = (UnityEngine.ComputeBuffer)translator.GetObject(L, 5, typeof(UnityEngine.ComputeBuffer));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 11&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 8)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 9)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 10)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 11)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 7, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 8, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 9, out _castShadows);
+                    bool _receiveShadows = LuaAPI.lua_toboolean(L, 10);
+                    int _layer = LuaAPI.xlua_tointeger(L, 11);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows, _receiveShadows, _layer );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 10&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 8)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 9)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 10)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 7, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 8, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 9, out _castShadows);
+                    bool _receiveShadows = LuaAPI.lua_toboolean(L, 10);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows, _receiveShadows );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 9&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 8)&& translator.Assignable<UnityEngine.Rendering.ShadowCastingMode>(L, 9)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 7, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 8, typeof(UnityEngine.MaterialPropertyBlock));
+                    UnityEngine.Rendering.ShadowCastingMode _castShadows;translator.Get(L, 9, out _castShadows);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset, _camera, _properties, _castShadows );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 8&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)&& translator.Assignable<UnityEngine.MaterialPropertyBlock>(L, 8)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 7, typeof(UnityEngine.Camera));
+                    UnityEngine.MaterialPropertyBlock _properties = (UnityEngine.MaterialPropertyBlock)translator.GetObject(L, 8, typeof(UnityEngine.MaterialPropertyBlock));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset, _camera, _properties );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 7&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& translator.Assignable<UnityEngine.Camera>(L, 7)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 7, typeof(UnityEngine.Camera));
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset, _camera );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 6&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
+                    int _argsOffset = LuaAPI.xlua_tointeger(L, 6);
+                    
+                    UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs, _argsOffset );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.Material>(L, 1)&& translator.Assignable<UnityEngine.Bounds>(L, 2)&& translator.Assignable<UnityEngine.MeshTopology>(L, 3)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 4)&& translator.Assignable<UnityEngine.GraphicsBuffer>(L, 5)) 
+                {
+                    UnityEngine.Material _material = (UnityEngine.Material)translator.GetObject(L, 1, typeof(UnityEngine.Material));
+                    UnityEngine.Bounds _bounds;translator.Get(L, 2, out _bounds);
+                    UnityEngine.MeshTopology _topology;translator.Get(L, 3, out _topology);
+                    UnityEngine.GraphicsBuffer _indexBuffer = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 4, typeof(UnityEngine.GraphicsBuffer));
+                    UnityEngine.GraphicsBuffer _bufferWithArgs = (UnityEngine.GraphicsBuffer)translator.GetObject(L, 5, typeof(UnityEngine.GraphicsBuffer));
                     
                     UnityEngine.Graphics.DrawProceduralIndirect( _material, _bounds, _topology, _indexBuffer, _bufferWithArgs );
                     
@@ -3068,6 +3768,18 @@ namespace XLua.CSObjectWrap
 		    try {
             
 			    LuaAPI.lua_pushboolean(L, UnityEngine.Graphics.preserveFramebufferAlpha);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_minOpenGLESVersion(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			    translator.Push(L, UnityEngine.Graphics.minOpenGLESVersion);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using GameFramework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -118,16 +118,121 @@ namespace Aquila.Extension
     /// </summary>
     public abstract class GameFrameworkModuleBase
     {
+        public virtual void Start(object param)
+        {
+            _open_flag = true;
+        }
+
+        public virtual void End()
+        {
+            _open_flag = false;
+        }
+
         /// <summary>
         /// 关闭当前模块
         /// </summary>
-        public abstract void OnClose();
+        public virtual void OnClose()
+        {
+            //clear all sub module
+            if ( Contains_Sub_Module && _sub_module_dic != null && _sub_module_dic.Count != 0 )
+            {
+                var iter = _sub_module_dic.GetEnumerator();
+                GameFrameworkModuleBase sub_module = null;
+                while ( iter.MoveNext() )
+                {
+                    sub_module = iter.Current.Value;
+                    sub_module.OnClose();
+                }
+                _sub_module_dic.Clear();
+            }//end if
+            _sub_module_dic = null;
+        }
 
         /// <summary>
         /// 模块内部数据的主动初始化
         /// </summary>
         public virtual void EnsureInit()
         {
+            if ( Contains_Sub_Module )
+                _sub_module_dic = new Dictionary<int, GameFrameworkModuleBase>();
         }
+
+        /// <summary>
+        /// 添加子模块
+        /// </summary>
+        protected T AddSubModule<T>() where T : GameFrameworkModuleBase
+        {
+            if ( !SubModuleValid() )
+                return null;
+
+            if ( ContainsSubModule<T>() )
+            {
+                Log.Warning( $"ContainsSubModule type:{typeof( T ).Name}" );
+                return null;
+            }
+
+            var module = CreateSubModule<T>();
+            module.EnsureInit();
+            _sub_module_dic.Add( typeof( T ).GetHashCode(), module );
+            return module as T;
+        }
+
+        /// <summary>
+        /// 获取某个子模块
+        /// </summary>
+        protected bool TryGetSubModule<T>(out GameFrameworkModuleBase temp) where T : GameFrameworkModuleBase
+        {
+            temp = null;
+
+            if ( !SubModuleValid() )
+                return false;
+
+            if ( !ContainsSubModule<T>() )
+                return false;
+
+            var code = typeof( T ).GetHashCode();
+            var succ = _sub_module_dic.TryGetValue( code, out temp );
+            return succ;
+        }
+
+        /// <summary>
+        /// 是否包含某个子模块
+        /// </summary>
+        private bool ContainsSubModule<T>() where T : GameFrameworkModuleBase
+        {
+            return _sub_module_dic.ContainsKey( typeof( T ).GetHashCode() );
+        }
+
+        private bool SubModuleValid()
+        {
+            if ( !Contains_Sub_Module )
+                throw new GameFrameworkException( $"{GetType().Name} not contains sub module" );
+
+            return true;
+        }
+
+        /// <summary>
+        /// 创建一个子module
+        /// </summary>
+        private static GameFrameworkModuleBase CreateSubModule<T>() where T : GameFrameworkModuleBase
+        {
+            return (GameFrameworkModuleBase) Activator.CreateInstance<T>();
+        }
+
+        /// <summary>
+        /// 开启标记
+        /// </summary>
+        protected bool _open_flag = false;
+
+        /// <summary>
+        /// 是否包含子模块
+        /// </summary>
+        protected virtual bool Contains_Sub_Module => false;
+
+        /// <summary>
+        /// 子模块目录
+        /// </summary>
+        private Dictionary<int, GameFrameworkModuleBase> _sub_module_dic = null;
+
     }
 }

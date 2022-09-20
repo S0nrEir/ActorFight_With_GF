@@ -45,10 +45,10 @@ namespace Aquila
         /// </summary>
         private static void InitCustomComponents()
         {
-            Timer = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
+            Timer     = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
             DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
-            Lua = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
-            Module = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
+            Lua       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
+            Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
         }
     }
 }

@@ -1,46 +1,48 @@
-ï»¿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Extension;
 using Aquila.ObjectPool;
+using Aquila.ToolKit;
+using GameFramework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
+
     /// <summary>
-    /// æˆ˜æ–—åœ°å½¢çš„æ¨¡ç»„ç±»ï¼Œè´Ÿè´£å¤„ç†åœ°å—çš„ç”Ÿæˆï¼Œç®¡ç†ï¼Œå›æ”¶ï¼Œé€»è¾‘
+    /// Õ½¶·Ä£¿é£¬µØ¿éÀà
     /// </summary>
     public class Module_Terrain : GameFrameworkModuleBase
     {
         #region public
-        //#todoæ‰€æœ‰çš„åœ°å—è·å–ï¼Œéƒ½è¦ä»å¯¹è±¡æ± é‡Œæ‹¿TerrainObject
+        //#todoËùÓĞµÄµØ¿é»ñÈ¡£¬¶¼Òª´Ó¶ÔÏó³ØÀïÄÃTerrainObject
 
-        /// <summary>
-        /// åœ°å—æ¨¡å—æˆ˜æ–—ç›¸å…³åˆå§‹åŒ–å’Œå¯åŠ¨
-        /// </summary>
-        public void Start( int x_width, int z_width )
+        public override void Start( object param )
         {
-            GenerateFightSceneTerrain( x_width, z_width );
+            base.Start( param );
+            var temp = param as Fight_Param;
+            GenerateFightSceneTerrain( temp.x_width,temp.z_width );
+            //µØĞÎÉèÖÃÔÚµØ¿é¼ÓÔØÖ®ºó
+            GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ), GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
+            _gen_flag = true;
         }
 
-        /// <summary>
-        /// åœ°å—æ¨¡å—å…³é—­
-        /// </summary>
-        public void End()
+        public override void End()
         {
             RemoveAll();
-            _generate_flag = false;
+            GameEntry.Lua.UnLoad( GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
+            _gen_flag = false;
+            base.End();
         }
 
-        //å›ºå®šåœ°å—åŠ è½½ç”¨åµŒå…¥å®ç°
+        //¹Ì¶¨µØ¿é¼ÓÔØÓÃÇ¶ÈëÊµÏÖ
         /// <summary>
-        /// ç”Ÿæˆæˆ˜æ–—åœ°å—åœºæ™¯
+        /// Éú³ÉÕ½¶·µØ¿é³¡¾°
         /// </summary>
-        /// <param name="x_width">xæ–¹å‘ä¸Šçš„é•¿åº¦</param>
-        /// <param name="y_width">zæ–¹å‘ä¸Šçš„é•¿åº¦</param>
         private void GenerateFightSceneTerrain( int x_width, int z_width )
         {
-            if ( _generate_flag )
+            if ( _gen_flag )
             {
                 Log.Info( $"already generate terrain!", LogColorTypeEnum.Orange );
                 return;
@@ -72,15 +74,15 @@ namespace Aquila.Module
                     terrain.SetParent( Root_GO.transform );
                     terrain.SetCoordinate( x, z );
                     terrain.SetHeight( 0 );
-                    terrain.SetPosition( x_offset, z_offset );
+                    terrain.SetLocalPosition( x_offset, z_offset );
+                    terrain.SetState( TerrainStateTypeEnum.NONE );
                     AddToCache( terrain );
                 }
             }//end for
-            _generate_flag = true;
         }
 
         /// <summary>
-        /// ç§»é™¤æ‰€æœ‰åœ°å—
+        /// ÒÆ³ıËùÓĞµØ¿é
         /// </summary>
         private void RemoveAll()
         {
@@ -89,18 +91,15 @@ namespace Aquila.Module
 
             if ( _terrain_cache_dic != null )
             {
-                int key = 0;
-                var iter = _terrain_cache_dic.GetEnumerator();
-                while ( iter.MoveNext() )
-                {
-                    key = iter.Current.Key;
-                    RemoveFromCache( key );
-                }
+                foreach( var kv in _terrain_cache_dic )
+                    RemoveFromCache( kv.Key );
+
+                _terrain_cache_dic.Clear();
             }
         }
 
         /// <summary>
-        /// æ ¹æ®xzåæ ‡è·å–ä¸€ä¸ªåœ°å—å¯¹è±¡ï¼Œå¤±è´¥è¿”å›ç©º
+        /// ¸ù¾İxz×ø±ê»ñÈ¡Ò»¸öµØ¿é¶ÔÏó£¬Ê§°Ü·µ»Ø¿Õ
         /// </summary>
         public Object_Terrain Get( int x, int z )
         {
@@ -108,7 +107,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// æ ¹æ®uniqueKeyè·å–ä¸€ä¸ªåœ°å—å¯¹è±¡ï¼Œå¤±è´¥è¿”å›ç©º
+        /// ¸ù¾İuniqueKey»ñÈ¡Ò»¸öµØ¿é¶ÔÏó£¬Ê§°Ü·µ»Ø¿Õ
         /// </summary>
         public Object_Terrain Get( int uniqueKey )
         {
@@ -117,7 +116,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// æ ¹æ®æŒæœ‰çš„GameObjectå¼•ç”¨è·å–ä¸€ä¸ªåœ°å—å¯¹è±¡
+        /// ¸ù¾İ³ÖÓĞµÄGameObjectÒıÓÃ»ñÈ¡Ò»¸öµØ¿é¶ÔÏó
         /// </summary>
         public Object_Terrain Get( GameObject go )
         {
@@ -133,7 +132,7 @@ namespace Aquila.Module
         #region private 
 
         /// <summary>
-        /// ä»åœ°å—ç¼“å­˜ä¸­ç§»é™¤
+        /// ´ÓµØ¿é»º´æÖĞÒÆ³ı
         /// </summary>
         private bool RemoveFromCache( int key )
         {
@@ -147,7 +146,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// æ·»åŠ åˆ°åœ°å—ç¼“å­˜
+        /// Ìí¼Óµ½µØ¿é»º´æ
         /// </summary>
         private bool AddToCache( Object_Terrain terrain )
         {
@@ -172,16 +171,15 @@ namespace Aquila.Module
         {
             _root_go = null;
             _terrain_cache_dic?.Clear();
+            Log.Info( "_terrain_cache_dic?.Clear()", LogColorTypeEnum.White );
             _terrain_cache_dic = null;
+
             _terrain_go_cache_dic?.Clear();
             _terrain_go_cache_dic = null;
-
-            _generate_flag = false;
         }
 
         public override void EnsureInit()
         {
-            base.EnsureInit();
             var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
             var size = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width;
             if ( _terrain_cache_dic is null )
@@ -189,22 +187,20 @@ namespace Aquila.Module
 
             if ( _terrain_go_cache_dic is null )
                 _terrain_go_cache_dic = new Dictionary<GameObject, Object_Terrain>( size );
-
-            _generate_flag = false;
         }
 
         /// <summary>
-        /// åœ°å—ç¼“å­˜
+        /// µØ¿é»º´æ
         /// </summary>
         private Dictionary<int, Object_Terrain> _terrain_cache_dic = null;
 
         /// <summary>
-        /// åœ°å—gameobjectç´¢å¼•
+        /// µØ¿égameobjectË÷Òı
         /// </summary>
         private Dictionary<GameObject, Object_Terrain> _terrain_go_cache_dic = null;
 
         /// <summary>
-        /// æ‰€æœ‰åœ°å—çš„æ ¹èŠ‚ç‚¹
+        /// ËùÓĞµØ¿éµÄ¸ù½Úµã
         /// </summary>
         public GameObject Root_GO
         {
@@ -212,15 +208,15 @@ namespace Aquila.Module
             {
                 if ( _root_go == null )
                 {
-                    //æ‹¿ä¸åˆ°å°±æ‰¾
+                    //ÄÃ²»µ½¾ÍÕÒ
                     _root_go = GameObject.FindGameObjectWithTag( GameConfig.Tags.TERRAIN_ROOT );
-                    //æ‰¾ä¸åˆ°å°±åˆ›å»º
+                    //ÕÒ²»µ½¾Í´´½¨
                     if ( _root_go == null )
                     {
                         _root_go = new GameObject( GameConfig.Tags.TERRAIN_ROOT );
                         _root_go.transform.position = Vector3.zero;
                         _root_go.transform.localScale = Vector3.one;
-                        _root_go.transform.eulerAngles = Vector3.zero;
+                        _root_go.transform.rotation = Quaternion.Euler( Vector3.zero );
                         Object.DontDestroyOnLoad( _root_go );
                     }
                 }
@@ -229,13 +225,13 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// åœ°å—æ ¹èŠ‚ç‚¹
+        /// µØ¿é¸ù½Úµã
         /// </summary>
         private GameObject _root_go = null;
 
         /// <summary>
-        /// ç”Ÿæˆæ ‡è®°
+        /// Éú³É±ê¼Ç
         /// </summary>
-        private bool _generate_flag = false;
-    }
+        private bool _gen_flag = false;
+    }//end of class
 }

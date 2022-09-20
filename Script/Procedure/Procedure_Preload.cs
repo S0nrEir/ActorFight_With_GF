@@ -1,6 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Module;
 using Aquila.ObjectPool;
+using Aquila.ToolKit;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -72,11 +73,11 @@ namespace Aquila.Procedure
 
             //---------------------------废弃代码----------------------------------
             //加载数据表
-            if ( !GameEntry.DataTable.LoadDataTable() )
-                throw new GameFrameworkException( "load data table faild!" );
+            //if ( !GameEntry.DataTable.LoadDataTable() )
+            //    throw new GameFrameworkException( "load data table faild!" );
 
-            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
-            OnPreLoadFinished();
+            //_preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
+            //OnPreLoadFinished();
         }
 
         /// <summary>
@@ -111,6 +112,9 @@ namespace Aquila.Procedure
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
             var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;
+            if ( root_go == null )
+                throw new GameFrameworkException( "root_go == null" );
+
             for ( var i = 0; i < default_create_count; i++ )
             {
                 temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );

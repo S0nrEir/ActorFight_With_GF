@@ -393,7 +393,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.Cubemap gen_to_be_invoked = (UnityEngine.Cubemap)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.CubemapFace>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& translator.Assignable<UnityEngine.Color>(L, 5)) 
                 {
                     UnityEngine.CubemapFace _face;translator.Get(L, 2, out _face);
                     int _x = LuaAPI.xlua_tointeger(L, 3);
@@ -406,10 +408,26 @@ namespace XLua.CSObjectWrap
                     
                     return 0;
                 }
+                if(gen_param_count == 6&& translator.Assignable<UnityEngine.CubemapFace>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& translator.Assignable<UnityEngine.Color>(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)) 
+                {
+                    UnityEngine.CubemapFace _face;translator.Get(L, 2, out _face);
+                    int _x = LuaAPI.xlua_tointeger(L, 3);
+                    int _y = LuaAPI.xlua_tointeger(L, 4);
+                    UnityEngine.Color _color;translator.Get(L, 5, out _color);
+                    int _mip = LuaAPI.xlua_tointeger(L, 6);
+                    
+                    gen_to_be_invoked.SetPixel( _face, _x, _y, _color, _mip );
+                    
+                    
+                    
+                    return 0;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Cubemap.SetPixel!");
             
         }
         
@@ -424,7 +442,9 @@ namespace XLua.CSObjectWrap
                 UnityEngine.Cubemap gen_to_be_invoked = (UnityEngine.Cubemap)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.CubemapFace>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
                 {
                     UnityEngine.CubemapFace _face;translator.Get(L, 2, out _face);
                     int _x = LuaAPI.xlua_tointeger(L, 3);
@@ -437,10 +457,26 @@ namespace XLua.CSObjectWrap
                     
                     return 1;
                 }
+                if(gen_param_count == 5&& translator.Assignable<UnityEngine.CubemapFace>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)) 
+                {
+                    UnityEngine.CubemapFace _face;translator.Get(L, 2, out _face);
+                    int _x = LuaAPI.xlua_tointeger(L, 3);
+                    int _y = LuaAPI.xlua_tointeger(L, 4);
+                    int _mip = LuaAPI.xlua_tointeger(L, 5);
+                    
+                        var gen_ret = gen_to_be_invoked.GetPixel( _face, _x, _y, _mip );
+                        translator.PushUnityEngineColor(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
                 
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Cubemap.GetPixel!");
             
         }
         

@@ -21,10 +21,11 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Collider2D);
-			Utils.BeginObjectRegister(type, L, translator, 0, 11, 12, 6);
+			Utils.BeginObjectRegister(type, L, translator, 0, 12, 13, 6);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "CreateMesh", _m_CreateMesh);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetShapeHash", _m_GetShapeHash);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetShapes", _m_GetShapes);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsTouching", _m_IsTouching);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "IsTouchingLayers", _m_IsTouchingLayers);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "OverlapPoint", _m_OverlapPoint);
@@ -45,6 +46,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "attachedRigidbody", _g_get_attachedRigidbody);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "shapeCount", _g_get_shapeCount);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "bounds", _g_get_bounds);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "errorState", _g_get_errorState);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "sharedMaterial", _g_get_sharedMaterial);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "friction", _g_get_friction);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "bounciness", _g_get_bounciness);
@@ -155,6 +157,64 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetShapes(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Collider2D gen_to_be_invoked = (UnityEngine.Collider2D)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 2&& translator.Assignable<UnityEngine.PhysicsShapeGroup2D>(L, 2)) 
+                {
+                    UnityEngine.PhysicsShapeGroup2D _physicsShapeGroup = (UnityEngine.PhysicsShapeGroup2D)translator.GetObject(L, 2, typeof(UnityEngine.PhysicsShapeGroup2D));
+                    
+                        var gen_ret = gen_to_be_invoked.GetShapes( _physicsShapeGroup );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.PhysicsShapeGroup2D>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    UnityEngine.PhysicsShapeGroup2D _physicsShapeGroup = (UnityEngine.PhysicsShapeGroup2D)translator.GetObject(L, 2, typeof(UnityEngine.PhysicsShapeGroup2D));
+                    int _shapeIndex = LuaAPI.xlua_tointeger(L, 3);
+                    int _shapeCount = LuaAPI.xlua_tointeger(L, 4);
+                    
+                        var gen_ret = gen_to_be_invoked.GetShapes( _physicsShapeGroup, _shapeIndex, _shapeCount );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 3&& translator.Assignable<UnityEngine.PhysicsShapeGroup2D>(L, 2)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 3)) 
+                {
+                    UnityEngine.PhysicsShapeGroup2D _physicsShapeGroup = (UnityEngine.PhysicsShapeGroup2D)translator.GetObject(L, 2, typeof(UnityEngine.PhysicsShapeGroup2D));
+                    int _shapeIndex = LuaAPI.xlua_tointeger(L, 3);
+                    
+                        var gen_ret = gen_to_be_invoked.GetShapes( _physicsShapeGroup, _shapeIndex );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Collider2D.GetShapes!");
             
         }
         
@@ -918,6 +978,20 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Collider2D gen_to_be_invoked = (UnityEngine.Collider2D)translator.FastGetCSObj(L, 1);
                 translator.PushUnityEngineBounds(L, gen_to_be_invoked.bounds);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_errorState(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Collider2D gen_to_be_invoked = (UnityEngine.Collider2D)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.errorState);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
