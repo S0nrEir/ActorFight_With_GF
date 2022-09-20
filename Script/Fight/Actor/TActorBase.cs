@@ -15,7 +15,7 @@ namespace Aquila.Fight.Actor
     /// <summary>
     /// Actor基类
     /// </summary>
-    public abstract class TActorBase : EntityLogic
+    public abstract partial class TActorBase : EntityLogic
     {
         #region public methods
 
@@ -202,9 +202,10 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            base.OnRecycle();
             UnRegister();
             HostID = GlobalVar.INVALID_GUID;
+            ExtensionRecycle();
+            base.OnRecycle();
         }
 
         protected override void OnInit( object userData )

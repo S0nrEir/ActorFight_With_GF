@@ -12,7 +12,7 @@ namespace Aquila.ObjectPool
     {
         public bool SetNameTest( string name )
         {
-            if(string.IsNullOrEmpty(name))
+            if ( string.IsNullOrEmpty( name ) )
                 return false;
 
             Target_GO.name = name;
@@ -20,7 +20,7 @@ namespace Aquila.ObjectPool
         }
 
         /// <summary>
-        /// 测试函数
+        /// 设置地块gameobject的名称
         /// </summary>
         public void SetName( string name )
         {
@@ -44,11 +44,12 @@ namespace Aquila.ObjectPool
         }
 
         /// <summary>
-        /// 设置地块的世界位置
+        /// 设置地块在根节点下的本地坐标
         /// </summary>
-        public void SetPosition( float x, float z )
+        public void SetLocalPosition( float x, float z )
         {
             Target_GO.transform.localPosition = new Vector3( x, 0, z );
+            WorldHangPosition = WorldPosition + GameConfig.Terrain.TERRAIN_HANG_POINT_OFFSET;
         }
 
         /// <summary>
@@ -140,6 +141,19 @@ namespace Aquila.ObjectPool
         /// 地块状态
         /// </summary>
         public TerrainStateTypeEnum State { get; private set; } = TerrainStateTypeEnum.INVALID;
+
+        /// <summary>
+        /// 地块世界坐标
+        /// </summary>
+        public Vector3 WorldPosition
+        {
+            get { return Target_GO.transform.position; }
+        }
+
+        /// <summary>
+        /// 世界物体挂点坐标
+        /// </summary>
+        public Vector3 WorldHangPosition { get; private set; } = Vector3.zero;
     }
 
     /// <summary>

@@ -83,19 +83,12 @@ namespace Aquila.Module
                 Log.Info( "terrain.State != ObjectPool.TerrainStateTypeEnum.NONE", LogColorTypeEnum.Red );
                 return;
             }
-
-            //#todo将actor和地形关联起来
-
+            actor.SetCoordAndPosition( grid_x, grid_z );
         }
 
-        #endregion
-
-        public override async void Start( object param )
-        {
-            base.Start( param );
-            LoadActor();
-        }
-
+        /// <summary>
+        /// 加载对应的actor
+        /// </summary>
         private async void LoadActor()
         {
             var entity_id = ACTOR_ID_POOL.Gen();
@@ -108,6 +101,14 @@ namespace Aquila.Module
                        new HeroActorEntityData( entity_id )
                    );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
+        }
+
+        #endregion
+
+        public override void Start( object param )
+        {
+            base.Start( param );
+            LoadActor();
         }
 
         public override void End()

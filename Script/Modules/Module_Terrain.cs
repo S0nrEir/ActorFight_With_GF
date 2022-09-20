@@ -74,7 +74,7 @@ namespace Aquila.Module
                     terrain.SetParent( Root_GO.transform );
                     terrain.SetCoordinate( x, z );
                     terrain.SetHeight( 0 );
-                    terrain.SetPosition( x_offset, z_offset );
+                    terrain.SetLocalPosition( x_offset, z_offset );
                     terrain.SetState( TerrainStateTypeEnum.NONE );
                     AddToCache( terrain );
                 }

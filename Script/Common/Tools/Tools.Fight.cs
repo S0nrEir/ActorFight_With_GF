@@ -31,6 +31,15 @@ namespace Aquila.ToolKit
             }
 
             /// <summary>
+            /// 坐标key转xz坐标值
+            /// </summary>
+            public static (int x, int z) UniqueKey2CoordTuple( int key )
+            {
+                var vec = UniqueKey2Coord( key );
+                return (vec.x, vec.y);
+            }
+
+            /// <summary>
             /// 获取一个坐标key对应的xz坐标值，失败返回vector2Int.zero
             /// </summary>
             /// <param name="key">key</param>
