@@ -75,13 +75,14 @@ namespace Aquila.Module
 
         private async void LoadActor()
         {
+            var entity_id = ACTOR_ID_POOL.Gen();
             var actor = await ShowActorAsync<HeroActor>
                    (
-                       ACTOR_ID_POOL.Gen(),
+                       entity_id,
                        @"Assets/Res/Prefab/Aquila_001.prefab",
                        0,
                        0,
-                       null
+                       new HeroActorEntityData( entity_id )
                    );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
