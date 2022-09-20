@@ -56,7 +56,7 @@ namespace Aquila.Fight.Addon
         protected bool _enable = true;
 
         /// <summary>
-        /// 组件添加
+        /// 当组件被添加到actor上
         /// </summary>
         public abstract void OnAdd ();
 

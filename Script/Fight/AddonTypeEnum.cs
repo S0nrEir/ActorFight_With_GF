@@ -66,6 +66,11 @@ namespace Aquila.Fight.Addon
             EFFECT = 10,
 
             /// <summary>
+            /// 精灵图类型
+            /// </summary>
+            SPRITE = 11,
+
+            /// <summary>
             /// 地图组件
             /// </summary>
             //MAP = 8,

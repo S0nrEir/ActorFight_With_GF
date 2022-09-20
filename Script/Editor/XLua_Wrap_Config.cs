@@ -74,7 +74,7 @@ public static class ExampleConfig
     {
         get
         {
-            List<string> namespaces = new List<string>() // 在这里添加名字空间
+            List<string> namespaces = new List<string>() // 在这里添加命名空间
             {
                 "UnityEngine",
                 "UnityEngine.UI",
