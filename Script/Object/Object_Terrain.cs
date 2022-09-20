@@ -28,6 +28,14 @@ namespace Aquila.ObjectPool
         }
 
         /// <summary>
+        /// 设置地块状态
+        /// </summary>
+        public void SetState( TerrainStateTypeEnum type )
+        {
+            State = type;
+        }
+
+        /// <summary>
         /// 设置父节点
         /// </summary>
         public void SetParent( Transform parent )
@@ -118,6 +126,7 @@ namespace Aquila.ObjectPool
         protected override void Release( bool isShutdown )
         {
             _mesh_render = null;
+            State = TerrainStateTypeEnum.INVALID;
             base.Release( isShutdown );
         }
         #endregion
@@ -126,6 +135,32 @@ namespace Aquila.ObjectPool
         /// 缓存网格渲染器
         /// </summary>
         private MeshRenderer _mesh_render = null;
+
+        /// <summary>
+        /// 地块状态
+        /// </summary>
+        public TerrainStateTypeEnum State { get; private set; } = TerrainStateTypeEnum.INVALID;
     }
 
+    /// <summary>
+    /// 地块状态枚举
+    /// </summary>
+    public enum TerrainStateTypeEnum
+    {
+        /// <summary>
+        /// 无效
+        /// </summary>
+        INVALID = -1,
+
+        /// <summary>
+        /// 初始状态，啥都没有
+        /// </summary>
+        NONE = 0,
+
+        /// <summary>
+        /// 地块上拥有actor
+        /// </summary>
+        ACTOR,
+
+    }
 }

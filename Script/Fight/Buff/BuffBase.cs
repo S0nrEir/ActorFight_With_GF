@@ -66,7 +66,7 @@ namespace Aquila.Fight.Buff
                 return false;
 
             var entity = _entityDic[objID];
-            var actor = GameEntry.Module.GetModule<Module_Actor>().GetActor( objID);
+            var actor = GameEntry.Module.GetModule<Module_Actor>().GetActor<HeroActor>( objID);
             if (actor is null)
                 return false;
 

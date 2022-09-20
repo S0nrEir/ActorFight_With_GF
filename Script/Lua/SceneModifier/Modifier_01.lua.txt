@@ -7,7 +7,6 @@ function on_start_lua()
     local terrain = _scene_module.Terrain_Module:Get(1,1)
     if(terrain ~= nil) then
         Debug.Log("terrain is not null")
-        terrain:SetName("call_from_lua")
     end
     
 end

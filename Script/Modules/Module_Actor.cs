@@ -1,5 +1,6 @@
 ﻿using Aquila.Extension;
 using Aquila.Fight.Actor;
+using Aquila.ToolKit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
@@ -12,13 +13,12 @@ namespace Aquila.Module
     /// </summary>
     public class Module_Actor : GameFrameworkModuleBase
     {
-
         #region public
 
         /// <summary>
         /// 获取一个actor
         /// </summary>
-        public TActorBase GetActor( int actor_id )
+        public T GetActor<T>( int actor_id ) where T: TActorBase
         {
             if ( !_open_flag )
             {
@@ -26,7 +26,11 @@ namespace Aquila.Module
                 return null;
             }
 
-            return null;
+            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
+                return null;
+
+            _actor_cache_dic.TryGetValue( actor_id, out var actor );
+            return actor as T;
         }
 
         /// <summary>
@@ -52,7 +56,7 @@ namespace Aquila.Module
                     user_data
                 );
 
-            OnActorShowSucc( result.Logic as TActorBase, grid_x, grid_z );
+            OnShowActorSuccBasedTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
 
@@ -60,8 +64,27 @@ namespace Aquila.Module
 
         #region 
 
-        private void OnActorShowSucc( TActorBase actor, int grid_x, int grid_z )
+        /// <summary>
+        /// 基于地块的actor生成后处理
+        /// </summary>
+        private void OnShowActorSuccBasedTerrain( TActorBase actor, int grid_x, int grid_z )
         {
+            var terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            var terrain = terrain_module.Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
+            //拿不到地块
+            if ( terrain is null )
+            {
+                Log.Info( "terrain is null", LogColorTypeEnum.Red );
+                return;
+            }
+
+            if ( terrain.State != ObjectPool.TerrainStateTypeEnum.NONE )
+            {
+                Log.Info( "terrain.State != ObjectPool.TerrainStateTypeEnum.NONE", LogColorTypeEnum.Red );
+                return;
+            }
+
+            //#todo将actor和地形关联起来
 
         }
 
@@ -105,7 +128,7 @@ namespace Aquila.Module
             if ( _actor_cache_dic is null )
                 _actor_cache_dic = new Dictionary<int, TActorBase>();
         }
-
+        
         /// <summary>
         /// actor缓存
         /// </summary>

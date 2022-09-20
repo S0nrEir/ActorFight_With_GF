@@ -111,7 +111,7 @@ namespace Aquila.Procedure
             Aquila_Object_Base[] obj_arr = new Aquila_Object_Base[default_create_count];
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
-            var root_go = GameEntry.Module.GetModule<Module_Scene>().Terrain_Module.Root_GO;
+            var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;
             if ( root_go == null )
                 throw new GameFrameworkException( "root_go == null" );
 

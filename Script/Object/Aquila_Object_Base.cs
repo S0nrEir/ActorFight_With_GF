@@ -11,16 +11,6 @@ namespace Aquila.ObjectPool
     /// </summary>
     public abstract class Aquila_Object_Base : ObjectBase
     {
-        /// <summary>
-        /// 生成一个object
-        /// </summary>
-        //public abstract object Gen( GameObject go );
-
-        ///// <summary>
-        ///// 对象池内的类型名称
-        ///// </summary>
-        //public abstract string ObjectName { get; }
-
         protected override void OnSpawn()
         {
             base.OnSpawn();
