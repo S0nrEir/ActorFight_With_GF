@@ -144,17 +144,17 @@ namespace Aquila.Extension
 
             public void Clear()
             {
-                Script_Name = string.Empty;
-                Chunk_Name = string.Empty;
-                Asset_Path = string.Empty;
-                Lua_Table.Dispose();
-                Lua_Table = null;
-                _lua_on_start = null;
-                _lua_on_finish = null;
+                Script_Name        = string.Empty;
+                Chunk_Name         = string.Empty;
+                Asset_Path         = string.Empty;
+                _lua_on_start      = null;
+                _lua_on_finish     = null;
                 _lua_on_timer_tick = null;
-                _lua_on_update = null;
-                _script_meta = null;
-                Type_Name = null;
+                _lua_on_update     = null;
+                _script_meta       = null;
+                Type_Name          = null;
+                Lua_Table.Dispose();
+                Lua_Table          = null;
             }
 
         }//end class

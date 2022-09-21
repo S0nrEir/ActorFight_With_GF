@@ -548,11 +548,11 @@ namespace UnityGameFramework.Runtime
     /// </summary>
     public enum LogColorTypeEnum
     {
-        White = 0,
-        Red = 1,
-        Orange = 2,
-        Yellow = 3,
-        Green = 4,
-        Purple = 5,
+        White ,
+        Red   ,
+        Orange,
+        Yellow,
+        Green ,
+        Purple,
     }
 }
