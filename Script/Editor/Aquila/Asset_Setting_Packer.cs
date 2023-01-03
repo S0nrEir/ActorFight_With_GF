@@ -55,14 +55,6 @@ namespace Aquila.Editor
                     size += ZipDict( dic, stream );
                 }
                 stream.Flush();
-                //try
-                //{
-                //    stream.Flush();
-                //}
-                //catch ( Exception err )
-                //{
-                //    Debug.LogError( err.Message );
-                //}
             }
         }
 
@@ -136,9 +128,17 @@ namespace Aquila.Editor
             stream.PutNextEntry( entry );
             using ( FileStream fs = File.OpenRead( file ) )
             {
+                //size = file_info.Length;
+                //if ( size == 3488 || size == 21 )
+                //    ;
+                //ZipEntry entry = new ZipEntry( file );
+                //entry.DateTime = DateTime.Now;
+                //entry.Size = size;
+                //stream.PutNextEntry( entry );
+
                 ICSharpCode.SharpZipLib.Core.StreamUtils.Copy( fs, stream, new byte[4096] );
-                //stream.Write( buffer, 0, buffer.Length );
-                //stream.Write( buffer, 0, size );
+
+                //stream.CloseEntry();
             }
             stream.CloseEntry();
 
