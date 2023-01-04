@@ -16,8 +16,10 @@ namespace Aquila.Editor
         /// </summary>
         private static string[] _include_dic = new string[]
         {
+            ".vs",
             "DataTable",
             "Note",
+            "obj",
             "Packages",
             "ProjectSettings",
             "UserSettings",
@@ -26,7 +28,12 @@ namespace Aquila.Editor
         /// <summary>
         /// 创建的zip文件名
         /// </summary>
-        private static string _file_name = @"/AssetSetting_Test.zip";
+        private static string _file_name = @"/AssetSetting.zip";
+
+        /// <summary>
+        /// 对应的meta文件
+        /// </summary>
+        private static string _meta_file_name = @"/AssetSetting.zip.meta";
 
         /// <summary>
         /// 完整路径
@@ -50,12 +57,27 @@ namespace Aquila.Editor
             {
                 var size = 0l;
                 stream.SetLevel( _default_compress_level );
-                foreach ( var dic in _include_dic )
+                //先压缩当前目录的所有文件，然后压缩文件夹
+
+                FileInfo file_info = null;
+                var files = Directory.GetFiles( Application.dataPath + @"/.." );
+                foreach ( var file in files )
                 {
-                    size += ZipDict( dic, stream );
+                    file_info = new FileInfo( file );
+                    //跳过临时文件
+                    if ( file_info.Name == "ActorFight_With_GF.zip" )
+                        continue;
+
+                    //这里的文件不带目录
+                    size += ZipFile( stream, file_info.Name );
                 }
+
+                foreach ( var dic in _include_dic )
+                    size += ZipDict( dic, stream );
+
                 stream.Flush();
             }
+            Debug.Log( "<color=white>zip finished.</color>" );
         }
 
         /// <summary>
@@ -63,12 +85,15 @@ namespace Aquila.Editor
         /// </summary>
         private static void PrevOp()
         {
-            var path = Application.dataPath + "AssetSetting.zip";
-            if ( File.Exists( path ) )
-            {
-                Debug.Log( "<color=white>File.Exists--->AssetSetting.zip,deletting...</color>" );
-                File.Delete( path );
-            }
+            //先删除原文件
+            var original_file = Application.dataPath + @"/" + _file_name;
+            if ( File.Exists( original_file ) )
+                File.Delete( original_file );
+
+            //删除meta文件
+            original_file = Application.dataPath + @"/" + _meta_file_name;
+            if ( File.Exists( original_file ) )
+                File.Delete( original_file );
         }
 
         /// <summary>
