@@ -12,7 +12,6 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_Input : GameFrameworkModuleBase, IUpdate
     {
-
         /// <summary>
         /// 场景初始化
         /// </summary>

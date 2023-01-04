@@ -25,6 +25,7 @@ namespace Aquila.Extension
                 return;
             }
 
+            //已经正在运行的实例
             if ( _script_running_dic.ContainsKey( type_name ) )
             {
                 Log.Info( $"_script_running_dic.ContainsKey:{type_name}" );
@@ -180,6 +181,12 @@ namespace Aquila.Extension
             if ( _script_running_dic.ContainsKey( type_name ) )
                 return false;
 
+            //#todo对脚本周期类型进行更细致的划分
+            data.SetOnFinishFunc();
+            data.SetOnTickFunc();
+            data.SetOnUpdateFunc();
+            data.SetStartFunc();
+
             _script_running_dic.Add( type_name , data );
             return true;
         }
@@ -256,7 +263,7 @@ namespace Aquila.Extension
             //#todo给个初始capcity
             _load_asset_callbacks = new LoadAssetCallbacks( OnScriptLoadSucc, OnScriptLoadFaild );
             _script_cache_dic = new Dictionary<int, byte[]>();
-            _script_running_dic = new Dictionary<string, Script_Running_Data>();
+            _script_running_dic = new Dictionary<string, Script_Running_Data>(128);
             StartVM();
         }
 

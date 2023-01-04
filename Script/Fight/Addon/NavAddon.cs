@@ -128,15 +128,15 @@ namespace Aquila.Fight.Addon
                     throw new GameFrameworkException( $"faild to add navMeshAgent to actor:{Actor.ActorID}" );
             }
             //初始参数设置
-            _agent.enabled = true;
-            _agent.updateRotation = true;
-            _agent.updatePosition = true;
-            _agent.stoppingDistance = StopDistance;
-            _agent.autoBraking = false;
-            _agent.angularSpeed = 360f;
-            _agent.autoRepath = false;
+            _agent.enabled               = true;
+            _agent.updateRotation        = true;
+            _agent.updatePosition        = true;
+            _agent.stoppingDistance      = StopDistance;
+            _agent.autoBraking           = false;
+            _agent.angularSpeed          = 360f;
+            _agent.autoRepath            = false;
             //避障半径，actor穿行的临时解决方案
-            _agent.radius = 0.1f;
+            _agent.radius                = 0.1f;
             _agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             if ( Actor.TryGetAddon<DataAddon>( out var dataAddon ) )
                 _agent.speed = dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;

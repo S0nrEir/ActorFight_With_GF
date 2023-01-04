@@ -45,6 +45,8 @@ namespace Aquila.Config
             /// ÌØÐ§
             /// </summary>
             public const int Priority_Effect = 2;
+
+
         }
     }
 }
