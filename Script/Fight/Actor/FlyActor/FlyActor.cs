@@ -51,7 +51,7 @@ namespace Aquila.Fight.Actor
         protected override void InitAddons ()
         {
             base.InitAddons();
-            _triggerAddon = AddAddon<ColliderTriggerAddon>();
+            _triggerAddon = AddAddon<Addon_ColliderTrigger>();
             _moveAddon    = AddAddon<MoveAddon>();
         }
 
@@ -96,7 +96,7 @@ namespace Aquila.Fight.Actor
 
         //子弹只有一种状态，不用加fsm
         protected MoveAddon _moveAddon               = null;
-        protected ColliderTriggerAddon _triggerAddon = null;
+        protected Addon_ColliderTrigger _triggerAddon = null;
 
         /// <summary>
         /// 目标actorID

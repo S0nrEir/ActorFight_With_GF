@@ -125,7 +125,7 @@ namespace Aquila.Fight.FSM
         public override void OnEnter ( params object[] param )
         {
             base.OnEnter ( param );
-            if ( _actor.TryGetAddon<AnimAddon> ( out _animAddon ) )
+            if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
                 _animAddon.PlayStandAnim ();
 
             if ( _actor.TryGetAddon<NavAddon> ( out var navAddon ) )
@@ -143,7 +143,7 @@ namespace Aquila.Fight.FSM
             base.OnUpdate ( deltaTime );
         }
 
-        private AnimAddon _animAddon = null;
+        private Addon_Anim _animAddon = null;
     }
 
     #endregion
@@ -171,7 +171,7 @@ namespace Aquila.Fight.FSM
             }
 
             //#todo有的obj没有动画，先这样处理
-            if ( _actor.TryGetAddon<AnimAddon> ( out var addon ) && addon.CurrClipName != "Run" )
+            if ( _actor.TryGetAddon<Addon_Anim> ( out var addon ) && addon.CurrClipName != "Run" )
                 addon.PlayRunAnim ();
 
             if ( !_actor.TryGetAddon ( out _moveAddon ) )
@@ -292,7 +292,7 @@ namespace Aquila.Fight.FSM
         public override void OnEnter ( params object[] param )
         {
             base.OnEnter ( param );
-            if ( _actor.TryGetAddon<AnimAddon> ( out _animAddon ) )
+            if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
                 _animAddon.PlayDieAnim();
 
             if ( _actor.TryGetAddon<DataAddon> ( out var dataAddon ) )
@@ -318,7 +318,7 @@ namespace Aquila.Fight.FSM
             base.OnUpdate ( deltaTime );
         }
 
-        private AnimAddon _animAddon = null;
+        private Addon_Anim _animAddon = null;
     }
 
     #endregion

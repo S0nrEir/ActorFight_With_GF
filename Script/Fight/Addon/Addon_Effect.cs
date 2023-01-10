@@ -11,7 +11,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 特效组件
     /// </summary>
-    public class EffectAddon : AddonBase
+    public class Addon_Effect : AddonBase
     {
         #region public
 

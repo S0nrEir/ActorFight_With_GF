@@ -7,7 +7,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 动画addon by yhc
     /// </summary>
-    public class AnimAddon : AddonBase
+    public class Addon_Anim : AddonBase
     {
         #region play interface
         /// <summary>
