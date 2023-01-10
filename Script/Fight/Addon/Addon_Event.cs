@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// actor的Event组件，只保留于Actor内部，event也只能通知到自己的Actor，这样做是为了让actor，state，addon互相解耦
     /// </summary>
-    public class EventAddon : AddonBase
+    public class Addon_Event : AddonBase
     {
         #region public
 

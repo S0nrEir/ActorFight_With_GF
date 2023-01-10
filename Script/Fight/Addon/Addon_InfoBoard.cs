@@ -8,7 +8,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 信息面板组件
     /// </summary>
-    public class InfoBoardAddon : AddonBase
+    public class Addon_InfoBoard : AddonBase
     {
         #region override
         public override AddonTypeEnum AddonType => AddonTypeEnum.INFO_BOARD;

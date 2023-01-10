@@ -52,7 +52,7 @@ namespace Aquila.Fight.Actor
         {
             base.InitAddons();
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
-            _moveAddon    = AddAddon<MoveAddon>();
+            _moveAddon    = AddAddon<Addon_Move>();
         }
 
         protected override void OnRecycle ()
@@ -95,7 +95,7 @@ namespace Aquila.Fight.Actor
         }
 
         //子弹只有一种状态，不用加fsm
-        protected MoveAddon _moveAddon               = null;
+        protected Addon_Move _moveAddon               = null;
         protected Addon_ColliderTrigger _triggerAddon = null;
 
         /// <summary>

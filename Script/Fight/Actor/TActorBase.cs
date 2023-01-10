@@ -305,7 +305,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void InitAddons()
         {
-            _eventAddon = AddAddon<EventAddon>();
+            _eventAddon = AddAddon<Addon_Event>();
         }
 
         protected TActorBase()
@@ -343,8 +343,8 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 事件组件
         /// </summary>
-        private EventAddon _eventAddon = null;
-        protected DataAddon _dataAddon = null;
+        private Addon_Event _eventAddon = null;
+        protected Addon_Data _dataAddon = null;
 
         /// <summary>
         /// actor身上的组件保存，key为 type的hashCode

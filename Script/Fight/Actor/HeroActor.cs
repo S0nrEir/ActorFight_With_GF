@@ -152,12 +152,12 @@ namespace Aquila.Fight.Actor
         protected override void InitAddons()
         {
             base.InitAddons();
-            _FsmAddon          = AddAddon<HeroStateAddon>();
+            _FsmAddon          = AddAddon<Addon_HeroState>();
             //_ProcessorAddon    = AddAddon<ProcessorAddon>();
             _AnimAddon         = AddAddon<Addon_Anim>();
-            _MoveAddon         = AddAddon<MoveAddon>();
-            _HPAddon           = AddAddon<InfoBoardAddon>();
-            _NavAddon          = AddAddon<NavAddon>();
+            _MoveAddon         = AddAddon<Addon_Move>();
+            _HPAddon           = AddAddon<Addon_InfoBoard>();
+            _NavAddon          = AddAddon<Addon_Nav>();
             _EffectAddon       = AddAddon<Addon_Effect>();
             //_MapAddon        = AddAddon<MapAddon>();
 
@@ -238,14 +238,14 @@ namespace Aquila.Fight.Actor
 
         #region addon
 
-        private FSMAddon _FsmAddon { get; set; } = null;
+        private Addon_FSM _FsmAddon { get; set; } = null;
         //private ProcessorAddon _ProcessorAddon { get; set; } = null;
         private Addon_Anim _AnimAddon { get; set; } = null;
-        private MoveAddon _MoveAddon { get; set; } = null;
-        private InfoBoardAddon _HPAddon { get; set; } = null;
-        private NavAddon _NavAddon { get; set; } = null;
+        private Addon_Move _MoveAddon { get; set; } = null;
+        private Addon_InfoBoard _HPAddon { get; set; } = null;
+        private Addon_Nav _NavAddon { get; set; } = null;
         private Addon_Effect _EffectAddon { get; set; } = null;
-        private DataAddon _DataAddon { get; set; } = null;
+        private Addon_Data _DataAddon { get; set; } = null;
         //private MapAddon _MapAddon { get; set; } = null;
 
         #endregion

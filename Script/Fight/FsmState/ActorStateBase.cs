@@ -128,7 +128,7 @@ namespace Aquila.Fight.FSM
             if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
                 _animAddon.PlayStandAnim ();
 
-            if ( _actor.TryGetAddon<NavAddon> ( out var navAddon ) )
+            if ( _actor.TryGetAddon<Addon_Nav> ( out var navAddon ) )
                 navAddon.StopInmidiate ();
         }
 
@@ -271,8 +271,8 @@ namespace Aquila.Fight.FSM
             _moveAddon.TargetNext ( deltaTime );
         }
 
-        private MoveAddon _moveAddon = null;
-        private NavAddon _navAddon = null;
+        private Addon_Move _moveAddon = null;
+        private Addon_Nav _navAddon = null;
     }
 
     #endregion
@@ -295,10 +295,10 @@ namespace Aquila.Fight.FSM
             if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
                 _animAddon.PlayDieAnim();
 
-            if ( _actor.TryGetAddon<DataAddon> ( out var dataAddon ) )
+            if ( _actor.TryGetAddon<Addon_Data> ( out var dataAddon ) )
                 dataAddon.SetNumricValue ( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
 
-            if ( _actor.TryGetAddon<InfoBoardAddon> ( out var sliderAddon ) )
+            if ( _actor.TryGetAddon<Addon_InfoBoard> ( out var sliderAddon ) )
             {
                 //sliderAddon.ChangeHPValue ( 0 );
                 //sliderAddon.HideAll ();
