@@ -39,14 +39,40 @@ public class Proxy_Actor : GameFrameworkModuleBase
     /// <summary>
     /// 注销单个实例
     /// </summary>
-    public void UnRegister( int id )
+    public bool UnRegister( int id )
     {
         if ( !Contains( id ) )
+        {
             Log.Warning( $"proxy doesnt have actor wich id = {id}" );
+            return false;
+        }
 
         _proxy_actor_dic.TryGetValue( id, out var actor_case );
         actor_case.Clear();
-        _proxy_actor_dic.Remove( id );
+        return _proxy_actor_dic.Remove( id ) && _registered_id_set.Remove( id );
+    }
+
+    /// <summary>
+    /// 注销全部
+    /// </summary>
+    public bool UnRegisterAll()
+    {
+        if ( _proxy_actor_dic is null || _proxy_actor_dic.Count == 0 )
+        {
+            Log.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
+            return false;
+        }
+
+        var iter = _proxy_actor_dic.GetEnumerator();
+        Proxy_Actor_Case actor_case = null;
+        while(iter.MoveNext())
+        {
+            actor_case = iter.Current.Value;
+            actor_case.Clear();
+        }
+        _proxy_actor_dic.Clear();
+        _registered_id_set.Clear();
+        return true;
     }
 
     /// <summary>
@@ -71,13 +97,10 @@ public class Proxy_Actor : GameFrameworkModuleBase
     /// </summary>
     public void DeInitActor()
     {
-        var iter = _proxy_actor_dic.GetEnumerator();
-        while ( iter.MoveNext() )
-            iter.Current.Value.Clear();
-
         _proxy_actor_dic = null;
 
         _registered_id_set.Clear();
+        _registered_id_set = null;
     }
 
     /// <summary>
@@ -100,6 +123,7 @@ public class Proxy_Actor : GameFrameworkModuleBase
 
     public override void End()
     {
+        UnRegisterAll();
         DeInitActor();
         base.End();
     }
