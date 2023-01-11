@@ -127,8 +127,8 @@ namespace Aquila.Fight.Actor
         protected override void InitAddons()
         {
             base.InitAddons();
-            _triggerAddon = AddAddon<ColliderTriggerAddon>();
-            _effectAddon = AddAddon<EffectAddon>();
+            _triggerAddon = AddAddon<Addon_ColliderTrigger>();
+            _effectAddon = AddAddon<Addon_Effect>();
         }
 
         #endregion
@@ -138,12 +138,12 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 碰撞
         /// </summary>
-        private ColliderTriggerAddon _triggerAddon = null;
+        private Addon_ColliderTrigger _triggerAddon = null;
 
         /// <summary>
         /// 特效组件
         /// </summary>
-        private EffectAddon _effectAddon = null;
+        private Addon_Effect _effectAddon = null;
 
         #endregion
     }

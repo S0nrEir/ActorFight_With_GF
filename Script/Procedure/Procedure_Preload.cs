@@ -32,9 +32,9 @@ namespace Aquila.Procedure
             procedure_variable.SetValue( new Procedure_Fight_Data()
             {
                 _scene_script_meta = scene_script_meta,
-                _chunk_name = Tools.Lua.GetChunkName(scene_script_meta.AssetPath)
-            } ) ;
-            _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name,procedure_variable);
+                _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
+            } );
+            _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
             ChangeState<Procedure_Fight>( _procedure_owner );
         }
 
@@ -67,7 +67,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void PreLoadTables()
         {
-            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
+            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
             OnPreLoadFinished();
             return;
 
@@ -132,7 +132,7 @@ namespace Aquila.Procedure
                 pool.Unspawn( obj.Target );
 
             obj_arr = null;
-            _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit, false );
+            _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
             OnPreLoadFinished();
         }
 
@@ -152,14 +152,14 @@ namespace Aquila.Procedure
         private int _preload_flags = 0;
 
         /// <summary>
-        /// 数据表加载标记位
+        /// 数据表加载标记位偏移位置
         /// </summary>
-        private const ushort _table_load_flag_bit = 0;
+        private const ushort _table_load_flag_bit_offset = 0;
 
         /// <summary>
-        /// 地块加载标记位
+        /// 地块加载标记位偏移位置
         /// </summary>
-        private const ushort _terrain_load_flag_bit = 1;
+        private const ushort _terrain_load_flag_bit_offset = 1;
 
         /// <summary>
         /// 加载完成状态
