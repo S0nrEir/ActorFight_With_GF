@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 移动组件 负责处理位移 by yhc
     /// </summary>
-    public class MoveAddon : AddonBase
+    public class Addon_Move : AddonBase
     {
         public void SetSpeed ( float speed )
         {
@@ -34,7 +34,7 @@ namespace Aquila.Fight.Addon
 
             _pathList.Clear();
             _pathList = pathArr;
-            if (Actor.TryGetAddon<DataAddon>( out var addon ))
+            if (Actor.TryGetAddon<Addon_Data>( out var addon ))
             {
                 SetSpeed( addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1 ) );
             }
@@ -47,7 +47,7 @@ namespace Aquila.Fight.Addon
 
             _pathList.Clear();
             _pathList = pathArr;
-            if (Actor.TryGetAddon<DataAddon>( out var addon ))
+            if (Actor.TryGetAddon<Addon_Data>( out var addon ))
             {
                 _speed = (float)addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f );
             }

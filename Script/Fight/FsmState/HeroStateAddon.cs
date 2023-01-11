@@ -6,7 +6,7 @@ namespace Aquila.Fight.FSM
     /// <summary>
     /// 英雄状态addon by yhc
     /// </summary>
-    public class HeroStateAddon : FSMAddon
+    public class Addon_HeroState : Addon_FSM
     {
         public override List<ActorStateBase> StateList => new List<ActorStateBase>
         {

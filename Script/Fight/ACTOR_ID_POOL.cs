@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityGameFramework.Runtime;
+
 namespace Aquila.Fight.Actor
 {
     /// <summary>
@@ -16,6 +18,15 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 生成一个ActorID
         /// </summary>
-        public static int Gen () => initID--;
+        public static int Gen()
+        {
+            if ( initID < 0 )
+            {
+                Log.Error( "Init ID < 0!" );
+                return -1;
+            }
+
+            return initID--;
+        }
     }
 }

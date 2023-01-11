@@ -70,7 +70,7 @@ namespace Aquila.Fight.Buff
             if (actor is null)
                 return false;
 
-            if (!actor.TryGetAddon<EffectAddon>( out var addon ))
+            if (!actor.TryGetAddon<Addon_Effect>( out var addon ))
                 return false;
 
             addon.Hide( entity.EffectActorID );

@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 导航
     /// </summary>
-    public class NavAddon : AddonBase
+    public class Addon_Nav : AddonBase
     {
         /// <summary>
         /// 是否达到了目标点，达到了返回true
@@ -138,7 +138,7 @@ namespace Aquila.Fight.Addon
             //避障半径，actor穿行的临时解决方案
             _agent.radius                = 0.1f;
             _agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-            if ( Actor.TryGetAddon<DataAddon>( out var dataAddon ) )
+            if ( Actor.TryGetAddon<Addon_Data>( out var dataAddon ) )
                 _agent.speed = dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
             else
                 _agent.speed = 1f;
@@ -163,7 +163,7 @@ namespace Aquila.Fight.Addon
             _targetPos = Vector3.zero;
             _openFlag = false;
 
-            if ( !Actor.TryGetAddon<DataAddon>( out var _dataAddon ) )
+            if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
                 _agent.speed = 1f;
             else
             {

@@ -7,7 +7,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 数据组件 by yhc 
     /// </summary>
-    public class DataAddon : AddonBase
+    public class Addon_Data : AddonBase
     {
         public override AddonTypeEnum AddonType => AddonTypeEnum.DATA;
 
