@@ -66,14 +66,14 @@ namespace Aquila.Fight.Buff
                 return false;
 
             var entity = _entityDic[objID];
-            var actor = GameEntry.Module.GetModule<Module_Actor_Factory>().GetActor<HeroActor>( objID);
-            if (actor is null)
-                return false;
+            //var actor = GameEntry.Module.GetModule<Module_Actor_Factory>().GetActor<HeroActor>( objID);
+            //if (actor is null)
+            //    return false;
 
-            if (!actor.TryGetAddon<Addon_Effect>( out var addon ))
-                return false;
+            //if (!actor.TryGetAddon<Addon_Effect>( out var addon ))
+            //    return false;
 
-            addon.Hide( entity.EffectActorID );
+            //addon.Hide( entity.EffectActorID );
             var removeSucc = _entityDic.Remove( objID );
             ReferencePool.Release( entity );
             entity = null;

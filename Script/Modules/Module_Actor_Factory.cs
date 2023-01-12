@@ -9,29 +9,29 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Module
 {
     /// <summary>
-    /// Actor的工厂类，创建和回收
+    /// Actor工厂类，创建和回收
     /// </summary>
     public class Module_Actor_Factory : GameFrameworkModuleBase
     {
         #region public
 
         /// <summary>
-        /// 获取一个actor
+        /// 获取一个actor，获取的地方移到了Proxy_Actor，这里不用了
         /// </summary>
-        public T GetActor<T>( int actor_id ) where T: TActorBase
-        {
-            if ( !_open_flag )
-            {
-                Log.Error( "!_open_flag" );
-                return null;
-            }
+        //public T GetActor<T>( int actor_id ) where T: TActorBase
+        //{
+        //    if ( !_open_flag )
+        //    {
+        //        Log.Error( "!_open_flag" );
+        //        return null;
+        //    }
 
-            if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-                return null;
+        //    if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
+        //        return null;
 
-            _actor_cache_dic.TryGetValue( actor_id, out var actor );
-            return actor as T;
-        }
+        //    _actor_cache_dic.TryGetValue( actor_id, out var actor );
+        //    return actor as T;
+        //}
 
         /// <summary>
         /// 异步显示一个actor
@@ -89,7 +89,7 @@ namespace Aquila.Module
         /// <summary>
         /// 加载对应的actor
         /// </summary>
-        private async void LoadActor()
+        private async void TestLoadActor()
         {
             var entity_id = ACTOR_ID_POOL.Gen();
             var actor = await ShowActorAsync<HeroActor>
@@ -108,7 +108,7 @@ namespace Aquila.Module
         public override void Start( object param )
         {
             base.Start( param );
-            LoadActor();
+            TestLoadActor();
         }
 
         public override void End()
@@ -118,21 +118,21 @@ namespace Aquila.Module
 
         public override void OnClose()
         {
-            if ( _actor_cache_dic != null )
-                _actor_cache_dic?.Clear();
+            //if ( _actor_cache_dic != null )
+            //    _actor_cache_dic?.Clear();
 
-            _actor_cache_dic = null;
+            //_actor_cache_dic = null;
         }
 
         public override void EnsureInit()
         {
-            if ( _actor_cache_dic is null )
-                _actor_cache_dic = new Dictionary<int, TActorBase>();
+            //if ( _actor_cache_dic is null )
+            //    _actor_cache_dic = new Dictionary<int, TActorBase>();
         }
         
         /// <summary>
-        /// actor缓存
+        /// actor缓存 获取的地方移到了Proxy_Actor，这里不用了
         /// </summary>
-        private Dictionary<int, TActorBase> _actor_cache_dic = null;
+        //private Dictionary<int, TActorBase> _actor_cache_dic = null;
     }
 }
