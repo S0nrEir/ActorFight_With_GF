@@ -21,7 +21,7 @@ namespace Aquila.Procedure
             //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
             _input_module   = GameEntry.Module.GetModule<Module_Input>();
             _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _actor_module   = GameEntry.Module.GetModule<Module_Actor>();
+            _actor_module   = GameEntry.Module.GetModule<Module_Actor_Factory>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -113,7 +113,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// actor模块
         /// </summary>
-        private Module_Actor _actor_module = null;
+        private Module_Actor_Factory _actor_module = null;
 
         /// <summary>
         /// 地块模块

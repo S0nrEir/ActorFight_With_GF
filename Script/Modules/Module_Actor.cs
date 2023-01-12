@@ -9,9 +9,9 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Module
 {
     /// <summary>
-    /// Actor模块类型，管理actor
+    /// Actor的工厂类，创建和回收
     /// </summary>
-    public class Module_Actor : GameFrameworkModuleBase
+    public class Module_Actor_Factory : GameFrameworkModuleBase
     {
         #region public
 

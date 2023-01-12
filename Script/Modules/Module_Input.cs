@@ -98,7 +98,7 @@ namespace Aquila.Module
         /// <summary>
         /// actor模块
         /// </summary>
-        private Module_Actor _actor_module = null;
+        private Module_Actor_Factory _actor_module = null;
 
         public Module_Terrain _terrain_module { get; private set; }
 

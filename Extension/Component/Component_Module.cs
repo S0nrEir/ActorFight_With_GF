@@ -114,7 +114,7 @@ namespace Aquila.Extension
     }
 
     /// <summary>
-    /// 模块基类
+    /// 脱离于框架的涉及具体业务的模块基类
     /// </summary>
     public abstract class GameFrameworkModuleBase
     {
