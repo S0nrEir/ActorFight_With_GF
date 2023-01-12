@@ -279,7 +279,7 @@ namespace Aquila.Fight.Actor
         #endregion
 
         /// <summary>
-        /// 添加一个Addon到自身
+        /// 为自身添加一个Addon
         /// </summary>                                                 
         protected T AddAddon<T>() where T : AddonBase, new()
         {
@@ -298,6 +298,25 @@ namespace Aquila.Fight.Actor
                 addonToAdd.OnAdd();
                 return addonToAdd;
             }
+        }
+
+        /// <summary>
+        /// 获取自己的全部addon
+        /// </summary>
+        protected AddonBase[] GetAllAddon()
+        {
+            if ( _addonDic is null || _addonDic.Count == 0 )
+            {
+                Log.Warning( "GetAllAddon--->_addonDic is null || _addonDic.Count == 0" );
+                return new AddonBase[0];
+            }
+
+            AddonBase[] addons = new AddonBase[_addonDic.Count];
+            var idx = 0;
+            foreach ( var kv in _addonDic )
+                addons[idx++] = kv.Value;
+
+            return addons;
         }
 
         /// <summary>
@@ -357,7 +376,7 @@ namespace Aquila.Fight.Actor
 
     //#region ActorInspector
     ///// <summary>
-    ///// 用于记录actor信息，抽时间写成inspector
+    ///// #todo用于记录actord信息的面板,抽时间写成inspector
     ///// </summary>
     //internal class ActorInspector : MonoBehaviour
     //{
