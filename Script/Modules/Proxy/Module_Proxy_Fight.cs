@@ -21,7 +21,7 @@ public partial class Proxy_Fight : GameFrameworkModuleBase
     /// <summary>
     /// 持有的actor代理
     /// </summary>
-    private Proxy_Actor _proxy_actor = null;
+    private Module_Proxy_Actor _proxy_actor = null;
 
     #endregion
 
@@ -30,7 +30,7 @@ public partial class Proxy_Fight : GameFrameworkModuleBase
     public override void Start( object param )
     {
         base.Start( param );
-        _proxy_actor = GameEntry.Module.GetModule<Proxy_Actor>();
+        _proxy_actor = GameEntry.Module.GetModule<Module_Proxy_Actor>();
     }
 
     public override void End()

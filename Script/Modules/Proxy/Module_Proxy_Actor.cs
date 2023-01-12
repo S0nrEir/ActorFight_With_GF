@@ -8,9 +8,9 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 
 /// <summary>
-/// Actor管理类，对外部调用方提供已注册的Actor
+/// Actor的包装类，包装了Actor和它持有的addon，本身没有任何逻辑，做别的模块的调用接口，比如负责提供给战斗代理需要的Actor数据
 /// </summary>
-public class Proxy_Actor : GameFrameworkModuleBase
+public class Module_Proxy_Actor : GameFrameworkModuleBase
 {
     /// <summary>
     /// 将actor注册到代理中，成功返回true
