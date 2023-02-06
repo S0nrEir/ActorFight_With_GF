@@ -1,9 +1,7 @@
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -26,7 +24,7 @@ namespace Aquila.Module
 
             if ( Contains( actor.ActorID ) )
             {
-                Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}</color>" );
+                Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
                 return false;
             }
 
@@ -40,7 +38,7 @@ namespace Aquila.Module
         /// <summary>
         /// 注销单个实例
         /// </summary>
-        private bool UnRegister( int id )
+        public bool UnRegister( int id )
         {
             if ( !Contains( id ) )
             {
@@ -73,8 +71,13 @@ namespace Aquila.Module
         /// </summary>
         private (bool has, Proxy_Actor_Instance instance) TryGet( int id )
         {
-            var has = _proxy_actor_dic.TryGetValue( id, out var actor_instance );
-            return (has, actor_instance);
+            (bool, Proxy_Actor_Instance) result = (false, null);
+            if ( !_proxy_actor_dic.TryGetValue( id, out result.Item2 ) )
+                return result;
+            else
+                result.Item1 = true;
+
+            return result;
         }
 
         /// <summary>

@@ -1,14 +1,13 @@
-﻿using GameFramework;
-using GameFramework.Event;
+﻿using Aquila.Config;
 using Aquila.Fight.Addon;
+using Aquila.Module;
+using Aquila.ToolKit;
+using GameFramework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
-using Aquila.Config;
-using Aquila.Event;
-using Aquila.ToolKit;
 
 namespace Aquila.Fight.Actor
 {
@@ -69,6 +68,7 @@ namespace Aquila.Fight.Actor
             //Debug.Log( $"<color=white>Actor{ActorID}--->RegisterActorEvent{type}</color>" );
             if ( !_eventAddon.Register( type, action ) )
                 throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
+
         }
 
         /// <summary>
@@ -137,13 +137,13 @@ namespace Aquila.Fight.Actor
                 return;
 
             SetWorldPosition
-                ( 
+                (
                     new Vector3
-                        ( 
-                            posToSet.x, 
-                            Tools.Fight.TerrainPositionY(string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
-                            posToSet.y 
-                        ) 
+                        (
+                            posToSet.x,
+                            Tools.Fight.TerrainPositionY( string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
+                            posToSet.y
+                        )
                 );
         }
 
@@ -188,13 +188,14 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
-            Register();
+            GameEntry.Module.GetModule<Module_Proxy_Fight>().Register( this, GetAllAddon() );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            base.OnHide( isShutdown, userData );
             CachedTransform.position = new Vector3( 999f, 999f, 999f );
+            GameEntry.Module.GetModule<Module_Proxy_Fight>().UnRegister( ActorID );
+            base.OnHide( isShutdown, userData );
         }
 
         /// <summary>
@@ -223,14 +224,14 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 注册GF消息，在OnShow的时候调用
+        /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
         protected virtual void Register()
         {
         }
 
         /// <summary>
-        /// 注销GF消息，在回收的时候调用
+        /// 注销GF消息，在回收的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
         protected virtual void UnRegister()
         {

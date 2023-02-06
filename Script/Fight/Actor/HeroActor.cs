@@ -67,15 +67,15 @@ namespace Aquila.Fight.Actor
 
         public void TakeDamage( int dmg )
         {
-            var currHp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
-            currHp -= dmg;
-            //写入当前hp
-            _dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, currHp );
-            if ( currHp <= 0 )
-            {
-                SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
-                return;
-            }
+            //var currHp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
+            //currHp -= dmg;
+            ////写入当前hp
+            //_dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, currHp );
+            //if ( currHp <= 0 )
+            //{
+            //    SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
+            //    return;
+            //}
         }
 
         /// <summary>
@@ -131,16 +131,6 @@ namespace Aquila.Fight.Actor
         public ActorStateTypeEnum CurrState => _FsmAddon.CurrState;
 
         #region public methods
-        /// <summary>y
-        /// 扣血
-        /// </summary>
-        public float Minus( int dmg )
-        {
-            var hp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP);
-            hp -= dmg;
-            _dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, hp );
-            return hp;
-        }
 
         #endregion
 

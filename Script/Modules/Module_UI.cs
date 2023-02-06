@@ -45,6 +45,11 @@ namespace Aquila.Module
                 _cached_UI_Component = GameEntry.UI;
         }
 
+        public override void End()
+        {
+            base.End();
+        }
+
         /// <summary>
         /// ui组件缓存
         /// </summary>

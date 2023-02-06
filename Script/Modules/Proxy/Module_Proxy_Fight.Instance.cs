@@ -33,19 +33,19 @@ namespace Aquila.Module
             /// <summary>
             /// 获取actor持有的指定类型的addon，没有返回空
             /// </summary>
-            //public T GetAddon<T>() where T : AddonBase
-            //{
-            //    if ( _addon_arr is null || _addon_arr.Length == 0 )
-            //        return null;
+            public T GetAddon<T>() where T : AddonBase
+            {
+                if ( _addon_arr is null || _addon_arr.Length == 0 )
+                    return null;
 
-            //    foreach ( var addon in _addon_arr )
-            //    {
-            //        if ( addon is T )
-            //            return addon as T;
-            //    }
+                foreach ( var addon in _addon_arr )
+                {
+                    if ( addon is T )
+                        return addon as T;
+                }
 
-            //    return null;
-            //}
+                return null;
+            }
 
             #endregion
 
