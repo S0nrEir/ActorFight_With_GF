@@ -28,7 +28,8 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
-            ResetNumricArr( _meta );
+            ResetNumricArr();
+
         }
 
         public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )

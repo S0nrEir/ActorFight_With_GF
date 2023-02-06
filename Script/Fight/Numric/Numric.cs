@@ -15,7 +15,18 @@ namespace Aquila.Numric
         /// <summary>
         /// 最终计算后的数值
         /// </summary>
-        public float Value => _value;
+        public float Value
+        {
+            get
+            {
+                if ( _changed_flag )
+                {
+                    _changed_flag = true;
+                    ReCalc();
+                }
+                return _value;
+            }
+        }
 
         /// <summary>
         /// 设置数值
@@ -29,8 +40,49 @@ namespace Aquila.Numric
             ReCalc();
         }
 
+        /// <summary>
+        /// 设置基础值
+        /// </summary>
+        public void SetBaseVal( float val )
+        {
+            _base_val = val;
+            _changed_flag = true;
+        }
+
+        public void SetClassAdd( float val )
+        {
+            _class_add = val;
+            _changed_flag = true;
+        }
+
+        /// <summary>
+        /// 设置buff修正
+        /// </summary>
+        public void SetBuffAdd( float val )
+        {
+            _buff_add = val;
+            _changed_flag = true;
+        }
+
+        /// <summary>
+        /// 设置装备修正
+        /// </summary>
+        public void SetEquipAdd( float val )
+        {
+            _equip_add = val;
+            _changed_flag = true;
+        }
+
+        /// <summary>
+        /// 清除数据
+        /// </summary>
         public void Clear()
         {
+            _base_val = 0;
+            _class_add = 0;
+            _equip_add = 0;
+            _buff_add = 0;
+            _changed_flag = false;
         }
 
         #endregion
@@ -49,6 +101,11 @@ namespace Aquila.Numric
         #endregion
 
         #region fields
+
+        /// <summary>
+        /// 变更标记
+        /// </summary>
+        private bool _changed_flag = false;
 
         /// <summary>
         /// 基础值

@@ -1,17 +1,24 @@
 using Aquila.Numric;
 using Cfg.Enum;
 using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
     public partial class Addon_Data
     {
+        public float SetBaseVal( Cfg.Enum.Numric_Type type, Numric_Modifier modifier)
+        {
+            var int_type = ( int ) type;
+            if ( !OverLen( int_type ) )
+                return 0f;
+
+            return _numric_arr[int_type].Value;
+        }
+
         #region priv
-        
-        private void ResetNumricArr(Cfg.role.RoleMeta meta)
+
+        private void ResetNumricArr()
         {
             var len = ( int ) Numric_Type.Max - 1;
             _numric_arr = new Numric.Numric[len];
@@ -24,7 +31,45 @@ namespace Aquila.Fight.Addon
             }
         }
 
+        /// <summary>
+        /// 设置某一类型数值的基础值
+        /// </summary>
+        private void SetBaseVal( Cfg.Enum.Numric_Type type, float val )
+        {
+            var int_type = ( int ) type;
+            if ( !OverLen( int_type ) )
+                return;
+
+            _numric_arr[int_type].SetBaseVal( val );
+        }
+
+        /// <summary>
+        /// 设置某一类型数值的职业修正
+        /// </summary>
+        private void SetClassAdd( Numric_Type type, float val )
+        {
+            var int_type = ( int ) type;
+            if ( !OverLen( int_type ) )
+                return;
+
+            _numric_arr[int_type].SetClassAdd( val );
+        }
+
+        /// <summary>
+        /// 检查数值是否正确，正确返回true
+        /// </summary>
+        private bool OverLen( int int_type )
+        {
+            if ( _numric_arr is null || int_type >= _numric_arr.Length )
+            {
+                Log.Warning( "Addon_Data.Base.cs--->int_type >= _numric_arr.Length" );
+                return false;
+            }
+            return true;
+        }
+
         #endregion
+
 
         #region fields
 

@@ -10,6 +10,8 @@ namespace Aquila.Numric
     /// </summary>
     public class Numric_Modifier : IReference
     {
+        //#todo数值修改方式，具体数值
+
         public void Clear()
         {
         }
