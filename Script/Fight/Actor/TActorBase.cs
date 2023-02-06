@@ -51,6 +51,7 @@ namespace Aquila.Fight.Actor
             foreach ( var iter in _addonDic )
             {
                 tempCode = iter.Value.Valid();
+
                 errCode |= tempCode;
                 if ( errCode != AddonValidErrorCodeEnum.NONE )
                     throw new GameFrameworkException( AddonValidErrorCodeEnum.ErrCode2String( tempCode ) );
@@ -154,20 +155,21 @@ namespace Aquila.Fight.Actor
 
         public void Setup
             (
+                int role_meta_id,
                 string tag
             )
         {
+            SetRoleMetaID( role_meta_id );
             SetTag( tag );
-            //SetActorID( actor_id );
             Reset();
         }
 
         /// <summary>
-        /// 设置actor的ID
+        /// 设置角色表配置ID
         /// </summary>
-        public void SetActorID( int actor_id )
+        private void SetRoleMetaID( int role_meta_id )
         {
-            //ActorID = actor_id;
+            RoleMetaID = role_meta_id;
         }
 
         /// <summary>
@@ -206,6 +208,17 @@ namespace Aquila.Fight.Actor
             UnRegister();
             HostID = GlobalVar.INVALID_GUID;
             ExtensionRecycle();
+            SetRoleMetaID( -1 );
+            gameObject.tag = String.Empty;
+            //dispose all addon
+            //var iter = _addonDic.GetEnumerator();
+            //AddonBase base_addon = null;
+            //while ( iter.MoveNext() )
+            //{
+            //    base_addon = iter.Current.Value;
+            //    base_addon.Dispose();
+            //}
+
             base.OnRecycle();
         }
 
@@ -213,12 +226,12 @@ namespace Aquila.Fight.Actor
         {
             base.OnInit( userData );
             InitAddons();
-            if ( gameObject.GetComponent<BoxCollider>() == null )
-            {
-                var collider = gameObject.AddComponent<BoxCollider>();
-                collider.size = new Vector3( .8f, .8f, .8f );
-                collider.isTrigger = true;
-            }
+            //if ( gameObject.GetComponent<BoxCollider>() == null )
+            //{
+            //    var collider = gameObject.AddComponent<BoxCollider>();
+            //    collider.size = new Vector3( .8f, .8f, .8f );
+            //    collider.isTrigger = true;
+            //}
 
             _allAddonInitDone = true;
         }
@@ -344,6 +357,11 @@ namespace Aquila.Fight.Actor
         /// ActorID(ObjID)
         /// </summary>
         public int ActorID => Entity.Id;
+
+        /// <summary>
+        /// 角色表格配置ID
+        /// </summary>
+        public int RoleMetaID { get; private set; } = -1;
 
         /// <summary>
         /// 组件初始化标记

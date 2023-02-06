@@ -56,8 +56,8 @@ namespace Aquila.Module
         #region private 
 
         /// <summary>
-        /// 根据ID获取一个ActorInstance
         /// </summary>
+        ///  /// <summary>
         private Proxy_Actor_Instance Get( int id )
         {
             if ( !_proxy_actor_dic.TryGetValue( id, out var actor_instance ) )
@@ -67,7 +67,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 根据ID获取一个ActorInstance
+        /// 根据ID获取一个ActorInstan
         /// </summary>
         private (bool has, Proxy_Actor_Instance instance) TryGet( int id )
         {

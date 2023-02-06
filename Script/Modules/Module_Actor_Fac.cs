@@ -38,6 +38,7 @@ namespace Aquila.Module
         /// </summary>
         public async Task<Entity> ShowActorAsync<T>
             (
+                int role_meta_id,
                 int actor_id,
                 string asset_path,
                 int grid_x,
@@ -55,7 +56,8 @@ namespace Aquila.Module
                     Config.GameConfig.Entity.PRIORITY_ACTOR,
                     user_data
                 );
-
+            //#todo_根据actor类型决定传入函数的tag值，不要写死
+            OnShowActorSucc(result.Logic as TActorBase,role_meta_id,Config.GameConfig.Entity.GROUP_HERO_ACTOR);
             OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
@@ -63,6 +65,14 @@ namespace Aquila.Module
         #endregion
 
         #region
+
+        /// <summary>
+        /// actor生成回调
+        /// </summary>
+        private void OnShowActorSucc(TActorBase actor,int role_meta_id,string tag)
+        {
+            actor.Setup( role_meta_id, tag );
+        }
 
         /// <summary>
         /// 基于地块的actor生成回调
@@ -94,6 +104,7 @@ namespace Aquila.Module
             var entity_id = ACTOR_ID_POOL.Gen();
             var actor = await ShowActorAsync<HeroActor>
                    (
+                       1,
                        entity_id,
                        @"Assets/Res/Prefab/Aquila_001.prefab",
                        0,
