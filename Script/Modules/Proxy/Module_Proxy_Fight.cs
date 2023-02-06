@@ -1,45 +1,42 @@
-using Aquila;
 using Aquila.Extension;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-/// <summary>
-/// 战斗代理组件
-/// </summary>
-public partial class Proxy_Fight : GameFrameworkModuleBase
+namespace Aquila.Module
 {
-    #region pub
-
-
-
-    #endregion
-
-
-    #region fields
 
     /// <summary>
-    /// 持有的actor代理
+    /// 战斗代理组件
     /// </summary>
-    private Module_Proxy_Actor _proxy_actor = null;
-
-    #endregion
-
-    #region override
-
-    public override void Start( object param )
+    public partial class Module_Proxy_Fight : GameFrameworkModuleBase
     {
-        base.Start( param );
-        _proxy_actor = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+        #region pub
+
+
+
+        #endregion
+
+        #region override
+
+        public override void Start( object param )
+        {
+            base.Start( param );
+            MgrStart();
+        }
+
+        public override void End()
+        {
+            MgrEnd();
+            base.End();
+        }
+
+        public override void EnsureInit()
+        {
+            base.EnsureInit();
+            MgrEnsureInit();
+        }
+
+        protected override bool Contains_Sub_Module => false;
+
+        #endregion
     }
 
-    public override void End()
-    {
-        _proxy_actor = null;
-        base.End();
-    }
-
-    protected override bool Contains_Sub_Module => false;
-
-    #endregion
 }

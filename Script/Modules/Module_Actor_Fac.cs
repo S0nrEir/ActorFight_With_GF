@@ -11,7 +11,7 @@ namespace Aquila.Module
     /// <summary>
     /// Actor工厂类，创建和回收
     /// </summary>
-    public class Module_Actor_Factory : GameFrameworkModuleBase
+    public class Module_Actor_Fac : GameFrameworkModuleBase
     {
         #region public
 
@@ -56,7 +56,7 @@ namespace Aquila.Module
                     user_data
                 );
 
-            OnShowActorSuccBasedTerrain( result.Logic as TActorBase, grid_x, grid_z );
+            OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
 
@@ -65,9 +65,9 @@ namespace Aquila.Module
         #region 
 
         /// <summary>
-        /// 基于地块的actor生成后处理
+        /// 基于地块的actor生成回调
         /// </summary>
-        private void OnShowActorSuccBasedTerrain( TActorBase actor, int grid_x, int grid_z )
+        private void OnShowActorSuccBasedOnTerrain( TActorBase actor, int grid_x, int grid_z )
         {
             var terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
             var terrain = terrain_module.Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
