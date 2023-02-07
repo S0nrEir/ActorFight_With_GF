@@ -21,7 +21,7 @@ namespace Aquila.Numric
             {
                 if ( _changed_flag )
                 {
-                    _changed_flag = true;
+                    _changed_flag = false;
                     ReCalc();
                 }
                 return _value;
