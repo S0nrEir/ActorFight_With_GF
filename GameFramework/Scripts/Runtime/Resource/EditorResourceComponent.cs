@@ -523,6 +523,11 @@ namespace UnityGameFramework.Runtime
         /// 资源更新全部完成事件。
         /// </summary>
         public event EventHandler<GameFramework.Resource.ResourceUpdateAllCompleteEventArgs> ResourceUpdateAllComplete = null;
+        //#todo_---> new gf impl
+        public event EventHandler<ResourceVerifyStartEventArgs> ResourceVerifyStart;
+        public event EventHandler<ResourceVerifySuccessEventArgs> ResourceVerifySuccess;
+        public event EventHandler<ResourceVerifyFailureEventArgs> ResourceVerifyFailure;
+        public event EventHandler<ResourceApplyStartEventArgs> ResourceApplyStart;
 
 #pragma warning restore 0067, 0414
 
@@ -1635,6 +1640,12 @@ namespace UnityGameFramework.Runtime
             }
 
             return null;
+        }
+
+        //#todo_ new gf impl
+        public void VerifyResources( int verifyResourceLengthPerFrame, VerifyResourcesCompleteCallback verifyResourcesCompleteCallback )
+        {
+            throw new NotImplementedException();
         }
 
         [StructLayout(LayoutKind.Auto)]
