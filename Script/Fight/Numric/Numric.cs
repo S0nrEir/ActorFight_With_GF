@@ -22,7 +22,7 @@ namespace Aquila.Numric
                 if ( _changed_flag )
                 {
                     _changed_flag = false;
-                    ReCalc();
+                    return ReCalc();
                 }
                 return _value;
             }
@@ -78,10 +78,10 @@ namespace Aquila.Numric
         /// </summary>
         public void Clear()
         {
-            _base_val = 0;
-            _class_add = 0;
-            _equip_add = 0;
-            _buff_add = 0;
+            _base_val     = 0;
+            _class_add    = 0;
+            _equip_add    = 0;
+            _buff_add     = 0;
             _changed_flag = false;
         }
 
@@ -103,32 +103,32 @@ namespace Aquila.Numric
         #region fields
 
         /// <summary>
-        /// 变更标记
+        /// 变更脏标记
         /// </summary>
         private bool _changed_flag = false;
 
         /// <summary>
-        /// 基础值
+        /// 基础值，计算后的实际值
         /// </summary>
         private float _base_val = 0f;
 
         /// <summary>
-        /// 装备修正
+        /// 装备修正，计算后的实际值
         /// </summary>
         private float _equip_add = 0f;
 
         /// <summary>
-        /// 职业修正
+        /// 职业修正，计算后的实际值
         /// </summary>
         private float _class_add = 0f;
 
         /// <summary>
-        /// buff修正
+        /// buff修正，计算后的实际值
         /// </summary>
         private float _buff_add = 0f;
 
         /// <summary>
-        /// 最终计算后的数值
+        /// 最终计算后的数值，计算后的实际值
         /// </summary>
         private float _value = 0f;
 

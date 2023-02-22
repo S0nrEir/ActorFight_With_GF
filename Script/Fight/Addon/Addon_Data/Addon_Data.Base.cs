@@ -7,6 +7,9 @@ namespace Aquila.Fight.Addon
 {
     public partial class Addon_Data
     {
+        /// <summary>
+        /// 设置基础值
+        /// </summary>
         public float SetBaseVal( Cfg.Enum.Numric_Type type, Numric_Modifier modifier)
         {
             var int_type = ( int ) type;
@@ -18,6 +21,9 @@ namespace Aquila.Fight.Addon
 
         #region priv
 
+        /// <summary>
+        /// 重置数值为基础值
+        /// </summary>
         private void ResetNumricArr()
         {
             var len = ( int ) Numric_Type.Max - 1;

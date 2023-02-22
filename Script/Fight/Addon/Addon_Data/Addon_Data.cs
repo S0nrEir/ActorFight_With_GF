@@ -32,9 +32,9 @@ namespace Aquila.Fight.Addon
 
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_gameobject_, Transform target_transform_ )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_gameobject_, target_transform_ );
             _meta = GameEntry.DataTable.Tables.TB_RoleMeta.Get( actor.RoleMetaID );
             if ( _meta is null )
                 throw new GameFrameworkException( $"faild to set meta role id:{actor.RoleMetaID},meta is null" );
