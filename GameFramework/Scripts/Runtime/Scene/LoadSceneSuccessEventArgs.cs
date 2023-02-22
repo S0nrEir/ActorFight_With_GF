@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Scene
 {
     /// <summary>
     /// 加载场景成功事件。
     /// </summary>
-    public sealed class LoadSceneSuccessEventArgs : GameEventArgs
+    public sealed class LoadSceneSuccessEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 加载场景成功事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(LoadSceneSuccessEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化加载场景成功事件的新实例。
         /// </summary>
@@ -28,17 +20,6 @@ namespace UnityGameFramework.Runtime
             SceneAssetName = null;
             Duration = 0f;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取加载场景成功事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -71,14 +52,16 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建加载场景成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="duration">加载持续时间。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的加载场景成功事件。</returns>
-        public static LoadSceneSuccessEventArgs Create(GameFramework.Scene.LoadSceneSuccessEventArgs e)
+        public static LoadSceneSuccessEventArgs Create(string sceneAssetName, float duration, object userData)
         {
             LoadSceneSuccessEventArgs loadSceneSuccessEventArgs = ReferencePool.Acquire<LoadSceneSuccessEventArgs>();
-            loadSceneSuccessEventArgs.SceneAssetName = e.SceneAssetName;
-            loadSceneSuccessEventArgs.Duration = e.Duration;
-            loadSceneSuccessEventArgs.UserData = e.UserData;
+            loadSceneSuccessEventArgs.SceneAssetName = sceneAssetName;
+            loadSceneSuccessEventArgs.Duration = duration;
+            loadSceneSuccessEventArgs.UserData = userData;
             return loadSceneSuccessEventArgs;
         }
 

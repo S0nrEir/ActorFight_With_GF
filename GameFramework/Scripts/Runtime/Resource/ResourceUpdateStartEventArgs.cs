@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Resource
 {
     /// <summary>
     /// 资源更新开始事件。
     /// </summary>
-    public sealed class ResourceUpdateStartEventArgs : GameEventArgs
+    public sealed class ResourceUpdateStartEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 资源更新开始事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(ResourceUpdateStartEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化资源更新开始事件的新实例。
         /// </summary>
@@ -31,17 +23,6 @@ namespace UnityGameFramework.Runtime
             CurrentLength = 0;
             CompressedLength = 0;
             RetryCount = 0;
-        }
-
-        /// <summary>
-        /// 获取资源更新开始事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -101,17 +82,22 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建资源更新开始事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="name">资源名称。</param>
+        /// <param name="downloadPath">资源下载后存放路径。</param>
+        /// <param name="downloadUri">资源下载地址。</param>
+        /// <param name="currentLength">当前下载大小。</param>
+        /// <param name="compressedLength">压缩后大小。</param>
+        /// <param name="retryCount">已重试下载次数。</param>
         /// <returns>创建的资源更新开始事件。</returns>
-        public static ResourceUpdateStartEventArgs Create(GameFramework.Resource.ResourceUpdateStartEventArgs e)
+        public static ResourceUpdateStartEventArgs Create(string name, string downloadPath, string downloadUri, int currentLength, int compressedLength, int retryCount)
         {
             ResourceUpdateStartEventArgs resourceUpdateStartEventArgs = ReferencePool.Acquire<ResourceUpdateStartEventArgs>();
-            resourceUpdateStartEventArgs.Name = e.Name;
-            resourceUpdateStartEventArgs.DownloadPath = e.DownloadPath;
-            resourceUpdateStartEventArgs.DownloadUri = e.DownloadUri;
-            resourceUpdateStartEventArgs.CurrentLength = e.CurrentLength;
-            resourceUpdateStartEventArgs.CompressedLength = e.CompressedLength;
-            resourceUpdateStartEventArgs.RetryCount = e.RetryCount;
+            resourceUpdateStartEventArgs.Name = name;
+            resourceUpdateStartEventArgs.DownloadPath = downloadPath;
+            resourceUpdateStartEventArgs.DownloadUri = downloadUri;
+            resourceUpdateStartEventArgs.CurrentLength = currentLength;
+            resourceUpdateStartEventArgs.CompressedLength = compressedLength;
+            resourceUpdateStartEventArgs.RetryCount = retryCount;
             return resourceUpdateStartEventArgs;
         }
 

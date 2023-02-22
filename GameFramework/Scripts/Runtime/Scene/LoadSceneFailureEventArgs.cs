@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Scene
 {
     /// <summary>
     /// 加载场景失败事件。
     /// </summary>
-    public sealed class LoadSceneFailureEventArgs : GameEventArgs
+    public sealed class LoadSceneFailureEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 加载场景失败事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(LoadSceneFailureEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化加载场景失败事件的新实例。
         /// </summary>
@@ -28,17 +20,6 @@ namespace UnityGameFramework.Runtime
             SceneAssetName = null;
             ErrorMessage = null;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取加载场景失败事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -71,14 +52,16 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建加载场景失败事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="sceneAssetName">场景资源名称。</param>
+        /// <param name="errorMessage">错误信息。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的加载场景失败事件。</returns>
-        public static LoadSceneFailureEventArgs Create(GameFramework.Scene.LoadSceneFailureEventArgs e)
+        public static LoadSceneFailureEventArgs Create(string sceneAssetName, string errorMessage, object userData)
         {
             LoadSceneFailureEventArgs loadSceneFailureEventArgs = ReferencePool.Acquire<LoadSceneFailureEventArgs>();
-            loadSceneFailureEventArgs.SceneAssetName = e.SceneAssetName;
-            loadSceneFailureEventArgs.ErrorMessage = e.ErrorMessage;
-            loadSceneFailureEventArgs.UserData = e.UserData;
+            loadSceneFailureEventArgs.SceneAssetName = sceneAssetName;
+            loadSceneFailureEventArgs.ErrorMessage = errorMessage;
+            loadSceneFailureEventArgs.UserData = userData;
             return loadSceneFailureEventArgs;
         }
 

@@ -5,22 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-using GameFramework.Sound;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Sound
 {
     /// <summary>
     /// 播放声音成功事件。
     /// </summary>
-    public sealed class PlaySoundSuccessEventArgs : GameEventArgs
+    public sealed class PlaySoundSuccessEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 播放声音成功事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(PlaySoundSuccessEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化播放声音成功事件的新实例。
         /// </summary>
@@ -30,19 +21,7 @@ namespace UnityGameFramework.Runtime
             SoundAssetName = null;
             SoundAgent = null;
             Duration = 0f;
-            BindingEntity = null;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取播放声音成功事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -82,15 +61,6 @@ namespace UnityGameFramework.Runtime
         }
 
         /// <summary>
-        /// 获取声音绑定的实体。
-        /// </summary>
-        public Entity BindingEntity
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
         public object UserData
@@ -102,19 +72,20 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建播放声音成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="serialId">声音的序列编号。</param>
+        /// <param name="soundAssetName">声音资源名称。</param>
+        /// <param name="soundAgent">用于播放的声音代理。</param>
+        /// <param name="duration">加载持续时间。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的播放声音成功事件。</returns>
-        public static PlaySoundSuccessEventArgs Create(GameFramework.Sound.PlaySoundSuccessEventArgs e)
+        public static PlaySoundSuccessEventArgs Create(int serialId, string soundAssetName, ISoundAgent soundAgent, float duration, object userData)
         {
-            PlaySoundInfo playSoundInfo = (PlaySoundInfo)e.UserData;
             PlaySoundSuccessEventArgs playSoundSuccessEventArgs = ReferencePool.Acquire<PlaySoundSuccessEventArgs>();
-            playSoundSuccessEventArgs.SerialId = e.SerialId;
-            playSoundSuccessEventArgs.SoundAssetName = e.SoundAssetName;
-            playSoundSuccessEventArgs.SoundAgent = e.SoundAgent;
-            playSoundSuccessEventArgs.Duration = e.Duration;
-            playSoundSuccessEventArgs.BindingEntity = playSoundInfo.BindingEntity;
-            playSoundSuccessEventArgs.UserData = playSoundInfo.UserData;
-            ReferencePool.Release(playSoundInfo);
+            playSoundSuccessEventArgs.SerialId = serialId;
+            playSoundSuccessEventArgs.SoundAssetName = soundAssetName;
+            playSoundSuccessEventArgs.SoundAgent = soundAgent;
+            playSoundSuccessEventArgs.Duration = duration;
+            playSoundSuccessEventArgs.UserData = userData;
             return playSoundSuccessEventArgs;
         }
 
@@ -127,7 +98,6 @@ namespace UnityGameFramework.Runtime
             SoundAssetName = null;
             SoundAgent = null;
             Duration = 0f;
-            BindingEntity = null;
             UserData = null;
         }
     }

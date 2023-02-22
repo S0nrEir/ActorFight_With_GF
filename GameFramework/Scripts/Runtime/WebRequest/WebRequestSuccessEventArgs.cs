@@ -5,22 +5,14 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.WebRequest
 {
     /// <summary>
     /// Web 请求成功事件。
     /// </summary>
-    public sealed class WebRequestSuccessEventArgs : GameEventArgs
+    public sealed class WebRequestSuccessEventArgs : GameFrameworkEventArgs
     {
-        private byte[] m_WebResponseBytes = null;
-
-        /// <summary>
-        /// Web 请求成功事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(WebRequestSuccessEventArgs).GetHashCode();
+        private byte[] m_WebResponseBytes;
 
         /// <summary>
         /// 初始化 Web 请求成功事件的新实例。
@@ -31,17 +23,6 @@ namespace UnityGameFramework.Runtime
             WebRequestUri = null;
             m_WebResponseBytes = null;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取 Web 请求成功事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -72,28 +53,20 @@ namespace UnityGameFramework.Runtime
         }
 
         /// <summary>
-        /// 获取 Web 响应的数据流。
-        /// </summary>
-        /// <returns>Web 响应的数据流。</returns>
-        public byte[] GetWebResponseBytes()
-        {
-            return m_WebResponseBytes;
-        }
-
-        /// <summary>
         /// 创建 Web 请求成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="serialId">Web 请求任务的序列编号。</param>
+        /// <param name="webRequestUri">Web 请求地址。</param>
+        /// <param name="webResponseBytes">Web 响应的数据流。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的 Web 请求成功事件。</returns>
-        public static WebRequestSuccessEventArgs Create(GameFramework.WebRequest.WebRequestSuccessEventArgs e)
+        public static WebRequestSuccessEventArgs Create(int serialId, string webRequestUri, byte[] webResponseBytes, object userData)
         {
-            WWWFormInfo wwwFormInfo = (WWWFormInfo)e.UserData;
             WebRequestSuccessEventArgs webRequestSuccessEventArgs = ReferencePool.Acquire<WebRequestSuccessEventArgs>();
-            webRequestSuccessEventArgs.SerialId = e.SerialId;
-            webRequestSuccessEventArgs.WebRequestUri = e.WebRequestUri;
-            webRequestSuccessEventArgs.m_WebResponseBytes = e.GetWebResponseBytes();
-            webRequestSuccessEventArgs.UserData = wwwFormInfo.UserData;
-            ReferencePool.Release(wwwFormInfo);
+            webRequestSuccessEventArgs.SerialId = serialId;
+            webRequestSuccessEventArgs.WebRequestUri = webRequestUri;
+            webRequestSuccessEventArgs.m_WebResponseBytes = webResponseBytes;
+            webRequestSuccessEventArgs.UserData = userData;
             return webRequestSuccessEventArgs;
         }
 
@@ -106,6 +79,15 @@ namespace UnityGameFramework.Runtime
             WebRequestUri = null;
             m_WebResponseBytes = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取 Web 响应的数据流。
+        /// </summary>
+        /// <returns>Web 响应的数据流。</returns>
+        public byte[] GetWebResponseBytes()
+        {
+            return m_WebResponseBytes;
         }
     }
 }

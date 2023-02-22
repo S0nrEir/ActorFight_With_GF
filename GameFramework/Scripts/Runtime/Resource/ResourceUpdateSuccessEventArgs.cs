@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Resource
 {
     /// <summary>
     /// 资源更新成功事件。
     /// </summary>
-    public sealed class ResourceUpdateSuccessEventArgs : GameEventArgs
+    public sealed class ResourceUpdateSuccessEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 资源更新成功事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(ResourceUpdateSuccessEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化资源更新成功事件的新实例。
         /// </summary>
@@ -30,17 +22,6 @@ namespace UnityGameFramework.Runtime
             DownloadUri = null;
             Length = 0;
             CompressedLength = 0;
-        }
-
-        /// <summary>
-        /// 获取资源更新成功事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -91,16 +72,20 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建资源更新成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="name">资源名称。</param>
+        /// <param name="downloadPath">资源下载后存放路径。</param>
+        /// <param name="downloadUri">资源下载地址。</param>
+        /// <param name="length">资源大小。</param>
+        /// <param name="compressedLength">压缩后大小。</param>
         /// <returns>创建的资源更新成功事件。</returns>
-        public static ResourceUpdateSuccessEventArgs Create(GameFramework.Resource.ResourceUpdateSuccessEventArgs e)
+        public static ResourceUpdateSuccessEventArgs Create(string name, string downloadPath, string downloadUri, int length, int compressedLength)
         {
             ResourceUpdateSuccessEventArgs resourceUpdateSuccessEventArgs = ReferencePool.Acquire<ResourceUpdateSuccessEventArgs>();
-            resourceUpdateSuccessEventArgs.Name = e.Name;
-            resourceUpdateSuccessEventArgs.DownloadPath = e.DownloadPath;
-            resourceUpdateSuccessEventArgs.DownloadUri = e.DownloadUri;
-            resourceUpdateSuccessEventArgs.Length = e.Length;
-            resourceUpdateSuccessEventArgs.CompressedLength = e.CompressedLength;
+            resourceUpdateSuccessEventArgs.Name = name;
+            resourceUpdateSuccessEventArgs.DownloadPath = downloadPath;
+            resourceUpdateSuccessEventArgs.DownloadUri = downloadUri;
+            resourceUpdateSuccessEventArgs.Length = length;
+            resourceUpdateSuccessEventArgs.CompressedLength = compressedLength;
             return resourceUpdateSuccessEventArgs;
         }
 

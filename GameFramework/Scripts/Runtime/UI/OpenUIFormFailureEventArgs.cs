@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.UI
 {
     /// <summary>
     /// 打开界面失败事件。
     /// </summary>
-    public sealed class OpenUIFormFailureEventArgs : GameEventArgs
+    public sealed class OpenUIFormFailureEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 打开界面失败事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(OpenUIFormFailureEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化打开界面失败事件的新实例。
         /// </summary>
@@ -31,17 +23,6 @@ namespace UnityGameFramework.Runtime
             PauseCoveredUIForm = false;
             ErrorMessage = null;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取打开界面失败事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -101,17 +82,22 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建打开界面失败事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="serialId">界面序列编号。</param>
+        /// <param name="uiFormAssetName">界面资源名称。</param>
+        /// <param name="uiGroupName">界面组名称。</param>
+        /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
+        /// <param name="errorMessage">错误信息。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的打开界面失败事件。</returns>
-        public static OpenUIFormFailureEventArgs Create(GameFramework.UI.OpenUIFormFailureEventArgs e)
+        public static OpenUIFormFailureEventArgs Create(int serialId, string uiFormAssetName, string uiGroupName, bool pauseCoveredUIForm, string errorMessage, object userData)
         {
             OpenUIFormFailureEventArgs openUIFormFailureEventArgs = ReferencePool.Acquire<OpenUIFormFailureEventArgs>();
-            openUIFormFailureEventArgs.SerialId = e.SerialId;
-            openUIFormFailureEventArgs.UIFormAssetName = e.UIFormAssetName;
-            openUIFormFailureEventArgs.UIGroupName = e.UIGroupName;
-            openUIFormFailureEventArgs.PauseCoveredUIForm = e.PauseCoveredUIForm;
-            openUIFormFailureEventArgs.ErrorMessage = e.ErrorMessage;
-            openUIFormFailureEventArgs.UserData = e.UserData;
+            openUIFormFailureEventArgs.SerialId = serialId;
+            openUIFormFailureEventArgs.UIFormAssetName = uiFormAssetName;
+            openUIFormFailureEventArgs.UIGroupName = uiGroupName;
+            openUIFormFailureEventArgs.PauseCoveredUIForm = pauseCoveredUIForm;
+            openUIFormFailureEventArgs.ErrorMessage = errorMessage;
+            openUIFormFailureEventArgs.UserData = userData;
             return openUIFormFailureEventArgs;
         }
 

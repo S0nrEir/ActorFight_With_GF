@@ -5,57 +5,27 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-using System;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Entity
 {
     /// <summary>
     /// 显示实体成功事件。
     /// </summary>
-    public sealed class ShowEntitySuccessEventArgs : GameEventArgs
+    public sealed class ShowEntitySuccessEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 显示实体成功事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(ShowEntitySuccessEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化显示实体成功事件的新实例。
         /// </summary>
         public ShowEntitySuccessEventArgs()
         {
-            EntityLogicType = null;
             Entity = null;
             Duration = 0f;
             UserData = null;
         }
 
         /// <summary>
-        /// 获取显示实体成功事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
-        }
-
-        /// <summary>
-        /// 获取实体逻辑类型。
-        /// </summary>
-        public Type EntityLogicType
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// 获取显示成功的实体。
         /// </summary>
-        public Entity Entity
+        public IEntity Entity
         {
             get;
             private set;
@@ -82,17 +52,16 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建显示实体成功事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="entity">加载成功的实体。</param>
+        /// <param name="duration">加载持续时间。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的显示实体成功事件。</returns>
-        public static ShowEntitySuccessEventArgs Create(GameFramework.Entity.ShowEntitySuccessEventArgs e)
+        public static ShowEntitySuccessEventArgs Create(IEntity entity, float duration, object userData)
         {
-            ShowEntityInfo showEntityInfo = (ShowEntityInfo)e.UserData;
             ShowEntitySuccessEventArgs showEntitySuccessEventArgs = ReferencePool.Acquire<ShowEntitySuccessEventArgs>();
-            showEntitySuccessEventArgs.EntityLogicType = showEntityInfo.EntityLogicType;
-            showEntitySuccessEventArgs.Entity = (Entity)e.Entity;
-            showEntitySuccessEventArgs.Duration = e.Duration;
-            showEntitySuccessEventArgs.UserData = showEntityInfo.UserData;
-            ReferencePool.Release(showEntityInfo);
+            showEntitySuccessEventArgs.Entity = entity;
+            showEntitySuccessEventArgs.Duration = duration;
+            showEntitySuccessEventArgs.UserData = userData;
             return showEntitySuccessEventArgs;
         }
 
@@ -101,7 +70,6 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         public override void Clear()
         {
-            EntityLogicType = null;
             Entity = null;
             Duration = 0f;
             UserData = null;

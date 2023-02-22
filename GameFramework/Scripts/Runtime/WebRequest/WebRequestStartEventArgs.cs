@@ -5,21 +5,13 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-
-namespace UnityGameFramework.Runtime
+namespace GameFramework.WebRequest
 {
     /// <summary>
     /// Web 请求开始事件。
     /// </summary>
-    public sealed class WebRequestStartEventArgs : GameEventArgs
+    public sealed class WebRequestStartEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// Web 请求开始事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(WebRequestStartEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化 Web 请求开始事件的新实例。
         /// </summary>
@@ -28,17 +20,6 @@ namespace UnityGameFramework.Runtime
             SerialId = 0;
             WebRequestUri = null;
             UserData = null;
-        }
-
-        /// <summary>
-        /// 获取 Web 请求开始事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -71,15 +52,16 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建 Web 请求开始事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="serialId">Web 请求任务的序列编号。</param>
+        /// <param name="webRequestUri">Web 请求地址。</param>
+        /// <param name="userData">用户自定义数据。</param>
         /// <returns>创建的 Web 请求开始事件。</returns>
-        public static WebRequestStartEventArgs Create(GameFramework.WebRequest.WebRequestStartEventArgs e)
+        public static WebRequestStartEventArgs Create(int serialId, string webRequestUri, object userData)
         {
-            WWWFormInfo wwwFormInfo = (WWWFormInfo)e.UserData;
             WebRequestStartEventArgs webRequestStartEventArgs = ReferencePool.Acquire<WebRequestStartEventArgs>();
-            webRequestStartEventArgs.SerialId = e.SerialId;
-            webRequestStartEventArgs.WebRequestUri = e.WebRequestUri;
-            webRequestStartEventArgs.UserData = wwwFormInfo.UserData;
+            webRequestStartEventArgs.SerialId = serialId;
+            webRequestStartEventArgs.WebRequestUri = webRequestUri;
+            webRequestStartEventArgs.UserData = userData;
             return webRequestStartEventArgs;
         }
 

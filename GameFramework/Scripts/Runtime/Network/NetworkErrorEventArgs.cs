@@ -5,23 +5,15 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Event;
-using GameFramework.Network;
 using System.Net.Sockets;
 
-namespace UnityGameFramework.Runtime
+namespace GameFramework.Network
 {
     /// <summary>
     /// 网络错误事件。
     /// </summary>
-    public sealed class NetworkErrorEventArgs : GameEventArgs
+    public sealed class NetworkErrorEventArgs : GameFrameworkEventArgs
     {
-        /// <summary>
-        /// 网络错误事件编号。
-        /// </summary>
-        public static readonly int EventId = typeof(NetworkErrorEventArgs).GetHashCode();
-
         /// <summary>
         /// 初始化网络错误事件的新实例。
         /// </summary>
@@ -29,18 +21,8 @@ namespace UnityGameFramework.Runtime
         {
             NetworkChannel = null;
             ErrorCode = NetworkErrorCode.Unknown;
+            SocketErrorCode = SocketError.Success;
             ErrorMessage = null;
-        }
-
-        /// <summary>
-        /// 获取网络错误事件编号。
-        /// </summary>
-        public override int Id
-        {
-            get
-            {
-                return EventId;
-            }
         }
 
         /// <summary>
@@ -82,15 +64,18 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 创建网络错误事件。
         /// </summary>
-        /// <param name="e">内部事件。</param>
+        /// <param name="networkChannel">网络频道。</param>
+        /// <param name="errorCode">错误码。</param>
+        /// <param name="socketErrorCode">Socket 错误码。</param>
+        /// <param name="errorMessage">错误信息。</param>
         /// <returns>创建的网络错误事件。</returns>
-        public static NetworkErrorEventArgs Create(GameFramework.Network.NetworkErrorEventArgs e)
+        public static NetworkErrorEventArgs Create(INetworkChannel networkChannel, NetworkErrorCode errorCode, SocketError socketErrorCode, string errorMessage)
         {
             NetworkErrorEventArgs networkErrorEventArgs = ReferencePool.Acquire<NetworkErrorEventArgs>();
-            networkErrorEventArgs.NetworkChannel = e.NetworkChannel;
-            networkErrorEventArgs.ErrorCode = e.ErrorCode;
-            networkErrorEventArgs.SocketErrorCode = e.SocketErrorCode;
-            networkErrorEventArgs.ErrorMessage = e.ErrorMessage;
+            networkErrorEventArgs.NetworkChannel = networkChannel;
+            networkErrorEventArgs.ErrorCode = errorCode;
+            networkErrorEventArgs.SocketErrorCode = socketErrorCode;
+            networkErrorEventArgs.ErrorMessage = errorMessage;
             return networkErrorEventArgs;
         }
 
@@ -101,6 +86,7 @@ namespace UnityGameFramework.Runtime
         {
             NetworkChannel = null;
             ErrorCode = NetworkErrorCode.Unknown;
+            SocketErrorCode = SocketError.Success;
             ErrorMessage = null;
         }
     }
