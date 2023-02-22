@@ -5,13 +5,22 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Network
+using GameFramework;
+using GameFramework.Event;
+using GameFramework.Network;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 网络心跳包丢失事件。
     /// </summary>
-    public sealed class NetworkMissHeartBeatEventArgs : GameFrameworkEventArgs
+    public sealed class NetworkMissHeartBeatEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 网络心跳包丢失事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(NetworkMissHeartBeatEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化网络心跳包丢失事件的新实例。
         /// </summary>
@@ -19,6 +28,17 @@ namespace GameFramework.Network
         {
             NetworkChannel = null;
             MissCount = 0;
+        }
+
+        /// <summary>
+        /// 获取网络心跳包丢失事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -42,14 +62,13 @@ namespace GameFramework.Network
         /// <summary>
         /// 创建网络心跳包丢失事件。
         /// </summary>
-        /// <param name="networkChannel">网络频道。</param>
-        /// <param name="missCount">心跳包已丢失次数。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的网络心跳包丢失事件。</returns>
-        public static NetworkMissHeartBeatEventArgs Create(INetworkChannel networkChannel, int missCount)
+        public static NetworkMissHeartBeatEventArgs Create(GameFramework.Network.NetworkMissHeartBeatEventArgs e)
         {
             NetworkMissHeartBeatEventArgs networkMissHeartBeatEventArgs = ReferencePool.Acquire<NetworkMissHeartBeatEventArgs>();
-            networkMissHeartBeatEventArgs.NetworkChannel = networkChannel;
-            networkMissHeartBeatEventArgs.MissCount = missCount;
+            networkMissHeartBeatEventArgs.NetworkChannel = e.NetworkChannel;
+            networkMissHeartBeatEventArgs.MissCount = e.MissCount;
             return networkMissHeartBeatEventArgs;
         }
 

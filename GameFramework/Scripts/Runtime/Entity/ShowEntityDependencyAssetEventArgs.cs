@@ -5,19 +5,29 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Entity
+using GameFramework;
+using GameFramework.Event;
+using System;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 显示实体时加载依赖资源事件。
     /// </summary>
-    public sealed class ShowEntityDependencyAssetEventArgs : GameFrameworkEventArgs
+    public sealed class ShowEntityDependencyAssetEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 显示实体时加载依赖资源事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(ShowEntityDependencyAssetEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化显示实体时加载依赖资源事件的新实例。
         /// </summary>
         public ShowEntityDependencyAssetEventArgs()
         {
             EntityId = 0;
+            EntityLogicType = null;
             EntityAssetName = null;
             EntityGroupName = null;
             DependencyAssetName = null;
@@ -27,9 +37,29 @@ namespace GameFramework.Entity
         }
 
         /// <summary>
+        /// 获取显示实体时加载依赖资源事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
+        }
+
+        /// <summary>
         /// 获取实体编号。
         /// </summary>
         public int EntityId
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 获取实体逻辑类型。
+        /// </summary>
+        public Type EntityLogicType
         {
             get;
             private set;
@@ -92,24 +122,20 @@ namespace GameFramework.Entity
         /// <summary>
         /// 创建显示实体时加载依赖资源事件。
         /// </summary>
-        /// <param name="entityId">实体编号。</param>
-        /// <param name="entityAssetName">实体资源名称。</param>
-        /// <param name="entityGroupName">实体组名称。</param>
-        /// <param name="dependencyAssetName">被加载的依赖资源名称。</param>
-        /// <param name="loadedCount">当前已加载依赖资源数量。</param>
-        /// <param name="totalCount">总共加载依赖资源数量。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的显示实体时加载依赖资源事件。</returns>
-        public static ShowEntityDependencyAssetEventArgs Create(int entityId, string entityAssetName, string entityGroupName, string dependencyAssetName, int loadedCount, int totalCount, object userData)
+        public static ShowEntityDependencyAssetEventArgs Create(GameFramework.Entity.ShowEntityDependencyAssetEventArgs e)
         {
+            ShowEntityInfo showEntityInfo = (ShowEntityInfo)e.UserData;
             ShowEntityDependencyAssetEventArgs showEntityDependencyAssetEventArgs = ReferencePool.Acquire<ShowEntityDependencyAssetEventArgs>();
-            showEntityDependencyAssetEventArgs.EntityId = entityId;
-            showEntityDependencyAssetEventArgs.EntityAssetName = entityAssetName;
-            showEntityDependencyAssetEventArgs.EntityGroupName = entityGroupName;
-            showEntityDependencyAssetEventArgs.DependencyAssetName = dependencyAssetName;
-            showEntityDependencyAssetEventArgs.LoadedCount = loadedCount;
-            showEntityDependencyAssetEventArgs.TotalCount = totalCount;
-            showEntityDependencyAssetEventArgs.UserData = userData;
+            showEntityDependencyAssetEventArgs.EntityId = e.EntityId;
+            showEntityDependencyAssetEventArgs.EntityLogicType = showEntityInfo.EntityLogicType;
+            showEntityDependencyAssetEventArgs.EntityAssetName = e.EntityAssetName;
+            showEntityDependencyAssetEventArgs.EntityGroupName = e.EntityGroupName;
+            showEntityDependencyAssetEventArgs.DependencyAssetName = e.DependencyAssetName;
+            showEntityDependencyAssetEventArgs.LoadedCount = e.LoadedCount;
+            showEntityDependencyAssetEventArgs.TotalCount = e.TotalCount;
+            showEntityDependencyAssetEventArgs.UserData = showEntityInfo.UserData;
             return showEntityDependencyAssetEventArgs;
         }
 
@@ -119,6 +145,7 @@ namespace GameFramework.Entity
         public override void Clear()
         {
             EntityId = 0;
+            EntityLogicType = null;
             EntityAssetName = null;
             EntityGroupName = null;
             DependencyAssetName = null;

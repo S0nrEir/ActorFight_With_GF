@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Download
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 下载失败事件。
     /// </summary>
-    public sealed class DownloadFailureEventArgs : GameFrameworkEventArgs
+    public sealed class DownloadFailureEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 下载失败事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(DownloadFailureEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化下载失败事件的新实例。
         /// </summary>
@@ -22,6 +30,17 @@ namespace GameFramework.Download
             DownloadUri = null;
             ErrorMessage = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取下载失败事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -72,20 +91,16 @@ namespace GameFramework.Download
         /// <summary>
         /// 创建下载失败事件。
         /// </summary>
-        /// <param name="serialId">下载任务的序列编号。</param>
-        /// <param name="downloadPath">下载后存放路径。</param>
-        /// <param name="downloadUri">下载地址。</param>
-        /// <param name="errorMessage">错误信息。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的下载失败事件。</returns>
-        public static DownloadFailureEventArgs Create(int serialId, string downloadPath, string downloadUri, string errorMessage, object userData)
+        public static DownloadFailureEventArgs Create(GameFramework.Download.DownloadFailureEventArgs e)
         {
             DownloadFailureEventArgs downloadFailureEventArgs = ReferencePool.Acquire<DownloadFailureEventArgs>();
-            downloadFailureEventArgs.SerialId = serialId;
-            downloadFailureEventArgs.DownloadPath = downloadPath;
-            downloadFailureEventArgs.DownloadUri = downloadUri;
-            downloadFailureEventArgs.ErrorMessage = errorMessage;
-            downloadFailureEventArgs.UserData = userData;
+            downloadFailureEventArgs.SerialId = e.SerialId;
+            downloadFailureEventArgs.DownloadPath = e.DownloadPath;
+            downloadFailureEventArgs.DownloadUri = e.DownloadUri;
+            downloadFailureEventArgs.ErrorMessage = e.ErrorMessage;
+            downloadFailureEventArgs.UserData = e.UserData;
             return downloadFailureEventArgs;
         }
 

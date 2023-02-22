@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 资源应用失败事件。
     /// </summary>
-    public sealed class ResourceApplyFailureEventArgs : GameFrameworkEventArgs
+    public sealed class ResourceApplyFailureEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 资源应用失败事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(ResourceApplyFailureEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化资源应用失败事件的新实例。
         /// </summary>
@@ -20,6 +28,17 @@ namespace GameFramework.Resource
             Name = null;
             ResourcePackPath = null;
             ErrorMessage = null;
+        }
+
+        /// <summary>
+        /// 获取资源应用失败事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -52,16 +71,14 @@ namespace GameFramework.Resource
         /// <summary>
         /// 创建资源应用失败事件。
         /// </summary>
-        /// <param name="name">资源名称。</param>
-        /// <param name="resourcePackPath">资源包路径。</param>
-        /// <param name="errorMessage">错误信息。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的资源应用失败事件。</returns>
-        public static ResourceApplyFailureEventArgs Create(string name, string resourcePackPath, string errorMessage)
+        public static ResourceApplyFailureEventArgs Create(GameFramework.Resource.ResourceApplyFailureEventArgs e)
         {
             ResourceApplyFailureEventArgs resourceApplyFailureEventArgs = ReferencePool.Acquire<ResourceApplyFailureEventArgs>();
-            resourceApplyFailureEventArgs.Name = name;
-            resourceApplyFailureEventArgs.ResourcePackPath = resourcePackPath;
-            resourceApplyFailureEventArgs.ErrorMessage = errorMessage;
+            resourceApplyFailureEventArgs.Name = e.Name;
+            resourceApplyFailureEventArgs.ResourcePackPath = e.ResourcePackPath;
+            resourceApplyFailureEventArgs.ErrorMessage = e.ErrorMessage;
             return resourceApplyFailureEventArgs;
         }
 

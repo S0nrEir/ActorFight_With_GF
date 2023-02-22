@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.UI
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 打开界面更新事件。
     /// </summary>
-    public sealed class OpenUIFormUpdateEventArgs : GameFrameworkEventArgs
+    public sealed class OpenUIFormUpdateEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 打开界面更新事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(OpenUIFormUpdateEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化打开界面更新事件的新实例。
         /// </summary>
@@ -23,6 +31,17 @@ namespace GameFramework.UI
             PauseCoveredUIForm = false;
             Progress = 0f;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取打开界面更新事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -82,22 +101,17 @@ namespace GameFramework.UI
         /// <summary>
         /// 创建打开界面更新事件。
         /// </summary>
-        /// <param name="serialId">界面序列编号。</param>
-        /// <param name="uiFormAssetName">界面资源名称。</param>
-        /// <param name="uiGroupName">界面组名称。</param>
-        /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
-        /// <param name="progress">打开界面进度。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的打开界面更新事件。</returns>
-        public static OpenUIFormUpdateEventArgs Create(int serialId, string uiFormAssetName, string uiGroupName, bool pauseCoveredUIForm, float progress, object userData)
+        public static OpenUIFormUpdateEventArgs Create(GameFramework.UI.OpenUIFormUpdateEventArgs e)
         {
             OpenUIFormUpdateEventArgs openUIFormUpdateEventArgs = ReferencePool.Acquire<OpenUIFormUpdateEventArgs>();
-            openUIFormUpdateEventArgs.SerialId = serialId;
-            openUIFormUpdateEventArgs.UIFormAssetName = uiFormAssetName;
-            openUIFormUpdateEventArgs.UIGroupName = uiGroupName;
-            openUIFormUpdateEventArgs.PauseCoveredUIForm = pauseCoveredUIForm;
-            openUIFormUpdateEventArgs.Progress = progress;
-            openUIFormUpdateEventArgs.UserData = userData;
+            openUIFormUpdateEventArgs.SerialId = e.SerialId;
+            openUIFormUpdateEventArgs.UIFormAssetName = e.UIFormAssetName;
+            openUIFormUpdateEventArgs.UIGroupName = e.UIGroupName;
+            openUIFormUpdateEventArgs.PauseCoveredUIForm = e.PauseCoveredUIForm;
+            openUIFormUpdateEventArgs.Progress = e.Progress;
+            openUIFormUpdateEventArgs.UserData = e.UserData;
             return openUIFormUpdateEventArgs;
         }
 

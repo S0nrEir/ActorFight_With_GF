@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 资源更新失败事件。
     /// </summary>
-    public sealed class ResourceUpdateFailureEventArgs : GameFrameworkEventArgs
+    public sealed class ResourceUpdateFailureEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 资源更新失败事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(ResourceUpdateFailureEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化资源更新失败事件的新实例。
         /// </summary>
@@ -22,6 +30,17 @@ namespace GameFramework.Resource
             RetryCount = 0;
             TotalRetryCount = 0;
             ErrorMessage = null;
+        }
+
+        /// <summary>
+        /// 获取资源更新失败事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -72,21 +91,16 @@ namespace GameFramework.Resource
         /// <summary>
         /// 创建资源更新失败事件。
         /// </summary>
-        /// <param name="name">资源名称。</param>
-        /// <param name="downloadUri">下载地址。</param>
-        /// <param name="retryCount">已重试次数。</param>
-        /// <param name="totalRetryCount">设定的重试次数。</param>
-        /// <param name="errorMessage">错误信息。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的资源更新失败事件。</returns>
-        /// <remarks>当已重试次数达到设定的重试次数时，将不再重试。</remarks>
-        public static ResourceUpdateFailureEventArgs Create(string name, string downloadUri, int retryCount, int totalRetryCount, string errorMessage)
+        public static ResourceUpdateFailureEventArgs Create(GameFramework.Resource.ResourceUpdateFailureEventArgs e)
         {
             ResourceUpdateFailureEventArgs resourceUpdateFailureEventArgs = ReferencePool.Acquire<ResourceUpdateFailureEventArgs>();
-            resourceUpdateFailureEventArgs.Name = name;
-            resourceUpdateFailureEventArgs.DownloadUri = downloadUri;
-            resourceUpdateFailureEventArgs.RetryCount = retryCount;
-            resourceUpdateFailureEventArgs.TotalRetryCount = totalRetryCount;
-            resourceUpdateFailureEventArgs.ErrorMessage = errorMessage;
+            resourceUpdateFailureEventArgs.Name = e.Name;
+            resourceUpdateFailureEventArgs.DownloadUri = e.DownloadUri;
+            resourceUpdateFailureEventArgs.RetryCount = e.RetryCount;
+            resourceUpdateFailureEventArgs.TotalRetryCount = e.TotalRetryCount;
+            resourceUpdateFailureEventArgs.ErrorMessage = e.ErrorMessage;
             return resourceUpdateFailureEventArgs;
         }
 

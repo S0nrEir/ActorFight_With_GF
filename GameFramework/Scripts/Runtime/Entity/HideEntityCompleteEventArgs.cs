@@ -5,13 +5,22 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Entity
+using GameFramework;
+using GameFramework.Entity;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 隐藏实体完成事件。
     /// </summary>
-    public sealed class HideEntityCompleteEventArgs : GameFrameworkEventArgs
+    public sealed class HideEntityCompleteEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 隐藏实体完成事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(HideEntityCompleteEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化隐藏实体完成事件的新实例。
         /// </summary>
@@ -21,6 +30,17 @@ namespace GameFramework.Entity
             EntityAssetName = null;
             EntityGroup = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取隐藏实体完成事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -62,18 +82,15 @@ namespace GameFramework.Entity
         /// <summary>
         /// 创建隐藏实体完成事件。
         /// </summary>
-        /// <param name="entityId">实体编号。</param>
-        /// <param name="entityAssetName">实体资源名称。</param>
-        /// <param name="entityGroup">实体所属的实体组。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的隐藏实体完成事件。</returns>
-        public static HideEntityCompleteEventArgs Create(int entityId, string entityAssetName, IEntityGroup entityGroup, object userData)
+        public static HideEntityCompleteEventArgs Create(GameFramework.Entity.HideEntityCompleteEventArgs e)
         {
             HideEntityCompleteEventArgs hideEntityCompleteEventArgs = ReferencePool.Acquire<HideEntityCompleteEventArgs>();
-            hideEntityCompleteEventArgs.EntityId = entityId;
-            hideEntityCompleteEventArgs.EntityAssetName = entityAssetName;
-            hideEntityCompleteEventArgs.EntityGroup = entityGroup;
-            hideEntityCompleteEventArgs.UserData = userData;
+            hideEntityCompleteEventArgs.EntityId = e.EntityId;
+            hideEntityCompleteEventArgs.EntityAssetName = e.EntityAssetName;
+            hideEntityCompleteEventArgs.EntityGroup = e.EntityGroup;
+            hideEntityCompleteEventArgs.UserData = e.UserData;
             return hideEntityCompleteEventArgs;
         }
 

@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Scene
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 卸载场景成功事件。
     /// </summary>
-    public sealed class UnloadSceneSuccessEventArgs : GameFrameworkEventArgs
+    public sealed class UnloadSceneSuccessEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 加载场景成功事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(UnloadSceneSuccessEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化卸载场景成功事件的新实例。
         /// </summary>
@@ -19,6 +27,17 @@ namespace GameFramework.Scene
         {
             SceneAssetName = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取加载场景成功事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -42,14 +61,13 @@ namespace GameFramework.Scene
         /// <summary>
         /// 创建卸载场景成功事件。
         /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的卸载场景成功事件。</returns>
-        public static UnloadSceneSuccessEventArgs Create(string sceneAssetName, object userData)
+        public static UnloadSceneSuccessEventArgs Create(GameFramework.Scene.UnloadSceneSuccessEventArgs e)
         {
             UnloadSceneSuccessEventArgs unloadSceneSuccessEventArgs = ReferencePool.Acquire<UnloadSceneSuccessEventArgs>();
-            unloadSceneSuccessEventArgs.SceneAssetName = sceneAssetName;
-            unloadSceneSuccessEventArgs.UserData = userData;
+            unloadSceneSuccessEventArgs.SceneAssetName = e.SceneAssetName;
+            unloadSceneSuccessEventArgs.UserData = e.UserData;
             return unloadSceneSuccessEventArgs;
         }
 

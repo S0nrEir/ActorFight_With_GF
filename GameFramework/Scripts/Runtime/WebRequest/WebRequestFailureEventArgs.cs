@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.WebRequest
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// Web 请求失败事件。
     /// </summary>
-    public sealed class WebRequestFailureEventArgs : GameFrameworkEventArgs
+    public sealed class WebRequestFailureEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// Web 请求失败事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(WebRequestFailureEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化 Web 请求失败事件的新实例。
         /// </summary>
@@ -21,6 +29,17 @@ namespace GameFramework.WebRequest
             WebRequestUri = null;
             ErrorMessage = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取 Web 请求失败事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -62,18 +81,17 @@ namespace GameFramework.WebRequest
         /// <summary>
         /// 创建 Web 请求失败事件。
         /// </summary>
-        /// <param name="serialId">Web 请求任务的序列编号。</param>
-        /// <param name="webRequestUri">Web 请求地址。</param>
-        /// <param name="errorMessage">错误信息。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的 Web 请求失败事件。</returns>
-        public static WebRequestFailureEventArgs Create(int serialId, string webRequestUri, string errorMessage, object userData)
+        public static WebRequestFailureEventArgs Create(GameFramework.WebRequest.WebRequestFailureEventArgs e)
         {
+            WWWFormInfo wwwFormInfo = (WWWFormInfo)e.UserData;
             WebRequestFailureEventArgs webRequestFailureEventArgs = ReferencePool.Acquire<WebRequestFailureEventArgs>();
-            webRequestFailureEventArgs.SerialId = serialId;
-            webRequestFailureEventArgs.WebRequestUri = webRequestUri;
-            webRequestFailureEventArgs.ErrorMessage = errorMessage;
-            webRequestFailureEventArgs.UserData = userData;
+            webRequestFailureEventArgs.SerialId = e.SerialId;
+            webRequestFailureEventArgs.WebRequestUri = e.WebRequestUri;
+            webRequestFailureEventArgs.ErrorMessage = e.ErrorMessage;
+            webRequestFailureEventArgs.UserData = wwwFormInfo.UserData;
+            ReferencePool.Release(wwwFormInfo);
             return webRequestFailureEventArgs;
         }
 

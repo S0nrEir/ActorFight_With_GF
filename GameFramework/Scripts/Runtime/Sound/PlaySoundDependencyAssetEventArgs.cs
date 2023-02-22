@@ -5,13 +5,22 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Sound
+using GameFramework;
+using GameFramework.Event;
+using GameFramework.Sound;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 播放声音时加载依赖资源事件。
     /// </summary>
-    public sealed class PlaySoundDependencyAssetEventArgs : GameFrameworkEventArgs
+    public sealed class PlaySoundDependencyAssetEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 播放声音时加载依赖资源事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(PlaySoundDependencyAssetEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化播放声音时加载依赖资源事件的新实例。
         /// </summary>
@@ -24,7 +33,19 @@ namespace GameFramework.Sound
             DependencyAssetName = null;
             LoadedCount = 0;
             TotalCount = 0;
+            BindingEntity = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取播放声音时加载依赖资源事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -91,6 +112,15 @@ namespace GameFramework.Sound
         }
 
         /// <summary>
+        /// 获取声音绑定的实体。
+        /// </summary>
+        public Entity BindingEntity
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// 获取用户自定义数据。
         /// </summary>
         public object UserData
@@ -102,26 +132,21 @@ namespace GameFramework.Sound
         /// <summary>
         /// 创建播放声音时加载依赖资源事件。
         /// </summary>
-        /// <param name="serialId">声音的序列编号。</param>
-        /// <param name="soundAssetName">声音资源名称。</param>
-        /// <param name="soundGroupName">声音组名称。</param>
-        /// <param name="playSoundParams">播放声音参数。</param>
-        /// <param name="dependencyAssetName">被加载的依赖资源名称。</param>
-        /// <param name="loadedCount">当前已加载依赖资源数量。</param>
-        /// <param name="totalCount">总共加载依赖资源数量。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的播放声音时加载依赖资源事件。</returns>
-        public static PlaySoundDependencyAssetEventArgs Create(int serialId, string soundAssetName, string soundGroupName, PlaySoundParams playSoundParams, string dependencyAssetName, int loadedCount, int totalCount, object userData)
+        public static PlaySoundDependencyAssetEventArgs Create(GameFramework.Sound.PlaySoundDependencyAssetEventArgs e)
         {
+            PlaySoundInfo playSoundInfo = (PlaySoundInfo)e.UserData;
             PlaySoundDependencyAssetEventArgs playSoundDependencyAssetEventArgs = ReferencePool.Acquire<PlaySoundDependencyAssetEventArgs>();
-            playSoundDependencyAssetEventArgs.SerialId = serialId;
-            playSoundDependencyAssetEventArgs.SoundAssetName = soundAssetName;
-            playSoundDependencyAssetEventArgs.SoundGroupName = soundGroupName;
-            playSoundDependencyAssetEventArgs.PlaySoundParams = playSoundParams;
-            playSoundDependencyAssetEventArgs.DependencyAssetName = dependencyAssetName;
-            playSoundDependencyAssetEventArgs.LoadedCount = loadedCount;
-            playSoundDependencyAssetEventArgs.TotalCount = totalCount;
-            playSoundDependencyAssetEventArgs.UserData = userData;
+            playSoundDependencyAssetEventArgs.SerialId = e.SerialId;
+            playSoundDependencyAssetEventArgs.SoundAssetName = e.SoundAssetName;
+            playSoundDependencyAssetEventArgs.SoundGroupName = e.SoundGroupName;
+            playSoundDependencyAssetEventArgs.PlaySoundParams = e.PlaySoundParams;
+            playSoundDependencyAssetEventArgs.DependencyAssetName = e.DependencyAssetName;
+            playSoundDependencyAssetEventArgs.LoadedCount = e.LoadedCount;
+            playSoundDependencyAssetEventArgs.TotalCount = e.TotalCount;
+            playSoundDependencyAssetEventArgs.BindingEntity = playSoundInfo.BindingEntity;
+            playSoundDependencyAssetEventArgs.UserData = playSoundInfo.UserData;
             return playSoundDependencyAssetEventArgs;
         }
 
@@ -137,6 +162,7 @@ namespace GameFramework.Sound
             DependencyAssetName = null;
             LoadedCount = 0;
             TotalCount = 0;
+            BindingEntity = null;
             UserData = null;
         }
     }

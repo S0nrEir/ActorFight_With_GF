@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.UI
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 打开界面时加载依赖资源事件。
     /// </summary>
-    public sealed class OpenUIFormDependencyAssetEventArgs : GameFrameworkEventArgs
+    public sealed class OpenUIFormDependencyAssetEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 打开界面时加载依赖资源事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(OpenUIFormDependencyAssetEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化打开界面时加载依赖资源事件的新实例。
         /// </summary>
@@ -25,6 +33,17 @@ namespace GameFramework.UI
             LoadedCount = 0;
             TotalCount = 0;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取打开界面时加载依赖资源事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -102,26 +121,19 @@ namespace GameFramework.UI
         /// <summary>
         /// 创建打开界面时加载依赖资源事件。
         /// </summary>
-        /// <param name="serialId">界面序列编号。</param>
-        /// <param name="uiFormAssetName">界面资源名称。</param>
-        /// <param name="uiGroupName">界面组名称。</param>
-        /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
-        /// <param name="dependencyAssetName">被加载的依赖资源名称。</param>
-        /// <param name="loadedCount">当前已加载依赖资源数量。</param>
-        /// <param name="totalCount">总共加载依赖资源数量。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的打开界面时加载依赖资源事件。</returns>
-        public static OpenUIFormDependencyAssetEventArgs Create(int serialId, string uiFormAssetName, string uiGroupName, bool pauseCoveredUIForm, string dependencyAssetName, int loadedCount, int totalCount, object userData)
+        public static OpenUIFormDependencyAssetEventArgs Create(GameFramework.UI.OpenUIFormDependencyAssetEventArgs e)
         {
             OpenUIFormDependencyAssetEventArgs openUIFormDependencyAssetEventArgs = ReferencePool.Acquire<OpenUIFormDependencyAssetEventArgs>();
-            openUIFormDependencyAssetEventArgs.SerialId = serialId;
-            openUIFormDependencyAssetEventArgs.UIFormAssetName = uiFormAssetName;
-            openUIFormDependencyAssetEventArgs.UIGroupName = uiGroupName;
-            openUIFormDependencyAssetEventArgs.PauseCoveredUIForm = pauseCoveredUIForm;
-            openUIFormDependencyAssetEventArgs.DependencyAssetName = dependencyAssetName;
-            openUIFormDependencyAssetEventArgs.LoadedCount = loadedCount;
-            openUIFormDependencyAssetEventArgs.TotalCount = totalCount;
-            openUIFormDependencyAssetEventArgs.UserData = userData;
+            openUIFormDependencyAssetEventArgs.SerialId = e.SerialId;
+            openUIFormDependencyAssetEventArgs.UIFormAssetName = e.UIFormAssetName;
+            openUIFormDependencyAssetEventArgs.UIGroupName = e.UIGroupName;
+            openUIFormDependencyAssetEventArgs.PauseCoveredUIForm = e.PauseCoveredUIForm;
+            openUIFormDependencyAssetEventArgs.DependencyAssetName = e.DependencyAssetName;
+            openUIFormDependencyAssetEventArgs.LoadedCount = e.LoadedCount;
+            openUIFormDependencyAssetEventArgs.TotalCount = e.TotalCount;
+            openUIFormDependencyAssetEventArgs.UserData = e.UserData;
             return openUIFormDependencyAssetEventArgs;
         }
 

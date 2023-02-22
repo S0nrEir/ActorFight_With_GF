@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Download
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 下载成功事件。
     /// </summary>
-    public sealed class DownloadSuccessEventArgs : GameFrameworkEventArgs
+    public sealed class DownloadSuccessEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 下载成功事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(DownloadSuccessEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化下载成功事件的新实例。
         /// </summary>
@@ -22,6 +30,17 @@ namespace GameFramework.Download
             DownloadUri = null;
             CurrentLength = 0L;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取下载成功事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -72,20 +91,16 @@ namespace GameFramework.Download
         /// <summary>
         /// 创建下载成功事件。
         /// </summary>
-        /// <param name="serialId">下载任务的序列编号。</param>
-        /// <param name="downloadPath">下载后存放路径。</param>
-        /// <param name="downloadUri">下载地址。</param>
-        /// <param name="currentLength">当前大小。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的下载成功事件。</returns>
-        public static DownloadSuccessEventArgs Create(int serialId, string downloadPath, string downloadUri, long currentLength, object userData)
+        public static DownloadSuccessEventArgs Create(GameFramework.Download.DownloadSuccessEventArgs e)
         {
             DownloadSuccessEventArgs downloadSuccessEventArgs = ReferencePool.Acquire<DownloadSuccessEventArgs>();
-            downloadSuccessEventArgs.SerialId = serialId;
-            downloadSuccessEventArgs.DownloadPath = downloadPath;
-            downloadSuccessEventArgs.DownloadUri = downloadUri;
-            downloadSuccessEventArgs.CurrentLength = currentLength;
-            downloadSuccessEventArgs.UserData = userData;
+            downloadSuccessEventArgs.SerialId = e.SerialId;
+            downloadSuccessEventArgs.DownloadPath = e.DownloadPath;
+            downloadSuccessEventArgs.DownloadUri = e.DownloadUri;
+            downloadSuccessEventArgs.CurrentLength = e.CurrentLength;
+            downloadSuccessEventArgs.UserData = e.UserData;
             return downloadSuccessEventArgs;
         }
 

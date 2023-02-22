@@ -5,13 +5,22 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.UI
+using GameFramework;
+using GameFramework.Event;
+using GameFramework.UI;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 关闭界面完成事件。
     /// </summary>
-    public sealed class CloseUIFormCompleteEventArgs : GameFrameworkEventArgs
+    public sealed class CloseUIFormCompleteEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 关闭界面完成事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(CloseUIFormCompleteEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化关闭界面完成事件的新实例。
         /// </summary>
@@ -21,6 +30,17 @@ namespace GameFramework.UI
             UIFormAssetName = null;
             UIGroup = null;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取关闭界面完成事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -62,18 +82,15 @@ namespace GameFramework.UI
         /// <summary>
         /// 创建关闭界面完成事件。
         /// </summary>
-        /// <param name="serialId">界面序列编号。</param>
-        /// <param name="uiFormAssetName">界面资源名称。</param>
-        /// <param name="uiGroup">界面所属的界面组。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的关闭界面完成事件。</returns>
-        public static CloseUIFormCompleteEventArgs Create(int serialId, string uiFormAssetName, IUIGroup uiGroup, object userData)
+        public static CloseUIFormCompleteEventArgs Create(GameFramework.UI.CloseUIFormCompleteEventArgs e)
         {
             CloseUIFormCompleteEventArgs closeUIFormCompleteEventArgs = ReferencePool.Acquire<CloseUIFormCompleteEventArgs>();
-            closeUIFormCompleteEventArgs.SerialId = serialId;
-            closeUIFormCompleteEventArgs.UIFormAssetName = uiFormAssetName;
-            closeUIFormCompleteEventArgs.UIGroup = uiGroup;
-            closeUIFormCompleteEventArgs.UserData = userData;
+            closeUIFormCompleteEventArgs.SerialId = e.SerialId;
+            closeUIFormCompleteEventArgs.UIFormAssetName = e.UIFormAssetName;
+            closeUIFormCompleteEventArgs.UIGroup = e.UIGroup;
+            closeUIFormCompleteEventArgs.UserData = e.UserData;
             return closeUIFormCompleteEventArgs;
         }
 

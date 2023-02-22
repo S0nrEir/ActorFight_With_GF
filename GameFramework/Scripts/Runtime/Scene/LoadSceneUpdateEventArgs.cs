@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Scene
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 加载场景更新事件。
     /// </summary>
-    public sealed class LoadSceneUpdateEventArgs : GameFrameworkEventArgs
+    public sealed class LoadSceneUpdateEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 加载场景更新事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(LoadSceneUpdateEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化加载场景更新事件的新实例。
         /// </summary>
@@ -20,6 +28,17 @@ namespace GameFramework.Scene
             SceneAssetName = null;
             Progress = 0f;
             UserData = null;
+        }
+
+        /// <summary>
+        /// 获取加载场景更新事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -52,16 +71,14 @@ namespace GameFramework.Scene
         /// <summary>
         /// 创建加载场景更新事件。
         /// </summary>
-        /// <param name="sceneAssetName">场景资源名称。</param>
-        /// <param name="progress">加载场景进度。</param>
-        /// <param name="userData">用户自定义数据。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的加载场景更新事件。</returns>
-        public static LoadSceneUpdateEventArgs Create(string sceneAssetName, float progress, object userData)
+        public static LoadSceneUpdateEventArgs Create(GameFramework.Scene.LoadSceneUpdateEventArgs e)
         {
             LoadSceneUpdateEventArgs loadSceneUpdateEventArgs = ReferencePool.Acquire<LoadSceneUpdateEventArgs>();
-            loadSceneUpdateEventArgs.SceneAssetName = sceneAssetName;
-            loadSceneUpdateEventArgs.Progress = progress;
-            loadSceneUpdateEventArgs.UserData = userData;
+            loadSceneUpdateEventArgs.SceneAssetName = e.SceneAssetName;
+            loadSceneUpdateEventArgs.Progress = e.Progress;
+            loadSceneUpdateEventArgs.UserData = e.UserData;
             return loadSceneUpdateEventArgs;
         }
 

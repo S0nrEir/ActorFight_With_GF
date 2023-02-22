@@ -5,13 +5,21 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+using GameFramework;
+using GameFramework.Event;
+
+namespace UnityGameFramework.Runtime
 {
     /// <summary>
     /// 资源应用成功事件。
     /// </summary>
-    public sealed class ResourceApplySuccessEventArgs : GameFrameworkEventArgs
+    public sealed class ResourceApplySuccessEventArgs : GameEventArgs
     {
+        /// <summary>
+        /// 资源应用成功事件编号。
+        /// </summary>
+        public static readonly int EventId = typeof(ResourceApplySuccessEventArgs).GetHashCode();
+
         /// <summary>
         /// 初始化资源应用成功事件的新实例。
         /// </summary>
@@ -22,6 +30,17 @@ namespace GameFramework.Resource
             ResourcePackPath = null;
             Length = 0;
             CompressedLength = 0;
+        }
+
+        /// <summary>
+        /// 获取资源应用成功事件编号。
+        /// </summary>
+        public override int Id
+        {
+            get
+            {
+                return EventId;
+            }
         }
 
         /// <summary>
@@ -72,20 +91,16 @@ namespace GameFramework.Resource
         /// <summary>
         /// 创建资源应用成功事件。
         /// </summary>
-        /// <param name="name">资源名称。</param>
-        /// <param name="applyPath">资源应用后存放路径。</param>
-        /// <param name="resourcePackPath">资源包路径。</param>
-        /// <param name="length">资源大小。</param>
-        /// <param name="compressedLength">压缩后大小。</param>
+        /// <param name="e">内部事件。</param>
         /// <returns>创建的资源应用成功事件。</returns>
-        public static ResourceApplySuccessEventArgs Create(string name, string applyPath, string resourcePackPath, int length, int compressedLength)
+        public static ResourceApplySuccessEventArgs Create(GameFramework.Resource.ResourceApplySuccessEventArgs e)
         {
             ResourceApplySuccessEventArgs resourceApplySuccessEventArgs = ReferencePool.Acquire<ResourceApplySuccessEventArgs>();
-            resourceApplySuccessEventArgs.Name = name;
-            resourceApplySuccessEventArgs.ApplyPath = applyPath;
-            resourceApplySuccessEventArgs.ResourcePackPath = resourcePackPath;
-            resourceApplySuccessEventArgs.Length = length;
-            resourceApplySuccessEventArgs.CompressedLength = compressedLength;
+            resourceApplySuccessEventArgs.Name = e.Name;
+            resourceApplySuccessEventArgs.ApplyPath = e.ApplyPath;
+            resourceApplySuccessEventArgs.ResourcePackPath = e.ResourcePackPath;
+            resourceApplySuccessEventArgs.Length = e.Length;
+            resourceApplySuccessEventArgs.CompressedLength = e.CompressedLength;
             return resourceApplySuccessEventArgs;
         }
 
