@@ -1,14 +1,13 @@
-﻿using GameFramework;
-using GameFramework.Event;
+﻿using Aquila.Config;
 using Aquila.Fight.Addon;
+using Aquila.Module;
+using Aquila.ToolKit;
+using GameFramework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.AddonBase;
-using Aquila.Config;
-using Aquila.Event;
-using Aquila.ToolKit;
 
 namespace Aquila.Fight.Actor
 {
@@ -52,6 +51,7 @@ namespace Aquila.Fight.Actor
             foreach ( var iter in _addonDic )
             {
                 tempCode = iter.Value.Valid();
+
                 errCode |= tempCode;
                 if ( errCode != AddonValidErrorCodeEnum.NONE )
                     throw new GameFrameworkException( AddonValidErrorCodeEnum.ErrCode2String( tempCode ) );
@@ -69,6 +69,7 @@ namespace Aquila.Fight.Actor
             //Debug.Log( $"<color=white>Actor{ActorID}--->RegisterActorEvent{type}</color>" );
             if ( !_eventAddon.Register( type, action ) )
                 throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
+
         }
 
         /// <summary>
@@ -137,13 +138,13 @@ namespace Aquila.Fight.Actor
                 return;
 
             SetWorldPosition
-                ( 
+                (
                     new Vector3
-                        ( 
-                            posToSet.x, 
-                            Tools.Fight.TerrainPositionY(string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
-                            posToSet.y 
-                        ) 
+                        (
+                            posToSet.x,
+                            Tools.Fight.TerrainPositionY( string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
+                            posToSet.y
+                        )
                 );
         }
 
@@ -154,20 +155,21 @@ namespace Aquila.Fight.Actor
 
         public void Setup
             (
+                int role_meta_id,
                 string tag
             )
         {
+            SetRoleMetaID( role_meta_id );
             SetTag( tag );
-            //SetActorID( actor_id );
             Reset();
         }
 
         /// <summary>
-        /// 设置actor的ID
+        /// 设置角色表配置ID
         /// </summary>
-        public void SetActorID( int actor_id )
+        private void SetRoleMetaID( int role_meta_id )
         {
-            //ActorID = actor_id;
+            RoleMetaID = role_meta_id;
         }
 
         /// <summary>
@@ -188,13 +190,14 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
-            Register();
+            GameEntry.Module.GetModule<Module_Proxy_Fight>().Register( this, GetAllAddon() );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            base.OnHide( isShutdown, userData );
             CachedTransform.position = new Vector3( 999f, 999f, 999f );
+            GameEntry.Module.GetModule<Module_Proxy_Fight>().UnRegister( ActorID );
+            base.OnHide( isShutdown, userData );
         }
 
         /// <summary>
@@ -205,6 +208,17 @@ namespace Aquila.Fight.Actor
             UnRegister();
             HostID = GlobalVar.INVALID_GUID;
             ExtensionRecycle();
+            SetRoleMetaID( -1 );
+            gameObject.tag = String.Empty;
+            //dispose all addon
+            //var iter = _addonDic.GetEnumerator();
+            //AddonBase base_addon = null;
+            //while ( iter.MoveNext() )
+            //{
+            //    base_addon = iter.Current.Value;
+            //    base_addon.Dispose();
+            //}
+
             base.OnRecycle();
         }
 
@@ -212,25 +226,25 @@ namespace Aquila.Fight.Actor
         {
             base.OnInit( userData );
             InitAddons();
-            if ( gameObject.GetComponent<BoxCollider>() == null )
-            {
-                var collider = gameObject.AddComponent<BoxCollider>();
-                collider.size = new Vector3( .8f, .8f, .8f );
-                collider.isTrigger = true;
-            }
+            //if ( gameObject.GetComponent<BoxCollider>() == null )
+            //{
+            //    var collider = gameObject.AddComponent<BoxCollider>();
+            //    collider.size = new Vector3( .8f, .8f, .8f );
+            //    collider.isTrigger = true;
+            //}
 
             _allAddonInitDone = true;
         }
 
         /// <summary>
-        /// 注册GF消息，在OnShow的时候调用
+        /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
         protected virtual void Register()
         {
         }
 
         /// <summary>
-        /// 注销GF消息，在回收的时候调用
+        /// 注销GF消息，在回收的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
         protected virtual void UnRegister()
         {
@@ -279,7 +293,7 @@ namespace Aquila.Fight.Actor
         #endregion
 
         /// <summary>
-        /// 添加一个Addon到自身
+        /// 为自身添加一个Addon
         /// </summary>                                                 
         protected T AddAddon<T>() where T : AddonBase, new()
         {
@@ -298,6 +312,25 @@ namespace Aquila.Fight.Actor
                 addonToAdd.OnAdd();
                 return addonToAdd;
             }
+        }
+
+        /// <summary>
+        /// 获取自己的全部addon
+        /// </summary>
+        protected AddonBase[] GetAllAddon()
+        {
+            if ( _addonDic is null || _addonDic.Count == 0 )
+            {
+                Log.Warning( "GetAllAddon--->_addonDic is null || _addonDic.Count == 0" );
+                return new AddonBase[0];
+            }
+
+            AddonBase[] addons = new AddonBase[_addonDic.Count];
+            var idx = 0;
+            foreach ( var kv in _addonDic )
+                addons[idx++] = kv.Value;
+
+            return addons;
         }
 
         /// <summary>
@@ -324,6 +357,11 @@ namespace Aquila.Fight.Actor
         /// ActorID(ObjID)
         /// </summary>
         public int ActorID => Entity.Id;
+
+        /// <summary>
+        /// 角色表格配置ID
+        /// </summary>
+        public int RoleMetaID { get; private set; } = -1;
 
         /// <summary>
         /// 组件初始化标记
@@ -357,7 +395,7 @@ namespace Aquila.Fight.Actor
 
     //#region ActorInspector
     ///// <summary>
-    ///// 用于记录actor信息，抽时间写成inspector
+    ///// #todo用于记录actord信息的面板,抽时间写成inspector
     ///// </summary>
     //internal class ActorInspector : MonoBehaviour
     //{

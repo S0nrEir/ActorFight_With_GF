@@ -21,7 +21,7 @@ namespace Aquila.Procedure
             //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
             _input_module   = GameEntry.Module.GetModule<Module_Input>();
             _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _actor_module   = GameEntry.Module.GetModule<Module_Actor>();
+            _actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -47,7 +47,7 @@ namespace Aquila.Procedure
 
             _input_module.Start( param );
             _terrain_module.Start( param );
-            _actor_module  .Start( param );
+            _actor_fac_module.Start( param );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -55,7 +55,7 @@ namespace Aquila.Procedure
             //_terrain_module.End();
             _input_module.End();
             _terrain_module.End();
-            _actor_module.End();
+            _actor_fac_module.End();
             _procedure_owner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
                 Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
@@ -111,9 +111,9 @@ namespace Aquila.Procedure
         private Module_Terrain _terrain_module = null;
 
         /// <summary>
-        /// actor模块
+        /// actor工厂模块
         /// </summary>
-        private Module_Actor _actor_module = null;
+        private Module_Actor_Fac _actor_fac_module = null;
 
         /// <summary>
         /// 地块模块

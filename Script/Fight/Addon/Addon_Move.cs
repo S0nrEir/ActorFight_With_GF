@@ -34,10 +34,10 @@ namespace Aquila.Fight.Addon
 
             _pathList.Clear();
             _pathList = pathArr;
-            if (Actor.TryGetAddon<Addon_Data>( out var addon ))
-            {
-                SetSpeed( addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1 ) );
-            }
+            //if (Actor.TryGetAddon<Addon_Data>( out var addon ))
+            //{
+            //    SetSpeed( addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1 ) );
+            //}
         }
 
         public void SetTargetPahtList ( List<Vector2> pathArr )
@@ -47,10 +47,10 @@ namespace Aquila.Fight.Addon
 
             _pathList.Clear();
             _pathList = pathArr;
-            if (Actor.TryGetAddon<Addon_Data>( out var addon ))
-            {
-                _speed = (float)addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f );
-            }
+            //if (Actor.TryGetAddon<Addon_Data>( out var addon ))
+            //{
+            //    _speed = (float)addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f );
+            //}
             _pathIndex = 0;
         }
 

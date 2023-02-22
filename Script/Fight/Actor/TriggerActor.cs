@@ -73,16 +73,16 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 设置信息
         /// </summary>
-        public void Setup
-            (
-                string tag,
-                int actor_id,
-                (float x, float z) wh
-            )
-        {
-            Setup( tag );
-            _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
-        }
+        //public void Setup
+        //    (
+        //        string tag,
+        //        int actor_id,
+        //        (float x, float z) wh
+        //    )
+        //{
+        //    Setup( tag );
+        //    _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
+        //}
 
         public void SetSize( (float x, float z) wh )
         {

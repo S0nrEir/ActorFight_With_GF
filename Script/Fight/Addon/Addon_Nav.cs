@@ -138,10 +138,10 @@ namespace Aquila.Fight.Addon
             //避障半径，actor穿行的临时解决方案
             _agent.radius                = 0.1f;
             _agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-            if ( Actor.TryGetAddon<Addon_Data>( out var dataAddon ) )
-                _agent.speed = dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
-            else
-                _agent.speed = 1f;
+            //if ( Actor.TryGetAddon<Addon_Data>( out var dataAddon ) )
+            //    _agent.speed = dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
+            //else
+            //    _agent.speed = 1f;
         }
 
         public override void Dispose()
@@ -163,12 +163,12 @@ namespace Aquila.Fight.Addon
             _targetPos = Vector3.zero;
             _openFlag = false;
 
-            if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
-                _agent.speed = 1f;
-            else
-            {
-                _agent.speed = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
-            }
+            //if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
+            //    _agent.speed = 1f;
+            //else
+            //{
+            //    _agent.speed = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
+            //}
         }
 
         public override void SetEnable( bool enable )
