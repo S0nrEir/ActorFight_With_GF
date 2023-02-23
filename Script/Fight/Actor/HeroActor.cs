@@ -205,11 +205,6 @@ namespace Aquila.Fight.Actor
         {
             base.Reset();
         }
-
-        protected override void ResetData()
-        {
-        }
-
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );

@@ -269,25 +269,16 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 重置自己和addon的数据为初始值，而非清理，
         /// 建议的调用时机：初始化；回收时，
+        /// 目前的调用时机：Reset，ShowEntity后
         /// </summary>
         public virtual void Reset()
         {
-            ResetData();
             if ( _addonDic != null )
             {
                 var iter = _addonDic.GetEnumerator();
                 while ( iter.MoveNext() )
                     iter.Current.Value?.Reset();
             }
-
-        }
-
-        /// <summary>
-        /// 重置数据,setDataID(),Reset时调用
-        /// </summary> 
-        protected virtual void ResetData()
-        {
-
         }
 
         #endregion
