@@ -76,6 +76,11 @@ namespace Aquila.Fight.Addon
             //MAP = 8,
 
             /// <summary>
+            /// 数值组件
+            /// </summary>
+            NUMRIC,
+
+            /// <summary>
             /// 基础类型
             /// </summary>
             BASE = 999,
