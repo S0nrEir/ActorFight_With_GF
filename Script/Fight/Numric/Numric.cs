@@ -1,11 +1,8 @@
 using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
 {
-    #region pub
 
     /// <summary>
     /// 描述一个数值类型
@@ -13,124 +10,92 @@ namespace Aquila.Numric
     public class Numric : IReference
     {
         /// <summary>
-        /// 最终计算后的数值
+        /// 获取值
         /// </summary>
-        public float Value
+        public virtual float Value
         {
             get
             {
-                if ( _changed_flag )
+                if ( _change_flag )
                 {
-                    _changed_flag = false;
+                    _change_flag = false;
                     return ReCalc();
                 }
-                return _value;
+                return _correction_value;
             }
         }
 
         /// <summary>
-        /// 设置数值
+        /// 移除一个基础值修饰器
         /// </summary>
-        public void Setup(float base_val,float equip_add,float buff_add,float class_add)
+        public bool RemoveBaseModifier(Numric_Modifier to_remove_)
         {
-            _base_val  = base_val;
-            _class_add = class_add;
-            _equip_add = equip_add;
-            _buff_add  = buff_add;
-            ReCalc();
+            var succ = _correction.Remove( to_remove_ );
+            if ( !succ )
+                Log.Error("remove numric modifier faild!");
+
+            return succ;
+        }
+
+        #region override
+
+        /// <summary>
+        /// 重新计算修正值
+        /// </summary>
+        protected virtual float ReCalc()
+        {
+            _correction_value = 0f;
+            var iter = _correction.GetEnumerator();
+            while ( iter.MoveNext() )
+                _correction_value += iter.Current.Calc( _value );
+
+            return _correction_value;
         }
 
         /// <summary>
-        /// 设置基础值
+        /// 设置基础数值
         /// </summary>
-        public void SetBaseVal( float val )
+        public virtual void Setup( float base_val_ )
         {
-            _base_val = val;
-            _changed_flag = true;
-        }
-
-        public void SetClassAdd( float val )
-        {
-            _class_add = val;
-            _changed_flag = true;
-        }
-
-        /// <summary>
-        /// 设置buff修正
-        /// </summary>
-        public void SetBuffAdd( float val )
-        {
-            _buff_add = val;
-            _changed_flag = true;
-        }
-
-        /// <summary>
-        /// 设置装备修正
-        /// </summary>
-        public void SetEquipAdd( float val )
-        {
-            _equip_add = val;
-            _changed_flag = true;
+            _change_flag = true;
+            _value = base_val_;
+            if ( _correction is null )
+                _correction = new GameFrameworkLinkedList<Numric_Modifier>();
         }
 
         /// <summary>
         /// 清除数据
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
-            _base_val     = 0;
-            _class_add    = 0;
-            _equip_add    = 0;
-            _buff_add     = 0;
-            _changed_flag = false;
+            _value = 0f;
+            _correction_value = 0f;
+            _correction.Clear();
+            _change_flag = false;
         }
-
-        #endregion
-
-        #region priv
-
-        /// <summary>
-        /// 重新计算所有数值并设置到最终值
-        /// </summary>
-        private float ReCalc()
-        {
-            _value = _base_val + _equip_add + _buff_add + _class_add;
-            return _value;
-        }
-
         #endregion
 
         #region fields
 
         /// <summary>
-        /// 变更脏标记
+        /// 变更标记
         /// </summary>
-        private bool _changed_flag = false;
+        protected bool _change_flag = false;
 
         /// <summary>
-        /// 基础值，计算后的实际值
+        /// 该数值类型的基础值
         /// </summary>
-        private float _base_val = 0f;
+        protected float _value = 0f;
 
         /// <summary>
-        /// 装备修正，计算后的实际值
+        /// 修正加成值，保存所有修正运算后的结果
         /// </summary>
-        private float _equip_add = 0f;
+        protected float _correction_value;
 
         /// <summary>
-        /// 职业修正，计算后的实际值
+        /// 基础值修正
         /// </summary>
-        private float _class_add = 0f;
-
-        /// <summary>
-        /// buff修正，计算后的实际值
-        /// </summary>
-        private float _buff_add = 0f;
-
-        /// <summary>
-        /// 最终计算后的数值，计算后的实际值
-        /// </summary>
-        private float _value = 0f;
+        protected GameFrameworkLinkedList<Numric_Modifier> _correction;
 
         #endregion
     }
