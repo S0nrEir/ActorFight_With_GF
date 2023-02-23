@@ -125,11 +125,11 @@ namespace Aquila.Fight.FSM
         public override void OnEnter ( params object[] param )
         {
             base.OnEnter ( param );
-            if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
-                _animAddon.PlayStandAnim ();
+            //if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
+            //    _animAddon.PlayStandAnim ();
 
-            if ( _actor.TryGetAddon<Addon_Nav> ( out var navAddon ) )
-                navAddon.StopInmidiate ();
+            //if ( _actor.TryGetAddon<Addon_Nav> ( out var navAddon ) )
+            //    navAddon.StopInmidiate ();
         }
 
         public override void OnLeave ( params object[] param )
@@ -171,21 +171,21 @@ namespace Aquila.Fight.FSM
             }
 
             //#todo有的obj没有动画，先这样处理
-            if ( _actor.TryGetAddon<Addon_Anim> ( out var addon ) && addon.CurrClipName != "Run" )
-                addon.PlayRunAnim ();
+            //if ( _actor.TryGetAddon<Addon_Anim> ( out var addon ) && addon.CurrClipName != "Run" )
+            //    addon.PlayRunAnim ();
 
-            if ( !_actor.TryGetAddon ( out _moveAddon ) )
-                throw new GameFrameworkException ( "!_actor.TryGetAddon<MoveAddon>( out _moveAddon )" );
+            //if ( !_actor.TryGetAddon ( out _moveAddon ) )
+            //    throw new GameFrameworkException ( "!_actor.TryGetAddon<MoveAddon>( out _moveAddon )" );
 
-            if ( !_actor.TryGetAddon ( out _navAddon ) )
-                throw new GameFrameworkException ( "!_actor.TryGetAddon<NavAddon>( out _moveAddon )" );
+            //if ( !_actor.TryGetAddon ( out _navAddon ) )
+            //    throw new GameFrameworkException ( "!_actor.TryGetAddon<NavAddon>( out _moveAddon )" );
 
-            var listArr = param[0] as object[];
-            IList<float> xList = listArr[0] as IList<float>;
-            IList<float> zList = listArr[1] as IList<float>;
+            //var listArr = param[0] as object[];
+            //IList<float> xList = listArr[0] as IList<float>;
+            //IList<float> zList = listArr[1] as IList<float>;
 
-            OnNavAddonEnter ( xList, zList );
-            return;
+            //OnNavAddonEnter ( xList, zList );
+            //return;
 
             //OnMoveAddonEnter( xList, zList );
         }
@@ -292,14 +292,14 @@ namespace Aquila.Fight.FSM
         public override void OnEnter ( params object[] param )
         {
             base.OnEnter ( param );
-            if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
-                _animAddon.PlayDieAnim();
+            //if ( _actor.TryGetAddon<Addon_Anim> ( out _animAddon ) )
+            //    _animAddon.PlayDieAnim();
 
-            if ( _actor.TryGetAddon<Addon_InfoBoard> ( out var sliderAddon ) )
-            {
-                //sliderAddon.ChangeHPValue ( 0 );
-                //sliderAddon.HideAll ();
-            }
+            //if ( _actor.TryGetAddon<Addon_InfoBoard> ( out var sliderAddon ) )
+            //{
+            //    sliderAddon.ChangeHPValue( 0 );
+            //    sliderAddon.HideAll();
+            //}
 
             GameEntry.Event.Fire ( this, ReferencePool.Acquire<ActorDieEventArgs> ().Fill ( _actor ) );
         }

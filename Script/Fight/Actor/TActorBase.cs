@@ -26,7 +26,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 尝试获取一个addon
         /// </summary>
-        public bool TryGetAddon<T>( out T targetAddon ) where T : AddonBase
+        private bool TryGetAddon<T>( out T targetAddon ) where T : AddonBase
         {
             targetAddon = null;
             if ( _addonDic is null || _addonDic.Count == 0 )
@@ -66,7 +66,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void RegisterActorEvent( ActorEventEnum type, Action<int, object[]> action )
         {
-            //Debug.Log( $"<color=white>Actor{ActorID}--->RegisterActorEvent{type}</color>" );
             if ( !_eventAddon.Register( type, action ) )
                 throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
 
