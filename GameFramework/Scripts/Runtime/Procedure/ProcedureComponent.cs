@@ -31,6 +31,11 @@ namespace UnityGameFramework.Runtime
         private string m_EntranceProcedureTypeName = null;
 
         /// <summary>
+        /// 自加变量，是否进入测试流程
+        /// </summary>
+        public bool _is_enter_test_scene = false;
+
+        /// <summary>
         /// 获取当前流程。
         /// </summary>
         public ProcedureBase CurrentProcedure
