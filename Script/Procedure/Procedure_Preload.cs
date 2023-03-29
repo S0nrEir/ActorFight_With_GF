@@ -27,15 +27,22 @@ namespace Aquila.Procedure
             Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
-            var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-            var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
-            procedure_variable.SetValue( new Procedure_Fight_Data()
+            if ( GameEntry.Procedure._is_enter_test_scene )
             {
-                _scene_script_meta = scene_script_meta,
-                _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
-            } );
-            _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
-            ChangeState<Procedure_Fight>( _procedure_owner );
+                ChangeState<Procedure_Test>( _procedure_owner );
+            }
+            else
+            {
+                var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
+                var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
+                procedure_variable.SetValue( new Procedure_Fight_Data()
+                {
+                    _scene_script_meta = scene_script_meta,
+                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
+                } );
+                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
+                ChangeState<Procedure_Fight>( _procedure_owner );
+            }
         }
 
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
