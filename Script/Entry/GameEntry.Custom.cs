@@ -41,6 +41,15 @@ namespace Aquila
         }
 
         /// <summary>
+        /// 时间轮组件
+        /// </summary>
+        public static Component_TimeWheel TimeWheel
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// 初始化自定义组件
         /// </summary>
         private static void InitCustomComponents()
@@ -49,6 +58,7 @@ namespace Aquila
             DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
             Lua       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
             Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
+            TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
         }
     }
 }
