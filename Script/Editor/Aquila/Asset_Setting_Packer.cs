@@ -7,12 +7,12 @@ using UnityEngine;
 namespace Aquila.Editor
 {
     /// <summary>
-    /// ±à¼­Æ÷¹¤¾ßÀà
+    /// ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public partial class AquilaEditor
     {
         /// <summary>
-        /// ´ò°üÎÄ¼þ¼Ð
+        /// ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
         /// </summary>
         private static string[] _include_dic = new string[]
         {
@@ -26,27 +26,27 @@ namespace Aquila.Editor
         };
 
         /// <summary>
-        /// ´´½¨µÄzipÎÄ¼þÃû
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½zipï¿½Ä¼ï¿½ï¿½ï¿½
         /// </summary>
         private static string _file_name = @"/AssetSetting.zip";
 
         /// <summary>
-        /// ¶ÔÓ¦µÄmetaÎÄ¼þ
+        /// ï¿½ï¿½Ó¦ï¿½ï¿½metaï¿½Ä¼ï¿½
         /// </summary>
         private static string _meta_file_name = @"/AssetSetting.zip.meta";
 
         /// <summary>
-        /// ÍêÕûÂ·¾¶
+        /// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
         /// </summary>
         private static string _create_path = Application.dataPath + _file_name;
 
         /// <summary>
-        /// Ä¬ÈÏµÄÑ¹Ëõ¼¶±ð
+        /// Ä¬ï¿½Ïµï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         private const int _default_compress_level = 5;
 
         /// <summary>
-        /// ´ò°üAssetSettingÎªZip£¬²¢ÇÒ·Åµ½applicationÄ¿Â¼ÏÂ
+        /// ï¿½ï¿½ï¿½AssetSettingÎªZipï¿½ï¿½ï¿½ï¿½ï¿½Ò·Åµï¿½applicationÄ¿Â¼ï¿½ï¿½
         /// </summary>
         [MenuItem( "Aquila/PackAssetSetting" )]
         public static void PackAssetSetting()
@@ -57,18 +57,18 @@ namespace Aquila.Editor
             {
                 var size = 0l;
                 stream.SetLevel( _default_compress_level );
-                //ÏÈÑ¹Ëõµ±Ç°Ä¿Â¼µÄËùÓÐÎÄ¼þ£¬È»ºóÑ¹ËõÎÄ¼þ¼Ð
+                //ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½Ç°Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½È»ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 
                 FileInfo file_info = null;
                 var files = Directory.GetFiles( Application.dataPath + @"/.." );
                 foreach ( var file in files )
                 {
                     file_info = new FileInfo( file );
-                    //Ìø¹ýÁÙÊ±ÎÄ¼þ
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ä¼ï¿½
                     if ( file_info.Name == "ActorFight_With_GF.zip" )
                         continue;
 
-                    //ÕâÀïµÄÎÄ¼þ²»´øÄ¿Â¼
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼
                     size += ZipFile( stream, file_info.Name );
                 }
 
@@ -81,56 +81,41 @@ namespace Aquila.Editor
         }
 
         /// <summary>
-        /// Ç°ÖÃ²Ù×÷£¬Èç¹û´ò°üÎÄ¼þÒÑ¾­´æÔÚ£¬ÔòÉ¾³ý
+        /// Ç°ï¿½Ã²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½É¾ï¿½ï¿½
         /// </summary>
         private static void PrevOp()
         {
-            //ÏÈÉ¾³ýÔ­ÎÄ¼þ
+            //ï¿½ï¿½É¾ï¿½ï¿½Ô­ï¿½Ä¼ï¿½
             var original_file = Application.dataPath + @"/" + _file_name;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
 
-            //É¾³ýmetaÎÄ¼þ
+            //É¾ï¿½ï¿½metaï¿½Ä¼ï¿½
             original_file = Application.dataPath + @"/" + _meta_file_name;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
         }
 
         /// <summary>
-        /// Ñ¹ËõÄ¿Â¼
+        /// Ñ¹ï¿½ï¿½Ä¿Â¼
         /// </summary>
         private static long ZipDict( string dict, ZipOutputStream stream )
         {
             var size = 0l;
-            //±éÀúÃ¿Ò»Ïî£¬Èç¹ûÊÇÄ¿Â¼¾Í¼ÌÐø£¬Èç¹û²»ÊÇ£¬Ö±½ÓÑ¹Ëõ
+            //ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½î£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç£ï¿½Ö±ï¿½ï¿½Ñ¹ï¿½ï¿½
             var files_in_dict = Directory.GetFiles( dict );
             foreach ( var file in files_in_dict )
                 size += ZipFile( stream, file );
 
             var dicts_in_dict = Directory.GetDirectories( dict );
             foreach ( var temp_dict in dicts_in_dict )
-                ZipDict( temp_dict, stream );
+                size += ZipDict( temp_dict, stream );
 
             return size;
-            //var dicts = Directory.GetDirectories( @System.Environment.CurrentDirectory + "\\" + dict );
-
-            //if ( dicts.Length != 0 )
-            //{
-            //    foreach ( var t in dicts )
-            //        ZipDict( t, stream );
-            //}
-
-            //var files = Directory.GetFiles( @System.Environment.CurrentDirectory + "/" + dict );
-            //string file_name;
-            //int size = 0;
-            //foreach ( var file in files )
-            //{
-            //    file_name = @System.Environment.CurrentDirectory + "/" + dict + "/" + file;
-            //}
         }
 
         /// <summary>
-        /// Ñ¹Ëõµ¥¸öÎÄ¼þ
+        /// Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
         /// </summary>
         private static long ZipFile( ZipOutputStream stream, string file )
         {
@@ -141,12 +126,10 @@ namespace Aquila.Editor
             }
             //512000000 bytes
             FileInfo file_info = new FileInfo( file );
-            byte[] buffer = new byte[file.Length];//ÎÄ¼þÈç¹ûÌ«´ó£¬´óÓÚ»º³åÇø´óÐ¡£¬»á±¨´í£¬Èç¹ûÓÖÕâÖÖÇé¿öÔòÐèÒªÑ­»·¶ÁÈ¡
+            byte[] buffer = new byte[file.Length];//ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ó£¬´ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½á±¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÑ­ï¿½ï¿½ï¿½ï¿½È¡
             var size = 0l;
             //size = fs.Read( buffer, 0, buffer.Length );
             size = file_info.Length;
-            if ( size == 3488 || size == 21 )
-                ;
             ZipEntry entry = new ZipEntry( file );
             entry.DateTime = DateTime.Now;
             entry.Size = size;
