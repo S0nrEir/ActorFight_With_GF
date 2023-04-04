@@ -133,7 +133,7 @@ namespace Aquila.Extension
             if ( next_pos >= _size )
             {
                 //next_pos = next_pos / _size;
-                return (( int ) next_pos / _size, ( int ) next_pos % _size);
+                return (( int ) next_pos % _size, ( int ) next_pos / _size);
             }
             else
             {
@@ -183,7 +183,11 @@ namespace Aquila.Extension
         /// </summary>
         public bool AddTask( TimeWheel_Task task )
         {
-            return _tasks.AddLast( task ) != null;
+            var succ = _tasks.AddLast( task ) != null;
+            if ( !succ )
+                Log.Warning( "faild to add task to linklist!" );
+
+            return succ;
         }
 
         /// <summary>
@@ -197,9 +201,10 @@ namespace Aquila.Extension
                 return false;
             }
 
-            GameEntry.TimeWheel.RemoveTask( task.ID );
+            var succ = _tasks.Remove( task );
             ReferencePool.Release( task );
-            return _tasks.Remove( task );
+            GameEntry.TimeWheel.RemoveTask( task.ID );
+            return succ;
         }
 
         /// <summary>
@@ -207,39 +212,100 @@ namespace Aquila.Extension
         /// </summary>
         public void Exec()
         {
-            foreach ( var task in _tasks )
+            if ( _tasks.Count >= 1 )
+                ;
+
+            var iter = _tasks.GetEnumerator();
+            while ( iter.MoveNext() )
             {
-                if ( task.DestroyFlag )
+                if ( iter.Current.DestroyFlag )
                 {
-                    RemoveTask( task );
+                    _tasks.Remove( iter.Current );
                     continue;
                 }
 
-                task.CallBack();
-                //周期任务，放到下一个刻度槽
-                if ( task.Repeat )
+                iter.Current.Count();
+                if ( iter.Current.Counter != 0 )
+                    continue;
+
+                iter.Current.CallBack();
+                if ( iter.Current.Repeat )
                 {
-                    //todo:move task
-                    //计算时间和下一位置的时间刻度，放到别的bucket里
-                    _owner.AddTask( task );
-                    RemoveTask( task );
+                    //移到别的bucket
+                    //RemoveFromTasks( iter.Current );
+                    //_owner.AddTask( iter.Current );
+                    _move_queue.Enqueue( iter.Current );
                 }
                 else
                 {
-                    //task.SetAsDestroy();
-                    //GameEntry.TimeWheel.RemoveTask( task.ID );
-                    var temp_id = task.ID;
-                    if ( !RemoveTask( task ) )
-                        Log.Error( $"faild to remove task id={temp_id}" );
+                    _remove_queue.Enqueue( iter.Current );
                 }
+            }
+            //#todo要移除的task放到remove task中
+            RemoveUnusedTask();
+            HandleMoveTasks();
+            #region
+            //foreach ( var task in _tasks )
+            //{
+            //    if ( task.DestroyFlag )
+            //    {
+            //        RemoveTask( task );
+            //        continue;
+            //    }
+
+            //    task.CallBack();
+            //    //周期任务，放到下一个刻度槽
+            //    if ( task.Repeat )
+            //    {
+            //        //todo:move task
+            //        //计算时间和下一位置的时间刻度，放到别的bucket里
+            //        _owner.AddTask( task );
+            //        RemoveTask( task );
+            //    }
+            //    else
+            //    {
+            //        //task.SetAsDestroy();
+            //        //GameEntry.TimeWheel.RemoveTask( task.ID );
+            //        var temp_id = task.ID;
+            //        if ( !RemoveTask( task ) )
+            //            Log.Error( $"faild to remove task id={temp_id}" );
+            //    }
+            //}
+            #endregion
+        }
+
+        private void HandleMoveTasks()
+        {
+            TimeWheel_Task task = null;
+            while ( _move_queue.Count != 0 )
+            {
+                task = _move_queue.Dequeue();
+                _tasks.Remove( task );
+                _owner.AddTask( task );
+            }
+        }
+
+
+        /// <summary>
+        /// 彻底移除对应的task
+        /// </summary>
+        private void RemoveUnusedTask()
+        {
+            TimeWheel_Task task = null;
+            while ( _remove_queue.Count != 0 )
+            {
+                task = _remove_queue.Dequeue();
+                RemoveTask( task );
             }
         }
 
         public Bucket( int idx_, TimeWheel owner_ )
         {
             Index = idx_;
-            _tasks = new GameFrameworkLinkedList<TimeWheel_Task>();
             _owner = owner_;
+            _tasks = new GameFrameworkLinkedList<TimeWheel_Task>();
+            _remove_queue = new Queue<TimeWheel_Task>();
+            _move_queue = new Queue<TimeWheel_Task>();
         }
 
         /// <summary>
@@ -256,6 +322,16 @@ namespace Aquila.Extension
         /// 持有的任务集合
         /// </summary>
         private GameFrameworkLinkedList<TimeWheel_Task> _tasks = null;
+
+        /// <summary>
+        /// 移除队列
+        /// </summary>
+        private Queue<TimeWheel_Task> _remove_queue = null;
+
+        /// <summary>
+        /// 待移动的task队列
+        /// </summary>
+        private Queue<TimeWheel_Task> _move_queue = null;
     }
 
     /// <summary>
@@ -279,13 +355,17 @@ namespace Aquila.Extension
             task.Setup( interval_, true, call_back_ );
             return task;
         }
-
         /// <summary>
         /// 重置触发轮次数
         /// </summary>
         public void Reset( int count_ )
         {
-            _counter = count_;
+            Counter = count_;
+        }
+
+        public void Count()
+        {
+            Counter--;
         }
 
         /// <summary>
@@ -293,10 +373,7 @@ namespace Aquila.Extension
         /// </summary>
         public void CallBack()
         {
-            if ( _counter < 0 )
-                return;
-
-            if ( --_counter == 0 )
+            if(Counter == 0)
                 _call_back?.Invoke();
         }
 
@@ -320,6 +397,7 @@ namespace Aquila.Extension
 
         public void Clear()
         {
+            Debug.Log("clear");
             Repeat = false;
             DestroyFlag = false;
             _call_back = null;
@@ -348,7 +426,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 计数器
         /// </summary>
-        private int _counter = 0;
+        public int Counter { get; private set; } = 0;
 
         /// <summary>
         /// 回调
