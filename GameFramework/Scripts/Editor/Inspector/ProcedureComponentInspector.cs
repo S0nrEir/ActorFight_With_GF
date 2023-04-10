@@ -19,10 +19,13 @@ namespace UnityGameFramework.Editor
     {
         private SerializedProperty m_AvailableProcedureTypeNames = null;
         private SerializedProperty m_EntranceProcedureTypeName = null;
+        //#自定义字段
+        private SerializedProperty _is_enter_test_procedure = null;
 
         private string[] m_ProcedureTypeNames = null;
         private List<string> m_CurrentAvailableProcedureTypeNames = null;
         private int m_EntranceProcedureIndex = -1;
+        private bool _is_enter_test_prcd_selected = false;
 
         public override void OnInspectorGUI()
         {
@@ -43,6 +46,13 @@ namespace UnityGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
+                //#自定义字段，是否进入测试流程
+                //GUILayout.Label( "Is enter test procedure", EditorStyles.boldLabel );
+                var is_sel_prcd = EditorGUILayout.ToggleLeft( "Is enter test procedure", _is_enter_test_prcd_selected );
+                _is_enter_test_procedure.boolValue = is_sel_prcd;
+                _is_enter_test_prcd_selected = is_sel_prcd;
+                EditorGUILayout.Separator();
+
                 GUILayout.Label("Available Procedures", EditorStyles.boldLabel);
                 if (m_ProcedureTypeNames.Length > 0)
                 {
@@ -108,6 +118,7 @@ namespace UnityGameFramework.Editor
             m_AvailableProcedureTypeNames = serializedObject.FindProperty("m_AvailableProcedureTypeNames");
             m_EntranceProcedureTypeName = serializedObject.FindProperty("m_EntranceProcedureTypeName");
 
+            _is_enter_test_procedure = serializedObject.FindProperty( "_is_enter_test_scene" );
             RefreshTypeNames();
         }
 
@@ -130,6 +141,7 @@ namespace UnityGameFramework.Editor
                 }
             }
 
+            _is_enter_test_prcd_selected = _is_enter_test_procedure.boolValue;
             serializedObject.ApplyModifiedProperties();
         }
 

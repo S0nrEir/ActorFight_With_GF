@@ -69,17 +69,6 @@ namespace Aquila.Fight.Actor
             base.Reset();
         }
 
-        protected override void ResetData()
-        {
-            base.ResetData();
-            //var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>( Addon.DataAddonFieldTypeEnum.OBJ_META_ROLEBASE );
-            //if ( meta is null )
-            //    return;
-
-            //_dataAddon.SetIntDataValue( Addon.DataAddonFieldTypeEnum.INT_MOVE_SPEED, meta.MoveSpeed );
-            //_dataAddon.SetFloatDataValue( Addon.DataAddonFieldTypeEnum.FLOAT_RADIUS, meta.Radius );
-        }
-
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );

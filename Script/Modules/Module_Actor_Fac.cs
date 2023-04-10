@@ -119,14 +119,12 @@ namespace Aquila.Module
         public override void Start( object param )
         {
             base.Start( param );
-            _proxy_actor_fight = GameEntry.Module.GetModule<Module_Proxy_Fight>();
             TestLoadActor();
         }
 
         public override void End()
         {
             base.End();
-            _proxy_actor_fight = null;
         }
 
         public override void OnClose()
@@ -142,7 +140,5 @@ namespace Aquila.Module
             //if ( _actor_cache_dic is null )
             //    _actor_cache_dic = new Dictionary<int, TActorBase>();
         }
-
-        private Module_Proxy_Fight _proxy_actor_fight = null;
     }
 }

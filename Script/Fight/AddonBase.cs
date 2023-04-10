@@ -25,7 +25,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// 重置addon状态
+        /// 重置addon状态，Actor在Reset时调用
         /// </summary>
         public virtual void Reset ()
         {

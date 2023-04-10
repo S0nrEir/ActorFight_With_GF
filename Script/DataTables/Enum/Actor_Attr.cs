@@ -9,49 +9,57 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// 角色属性类型枚举
+    /// 角色属性枚举
     /// </summary>
-    public enum Attribute_Type
+    public enum Actor_Attr
     {
         /// <summary>
-        /// 无效
+        /// 当前生命
         /// </summary>
-        Invalid = 0,
+        Curr_HP = 0,
         /// <summary>
-        /// HP上限
+        /// 生命上限
         /// </summary>
-        HP = 1,
+        Max_HP = 1,
         /// <summary>
-        /// MP上限
+        /// 当前法力
         /// </summary>
-        MP = 2,
+        Curr_MP = 2,
         /// <summary>
-        /// 基础攻击力系数
+        /// 法力上限
         /// </summary>
-        ATK = 3,
+        Max_MP = 3,
         /// <summary>
-        /// 基础防御力
+        /// 攻击力
         /// </summary>
-        DEF = 4,
+        ATK = 4,
         /// <summary>
-        /// 基础速度
+        /// 防御力
         /// </summary>
-        SPD = 5,
+        DEF = 5,
         /// <summary>
-        /// 基础移动力
+        /// 速度
         /// </summary>
-        MVT = 6,
+        SPD = 6,
+        /// <summary>
+        /// 移动力
+        /// </summary>
+        MVT = 7,
         /// <summary>
         /// 力量
         /// </summary>
-        STR = 7,
+        STR = 8,
         /// <summary>
         /// 敏捷
         /// </summary>
-        AGI = 8,
+        AGI = 9,
         /// <summary>
         /// 法力
         /// </summary>
-        SPW = 9,
+        SPW = 10,
+        /// <summary>
+        /// 最大值，所有的新增属性都添加在它之前，不要超过此值
+        /// </summary>
+        Max = 11,
     }
 }
