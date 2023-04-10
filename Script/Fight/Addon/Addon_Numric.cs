@@ -34,7 +34,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ,float value) GetBaseValue( Numric_Modify_Type_EnumNumric_Type type_ )
+        public (bool get_succ,float value) GetBaseValue( Numric_Type type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
