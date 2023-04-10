@@ -55,8 +55,8 @@ namespace Aquila.Procedure
                     role_meta_id: _temp_role_meta_id_1,
                     actor_id: actor_id,
                     asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
-                    grid_x: 0,
-                    grid_z: 0,
+                    grid_x: 1,
+                    grid_z: 1,
                     new HeroActorEntityData( actor_id )
                 );
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
