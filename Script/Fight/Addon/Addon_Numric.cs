@@ -2,13 +2,11 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
-using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
-
     /// <summary>
     /// 基础属性组件
     /// ----------------------+-----------------------+-----------------------+----------------
@@ -34,7 +32,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ,float value) GetBaseValue( Actor_Attr type_ )
+        public (bool get_succ, float value) GetBaseValue( Actor_Attr type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -46,7 +44,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ,float value_after_set) SetBaseValue( Actor_Attr type_,float value_to_set)
+        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Attr type_, float value_to_set )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -67,7 +65,7 @@ namespace Aquila.Fight.Addon
 
             return (true, _numric_arr[int_type].CorrectionValue);
         }
-        
+
         /// <summary>
         /// 设置一个装备类型的数值修饰器
         /// </summary>
@@ -114,10 +112,42 @@ namespace Aquila.Fight.Addon
         private void ResetNumricArr()
         {
             if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[(int)Cfg.Enum.Actor_Attr.Max - 1];
+                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max - 1];
 
+            var meta = GameEntry.DataTable.GetTable<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
+            if ( meta is null )
+            {
+                Log.Warning( $"<color=yellow>meta is null,meta id = {Actor.RoleMetaID}</color>" );
+                return;
+            }
+            SetBaseAttr( meta );
+        }
+
+        /// <summary>
+        /// 设置基础属性
+        /// </summary>
+        private void SetBaseAttr(Cfg.role.RoleMeta meta)
+        {
+            //#todo设置属性暂时是一个个设置，想个办法走loop
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
-
+            //max hp
+            SetBaseValue( Actor_Attr.Max_HP, meta.HP );
+            //curr hp
+            SetBaseValue(Actor_Attr.Curr_HP,meta.HP );
+            //str
+            SetBaseValue(Actor_Attr.STR,meta.STR );
+            //def
+            SetBaseValue( Actor_Attr.DEF, meta.DEF );
+            //agi
+            SetBaseValue( Actor_Attr.AGI, meta.AGI );
+            //mvt
+            SetBaseValue( Actor_Attr.MVT, meta.MVT );
+            //spw
+            SetBaseValue( Actor_Attr.SPW, meta.SPW );
+            //mp
+            SetBaseValue( Actor_Attr.Max_MP, meta.MP );
+            //curr mp
+            SetBaseValue( Actor_Attr.Curr_MP, meta.MP );
         }
 
         /// <summary>
