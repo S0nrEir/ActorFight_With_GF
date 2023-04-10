@@ -27,6 +27,10 @@ namespace Aquila.Procedure
             Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
+
+            //测试进入战斗流程
+            ChangeState<Procedure_Test_Fight>(_procedure_owner);
+            return;
             if ( GameEntry.Procedure._is_enter_test_scene )
             {
                 ChangeState<Procedure_Test>( _procedure_owner );
