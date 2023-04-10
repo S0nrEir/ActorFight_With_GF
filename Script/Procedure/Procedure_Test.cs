@@ -14,16 +14,20 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            GameEntry.TimeWheel.AddTask( Extension.TimeWheel_Task.GenRepeat
-                ( 
-                    1f, 
-                    () => 
-                    { 
-                        Debug.Log( $"testing...{counter++}" ); 
-                    } 
-                ));
+            TimeWheelTest();
         }
         private int counter = 0;
+        private void TimeWheelTest()
+        {
+            GameEntry.TimeWheel.AddTask( Extension.TimeWheel_Task.GenRepeat
+                   (
+                       1f,
+                       () =>
+                       {
+                           Debug.Log( $"testing...{counter++}" );
+                       }
+                   ) );
+        }
     }
 
 }

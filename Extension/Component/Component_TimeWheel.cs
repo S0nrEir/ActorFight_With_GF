@@ -212,9 +212,6 @@ namespace Aquila.Extension
         /// </summary>
         public void Exec()
         {
-            if ( _tasks.Count >= 1 )
-                ;
-
             var iter = _tasks.GetEnumerator();
             while ( iter.MoveNext() )
             {
