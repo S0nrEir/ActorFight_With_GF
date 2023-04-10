@@ -34,7 +34,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ,float value) GetBaseValue( Numric_Type type_ )
+        public (bool get_succ,float value) GetBaseValue( Actor_Attr type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -46,7 +46,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ,float value_after_set) SetBaseValue( Numric_Type type_,float value_to_set)
+        public (bool set_succ,float value_after_set) SetBaseValue( Actor_Attr type_,float value_to_set)
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -59,7 +59,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool get_succ, float value) GetCorrectionFinalValue( Numric_Type type_ )
+        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -83,7 +83,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个buff类型的数值修饰器
         /// </summary>
-        public bool SetBuffModifier( Numric_Type type_, Numric_Modifier modifier_ )
+        public bool SetBuffModifier( Actor_Attr type_, Numric_Modifier modifier_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -95,7 +95,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个职业修正的数值修饰器
         /// </summary>
-        public bool SetClassModifier( Numric_Type type_, Numric_Modifier modifier_ )
+        public bool SetClassModifier( Actor_Attr type_, Numric_Modifier modifier_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -114,7 +114,7 @@ namespace Aquila.Fight.Addon
         private void ResetNumricArr()
         {
             if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[(int)Cfg.Enum.Numric_Type.Max - 1];
+                _numric_arr = new Numric_ActorBaseAttr[(int)Cfg.Enum.Actor_Attr.Max - 1];
 
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
 
