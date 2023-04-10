@@ -14,7 +14,7 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            TimeWheelTest();
+            //TimeWheelTest();
         }
         private int counter = 0;
         private void TimeWheelTest()
