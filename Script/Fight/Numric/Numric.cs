@@ -3,16 +3,23 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
 {
-
     /// <summary>
     /// 描述一个数值类型
     /// </summary>
     public class Numric : IReference
     {
         /// <summary>
-        /// 获取值
+        /// 基础值
         /// </summary>
-        public virtual float Value
+        public virtual float BaseValue
+        {
+            get { return _value; }
+        }
+
+        /// <summary>
+        /// 修正值
+        /// </summary>
+        public virtual float CorrectionValue
         {
             get
             {
@@ -55,7 +62,7 @@ namespace Aquila.Numric
         /// <summary>
         /// 设置基础数值
         /// </summary>
-        public virtual void Setup( float base_val_ )
+        public virtual void SetBaseVal( float base_val_ )
         {
             _change_flag = true;
             _value = base_val_;

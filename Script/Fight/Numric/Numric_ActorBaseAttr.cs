@@ -2,13 +2,14 @@ using GameFramework;
 
 namespace Aquila.Numric
 {
-
     /// <summary>
-    /// 继承自Numric，用于描述actor的数值类型
+    /// 继承自Numric，用于描述actor基础属性的数值类型
+    /// baseValue=该属性或类型的基础值，该类扩展=所有加成最后修正的数值
+    /// 目前包含：buff，装备，职业修正
     /// </summary>
-    public class Numric_Actor : Numric
+    public class Numric_ActorBaseAttr : Numric
     {
-        public override float Value
+        public override float CorrectionValue
         {
             get
             {
@@ -16,21 +17,21 @@ namespace Aquila.Numric
                     return _total;
 
                 _total = 0f;
+
+                //#todo-基于父类做脏标记处理的方法不太好，这样子类的脏标记逻辑要依赖于父类，找时间优化一下
+                _total += base.CorrectionValue;
                 _total += Enumrate( _total, _equip_correction );
                 _total += Enumrate( _total, _class_correction );
                 _total += Enumrate( _total, _buff_correction );
-
-                //#todo-基于父类做脏标记处理的方法不太好，这样子类的脏标记逻辑要依赖于父类，找时间优化一下
-                _total += base.Value;
                 return _total;
             }
         }
         /// <summary>
         /// 添加一个装备修正
         /// </summary>
-        public void AddEquipModifier( Numric_Modifier modifier_ )
+        public bool AddEquipModifier( Numric_Modifier modifier_ )
         {
-            _equip_correction.AddLast( modifier_ );
+            return _equip_correction.AddLast( modifier_ ) != null;
         }
 
         /// <summary>
@@ -44,9 +45,9 @@ namespace Aquila.Numric
         /// <summary>
         /// 添加一个职业修正
         /// </summary>
-        public void AddClassModifier( Numric_Modifier modifier_ )
+        public bool AddClassModifier( Numric_Modifier modifier_ )
         {
-            _class_correction.AddLast( modifier_ );
+            return _class_correction.AddLast( modifier_ ) != null;
         }
 
         /// <summary>
@@ -60,9 +61,9 @@ namespace Aquila.Numric
         /// <summary>
         /// 添加一个buff修正
         /// </summary>
-        public void AddBuffModifier( Numric_Modifier modifier_ )
+        public bool AddBuffModifier( Numric_Modifier modifier_ )
         {
-            _buff_correction.AddLast( modifier_ );
+            return _buff_correction.AddLast( modifier_ ) != null;
         }
 
         /// <summary>
@@ -102,15 +103,13 @@ namespace Aquila.Numric
             return val;
         }
 
-
-
         private void EnsureInit( GameFrameworkLinkedList<Numric_Modifier> correction_ )
         {
             if ( correction_ is null )
                 correction_ = new GameFrameworkLinkedList<Numric_Modifier>();
         }
 
-        //#todo改成LinkRange
+        //#todo改成LinkedRange
         /// <summary>
         /// 装备加成修正
         /// </summary>
