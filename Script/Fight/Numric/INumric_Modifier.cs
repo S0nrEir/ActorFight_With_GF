@@ -4,13 +4,6 @@ using UnityEngine;
 
 namespace Aquila.Numric
 {
-    /// <summary>
-    /// 数值修改器类型接口
-    /// </summary>
-    public interface INumric_Modifier
-    {
-
-    }
 
     /// <summary>
     /// Numric数值修改方式枚举
