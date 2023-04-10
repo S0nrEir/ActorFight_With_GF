@@ -187,5 +187,13 @@ namespace Aquila.ToolKit
             var val = 1 << index;
             return bitValue ? ( value | val ) : ( value & ~val );
         }
+
+        /// <summary>
+        /// 直接对一个int值进行或操作，返回操作后的值
+        /// </summary>
+        public static int OrBitValue( int orig_value_, int attenmp_value_ )
+        {
+            return orig_value_ | attenmp_value_;
+        }
     }
 }

@@ -28,7 +28,6 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
-            ResetNumricArr();
 
         }
 

@@ -29,6 +29,7 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
         STR = _buf.ReadFloat();
         AGI = _buf.ReadFloat();
         SPW = _buf.ReadFloat();
+        Class = _buf.ReadInt();
         PostInit();
     }
 
@@ -85,6 +86,10 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
     /// 法伤
     /// </summary>
     public float SPW { get; private set; }
+    /// <summary>
+    /// 职业，索引Role_Class枚举
+    /// </summary>
+    public int Class { get; private set; }
 
     public const int __ID__ = 1444141619;
     public override int GetTypeId() => __ID__;
@@ -113,6 +118,7 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
         + "STR:" + STR + ","
         + "AGI:" + AGI + ","
         + "SPW:" + SPW + ","
+        + "Class:" + Class + ","
         + "}";
     }
     

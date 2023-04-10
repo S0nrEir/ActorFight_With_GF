@@ -70,11 +70,6 @@ namespace Aquila.Fight.Actor
 
         }
 
-        protected override void ResetData ()
-        {
-            base.ResetData();
-        }
-
         /// <summary>
         /// 是否击中正确目标，是返回true,传入gameObject
         /// </summary>

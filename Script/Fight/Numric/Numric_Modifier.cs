@@ -1,74 +1,86 @@
 using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
 {
     /// <summary>
-    /// 数值修改器
+    /// 数值修饰器
     /// </summary>
     public class Numric_Modifier : IReference
     {
         /// <summary>
+        /// 获取修正值
+        /// </summary>
+        public float ValueAfterModify
+        {
+            get
+            {
+                if ( !_modified )
+                {
+                    Log.Warning( "修饰器还未被修改" );
+                    return 0f;
+                }
+                return _value_after_modify;
+            }
+        }
+
+        /// <summary>
         /// 设置修改器的类型
         /// </summary>
-        public void Setup( float val_to_modify_,Numric_Modify_Type_Enum type_ )
+        public void Setup( Numric_Modify_Type_Enum type_ )
         {
-            _value_to_modify = val_to_modify_;
             _type = type_;
         }
 
         /// <summary>
-        /// 修改，返回修改后的实际值
+        /// 计算，设置并返回修改后的实际值
         /// </summary>
-        public float Modify(float original_val_ )
+        public float Calc( float original_val_ )
         {
-            float val_after_modify = 0f;
+            if ( _modified )
+            {
+                Log.Warning( "this modifier has modified" );
+                return 0f;
+            }
+
             switch ( _type )
             {
                 case Numric_Modify_Type_Enum.Add:
-                    val_after_modify = original_val_ + _value_to_modify;
+                    _value_after_modify = original_val_ + _value_after_modify;
                     break;
 
-                //case Numric_Modify_Type_Enum.Multiple:
-                //    val_after_modify = original_val_ * _value_to_modify;
-                //    break;
-
                 case Numric_Modify_Type_Enum.Percent:
-                    val_after_modify =  _value_to_modify * original_val_;
+                    _value_after_modify = _value_after_modify * original_val_;
                     break;
 
                 default:
-                    throw new GameFrameworkException("invalid modifier type!");
+                    throw new GameFrameworkException( "invalid modifier type!" );
             }
+            _modified = true;
+            return _value_after_modify;
+        }
 
-            return val_after_modify;
+        public void Clear()
+        {
+            _value_after_modify = 0;
+            _type = Numric_Modify_Type_Enum.None;
+            _modified = false;
         }
 
         /// <summary>
-        /// 恢复修改，返回修改后的实际值
+        /// 修改标记
         /// </summary>
-        public void Recover(float original_val_)
-        {
-            //float val_after_modify = 0f;
-            ////各种类型反着计算
-            //switch ( _type )
-            //{
-            //    case Numric_Modify_Type_Enum.Add:
-            //        val_after_modify = original_val_ - _value_to_modify;
-            //        break;
+        private bool _modified = false;
 
-            //    case Numric_Modify_Type_Enum.Percent:
-            //        val_after_modify = _value_to_modify * original_val_;
-            //        break;
+        /// <summary>
+        /// 数值修改方式
+        /// </summary>
+        private Numric_Modify_Type_Enum _type = Numric_Modify_Type_Enum.None;
 
-            //    default:
-            //        throw new GameFrameworkException( "invalid modifier type!" );
-            //}
-
-            //return val_after_modify;
-        }
+        /// <summary>
+        /// 修正值
+        /// </summary>
+        private float _value_after_modify = 0f;
 
         //#todo数值修改方式，具体数值
         //关联到数据组件，还有buff之类的，他们都可以持有数值修改器，装备什么的也行
@@ -91,18 +103,5 @@ namespace Aquila.Numric
         //temp*=-1
         //add+=temp=0
         //final=base+add=100
-        public void Clear()
-        {
-        }
-
-        /// <summary>
-        /// 数值修改方式
-        /// </summary>
-        private Numric_Modify_Type_Enum _type = Numric_Modify_Type_Enum.None;
-
-        /// <summary>
-        /// 要修改的值
-        /// </summary>
-        private float _value_to_modify = 0f;
     }
 }

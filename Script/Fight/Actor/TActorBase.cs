@@ -17,7 +17,9 @@ namespace Aquila.Fight.Actor
     public abstract partial class TActorBase : EntityLogic
     {
         #region public methods
-
+        /// <summary>
+        /// 触发Actor事件
+        /// </summary>
         public void Trigger( ActorEventEnum type, params object[] param )
         {
             _eventAddon?.Trigger( type, param );
@@ -26,7 +28,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 尝试获取一个addon
         /// </summary>
-        public bool TryGetAddon<T>( out T targetAddon ) where T : AddonBase
+        private bool TryGetAddon<T>( out T targetAddon ) where T : AddonBase
         {
             targetAddon = null;
             if ( _addonDic is null || _addonDic.Count == 0 )
@@ -41,35 +43,12 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 有效性检查，会检查所有的addon
-        /// </summary>
-        public bool Valid()
-        {
-            uint errCode = AddonValidErrorCodeEnum.NONE;
-            uint tempCode = 0;
-            string errString = string.Empty;
-            foreach ( var iter in _addonDic )
-            {
-                tempCode = iter.Value.Valid();
-
-                errCode |= tempCode;
-                if ( errCode != AddonValidErrorCodeEnum.NONE )
-                    throw new GameFrameworkException( AddonValidErrorCodeEnum.ErrCode2String( tempCode ) );
-            }
-
-            return errCode == AddonValidErrorCodeEnum.NONE;
-        }
-
-
-        /// <summary>
         /// 注册事件到actor自身，OnShow时调用
         /// </summary>
         public void RegisterActorEvent( ActorEventEnum type, Action<int, object[]> action )
         {
-            //Debug.Log( $"<color=white>Actor{ActorID}--->RegisterActorEvent{type}</color>" );
             if ( !_eventAddon.Register( type, action ) )
                 throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
-
         }
 
         /// <summary>
@@ -80,16 +59,6 @@ namespace Aquila.Fight.Actor
             if ( !_eventAddon.UnRegister( type ) )
                 throw new GameFrameworkException( "!_eventAddon.UnRegister( type )" );
         }
-
-        /// <summary>
-        /// 是否为我方阵营的actor，是返回true
-        /// </summary>
-        public bool IsMine()
-        {
-            //return HostID == GameFrameworkMode.GetModule<AccountModule>().Guid && HostID != GlobalVar.INVALID_GUID;
-            return true;
-        }
-
         #endregion
 
         #region set
@@ -148,11 +117,6 @@ namespace Aquila.Fight.Actor
                 );
         }
 
-        /// <summary>
-        /// 设置hostID
-        /// </summary>
-        public void SetHostID( ulong hostID ) => HostID = hostID;
-
         public void Setup
             (
                 int role_meta_id,
@@ -190,13 +154,13 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
-            GameEntry.Module.GetModule<Module_Proxy_Fight>().Register( this, GetAllAddon() );
+            GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            CachedTransform.position = new Vector3( 999f, 999f, 999f );
-            GameEntry.Module.GetModule<Module_Proxy_Fight>().UnRegister( ActorID );
+            SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
+            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
         }
 
@@ -251,43 +215,18 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// AbilityAction准备
-        /// </summary>
-        protected virtual bool OnPreAbilityAction( int abilityID )
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// AbilityAction之后
-        /// </summary>
-        protected virtual bool OnAfterAbilityAction()
-        {
-            return true;
-        }
-
-        /// <summary>
         /// 重置自己和addon的数据为初始值，而非清理，
         /// 建议的调用时机：初始化；回收时，
+        /// 目前的调用时机：Reset，ShowEntity后
         /// </summary>
         public virtual void Reset()
         {
-            ResetData();
             if ( _addonDic != null )
             {
                 var iter = _addonDic.GetEnumerator();
                 while ( iter.MoveNext() )
                     iter.Current.Value?.Reset();
             }
-
-        }
-
-        /// <summary>
-        /// 重置数据,setDataID(),Reset时调用
-        /// </summary> 
-        protected virtual void ResetData()
-        {
-
         }
 
         #endregion

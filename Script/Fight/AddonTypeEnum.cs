@@ -18,62 +18,67 @@ namespace Aquila.Fight.Addon
             /// <summary>
             /// 移动
             /// </summary>
-            MOVE = 1,
+            MOVE,
 
             /// <summary>
             /// 导航
             /// </summary>
-            NAV = 2,
+            NAV,
 
             /// <summary>
             /// 状态
             /// </summary>
-            STATE_MATCHINE = 3,
+            STATE_MATCHINE,
 
             /// <summary>
             /// 流程处理器
             /// </summary>
-            PROCESSOR = 4,
+            PROCESSOR,
 
             /// <summary>
             /// 数据
             /// </summary>
-            DATA = 5,
+            DATA,
 
             /// <summary>
             /// 信息板组件
             /// </summary>
-            INFO_BOARD = 6,
+            INFO_BOARD,
 
             /// <summary>
             /// 寻路组件
             /// </summary>
-            PATH_FINDER = 7,
+            PATH_FINDER,
 
             /// <summary>
             /// Actor事件
             /// </summary>
-            EVENT = 8,
+            EVENT,
 
             /// <summary>
             /// 触发器
             /// </summary>
-            TRIGGER = 9,
+            TRIGGER,
 
             /// <summary>
             /// 特效
             /// </summary>
-            EFFECT = 10,
+            EFFECT,
 
             /// <summary>
             /// 精灵图类型
             /// </summary>
-            SPRITE = 11,
+            SPRITE,
 
             /// <summary>
             /// 地图组件
             /// </summary>
             //MAP = 8,
+
+            /// <summary>
+            /// 基础属性-数值组件
+            /// </summary>
+            NUMRIC_BaseAttr,
 
             /// <summary>
             /// 基础类型
