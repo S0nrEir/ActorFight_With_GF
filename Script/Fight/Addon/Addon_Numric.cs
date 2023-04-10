@@ -1,4 +1,5 @@
 using Aquila.Fight.Actor;
+using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
 using GameFramework;
@@ -10,6 +11,7 @@ namespace Aquila.Fight.Addon
 
     /// <summary>
     /// 基础属性组件
+    /// ----------------------+-----------------------+-----------------------+----------------
     /// Numric_1              | Numric_2              | Numric_3              | Numric_4
     /// ----------------------+-----------------------+-----------------------+----------------
     /// xxx_Numric_Modifier_1 |xxx_Numric_Modifier_1  |xxx_Numric_Modifier_1  |xxx_Numric_Modifier_1
@@ -32,7 +34,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ,float value) GetBaseValue(Numric_Modify_Type_Enum type_)
+        public (bool get_succ,float value) GetBaseValue( Numric_Modify_Type_EnumNumric_Type type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -44,7 +46,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ,float value_after_set) SetBaseValue( Numric_Modify_Type_Enum type_,float value_to_set)
+        public (bool set_succ,float value_after_set) SetBaseValue( Numric_Type type_,float value_to_set)
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -57,7 +59,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool get_succ, float value) GetCorrectionFinalValue( Numric_Modify_Type_Enum type_ )
+        public (bool get_succ, float value) GetCorrectionFinalValue( Numric_Type type_ )
         {
             var int_type = ( int ) type_;
             if ( OverLen( int_type ) )
@@ -114,7 +116,8 @@ namespace Aquila.Fight.Addon
             if ( _numric_arr is null )
                 _numric_arr = new Numric_ActorBaseAttr[(int)Cfg.Enum.Numric_Type.Max - 1];
 
-            //#TODO-所有属性等于基础值，没有任何加成
+            var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+
         }
 
         /// <summary>
@@ -137,8 +140,8 @@ namespace Aquila.Fight.Addon
 
         public override void Reset()
         {
-            ResetNumricArr();
             base.Reset();
+            ResetNumricArr();
         }
 
         public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
@@ -151,7 +154,7 @@ namespace Aquila.Fight.Addon
             base.Dispose();
         }
 
-        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC;
+        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BaseAttr;
 
         public override void OnAdd()
         {
