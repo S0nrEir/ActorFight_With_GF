@@ -54,7 +54,7 @@ namespace Aquila.Fight.Actor
             if ( actorEffect is null )
                 return;
 
-            _EffectAddon?.Hide( actorEffect );
+            _effect_addon?.Hide( actorEffect );
         }
 
         #endregion
@@ -67,15 +67,6 @@ namespace Aquila.Fight.Actor
 
         public void TakeDamage( int dmg )
         {
-            //var currHp = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, 0 );
-            //currHp -= dmg;
-            ////写入当前hp
-            //_dataAddon.SetNumricValue( DataAddonFieldTypeEnum.NUM_CURR_HP, currHp );
-            //if ( currHp <= 0 )
-            //{
-            //    SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
-            //    return;
-            //}
         }
 
         /// <summary>
@@ -116,7 +107,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SwitchTo( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
         {
-            _FsmAddon.SwitchTo( stateType, enterParam, existParam );
+            _fsm_addon.SwitchTo( stateType, enterParam, existParam );
         }
 
         /// <summary>
@@ -128,7 +119,7 @@ namespace Aquila.Fight.Actor
 
         #endregion
 
-        public ActorStateTypeEnum CurrState => _FsmAddon.CurrState;
+        public ActorStateTypeEnum CurrState => _fsm_addon.CurrState;
 
         #region public methods
 
@@ -142,15 +133,13 @@ namespace Aquila.Fight.Actor
         protected override void InitAddons()
         {
             base.InitAddons();
-            _FsmAddon          = AddAddon<Addon_HeroState>();
-            //_ProcessorAddon    = AddAddon<ProcessorAddon>();
-            _AnimAddon         = AddAddon<Addon_Anim>();
-            _MoveAddon         = AddAddon<Addon_Move>();
-            _HPAddon           = AddAddon<Addon_InfoBoard>();
-            _NavAddon          = AddAddon<Addon_Nav>();
-            _EffectAddon       = AddAddon<Addon_Effect>();
-            //_MapAddon        = AddAddon<MapAddon>();
-
+            _fsm_addon          = AddAddon<Addon_HeroState>();
+            _anim_addon         = AddAddon<Addon_Anim>();
+            _move_addon         = AddAddon<Addon_Move>();
+            _hp_addon           = AddAddon<Addon_InfoBoard>();
+            _nav_addon          = AddAddon<Addon_Nav>();
+            _effect_addon       = AddAddon<Addon_Effect>();
+            _base_attr_addon    = AddAddon<Addon_BaseAttrNumric>();
         }
 
         protected override void OnRecycle()
@@ -169,7 +158,7 @@ namespace Aquila.Fight.Actor
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
-            _FsmAddon?.OnUpdateDate( elapseSeconds, realElapseSeconds );
+            _fsm_addon?.OnUpdateDate( elapseSeconds, realElapseSeconds );
         }
 
         /// <summary>
@@ -178,8 +167,7 @@ namespace Aquila.Fight.Actor
         protected override bool OnPreAbilityAction( int abilityID )
         {
             Debug.Log( "OnPreAbilityAction hero Actor" );
-            //目前只有idle才可以放技能
-            if ( _FsmAddon.CurrState != ActorStateTypeEnum.IDLE_STATE )
+            if ( _fsm_addon.CurrState != ActorStateTypeEnum.IDLE_STATE )
                 return false;
 
             return true;
@@ -223,15 +211,45 @@ namespace Aquila.Fight.Actor
 
         #region addon
 
-        private Addon_FSM _FsmAddon { get; set; } = null;
-        //private ProcessorAddon _ProcessorAddon { get; set; } = null;
-        private Addon_Anim _AnimAddon { get; set; } = null;
-        private Addon_Move _MoveAddon { get; set; } = null;
-        private Addon_InfoBoard _HPAddon { get; set; } = null;
-        private Addon_Nav _NavAddon { get; set; } = null;
-        private Addon_Effect _EffectAddon { get; set; } = null;
-        private Addon_Data _DataAddon { get; set; } = null;
-        //private MapAddon _MapAddon { get; set; } = null;
+        /// <summary>
+        /// 状态机组件
+        /// </summary>
+        private Addon_FSM _fsm_addon { get; set; } = null;
+
+        /// <summary>
+        /// 动画组件
+        /// </summary>
+        private Addon_Anim _anim_addon { get; set; } = null;
+
+        /// <summary>
+        /// 移动组件
+        /// </summary>
+        private Addon_Move _move_addon { get; set; } = null;
+
+        /// <summary>
+        /// 信息板组件
+        /// </summary>
+        private Addon_InfoBoard _hp_addon { get; set; } = null;
+
+        /// <summary>
+        /// 导航组件
+        /// </summary>
+        private Addon_Nav _nav_addon { get; set; } = null;
+
+        /// <summary>
+        /// 特效组件
+        /// </summary>
+        private Addon_Effect _effect_addon { get; set; } = null;
+
+        /// <summary>
+        /// 数据组件
+        /// </summary>
+        private Addon_Data _data_addon { get; set; } = null;
+
+        /// <summary>
+        /// 基础属性数值组件
+        /// </summary>
+        private Addon_BaseAttrNumric _base_attr_addon { get; set; } = null;
 
         #endregion
 

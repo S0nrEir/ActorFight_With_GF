@@ -8,11 +8,99 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Fight.Addon
 {
 
-    public class Addon_Numric : AddonBase
+    /// <summary>
+    /// 基础属性组件
+    /// Numric_1              | Numric_2              | Numric_3              | Numric_4
+    /// ----------------------+-----------------------+-----------------------+----------------
+    /// xxx_Numric_Modifier_1 |xxx_Numric_Modifier_1  |xxx_Numric_Modifier_1  |xxx_Numric_Modifier_1
+    /// xxx_Numric_Modifier_2 |xxx_Numric_Modifier_2  |xxx_Numric_Modifier_2  |xxx_Numric_Modifier_2
+    /// xxx_Numric_Modifier_3 |xxx_Numric_Modifier_3  |xxx_Numric_Modifier_3  |xxx_Numric_Modifier_3
+    /// ----------------------+-----------------------+-----------------------+----------------
+    /// yyy_Numric_Modifier_1 |yyy_Numric_Modifier_1  |yyy_Numric_Modifier_1  |yyy_Numric_Modifier_1
+    /// yyy_Numric_Modifier_2 |yyy_Numric_Modifier_2  |yyy_Numric_Modifier_2  |yyy_Numric_Modifier_2
+    /// yyy_Numric_Modifier_3 |yyy_Numric_Modifier_3  |yyy_Numric_Modifier_3  |yyy_Numric_Modifier_3
+    /// -----------------------+----------------------+----------------------+----------------
+    /// zzz_Numric_Modifier_1 |zzz_Numric_Modifier_1  |zzz_Numric_Modifier_1  |zzz_Numric_Modifier_1
+    /// zzz_Numric_Modifier_2 |zzz_Numric_Modifier_2  |zzz_Numric_Modifier_2  |zzz_Numric_Modifier_2
+    /// zzz_Numric_Modifier_3 |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3
+    /// ----------------------+----------------------+----------------------+----------------
+    /// </summary>
+    public class Addon_BaseAttrNumric : AddonBase
     {
         #region pub
 
+        /// <summary>
+        /// 获取某项属性的基础值
+        /// </summary>
+        public (bool get_succ,float value) GetBaseValue(Numric_Modify_Type_Enum type_)
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return (false, 0f);
 
+            return (true, _numric_arr[int_type].BaseValue);
+        }
+
+        /// <summary>
+        /// 设置某项属性的基础值，返回修改后的值和成功标记
+        /// </summary>
+        public (bool set_succ,float value_after_set) SetBaseValue( Numric_Modify_Type_Enum type_,float value_to_set)
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return (false, _numric_arr[int_type].BaseValue);
+
+            _numric_arr[int_type].SetBaseVal( value_to_set );
+            return (true, _numric_arr[int_type].BaseValue);
+        }
+
+        /// <summary>
+        /// 获取某项属性的最终修正值
+        /// </summary>
+        public (bool get_succ, float value) GetCorrectionFinalValue( Numric_Modify_Type_Enum type_ )
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return (false, 0f);
+
+            return (true, _numric_arr[int_type].CorrectionValue);
+        }
+        
+        /// <summary>
+        /// 设置一个装备类型的数值修饰器
+        /// </summary>
+        public bool SetEquipModifier( Numric_Modify_Type_Enum type_, Numric_Modifier modifier_ )
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return false;
+
+            return _numric_arr[int_type].AddEquipModifier( modifier_ );
+        }
+
+        /// <summary>
+        /// 设置一个buff类型的数值修饰器
+        /// </summary>
+        public bool SetBuffModifier( Numric_Type type_, Numric_Modifier modifier_ )
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return false;
+
+            return _numric_arr[int_type].AddBuffModifier( modifier_ );
+        }
+
+        /// <summary>
+        /// 设置一个职业修正的数值修饰器
+        /// </summary>
+        public bool SetClassModifier( Numric_Type type_, Numric_Modifier modifier_ )
+        {
+            var int_type = ( int ) type_;
+            if ( OverLen( int_type ) )
+                return false;
+
+            return _numric_arr[int_type].AddClassModifier( modifier_ );
+        }
 
         #endregion
 
@@ -24,22 +112,22 @@ namespace Aquila.Fight.Addon
         private void ResetNumricArr()
         {
             if ( _numric_arr is null )
-                _numric_arr = new Numric_Actor[(int)Cfg.Enum.Numric_Type.Max - 1];
+                _numric_arr = new Numric_ActorBaseAttr[(int)Cfg.Enum.Numric_Type.Max - 1];
 
             //#TODO-所有属性等于基础值，没有任何加成
         }
 
         /// <summary>
-        /// 检查数值是否正确，正确返回true
+        /// 检查数值是否正确，不正确返回true
         /// </summary>
         private bool OverLen( int int_type )
         {
             if ( _numric_arr is null || int_type >= _numric_arr.Length )
             {
-                Log.Warning( "Addon_Data.Base.cs--->int_type >= _numric_arr.Length" );
-                return false;
+                Log.Warning( $"attr int type {int_type.ToString()} is over len:{_numric_arr.Length}" );
+                return true;
             }
-            return true;
+            return false;
         }
 
         #endregion
@@ -81,7 +169,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 所有的数值集合
         /// </summary>
-        private Numric.Numric_Actor[] _numric_arr = null;
+        private Numric.Numric_ActorBaseAttr[] _numric_arr = null;
 
         #endregion
     }
