@@ -8,6 +8,7 @@ namespace Aquila.Fight.Actor
     /// </summary>
     public class ACTOR_ID_POOL
     {
+        //#todo:actor销毁时，回收ID，一种思路是，
         public const int Invalid = -1;
 
         /// <summary>
