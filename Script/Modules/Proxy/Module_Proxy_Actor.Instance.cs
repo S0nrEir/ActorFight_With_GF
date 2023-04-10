@@ -4,8 +4,8 @@ using GameFramework;
 
 namespace Aquila.Module
 {
-    //Module_Proxy_Fight的部分类，用于描述ActorInstance
-    public partial class Module_Proxy_Fight
+    //Module_Proxy_Actor的部分类，用于描述ActorInstance
+    public partial class Module_Proxy_Actor
     {
         /// <summary>
         /// 战斗代理Actor类，表示Actor在Proxy中的表示，封装了Actor和对应的Addon

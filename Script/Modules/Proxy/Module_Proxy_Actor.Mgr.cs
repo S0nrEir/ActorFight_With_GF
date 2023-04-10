@@ -6,8 +6,8 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
-    //Module_Proxy_Fight的部分类，用于管理ActorInstance实例
-    public partial class Module_Proxy_Fight
+    //Module_Proxy_Actor的部分类，用于管理各类Actor实例
+    public partial class Module_Proxy_Actor
     {
         #region pub
 
