@@ -87,6 +87,10 @@ namespace Aquila.Numric
             _class_correction.Clear();
             _buff_correction.Clear();
 
+            _equip_correction = null;
+            _class_correction = null;
+            _buff_correction  = null;
+
             _total = 0f;
             base.Clear();
         }

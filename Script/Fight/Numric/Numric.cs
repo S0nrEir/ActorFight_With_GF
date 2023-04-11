@@ -78,6 +78,7 @@ namespace Aquila.Numric
             _value = 0f;
             _correction_value = 0f;
             _correction.Clear();
+            _correction = null;
             _change_flag = false;
         }
         #endregion
