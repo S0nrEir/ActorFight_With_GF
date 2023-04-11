@@ -1,7 +1,6 @@
 ﻿using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.ToolKit;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
 using UnityGameFramework.Runtime;
@@ -57,7 +56,7 @@ namespace Aquila.Module
                     user_data
                 );
             //#todo_根据actor类型决定传入函数的tag值，不要写死
-            OnShowActorSucc(result.Logic as TActorBase,role_meta_id,Config.GameConfig.Entity.GROUP_HERO_ACTOR);
+            OnShowActorSucc( result.Logic as TActorBase, role_meta_id, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
             OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
@@ -69,9 +68,9 @@ namespace Aquila.Module
         /// <summary>
         /// actor生成回调
         /// </summary>
-        private void OnShowActorSucc(TActorBase actor,int role_meta_id,string tag)
+        private void OnShowActorSucc( TActorBase actor, int role_meta_id, string tag )
         {
-            actor.Setup( role_meta_id, tag );
+            //actor.Setup( role_meta_id, tag );
         }
 
         /// <summary>

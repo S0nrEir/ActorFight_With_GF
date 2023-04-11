@@ -4,6 +4,7 @@ using Aquila.ToolKit;
 using GameFramework.Event;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -48,16 +49,24 @@ namespace Aquila.Fight.Actor
 
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
 
-        protected override void InitAddons()
+        protected override void InitAddons(object user_data)
         {
-            base.InitAddons();
+            base.InitAddons( user_data );
+            if ( !( user_data is HeroActorEntityData ) )
+            {
+                Log.Warning( "user_data is not HeroActorEntityData" );
+                return;
+            }
+            var data = user_data as HeroActorEntityData;
+            Setup( data._role_meta_id );
+
             _base_attr_addon    = AddAddon<Addon_BaseAttrNumric>();
             _data_addon         = AddAddon<Addon_Data>();
             _fsm_addon          = AddAddon<Addon_HeroState>();
             _anim_addon         = AddAddon<Addon_Anim>();
             _move_addon         = AddAddon<Addon_Move>();
             _hp_addon           = AddAddon<Addon_InfoBoard>();
-            _nav_addon          = AddAddon<Addon_Nav>();
+            //_nav_addon          = AddAddon<Addon_Nav>();
             _effect_addon       = AddAddon<Addon_Effect>();
         }
 
@@ -152,5 +161,10 @@ namespace Aquila.Fight.Actor
         public HeroActorEntityData( int entityId ) : base( entityId, typeof( HeroActor ).GetHashCode() )
         {
         }
+
+        /// <summary>
+        /// 角色role meta表id
+        /// </summary>
+        public int _role_meta_id = -1;
     }
 }

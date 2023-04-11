@@ -1,5 +1,4 @@
-﻿using Aquila.Fight.Actor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Aquila.Fight.Actor
 {
@@ -12,9 +11,9 @@ namespace Aquila.Fight.Actor
     {
         #region public methods
 
-        public void SetTarget ( Transform targetTransform ,int targetID)
+        public void SetTarget( Transform targetTransform, int targetID )
         {
-            SetReadyFlag( true , targetTransform );
+            SetReadyFlag( true, targetTransform );
             Setup( targetID );
         }
 
@@ -25,7 +24,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 设置检查状态
         /// </summary>
-        private void SetReadyFlag (bool ready,Transform targetTran = null)
+        private void SetReadyFlag( bool ready, Transform targetTran = null )
         {
             _readyFlag = ready;
             _targetTransform = _readyFlag ? targetTran : null;
@@ -35,30 +34,30 @@ namespace Aquila.Fight.Actor
 
         #region impl
 
-        public void MoveTo ( float targetX, float targetZ )
+        public void MoveTo( float targetX, float targetZ )
         {
             _moveAddon.MoveTo( CachedTransform.position, _targetTransform.position, _elapsedSeconds );
         }
 
         #endregion
 
-        protected override void ColliderTriggerHit ( int evnetID, object[] param )
+        protected override void ColliderTriggerHit( int evnetID, object[] param )
         {
             SetReadyFlag( false );
             base.ColliderTriggerHit( evnetID, param );
         }
 
-        protected override void OnColliderTriggerCountLmt ( int evnetID, object[] param )
+        protected override void OnColliderTriggerCountLmt( int evnetID, object[] param )
         {
             SetReadyFlag( false );
             base.OnColliderTriggerCountLmt( evnetID, param );
         }
 
         //刷位置
-        protected override void OnUpdate ( float elapseSeconds, float realElapseSeconds )
+        protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
-            if (!ReadyFlag)
+            if ( !ReadyFlag )
                 return;
 
             _elapsedSeconds = elapseSeconds;
@@ -68,40 +67,40 @@ namespace Aquila.Fight.Actor
         #region override
         public override ActorTypeEnum ActorType => ActorTypeEnum.Projectile;
 
-        protected override void InitAddons ()
+        protected override void InitAddons( object user_data )
         {
-            base.InitAddons();
+            base.InitAddons( user_data );
             _triggerAddon.SetTriggerLmt( 1 );
             _moveAddon.SetSpeed( 5f );
         }
 
-        public override void Reset ()
+        public override void Reset()
         {
             base.Reset();
             SetReadyFlag( false, null );
             _elapsedSeconds = 0f;
         }
 
-        protected override void OnShow ( object userData )
+        protected override void OnShow( object userData )
         {
             base.OnShow( userData );
         }
 
-        protected override void OnRecycle ()
+        protected override void OnRecycle()
         {
             Reset();
             base.OnRecycle();
         }
 
-        protected override void OnInit ( object userData )
+        protected override void OnInit( object userData )
         {
             base.OnInit( userData );
         }
 
-        public virtual bool HitCorrectTarget (object obj)
+        public virtual bool HitCorrectTarget( object obj )
         {
             var go = obj as GameObject;
-            if (go == null)
+            if ( go == null )
                 return false;
 
             //return _targetTransform != null && Vector3.Distance( _targetTransform.position , CachedTransform.position ) <= .1f;
@@ -132,7 +131,7 @@ namespace Aquila.Fight.Actor
 
     public class ProjectileActorEntityData : EntityData
     {
-        public ProjectileActorEntityData ( int entityId ) : base( entityId, typeof( ProjectileActor ).GetHashCode() )
+        public ProjectileActorEntityData( int entityId ) : base( entityId, typeof( ProjectileActor ).GetHashCode() )
         {
         }
     }

@@ -117,6 +117,9 @@ namespace Aquila.Fight.Actor
                 );
         }
 
+        /// <summary>
+        /// 自定义初始设置
+        /// </summary>
         public void Setup
             (
                 int role_meta_id,
@@ -125,6 +128,15 @@ namespace Aquila.Fight.Actor
         {
             SetRoleMetaID( role_meta_id );
             SetTag( tag );
+            Reset();
+        }
+
+        /// <summary>
+        /// 自定义初始设置
+        /// </summary>
+        public void Setup( int role_meta_id_ )
+        {
+            SetRoleMetaID( role_meta_id_ );
             Reset();
         }
 
@@ -189,7 +201,7 @@ namespace Aquila.Fight.Actor
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            InitAddons();
+            InitAddons( userData );
             //if ( gameObject.GetComponent<BoxCollider>() == null )
             //{
             //    var collider = gameObject.AddComponent<BoxCollider>();
@@ -275,7 +287,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons()
+        protected virtual void InitAddons(object user_data)
         {
             _eventAddon = AddAddon<Addon_Event>();
         }
