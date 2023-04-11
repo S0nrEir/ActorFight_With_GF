@@ -2,6 +2,7 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -111,10 +112,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private void ResetNumricArr()
         {
-            if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max - 1];
-
-            var meta = GameEntry.DataTable.GetTable<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
+            var meta = GameEntry.DataTable.Table<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
             if ( meta is null )
             {
                 Log.Warning( $"<color=yellow>meta is null,meta id = {Actor.RoleMetaID}</color>" );
@@ -126,16 +124,16 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置基础属性
         /// </summary>
-        private void SetBaseAttr(Cfg.role.RoleMeta meta)
+        private void SetBaseAttr( Cfg.role.RoleMeta meta )
         {
             //#todo设置属性暂时是一个个设置，想个办法走loop
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
             //max hp
             SetBaseValue( Actor_Attr.Max_HP, meta.HP );
             //curr hp
-            SetBaseValue(Actor_Attr.Curr_HP,meta.HP );
+            SetBaseValue( Actor_Attr.Curr_HP, meta.HP );
             //str
-            SetBaseValue(Actor_Attr.STR,meta.STR );
+            SetBaseValue( Actor_Attr.STR, meta.STR );
             //def
             SetBaseValue( Actor_Attr.DEF, meta.DEF );
             //agi
@@ -166,7 +164,7 @@ namespace Aquila.Fight.Addon
         #endregion
 
 
-        #region override
+        //----------------------------override----------------------------
 
         public override void Reset()
         {
@@ -182,28 +180,45 @@ namespace Aquila.Fight.Addon
         public override void Dispose()
         {
             base.Dispose();
+            if ( _numric_arr != null )
+            {
+                var len = _numric_arr.Length;
+                for ( var i = 0; i < len; i++ )
+                {
+                    //_numric_arr[i].Clear();
+                    ReferencePool.Release( _numric_arr[i] );
+                    _numric_arr[i] = null;
+                }
+                _numric_arr = null;
+            }
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BaseAttr;
 
         public override void OnAdd()
         {
+            if ( _numric_arr is null )
+                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max ];
 
+            var len = _numric_arr.Length;
+            for ( var i = 0; i < len; i++ )
+            {
+                if ( _numric_arr[i] is null )
+                    _numric_arr[i] = ReferencePool.Acquire<Numric_ActorBaseAttr>();
+                else
+                    Log.Warning( "Numric arr not not null on add!" );
+            }
         }
 
         public override void SetEnable( bool enable )
         {
             _enable = enable;
         }
-        #endregion
 
-        #region fields
-
+        //----------------------------fields----------------------------
         /// <summary>
         /// 所有的数值集合
         /// </summary>
         private Numric.Numric_ActorBaseAttr[] _numric_arr = null;
-
-        #endregion
     }
 }
