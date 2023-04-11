@@ -19,13 +19,13 @@ namespace Aquila.Extension
         [XLua.DoNotGen]
         public void Test()
         {
-            var meta = GetTable<TB_RoleBaseAttr>().Get(10001);
+            var meta = Table<TB_RoleBaseAttr>().Get(10001);
         }
 
         /// <summary>
         /// 获取指定类型的表实例
         /// </summary>
-        public T GetTable<T>() where T : class
+        public T Table<T>() where T : class
         {
             if ( !_is_custom_cache_tables )
                 return null;
