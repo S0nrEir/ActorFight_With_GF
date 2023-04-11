@@ -27,26 +27,8 @@ namespace Aquila.Procedure
             Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
-
             //测试进入战斗流程
-            ChangeState<Procedure_Test_Fight>(_procedure_owner);
-            return;
-            if ( GameEntry.Procedure._is_enter_test_scene )
-            {
-                ChangeState<Procedure_Test>( _procedure_owner );
-            }
-            else
-            {
-                var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-                var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
-                procedure_variable.SetValue( new Procedure_Fight_Data()
-                {
-                    _scene_script_meta = scene_script_meta,
-                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
-                } );
-                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
-                ChangeState<Procedure_Fight>( _procedure_owner );
-            }
+            NextProcedure();
         }
 
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
@@ -145,6 +127,31 @@ namespace Aquila.Procedure
             obj_arr = null;
             _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
             OnPreLoadFinished();
+        }
+
+        /// <summary>
+        /// 下一个流程
+        /// </summary>
+        private void NextProcedure()
+        {
+            ChangeState<Procedure_Test_Fight>( _procedure_owner );
+            return;
+            if ( GameEntry.Procedure._is_enter_test_scene )
+            {
+                ChangeState<Procedure_Test>( _procedure_owner );
+            }
+            else
+            {
+                var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
+                var scene_script_meta = GameEntry.DataTable.Table<Cfg.common.TB_Scripts>().Get( 10000 );
+                procedure_variable.SetValue( new Procedure_Fight_Data()
+                {
+                    _scene_script_meta = scene_script_meta,
+                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
+                } );
+                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
+                ChangeState<Procedure_Fight>( _procedure_owner );
+            }
         }
 
         /// <summary>

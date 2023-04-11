@@ -38,27 +38,31 @@ namespace Aquila.Procedure
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
             var actor_id = ACTOR_ID_POOL.Gen();
-            var actor_1 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
                 (
                     role_meta_id: _temp_role_meta_id_1,
                     actor_id: actor_id,
                     asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
-                    new HeroActorEntityData( actor_id )
+                    new HeroActorEntityData( actor_id ) { _role_meta_id = _temp_role_meta_id_1 }
                 );
 
             //actor2
             actor_id = ACTOR_ID_POOL.Gen();
-            var actor_2 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
                 (
                     role_meta_id: _temp_role_meta_id_1,
                     actor_id: actor_id,
                     asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
                     grid_x: 1,
                     grid_z: 1,
-                    new HeroActorEntityData( actor_id )
+                    new HeroActorEntityData( actor_id ) { _role_meta_id = _temp_role_meta_id_2 }
                 );
+
+            if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
+                return;
+
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_2 );
             OnLoadFinish();
