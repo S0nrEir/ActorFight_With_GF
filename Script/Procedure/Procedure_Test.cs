@@ -1,4 +1,4 @@
-using GameFramework.Fsm;
+ï»¿using GameFramework.Fsm;
 using GameFramework.Procedure;
 using GameFramework.Resource;
 using UnityEngine;
@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.Interactions;
 namespace Aquila.Procedure
 {
     /// <summary>
-    /// ²âÊÔÁ÷³Ì
+    /// æµ‹è¯•æµç¨‹
     /// </summary>
     public class Procedure_Test : ProcedureBase
     {
@@ -25,13 +25,14 @@ namespace Aquila.Procedure
             //TimeWheelTest();
         }
 
+        //tip:å‘½ä»¤æ¨¡å¼ï¼šé€šè¿‡æ¥å£æˆ–è€…æŠ½è±¡ç±»å°†è¾“å…¥å’Œè¾“å…¥çš„é€»è¾‘è§£è€¦
         private void RunInput()
         {
             if ( _move_action is null )
                 return;
 
-            //ÕâÀï¶Ámove actionµÄÖµ£¬ÔÚÅäÖÃÎÄ¼şÖĞ£¬ËûµÄaction type±»ÅäÖÃÎª¡¾Value¡¿£¬±íÊ¾×´Ì¬ÔÚ³ÖĞøÆÚ¼äÁ¬Ğø¸ü¸ÄµÄÊäÈë£¬±ÈÈçÊó±êÒÆ¶¯£¬ÊÖ±úÒ¡¸Ë
-            //Control type¸ù¾İÑ¡ÔñµÄÄÚÈİ²»Í¬ÔÚ´¥·¢Ïà¹ØĞĞÎªÊ±·µ»Ø¶ÔÓ¦µÄÖµ£¬ÕâÀïÊÇVector2£¬ÓÃV2±íÊ¾ÉÏÏÂ×óÓÒµÄËÄ¸öÊäÈë·½Ïò
+            //è¿™é‡Œè¯»move actionçš„å€¼ï¼Œåœ¨é…ç½®æ–‡ä»¶ä¸­ï¼Œä»–çš„action typeè¢«é…ç½®ä¸ºã€Valueã€‘ï¼Œè¡¨ç¤ºçŠ¶æ€åœ¨æŒç»­æœŸé—´è¿ç»­æ›´æ”¹çš„è¾“å…¥ï¼Œæ¯”å¦‚é¼ æ ‡ç§»åŠ¨ï¼Œæ‰‹æŸ„æ‘‡æ†
+            //Control typeæ ¹æ®é€‰æ‹©çš„å†…å®¹ä¸åŒåœ¨è§¦å‘ç›¸å…³è¡Œä¸ºæ—¶è¿”å›å¯¹åº”çš„å€¼ï¼Œè¿™é‡Œæ˜¯Vector2ï¼Œç”¨V2è¡¨ç¤ºä¸Šä¸‹å·¦å³çš„å››ä¸ªè¾“å…¥æ–¹å‘
             var value = _move_action.ReadValue<Vector2>();
             if ( value != Vector2.zero )
             {
@@ -74,7 +75,7 @@ namespace Aquila.Procedure
         private InputAction _fire_action = null;
 
         /// <summary>
-        /// µã»÷»Øµ÷
+        /// ç‚¹å‡»å›è°ƒ
         /// </summary>
         private void OnFireActionPerformed( InputAction.CallbackContext ctx )
         {
@@ -85,7 +86,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// ÒÆ¶¯»Øµ÷
+        /// ç§»åŠ¨å›è°ƒ
         /// </summary>
         private void OnMoveActionPerformed( InputAction.CallbackContext ctx )
         {
