@@ -33,7 +33,7 @@ public partial class @SimpleControls : IInputActionCollection2, IDisposable
                     ""id"": ""1077f913-a9f9-41b1-acb3-b9ee0adbc744"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Tap,SlowTap"",
+                    ""interactions"": ""Tap,SlowTap,Press"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -60,7 +60,7 @@ public partial class @SimpleControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""abb776f3-f329-4f7b-bbf8-b577d13be018"",
                     ""path"": ""*/{PrimaryAction}"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""fire"",
@@ -156,15 +156,52 @@ public partial class @SimpleControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""TestInput"",
+            ""id"": ""2bc05866-6f60-430a-84f2-fa8f2e4e6d9f"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""732b6a77-0c12-4434-8851-239e57e63d10"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3480de4d-c0f7-4d11-81e5-719975d72cce"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""keyboard"",
+            ""bindingGroup"": ""keyboard"",
+            ""devices"": []
+        }
+    ]
 }");
         // gameplay
         m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
         m_gameplay_fire = m_gameplay.FindAction("fire", throwIfNotFound: true);
         m_gameplay_move = m_gameplay.FindAction("move", throwIfNotFound: true);
         m_gameplay_look = m_gameplay.FindAction("look", throwIfNotFound: true);
+        // TestInput
+        m_TestInput = asset.FindActionMap("TestInput", throwIfNotFound: true);
+        m_TestInput_Newaction = m_TestInput.FindAction("New action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -269,10 +306,56 @@ public partial class @SimpleControls : IInputActionCollection2, IDisposable
         }
     }
     public GameplayActions @gameplay => new GameplayActions(this);
+
+    // TestInput
+    private readonly InputActionMap m_TestInput;
+    private ITestInputActions m_TestInputActionsCallbackInterface;
+    private readonly InputAction m_TestInput_Newaction;
+    public struct TestInputActions
+    {
+        private @SimpleControls m_Wrapper;
+        public TestInputActions(@SimpleControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_TestInput_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_TestInput; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TestInputActions set) { return set.Get(); }
+        public void SetCallbacks(ITestInputActions instance)
+        {
+            if (m_Wrapper.m_TestInputActionsCallbackInterface != null)
+            {
+                @Newaction.started -= m_Wrapper.m_TestInputActionsCallbackInterface.OnNewaction;
+                @Newaction.performed -= m_Wrapper.m_TestInputActionsCallbackInterface.OnNewaction;
+                @Newaction.canceled -= m_Wrapper.m_TestInputActionsCallbackInterface.OnNewaction;
+            }
+            m_Wrapper.m_TestInputActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
+            }
+        }
+    }
+    public TestInputActions @TestInput => new TestInputActions(this);
+    private int m_keyboardSchemeIndex = -1;
+    public InputControlScheme keyboardScheme
+    {
+        get
+        {
+            if (m_keyboardSchemeIndex == -1) m_keyboardSchemeIndex = asset.FindControlSchemeIndex("keyboard");
+            return asset.controlSchemes[m_keyboardSchemeIndex];
+        }
+    }
     public interface IGameplayActions
     {
         void OnFire(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+    }
+    public interface ITestInputActions
+    {
+        void OnNewaction(InputAction.CallbackContext context);
     }
 }

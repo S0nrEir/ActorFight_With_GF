@@ -11,7 +11,8 @@
                     "id": "1077f913-a9f9-41b1-acb3-b9ee0adbc744",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Tap,SlowTap"
+                    "interactions": "Tap,SlowTap,Press",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "move",
@@ -19,7 +20,8 @@
                     "id": "50fd2809-3aa3-4a90-988e-1facf6773553",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "look",
@@ -27,7 +29,8 @@
                     "id": "c60e0974-d140-4597-a40e-9862193067e9",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -35,7 +38,7 @@
                     "name": "",
                     "id": "abb776f3-f329-4f7b-bbf8-b577d13be018",
                     "path": "*/{PrimaryAction}",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "fire",
@@ -131,7 +134,41 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "TestInput",
+            "id": "2bc05866-6f60-430a-84f2-fa8f2e4e6d9f",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "732b6a77-0c12-4434-8851-239e57e63d10",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3480de4d-c0f7-4d11-81e5-719975d72cce",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "keyboard",
+            "bindingGroup": "keyboard",
+            "devices": []
+        }
+    ]
 }
