@@ -3,6 +3,7 @@ using Aquila.Extension;
 using GameFramework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -12,12 +13,9 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_Input : GameFrameworkModuleBase, IUpdate
     {
-
-
         //impl
         public void OnUpdate( float deltaTime )
         {
-            throw new System.NotImplementedException();
         }
 
         //override
