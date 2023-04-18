@@ -18,9 +18,8 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
-            //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _input_module   = GameEntry.Module.GetModule<Module_Input>();
-            _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
+            //_input_module       = GameEntry.Module.GetModule<Module_Input>();
+            _terrain_module     = GameEntry.Module.GetModule<Module_Terrain>();
             _actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
         }
 
@@ -45,7 +44,7 @@ namespace Aquila.Procedure
             //if ( !_scene_module.Start( param ) )
             //    Log.Error( "scene_module start failed" );
 
-            _input_module.Start( param );
+            //_input_module.Start( param );
             _terrain_module.Start( param );
             _actor_fac_module.Start( param );
         }
@@ -53,7 +52,7 @@ namespace Aquila.Procedure
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             //_terrain_module.End();
-            _input_module.End();
+            //_input_module.End();
             _terrain_module.End();
             _actor_fac_module.End();
             _procedure_owner = null;
@@ -101,9 +100,9 @@ namespace Aquila.Procedure
         private Camera _main_camera = null;
 
         /// <summary>
-        /// 战斗模块
+        /// 模块
         /// </summary>
-        private Module_Input _input_module = null;
+        //private Module_Input _input_module = null;
 
         /// <summary>
         /// 地块模块

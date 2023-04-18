@@ -110,9 +110,8 @@ namespace Aquila.Fight.Actor
         }
 
         #endregion
-
-        #region addon
-
+        
+        //----------------addon----------------
         /// <summary>
         /// 状态机组件
         /// </summary>
@@ -152,8 +151,6 @@ namespace Aquila.Fight.Actor
         /// 基础属性数值组件
         /// </summary>
         private Addon_BaseAttrNumric _base_attr_addon { get; set; } = null;
-
-        #endregion
     }
 
     public class HeroActorEntityData : EntityData

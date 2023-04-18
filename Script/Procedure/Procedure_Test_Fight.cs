@@ -3,18 +3,19 @@ using Aquila.Module;
 using Aquila.ToolKit;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
     /// <summary>
-    /// Õ½¶·²âÊÔÁ÷³Ì
+    /// æˆ˜æ–—æµ‹è¯•æµç¨‹
     /// </summary>
     public class Procedure_Test_Fight : ProcedureBase
     {
         /// <summary>
-        /// ¸ÃÁ÷³Ì¼ÓÔØÊÇ·ñÍê³É
+        /// è¯¥æµç¨‹åŠ è½½æ˜¯å¦å®Œæˆ
         /// </summary>
         private void OnLoadFinish()
         {
@@ -25,7 +26,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// ¼ÓÔØ³¡¾°
+        /// åŠ è½½åœºæ™¯
         /// </summary>
         private void LoadScene()
         {
@@ -33,6 +34,9 @@ namespace Aquila.Procedure
             SceneManager.LoadSceneAsync( "TestFightScene" );
         }
 
+        /// <summary>
+        /// åŠ è½½actor
+        /// </summary>
         private async void LoadActor()
         {
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
@@ -69,7 +73,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// ³¡¾°»Øµ÷
+        /// åœºæ™¯å›è°ƒ
         /// </summary>
         private void OnSceneLoaded( Scene scene_, LoadSceneMode mode_ )
         {
@@ -78,47 +82,53 @@ namespace Aquila.Procedure
         }
 
         //@override:
+
+        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
+        {
+            
+        }
+
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             _load_flag_curr_state = 0b_0000;
-            base.OnEnter( procedureOwner );
-            //¼ÓÔØ³¡¾°£¬¼ÓÔØÁ½¸ö²âÊÔÓÃµÄÕ½¶·actor
+            // base.OnEnter( procedureOwner );
+            //åŠ è½½åœºæ™¯ï¼ŒåŠ è½½ä¸¤ä¸ªæµ‹è¯•ç”¨çš„æˆ˜æ–—actor
             LoadScene();
             LoadActor();
         }
 
         /// <summary>
-        /// ¼ÓÔØactor1
+        /// åŠ è½½actor1
         /// </summary>
         private int _load_flag_actor_1 = 0b_0001;
 
         /// <summary>
-        /// ¼ÓÔØactor2
+        /// åŠ è½½actor2
         /// </summary>
         private int _load_flag_actor_2 = 0b_0010;
 
         /// <summary>
-        /// ¼ÓÔØ³¡¾°
+        /// åŠ è½½åœºæ™¯
         /// </summary>
         private int _load_flag_scene = 0b_0100;
 
         /// <summary>
-        /// ¼ÓÔØÍê³É
+        /// åŠ è½½å®Œæˆ
         /// </summary>
         private const int _load_flag_finish = 0b_1000;
 
         /// <summary>
-        /// µ±Ç°µÄ¼ÓÔØ×´Ì¬
+        /// å½“å‰çš„åŠ è½½çŠ¶æ€
         /// </summary>
         private int _load_flag_curr_state = 0b_0000;
 
         /// <summary>
-        /// ½ÇÉ«ÊôĞÔ±íid
+        /// è§’è‰²å±æ€§è¡¨id
         /// </summary>
         private int _temp_role_meta_id_1 = 1;
 
         /// <summary>
-        /// ½ÇÉ«ÊôĞÔ±íid
+        /// è§’è‰²å±æ€§è¡¨id
         /// </summary>
         private int _temp_role_meta_id_2 = 2;
     }
