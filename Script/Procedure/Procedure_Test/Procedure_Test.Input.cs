@@ -10,20 +10,8 @@ namespace Aquila.Procedure
     /// <summary>
     /// 测试流程
     /// </summary>
-    public class Procedure_Test : ProcedureBase
+    public partial class Procedure_Test : ProcedureBase
     {
-        protected override void OnUpdate( IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds )
-        {
-            //base.OnUpdate( procedureOwner, elapseSeconds, realElapseSeconds );
-            RunInput();
-        }
-
-        protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
-        {
-            base.OnEnter( procedureOwner );
-            InputTest();
-            //TimeWheelTest();
-        }
 
         //tip:命令模式：通过接口或者抽象类将输入和输入的逻辑解耦
         private void RunInput()
@@ -99,19 +87,6 @@ namespace Aquila.Procedure
         private void OnLoadActionsFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
             Debug.LogError( $"load action faild , status = {status.ToString()}" );
-        }
-
-        private int counter = 0;
-        private void TimeWheelTest()
-        {
-            GameEntry.TimeWheel.AddTask( Extension.TimeWheel_Task.GenRepeat
-                   (
-                       1f,
-                       () =>
-                       {
-                           Debug.Log( $"testing...{counter++}" );
-                       }
-                   ) );
         }
     }
 
