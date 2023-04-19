@@ -36,7 +36,6 @@ namespace Aquila.Extension
             if ( _custom_table_cache is null || _custom_table_cache.Count == 0 )
                 return null;
 
-
             var code = typeof( T ).GetHashCode();
             if(!_custom_table_cache.TryGetValue( code, out var field_value ))
                 return null;
