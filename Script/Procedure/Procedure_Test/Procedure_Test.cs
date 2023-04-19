@@ -15,13 +15,15 @@ namespace Aquila.Procedure
         protected override void OnUpdate( IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds )
         {
             //base.OnUpdate( procedureOwner, elapseSeconds, realElapseSeconds );
-            RunInput();
+            //RunInput();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            InputTest();
+
+            LoadScript();
+            //InputTest();
             //TimeWheelTest();
         }
     }
