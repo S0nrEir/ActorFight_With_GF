@@ -134,7 +134,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 自定义初始设置
         /// </summary>
-        public void Setup( int role_meta_id_ )
+        public virtual void Setup( int role_meta_id_ )
         {
             SetRoleMetaID( role_meta_id_ );
             Reset();

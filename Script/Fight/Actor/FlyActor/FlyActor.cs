@@ -10,7 +10,7 @@ namespace Aquila.Fight.Actor
     /// </summary>
     public abstract class FlyActor : TActorBase
     {
-        public virtual void Setup (int actorID)
+        public override void Setup (int actorID)
         {
             _targetActorID = actorID;
         }
