@@ -23,6 +23,7 @@ namespace Aquila.Procedure
             base.OnEnter( procedureOwner );
 
             LoadScript();
+            
             //InputTest();
             //TimeWheelTest();
         }
