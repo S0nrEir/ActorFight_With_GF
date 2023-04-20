@@ -10,11 +10,7 @@ namespace Aquila.Fight.Actor
 {
     public class HeroActor :
         TActorBase,
-        //INavMoveBehavior,
         ISwitchStateBehavior,
-        //IDoAbilityBehavior,
-        //ITakeDamageBehavior,
-        //IPathMoveBehavior,
         IDieBehavior
     {
 
