@@ -12,7 +12,7 @@ namespace Aquila.Procedure
         {
             var meta = GameEntry.DataTable.Table<TB_Scripts>().Get( 10001 );
             GameEntry.Lua.Load( meta );
-            GameEntry.Lua.UnLoadAllRunningData();
+            //GameEntry.Lua.UnLoadAllRunningData();
         }
     }
 }

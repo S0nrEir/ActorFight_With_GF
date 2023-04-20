@@ -33,7 +33,7 @@ namespace Aquila.Module
         //}
 
         /// <summary>
-        /// 异步显示一个actor
+        /// 异步显示一个actor，注意，调用该接口前使用await关键字进行等待
         /// </summary>
         public async Task<Entity> ShowActorAsync<T>
             (
@@ -108,7 +108,7 @@ namespace Aquila.Module
                        @"Assets/Res/Prefab/Aquila_001.prefab",
                        0,
                        0,
-                       new HeroActorEntityData( entity_id )
+                       new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
                    );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
@@ -118,7 +118,7 @@ namespace Aquila.Module
         public override void Start( object param )
         {
             base.Start( param );
-            TestLoadActor();
+            //TestLoadActor();
         }
 
         public override void End()

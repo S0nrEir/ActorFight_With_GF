@@ -23,7 +23,6 @@ namespace Aquila.Procedure
             if ( _preload_flags != _preload_state_finish )
                 return;
 
-            //#todo_switchToNextProcedure
             Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
@@ -44,10 +43,9 @@ namespace Aquila.Procedure
             _preload_flags = _preload_state_init;
 
             PreLoadTables();
-
             PreLoadObejct();
             //测试配表
-            GameEntry.DataTable.Test();
+            //GameEntry.DataTable.Test();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -74,7 +72,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 预加载对象池对象
+        /// 预加载地形的对象池对象
         /// </summary>
         private void PreLoadObejct()
         {
@@ -91,6 +89,8 @@ namespace Aquila.Procedure
         /// </summary>
         private void LoadTerrainSuccCallBack( string assetName, object asset, float duration, object userData )
         {
+            //这里是为了提前创建好对象池和对象池内的数量，以便在后续的流程中使用，
+            //最后把他们释放掉也是因为如此
             var go = asset as GameObject;
             if ( go == null )
                 throw new GameFrameworkException( "terrain game object is null!" );
@@ -113,6 +113,8 @@ namespace Aquila.Procedure
                 temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
                 if ( temp_obj == null )
                 {
+                    //第一次生成，池里没有现成的object，先生成新的，然后注册到池里，直到把池内填满
+                    //下次拿的时候就不用重新生成
                     temp_go = Object.Instantiate( go );
                     temp_go.tag = GameConfig.Tags.TERRAIN_BLOCK;
                     temp_go.transform.SetParent( root_go.transform );
