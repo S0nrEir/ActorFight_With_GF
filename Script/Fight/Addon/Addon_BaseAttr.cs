@@ -193,7 +193,7 @@ namespace Aquila.Fight.Addon
             }
         }
 
-        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BaseAttr;
+        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BASEATTR;
 
         public override void OnAdd()
         {
