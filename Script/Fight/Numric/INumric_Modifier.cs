@@ -6,22 +6,22 @@ namespace Aquila.Numric
 {
 
     /// <summary>
-    /// NumricÊıÖµĞŞ¸Ä·½Ê½Ã¶¾Ù
+    /// Numricæ•°å€¼ä¿®æ”¹æ–¹å¼æšä¸¾
     /// </summary>
     public enum Numric_Modify_Type_Enum
     {
         /// <summary>
-        /// ÎŞ£¬ÎŞĞ§
+        /// æ— ï¼Œæ— æ•ˆ
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// ¼Ó
+        /// åŠ 
         /// </summary>
         Add = 1,
 
         /// <summary>
-        /// °Ù·Ö±È£¬±äÎªÔ­ÏÈµÄ°Ù·ÖÖ®¶àÉÙ
+        /// ç™¾åˆ†æ¯”ï¼Œå˜ä¸ºåŸå…ˆçš„ç™¾åˆ†ä¹‹å¤šå°‘
         /// </summary>
         Percent,
     }

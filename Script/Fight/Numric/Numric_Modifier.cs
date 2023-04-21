@@ -4,12 +4,12 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Numric
 {
     /// <summary>
-    /// ÊýÖµÐÞÊÎÆ÷
+    /// æ•°å€¼ä¿®é¥°å™¨
     /// </summary>
     public class Numric_Modifier : IReference
     {
         /// <summary>
-        /// »ñÈ¡ÐÞÕýÖµ
+        /// èŽ·å–ä¿®æ­£å€¼
         /// </summary>
         public float ValueAfterModify
         {
@@ -17,7 +17,7 @@ namespace Aquila.Numric
             {
                 if ( !_modified )
                 {
-                    Log.Warning( "ÐÞÊÎÆ÷»¹Î´±»ÐÞ¸Ä" );
+                    Log.Warning( "ä¿®é¥°å™¨è¿˜æœªè¢«ä¿®æ”¹" );
                     return 0f;
                 }
                 return _value_after_modify;
@@ -25,7 +25,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÉèÖÃÐÞ¸ÄÆ÷µÄÀàÐÍ
+        /// è®¾ç½®ä¿®æ”¹å™¨çš„ç±»åž‹
         /// </summary>
         public void Setup( Numric_Modify_Type_Enum type_ )
         {
@@ -33,7 +33,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ¼ÆËã£¬ÉèÖÃ²¢·µ»ØÐÞ¸ÄºóµÄÊµ¼ÊÖµ
+        /// è®¡ç®—ï¼Œè®¾ç½®å¹¶è¿”å›žä¿®æ”¹åŽçš„å®žé™…å€¼
         /// </summary>
         public float Calc( float original_val_ )
         {
@@ -68,37 +68,37 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÐÞ¸Ä±ê¼Ç
+        /// ä¿®æ”¹æ ‡è®°
         /// </summary>
         private bool _modified = false;
 
         /// <summary>
-        /// ÊýÖµÐÞ¸Ä·½Ê½
+        /// æ•°å€¼ä¿®æ”¹æ–¹å¼
         /// </summary>
         private Numric_Modify_Type_Enum _type = Numric_Modify_Type_Enum.None;
 
         /// <summary>
-        /// ÐÞÕýÖµ
+        /// ä¿®æ­£å€¼
         /// </summary>
         private float _value_after_modify = 0f;
 
-        //#todoÊýÖµÐÞ¸Ä·½Ê½£¬¾ßÌåÊýÖµ
-        //¹ØÁªµ½Êý¾Ý×é¼þ£¬»¹ÓÐbuffÖ®ÀàµÄ£¬ËûÃÇ¶¼¿ÉÒÔ³ÖÓÐÊýÖµÐÞ¸ÄÆ÷£¬×°±¸Ê²Ã´µÄÒ²ÐÐ
-        //#todo_ÐÞ¸ÄÊýÖµºóÈçºÎ¸Ä»ØÈ¥£¿
-        //ÒòÎªÊý¾Ý×é¼þµÄÐÞÕýÖµ£¬ÊÇ¼ÆËãºóµÄÖµ£¬
-        //Òò´Ë£¬±ÈÈçËµÒ»¸öbuffÔö¼Ó»ù´¡¹¥»÷Á¦(100)µÄ25%£¬¹¥»÷Á¦µÄ×°±¸ÐÞÕý¾ÍÊÇ25£¬ÐÞ¸ÄºóÏà¼Ó±äÎª125£¬
-        //µÈbuffÊ±¼äµ½ÁËÒÔºó£¬Òª°ÑÕâ25%Ïûµô£¬ÒòÎªÊÇÔö¼Ó25%£¬Ïàµ±ÓÚ³ËÒÔ1.25(0.25)£¬Òò´ËÒªÏûµôÕâ¸öbuff
-        //Ïàµ±ÓÚ³ËÒÔ1-(1-0.25)£¬ÔÙ°ÑÕâ¸öÖµÖØÐÂ¼õµ½¹¥»÷Á¦µÄ×°±¸²¹ÕýÉÏ£¬ÖØÐÂ¼õ25£¬ÓÖ±ä³ÉÁË0
-        //ÐÞ¸Ä¸ÄÎªÃ¿¸öÀàÐÍÊýÖµ³ÖÓÐÒ»¸öÁ´±íÀàµÄmodifier
+        //#todoæ•°å€¼ä¿®æ”¹æ–¹å¼ï¼Œå…·ä½“æ•°å€¼
+        //å…³è”åˆ°æ•°æ®ç»„ä»¶ï¼Œè¿˜æœ‰buffä¹‹ç±»çš„ï¼Œä»–ä»¬éƒ½å¯ä»¥æŒæœ‰æ•°å€¼ä¿®æ”¹å™¨ï¼Œè£…å¤‡ä»€ä¹ˆçš„ä¹Ÿè¡Œ
+        //#todo_ä¿®æ”¹æ•°å€¼åŽå¦‚ä½•æ”¹å›žåŽ»ï¼Ÿ
+        //å› ä¸ºæ•°æ®ç»„ä»¶çš„ä¿®æ­£å€¼ï¼Œæ˜¯è®¡ç®—åŽçš„å€¼ï¼Œ
+        //å› æ­¤ï¼Œæ¯”å¦‚è¯´ä¸€ä¸ªbuffå¢žåŠ åŸºç¡€æ”»å‡»åŠ›(100)çš„25%ï¼Œæ”»å‡»åŠ›çš„è£…å¤‡ä¿®æ­£å°±æ˜¯25ï¼Œä¿®æ”¹åŽç›¸åŠ å˜ä¸º125ï¼Œ
+        //ç­‰buffæ—¶é—´åˆ°äº†ä»¥åŽï¼Œè¦æŠŠè¿™25%æ¶ˆæŽ‰ï¼Œå› ä¸ºæ˜¯å¢žåŠ 25%ï¼Œç›¸å½“äºŽä¹˜ä»¥1.25(0.25)ï¼Œå› æ­¤è¦æ¶ˆæŽ‰è¿™ä¸ªbuff
+        //ç›¸å½“äºŽä¹˜ä»¥1-(1-0.25)ï¼Œå†æŠŠè¿™ä¸ªå€¼é‡æ–°å‡åˆ°æ”»å‡»åŠ›çš„è£…å¤‡è¡¥æ­£ä¸Šï¼Œé‡æ–°å‡25ï¼Œåˆå˜æˆäº†0
+        //ä¿®æ”¹æ”¹ä¸ºæ¯ä¸ªç±»åž‹æ•°å€¼æŒæœ‰ä¸€ä¸ªé“¾è¡¨ç±»çš„modifier
 
-        //ModifierÈçºÎÓ¦ÓÃÓÚNumric:
-        //addonBaseµÄ½Ó¿Ú
+        //Modifierå¦‚ä½•åº”ç”¨äºŽNumric:
+        //addonBaseçš„æŽ¥å£
 
         //Base = 100,fac=0.25,add=0,final=100
-        //1.Ìí¼Ó
+        //1.æ·»åŠ 
         //add=base*fac=25
         //final = base+add=125
-        //2.ÒÆ³ý
+        //2.ç§»é™¤
         //temp=base-base*(1-fac)=25
         //temp*=-1
         //add+=temp=0
