@@ -9,17 +9,21 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Effect的类型
+    /// 技能生效时机
     /// </summary>
-    public enum EffectType
+    public enum EffectTakeType
     {
         /// <summary>
-        /// 冷却类effect
+        /// 立即
         /// </summary>
-        CoolDown = 1,
+        Instant = 1,
         /// <summary>
-        /// 消耗类Effect
+        /// 周期
         /// </summary>
-        Cost = 2,
+        Duration = 2,
+        /// <summary>
+        /// 永久
+        /// </summary>
+        Infinite = 3,
     }
 }

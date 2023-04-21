@@ -9,17 +9,21 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Effect的类型
+    /// Effect类型枚举
     /// </summary>
-    public enum EffectType
+    public enum EffectTagType
     {
         /// <summary>
-        /// 冷却类effect
+        /// 无效1
         /// </summary>
-        CoolDown = 1,
+        Invalid = 1,
         /// <summary>
-        /// 消耗类Effect
+        /// CD类型枚举10
         /// </summary>
-        Cost = 2,
+        CoolDown = 2,
+        /// <summary>
+        /// 消耗类型枚举，消耗某项数值100
+        /// </summary>
+        Cost = 4,
     }
 }

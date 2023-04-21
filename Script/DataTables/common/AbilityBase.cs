@@ -20,6 +20,7 @@ public sealed partial class AbilityBase :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         name = _buf.ReadString();
         desc = _buf.ReadString();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);effects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); effects[i] = _e;}}
         PostInit();
     }
 
@@ -40,6 +41,10 @@ public sealed partial class AbilityBase :  Bright.Config.BeanBase
     /// 描述
     /// </summary>
     public string desc { get; private set; }
+    /// <summary>
+    /// 携带的effect集合
+    /// </summary>
+    public int[] effects { get; private set; }
 
     public const int __ID__ = -1922790536;
     public override int GetTypeId() => __ID__;
@@ -59,6 +64,7 @@ public sealed partial class AbilityBase :  Bright.Config.BeanBase
         + "id:" + id + ","
         + "name:" + name + ","
         + "desc:" + desc + ","
+        + "effects:" + Bright.Common.StringUtil.CollectionToString(effects) + ","
         + "}";
     }
     

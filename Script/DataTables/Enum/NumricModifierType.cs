@@ -9,17 +9,25 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Effect的类型
+    /// 数值修改器类型
     /// </summary>
-    public enum EffectType
+    public enum NumricModifierType
     {
         /// <summary>
-        /// 冷却类effect
+        /// 加法
         /// </summary>
-        CoolDown = 1,
+        Sum = 1,
         /// <summary>
-        /// 消耗类Effect
+        /// 乘法
         /// </summary>
-        Cost = 2,
+        Mult = 2,
+        /// <summary>
+        /// 除法
+        /// </summary>
+        Dive = 3,
+        /// <summary>
+        /// 无
+        /// </summary>
+        None = 4,
     }
 }
