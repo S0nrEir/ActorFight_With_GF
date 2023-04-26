@@ -3,9 +3,9 @@ using GameFramework;
 namespace Aquila.Numric
 {
     /// <summary>
-    /// ¼Ì³Ğ×ÔNumric£¬ÓÃÓÚÃèÊöactor»ù´¡ÊôĞÔµÄÊıÖµÀàĞÍ
-    /// baseValue=¸ÃÊôĞÔ»òÀàĞÍµÄ»ù´¡Öµ£¬¸ÃÀàÀ©Õ¹=ËùÓĞ¼Ó³É×îºóĞŞÕıµÄÊıÖµ
-    /// Ä¿Ç°°üº¬£ºbuff£¬×°±¸£¬Ö°ÒµĞŞÕı
+    /// ç»§æ‰¿è‡ªNumricï¼Œç”¨äºæè¿°actoråŸºç¡€å±æ€§çš„æ•°å€¼ç±»å‹
+    /// baseValue=è¯¥å±æ€§æˆ–ç±»å‹çš„åŸºç¡€å€¼ï¼Œè¯¥ç±»æ‰©å±•=æ‰€æœ‰åŠ æˆæœ€åä¿®æ­£çš„æ•°å€¼
+    /// ç›®å‰åŒ…å«ï¼šbuffï¼Œè£…å¤‡ï¼ŒèŒä¸šä¿®æ­£
     /// </summary>
     public class Numric_ActorBaseAttr : Numric
     {
@@ -18,7 +18,7 @@ namespace Aquila.Numric
 
                 _total = 0f;
 
-                //#todo-»ùÓÚ¸¸Àà×öÔà±ê¼Ç´¦ÀíµÄ·½·¨²»Ì«ºÃ£¬ÕâÑù×ÓÀàµÄÔà±ê¼ÇÂß¼­ÒªÒÀÀµÓÚ¸¸Àà£¬ÕÒÊ±¼äÓÅ»¯Ò»ÏÂ
+                //#todo-åŸºäºçˆ¶ç±»åšè„æ ‡è®°å¤„ç†çš„æ–¹æ³•ä¸å¤ªå¥½ï¼Œè¿™æ ·å­ç±»çš„è„æ ‡è®°é€»è¾‘è¦ä¾èµ–äºçˆ¶ç±»ï¼Œæ‰¾æ—¶é—´ä¼˜åŒ–ä¸€ä¸‹
                 _total += base.CorrectionValue;
                 _total += Enumrate( _total, _equip_correction );
                 _total += Enumrate( _total, _class_correction );
@@ -27,7 +27,7 @@ namespace Aquila.Numric
             }
         }
         /// <summary>
-        /// Ìí¼ÓÒ»¸ö×°±¸ĞŞÕı
+        /// æ·»åŠ ä¸€ä¸ªè£…å¤‡ä¿®æ­£
         /// </summary>
         public bool AddEquipModifier( Numric_Modifier modifier_ )
         {
@@ -35,7 +35,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÒÆ³ıÒ»¸ö×°±¸ĞŞÕı
+        /// ç§»é™¤ä¸€ä¸ªè£…å¤‡ä¿®æ­£
         /// </summary>
         public bool RemoveEquipModifier( Numric_Modifier modifier_ )
         {
@@ -43,7 +43,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// Ìí¼ÓÒ»¸öÖ°ÒµĞŞÕı
+        /// æ·»åŠ ä¸€ä¸ªèŒä¸šä¿®æ­£
         /// </summary>
         public bool AddClassModifier( Numric_Modifier modifier_ )
         {
@@ -51,7 +51,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÒÆ³ıÒ»¸öÖ°ÒµĞŞÕı
+        /// ç§»é™¤ä¸€ä¸ªèŒä¸šä¿®æ­£
         /// </summary>
         public bool RemoveClassModifier( Numric_Modifier modifier_ )
         {
@@ -59,7 +59,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// Ìí¼ÓÒ»¸öbuffĞŞÕı
+        /// æ·»åŠ ä¸€ä¸ªbuffä¿®æ­£
         /// </summary>
         public bool AddBuffModifier( Numric_Modifier modifier_ )
         {
@@ -67,7 +67,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÒÆ³ıÒ»¸öbuffĞŞÕı
+        /// ç§»é™¤ä¸€ä¸ªbuffä¿®æ­£
         /// </summary>
         public bool RemoveBuffModifier( Numric_Modifier modifier_ )
         {
@@ -76,7 +76,7 @@ namespace Aquila.Numric
 
         public override void Clear()
         {
-            //#todo-ÏÖÔÚ×ßµÄ¶¼ÊÇÒıÓÃ³Ø£¬³õÊ¼»¯Ã»ÓĞ¹Ì¶¨º¯ÊıÖ»ÄÜĞ´ÔÚÕâÀï£¬Òª²»Òª³éÈ¡³öÀ´£¿
+            //#todo-ç°åœ¨èµ°çš„éƒ½æ˜¯å¼•ç”¨æ± ï¼Œåˆå§‹åŒ–æ²¡æœ‰å›ºå®šå‡½æ•°åªèƒ½å†™åœ¨è¿™é‡Œï¼Œè¦ä¸è¦æŠ½å–å‡ºæ¥ï¼Ÿ
             //init
             EnsureInit( _equip_correction );
             EnsureInit( _class_correction );
@@ -96,7 +96,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ±éÀúÒ»¸öĞŞÊÎÆ÷¼¯ºÏ²¢·µ»ØĞŞÕıºóµÄÖµ
+        /// éå†ä¸€ä¸ªä¿®é¥°å™¨é›†åˆå¹¶è¿”å›ä¿®æ­£åçš„å€¼
         /// </summary>
         private float Enumrate( float val, GameFrameworkLinkedList<Numric_Modifier> linked_list_ )
         {
@@ -113,24 +113,24 @@ namespace Aquila.Numric
                 correction_ = new GameFrameworkLinkedList<Numric_Modifier>();
         }
 
-        //#todo¸Ä³ÉLinkedRange
+        //#todoæ”¹æˆLinkedRange
         /// <summary>
-        /// ×°±¸¼Ó³ÉĞŞÕı
+        /// è£…å¤‡åŠ æˆä¿®æ­£
         /// </summary>
         private GameFrameworkLinkedList<Numric_Modifier> _equip_correction;
 
         /// <summary>
-        /// Ö°ÒµĞŞÕı
+        /// èŒä¸šä¿®æ­£
         /// </summary>
         private GameFrameworkLinkedList<Numric_Modifier> _class_correction;
 
         /// <summary>
-        /// buff¼Ó³ÉĞŞÕı£¬buffĞŞÕıÓĞ±ä¸üÊ±
+        /// buffåŠ æˆä¿®æ­£ï¼Œbuffä¿®æ­£æœ‰å˜æ›´æ—¶
         /// </summary>
         private GameFrameworkLinkedList<Numric_Modifier> _buff_correction;
 
         /// <summary>
-        /// ĞŞÕı¼ÆËãµÄ×îÖÕÖµ
+        /// ä¿®æ­£è®¡ç®—çš„æœ€ç»ˆå€¼
         /// </summary>
         private float _total = 0f;
     }

@@ -4,12 +4,12 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Numric
 {
     /// <summary>
-    /// ÃèÊöÒ»¸öÊıÖµÀàĞÍ
+    /// æè¿°ä¸€ä¸ªæ•°å€¼ç±»å‹
     /// </summary>
     public class Numric : IReference
     {
         /// <summary>
-        /// »ù´¡Öµ
+        /// åŸºç¡€å€¼
         /// </summary>
         public virtual float BaseValue
         {
@@ -17,7 +17,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ĞŞÕıÖµ
+        /// ä¿®æ­£å€¼
         /// </summary>
         public virtual float CorrectionValue
         {
@@ -33,7 +33,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÒÆ³ıÒ»¸ö»ù´¡ÖµĞŞÊÎÆ÷
+        /// ç§»é™¤ä¸€ä¸ªåŸºç¡€å€¼ä¿®é¥°å™¨
         /// </summary>
         public bool RemoveBaseModifier(Numric_Modifier to_remove_)
         {
@@ -47,7 +47,7 @@ namespace Aquila.Numric
         #region override
 
         /// <summary>
-        /// ÖØĞÂ¼ÆËãĞŞÕıÖµ
+        /// é‡æ–°è®¡ç®—ä¿®æ­£å€¼
         /// </summary>
         protected virtual float ReCalc()
         {
@@ -60,7 +60,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// ÉèÖÃ»ù´¡ÊıÖµ
+        /// è®¾ç½®åŸºç¡€æ•°å€¼
         /// </summary>
         public virtual void SetBaseVal( float base_val_ )
         {
@@ -71,7 +71,7 @@ namespace Aquila.Numric
         }
 
         /// <summary>
-        /// Çå³ıÊı¾İ
+        /// æ¸…é™¤æ•°æ®
         /// </summary>
         public virtual void Clear()
         {
@@ -86,22 +86,22 @@ namespace Aquila.Numric
         #region fields
 
         /// <summary>
-        /// ±ä¸ü±ê¼Ç
+        /// å˜æ›´æ ‡è®°
         /// </summary>
         protected bool _change_flag = false;
 
         /// <summary>
-        /// ¸ÃÊıÖµÀàĞÍµÄ»ù´¡Öµ
+        /// è¯¥æ•°å€¼ç±»å‹çš„åŸºç¡€å€¼
         /// </summary>
         protected float _value = 0f;
 
         /// <summary>
-        /// ĞŞÕı¼Ó³ÉÖµ£¬±£´æËùÓĞĞŞÕıÔËËãºóµÄ½á¹û
+        /// ä¿®æ­£åŠ æˆå€¼ï¼Œä¿å­˜æ‰€æœ‰ä¿®æ­£è¿ç®—åçš„ç»“æœ
         /// </summary>
         protected float _correction_value;
 
         /// <summary>
-        /// »ù´¡ÖµĞŞÕı
+        /// åŸºç¡€å€¼ä¿®æ­£
         /// </summary>
         protected GameFrameworkLinkedList<Numric_Modifier> _correction;
 

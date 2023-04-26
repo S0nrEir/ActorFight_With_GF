@@ -1,4 +1,6 @@
+using Cfg.Enum;
 using GameFramework;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
@@ -11,29 +13,30 @@ namespace Aquila.Numric
         /// <summary>
         /// 获取修正值
         /// </summary>
-        public float ValueAfterModify
-        {
-            get
-            {
-                if ( !_modified )
-                {
-                    Log.Warning( "修饰器还未被修改" );
-                    return 0f;
-                }
-                return _value_after_modify;
-            }
-        }
+        // public float ValueAfterModify
+        // {
+        //     get
+        //     {
+        //         if ( !_modified )
+        //         {
+        //             Log.Warning( "修饰器还未被修改" );
+        //             return 0f;
+        //         }
+        //         return _value_after_modify;
+        //     }
+        // }
 
         /// <summary>
         /// 设置修改器的类型
         /// </summary>
-        public void Setup( Numric_Modify_Type_Enum type_ )
+        public void Setup( NumricModifierType type_ ,float fac_)
         {
             _type = type_;
+            _value_fac = fac_;
         }
 
         /// <summary>
-        /// 计算，设置并返回修改后的实际值
+        /// 计算，传入初始值，设置并返回修改后的实际值
         /// </summary>
         public float Calc( float original_val_ )
         {
@@ -45,16 +48,22 @@ namespace Aquila.Numric
 
             switch ( _type )
             {
-                case Numric_Modify_Type_Enum.Add:
-                    _value_after_modify = original_val_ + _value_after_modify;
+                case NumricModifierType.Sum:
+                    _value_after_modify = original_val_ + _value_fac;
                     break;
 
-                case Numric_Modify_Type_Enum.Percent:
-                    _value_after_modify = _value_after_modify * original_val_;
+                case NumricModifierType.Mult:
+                    _value_after_modify = original_val_ * _value_fac;
                     break;
-
+                
+                case NumricModifierType.Dive:
+                    _value_after_modify = original_val_ / _value_fac;
+                    break;
+                
                 default:
-                    throw new GameFrameworkException( "invalid modifier type!" );
+                    Log.Warning("none modifier type.");
+                    // throw new GameFrameworkException( "invalid modifier type!" );
+                    break;
             }
             _modified = true;
             return _value_after_modify;
@@ -63,7 +72,7 @@ namespace Aquila.Numric
         public void Clear()
         {
             _value_after_modify = 0;
-            _type = Numric_Modify_Type_Enum.None;
+            _type = NumricModifierType.None;
             _modified = false;
         }
 
@@ -75,21 +84,22 @@ namespace Aquila.Numric
         /// <summary>
         /// 数值修改方式
         /// </summary>
-        private Numric_Modify_Type_Enum _type = Numric_Modify_Type_Enum.None;
+        private NumricModifierType _type = NumricModifierType.None;
 
         /// <summary>
         /// 修正值
         /// </summary>
         private float _value_after_modify = 0f;
 
+        /// <summary>
+        /// 修改系数
+        /// </summary>
+        private float _value_fac = 0f;
+
         //#todo数值修改方式，具体数值
         //关联到数据组件，还有buff之类的，他们都可以持有数值修改器，装备什么的也行
         //#todo_修改数值后如何改回去？
         //因为数据组件的修正值，是计算后的值，
-        //因此，比如说一个buff增加基础攻击力(100)的25%，攻击力的装备修正就是25，修改后相加变为125，
-        //等buff时间到了以后，要把这25%消掉，因为是增加25%，相当于乘以1.25(0.25)，因此要消掉这个buff
-        //相当于乘以1-(1-0.25)，再把这个值重新减到攻击力的装备补正上，重新减25，又变成了0
-        //修改改为每个类型数值持有一个链表类的modifier
 
         //Modifier如何应用于Numric:
         //addonBase的接口

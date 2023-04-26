@@ -15,10 +15,20 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : AddonBase
     {
         //----------------------pub----------------------
+        public bool CanUseAbility(int meta_id_)
+        {
+            var spec = GetAbilitySpec(meta_id_);
+            if (spec is null)
+                return false;
+
+            return spec.CanUseAbility();
+        }
+
+        //----------------------priv----------------------
         /// <summary>
         /// 获取指定逻辑类型，获取不到返回空
         /// </summary>
-        public AbilitySpecBase GetAbilitySpec(int meta_id_)
+        private AbilitySpecBase GetAbilitySpec(int meta_id_)
         {
             if (_spec_arr is null || _spec_arr.Length == 0)
             {
@@ -34,8 +44,7 @@ namespace  Aquila.Fight.Addon
 
             return null;
         }
-
-        //----------------------priv----------------------
+        
         /// <summary>
         /// 初始化组件持有的技能和对应的spec
         /// </summary>

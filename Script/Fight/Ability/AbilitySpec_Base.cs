@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using Aquila.GameTag;
 using Cfg.common;
+using Cfg.Enum;
 using GameFramework;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -48,6 +50,8 @@ namespace Aquila.Fight
         public virtual void Setup(AbilityBase meta_)
         {
             Meta = meta_;
+            InitCDEffect();
+            InitCostEffect();
         }
         
         /// <summary>
@@ -63,7 +67,7 @@ namespace Aquila.Fight
         /// </summary>
         public virtual bool CanUseAbility()
         {
-            return true;
+            return CostOK() && CDOK();
         }
 
         public virtual void Clear()
@@ -71,8 +75,32 @@ namespace Aquila.Fight
             //处理CD和Cost
             Meta = null;
             _ability_tag = null;
+            _cd_effect = null;
+            _cost_effect = null;
         }
         
+        //-------------------priv-------------------
+        /// <summary>
+        /// 检查技能冷却
+        /// </summary>
+        private bool CDOK()
+        {
+            
+        }
+
+        /// <summary>
+        /// 检查技能消耗
+        /// </summary>
+        private bool CostOK()
+        {
+            if (_cost_effect != null)
+            {
+                
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// 表数据
         /// </summary>
@@ -81,13 +109,79 @@ namespace Aquila.Fight
         /// <summary>
         /// 该技能持有的tag
         /// </summary>
-        private TagContainer _ability_tag = null; 
+        private TagContainer _ability_tag = null;
+
+        /// <summary>
+        /// 技能CD
+        /// </summary>
+        private EffectSpec_Base _cd_effect = null;
+
+        /// <summary>
+        /// 技能消耗
+        /// </summary>
+        private EffectSpec_Base _cost_effect = null;
         
         public AbilitySpecBase()
         {
             _ability_tag = new TagContainer();
         }
+
+        // private bool _active = false;
         
+        /// <summary>
+        /// 初始化技能CD相关逻辑
+        /// </summary>
+        private void InitCDEffect()
+        {
+            _cd_effect = null;
+            if(Meta is null)
+                return;
+
+            Effect effect_meta = null;
+            foreach (var effect_id in Meta.effects)
+            {
+                effect_meta = GameEntry.DataTable.Table<TB_Effect>().Get(effect_id);
+                if (effect_meta is null)
+                {
+                    Log.Warning($"effect_meta is null,id:{effect_id}");
+                    continue;
+                }
+
+                if (effect_meta.Type == EffectType.CoolDown)
+                {
+                    _cd_effect = new EffectSpec_Base(effect_meta);
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 初始化Cost相关逻辑
+        /// </summary>
+        private void InitCostEffect()
+        {
+            _cost_effect = null;
+            if(Meta is null)
+                return;
+
+            Effect effect_meta = null;
+            foreach (var effect_id in Meta.effects)
+            {
+                effect_meta = GameEntry.DataTable.Table<TB_Effect>().Get(effect_id);
+                if (effect_meta is null)
+                {
+                    Log.Warning($"effect_meta is null,id:{effect_id}");
+                    continue;
+                }
+
+                if (effect_meta.Type == EffectType.Cost)
+                {
+                    _cost_effect = new EffectSpec_Base(effect_meta);
+                    return;
+                }
+            }
+        }
+
         /// <summary>
         /// 根据表格配置生成一个spec实例
         /// </summary>
