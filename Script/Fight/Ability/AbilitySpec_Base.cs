@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Cfg.common;
 using Cfg.Enum;
@@ -59,7 +60,8 @@ namespace Aquila.Fight
         /// </summary>
         public virtual bool UseAbility()
         {
-            return CanUseAbility();
+            //TODO扣除消耗，刷新CD
+            return true;
         }
 
         /// <summary>
@@ -70,15 +72,28 @@ namespace Aquila.Fight
             return CostOK() && CDOK();
         }
 
+        /// <summary>
+        /// 清理数据
+        /// </summary>
         public virtual void Clear()
         {
             //处理CD和Cost
             Meta = null;
             _ability_tag = null;
+            _cd_effect.Clear();
+            _cost_effect.Clear();
             _cd_effect = null;
             _cost_effect = null;
         }
-        
+
+        /// <summary>
+        /// 刷帧，处理CD
+        /// </summary>
+        public virtual void OnUpdate(float delta_time_)
+        {
+            
+        }
+
         //-------------------priv-------------------
         /// <summary>
         /// 检查技能冷却
@@ -93,12 +108,13 @@ namespace Aquila.Fight
         /// </summary>
         private bool CostOK()
         {
-            if (_cost_effect != null)
-            {
-                
-            }
+            if (_cost_effect is null)
+                return true;
 
-            return true;
+            //#todo属性值怎么拿
+            var meta = _cost_effect.Meta;
+            if(meta.ModifierType == )
+            return _cost_effect.Calc() > 0;
         }
 
         /// <summary>
@@ -114,12 +130,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 技能CD
         /// </summary>
-        private EffectSpec_Base _cd_effect = null;
+        private EffectSpec_CoolDown _cd_effect = null;
 
         /// <summary>
         /// 技能消耗
         /// </summary>
-        private EffectSpec_Base _cost_effect = null;
+        private EffectSpec_Cost _cost_effect = null;
         
         public AbilitySpecBase()
         {
@@ -149,7 +165,7 @@ namespace Aquila.Fight
 
                 if (effect_meta.Type == EffectType.CoolDown)
                 {
-                    _cd_effect = new EffectSpec_Base(effect_meta);
+                    _cd_effect = new EffectSpec_CoolDown(effect_meta);
                     return;
                 }
             }
@@ -176,16 +192,19 @@ namespace Aquila.Fight
 
                 if (effect_meta.Type == EffectType.Cost)
                 {
-                    _cost_effect = new EffectSpec_Base(effect_meta);
+                    _cost_effect = new EffectSpec_Cost(effect_meta);
                     return;
                 }
             }
         }
-
+        
         /// <summary>
         /// 根据表格配置生成一个spec实例
         /// </summary>
-        public static AbilitySpecBase Gen( AbilityBase meta_ )
+        /// <param name="meta_">技能元数据</param>
+        /// <param name="addon_arr_">携带的各个组件</param>
+        /// <returns></returns>
+        public static AbilitySpecBase Gen( AbilityBase meta_)
         {
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
             spec.Setup(meta_);
