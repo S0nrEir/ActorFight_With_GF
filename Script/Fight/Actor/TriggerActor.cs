@@ -128,7 +128,7 @@ namespace Aquila.Fight.Actor
         {
             base.InitAddons( user_data );
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
-            _effectAddon = AddAddon<Addon_Effect>();
+            _effectAddon = AddAddon<Addon_FX>();
         }
 
         #endregion
@@ -143,7 +143,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 特效组件
         /// </summary>
-        private Addon_Effect _effectAddon = null;
+        private Addon_FX _effectAddon = null;
 
         #endregion
     }

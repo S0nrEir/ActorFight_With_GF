@@ -40,9 +40,6 @@ namespace Aquila.Fight.Actor
 
         #endregion
 
-
-        #region override
-
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
 
         protected override void InitAddons(object user_data)
@@ -63,7 +60,7 @@ namespace Aquila.Fight.Actor
             _move_addon         = AddAddon<Addon_Move>();
             _hp_addon           = AddAddon<Addon_InfoBoard>();
             //_nav_addon          = AddAddon<Addon_Nav>();
-            _effect_addon       = AddAddon<Addon_Effect>();
+            _effect_addon       = AddAddon<Addon_FX>();
         }
 
         protected override void OnRecycle()
@@ -104,8 +101,6 @@ namespace Aquila.Fight.Actor
         {
             base.OnHide( isShutdown, userData );
         }
-
-        #endregion
         
         //----------------addon----------------
         /// <summary>
@@ -136,7 +131,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 特效组件
         /// </summary>
-        private Addon_Effect _effect_addon { get; set; } = null;
+        private Addon_FX _effect_addon { get; set; } = null;
 
         /// <summary>
         /// 数据组件
