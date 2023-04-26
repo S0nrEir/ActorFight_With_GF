@@ -78,8 +78,13 @@ namespace Aquila.Fight.Addon
             /// <summary>
             /// 基础属性-数值组件
             /// </summary>
-            NUMRIC_BaseAttr,
+            NUMRIC_BASEATTR,
 
+            /// <summary>
+            /// 技能组件
+            /// </summary>
+            ABILITY,
+            
             /// <summary>
             /// 基础类型
             /// </summary>

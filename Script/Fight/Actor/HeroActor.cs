@@ -4,16 +4,13 @@ using Aquila.ToolKit;
 using GameFramework.Event;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
     public class HeroActor :
         TActorBase,
-        //INavMoveBehavior,
         ISwitchStateBehavior,
-        //IDoAbilityBehavior,
-        //ITakeDamageBehavior,
-        //IPathMoveBehavior,
         IDieBehavior
     {
 
@@ -43,22 +40,27 @@ namespace Aquila.Fight.Actor
 
         #endregion
 
-
-        #region override
-
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
 
-        protected override void InitAddons()
+        protected override void InitAddons(object user_data)
         {
-            base.InitAddons();
+            base.InitAddons( user_data );
+            if ( !( user_data is HeroActorEntityData ) )
+            {
+                Log.Warning( "user_data is not HeroActorEntityData" );
+                return;
+            }
+            var data = user_data as HeroActorEntityData;
+            Setup( data._role_meta_id );
+
             _base_attr_addon    = AddAddon<Addon_BaseAttrNumric>();
             _data_addon         = AddAddon<Addon_Data>();
             _fsm_addon          = AddAddon<Addon_HeroState>();
             _anim_addon         = AddAddon<Addon_Anim>();
             _move_addon         = AddAddon<Addon_Move>();
             _hp_addon           = AddAddon<Addon_InfoBoard>();
-            _nav_addon          = AddAddon<Addon_Nav>();
-            _effect_addon       = AddAddon<Addon_Effect>();
+            //_nav_addon          = AddAddon<Addon_Nav>();
+            _fx_addon           = AddAddon<Addon_FX>();
         }
 
         protected override void OnRecycle()
@@ -99,11 +101,8 @@ namespace Aquila.Fight.Actor
         {
             base.OnHide( isShutdown, userData );
         }
-
-        #endregion
-
-        #region addon
-
+        
+        //----------------addon----------------
         /// <summary>
         /// 状态机组件
         /// </summary>
@@ -132,7 +131,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 特效组件
         /// </summary>
-        private Addon_Effect _effect_addon { get; set; } = null;
+        private Addon_FX _fx_addon { get; set; } = null;
 
         /// <summary>
         /// 数据组件
@@ -143,8 +142,6 @@ namespace Aquila.Fight.Actor
         /// 基础属性数值组件
         /// </summary>
         private Addon_BaseAttrNumric _base_attr_addon { get; set; } = null;
-
-        #endregion
     }
 
     public class HeroActorEntityData : EntityData
@@ -152,5 +149,10 @@ namespace Aquila.Fight.Actor
         public HeroActorEntityData( int entityId ) : base( entityId, typeof( HeroActor ).GetHashCode() )
         {
         }
+
+        /// <summary>
+        /// 角色role meta表id
+        /// </summary>
+        public int _role_meta_id = -1;
     }
 }

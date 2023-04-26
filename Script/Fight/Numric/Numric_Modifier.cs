@@ -1,39 +1,42 @@
+using Cfg.Enum;
 using GameFramework;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
 {
     /// <summary>
-    /// ÊıÖµĞŞÊÎÆ÷
+    /// æ•°å€¼ä¿®é¥°å™¨
     /// </summary>
     public class Numric_Modifier : IReference
     {
         /// <summary>
-        /// »ñÈ¡ĞŞÕıÖµ
+        /// è·å–ä¿®æ­£å€¼
         /// </summary>
-        public float ValueAfterModify
-        {
-            get
-            {
-                if ( !_modified )
-                {
-                    Log.Warning( "ĞŞÊÎÆ÷»¹Î´±»ĞŞ¸Ä" );
-                    return 0f;
-                }
-                return _value_after_modify;
-            }
-        }
+        // public float ValueAfterModify
+        // {
+        //     get
+        //     {
+        //         if ( !_modified )
+        //         {
+        //             Log.Warning( "ä¿®é¥°å™¨è¿˜æœªè¢«ä¿®æ”¹" );
+        //             return 0f;
+        //         }
+        //         return _value_after_modify;
+        //     }
+        // }
 
         /// <summary>
-        /// ÉèÖÃĞŞ¸ÄÆ÷µÄÀàĞÍ
+        /// è®¾ç½®ä¿®æ”¹å™¨çš„ç±»å‹
         /// </summary>
-        public void Setup( Numric_Modify_Type_Enum type_ )
+        public void Setup( NumricModifierType type_ ,float fac_)
         {
             _type = type_;
+            _value_fac = fac_;
         }
 
         /// <summary>
-        /// ¼ÆËã£¬ÉèÖÃ²¢·µ»ØĞŞ¸ÄºóµÄÊµ¼ÊÖµ
+        /// è®¡ç®—ï¼Œä¼ å…¥åˆå§‹å€¼ï¼Œè®¾ç½®å¹¶è¿”å›ä¿®æ”¹åçš„å®é™…å€¼
         /// </summary>
         public float Calc( float original_val_ )
         {
@@ -45,16 +48,22 @@ namespace Aquila.Numric
 
             switch ( _type )
             {
-                case Numric_Modify_Type_Enum.Add:
-                    _value_after_modify = original_val_ + _value_after_modify;
+                case NumricModifierType.Sum:
+                    _value_after_modify = original_val_ + _value_fac;
                     break;
 
-                case Numric_Modify_Type_Enum.Percent:
-                    _value_after_modify = _value_after_modify * original_val_;
+                case NumricModifierType.Mult:
+                    _value_after_modify = original_val_ * _value_fac;
                     break;
-
+                
+                case NumricModifierType.Dive:
+                    _value_after_modify = original_val_ / _value_fac;
+                    break;
+                
                 default:
-                    throw new GameFrameworkException( "invalid modifier type!" );
+                    Log.Warning("none modifier type.");
+                    // throw new GameFrameworkException( "invalid modifier type!" );
+                    break;
             }
             _modified = true;
             return _value_after_modify;
@@ -63,42 +72,43 @@ namespace Aquila.Numric
         public void Clear()
         {
             _value_after_modify = 0;
-            _type = Numric_Modify_Type_Enum.None;
+            _type = NumricModifierType.None;
             _modified = false;
         }
 
         /// <summary>
-        /// ĞŞ¸Ä±ê¼Ç
+        /// ä¿®æ”¹æ ‡è®°
         /// </summary>
         private bool _modified = false;
 
         /// <summary>
-        /// ÊıÖµĞŞ¸Ä·½Ê½
+        /// æ•°å€¼ä¿®æ”¹æ–¹å¼
         /// </summary>
-        private Numric_Modify_Type_Enum _type = Numric_Modify_Type_Enum.None;
+        private NumricModifierType _type = NumricModifierType.None;
 
         /// <summary>
-        /// ĞŞÕıÖµ
+        /// ä¿®æ­£å€¼
         /// </summary>
         private float _value_after_modify = 0f;
 
-        //#todoÊıÖµĞŞ¸Ä·½Ê½£¬¾ßÌåÊıÖµ
-        //¹ØÁªµ½Êı¾İ×é¼ş£¬»¹ÓĞbuffÖ®ÀàµÄ£¬ËûÃÇ¶¼¿ÉÒÔ³ÖÓĞÊıÖµĞŞ¸ÄÆ÷£¬×°±¸Ê²Ã´µÄÒ²ĞĞ
-        //#todo_ĞŞ¸ÄÊıÖµºóÈçºÎ¸Ä»ØÈ¥£¿
-        //ÒòÎªÊı¾İ×é¼şµÄĞŞÕıÖµ£¬ÊÇ¼ÆËãºóµÄÖµ£¬
-        //Òò´Ë£¬±ÈÈçËµÒ»¸öbuffÔö¼Ó»ù´¡¹¥»÷Á¦(100)µÄ25%£¬¹¥»÷Á¦µÄ×°±¸ĞŞÕı¾ÍÊÇ25£¬ĞŞ¸ÄºóÏà¼Ó±äÎª125£¬
-        //µÈbuffÊ±¼äµ½ÁËÒÔºó£¬Òª°ÑÕâ25%Ïûµô£¬ÒòÎªÊÇÔö¼Ó25%£¬Ïàµ±ÓÚ³ËÒÔ1.25(0.25)£¬Òò´ËÒªÏûµôÕâ¸öbuff
-        //Ïàµ±ÓÚ³ËÒÔ1-(1-0.25)£¬ÔÙ°ÑÕâ¸öÖµÖØĞÂ¼õµ½¹¥»÷Á¦µÄ×°±¸²¹ÕıÉÏ£¬ÖØĞÂ¼õ25£¬ÓÖ±ä³ÉÁË0
-        //ĞŞ¸Ä¸ÄÎªÃ¿¸öÀàĞÍÊıÖµ³ÖÓĞÒ»¸öÁ´±íÀàµÄmodifier
+        /// <summary>
+        /// ä¿®æ”¹ç³»æ•°
+        /// </summary>
+        private float _value_fac = 0f;
 
-        //ModifierÈçºÎÓ¦ÓÃÓÚNumric:
-        //addonBaseµÄ½Ó¿Ú
+        //#todoæ•°å€¼ä¿®æ”¹æ–¹å¼ï¼Œå…·ä½“æ•°å€¼
+        //å…³è”åˆ°æ•°æ®ç»„ä»¶ï¼Œè¿˜æœ‰buffä¹‹ç±»çš„ï¼Œä»–ä»¬éƒ½å¯ä»¥æŒæœ‰æ•°å€¼ä¿®æ”¹å™¨ï¼Œè£…å¤‡ä»€ä¹ˆçš„ä¹Ÿè¡Œ
+        //#todo_ä¿®æ”¹æ•°å€¼åå¦‚ä½•æ”¹å›å»ï¼Ÿ
+        //å› ä¸ºæ•°æ®ç»„ä»¶çš„ä¿®æ­£å€¼ï¼Œæ˜¯è®¡ç®—åçš„å€¼ï¼Œ
+
+        //Modifierå¦‚ä½•åº”ç”¨äºNumric:
+        //addonBaseçš„æ¥å£
 
         //Base = 100,fac=0.25,add=0,final=100
-        //1.Ìí¼Ó
+        //1.æ·»åŠ 
         //add=base*fac=25
         //final = base+add=125
-        //2.ÒÆ³ı
+        //2.ç§»é™¤
         //temp=base-base*(1-fac)=25
         //temp*=-1
         //add+=temp=0

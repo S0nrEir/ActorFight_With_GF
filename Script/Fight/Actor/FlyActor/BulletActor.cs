@@ -6,7 +6,7 @@ namespace Aquila.Fight.Actor
     /// 子弹类actor
     /// </summary>
     public class BulletActor : FlyActor
-    ,ITriggerHitBehavior
+    , ITriggerHitBehavior
     {
         public bool HitCorrectTarget( object obj )
         {
@@ -57,11 +57,11 @@ namespace Aquila.Fight.Actor
             _moveAddon.MoveTo( CachedTransform.position, _targetPos, elapseSeconds );
         }
 
-        protected override void InitAddons()
+        protected override void InitAddons( object user_data )
         {
-            base.InitAddons();
+            base.InitAddons( user_data );
         }
-        
+
         public override void Reset()
         {
             _readyFlag = false;
@@ -102,7 +102,7 @@ namespace Aquila.Fight.Actor
     {
         public BulletActorEntityData( int entityID ) : base( entityID, typeof( BulletActor ).GetHashCode() )
         {
-            
+
         }
     }
 

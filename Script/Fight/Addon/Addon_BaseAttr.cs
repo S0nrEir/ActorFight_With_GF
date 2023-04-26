@@ -1,14 +1,15 @@
-using Aquila.Fight.Actor;
+ï»¿using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
     /// <summary>
-    /// »ù´¡ÊôĞÔ×é¼ş
+    /// åŸºç¡€å±æ€§ç»„ä»¶
     /// ----------------------+-----------------------+-----------------------+----------------
     /// Numric_1              | Numric_2              | Numric_3              | Numric_4
     /// ----------------------+-----------------------+-----------------------+----------------
@@ -30,7 +31,7 @@ namespace Aquila.Fight.Addon
         #region pub
 
         /// <summary>
-        /// »ñÈ¡Ä³ÏîÊôĞÔµÄ»ù´¡Öµ
+        /// è·å–æŸé¡¹å±æ€§çš„åŸºç¡€å€¼
         /// </summary>
         public (bool get_succ, float value) GetBaseValue( Actor_Attr type_ )
         {
@@ -42,7 +43,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ÉèÖÃÄ³ÏîÊôĞÔµÄ»ù´¡Öµ£¬·µ»ØĞŞ¸ÄºóµÄÖµºÍ³É¹¦±ê¼Ç
+        /// è®¾ç½®æŸé¡¹å±æ€§çš„åŸºç¡€å€¼ï¼Œè¿”å›ä¿®æ”¹åçš„å€¼å’ŒæˆåŠŸæ ‡è®°
         /// </summary>
         public (bool set_succ, float value_after_set) SetBaseValue( Actor_Attr type_, float value_to_set )
         {
@@ -55,7 +56,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// »ñÈ¡Ä³ÏîÊôĞÔµÄ×îÖÕĞŞÕıÖµ
+        /// è·å–æŸé¡¹å±æ€§çš„æœ€ç»ˆä¿®æ­£å€¼
         /// </summary>
         public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type_ )
         {
@@ -67,7 +68,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ÉèÖÃÒ»¸ö×°±¸ÀàĞÍµÄÊıÖµĞŞÊÎÆ÷
+        /// è®¾ç½®ä¸€ä¸ªè£…å¤‡ç±»å‹çš„æ•°å€¼ä¿®é¥°å™¨
         /// </summary>
         public bool SetEquipModifier( Numric_Modify_Type_Enum type_, Numric_Modifier modifier_ )
         {
@@ -79,7 +80,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ÉèÖÃÒ»¸öbuffÀàĞÍµÄÊıÖµĞŞÊÎÆ÷
+        /// è®¾ç½®ä¸€ä¸ªbuffç±»å‹çš„æ•°å€¼ä¿®é¥°å™¨
         /// </summary>
         public bool SetBuffModifier( Actor_Attr type_, Numric_Modifier modifier_ )
         {
@@ -91,7 +92,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ÉèÖÃÒ»¸öÖ°ÒµĞŞÕıµÄÊıÖµĞŞÊÎÆ÷
+        /// è®¾ç½®ä¸€ä¸ªèŒä¸šä¿®æ­£çš„æ•°å€¼ä¿®é¥°å™¨
         /// </summary>
         public bool SetClassModifier( Actor_Attr type_, Numric_Modifier modifier_ )
         {
@@ -107,14 +108,11 @@ namespace Aquila.Fight.Addon
         #region priv
 
         /// <summary>
-        /// È¡ÏûËùÓĞĞŞÕı£¬ÖØÖÃÊıÖµÎªÎ´ĞŞÕıµÄ×´Ì¬
+        /// å–æ¶ˆæ‰€æœ‰ä¿®æ­£ï¼Œé‡ç½®æ•°å€¼ä¸ºæœªä¿®æ­£çš„çŠ¶æ€
         /// </summary>
         private void ResetNumricArr()
         {
-            if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max - 1];
-
-            var meta = GameEntry.DataTable.GetTable<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
+            var meta = GameEntry.DataTable.Table<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
             if ( meta is null )
             {
                 Log.Warning( $"<color=yellow>meta is null,meta id = {Actor.RoleMetaID}</color>" );
@@ -124,18 +122,18 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ÉèÖÃ»ù´¡ÊôĞÔ
+        /// è®¾ç½®åŸºç¡€å±æ€§
         /// </summary>
-        private void SetBaseAttr(Cfg.role.RoleMeta meta)
+        private void SetBaseAttr( Cfg.role.RoleMeta meta )
         {
-            //#todoÉèÖÃÊôĞÔÔİÊ±ÊÇÒ»¸ö¸öÉèÖÃ£¬Ïë¸ö°ì·¨×ßloop
+            //#todoè®¾ç½®å±æ€§æš‚æ—¶æ˜¯ä¸€ä¸ªä¸ªè®¾ç½®ï¼Œæƒ³ä¸ªåŠæ³•èµ°loop
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
             //max hp
             SetBaseValue( Actor_Attr.Max_HP, meta.HP );
             //curr hp
-            SetBaseValue(Actor_Attr.Curr_HP,meta.HP );
+            SetBaseValue( Actor_Attr.Curr_HP, meta.HP );
             //str
-            SetBaseValue(Actor_Attr.STR,meta.STR );
+            SetBaseValue( Actor_Attr.STR, meta.STR );
             //def
             SetBaseValue( Actor_Attr.DEF, meta.DEF );
             //agi
@@ -151,7 +149,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ¼ì²éÊıÖµÊÇ·ñÕıÈ·£¬²»ÕıÈ··µ»Øtrue
+        /// æ£€æŸ¥æ•°å€¼æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®è¿”å›true
         /// </summary>
         private bool OverLen( int int_type )
         {
@@ -166,7 +164,7 @@ namespace Aquila.Fight.Addon
         #endregion
 
 
-        #region override
+        //----------------------------override----------------------------
 
         public override void Reset()
         {
@@ -182,28 +180,45 @@ namespace Aquila.Fight.Addon
         public override void Dispose()
         {
             base.Dispose();
+            if ( _numric_arr != null )
+            {
+                var len = _numric_arr.Length;
+                for ( var i = 0; i < len; i++ )
+                {
+                    //_numric_arr[i].Clear();
+                    ReferencePool.Release( _numric_arr[i] );
+                    _numric_arr[i] = null;
+                }
+                _numric_arr = null;
+            }
         }
 
-        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BaseAttr;
+        public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BASEATTR;
 
         public override void OnAdd()
         {
+            if ( _numric_arr is null )
+                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max ];
 
+            var len = _numric_arr.Length;
+            for ( var i = 0; i < len; i++ )
+            {
+                if ( _numric_arr[i] is null )
+                    _numric_arr[i] = ReferencePool.Acquire<Numric_ActorBaseAttr>();
+                else
+                    Log.Warning( "Numric arr not not null on add!" );
+            }
         }
 
         public override void SetEnable( bool enable )
         {
             _enable = enable;
         }
-        #endregion
 
-        #region fields
-
+        //----------------------------fields----------------------------
         /// <summary>
-        /// ËùÓĞµÄÊıÖµ¼¯ºÏ
+        /// æ‰€æœ‰çš„æ•°å€¼é›†åˆ
         /// </summary>
         private Numric.Numric_ActorBaseAttr[] _numric_arr = null;
-
-        #endregion
     }
 }

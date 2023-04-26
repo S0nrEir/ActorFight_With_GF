@@ -771,7 +771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[0]
@@ -792,6 +792,10 @@ PrefabInstance:
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[4]
       value: Aquila.Procedure.Procedure_Test
+      objectReference: {fileID: 0}
+    - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
+      propertyPath: m_AvailableProcedureTypeNames.Array.data[5]
+      value: Aquila.Procedure.Procedure_Test_Fight
       objectReference: {fileID: 0}
     - target: {fileID: 11494652, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_EntityGroups.Array.size

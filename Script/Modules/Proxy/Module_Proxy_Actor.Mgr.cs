@@ -6,13 +6,13 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
-    //Module_Proxy_ActorµÄ²¿·ÖÀà£¬ÓÃÓÚ¹ÜÀí¸÷ÀàActorÊµÀı
+    //Module_Proxy_Actorçš„éƒ¨åˆ†ç±»ï¼Œç”¨äºç®¡ç†å„ç±»Actorå®ä¾‹
     public partial class Module_Proxy_Actor
     {
         #region pub
 
         /// <summary>
-        /// ½«actor×¢²áµ½´úÀíÖĞ£¬³É¹¦·µ»Øtrue
+        /// å°†actoræ³¨å†Œåˆ°ä»£ç†ä¸­ï¼ŒæˆåŠŸè¿”å›true
         /// </summary>
         public bool Register( TActorBase actor, AddonBase[] addons )
         {
@@ -36,7 +36,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ×¢Ïúµ¥¸öÊµÀı
+        /// æ³¨é”€å•ä¸ªå®ä¾‹
         /// </summary>
         public bool UnRegister( int id )
         {
@@ -67,7 +67,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ¸ù¾İID»ñÈ¡Ò»¸öActorInstan
+        /// æ ¹æ®IDè·å–ä¸€ä¸ªActorInstan
         /// </summary>
         private (bool has, Proxy_Actor_Instance instance) TryGet( int id )
         {
@@ -81,7 +81,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ÊÇ·ñ°üº¬Ö¸¶¨ActorInstance£¬°üº¬·µ»Øtrue
+        /// æ˜¯å¦åŒ…å«æŒ‡å®šActorInstanceï¼ŒåŒ…å«è¿”å›true
         /// </summary>
         private bool Contains( int actor_id )
         {
@@ -89,7 +89,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ÊÍ·ÅËùÓĞ
+        /// é‡Šæ”¾æ‰€æœ‰
         /// </summary>
         private bool ReleaseAll()
         {
@@ -113,7 +113,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ¹ÜÀíÆ÷²¿·ÖÄ£¿é³õÊ¼»¯
+        /// ç®¡ç†å™¨éƒ¨åˆ†æ¨¡å—åˆå§‹åŒ–
         /// </summary>
         private void MgrEnsureInit()
         {
@@ -122,14 +122,14 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// ¹ÜÀíÆ÷²¿·ÖµÄÄ£¿é¿ªÆô´¦Àí
+        /// ç®¡ç†å™¨éƒ¨åˆ†çš„æ¨¡å—å¼€å¯å¤„ç†
         /// </summary>
         private void MgrStart()
         {
         }
 
         /// <summary>
-        /// ¹ÜÀíÆ÷²¿·ÖµÄÄ£¿é¹Ø±Õ´¦Àí
+        /// ç®¡ç†å™¨éƒ¨åˆ†çš„æ¨¡å—å…³é—­å¤„ç†
         /// </summary>
         private void MgrEnd()
         {
@@ -141,12 +141,12 @@ namespace Aquila.Module
         #region fields
 
         /// <summary>
-        /// actorË÷Òı¼¯ºÏ£¬±£´æÁËÕ½¶·ÖĞËùÓĞµÄActorProxy
+        /// actorç´¢å¼•é›†åˆï¼Œä¿å­˜äº†æˆ˜æ–—ä¸­æ‰€æœ‰çš„ActorProxy
         /// </summary>
         private Dictionary<int, Proxy_Actor_Instance> _proxy_actor_dic;
 
         /// <summary>
-        /// ×¢²áµÄID¼¯ºÏ
+        /// æ³¨å†Œçš„IDé›†åˆ
         /// </summary>
         private HashSet<int> _registered_id_set = null;
 

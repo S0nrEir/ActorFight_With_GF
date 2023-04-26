@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -6,12 +6,10 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Fight.Addon
 {
     /// <summary>
-    /// ActorµÄsprite×é¼şÀà
+    /// Actorçš„spriteç»„ä»¶ç±»
     /// </summary>
     public class SpriteAddon : AddonBase
     {
-
-
         public override AddonTypeEnum AddonType => AddonTypeEnum.SPRITE;
 
         public override void OnAdd()
@@ -22,7 +20,7 @@ namespace Aquila.Fight.Addon
                 Log.Warning( "sprite_go == null", LogColorTypeEnum.Red );
                 return;
             }
-            //#todo_spriteRender×é¼ş³õÊ¼»¯
+            //#todo_spriteRenderç»„ä»¶åˆå§‹åŒ–
         }
 
         public override void SetEnable( bool enable )
@@ -30,7 +28,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ¾«ÁéÍ¼äÖÈ¾Æ÷
+        /// ç²¾çµå›¾æ¸²æŸ“å™¨
         /// </summary>
         private SpriteRenderer _sprite_renderer = null;
     }

@@ -11,7 +11,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 特效组件
     /// </summary>
-    public class Addon_Effect : AddonBase
+    public class Addon_FX : AddonBase
     {
         #region public
 
@@ -22,7 +22,7 @@ namespace Aquila.Fight.Addon
         /// <param name="assetPath">资源路径</param>
         /// <param name="duration">持续时间，0为一直显示</param>
         /// <param name="callBack">回调</param>
-        public async void ShowEffectAsync( int effectID, string assetPath, float duration , Action<ActorEffectEntityData, ActorEffect> callBack )
+        public async void ShowEffectAsync( int effectID, string assetPath, float duration , Action<ActorEffectEntityData, ActorFX> callBack )
         {
             if ( string.IsNullOrEmpty( assetPath ) )
                 return;
@@ -34,14 +34,14 @@ namespace Aquila.Fight.Addon
                 (
                     Aquila.GameEntry.Entity,
                     effectID,
-                    typeof( ActorEffect ),
+                    typeof( ActorFX ),
                     assetPath,
                     GameConfig.Entity.GROUP_ActorEffect,
                     GameConfig.Entity.Priority_Effect,
                     effectEntityData
                 );
 
-            var actorEffect = task.Logic as ActorEffect;
+            var actorEffect = task.Logic as ActorFX;
             if ( actorEffect is null )
             {
                 Log.Error( $"create actor effect faild--->id:{effectID}" );
@@ -60,7 +60,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 添加到集合中
         /// </summary>
-        private bool Add( int effectID, ActorEffect effect )
+        private bool Add( int effectID, ActorFX effect )
         {
             if ( _releasedEffectDic.ContainsKey( effectID ) )
                 return false;
@@ -81,7 +81,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 隐藏
         /// </summary
-        public bool Hide( ActorEffect effect )
+        public bool Hide( ActorFX effect )
         {
             return effect != null && Hide( effect.ID );
         }
@@ -95,7 +95,7 @@ namespace Aquila.Fight.Addon
                 return false;
 
             var iter = _releasedEffectDic.GetEnumerator();
-            ActorEffect effect = null;
+            ActorFX effect = null;
             while ( iter.MoveNext() )
             {
                 effect = iter.Current.Value;
@@ -119,7 +119,7 @@ namespace Aquila.Fight.Addon
             return _releasedEffectDic.Remove( effectID );
         }
 
-        private ActorEffect Get( int effectID )
+        private ActorFX Get( int effectID )
         {
             if ( _releasedEffectDic.TryGetValue( effectID, out var effect ) )
                 return effect;
@@ -145,7 +145,7 @@ namespace Aquila.Fight.Addon
 
         public override void OnAdd()
         {
-            _releasedEffectDic = new Dictionary<int, ActorEffect>( 0x2 );
+            _releasedEffectDic = new Dictionary<int, ActorFX>( 0x2 );
         }
 
         public override void Reset()
@@ -165,7 +165,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 放出的特效集合
         /// </summary>
-        private Dictionary<int, ActorEffect> _releasedEffectDic = null;
+        private Dictionary<int, ActorFX> _releasedEffectDic = null;
 
         #endregion
     }

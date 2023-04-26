@@ -1,7 +1,6 @@
 ﻿using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.ToolKit;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
 using UnityGameFramework.Runtime;
@@ -34,7 +33,7 @@ namespace Aquila.Module
         //}
 
         /// <summary>
-        /// 异步显示一个actor
+        /// 异步显示一个actor，注意，调用该接口前使用await关键字进行等待
         /// </summary>
         public async Task<Entity> ShowActorAsync<T>
             (
@@ -57,7 +56,7 @@ namespace Aquila.Module
                     user_data
                 );
             //#todo_根据actor类型决定传入函数的tag值，不要写死
-            OnShowActorSucc(result.Logic as TActorBase,role_meta_id,Config.GameConfig.Entity.GROUP_HERO_ACTOR);
+            OnShowActorSucc( result.Logic as TActorBase, role_meta_id, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
             OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
@@ -69,9 +68,9 @@ namespace Aquila.Module
         /// <summary>
         /// actor生成回调
         /// </summary>
-        private void OnShowActorSucc(TActorBase actor,int role_meta_id,string tag)
+        private void OnShowActorSucc( TActorBase actor, int role_meta_id, string tag )
         {
-            actor.Setup( role_meta_id, tag );
+            //actor.Setup( role_meta_id, tag );
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace Aquila.Module
                        @"Assets/Res/Prefab/Aquila_001.prefab",
                        0,
                        0,
-                       new HeroActorEntityData( entity_id )
+                       new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
                    );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
@@ -119,7 +118,7 @@ namespace Aquila.Module
         public override void Start( object param )
         {
             base.Start( param );
-            TestLoadActor();
+            //TestLoadActor();
         }
 
         public override void End()

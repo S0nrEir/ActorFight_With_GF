@@ -1,4 +1,4 @@
-using Aquila.Config;
+ï»¿using Aquila.Config;
 using Aquila.ToolKit;
 using GameFramework;
 using System;
@@ -9,13 +9,20 @@ namespace Aquila.Extension
     public partial class Component_Lua
     {
         /// <summary>
-        /// lua½Å±¾ÔËĞĞÊ±Êı¾İ£¬Ã¿Ò»¸öÊµÀıÃèÊöÒ»¸ö¶ÀÁ¢µÄlua table
+        /// è„šæœ¬çš„è¿è¡Œæ—¶æ•°æ®ï¼Œæ¯ä¸€ä¸ªå®ä¾‹æè¿°ä¸€ä¸ªç‹¬ç«‹çš„lua table
         /// </summary>
         private class Script_Running_Data : IReference
         {
+            /// <summary>
+            /// å…³è”Timer
+            /// </summary>
+            public void SetupTimer(Component_Timer.Timer timer_ )
+            {
+                Timer = timer_;
+            }
 
             /// <summary>
-            /// ÉèÖÃ¿ªÊ¼º¯Êı
+            /// è®¾ç½®å¼€å§‹å‡½æ•°
             /// </summary>
             public void SetStartFunc()
             {
@@ -23,7 +30,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// Ö´ĞĞ¿ªÊ¼º¯Êı
+            /// æ‰§è¡Œå¼€å§‹å‡½æ•°
             /// </summary>
             public void ExecStartFunc()
             {
@@ -31,7 +38,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// ÉèÖÃ½áÊøº¯Êı
+            /// è®¾ç½®ç»“æŸå‡½æ•°
             /// </summary>
             public void SetOnFinishFunc()
             {
@@ -39,7 +46,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// Ö´ĞĞ½áÊøº¯Êı
+            /// æ‰§è¡Œç»“æŸå‡½æ•°
             /// </summary>
             public void ExecFinishFunc()
             {
@@ -47,7 +54,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// ÉèÖÃ¼ÆÊ±»Øµ÷º¯Êı
+            /// è®¾ç½®è®¡æ—¶å›è°ƒå‡½æ•°
             /// </summary>
             public void SetOnTickFunc()
             {
@@ -60,7 +67,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// ÉèÖÃË¢Ö¡º¯Êı
+            /// è®¾ç½®åˆ·å¸§å‡½æ•°
             /// </summary>
             public void SetOnUpdateFunc()
             {
@@ -68,7 +75,7 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// Ö´ĞĞË¢Ö¡º¯Êı
+            /// æ‰§è¡Œåˆ·å¸§å‡½æ•°
             /// </summary>
             public void ExecUpdateFunc( float delta_time )
             {
@@ -76,38 +83,37 @@ namespace Aquila.Extension
             }
 
             /// <summary>
-            /// ÉèÖÃ½Å±¾ÔËĞĞÊ±²ÎÊı
+            /// è®¾ç½®è„šæœ¬è¿è¡Œæ—¶å‚æ•°
             /// </summary>
-            public bool SetUp( Cfg.common.Scripts meta, LuaTable table, string type_name )
+            public bool SetUp( Cfg.common.Scripts meta, LuaTable table )
             {
-                Type_Name = type_name;
+                //Type_Name    = type_name;
                 _script_meta = meta;
-                Script_Name = Tools.Lua.GetScriptName( _script_meta.AssetPath );
-                Asset_Path = Tools.Lua.GetScriptAssetPath( _script_meta.AssetPath );
-                Chunk_Name = Tools.Lua.GetChunkName( Script_Name );
-                Lua_Table = table;
-
+                Script_Name  = Tools.Lua.GetScriptName( _script_meta.AssetPath );
+                Asset_Path   = Tools.Lua.GetScriptAssetPath( _script_meta.AssetPath );
+                Chunk_Name   = Tools.Lua.GetChunkName( Script_Name );
+                Lua_Table    = table;
 
                 return true;
             }
 
             /// <summary>
-            /// ½Å±¾±í¸ñÊı¾İ
+            /// è„šæœ¬è¡¨æ ¼æ•°æ®
             /// </summary>
             public Cfg.common.Scripts _script_meta = null;
 
             /// <summary>
-            /// ½Å±¾key
+            /// è„šæœ¬key
             /// </summary>
-            public string Type_Name { get; private set; } = string.Empty;
+            //public string Type_Name { get; private set; } = string.Empty;
 
             /// <summary>
-            /// ×ÊÔ´Â·¾¶
+            /// èµ„æºè·¯å¾„
             /// </summary>
             public string Asset_Path { get; private set; } = string.Empty;
 
             /// <summary>
-            /// ½Å±¾Ãû³Æ£¬key
+            /// è„šæœ¬åç§°ï¼Œkey
             /// </summary>
             public string Script_Name { get; private set; } = string.Empty;
 
@@ -118,24 +124,29 @@ namespace Aquila.Extension
 
             public LuaTable Lua_Table { get; private set; } = null;
 
-            #region ÖÜÆÚº¯Êı
             /// <summary>
-            /// ½Å±¾¿ªÊ¼
+            /// å…³è”çš„timer
+            /// </summary>
+            public Component_Timer.Timer Timer { get; private set; } = null;
+
+            #region å‘¨æœŸå‡½æ•°
+            /// <summary>
+            /// è„šæœ¬å¼€å§‹
             /// </summary>
             private Action _lua_on_start = null;
 
             /// <summary>
-            /// Ë¢Ö¡
+            /// åˆ·å¸§
             /// </summary>
             private Action<float> _lua_on_update = null;
 
             /// <summary>
-            /// Ê±¼ä»Øµ÷
+            /// æ—¶é—´å›è°ƒ
             /// </summary>
             private Action<float> _lua_on_timer_tick = null;
 
             /// <summary>
-            /// ½Å±¾½áÊø
+            /// è„šæœ¬ç»“æŸ
             /// </summary>
             private Action _lua_on_finish = null;
 
@@ -152,9 +163,10 @@ namespace Aquila.Extension
                 _lua_on_timer_tick = null;
                 _lua_on_update     = null;
                 _script_meta       = null;
-                Type_Name          = null;
+                //Type_Name          = null;
                 Lua_Table.Dispose();
                 Lua_Table          = null;
+                Timer              = null;
             }
 
         }//end class

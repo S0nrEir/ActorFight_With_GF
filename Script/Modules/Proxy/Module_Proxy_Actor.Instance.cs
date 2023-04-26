@@ -4,11 +4,11 @@ using GameFramework;
 
 namespace Aquila.Module
 {
-    //Module_Proxy_Actor的部分类，用于描述ActorInstance
+    //Module_Proxy_Actor鐨勯儴鍒嗙被锛岀敤浜庢弿杩癆ctor浠ｇ悊鐨刬nstance
     public partial class Module_Proxy_Actor
     {
         /// <summary>
-        /// 战斗代理Actor类，表示Actor在Proxy中的表示，封装了Actor和对应的Addon
+        /// 鎴樻枟浠ｇ悊Actor绫伙紝琛ㄧずActor鍦≒roxy涓殑琛ㄧず锛屽皝瑁呬簡Actor鍜屽搴旂殑Addon
         /// </summary>
         private class Proxy_Actor_Instance : IReference
         {
@@ -23,7 +23,7 @@ namespace Aquila.Module
             public Proxy_Actor_Instance() { }
 
             /// <summary>
-            /// 返回该实例持有的actor
+            /// 杩斿洖璇ュ疄渚嬫寔鏈夌殑actor
             /// </summary>
             public TActorBase Actor
             {
@@ -31,7 +31,7 @@ namespace Aquila.Module
             }
 
             /// <summary>
-            /// 获取actor持有的指定类型的addon，没有返回空
+            /// 鑾峰彇actor鎸佹湁鐨勬寚瀹氱被鍨嬬殑addon锛屾病鏈夎繑鍥炵┖
             /// </summary>
             public T GetAddon<T>() where T : AddonBase
             {
@@ -52,12 +52,12 @@ namespace Aquila.Module
             #region fields
 
             /// <summary>
-            /// 持有的Actor
+            /// 鎸佹湁鐨凙ctor
             /// </summary>
             private TActorBase _actor = null;
 
             /// <summary>
-            /// actor持有的addon集合
+            /// actor鎸佹湁鐨刟ddon闆嗗悎
             /// </summary>
             private AddonBase[] _addon_arr = null;
 

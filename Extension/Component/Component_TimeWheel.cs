@@ -7,14 +7,14 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Extension
 {
     /// <summary>
-    /// Ê±¼äÂÖ×é¼ş
+    /// æ—¶é—´è½®ç»„ä»¶
     /// </summary>
     [DisallowMultipleComponent]
     public class Component_TimeWheel : GameFrameworkComponent
     {
 
         /// <summary>
-        /// ÒÆ³ıÈÎÎñ£¬¶ÔÓÚÒ»´ÎĞÔµÄÈÎÎñ£¬ÎŞĞèÊÖ¶¯µ÷ÓÃÒÆ³ı
+        /// ç§»é™¤ä»»åŠ¡ï¼Œå¯¹äºä¸€æ¬¡æ€§çš„ä»»åŠ¡ï¼Œæ— éœ€æ‰‹åŠ¨è°ƒç”¨ç§»é™¤
         /// </summary>
         public bool RemoveTask( int task_id_ )
         {
@@ -27,7 +27,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// Ìí¼ÓÒ»¸öÈÎÎñ
+        /// æ·»åŠ ä¸€ä¸ªä»»åŠ¡
         /// </summary>
         public void AddTask( TimeWheel_Task task_ )
         {
@@ -54,43 +54,43 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// Ê±¼äÂÖÈÎÎñ¼¯ºÏË÷Òı
+        /// æ—¶é—´è½®ä»»åŠ¡é›†åˆç´¢å¼•
         /// </summary>
         private Dictionary<int, TimeWheel_Task> _task_dic = null;
 
         /// <summary>
-        /// Á÷ÊÅÊ±¼ä
+        /// æµé€æ—¶é—´
         /// </summary>
         private float _elpased = 0f;
 
         /// <summary>
-        /// Ê±¼äÂÖ³ß¶È
+        /// æ—¶é—´è½®å°ºåº¦
         /// </summary>
         private int _wheel_size;
 
         /// <summary>
-        /// µ±Ç°Ê±¼äÂÖ
+        /// å½“å‰æ—¶é—´è½®
         /// </summary>
         private TimeWheel _current = null;
 
         /// <summary>
-        /// Ê±¼äÂÖÄ¬ÈÏ³ß¶È
+        /// æ—¶é—´è½®é»˜è®¤å°ºåº¦
         /// </summary>
         public const int DEFAULT_WHEEL_SIZE = 0xa;//10
 
         /// <summary>
-        /// Ê±¼ä¿ç¶È
+        /// æ—¶é—´è·¨åº¦
         /// </summary>
         private const float DEFAULT_TICK_SEC = 0.1f;
     }
 
     /// <summary>
-    /// Ê±¼äÂÖ
+    /// æ—¶é—´è½®
     /// </summary>
     internal class TimeWheel
     {
         /// <summary>
-        /// µ÷ÓÃ¸ÃÊ±¼äÂÖµ±Ç°¿Ì¶ÈµÄËùÓĞÈÎÎñ£¬²¢ÇÒÈÃÊ±¼äÂÖ×ßÏòÏÂÒ»¸ö¿Ì¶È
+        /// è°ƒç”¨è¯¥æ—¶é—´è½®å½“å‰åˆ»åº¦çš„æ‰€æœ‰ä»»åŠ¡ï¼Œå¹¶ä¸”è®©æ—¶é—´è½®èµ°å‘ä¸‹ä¸€ä¸ªåˆ»åº¦
         /// </summary>
         public void Exec()
         {
@@ -99,17 +99,17 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// Ê±¼äÂÖ×ßÏòÏÂÒ»¸ö¿Ì¶È
+        /// æ—¶é—´è½®èµ°å‘ä¸‹ä¸€ä¸ªåˆ»åº¦
         /// </summary>
         public void Move2Next()
         {
-            //ÖØÖÃ¿Ì¶È
+            //é‡ç½®åˆ»åº¦
             if ( ++_curr_bucket >= _buckets.Length )
                 _curr_bucket = 0;
         }
 
         /// <summary>
-        /// ÔÚÄ³Ò»¿Ì¶ÈÉÏÌí¼ÓÒ»¸ötask
+        /// åœ¨æŸä¸€åˆ»åº¦ä¸Šæ·»åŠ ä¸€ä¸ªtask
         /// </summary>
         public void AddTask( TimeWheel_Task task_ )
         {
@@ -125,7 +125,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ¼ÆËãÏÂ±ê£¬·µ»ØĞÂµÄÏÂ±êÎ»ÖÃºÍ¼ÆÊıÆ÷
+        /// è®¡ç®—ä¸‹æ ‡ï¼Œè¿”å›æ–°çš„ä¸‹æ ‡ä½ç½®å’Œè®¡æ•°å™¨
         /// </summary>
         private (int idx, int counter) CalcBucketIndex( float interval_ )
         {
@@ -157,29 +157,29 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// Ê±¼äÂÖ³¤¶È
+        /// æ—¶é—´è½®é•¿åº¦
         /// </summary>
         private int _size = 0;
 
         /// <summary>
-        /// ¿Ì¶È²Û¼¯ºÏ£¬Ã¿Ò»ÂÖµÄËùÓĞ¿Ì¶È²ÛÎ»
+        /// åˆ»åº¦æ§½é›†åˆï¼Œæ¯ä¸€è½®çš„æ‰€æœ‰åˆ»åº¦æ§½ä½
         /// </summary>
         private Bucket[] _buckets = null;
 
         /// <summary>
-        /// Ê±¼äÂÖµ±Ç°Ö¸ÏòµÄ¿Ì¶È
+        /// æ—¶é—´è½®å½“å‰æŒ‡å‘çš„åˆ»åº¦
         /// </summary>
         private int _curr_bucket = 0;
 
     }//end TimeWheel
 
     /// <summary>
-    /// Ê±¼äÂÖ¿Ì¶È
+    /// æ—¶é—´è½®åˆ»åº¦
     /// </summary>
     internal class Bucket
     {
         /// <summary>
-        /// ÔÚµ±Ç°¿Ì¶ÈÉÏÌí¼Ótask
+        /// åœ¨å½“å‰åˆ»åº¦ä¸Šæ·»åŠ task
         /// </summary>
         public bool AddTask( TimeWheel_Task task )
         {
@@ -191,7 +191,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// É¾³ıµ±Ç°¿Ì¶ÈÉÏµÄÖ¸¶¨task
+        /// åˆ é™¤å½“å‰åˆ»åº¦ä¸Šçš„æŒ‡å®štask
         /// </summary>
         public bool RemoveTask( TimeWheel_Task task )
         {
@@ -208,7 +208,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// µ÷ÓÃ¸Ã¿Ì¶ÈÉÏµÄËùÓĞÈÎÎñ
+        /// è°ƒç”¨è¯¥åˆ»åº¦ä¸Šçš„æ‰€æœ‰ä»»åŠ¡
         /// </summary>
         public void Exec()
         {
@@ -228,7 +228,7 @@ namespace Aquila.Extension
                 iter.Current.CallBack();
                 if ( iter.Current.Repeat )
                 {
-                    //ÒÆµ½±ğµÄbucket
+                    //ç§»åˆ°åˆ«çš„bucket
                     //RemoveFromTasks( iter.Current );
                     //_owner.AddTask( iter.Current );
                     _move_queue.Enqueue( iter.Current );
@@ -238,7 +238,7 @@ namespace Aquila.Extension
                     _remove_queue.Enqueue( iter.Current );
                 }
             }
-            //#todoÒªÒÆ³ıµÄtask·Åµ½remove taskÖĞ
+            //#todoè¦ç§»é™¤çš„taskæ”¾åˆ°remove taskä¸­
             RemoveUnusedTask();
             HandleMoveTasks();
             #region
@@ -251,11 +251,11 @@ namespace Aquila.Extension
             //    }
 
             //    task.CallBack();
-            //    //ÖÜÆÚÈÎÎñ£¬·Åµ½ÏÂÒ»¸ö¿Ì¶È²Û
+            //    //å‘¨æœŸä»»åŠ¡ï¼Œæ”¾åˆ°ä¸‹ä¸€ä¸ªåˆ»åº¦æ§½
             //    if ( task.Repeat )
             //    {
             //        //todo:move task
-            //        //¼ÆËãÊ±¼äºÍÏÂÒ»Î»ÖÃµÄÊ±¼ä¿Ì¶È£¬·Åµ½±ğµÄbucketÀï
+            //        //è®¡ç®—æ—¶é—´å’Œä¸‹ä¸€ä½ç½®çš„æ—¶é—´åˆ»åº¦ï¼Œæ”¾åˆ°åˆ«çš„bucketé‡Œ
             //        _owner.AddTask( task );
             //        RemoveTask( task );
             //    }
@@ -284,7 +284,7 @@ namespace Aquila.Extension
 
 
         /// <summary>
-        /// ³¹µ×ÒÆ³ı¶ÔÓ¦µÄtask
+        /// å½»åº•ç§»é™¤å¯¹åº”çš„task
         /// </summary>
         private void RemoveUnusedTask()
         {
@@ -306,33 +306,33 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ¸ÃbucketµÄ³ÖÓĞÕß
+        /// è¯¥bucketçš„æŒæœ‰è€…
         /// </summary>
         private TimeWheel _owner = null;
 
         /// <summary>
-        /// ¿Ì¶È²ÛÏÂ±êÎ»ÖÃ
+        /// åˆ»åº¦æ§½ä¸‹æ ‡ä½ç½®
         /// </summary>
         public int Index { get; private set; } = -1;
 
         /// <summary>
-        /// ³ÖÓĞµÄÈÎÎñ¼¯ºÏ
+        /// æŒæœ‰çš„ä»»åŠ¡é›†åˆ
         /// </summary>
         private GameFrameworkLinkedList<TimeWheel_Task> _tasks = null;
 
         /// <summary>
-        /// ÒÆ³ı¶ÓÁĞ
+        /// ç§»é™¤é˜Ÿåˆ—
         /// </summary>
         private Queue<TimeWheel_Task> _remove_queue = null;
 
         /// <summary>
-        /// ´ıÒÆ¶¯µÄtask¶ÓÁĞ
+        /// å¾…ç§»åŠ¨çš„taské˜Ÿåˆ—
         /// </summary>
         private Queue<TimeWheel_Task> _move_queue = null;
     }
 
     /// <summary>
-    /// Ê±¼äÂÖÈÎÎñ
+    /// æ—¶é—´è½®ä»»åŠ¡
     /// </summary>
     public class TimeWheel_Task : IReference
     {
@@ -344,7 +344,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ·µ»ØÒ»¸öTimeWheel_TaskÊµÀı
+        /// è¿”å›ä¸€ä¸ªTimeWheel_Taskå®ä¾‹
         /// </summary>
         public static TimeWheel_Task GenRepeat( float interval_, Action call_back_ )
         {
@@ -353,7 +353,7 @@ namespace Aquila.Extension
             return task;
         }
         /// <summary>
-        /// ÖØÖÃ´¥·¢ÂÖ´ÎÊı
+        /// é‡ç½®è§¦å‘è½®æ¬¡æ•°
         /// </summary>
         public void Reset( int count_ )
         {
@@ -366,7 +366,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// µ÷ÓÃ»Øµ÷
+        /// è°ƒç”¨å›è°ƒ
         /// </summary>
         public void CallBack()
         {
@@ -375,7 +375,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ÉèÖÃÏú»Ù±ê¼Ç
+        /// è®¾ç½®é”€æ¯æ ‡è®°
         /// </summary>
         public void SetAsDestroy()
         {
@@ -383,7 +383,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ÉèÖÃtask²ÎÊı
+        /// è®¾ç½®taskå‚æ•°
         /// </summary>
         public void Setup( float interval_, bool repeat_, Action call_back_ )
         {
@@ -401,7 +401,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// Ïú»Ù±ê¼Ç
+        /// é”€æ¯æ ‡è®°
         /// </summary>
         public bool DestroyFlag { get; private set; } = false;
 
@@ -411,22 +411,22 @@ namespace Aquila.Extension
         public int ID { get; private set; } = -1;
 
         /// <summary>
-        /// ÖÜÆÚÈÎÎñ±ê¼Ç
+        /// å‘¨æœŸä»»åŠ¡æ ‡è®°
         /// </summary>
         public bool Repeat { get; private set; } = false;
 
         /// <summary>
-        /// µ÷ÓÃ¼ä¸ô
+        /// è°ƒç”¨é—´éš”
         /// </summary>
         public float Interval { get; private set; } = -1f;
 
         /// <summary>
-        /// ¼ÆÊıÆ÷
+        /// è®¡æ•°å™¨
         /// </summary>
         public int Counter { get; private set; } = 0;
 
         /// <summary>
-        /// »Øµ÷
+        /// å›è°ƒ
         /// </summary>
         private Action _call_back = null;
     }

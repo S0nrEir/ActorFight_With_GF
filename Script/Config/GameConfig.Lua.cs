@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,29 +7,29 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// Lua½Å±¾³£Á¿Ïà¹Ø
+        /// Luaè„šæœ¬å¸¸é‡ç›¸å…³
         /// </summary>
         public static class Lua
         {
             /// <summary>
-            /// luaº¯Êı½áÊø½Å±¾»Øµ÷
+            /// luaå‡½æ•°ç»“æŸè„šæœ¬å›è°ƒ
             /// </summary>
-            public const string LUA_FUNCTION_NAME_ON_FINISH = "on_finish_lua";
+            public const string LUA_FUNCTION_NAME_ON_FINISH = "on_finish";
 
             /// <summary>
-            /// ½Å±¾¼ÆÊ±Æ÷»Øµ÷º¯ÊıÃû³Æ
+            /// è„šæœ¬è®¡æ—¶å™¨å›è°ƒå‡½æ•°åç§°
             /// </summary>
-            public const string LUA_FUNCTION_NAME_ON_TICK = "on_timer_tick_lua";
+            public const string LUA_FUNCTION_NAME_ON_TICK = "on_timer_tick";
 
             /// <summary>
-            /// ½Å±¾Ë¢Ö¡º¯ÊıÃû³Æ
+            /// è„šæœ¬åˆ·å¸§å‡½æ•°åç§°
             /// </summary>
-            public const string LUA_FUNCTION_NAME_ON_UPDATE = "on_update_lua";
+            public const string LUA_FUNCTION_NAME_ON_UPDATE = "on_update";
 
             /// <summary>
-            /// ½Å±¾Æô¶¯º¯ÊıÃû
+            /// è„šæœ¬å¯åŠ¨å‡½æ•°å
             /// </summary>
-            public const string LUA_FUNCTION_NAME_ON_START = "on_start_lua";
+            public const string LUA_FUNCTION_NAME_ON_START = "on_start";
         }
     }
 }
