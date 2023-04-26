@@ -14,12 +14,25 @@ namespace Aquila.Fight
     {
         public EffectSpec_CoolDown(Effect meta_) : base(meta_)
         {
+            _total_duration = meta_.ModifierNumric;
+            _remain = 0f;
         }
-
+        
         public override void Clear()
         {
-            throw new System.NotImplementedException();
         }
+
+        
+        
+        /// <summary>
+        /// 剩余时间
+        /// </summary>
+        public float _remain = 0f;
+        
+        /// <summary>
+        /// cool down
+        /// </summary>
+        public float _total_duration = 0f;
     }
    
 }

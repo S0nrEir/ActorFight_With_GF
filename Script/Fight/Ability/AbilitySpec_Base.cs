@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Cfg.common;
 using Cfg.Enum;
 using GameFramework;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -60,8 +55,28 @@ namespace Aquila.Fight
         /// </summary>
         public virtual bool UseAbility()
         {
-            //TODO扣除消耗，刷新CD
+            OnPreAbility();
+            //刷新CD
+            _cd_effect._remain = _cd_effect._total_duration;
+            //todo扣除cost
+            OnAfterAbility();
             return true;
+        }
+
+        /// <summary>
+        /// 使用技能前置函数
+        /// </summary>
+        public virtual void OnPreAbility()
+        {
+            
+        }
+
+        /// <summary>
+        /// 使用技能后置函数
+        /// </summary>
+        public virtual void OnAfterAbility()
+        {
+            
         }
 
         /// <summary>
@@ -91,7 +106,7 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void OnUpdate(float delta_time_)
         {
-            
+            _cd_effect._remain -= delta_time_;
         }
 
         //-------------------priv-------------------
@@ -100,7 +115,7 @@ namespace Aquila.Fight
         /// </summary>
         private bool CDOK()
         {
-            
+            return _cd_effect._remain <= 0f;
         }
 
         /// <summary>
@@ -111,7 +126,8 @@ namespace Aquila.Fight
             if (_cost_effect is null)
                 return true;
 
-            //#todo属性值怎么拿
+            //#todo技能消耗目前暂时只消耗魔法值，剩下的后面再补
+            //因为都独立开来了，拿不到技能所属的addon和actor，暂时想到的解决办法：通过proxy拿他们的代理实例
             var meta = _cost_effect.Meta;
             if(meta.ModifierType == )
             return _cost_effect.Calc() > 0;
