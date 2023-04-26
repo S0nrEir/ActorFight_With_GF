@@ -17,15 +17,10 @@ namespace  Aquila.Toolkit
             /// <summary>
             /// 创建一个技能逻辑实例
             /// </summary>
-            public static AbilitySpecBase CreateAbilitySpec(TB_AbilityBase _meta)
-            {
-                switch (_meta.GetType())
-                {
-                    
-                }
-
-                return new Addon_Ability.AbilitySpec();
-            }
+            // public static AbilitySpecBase CreateAbilitySpec(TB_AbilityBase meta_)
+            // {
+            //     
+            // }
         }//end class Ability
     }//end class Tools
 }

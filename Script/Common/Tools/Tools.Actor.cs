@@ -8,13 +8,13 @@ namespace Aquila.Toolkit
     public static partial class Tools
     {
         /// <summary>
-        /// Actor¹¤¾ßÀà
+        /// Actorå·¥å…·ç±»
         /// </summary>
         public static class Actor
         {
-            //#todoÓ¦¸ÃÎªActor_AttrÊôĞÔÅäÖÃÒ»¸öinvalidÃ¶¾Ù£¬²¢ÇÒÔÚÆ¥ÅäÊ§°ÜÊ±·µ»Øinvalid£¬Ä¿Ç°·µ»ØµÄÊÇmax
+            //#todoåº”è¯¥ä¸ºActor_Attrå±æ€§é…ç½®ä¸€ä¸ªinvalidæšä¸¾ï¼Œå¹¶ä¸”åœ¨åŒ¹é…å¤±è´¥æ—¶è¿”å›invalidï¼Œç›®å‰è¿”å›çš„æ˜¯max
             /// <summary>
-            /// Actor_Base_Attrµ½Actor_AttrÃ¶¾ÙµÄÓ³Éä£¬Ã»ÓĞ·µ»ØMax£¬²¢ÇÒ²»»áÆ¥ÅäHPºÍMP
+            /// Actor_Base_Attråˆ°Actor_Attræšä¸¾çš„æ˜ å°„ï¼Œæ²¡æœ‰è¿”å›Maxï¼Œå¹¶ä¸”ä¸ä¼šåŒ¹é…HPå’ŒMP
             /// </summary>
             public static Actor_Attr BaseAttr2NormalAttrEnum(Actor_Base_Attr type)
             {
