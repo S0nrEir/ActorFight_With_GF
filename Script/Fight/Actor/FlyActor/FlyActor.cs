@@ -10,7 +10,7 @@ namespace Aquila.Fight.Actor
     /// </summary>
     public abstract class FlyActor : TActorBase
     {
-        public virtual void Setup (int actorID)
+        public override void Setup (int actorID)
         {
             _targetActorID = actorID;
         }
@@ -48,9 +48,9 @@ namespace Aquila.Fight.Actor
             RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
         }
 
-        protected override void InitAddons ()
+        protected override void InitAddons (object user_data)
         {
-            base.InitAddons();
+            base.InitAddons(user_data);
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
             _moveAddon    = AddAddon<Addon_Move>();
         }

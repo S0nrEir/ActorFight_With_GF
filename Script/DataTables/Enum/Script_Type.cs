@@ -11,15 +11,20 @@ namespace Cfg.Enum
     /// <summary>
     /// 脚本周期类型
     /// </summary>
+    [System.Flags]
     public enum Script_Type
     {
         /// <summary>
         /// 只在开始启动一次，然后关闭
         /// </summary>
-        On_Start = 1,
+        Start = 1,
         /// <summary>
         /// 需要手动回调结束
         /// </summary>
-        Start_End = 2,
+        End = 2,
+        /// <summary>
+        /// 刷帧
+        /// </summary>
+        Update = 4,
     }
 }

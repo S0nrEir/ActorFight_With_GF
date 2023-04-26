@@ -7,7 +7,10 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
-    public class ActorEffect : EntityLogic
+    /// <summary>
+    /// 特效
+    /// </summary>
+    public class ActorFX : EntityLogic
     {
 
         #region public

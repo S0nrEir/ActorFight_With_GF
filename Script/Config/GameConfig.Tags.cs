@@ -12,6 +12,11 @@ namespace Aquila.Config
         public static class Tags
         {
             /// <summary>
+            /// actor
+            /// </summary>
+            public static string ACTOR = "Actor";
+
+            /// <summary>
             /// 战斗地块根节点
             /// </summary>
             public static string TERRAIN_ROOT = "TerrainRoot";

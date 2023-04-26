@@ -4,11 +4,11 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
-    //TActorBaseµÄÀ©Õ¹Àà£¬×¨ÃÅĞ´ÊÊÓÃÓÚ¾ßÌåÏîÄ¿ĞèÇó£¬¶ÔÓ¦ÓÚTActorbaseµÄÀ©Õ¹º¯Êı¡¢ÊôĞÔºÍ×Ö¶Î
+    //TActorBaseçš„æ‰©å±•ç±»ï¼Œä¸“é—¨å†™é€‚ç”¨äºå…·ä½“é¡¹ç›®éœ€æ±‚ï¼Œå¯¹åº”äºTActorbaseçš„æ‰©å±•å‡½æ•°ã€å±æ€§å’Œå­—æ®µ
     public abstract partial class TActorBase
     {
         /// <summary>
-        /// À©Õ¹»ØÊÕ£¬×¨ÃÅÓÃÓÚActorÔÚµ÷ÓÃOnRecycleÊ±¶ÔÓÚÀ©Õ¹µÄRecycle
+        /// æ‰©å±•å›æ”¶ï¼Œä¸“é—¨ç”¨äºActoråœ¨è°ƒç”¨OnRecycleæ—¶å¯¹äºæ‰©å±•çš„Recycle
         /// </summary>
         private void ExtensionRecycle()
         {
@@ -18,7 +18,7 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// ÉèÖÃactorµØ¿é×ø±ê
+        /// è®¾ç½®actoråœ°å—åæ ‡
         /// </summary>
         public void SetCoord( int unique_key )
         {
@@ -29,7 +29,7 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// ÉèÖÃactorµÄµØ¿é×ø±êºÍ¶ÔÓ¦µÄÊÀ½ç×ø±êÎ»ÖÃ
+        /// è®¾ç½®actorçš„åœ°å—åæ ‡å’Œå¯¹åº”çš„ä¸–ç•Œåæ ‡ä½ç½®
         /// </summary>
         public bool SetCoordAndPosition( int grid_x, int grid_z )
         {
@@ -47,7 +47,7 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// ÉèÖÃactorµØ¿é×ø±ê
+        /// è®¾ç½®actoråœ°å—åæ ‡
         /// </summary>
         public void SetCoord( int grid_x, int grid_z )
         {
@@ -56,14 +56,14 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// »ñÈ¡ËùÊôµÄ×ø±ê
+        /// è·å–æ‰€å±çš„åæ ‡
         /// </summary>
         public (int x, int z) Coord()
         {
             return _coord;
         }
 
-        //xz×ø±ê
+        //xzåæ ‡
         private int _grid_x = 0;
         private int _grid_z = 0;
 

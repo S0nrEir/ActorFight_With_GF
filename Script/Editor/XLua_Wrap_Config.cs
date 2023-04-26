@@ -79,6 +79,10 @@ public static class ExampleConfig
                 "UnityEngine",
                 "UnityEngine.UI",
                 "UnityEngine.Debug",
+                //默认配置不生成代码运行报错，这是因为API Compatibility Level设置为.NET Standard2.0
+                //而其不支持emit导致的
+                //解决办法：平时开发设置为.Net 4.x，发布版本时配置为.Net Standard 2.0，这样包体也会更小
+                //详见：https://blog.csdn.net/zigzagbomb/article/details/103981885
                 "System.Action<float>",
                 "System.Action<float,float>",
                 "Aquila.ObjectPool",

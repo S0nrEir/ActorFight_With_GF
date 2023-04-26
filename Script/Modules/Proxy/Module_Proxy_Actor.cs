@@ -7,14 +7,14 @@ namespace Aquila.Module
 {
 
     /// <summary>
-    /// Actor´úÀíÄ£¿é
+    /// Actorä»£ç†æ¨¡å—
     /// </summary>
     public partial class Module_Proxy_Actor : GameFrameworkModuleBase
     {
         #region pub
         
         /// <summary>
-        /// »ñÈ¡Ö¸¶¨actor¶ÔÓ¦µÄĞŞÕıÊôĞÔ
+        /// è·å–æŒ‡å®šactorå¯¹åº”çš„ä¿®æ­£å±æ€§
         /// </summary>
         public (bool succ, float value) GetCorrectionAttr( int actor_id_, Actor_Attr type_ )
         {
@@ -26,7 +26,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// »ñÈ¡Ö¸¶¨actorµÄ¶ÔÓ¦»ù´¡ÊôĞÔ
+        /// è·å–æŒ‡å®šactorçš„å¯¹åº”åŸºç¡€å±æ€§
         /// </summary>
         public (bool succ, float value) GetActorBaseAttr( int actor_id_ , Actor_Attr type_ )
         {

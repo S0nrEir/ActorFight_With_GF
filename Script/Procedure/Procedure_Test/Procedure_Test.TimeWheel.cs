@@ -1,21 +1,17 @@
-using GameFramework.Fsm;
+Ôªøusing GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections;
-using System.Collections.Generic;
+using GameFramework.Resource;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 namespace Aquila.Procedure
 {
     /// <summary>
-    /// ≤‚ ‘¡˜≥Ã
+    /// ÊµãËØïÊµÅÁ®ã
     /// </summary>
-    public class Procedure_Test : ProcedureBase
+    public partial class Procedure_Test : ProcedureBase
     {
-        protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
-        {
-            base.OnEnter( procedureOwner );
-            //TimeWheelTest();
-        }
         private int counter = 0;
         private void TimeWheelTest()
         {

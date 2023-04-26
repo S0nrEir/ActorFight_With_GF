@@ -23,30 +23,11 @@ namespace Aquila.Procedure
             if ( _preload_flags != _preload_state_finish )
                 return;
 
-            //#todo_switchToNextProcedure
             Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
-
             //测试进入战斗流程
-            ChangeState<Procedure_Test_Fight>(_procedure_owner);
-            return;
-            if ( GameEntry.Procedure._is_enter_test_scene )
-            {
-                ChangeState<Procedure_Test>( _procedure_owner );
-            }
-            else
-            {
-                var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-                var scene_script_meta = GameEntry.DataTable.GetTable<Cfg.common.TB_Scripts>().Get( 10000 );
-                procedure_variable.SetValue( new Procedure_Fight_Data()
-                {
-                    _scene_script_meta = scene_script_meta,
-                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
-                } );
-                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
-                ChangeState<Procedure_Fight>( _procedure_owner );
-            }
+            NextProcedure();
         }
 
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
@@ -62,10 +43,9 @@ namespace Aquila.Procedure
             _preload_flags = _preload_state_init;
 
             PreLoadTables();
-
             PreLoadObejct();
             //测试配表
-            GameEntry.DataTable.Test();
+            //GameEntry.DataTable.Test();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -92,7 +72,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 预加载对象池对象
+        /// 预加载地形的对象池对象
         /// </summary>
         private void PreLoadObejct()
         {
@@ -109,6 +89,8 @@ namespace Aquila.Procedure
         /// </summary>
         private void LoadTerrainSuccCallBack( string assetName, object asset, float duration, object userData )
         {
+            //这里是为了提前创建好对象池和对象池内的数量，以便在后续的流程中使用，
+            //最后把他们释放掉也是因为如此
             var go = asset as GameObject;
             if ( go == null )
                 throw new GameFrameworkException( "terrain game object is null!" );
@@ -131,6 +113,8 @@ namespace Aquila.Procedure
                 temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
                 if ( temp_obj == null )
                 {
+                    //第一次生成，池里没有现成的object，先生成新的，然后注册到池里，直到把池内填满
+                    //下次拿的时候就不用重新生成
                     temp_go = Object.Instantiate( go );
                     temp_go.tag = GameConfig.Tags.TERRAIN_BLOCK;
                     temp_go.transform.SetParent( root_go.transform );
@@ -145,6 +129,31 @@ namespace Aquila.Procedure
             obj_arr = null;
             _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
             OnPreLoadFinished();
+        }
+
+        /// <summary>
+        /// 下一个流程
+        /// </summary>
+        private void NextProcedure()
+        {
+            //ChangeState<Procedure_Test_Fight>( _procedure_owner );
+            //return;
+            if ( GameEntry.Procedure._is_enter_test_scene )
+            {
+                ChangeState<Procedure_Test>( _procedure_owner );
+            }
+            else
+            {
+                var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
+                var scene_script_meta = GameEntry.DataTable.Table<Cfg.common.TB_Scripts>().Get( 10000 );
+                procedure_variable.SetValue( new Procedure_Fight_Data()
+                {
+                    _scene_script_meta = scene_script_meta,
+                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
+                } );
+                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
+                ChangeState<Procedure_Fight>( _procedure_owner );
+            }
         }
 
         /// <summary>

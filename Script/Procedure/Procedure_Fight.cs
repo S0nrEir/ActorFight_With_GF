@@ -1,4 +1,5 @@
 ﻿using Aquila.Config;
+using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.ToolKit;
 using GameFramework;
@@ -18,13 +19,12 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
-            //_terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _input_module   = GameEntry.Module.GetModule<Module_Input>();
-            _terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            _actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
+            //_input_module       = GameEntry.Module.GetModule<Module_Input>();
+            _terrain_module     = GameEntry.Module.GetModule<Module_Terrain>();
+            //_actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
         }
 
-        protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
+        protected override async void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
             _procedure_owner = procedureOwner;
@@ -45,17 +45,28 @@ namespace Aquila.Procedure
             //if ( !_scene_module.Start( param ) )
             //    Log.Error( "scene_module start failed" );
 
-            _input_module.Start( param );
+            //_input_module.Start( param );
             _terrain_module.Start( param );
-            _actor_fac_module.Start( param );
+            var entity_id = ACTOR_ID_POOL.Gen();
+            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<HeroActor>
+                (
+                    1,
+                    entity_id,
+                    @"Assets/Res/Prefab/Aquila_001.prefab",
+                    0,
+                    0,
+                    new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
+                );
+
+            //_actor_fac_module.Start( param );
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             //_terrain_module.End();
-            _input_module.End();
+            //_input_module.End();
             _terrain_module.End();
-            _actor_fac_module.End();
+            //_actor_fac_module.End();
             _procedure_owner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
                 Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
@@ -101,9 +112,9 @@ namespace Aquila.Procedure
         private Camera _main_camera = null;
 
         /// <summary>
-        /// 战斗模块
+        /// 模块
         /// </summary>
-        private Module_Input _input_module = null;
+        //private Module_Input _input_module = null;
 
         /// <summary>
         /// 地块模块
@@ -113,7 +124,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// actor工厂模块
         /// </summary>
-        private Module_Actor_Fac _actor_fac_module = null;
+        //private Module_Actor_Fac _actor_fac_module = null;
 
         /// <summary>
         /// 地块模块

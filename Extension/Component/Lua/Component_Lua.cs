@@ -1,4 +1,5 @@
-﻿using Cfg.Enum;
+﻿using Aquila.ToolKit;
+using Cfg.Enum;
 using GameFramework;
 using GameFramework.Resource;
 using System.Collections.Generic;
@@ -10,14 +11,37 @@ using XLua;
 namespace Aquila.Extension
 {
     /// <summary>
-    /// lua环境组件
+    /// lua组件
     /// </summary>
     public partial class Component_Lua : GameFrameworkComponent
     {
+        //-----------------lua call cs-----------------
+        /// <summary>
+        /// 由脚本开启一个定时回调
+        /// </summary>
+        [XLua.LuaCallCSharp]
+        public void Tick( int id, float internal_ )
+        {
+            if ( !_script_running_dic.TryGetValue( id, out var data ) )
+            {
+                Log.Warning( $"!_script_running_dic.TryGetValue( {id} )" );
+                return;
+            }
+            //关联timer
+            var timer = GameEntry.Timer.StartTick( internal_, data.ExecTickFunc );
+            data.SetupTimer( timer );
+        }
+
+        //-----------------public-----------------
+        public void Load( Cfg.common.Scripts meta_ )
+        {
+            Load( meta_, meta_.id );
+        }
+
         /// <summary>
         /// 加载一个脚本实例//#todo__lua的执行结果返回参数怎么获得,尤其是在resourceModeLoad下
         /// </summary>
-        public void Load( Cfg.common.Scripts meta, string type_name )
+        public void Load( Cfg.common.Scripts meta, int id )
         {
             if ( meta is null )
             {
@@ -26,14 +50,14 @@ namespace Aquila.Extension
             }
 
             //已经正在运行的实例
-            if ( _script_running_dic.ContainsKey( type_name ) )
+            if ( _script_running_dic.ContainsKey( id ) )
             {
-                Log.Info( $"_script_running_dic.ContainsKey:{type_name}" );
+                Log.Warning( $"_script_running_dic.ContainsKey:{id}" );
                 return;
             }
 
             var data = ReferencePool.Acquire<Script_Running_Data>();
-            data.SetUp( meta, ObtainTable(), type_name );
+            data.SetUp( meta, ObtainTable() );
 
             if ( GameEntry.Base.EditorResourceMode )
                 EditorModeLoad( data );
@@ -42,51 +66,44 @@ namespace Aquila.Extension
         }
 
         /// <summary>
+        /// 卸载所有脚本实例
+        /// </summary>
+        public bool UnLoadAllRunningData()
+        {
+            _update_script_set.Clear();
+            if ( _script_running_dic.Count == 0 )
+                return true;
+
+            var ids = _script_running_dic.Keys;
+            foreach ( var id in ids )
+            {
+                if ( !UnLoad( id ) )
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// 移除一个脚本实例
         /// </summary>
-        public bool UnLoad( string type_name )
+        private bool UnLoad( int id )
         {
-            if ( !_script_running_dic.TryGetValue( type_name, out var data ) )
+            if ( !_script_running_dic.TryGetValue( id, out var data ) )
                 return false;
 
-            data.ExecFinishFunc();
+            //clear timer
+            if ( data.Timer != null )
+                GameEntry.Timer.UnRegisterUpdate( data.Timer );
+
+            //如果有finish回调，调用
+            if ( Tools.GetBitValue( ( int ) data._script_meta.Type, 1 ) )
+                data.ExecFinishFunc();
+
             ReferencePool.Release( data );
-            return _script_running_dic.Remove( type_name );
+            return true;
         }
 
-        private object[] DoString( byte[] bytes, Script_Running_Data data )
-        {
-            if ( _lua_env is null )
-            {
-                Log.Error( "lua_end is null!" );
-                return null;
-            }
-
-            if ( bytes is null || bytes.Length == 0 )
-            {
-                Log.Error( "lua bytes is null!" );
-                return null;
-            }
-
-            var result = _lua_env.DoString( bytes, data.Chunk_Name, data.Lua_Table );
-            switch ( data._script_meta.Type )
-            {
-                //只有开始，不用进缓存，跑一遍就结束了
-                case Script_Type.On_Start:
-                    {
-                        data.SetStartFunc();
-                        data.ExecStartFunc();
-                        ReferencePool.Release( data );
-                        return result;
-                    }
-
-                //默认
-                default:
-                    RunningCache( data.Type_Name, data );
-                    break;
-            }
-            return result;
-        }
         /// <summary>
         /// 启动一个lua虚拟机
         /// </summary>
@@ -105,6 +122,48 @@ namespace Aquila.Extension
             _meta_table = _lua_env.NewTable();
             _meta_table.Set( "__index", _lua_env.Global );
         }
+        /// <summary>
+        /// 从缓存中获取指定的脚本字节流
+        /// </summary>
+        public byte[] GetFromCache( string asset_path )
+        {
+            _script_cache_dic.TryGetValue( asset_path.GetHashCode(), out var bytes );
+            return bytes;
+        }
+
+        //-----------------private-----------------
+        private object[] DoString( byte[] bytes, Script_Running_Data data )
+        {
+            if ( _lua_env is null )
+            {
+                Log.Error( "lua_end is null!" );
+                return null;
+            }
+
+            if ( bytes is null || bytes.Length == 0 )
+            {
+                Log.Error( "lua bytes is null!" );
+                return null;
+            }
+
+            var result = _lua_env.DoString( bytes, data.Chunk_Name, data.Lua_Table );
+            Debug.Log( $"<color=white>DoString:{data.Script_Name}</color>" );
+
+            //do start
+            //包含start，先设置start
+            //只有start，不用进缓存，跑一遍就结束了
+            if ( data._script_meta.Type == Script_Type.Start )
+            {
+                data.SetStartFunc();
+                data.ExecStartFunc();
+                ReferencePool.Release( data );
+                return result;
+            }
+
+            RunningCache( data );
+            return result;
+        }
+
 
         /// <summary>
         /// 提供一个luaTable
@@ -156,14 +215,6 @@ namespace Aquila.Extension
             DoString( GetFromCache( data.Asset_Path ), data );
         }
 
-        /// <summary>
-        /// 从缓存中获取指定的脚本字节流
-        /// </summary>
-        public byte[] GetFromCache( string asset_path )
-        {
-            _script_cache_dic.TryGetValue( asset_path.GetHashCode(), out var bytes );
-            return bytes;
-        }
 
         /// <summary>
         /// 一个脚本是否已被缓存，是返回true
@@ -176,18 +227,36 @@ namespace Aquila.Extension
         /// <summary>
         /// 缓存运行脚本
         /// </summary>
-        private bool RunningCache( string type_name, Script_Running_Data data )
+        private bool RunningCache( Script_Running_Data data )
         {
-            if ( _script_running_dic.ContainsKey( type_name ) )
+            if ( data is null || data._script_meta is null )
+            {
+                Log.Warning( "Running Cache--->Data is null || meta is null" );
+                return false;
+            }
+
+            if ( _script_running_dic.ContainsKey( data._script_meta.id ) )
                 return false;
 
             //#todo对脚本周期类型进行更细致的划分
+            //关于finish是否要主动通知lua组件进行回调关闭：目前的办法是在流程或某一阶段结束后，lua组件统一全部卸载
             data.SetOnFinishFunc();
             data.SetOnTickFunc();
             data.SetOnUpdateFunc();
-            data.SetStartFunc();
 
-            _script_running_dic.Add( type_name , data );
+            //如果是update，放到update里
+            if ( Tools.GetBitValue( (int)data._script_meta.Type, 2 ) )
+                _update_script_set.Add( data._script_meta.id );
+
+            _script_running_dic.Add( data._script_meta.id, data );
+
+            //包含start，跑一遍start
+            if ( Tools.GetBitValue( ( int ) data._script_meta.Type, 0 ) )
+            {
+                data.SetStartFunc();
+                data.ExecStartFunc();
+            }
+
             return true;
         }
 
@@ -202,7 +271,11 @@ namespace Aquila.Extension
 
             //#??处理UTF-8bom头
             if ( bytes[0] == 239 && bytes[1] == 187 && bytes[2] == 191 )
-                bytes[0] = bytes[1] = bytes[2] = 32;
+            {
+                bytes[0] = 32;
+                bytes[1] = 32;
+                bytes[2] = 32;
+            }
 
             _script_cache_dic.Add( script_name.GetHashCode(), bytes );
         }
@@ -251,9 +324,37 @@ namespace Aquila.Extension
             return bytes;
         }
 
+        private void LuaUpdate(float delta_time)
+        {
+            if ( _update_script_set.Count == 0 )
+                return;
+
+            foreach ( var script_id in _update_script_set )
+            {
+                if ( !_script_running_dic.TryGetValue( script_id, out var data ) )
+                {
+                    Log.Warning($"faild to get script data with id:{script_id}");
+                    continue;
+                }
+
+                data.ExecUpdateFunc( delta_time );
+            }
+        }
+
+        private void LuaGC()
+        {
+            if ( _gc_timer >= LUA_GC_INTERNAL )
+            {
+                _gc_timer = 0f;
+                _lua_env?.Tick();
+            }
+            _gc_timer++;
+        }
+
         private void Update()
         {
-
+            LuaUpdate(Time.deltaTime);
+            LuaGC();
         }
 
         protected override void Awake()
@@ -263,7 +364,9 @@ namespace Aquila.Extension
             //#todo给个初始capcity
             _load_asset_callbacks = new LoadAssetCallbacks( OnScriptLoadSucc, OnScriptLoadFaild );
             _script_cache_dic = new Dictionary<int, byte[]>();
-            _script_running_dic = new Dictionary<string, Script_Running_Data>(128);
+            _script_running_dic = new Dictionary<int, Script_Running_Data>( 128 );
+            _update_script_set = new HashSet<int>( 128 );
+            _gc_timer = 0f;
             StartVM();
         }
 
@@ -278,9 +381,14 @@ namespace Aquila.Extension
         private Dictionary<int, byte[]> _script_cache_dic = null;
 
         /// <summary>
-        /// 脚本运行时实例集合
+        /// 脚本运行时实例集合,key = 脚本配置表id
         /// </summary>
-        private Dictionary<string, Script_Running_Data> _script_running_dic = null;
+        private Dictionary<int, Script_Running_Data> _script_running_dic = null;
+
+        /// <summary>
+        /// 需要刷帧的脚本集合
+        /// </summary>
+        private HashSet<int> _update_script_set = null;
 
         /// <summary>
         /// lua环境
@@ -297,35 +405,11 @@ namespace Aquila.Extension
         /// </summary>
         private static string _lua_root_path = string.Empty;
 
+        private static float _gc_timer = 0f;
+
         /// <summary>
         /// luaGC时长
         /// </summary>
-        private const float LUA_INTERNAL_GC = 1f;
+        private const float LUA_GC_INTERNAL = 1f;
     }
-
-    /// <summary>
-    /// 脚本信息类，包含了脚本的一些基本信息
-    /// </summary>
-    //internal class ScriptInfo
-    //{
-    //    /// <summary>
-    //    /// 脚本路径
-    //    /// </summary>
-    //    public string script_name = string.Empty;
-
-    //    /// <summary>
-    //    /// chunkName
-    //    /// </summary>
-    //    public string chunk_name = string.Empty;
-
-    //    /// <summary>
-    //    /// 对应的luaTable
-    //    /// </summary>
-    //    public LuaTable _table = null;
-
-    //    /// <summary>
-    //    /// 脚本周期
-    //    /// </summary>
-    //    public Cfg.Enum.Script_Type _type = Cfg.Enum.Script_Type.On_Start;
-    //}
 }
