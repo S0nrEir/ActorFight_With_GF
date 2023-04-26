@@ -74,7 +74,7 @@ namespace Aquila.ToolKit
             /// </summary>
             /// <param name="effectEntityData">特效实体数据</param>
             /// <param name="effect">特效实体</param>
-            public static void BindEffect( ActorEffectEntityData effectEntityData, ActorEffect effect )
+            public static void BindEffect( ActorEffectEntityData effectEntityData, ActorFX effect )
             {
                 var actor = effect.Actor;
                 if ( actor == null || effectEntityData is null )
