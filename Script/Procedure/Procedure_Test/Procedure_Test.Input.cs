@@ -4,6 +4,7 @@ using GameFramework.Resource;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -24,7 +25,7 @@ namespace Aquila.Procedure
             var value = _move_action.ReadValue<Vector2>();
             if ( value != Vector2.zero )
             {
-                ;
+                Debug.Log($"RunInput--->vector value:{value}");
             }
         }
 
@@ -36,24 +37,24 @@ namespace Aquila.Procedure
         private void OnLoadActionsSucc( string assetName, object asset, float duration, object userData )
         {
             var action_asset = ( asset as InputActionAsset );
-            if ( action_asset is null )
+            if ( action_asset is null || action_asset.actionMaps.Count == 0)
             {
-                Debug.LogError( $"faild to convert action asset,path={assetName}" );
+                Debug.LogError( $"action_asset is null || action_asset.actionMaps.Count == 0" );
                 return;
             }
 
-            if ( action_asset.actionMaps.Count == 0 )
-            {
-                Debug.LogError( $"action_asset.actionMaps.Count == 0,path={assetName}" );
-                return;
-            }
+            // if ( action_asset.actionMaps.Count == 0 )
+            // {
+            //     Debug.LogError( $"action_asset.actionMaps.Count == 0,path={assetName}" );
+            //     return;
+            // }
 
             var map = action_asset.FindActionMap("gameplay",true);
             _move_action = map.FindAction( "move",true );
-            _move_action.started += OnMoveActionPerformed;
-
+            _move_action.performed += OnMoveActionPerformed; 
+            
             _fire_action = map.FindAction( "fire", true );
-            _fire_action.started += OnFireActionPerformed;
+            _fire_action.performed += OnFireActionPerformed;
 
             _move_action.Enable();
             _fire_action.Enable();
