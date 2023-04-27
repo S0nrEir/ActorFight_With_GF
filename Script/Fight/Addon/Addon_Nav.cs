@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 导航
     /// </summary>
-    public class Addon_Nav : AddonBase
+    public class Addon_Nav : Addon_Base
     {
         /// <summary>
         /// 是否达到了目标点，达到了返回true
@@ -37,9 +37,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public void SetDestination( Vector3 target_pos )
         {
-            if ( !Enable )
-                return;
-
             //var navPath = new NavMeshPath();
             //var isFoundPath = NavMesh.CalculatePath( Actor.CachedTransform.position, targetPos, NavMesh.AllAreas, navPath );
             //if (!isFoundPath)
@@ -67,9 +64,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public void Warp( Vector3 pos )
         {
-            if ( !Enable )
-                return;
-
             _agent.Warp( pos );
         }
 

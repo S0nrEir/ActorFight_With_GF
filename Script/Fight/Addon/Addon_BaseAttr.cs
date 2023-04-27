@@ -26,7 +26,7 @@ namespace Aquila.Fight.Addon
     /// zzz_Numric_Modifier_3 |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3
     /// ----------------------+----------------------+----------------------+----------------
     /// </summary>
-    public class Addon_BaseAttrNumric : AddonBase
+    public class Addon_BaseAttrNumric : Addon_Base
     {
         #region pub
 

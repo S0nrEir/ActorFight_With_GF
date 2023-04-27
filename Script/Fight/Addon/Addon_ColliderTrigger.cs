@@ -12,7 +12,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 碰撞检测触发类addon，比较特殊的addon，因为要依赖于monobehavior的回调做碰撞检测。
     /// </summary>
-    public class Addon_ColliderTrigger : AddonBase
+    public class Addon_ColliderTrigger : Addon_Base
     {
         /// <summary>
         /// 设置碰撞大小
@@ -142,7 +142,7 @@ namespace Aquila.Fight.Addon
             //boxCollider.center = Vector3.zero;
         }
 
-        public void Init ( AddonBase addon ,Action<object> on_trigger_enter)
+        public void Init ( Addon_Base addon ,Action<object> on_trigger_enter)
         {
             if (addon == null || addon.Actor == null)
                 return;

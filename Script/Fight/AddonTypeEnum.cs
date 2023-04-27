@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Aquila.Fight.Addon
 {
-    public abstract partial class AddonBase
+    public abstract partial class Addon_Base
     {
         /// <summary>
         /// addon类型枚举

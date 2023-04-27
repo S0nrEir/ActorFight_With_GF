@@ -3,7 +3,7 @@
     /// <summary>
     /// 战斗流程处理器by yhc
     /// </summary>
-    public class Addon_Processor : AddonBase
+    public class Addon_Processor : Addon_Base
     {
 
         //    /// <summary>

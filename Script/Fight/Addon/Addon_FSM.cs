@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     ///为什么没用GF的FSM，因为Actor想要通过自身来对状态进行控制，而不是像GF的FSM那样以状态为主导，连Actor自身的逻辑都要包含在GFFSM中
     /// </summary>
-    public class Addon_FSM : AddonBase
+    public class Addon_FSM : Addon_Base
     {
         public ActorStateTypeEnum CurrState => ( ActorStateTypeEnum ) ActorFsm.CurrState._stateID;
 
@@ -18,9 +18,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SwitchTo( int target_state_id, object enter_param, object exit_param )
         {
-            if ( !Enable )
-                return false;
-
             //没有持有该状态
             if ( !ActorFsm.HasState( target_state_id ) )
             {
@@ -43,9 +40,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SwitchTo( ActorStateTypeEnum type, object enter_param, object exit_param )
         {
-            if ( !Enable )
-                return false;
-
             return SwitchTo( ( int ) type, enter_param, exit_param );
         }
 

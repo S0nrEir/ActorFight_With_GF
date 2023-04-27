@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 移动组件 负责处理位移 by yhc
     /// </summary>
-    public class Addon_Move : AddonBase
+    public class Addon_Move : Addon_Base
     {
         public void SetSpeed ( float speed )
         {

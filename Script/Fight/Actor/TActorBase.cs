@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using static Aquila.Fight.Addon.AddonBase;
+using static Aquila.Fight.Addon.Addon_Base;
 
 namespace Aquila.Fight.Actor
 {
@@ -28,7 +28,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 尝试获取一个addon
         /// </summary>
-        private bool TryGetAddon<T>( out T target_addon ) where T : AddonBase
+        private bool TryGetAddon<T>( out T target_addon ) where T : Addon_Base
         {
             target_addon = null;
             if ( _addonDic is null || _addonDic.Count == 0 )
@@ -237,37 +237,36 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 为自身添加一个Addon
         /// </summary>                                                 
-        protected T AddAddon<T>() where T : AddonBase, new()
+        protected T AddAddon<T>() where T : Addon_Base, new()
         {
-            //var addonToAdd = GetAddon<T>();
-            if ( TryGetAddon<T>( out var addonToAdd ) )
+            if ( TryGetAddon<T>( out var addon_to_add ) )
             {
                 Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
-                return addonToAdd;
+                return addon_to_add;
             }
             else
             {
-                addonToAdd = new T();
-                addonToAdd.Init( this, gameObject, CachedTransform );
-                _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
+                addon_to_add = new T();
+                addon_to_add.Init( this, gameObject, CachedTransform );
+                _addonDic.Add( typeof( T ).GetHashCode(), addon_to_add );
 
-                addonToAdd.OnAdd();
-                return addonToAdd;
+                addon_to_add.OnAdd();
+                return addon_to_add;
             }
         }
 
         /// <summary>
         /// 获取自己的全部addon
         /// </summary>
-        protected AddonBase[] GetAllAddon()
+        protected Addon_Base[] GetAllAddon()
         {
             if ( _addonDic is null || _addonDic.Count == 0 )
             {
                 Log.Warning( "GetAllAddon--->_addonDic is null || _addonDic.Count == 0" );
-                return new AddonBase[0];
+                return new Addon_Base[0];
             }
 
-            AddonBase[] addons = new AddonBase[_addonDic.Count];
+            Addon_Base[] addons = new Addon_Base[_addonDic.Count];
             var idx = 0;
             foreach ( var kv in _addonDic )
                 addons[idx++] = kv.Value;
@@ -329,7 +328,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// actor身上的组件保存，key为 type的hashCode
         /// </summary>
-        private Dictionary<int, AddonBase> _addonDic = new Dictionary<int, AddonBase>();
+        private Dictionary<int, Addon_Base> _addonDic = new Dictionary<int, Addon_Base>();
 
         #endregion
     }

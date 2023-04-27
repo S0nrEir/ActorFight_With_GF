@@ -12,7 +12,7 @@ namespace  Aquila.Fight.Addon
     /// <summary>
     /// 技能组件
     /// </summary>
-    public partial class Addon_Ability : AddonBase
+    public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
         public bool CanUseAbility(int meta_id)

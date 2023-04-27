@@ -1,6 +1,7 @@
 ﻿using Aquila.Fight.Actor;
 using System.Collections;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -8,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// addon基类 by yhc 
     /// </summary>
-    public abstract partial class AddonBase
+    public abstract partial class Addon_Base
     {
         public abstract AddonTypeEnum AddonType { get; }
 
@@ -44,11 +45,17 @@ namespace Aquila.Fight.Addon
 
         public TActorBase Actor { get; private set; }
 
+        /// <summary>
+        /// Actor实例
+        /// </summary>
+        protected Module_Proxy_Actor.ActorInstance _actor_instance = null;
+        
+        
         //#封装do方法，统一处理
         /// <summary>
         /// 开关
         /// </summary>
-        public bool Enable => _enable;
+        // public bool Enable => _enable;
 
         /// <summary>
         /// 开关默认开

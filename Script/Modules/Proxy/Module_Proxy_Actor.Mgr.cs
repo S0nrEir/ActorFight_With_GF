@@ -14,25 +14,25 @@ namespace Aquila.Module
         /// <summary>
         /// 将actor注册到代理中，成功返回true
         /// </summary>
-        public bool Register( TActorBase actor, AddonBase[] addons )
+        public (bool succ,ActorInstance instance) Register( TActorBase actor, Addon_Base[] addons )
         {
             if ( actor is null )
             {
                 Log.Warning( "<color=yellow>actor is null.</color>" );
-                return false;
+                return (false,null);
             }
 
             if ( Contains( actor.ActorID ) )
             {
                 Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
-                return false;
+                return (false,null);;
             }
 
-            var actor_case = ReferencePool.Acquire<Proxy_Actor_Instance>();
+            var actor_case = ReferencePool.Acquire<ActorInstance>();
             actor_case.Setup( actor, addons );
             _proxy_actor_dic.Add( actor.ActorID, actor_case );
 
-            return true;
+            return (true,actor_case);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Aquila.Module
         /// <summary>
         /// </summary>
         ///  /// <summary>
-        private Proxy_Actor_Instance Get( int id )
+        private ActorInstance Get( int id )
         {
             if ( !_proxy_actor_dic.TryGetValue( id, out var actor_instance ) )
                 Log.Warning( $"faild to get actor id={id}" );
@@ -69,9 +69,9 @@ namespace Aquila.Module
         /// <summary>
         /// 根据ID获取一个ActorInstan
         /// </summary>
-        private (bool has, Proxy_Actor_Instance instance) TryGet( int id )
+        private (bool has, ActorInstance instance) TryGet( int id )
         {
-            (bool, Proxy_Actor_Instance) result = (false, null);
+            (bool, ActorInstance) result = (false, null);
             if ( !_proxy_actor_dic.TryGetValue( id, out result.Item2 ) )
                 return result;
             else
@@ -100,7 +100,7 @@ namespace Aquila.Module
             }
 
             var iter = _proxy_actor_dic.GetEnumerator();
-            Proxy_Actor_Instance actor_case = null;
+            ActorInstance actor_case = null;
             while ( iter.MoveNext() )
             {
                 actor_case = iter.Current.Value;
@@ -117,7 +117,7 @@ namespace Aquila.Module
         /// </summary>
         private void MgrEnsureInit()
         {
-            _proxy_actor_dic = new Dictionary<int, Proxy_Actor_Instance>();
+            _proxy_actor_dic = new Dictionary<int, ActorInstance>();
             _registered_id_set = new HashSet<int>();
         }
 
@@ -143,7 +143,7 @@ namespace Aquila.Module
         /// <summary>
         /// actor索引集合，保存了战斗中所有的ActorProxy
         /// </summary>
-        private Dictionary<int, Proxy_Actor_Instance> _proxy_actor_dic;
+        private Dictionary<int, ActorInstance> _proxy_actor_dic;
 
         /// <summary>
         /// 注册的ID集合
