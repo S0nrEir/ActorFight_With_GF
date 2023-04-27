@@ -23,7 +23,7 @@ namespace Aquila.Fight.Addon
         {
             _controller.Move( Vector3.zero );
             _pathIndex = 0;
-            _pathList?.Clear();
+            _path_list?.Clear();
             Actor.Trigger( ActorEventEnum.MOVE_TO_FINAL_POINT );
         }
 
@@ -32,21 +32,21 @@ namespace Aquila.Fight.Addon
             if (pathArr is null || pathArr.Count == 0)
                 return;
 
-            _pathList.Clear();
-            _pathList = pathArr;
+            _path_list.Clear();
+            _path_list = pathArr;
             //if (Actor.TryGetAddon<Addon_Data>( out var addon ))
             //{
             //    SetSpeed( addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1 ) );
             //}
         }
 
-        public void SetTargetPahtList ( List<Vector2> pathArr )
+        public void SetTargetPahtList ( List<Vector2> path_arr )
         {
-            if (pathArr is null || pathArr.Count == 0)
+            if (path_arr is null || path_arr.Count == 0)
                 return;
 
-            _pathList.Clear();
-            _pathList = pathArr;
+            _path_list.Clear();
+            _path_list = path_arr;
             //if (Actor.TryGetAddon<Addon_Data>( out var addon ))
             //{
             //    _speed = (float)addon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f );
@@ -59,17 +59,17 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool IsReachedFinalPoint ()
         {
-            return _pathIndex >= _pathList.Count;
+            return _pathIndex >= _path_list.Count;
         }
 
         public bool IsReachedFinalTarget()
         {
-            return _pathIndex >= _pathList.Count;
+            return _pathIndex >= _path_list.Count;
         }
 
         public void TargetNext ( float elapsedSeconds )
         {
-            if (_pathList.Count == 0)
+            if (_path_list.Count == 0)
                 return;
 
             if (IsReachedFinalPoint())
@@ -79,13 +79,13 @@ namespace Aquila.Fight.Addon
             }
 
             var nextPos = Vector3.zero;
-            nextPos.x = _pathList[_pathIndex].x;
-            nextPos.z = _pathList[_pathIndex].y;
+            nextPos.x = _path_list[_pathIndex].x;
+            nextPos.z = _path_list[_pathIndex].y;
             nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//#todo修改layer
-            var actorPos = Actor.CachedTransform.position;
+            var actor_pos = Actor.CachedTransform.position;
 
-            Rotate( _pathList[_pathIndex] );
-            var dis = Mathf.Abs( Vector3.Distance( actorPos, nextPos ) );
+            Rotate( _path_list[_pathIndex] );
+            var dis = Mathf.Abs( Vector3.Distance( actor_pos, nextPos ) );
             if (dis <= .1f)
             {
                 Actor.SetWorldPosition( nextPos );
@@ -93,12 +93,12 @@ namespace Aquila.Fight.Addon
                 return;
             }
 
-            Actor.SetWorldPosition( actorPos + ( nextPos - actorPos ).normalized * _speed * elapsedSeconds );
+            Actor.SetWorldPosition( actor_pos + ( nextPos - actor_pos ).normalized * _speed * elapsedSeconds );
         }
 
         public void Next ( float elapsedSeconds )
         {
-            if (_pathList.Count == 0)
+            if (_path_list.Count == 0)
                 return;
 
             if (IsReachedFinalPoint())
@@ -107,16 +107,16 @@ namespace Aquila.Fight.Addon
                 return;
             }
 
-            Vector3 nextPos = Vector3.zero;
-            nextPos.x = _pathList[_pathIndex + 1].x;
-            nextPos.z = _pathList[_pathIndex + 1].y;
-            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//#todo修改layer
+            Vector3 next_pos = Vector3.zero;
+            next_pos.x = _path_list[_pathIndex + 1].x;
+            next_pos.z = _path_list[_pathIndex + 1].y;
+            next_pos.y = Tools.Fight.TerrainPositionY(string.Empty, next_pos.x, next_pos.z, 0f );//#todo修改layer
 
-            _cachedTargetPos.x = _pathList[_pathIndex].x;
-            _cachedTargetPos.z = _pathList[_pathIndex].y;
+            _cachedTargetPos.x = _path_list[_pathIndex].x;
+            _cachedTargetPos.z = _path_list[_pathIndex].y;
             _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z, 0f );//#todo修改layer
 
-            var dis = Vector3.Distance( Actor.CachedTransform.position, nextPos );
+            var dis = Vector3.Distance( Actor.CachedTransform.position, next_pos );
             if (dis <= 0.1f)
             {
                 SetToNextPathPoint( true );
@@ -127,7 +127,7 @@ namespace Aquila.Fight.Addon
             var currPos = Actor.CachedTransform.position;
             var moveTo = currPos + ( _cachedTargetPos - Actor.CachedTransform.position ).normalized * 1f * elapsedSeconds;
 
-            if((moveTo - currPos).sqrMagnitude >= (nextPos - currPos).magnitude)
+            if((moveTo - currPos).sqrMagnitude >= (next_pos - currPos).magnitude)
             {
                 SetToNextPathPoint( true );
                 Actor.SetWorldPosition( _cachedTargetPos );
@@ -178,7 +178,7 @@ namespace Aquila.Fight.Addon
 
         public override void OnAdd ()
         {
-            _pathList = new List<Vector2>();
+            _path_list = new List<Vector2>();
             //if (Actor.TryGetAddon<DataAddon>( out var addon ))
             //    SetSpeed( (float)addon.GetFloatDataValue( DataAddonFieldTypeEnum.INT_MOVE_SPEED, 1f ) / 1000f );
             SetSpeed( 1f );
@@ -199,7 +199,7 @@ namespace Aquila.Fight.Addon
         public override void Dispose ()
         {
             base.Dispose();
-            _pathList = null;
+            _path_list = null;
             _pathIndex = 0;
         }
 
@@ -216,7 +216,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private bool SetToNextPathPoint ( bool needToRotate )
         {
-            if (_pathList is null || _pathList.Count == 0)
+            if (_path_list is null || _path_list.Count == 0)
                 return false;
 
             //if (IsReachedFinalPoint())
@@ -227,8 +227,8 @@ namespace Aquila.Fight.Addon
 
             _pathIndex++;
             //需要旋转且朝向不等，才做旋转，否则不做处理
-            if (needToRotate && _pathIndex < _pathList.Count)
-                Rotate( _pathList[_pathIndex] );
+            if (needToRotate && _pathIndex < _path_list.Count)
+                Rotate( _path_list[_pathIndex] );
 
             return true;
         }
@@ -289,7 +289,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 从寻路获取的路点信息集合，以此为据进行移动处理
         /// </summary>
-        private List<Vector2> _pathList = null;
+        private List<Vector2> _path_list = null;
 
         /// <summary>
         /// 路点信息索引下标

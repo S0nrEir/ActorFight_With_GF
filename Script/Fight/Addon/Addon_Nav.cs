@@ -19,7 +19,7 @@ namespace Aquila.Fight.Addon
             if ( !_openFlag )
                 return false;
 
-            var isReached = ( TargetTransform.position - _targetPos ).sqrMagnitude <= StopDistance;
+            var isReached = ( TargetTransform.position - _target_pos ).sqrMagnitude <= StopDistance;
             return isReached;
         }
 
@@ -35,7 +35,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置目标点
         /// </summary>
-        public void SetDestination( Vector3 targetPos )
+        public void SetDestination( Vector3 target_pos )
         {
             if ( !Enable )
                 return;
@@ -54,12 +54,12 @@ namespace Aquila.Fight.Addon
 
             _agent.isStopped = false;
             //_agent.SetPath( navPath );
-            _targetPos = targetPos;
+            _target_pos = target_pos;
 
             SetStopDistance( .001f );
             _openFlag = true;
             //_agent.SetPath( navPath );
-            _agent.SetDestination( _targetPos );
+            _agent.SetDestination( _target_pos );
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Aquila.Fight.Addon
             if ( !_agent.isOnNavMesh )
                 return;
 
-            Warp( _targetPos );
+            Warp( _target_pos );
             StopInmidiate();
         }
 
@@ -112,7 +112,7 @@ namespace Aquila.Fight.Addon
 
             _agent.ResetPath();
             _agent.isStopped = true;
-            _targetPos = Vector3.zero;
+            _target_pos = Vector3.zero;
         }
 
         #region override
@@ -160,7 +160,7 @@ namespace Aquila.Fight.Addon
             base.Reset();
             SetStopDistance( 1f );
             SetSpeed( 1f );
-            _targetPos = Vector3.zero;
+            _target_pos = Vector3.zero;
             _openFlag = false;
 
             //if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
@@ -184,7 +184,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 目标点
         /// </summary>
-        private Vector3 _targetPos;
+        private Vector3 _target_pos;
 
         /// <summary>
         /// 停止距离

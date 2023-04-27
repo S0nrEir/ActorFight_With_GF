@@ -150,9 +150,9 @@ namespace Aquila.Fight.Addon
             CurrClipName = string.Empty;
         }
 
-        public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_go, target_transform );
             //动画机是挂在GameObject上的,制作GameObject的时候手动加上去，这里只尝试获取
             _animator = Tools.GetComponent<Animator>( Actor.gameObject );
 
@@ -179,10 +179,10 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// play指定动画
         /// </summary>
-        public bool Play (string clipName)
+        public bool Play (string clip_name)
         {
             //Debug.Log( $"<color=white>Actor{Actor.ActorID}.Play()---->clipName:{clipName}</color>" );
-            if (string.IsNullOrEmpty( clipName ))
+            if (string.IsNullOrEmpty( clip_name ))
             {
                 Debug.LogError( "string.IsNullOrEmpty( clipName )" );
                 return false;
@@ -191,9 +191,9 @@ namespace Aquila.Fight.Addon
             if (_animator == null)
                 return false;
 
-            _animator.SetBool( clipName ,true);
+            _animator.SetBool( clip_name ,true);
             var len = AnimClipNameArr.Length;
-            var nameToHash = Animator.StringToHash( clipName );
+            var nameToHash = Animator.StringToHash( clip_name );
             var succFlag = false;
             bool matchFlag;
             for (int i = 0; i < len; i++)
@@ -207,9 +207,9 @@ namespace Aquila.Fight.Addon
 
             //给的clipName不匹配任何已指定的clipName
             if (!succFlag)
-                Debug.LogError( $"clip {clipName} dosent match any exist clipArr" );
+                Debug.LogError( $"clip {clip_name} dosent match any exist clipArr" );
             else
-                CurrClipName = clipName;
+                CurrClipName = clip_name;
 
             return succFlag;
         }

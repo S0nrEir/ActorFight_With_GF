@@ -15,15 +15,15 @@ namespace Aquila.Fight
         /// <summary>
         /// 计算消耗后的值
         /// </summary>
-        public float Calc(float val_to_modify_)
+        public float Calc(float val_to_modify)
         {
-            return _modifier.Calc(val_to_modify_);
+            return _modifier.Calc(val_to_modify);
         }
 
-        public EffectSpec_Cost(Effect meta_) : base(meta_)
+        public EffectSpec_Cost(Effect meta) : base(meta)
         {
             _modifier = ReferencePool.Acquire<Numric_Modifier>();
-            _modifier.Setup(meta_.ModifierType,meta_.ModifierNumric);
+            _modifier.Setup(meta.ModifierType,meta.ModifierNumric);
         }
         
         public override void Clear()

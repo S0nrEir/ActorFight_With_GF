@@ -16,19 +16,19 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( int targetStateID, object enterParam, object exitParam )
+        public bool SwitchTo( int target_state_id, object enter_param, object exit_param )
         {
             if ( !Enable )
                 return false;
 
             //没有持有该状态
-            if ( !ActorFsm.HasState( targetStateID ) )
+            if ( !ActorFsm.HasState( target_state_id ) )
             {
-                Debug.Log( "dosent has state:" + targetStateID );
+                Debug.Log( "dosent has state:" + target_state_id );
                 return false;
             }
 
-            ActorFsm.SwitchTo( targetStateID, enterParam, exitParam );
+            ActorFsm.SwitchTo( target_state_id, enter_param, exit_param );
 
 //#if UNITY_EDITOR
 //            var inspector = Actor.gameObject.GetComponent<ActorInspector>();
@@ -41,17 +41,17 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( ActorStateTypeEnum type, object enterParam, object exitParam )
+        public bool SwitchTo( ActorStateTypeEnum type, object enter_param, object exit_param )
         {
             if ( !Enable )
                 return false;
 
-            return SwitchTo( ( int ) type, enterParam, exitParam );
+            return SwitchTo( ( int ) type, enter_param, exit_param );
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_go, target_transform );
         }
 
         /// <summary>

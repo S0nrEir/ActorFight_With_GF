@@ -93,9 +93,9 @@ namespace Aquila.Fight.Addon
             _eventDic = null;
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_go, target_transform );
         }
 
         public override uint Valid()

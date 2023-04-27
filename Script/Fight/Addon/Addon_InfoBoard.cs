@@ -10,7 +10,6 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_InfoBoard : AddonBase
     {
-        #region override
         public override AddonTypeEnum AddonType => AddonTypeEnum.INFO_BOARD;
 
         public override void OnAdd()
@@ -20,6 +19,5 @@ namespace Aquila.Fight.Addon
         public override void SetEnable( bool enable )
         {
         }
-        #endregion
     }
 }

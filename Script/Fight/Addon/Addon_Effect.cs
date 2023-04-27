@@ -22,20 +22,20 @@ namespace Aquila.Fight.Addon
         /// <param name="assetPath">资源路径</param>
         /// <param name="duration">持续时间，0为一直显示</param>
         /// <param name="callBack">回调</param>
-        public async void ShowEffectAsync( int effectID, string assetPath, float duration , Action<ActorEffectEntityData, ActorFX> callBack )
+        public async void ShowEffectAsync( int fx_id, string asset_path, float duration , Action<ActorEffectEntityData, ActorFX> callBack )
         {
-            if ( string.IsNullOrEmpty( assetPath ) )
+            if ( string.IsNullOrEmpty( asset_path ) )
                 return;
 
-            var effectEntityData = new ActorEffectEntityData(effectID);
+            var effectEntityData = new ActorEffectEntityData(fx_id);
             effectEntityData._duration = duration;
-            effectEntityData.ModelPath = assetPath;
+            effectEntityData.ModelPath = asset_path;
             var task = await AwaitableExtensions.ShowEntity
                 (
                     Aquila.GameEntry.Entity,
-                    effectID,
+                    fx_id,
                     typeof( ActorFX ),
-                    assetPath,
+                    asset_path,
                     GameConfig.Entity.GROUP_ACTOR_FX,
                     GameConfig.Entity.PRIORITY_ACTOR,
                     effectEntityData
@@ -44,11 +44,11 @@ namespace Aquila.Fight.Addon
             var actorEffect = task.Logic as ActorFX;
             if ( actorEffect is null )
             {
-                Log.Error( $"create actor effect faild--->id:{effectID}" );
+                Log.Error( $"create actor effect faild--->id:{fx_id}" );
                 return;
             }
 
-            actorEffect.Setup( effectID, duration, Actor, duration <= 0 );
+            actorEffect.Setup( fx_id, duration, Actor, duration <= 0 );
             Add( actorEffect.ID, actorEffect );
             callBack?.Invoke( effectEntityData, actorEffect );
         }

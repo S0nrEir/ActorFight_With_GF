@@ -14,15 +14,15 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base
     {
-        protected EffectSpec_Base(Effect meta_)
+        protected EffectSpec_Base(Effect meta)
         {
-            Meta = meta_;
+            Meta = meta;
         }
 
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply(TActorBase actor, AddonBase[] addon_)
+        public virtual void Apply(TActorBase actor, AddonBase[] addon)
         {
             
         }

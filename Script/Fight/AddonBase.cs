@@ -12,11 +12,11 @@ namespace Aquila.Fight.Addon
     {
         public abstract AddonTypeEnum AddonType { get; }
 
-        public virtual void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
         {
             Actor = actor;
-            TargetGameObject = targetGameObject;
-            TargetTransform = targetTransform;
+            TargetGameObject = target_go;
+            TargetTransform = target_transform;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )

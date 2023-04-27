@@ -12,9 +12,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_CoolDown : EffectSpec_Base
     {
-        public EffectSpec_CoolDown(Effect meta_) : base(meta_)
+        public EffectSpec_CoolDown(Effect meta) : base(meta)
         {
-            _total_duration = meta_.ModifierNumric;
+            _total_duration = meta.ModifierNumric;
             _remain = 0f;
         }
         

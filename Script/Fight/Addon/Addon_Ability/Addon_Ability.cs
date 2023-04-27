@@ -15,9 +15,9 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : AddonBase
     {
         //----------------------pub----------------------
-        public bool CanUseAbility(int meta_id_)
+        public bool CanUseAbility(int meta_id)
         {
-            var spec = GetAbilitySpec(meta_id_);
+            var spec = GetAbilitySpec(meta_id);
             if (spec is null)
                 return false;
 
@@ -28,7 +28,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 获取指定逻辑类型，获取不到返回空
         /// </summary>
-        private AbilitySpecBase GetAbilitySpec(int meta_id_)
+        private AbilitySpecBase GetAbilitySpec(int meta_id)
         {
             if (_spec_arr is null || _spec_arr.Length == 0)
             {
@@ -38,7 +38,7 @@ namespace  Aquila.Fight.Addon
 
             foreach (var temp_spec in _spec_arr)
             {
-                if ( temp_spec.Meta.id == meta_id_)
+                if ( temp_spec.Meta.id == meta_id)
                     return temp_spec;
             }
 

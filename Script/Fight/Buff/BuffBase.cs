@@ -44,9 +44,9 @@ namespace Aquila.Fight.Buff
             _cache.Add( objID, list );
         }
 
-        public BuffEntity Get ( int objID )
+        public BuffEntity Get ( int obj_id )
         {
-            if (!_entityDic.TryGetValue( objID, out var entity ))
+            if (!_entityDic.TryGetValue( obj_id, out var entity ))
                 return null;
 
             return entity;
@@ -55,17 +55,17 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 移除
         /// </summary>
-        public bool Remove ( int objID, out bool emptyEntity )
+        public bool Remove ( int obj_id, out bool empty_entity )
         {
-            emptyEntity = true;
-            _cache.Remove( objID );
+            empty_entity = true;
+            _cache.Remove( obj_id );
             if (_entityDic is null || _entityDic.Count == 0)
                 return false;
 
-            if (!_entityDic.ContainsKey( objID ))
+            if (!_entityDic.ContainsKey( obj_id ))
                 return false;
 
-            var entity = _entityDic[objID];
+            var entity = _entityDic[obj_id];
             //var actor = GameEntry.Module.GetModule<Module_Actor_Factory>().GetActor<HeroActor>( objID);
             //if (actor is null)
             //    return false;
@@ -74,17 +74,17 @@ namespace Aquila.Fight.Buff
             //    return false;
 
             //addon.Hide( entity.EffectActorID );
-            var removeSucc = _entityDic.Remove( objID );
+            var removeSucc = _entityDic.Remove( obj_id );
             ReferencePool.Release( entity );
             entity = null;
-            emptyEntity = _entityDic is null || _entityDic.Count == 0;
+            empty_entity = _entityDic is null || _entityDic.Count == 0;
             return removeSucc;
         }
 
         /// <summary>
         /// 添加buffEntity实例
         /// </summary>
-        public BuffEntity Add ( int objID, int impactID, out bool createSucc )
+        public BuffEntity Add ( int obj_id, int impact_id, out bool createSucc )
         {
             createSucc = false;
             //var impactMeta = TableManager.GetImpactByID( impactID, 0 );
@@ -127,7 +127,7 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 生成buffEntity信息
         /// </summary>
-        private BuffEntity GenEntityInfo ( int objID, int impactID )
+        private BuffEntity GenEntityInfo ( int obj_id, int impact_id )
         {
             //var effectActorID = ACTOR_ID_POOL.Gen();
             //var entity = BuffEntity.Gen( objID, effectActorID, impactMeta.EffectId, impactID );
