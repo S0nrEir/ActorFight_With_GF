@@ -81,10 +81,6 @@ namespace  Aquila.Fight.Addon
             //#todo从哪里初始化表和spec？
         }
 
-        public override void SetEnable(bool enable)
-        {
-        }
-
         public override void Init(TActorBase actor, GameObject targetGameObject, Transform targetTransform)
         {
             base.Init(actor, targetGameObject, targetTransform);

@@ -269,13 +269,7 @@ namespace Aquila.Fight.Addon
 
             Actor.CachedTransform.localEulerAngles = new Vector3( tempEuler.x, tempEuler.y + angleOfL, tempEuler.z );
         }
-
-        public override void SetEnable ( bool enable )
-        {
-            _controller.enabled = enable;
-            _enable = _controller.enabled;
-        }
-
+        
         /// <summary>
         /// 碰撞标识
         /// </summary>

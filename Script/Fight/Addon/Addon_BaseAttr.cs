@@ -210,11 +210,6 @@ namespace Aquila.Fight.Addon
             }
         }
 
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         //----------------------------fields----------------------------
         /// <summary>
         /// 所有的数值集合

@@ -39,11 +39,6 @@ namespace Aquila.Fight.Addon
                 throw new GameFrameworkException( $"faild to set meta role id:{actor.RoleMetaID},meta is null" );
         }
 
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         private Cfg.role.RoleMeta _meta = null;
     }
 }

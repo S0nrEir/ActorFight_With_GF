@@ -129,7 +129,7 @@ namespace Aquila.Fight.Addon
 
         #endregion
 
-        #region override
+        //------------------------override------------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.EFFECT;
 
         public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
@@ -153,12 +153,6 @@ namespace Aquila.Fight.Addon
             base.Reset();
             _releasedEffectDic?.Clear();
         }
-
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-        #endregion
 
         #region fields
 

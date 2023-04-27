@@ -109,8 +109,7 @@ namespace Aquila.Fight.Addon
             _target_pos = Vector3.zero;
         }
 
-        #region override
-
+        //------------------------override------------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.NAV;
 
         public override void OnAdd()
@@ -164,14 +163,6 @@ namespace Aquila.Fight.Addon
             //    _agent.speed = _dataAddon.GetNumricValue( DataAddonFieldTypeEnum.NUM_MOVE_SPEED, 1f ) / 1000f;
             //}
         }
-
-        public override void SetEnable( bool enable )
-        {
-            _agent.enabled = enable;
-            _enable = _agent.enabled;
-        }
-
-        #endregion
 
         private bool _openFlag = false;
 

@@ -98,21 +98,11 @@ namespace Aquila.Fight.Addon
             SwitchTo( StateList[0]._stateID, null, null );
         }
 
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         /// <summary>
         /// fsm
         /// </summary>
         public ActorFSM ActorFsm { get; private set; }
-
-        /// <summary>
-        /// 指定类型的acator
-        /// </summary>
-        //public virtual TActorBase TypedActor { get; }
-
+        
         /// <summary>
         /// state list,放在第一个位置的state将成为默认进入的state
         /// </summary>

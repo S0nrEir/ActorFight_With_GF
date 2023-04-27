@@ -472,10 +472,5 @@
         {
             throw new System.NotImplementedException();
         }
-
-        public override void SetEnable( bool enable )
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

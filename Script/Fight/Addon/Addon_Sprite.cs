@@ -22,11 +22,7 @@ namespace Aquila.Fight.Addon
             }
             //#todo_spriteRender组件初始化
         }
-
-        public override void SetEnable( bool enable )
-        {
-        }
-
+        
         /// <summary>
         /// 精灵图渲染器
         /// </summary>

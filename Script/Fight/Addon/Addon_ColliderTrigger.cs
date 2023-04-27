@@ -83,12 +83,7 @@ namespace Aquila.Fight.Addon
             _triggerdActorIDSet?.Clear();
             _triggerCounter = 0;
         }
-
-        public override void SetEnable ( bool enable ) 
-        {
-            _enable = enable;
-        }
-
+        
         public override void Dispose ()
         {
             base.Dispose();

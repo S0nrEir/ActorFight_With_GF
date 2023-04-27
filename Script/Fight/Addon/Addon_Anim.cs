@@ -161,7 +161,6 @@ namespace Aquila.Fight.Addon
                 Debug.LogError( "<color=red>faild to get animator</color>" );
                 _animator = Actor.gameObject.AddComponent<Animator>();
             }
-            SetEnable( true );
         }
 
         public override void Dispose ()
@@ -218,13 +217,6 @@ namespace Aquila.Fight.Addon
         /// 当前的动画名称
         /// </summary>
         public string CurrClipName { get; private set; } = string.Empty;
-
-        public override void SetEnable ( bool enable )
-        {
-            _animator.enabled = enable;
-            _enable = _animator.enabled;
-        }
-
         /// <summary>
         /// 动画机
         /// </summary>

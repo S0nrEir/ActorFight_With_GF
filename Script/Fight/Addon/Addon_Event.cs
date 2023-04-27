@@ -74,12 +74,6 @@ namespace Aquila.Fight.Addon
         {
             _eventDic = new Dictionary<int, Action<int, object[]>>();
         }
-
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         public override void Reset()
         {
             base.Reset();

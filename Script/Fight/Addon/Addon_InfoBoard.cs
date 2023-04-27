@@ -16,8 +16,5 @@ namespace Aquila.Fight.Addon
         {
         }
 
-        public override void SetEnable( bool enable )
-        {
-        }
     }
 }

@@ -49,18 +49,6 @@ namespace Aquila.Fight.Addon
         /// Actor实例
         /// </summary>
         protected Module_Proxy_Actor.ActorInstance _actor_instance = null;
-        
-        
-        //#封装do方法，统一处理
-        /// <summary>
-        /// 开关
-        /// </summary>
-        // public bool Enable => _enable;
-
-        /// <summary>
-        /// 开关默认开
-        /// </summary>
-        protected bool _enable = true;
 
         /// <summary>
         /// 当组件被添加到actor上
@@ -90,8 +78,6 @@ namespace Aquila.Fight.Addon
         {
             return AddonValidErrorCodeEnum.NONE;
         }
-
-        public abstract void SetEnable ( bool enable );
 
         /// <summary>
         /// 通知actor一个event
