@@ -7,34 +7,34 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// ÊµÌåÅäÖÃÏà¹Ø
+        /// å®ä½“é…ç½®ç›¸å…³
         /// </summary>
         public static class Entity
         {
             /// <summary>
-            /// Ó¢ĞÛÀàactor×é
+            /// è‹±é›„ç±»actorç»„
             /// </summary>
             public const string GROUP_HERO_ACTOR = "HeroActor";
 
             /// <summary>
-            /// ÌØĞ§Ààactor×é
+            /// ç‰¹æ•ˆç±»actorç»„
             /// </summary>
-            public const string GROUP_ActorEffect = "ActorEffect";
+            public const string GROUP_ACTOR_EFFECT = "ActorEffect";
 
             /// <summary>
-            /// Í¶ÉäÎï
+            /// æŠ•å°„ç‰©
             /// </summary>
-            public const string GROUP_Projectile = "ProjectileActor";
+            public const string GROUP_PROJECTILE = "ProjectileActor";
 
             /// <summary>
-            /// TriggerÀàactor×é
+            /// Triggerç±»actorç»„
             /// </summary>
-            public const string GROUP_Trigger = "TriggerActor";
+            public const string GROUP_TRIGGER = "TriggerActor";
 
             /// <summary>
-            /// ÆäËû
+            /// å…¶ä»–
             /// </summary>
-            public const string GROUP_Other = "Other";
+            public const string GROUP_OTHER = "Other";
 
             /// <summary>
             /// actor
@@ -42,9 +42,9 @@ namespace Aquila.Config
             public const int PRIORITY_ACTOR = 1;
 
             /// <summary>
-            /// ÌØĞ§
+            /// ç‰¹æ•ˆ
             /// </summary>
-            public const int Priority_Effect = 2;
+            public const int PRIORITY_FX = 2;
 
 
         }
