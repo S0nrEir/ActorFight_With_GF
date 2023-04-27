@@ -110,7 +110,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 准备状态，要求标记位为true且目标transform不为空
         /// </summary>
-        public bool ReadyFlag => _readyFlag && _targetTransform != null && _targetActorID != -1;
+        public bool ReadyFlag => _readyFlag && _targetTransform != null && _target_actor_id != -1;
 
         /// <summary>
         /// 准备标记，完成后才会开始移动
@@ -131,7 +131,7 @@ namespace Aquila.Fight.Actor
 
     public class ProjectileActorEntityData : EntityData
     {
-        public ProjectileActorEntityData( int entityId ) : base( entityId, typeof( ProjectileActor ).GetHashCode() )
+        public ProjectileActorEntityData( int entity_id ) : base( entity_id, typeof( ProjectileActor ).GetHashCode() )
         {
         }
     }

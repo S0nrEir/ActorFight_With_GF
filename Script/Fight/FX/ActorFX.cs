@@ -92,7 +92,7 @@ namespace Aquila.Fight
         {
             base.OnHide( isShutdown, userData );
             //#todo这里对entity进行扩展
-            var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ActorEffect ).Helper as EntityGroupHelperBase;
+            var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ACTOR_FX ).Helper as EntityGroupHelperBase;
             if ( helperNode != null )
                 CachedTransform.SetParent( helperNode.transform );
         }

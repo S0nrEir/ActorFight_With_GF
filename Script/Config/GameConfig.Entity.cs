@@ -19,7 +19,7 @@ namespace Aquila.Config
             /// <summary>
             /// 特效类actor组
             /// </summary>
-            public const string GROUP_ACTOR_EFFECT = "ActorEffect";
+            public const string GROUP_ACTOR_FX = "ActorFX";
 
             /// <summary>
             /// 投射物

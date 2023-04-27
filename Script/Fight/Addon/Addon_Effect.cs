@@ -36,8 +36,8 @@ namespace Aquila.Fight.Addon
                     effectID,
                     typeof( ActorFX ),
                     assetPath,
-                    GameConfig.Entity.GROUP_ActorEffect,
-                    GameConfig.Entity.Priority_Effect,
+                    GameConfig.Entity.GROUP_ACTOR_FX,
+                    GameConfig.Entity.PRIORITY_ACTOR,
                     effectEntityData
                 );
 

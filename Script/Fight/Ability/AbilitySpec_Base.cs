@@ -22,30 +22,30 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove(UInt32 bit_to_remove_)
+        public void Remove(UInt32 bit_to_remove)
         {
-            _ability_tag.Remove(bit_to_remove_ - 1);
+            _ability_tag.Remove(bit_to_remove - 1);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void Add(UInt32 bit_to_add_)
+        public void Add(UInt32 bit_to_add)
         {
-            _ability_tag.Add(bit_to_add_ - 1);
+            _ability_tag.Add(bit_to_add - 1);
         }
 
         /// <summary>
         /// 包含某个tag
         /// </summary>
-        public bool ContainsTag(UInt32 bit_tag_)
+        public bool ContainsTag(UInt32 bit_tag)
         {
-            return _ability_tag.Contains(bit_tag_);
+            return _ability_tag.Contains(bit_tag);
         }
 
-        public virtual void Setup(AbilityBase meta_)
+        public virtual void Setup(AbilityBase meta)
         {
-            Meta = meta_;
+            Meta = meta;
             InitCDEffect();
             InitCostEffect();
         }
@@ -104,9 +104,9 @@ namespace Aquila.Fight
         /// <summary>
         /// 刷帧，处理CD
         /// </summary>
-        public virtual void OnUpdate(float delta_time_)
+        public virtual void OnUpdate(float delta_time)
         {
-            _cd_effect._remain -= delta_time_;
+            _cd_effect._remain -= delta_time;
         }
 
         //-------------------priv-------------------
@@ -221,10 +221,10 @@ namespace Aquila.Fight
         /// <param name="meta_">技能元数据</param>
         /// <param name="addon_arr_">携带的各个组件</param>
         /// <returns></returns>
-        public static AbilitySpecBase Gen( AbilityBase meta_)
+        public static AbilitySpecBase Gen( AbilityBase meta)
         {
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
-            spec.Setup(meta_);
+            spec.Setup(meta);
             return null;
         }
     }

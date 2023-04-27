@@ -1,5 +1,4 @@
-﻿using Aquila.Event;
-using Aquila.Fight.Actor;
+﻿using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.ToolKit;
 using GameFramework;
@@ -301,7 +300,7 @@ namespace Aquila.Fight.FSM
             //    sliderAddon.HideAll();
             //}
 
-            GameEntry.Event.Fire ( this, ReferencePool.Acquire<ActorDieEventArgs> ().Fill ( _actor ) );
+            // GameEntry.Event.Fire ( this, ReferencePool.Acquire<ActorDieEventArgs> ().Fill ( _actor ) );
         }
 
         public override void OnLeave ( params object[] param )

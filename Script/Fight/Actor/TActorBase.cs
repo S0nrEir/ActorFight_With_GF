@@ -28,16 +28,16 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 尝试获取一个addon
         /// </summary>
-        private bool TryGetAddon<T>( out T targetAddon ) where T : AddonBase
+        private bool TryGetAddon<T>( out T target_addon ) where T : AddonBase
         {
-            targetAddon = null;
+            target_addon = null;
             if ( _addonDic is null || _addonDic.Count == 0 )
                 return false;
 
             if ( _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon ) )
             {
-                targetAddon = addon as T;
-                return targetAddon != null;
+                target_addon = addon as T;
+                return target_addon != null;
             }
             return false;
         }
@@ -61,8 +61,7 @@ namespace Aquila.Fight.Actor
         }
         #endregion
 
-        #region set
-
+        //--------------------set--------------------
         /// <summary>
         /// 设置layer
         /// </summary>
@@ -72,35 +71,35 @@ namespace Aquila.Fight.Actor
         }
 
 
-        public void SetQuaternion( Quaternion rotationToSet )
+        public void SetQuaternion( Quaternion rotation_to_set )
         {
-            CachedTransform.rotation = rotationToSet;
+            CachedTransform.rotation = rotation_to_set;
         }
 
         /// <summary>
         /// 设置在entityGroup下的本地坐标
         /// </summary>
-        public void SetLocalPosition( Vector3 posToSet )
+        public void SetLocalPosition( Vector3 pos_to_set )
         {
             if ( CachedTransform == null )
                 return;
 
-            CachedTransform.localPosition = posToSet;
+            CachedTransform.localPosition = pos_to_set;
         }
 
         /// <summary>
         /// 设置世界坐标
         /// </summary>
-        public void SetWorldPosition( Vector3 posToSet )
+        public void SetWorldPosition( Vector3 pos_to_set )
         {
             //Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID},pos to set:{posToSet}</color>" );
             if ( CachedTransform == null )
                 return;
 
-            CachedTransform.position = posToSet;
+            CachedTransform.position = pos_to_set;
         }
 
-        public void SetWorldPosition( Vector2 posToSet )
+        public void SetWorldPosition( Vector2 pos_to_set )
         {
             Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID}</color>" );
             if ( CachedTransform == null )
@@ -110,9 +109,9 @@ namespace Aquila.Fight.Actor
                 (
                     new Vector3
                         (
-                            posToSet.x,
-                            Tools.Fight.TerrainPositionY( string.Empty, posToSet.x, posToSet.y ), //#todo设置坐标加上layer
-                            posToSet.y
+                            pos_to_set.x,
+                            Tools.Fight.TerrainPositionY( string.Empty, pos_to_set.x, pos_to_set.y ), //#todo设置坐标加上layer
+                            pos_to_set.y
                         )
                 );
         }
@@ -120,11 +119,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 自定义初始设置
         /// </summary>
-        public void Setup
-            (
-                int role_meta_id,
-                string tag
-            )
+        public void Setup ( int role_meta_id, string tag )
         {
             SetRoleMetaID( role_meta_id );
             SetTag( tag );
@@ -158,11 +153,8 @@ namespace Aquila.Fight.Actor
 
             gameObject.tag = tag;
         }
-
-        #endregion
-
-
-        #region override
+        
+        //--------------------override--------------------
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
@@ -240,8 +232,7 @@ namespace Aquila.Fight.Actor
                     iter.Current.Value?.Reset();
             }
         }
-
-        #endregion
+        
 
         /// <summary>
         /// 为自身添加一个Addon

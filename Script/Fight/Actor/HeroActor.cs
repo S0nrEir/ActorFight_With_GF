@@ -27,9 +27,9 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// switch state
         /// </summary>
-        public void SwitchTo( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
+        public void SwitchTo( ActorStateTypeEnum state_type, object[] enter_param, object[] exist_param )
         {
-            _fsm_addon.SwitchTo( stateType, enterParam, existParam );
+            _fsm_addon.SwitchTo( state_type, enter_param, exist_param );
         }
 
         #endregion
@@ -146,7 +146,7 @@ namespace Aquila.Fight.Actor
 
     public class HeroActorEntityData : EntityData
     {
-        public HeroActorEntityData( int entityId ) : base( entityId, typeof( HeroActor ).GetHashCode() )
+        public HeroActorEntityData( int entity_id ) : base( entity_id, typeof( HeroActor ).GetHashCode() )
         {
         }
 
