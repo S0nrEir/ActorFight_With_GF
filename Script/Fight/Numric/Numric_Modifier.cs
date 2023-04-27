@@ -29,16 +29,16 @@ namespace Aquila.Numric
         /// <summary>
         /// 设置修改器的类型
         /// </summary>
-        public void Setup( NumricModifierType type_ ,float fac_)
+        public void Setup( NumricModifierType type ,float fac)
         {
-            _type = type_;
-            _value_fac = fac_;
+            _type = type;
+            _value_fac = fac;
         }
 
         /// <summary>
         /// 计算，传入初始值，设置并返回修改后的实际值
         /// </summary>
-        public float Calc( float original_val_ )
+        public float Calc( float original_val )
         {
             if ( _modified )
             {
@@ -49,15 +49,15 @@ namespace Aquila.Numric
             switch ( _type )
             {
                 case NumricModifierType.Sum:
-                    _value_after_modify = original_val_ + _value_fac;
+                    _value_after_modify = original_val + _value_fac;
                     break;
 
                 case NumricModifierType.Mult:
-                    _value_after_modify = original_val_ * _value_fac;
+                    _value_after_modify = original_val * _value_fac;
                     break;
                 
                 case NumricModifierType.Dive:
-                    _value_after_modify = original_val_ / _value_fac;
+                    _value_after_modify = original_val / _value_fac;
                     break;
                 
                 default:

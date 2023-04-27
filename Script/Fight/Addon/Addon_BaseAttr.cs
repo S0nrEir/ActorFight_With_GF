@@ -70,7 +70,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个装备类型的数值修饰器
         /// </summary>
-        public bool SetEquipModifier( Numric_Modify_Type_Enum type, Numric_Modifier modifier )
+        public bool SetEquipModifier( Actor_Attr type, Numric_Modifier modifier )
         {
             var int_type = ( int ) type;
             if ( OverLen( int_type ) )

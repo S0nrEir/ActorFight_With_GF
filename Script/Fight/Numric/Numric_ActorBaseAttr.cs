@@ -29,49 +29,49 @@ namespace Aquila.Numric
         /// <summary>
         /// 添加一个装备修正
         /// </summary>
-        public bool AddEquipModifier( Numric_Modifier modifier_ )
+        public bool AddEquipModifier( Numric_Modifier modifier )
         {
-            return _equip_correction.AddLast( modifier_ ) != null;
+            return _equip_correction.AddLast( modifier ) != null;
         }
 
         /// <summary>
         /// 移除一个装备修正
         /// </summary>
-        public bool RemoveEquipModifier( Numric_Modifier modifier_ )
+        public bool RemoveEquipModifier( Numric_Modifier modifier )
         {
-            return _equip_correction.Remove( modifier_ );
+            return _equip_correction.Remove( modifier );
         }
 
         /// <summary>
         /// 添加一个职业修正
         /// </summary>
-        public bool AddClassModifier( Numric_Modifier modifier_ )
+        public bool AddClassModifier( Numric_Modifier modifier )
         {
-            return _class_correction.AddLast( modifier_ ) != null;
+            return _class_correction.AddLast( modifier ) != null;
         }
 
         /// <summary>
         /// 移除一个职业修正
         /// </summary>
-        public bool RemoveClassModifier( Numric_Modifier modifier_ )
+        public bool RemoveClassModifier( Numric_Modifier modifier )
         {
-            return _class_correction.Remove( modifier_ );
+            return _class_correction.Remove( modifier );
         }
 
         /// <summary>
         /// 添加一个buff修正
         /// </summary>
-        public bool AddBuffModifier( Numric_Modifier modifier_ )
+        public bool AddBuffModifier( Numric_Modifier modifier )
         {
-            return _buff_correction.AddLast( modifier_ ) != null;
+            return _buff_correction.AddLast( modifier ) != null;
         }
 
         /// <summary>
         /// 移除一个buff修正
         /// </summary>
-        public bool RemoveBuffModifier( Numric_Modifier modifier_ )
+        public bool RemoveBuffModifier( Numric_Modifier modifier )
         {
-            return _buff_correction.Remove( modifier_ );
+            return _buff_correction.Remove( modifier );
         }
 
         public override void Clear()
@@ -98,19 +98,19 @@ namespace Aquila.Numric
         /// <summary>
         /// 遍历一个修饰器集合并返回修正后的值
         /// </summary>
-        private float Enumrate( float val, GameFrameworkLinkedList<Numric_Modifier> linked_list_ )
+        private float Enumrate( float val, GameFrameworkLinkedList<Numric_Modifier> linked_list )
         {
-            var iter = linked_list_.GetEnumerator();
+            var iter = linked_list.GetEnumerator();
             while ( iter.MoveNext() )
                 val += iter.Current.Calc( _value );
 
             return val;
         }
 
-        private void EnsureInit( GameFrameworkLinkedList<Numric_Modifier> correction_ )
+        private void EnsureInit( GameFrameworkLinkedList<Numric_Modifier> correction )
         {
-            if ( correction_ is null )
-                correction_ = new GameFrameworkLinkedList<Numric_Modifier>();
+            if ( correction is null )
+                correction = new GameFrameworkLinkedList<Numric_Modifier>();
         }
 
         //#todo改成LinkedRange

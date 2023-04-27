@@ -12,8 +12,7 @@ namespace Aquila.Module
     /// </summary>
     public class Module_Actor_Fac : GameFrameworkModuleBase
     {
-        #region public
-
+        //--------------------public--------------------
         /// <summary>
         /// 获取一个actor，获取的地方移到了Proxy_Actor，这里不用了
         /// </summary>
@@ -60,10 +59,6 @@ namespace Aquila.Module
             OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
             return result;
         }
-
-        #endregion
-
-        #region
 
         /// <summary>
         /// actor生成回调
@@ -113,7 +108,6 @@ namespace Aquila.Module
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }
 
-        #endregion
 
         public override void Start( object param )
         {

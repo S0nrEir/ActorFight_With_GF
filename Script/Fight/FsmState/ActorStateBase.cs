@@ -13,9 +13,9 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public abstract class ActorStateBase
     {
-        public ActorStateBase ( int stateID )
+        public ActorStateBase ( int state_id )
         {
-            _stateID = stateID;
+            _stateID = state_id;
         }
 
         public virtual void Dispose ()
@@ -25,7 +25,7 @@ namespace Aquila.Fight.FSM
             _stateID = -1;
         }
 
-        public virtual void OnUpdate ( float deltaTime )
+        public virtual void OnUpdate ( float delta_time )
         {
 
         }
@@ -73,7 +73,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public abstract class ActorAbilityStateBase : ActorStateBase
     {
-        public ActorAbilityStateBase ( int stateID ) : base ( stateID ) { }
+        public ActorAbilityStateBase ( int state_id ) : base ( state_id ) { }
 
         public override void Init ( ActorFSM fsm, TActorBase actor )
         {
@@ -280,7 +280,7 @@ namespace Aquila.Fight.FSM
 
     public class ActorDieStateBase : ActorStateBase
     {
-        public ActorDieStateBase ( int stateID ) : base ( stateID )
+        public ActorDieStateBase ( int state_id ) : base ( state_id )
         { }
 
         public override void Init ( ActorFSM fsm, TActorBase actor )

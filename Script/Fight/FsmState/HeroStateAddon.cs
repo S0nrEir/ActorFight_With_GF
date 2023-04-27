@@ -53,7 +53,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroAbilityState : ActorAbilityStateBase
     {
-        public HeroAbilityState( int stateID ) : base( stateID )
+        public HeroAbilityState( int state_id ) : base( state_id )
         {
         }
     }
@@ -63,7 +63,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroDieState : ActorDieStateBase
     {
-        public HeroDieState( int stateID ) : base( stateID )
+        public HeroDieState( int state_id ) : base( state_id )
         {
         }
     }

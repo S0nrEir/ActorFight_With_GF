@@ -50,17 +50,17 @@ namespace  Aquila.Module
         /// 单对单释放技能
         /// </summary>
         /// <param name="castor_">施法者</param>
-        /// <param name="target_">目标</param>
-        /// <param name="ability_meta_id_">技能元数据id</param>
+        /// <param name="target">目标</param>
+        /// <param name="ability_meta_id">技能元数据id</param>
         /// <returns></returns>
-        public AbilityResult AbilityToSingleTarget(TActorBase castor_,TActorBase target_,int ability_meta_id_)
+        public AbilityResult AbilityToSingleTarget(TActorBase castor_,TActorBase target,int ability_meta_id)
         {
             //obtain ability result
             var result = default(AbilityResult);
             result.Init();
             
             //检查类型走不同的流程
-            if (castor_ is null || target_ is null)
+            if (castor_ is null || target is null)
             {
                 Log.Warning("<color=yellow>castor_ is null || target_ is null</color>");
                 result.SetState(AbilityResultTypeEnum.INVALID);
@@ -78,7 +78,7 @@ namespace  Aquila.Module
 
             //检查释放条件
             ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
-            if (!ability_addon.CanUseAbility(ability_meta_id_))
+            if (!ability_addon.CanUseAbility(ability_meta_id))
             {
                 result.SetState(AbilityResultTypeEnum.CANT_USE);
                 return result;

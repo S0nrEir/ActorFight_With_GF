@@ -105,7 +105,7 @@ namespace Aquila.Fight.Addon
             ///// </summary>
             //public const ushort HAVE_NO_STATE = 0b0000_0000_0000_0100;
 
-            private static Dictionary<uint, string> _erroCodeMap = new Dictionary<uint, string>
+            private static Dictionary<uint, string> _err_code_map = new Dictionary<uint, string>
             {
                 { ZERO_DATA_COUNT,"数据组组件为空!" },
             };
@@ -115,7 +115,7 @@ namespace Aquila.Fight.Addon
             /// </summary>
             public static string ErrCode2String ( uint errCode )
             {
-                if (!_erroCodeMap.TryGetValue( errCode, out var errMsg ))
+                if (!_err_code_map.TryGetValue( errCode, out var errMsg ))
                     return $"cant find errCode {errCode} msg";
 
                 return errMsg;

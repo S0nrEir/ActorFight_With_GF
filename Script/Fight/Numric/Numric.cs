@@ -35,9 +35,9 @@ namespace Aquila.Numric
         /// <summary>
         /// 移除一个基础值修饰器
         /// </summary>
-        public bool RemoveBaseModifier(Numric_Modifier to_remove_)
+        public bool RemoveBaseModifier(Numric_Modifier to_remove)
         {
-            var succ = _correction.Remove( to_remove_ );
+            var succ = _correction.Remove( to_remove );
             if ( !succ )
                 Log.Error("remove numric modifier faild!");
 
@@ -62,10 +62,10 @@ namespace Aquila.Numric
         /// <summary>
         /// 设置基础数值
         /// </summary>
-        public virtual void SetBaseVal( float base_val_ )
+        public virtual void SetBaseVal( float base_val )
         {
             _change_flag = true;
-            _value = base_val_;
+            _value = base_val;
             if ( _correction is null )
                 _correction = new GameFrameworkLinkedList<Numric_Modifier>();
         }

@@ -151,12 +151,12 @@ namespace Aquila.Fight
             TimesUpFlag = flag;
         }
 
-        public void Setup ( int id, float surTime, int actorID, string path )
+        public void Setup ( int id, float sur_time, int actor_id, string path )
         {
             ID = id;
-            SurvivalTime = surTime;
+            SurvivalTime = sur_time;
             AssetPath = path;
-            ActorID = actorID.ToString();
+            ActorID = actor_id.ToString();
         }
 
         public int ID = -1;
