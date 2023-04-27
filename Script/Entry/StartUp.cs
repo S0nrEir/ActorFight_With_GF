@@ -7,11 +7,11 @@ public class StartUp : MonoBehaviour
 {
     void Start()
     {
-        if ( _gameEntry == null )
+        if ( _game_entry == null )
             throw new GameFrameworkException( "GameEntry is null!" );
 
-        Tools.SetActive( _gameEntry, true );
+        Tools.SetActive( _game_entry, true );
     }
 
-    [SerializeField] private GameObject _gameEntry = null;
+    [SerializeField] private GameObject _game_entry = null;
 }
