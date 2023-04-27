@@ -45,18 +45,18 @@ namespace Aquila.ToolKit
         /// <summary>
         /// 设置一个gameObject的tag
         /// </summary>
-        public static void SetTag( string tag, GameObject GO, bool loopSet = false )
+        public static void SetTag( string tag, GameObject GO, bool loop_set = false )
         {
             if ( GO == null )
                 return;
 
             GO.tag = tag;
             var tran = GO.transform;
-            if ( loopSet )
+            if ( loop_set )
             {
                 var childCnt = tran.childCount;
                 for ( var i = 0; i < childCnt; i++ )
-                    SetTag( tag, tran.GetChild( i ).gameObject, loopSet );
+                    SetTag( tag, tran.GetChild( i ).gameObject, loop_set );
             }
         }
 
@@ -109,12 +109,12 @@ namespace Aquila.ToolKit
         /// <summary>
         /// 获取某个Transform上指定子路径的组件，拿不到返回空
         /// </summary>
-        public static T GetComponent<T>( Transform tran, string childPath ) where T : class
+        public static T GetComponent<T>( Transform tran, string child_path ) where T : class
         {
-            if ( string.IsNullOrEmpty( childPath ) )
+            if ( string.IsNullOrEmpty( child_path ) )
                 return null;
 
-            return GetComponent<T>( tran.Find( childPath ) );
+            return GetComponent<T>( tran.Find( child_path ) );
         }
 
         /// <summary>
@@ -194,13 +194,13 @@ namespace Aquila.ToolKit
         /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
         /// <param name="bitValue">true设该位为1,false设为0</param>
         /// <returns>返回位设定后的值</returns>
-        public static UInt32 SetBitValue_U32( UInt32 value, UInt32 index, bool bitValue )
+        public static UInt32 SetBitValue_U32( UInt32 value, UInt32 index, bool bit_value )
         {
             if ( index > 31 )
                 throw new ArgumentOutOfRangeException( "index" ); //索引出错
 
             var val = index << 1;
-            return bitValue ? ( value | val ) : ( value & ~val );
+            return bit_value ? ( value | val ) : ( value & ~val );
         }
         
         /// <summary>
@@ -210,21 +210,21 @@ namespace Aquila.ToolKit
         /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
         /// <param name="bitValue">true设该位为1,false设为0</param>
         /// <returns>返回位设定后的值</returns>
-        public static int SetBitValue( int value, ushort index, bool bitValue )
+        public static int SetBitValue( int value, ushort index, bool bit_value )
         {
             if ( index > 31 )
                 throw new ArgumentOutOfRangeException( "index" ); //索引出错
 
             var val = 1 << index;
-            return bitValue ? ( value | val ) : ( value & ~val );
+            return bit_value ? ( value | val ) : ( value & ~val );
         }
 
         /// <summary>
         /// 直接对一个int值进行或操作，返回操作后的值
         /// </summary>
-        public static int OrBitValue( int orig_value_, int attenmp_value_ )
+        public static int OrBitValue( int orig_value, int attenmp_value )
         {
-            return orig_value_ | attenmp_value_;
+            return orig_value | attenmp_value;
         }
     }
 }
