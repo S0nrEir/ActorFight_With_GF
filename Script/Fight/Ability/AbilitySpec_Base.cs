@@ -123,14 +123,15 @@ namespace Aquila.Fight
         /// </summary>
         private bool CostOK()
         {
-            if (_cost_effect is null)
-                return true;
-
-            //#todo技能消耗目前暂时只消耗魔法值，剩下的后面再补
-            //因为都独立开来了，拿不到技能所属的addon和actor，暂时想到的解决办法：通过proxy拿他们的代理实例
-            var meta = _cost_effect.Meta;
-            if(meta.ModifierType == )
-            return _cost_effect.Calc() > 0;
+            return true;
+            // if (_cost_effect is null)
+            //     return true;
+            //
+            // //#todo技能消耗目前暂时只消耗魔法值，剩下的后面再补
+            // //因为都独立开来了，拿不到技能所属的addon和actor，暂时想到的解决办法：通过proxy拿他们的代理实例
+            // var meta = _cost_effect.Meta;
+            // if(meta.ModifierType == )
+            // return _cost_effect.Calc() > 0;
         }
 
         /// <summary>
