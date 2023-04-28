@@ -58,11 +58,11 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type )
+        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type ,float default_value = 0f)
         {
             var int_type = ( int ) type;
             if ( OverLen( int_type ) )
-                return (false, 0f);
+                return (false, default_value);
 
             return (true, _numric_arr[int_type].CorrectionValue);
         }

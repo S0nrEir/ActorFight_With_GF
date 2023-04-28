@@ -6,7 +6,6 @@ using Cfg.role;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
 namespace  Aquila.Fight.Addon
 {
     /// <summary>
@@ -15,6 +14,12 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
+        public override void OnUpdate(float delta_time,float real_elapsed)
+        {
+            foreach (var spec in _spec_arr)
+                spec.OnUpdate(delta_time);
+        }
+
         public bool CanUseAbility(int meta_id)
         {
             var spec = GetAbilitySpec(meta_id);
@@ -69,7 +74,7 @@ namespace  Aquila.Fight.Addon
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");
                     return false;
                 }
-                _spec_arr[i] = AbilitySpecBase.Gen(ability_base_meta);
+                _spec_arr[i] = AbilitySpecBase.Gen(ability_base_meta,_actor_instance);
             }
             return true;
         }

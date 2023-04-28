@@ -53,22 +53,22 @@ namespace  Aquila.Module
         /// <param name="target">目标</param>
         /// <param name="ability_meta_id">技能元数据id</param>
         /// <returns></returns>
-        public AbilityResult AbilityToSingleTarget(TActorBase castor_,TActorBase target,int ability_meta_id)
+        public AbilityResult AbilityToSingleTarget(TActorBase castor,TActorBase target,int ability_meta_id)
         {
             //obtain ability result
             var result = default(AbilityResult);
             result.Init();
             
             //检查类型走不同的流程
-            if (castor_ is null || target is null)
+            if (castor is null || target is null)
             {
-                Log.Warning("<color=yellow>castor_ is null || target_ is null</color>");
+                Log.Warning("<color=yellow>castor is null || target is null</color>");
                 result.SetState(AbilityResultTypeEnum.INVALID);
                 return result;
             }
             
             //拿技能组件
-            var castor_instance = TryGet(castor_.ActorID);
+            var castor_instance = TryGet(castor.ActorID);
             Addon_Ability ability_addon = null; 
             if (!castor_instance.has)
             {
@@ -83,7 +83,15 @@ namespace  Aquila.Module
                 result.SetState(AbilityResultTypeEnum.CANT_USE);
                 return result;
             }
-            
+
+            var target_instance = TryGet(target.ActorID);
+            if (!target_instance.has)
+            {
+                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                return result;
+            }
+
+            //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
             result.SetState(AbilityResultTypeEnum.HIT);
             return result;
         }
@@ -97,6 +105,7 @@ namespace  Aquila.Module
         public void Init()
         {
             _ability_result = AbilityResultTypeEnum.INVALID;
+            _state_description = 0b_0000_0000_0000_0000;
         }
 
         public void SetState(AbilityResultTypeEnum type)
@@ -108,6 +117,11 @@ namespace  Aquila.Module
         /// 是否成功
         /// </summary>
         public AbilityResultTypeEnum _ability_result;
+
+        /// <summary>
+        /// 技能结果的状态描述
+        /// </summary>
+        public int _state_description;
     }
 
     /// <summary>

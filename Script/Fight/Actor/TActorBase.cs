@@ -22,7 +22,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void Trigger( ActorEventEnum type, params object[] param )
         {
-            _eventAddon?.Trigger( type, param );
+            _event_addon?.Trigger( type, param );
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void RegisterActorEvent( ActorEventEnum type, Action<int, object[]> action )
         {
-            if ( !_eventAddon.Register( type, action ) )
+            if ( !_event_addon.Register( type, action ) )
                 throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
         }
 
@@ -56,7 +56,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void UnRegisterActorEvent( ActorEventEnum type )
         {
-            if ( !_eventAddon.UnRegister( type ) )
+            if ( !_event_addon.UnRegister( type ) )
                 throw new GameFrameworkException( "!_eventAddon.UnRegister( type )" );
         }
         #endregion
@@ -92,7 +92,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SetWorldPosition( Vector3 pos_to_set )
         {
-            //Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID},pos to set:{posToSet}</color>" );
             if ( CachedTransform == null )
                 return;
 
@@ -153,7 +152,21 @@ namespace Aquila.Fight.Actor
 
             gameObject.tag = tag;
         }
-        
+
+        /// <summary>
+        /// 为actor的所有addon设置他们持有的actor的Addon
+        /// </summary>
+        //#todo:有没有更好的办法让actor的addon持有其他兄弟addon？
+        private void SetAllAddons()
+        {
+            var addon_arr = GetAllAddon();
+            if(addon_arr is null || addon_arr.Length == 0)
+                return;
+
+            foreach (var addon in _addonDic.Values)
+                addon.SetActorAddons(addon_arr);
+        }
+
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
@@ -194,13 +207,8 @@ namespace Aquila.Fight.Actor
         {
             base.OnInit( userData );
             InitAddons( userData );
-            //if ( gameObject.GetComponent<BoxCollider>() == null )
-            //{
-            //    var collider = gameObject.AddComponent<BoxCollider>();
-            //    collider.size = new Vector3( .8f, .8f, .8f );
-            //    collider.isTrigger = true;
-            //}
-
+            SetAllAddons();
+            
             _allAddonInitDone = true;
         }
 
@@ -256,7 +264,7 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 获取自己的全部addon
+        /// 获取自己的全部addon，没有返回一个空数组
         /// </summary>
         protected Addon_Base[] GetAllAddon()
         {
@@ -279,7 +287,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void InitAddons(object user_data)
         {
-            _eventAddon = AddAddon<Addon_Event>();
+            _event_addon = AddAddon<Addon_Event>();
         }
 
         protected TActorBase()
@@ -322,7 +330,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 事件组件
         /// </summary>
-        private Addon_Event _eventAddon = null;
+        private Addon_Event _event_addon = null;
         protected Addon_Data _dataAddon = null;
 
         /// <summary>

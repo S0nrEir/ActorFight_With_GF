@@ -61,6 +61,7 @@ namespace Aquila.Fight.Actor
             _hp_addon           = AddAddon<Addon_InfoBoard>();
             //_nav_addon          = AddAddon<Addon_Nav>();
             _fx_addon           = AddAddon<Addon_FX>();
+            _ability_addon      = AddAddon<Addon_Ability>();
         }
 
         protected override void OnRecycle()
@@ -75,6 +76,7 @@ namespace Aquila.Fight.Actor
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
             _fsm_addon?.OnUpdateDate( elapseSeconds, realElapseSeconds );
+            _ability_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
         }
 
         protected override void Register()
@@ -142,6 +144,11 @@ namespace Aquila.Fight.Actor
         /// 基础属性数值组件
         /// </summary>
         private Addon_BaseAttrNumric _base_attr_addon { get; set; } = null;
+
+        /// <summary>
+        /// 技能组件
+        /// </summary>
+        private Addon_Ability _ability_addon = null;
     }
 
     public class HeroActorEntityData : EntityData

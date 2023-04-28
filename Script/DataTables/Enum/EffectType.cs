@@ -21,5 +21,9 @@ namespace Cfg.Enum
         /// 消耗类Effect
         /// </summary>
         Cost = 2,
+        /// <summary>
+        /// 直接伤害类
+        /// </summary>
+        Damage = 3,
     }
 }

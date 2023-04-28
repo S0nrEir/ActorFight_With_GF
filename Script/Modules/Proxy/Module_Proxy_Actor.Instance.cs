@@ -1,5 +1,6 @@
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Toolkit;
 using GameFramework;
 
 namespace Aquila.Module
@@ -35,16 +36,15 @@ namespace Aquila.Module
             /// </summary>
             public T GetAddon<T>() where T : Addon_Base
             {
-                if ( _addon_arr is null || _addon_arr.Length == 0 )
-                    return null;
+                return Tools.Actor.FilterAddon<T>(_addon_arr);
+            }
 
-                foreach ( var addon in _addon_arr )
-                {
-                    if ( addon is T )
-                        return addon as T;
-                }
-
-                return null;
+            /// <summary>
+            /// 获取该实例的苏哟有addon
+            /// </summary>
+            public Addon_Base[] AllAddons()
+            {
+                return _addon_arr;
             }
 
             #endregion

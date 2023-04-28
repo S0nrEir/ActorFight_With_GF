@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using Aquila.Numric;
 using Cfg.common;
-using GameFramework;
-using UnityEngine;
 
 namespace Aquila.Fight
 {

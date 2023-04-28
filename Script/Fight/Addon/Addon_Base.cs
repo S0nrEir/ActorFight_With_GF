@@ -11,6 +11,22 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public abstract partial class Addon_Base
     {
+        /// <summary>
+        /// 让该addon持有该actor的所有其他addon
+        /// </summary>
+        public void SetActorAddons(Addon_Base[] addons)
+        {
+            _actor_addons = addons;
+        }
+        
+        /// <summary>
+        /// 设置玩家的actor实例
+        /// </summary>
+        public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
+        {
+            _actor_instance = instance;
+        }
+
         public abstract AddonTypeEnum AddonType { get; }
 
         public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
@@ -46,7 +62,12 @@ namespace Aquila.Fight.Addon
         public TActorBase Actor { get; private set; }
 
         /// <summary>
-        /// Actor实例
+        /// actor持有的addon
+        /// </summary>
+        protected Addon_Base[] _actor_addons = null;
+
+        /// <summary>
+        /// 持有的actor实例
         /// </summary>
         protected Module_Proxy_Actor.ActorInstance _actor_instance = null;
 
