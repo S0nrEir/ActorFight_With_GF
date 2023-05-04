@@ -19,11 +19,11 @@ namespace Aquila.Fight.Addon
         public void Trigger( ActorEventEnum type, object[] param )
         {
             //Debug.Log( $"<color=green>Actor{Actor.ActorID}--->Trigger:{type}</color>" );
-            var intType = ( int ) type;
-            if ( !_eventDic.TryGetValue( intType, out var action ) )
+            var int_type = ( int ) type;
+            if ( !_eventDic.TryGetValue( int_type, out var action ) )
                 return;
 
-            action?.Invoke( intType, param );
+            action?.Invoke( int_type, param );
         }
 
         /// <summary>

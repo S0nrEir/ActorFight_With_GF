@@ -16,7 +16,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool IsReachDestination()
         {
-            if ( !_openFlag )
+            if ( !_open_flag )
                 return false;
 
             var isReached = ( TargetTransform.position - _target_pos ).sqrMagnitude <= StopDistance;
@@ -54,7 +54,7 @@ namespace Aquila.Fight.Addon
             _target_pos = target_pos;
 
             SetStopDistance( .001f );
-            _openFlag = true;
+            _open_flag = true;
             //_agent.SetPath( navPath );
             _agent.SetDestination( _target_pos );
         }
@@ -125,8 +125,8 @@ namespace Aquila.Fight.Addon
             _agent.updateRotation        = true;
             _agent.updatePosition        = true;
             _agent.stoppingDistance      = StopDistance;
-            _agent.autoBraking           = false;
-            _agent.angularSpeed          = 360f;
+            _agent.autoBraking = false;
+            _agent.angularSpeed = 360f;
             _agent.autoRepath            = false;
             //避障半径，actor穿行的临时解决方案
             _agent.radius                = 0.1f;
@@ -149,7 +149,7 @@ namespace Aquila.Fight.Addon
             SetStopDistance( 1f );
             SetSpeed( 1f );
             _target_pos = Vector3.zero;
-            _openFlag = false;
+            _open_flag   = false;
 
             //if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
             //    _agent.speed = 1f;
@@ -159,7 +159,7 @@ namespace Aquila.Fight.Addon
             //}
         }
 
-        private bool _openFlag = false;
+        private bool _open_flag = false;
 
         /// <summary>
         /// 目标点
