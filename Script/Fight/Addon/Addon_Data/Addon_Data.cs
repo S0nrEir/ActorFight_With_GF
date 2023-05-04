@@ -20,11 +20,6 @@ namespace Aquila.Fight.Addon
             base.Dispose();
         }
 
-        public override uint Valid()
-        {
-            return ( uint ) AddonValidErrorCodeEnum.NONE;
-        }
-
         public override void Reset()
         {
             base.Reset();

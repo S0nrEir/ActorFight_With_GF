@@ -143,11 +143,6 @@ namespace Aquila.Fight.Addon
             _agent = null;
         }
 
-        public override uint Valid()
-        {
-            return base.Valid();
-        }
-
         public override void Reset()
         {
             base.Reset();

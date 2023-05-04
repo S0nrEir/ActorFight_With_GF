@@ -92,11 +92,6 @@ namespace Aquila.Fight.Addon
             base.Init( actor, target_go, target_transform );
         }
 
-        public override uint Valid()
-        {
-            return _eventDic is null ? base.Valid() : AddonValidErrorCodeEnum.NONE_EVENT;
-        }
-
         /// <summary>
         /// 事件集,K=eventID,V=(eventID,param)
         /// </summary>

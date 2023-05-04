@@ -95,10 +95,10 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 检查，返回addon错误码
         /// </summary>
-        public virtual uint Valid () 
-        {
-            return AddonValidErrorCodeEnum.NONE;
-        }
+        // public virtual uint Valid () 
+        // {
+        //     return AddonValidErrorCodeEnum.NONE;
+        // }
 
         /// <summary>
         /// 通知actor一个event
