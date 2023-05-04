@@ -14,6 +14,10 @@ namespace Cfg.Enum
     public enum Actor_Attr
     {
         /// <summary>
+        /// 无效
+        /// </summary>
+        Invalid = -1,
+        /// <summary>
         /// 当前生命
         /// </summary>
         Curr_HP = 0,

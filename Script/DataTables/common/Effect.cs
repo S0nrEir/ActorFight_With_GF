@@ -22,9 +22,10 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         Type = (Enum.EffectType)_buf.ReadInt();
         ModifierNumric = _buf.ReadFloat();
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
-        Take = (Enum.EffectTakeType)_buf.ReadInt();
-        Target = _buf.ReadInt();
-        EffectType = _buf.ReadInt();
+        Take = (Enum.DurationPolicy)_buf.ReadInt();
+        Period = _buf.ReadFloat();
+        Target_None = _buf.ReadInt();
+        EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         PostInit();
     }
 
@@ -56,15 +57,19 @@ public sealed partial class Effect :  Bright.Config.BeanBase
     /// <summary>
     /// 生效时机
     /// </summary>
-    public Enum.EffectTakeType Take { get; private set; }
+    public Enum.DurationPolicy Take { get; private set; }
     /// <summary>
-    /// 目标类型，0自己否则为对方
+    /// 生效周期，单位毫秒
     /// </summary>
-    public int Target { get; private set; }
+    public float Period { get; private set; }
     /// <summary>
-    /// 影响的数值类型，暂时没用
+    /// 目标类型，目前没用
     /// </summary>
-    public int EffectType { get; private set; }
+    public int Target_None { get; private set; }
+    /// <summary>
+    /// 影响的数值类型
+    /// </summary>
+    public Enum.Actor_Attr EffectType { get; private set; }
 
     public const int __ID__ = -458280172;
     public override int GetTypeId() => __ID__;
@@ -87,7 +92,8 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         + "ModifierNumric:" + ModifierNumric + ","
         + "ModifierType:" + ModifierType + ","
         + "Take:" + Take + ","
-        + "Target:" + Target + ","
+        + "Period:" + Period + ","
+        + "Target_None:" + Target_None + ","
         + "EffectType:" + EffectType + ","
         + "}";
     }
