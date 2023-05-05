@@ -1,18 +1,35 @@
-﻿using Aquila.Config;
-using Aquila.Fight;
+﻿using Aquila.Fight;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila.ToolKit
+namespace Aquila.Toolkit
 {
-    public static partial class Tools
+    public partial class Tools
     {
         /// <summary>
         /// 战斗相关工具类
         /// </summary>
         public static class Fight
         {
+            /// <summary>
+            /// 对一个单体目标使用技能
+            /// </summary>
+            public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
+            {
+                var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+            }
+
+            /// <summary>
+            /// 计算物理伤害，返回计算后的生命值
+            /// </summary>
+            public static float CalcPhysicDamage(float damage, float def)
+            {
+                var final = Mathf.Floor(damage - def);
+                return final > 0 ? final : 1f;
+            }
+
             /// <summary>
             /// 获取一个xz坐标的坐标key，失败返回-1
             /// </summary>

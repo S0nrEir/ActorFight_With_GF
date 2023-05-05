@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Aquila.ToolKit
+namespace Aquila.Toolkit
 {
-    public static partial class Tools
+    public partial class Tools
     {
         /// <summary>
         /// 数据表工具类

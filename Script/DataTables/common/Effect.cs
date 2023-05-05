@@ -55,7 +55,7 @@ public sealed partial class Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.NumricModifierType ModifierType { get; private set; }
     /// <summary>
-    /// 生效时机
+    /// 生效策略
     /// </summary>
     public Enum.DurationPolicy Take { get; private set; }
     /// <summary>

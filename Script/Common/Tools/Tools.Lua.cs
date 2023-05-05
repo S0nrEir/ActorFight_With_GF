@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila.ToolKit
+namespace Aquila.Toolkit
 {
-    public static partial class Tools
+    public partial class Tools
     {
         /// <summary>
         /// Lua工具类

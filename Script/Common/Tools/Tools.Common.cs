@@ -1,12 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Aquila.ToolKit
+namespace Aquila.Toolkit
 {
     /// <summary>
     /// 工具类
     /// </summary>
-    public static partial class Tools
+    public partial class Tools
     {
         public static void SetParent( Transform child, Transform parent )
         {

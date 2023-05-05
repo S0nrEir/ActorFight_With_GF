@@ -22,8 +22,8 @@ namespace Cfg.Enum
         /// </summary>
         Cost = 2,
         /// <summary>
-        /// 直接伤害类
+        /// 物理伤害
         /// </summary>
-        Damage = 3,
+        PhyDamage = 3,
     }
 }
