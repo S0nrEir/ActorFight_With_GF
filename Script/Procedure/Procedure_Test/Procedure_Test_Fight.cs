@@ -14,6 +14,15 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_Test_Fight : ProcedureBase
     {
+        private void TestFight()
+        {
+            if(_load_flag_curr_state != _load_flag_finish)
+                return;
+
+            //test ability
+            GameEntry.Module.GetModule<Module_Proxy_Actor>().AbilityToSingleTarget(_actor_id_1, _actor_id_2, 1);
+        }
+        
         /// <summary>
         /// 该流程加载是否完成
         /// </summary>
@@ -41,27 +50,27 @@ namespace Aquila.Procedure
         {
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
-            var actor_id = ACTOR_ID_POOL.Gen();
+            _actor_id_1 = ACTOR_ID_POOL.Gen();
             var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
                 (
                     role_meta_id: _temp_role_meta_id_1,
-                    actor_id: actor_id,
+                    actor_id: _actor_id_1,
                     asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
-                    new HeroActorEntityData( actor_id ) { _role_meta_id = _temp_role_meta_id_1 }
+                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = _temp_role_meta_id_1 }
                 );
 
             //actor2
-            actor_id = ACTOR_ID_POOL.Gen();
+            _actor_id_2 = ACTOR_ID_POOL.Gen();
             var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
                 (
                     role_meta_id: _temp_role_meta_id_1,
-                    actor_id: actor_id,
+                    actor_id: _actor_id_2,
                     asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
                     grid_x: 1,
                     grid_z: 1,
-                    new HeroActorEntityData( actor_id ) { _role_meta_id = _temp_role_meta_id_2 }
+                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = _temp_role_meta_id_2 }
                 );
 
             if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
@@ -85,7 +94,8 @@ namespace Aquila.Procedure
 
         protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
-            
+            if(Input.GetKeyDown(KeyCode.Space))
+                TestFight();
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -96,7 +106,10 @@ namespace Aquila.Procedure
             LoadScene();
             LoadActor();
         }
-
+        
+        private int _actor_id_2 = 0;
+        private int _actor_id_1 = 0;
+        
         /// <summary>
         /// 加载actor1
         /// </summary>

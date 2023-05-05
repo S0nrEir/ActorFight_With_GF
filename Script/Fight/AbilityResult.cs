@@ -31,7 +31,7 @@ namespace Aquila.Fight
             _dealed_damage += dmg;
         }
 
-        /// <summary>
+        /// <summary>222
         /// 设置状态
         /// </summary>
         public void SetState(AbilityResultDescTypeEnum type)

@@ -95,6 +95,13 @@ namespace  Aquila.Module
             
             //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
             //refresh actor info,refresh actor ui
+
+            Log.Info("<color=green>castor info:</color>");
+            Log.Info(ability_addon.ToString());
+            
+            ability_addon = target_instance.instance.GetAddon<Addon_Ability>();
+            Log.Info("<color=green>target info:</color>");
+            Log.Info(ability_addon.ToString());
             return result;
         }
     }

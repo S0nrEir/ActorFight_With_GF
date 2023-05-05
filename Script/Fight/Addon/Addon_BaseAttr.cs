@@ -159,9 +159,13 @@ namespace Aquila.Fight.Addon
             }
             return false;
         }
-
-
+        
         //----------------------------override----------------------------
+        public override string ToString()
+        {
+            return $"<color=green>curr hp:{GetCorrectionFinalValue(Actor_Attr.Curr_HP).value}</color>\n"+
+                   $"<color=green>curr mp:{GetCorrectionFinalValue(Actor_Attr.Curr_MP).value}</color>";
+        }
 
         public override void Reset()
         {
