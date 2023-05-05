@@ -94,6 +94,7 @@ namespace  Aquila.Module
             ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
             
             //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
+            //refresh actor info,refresh actor ui
             return result;
         }
     }

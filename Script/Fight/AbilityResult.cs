@@ -42,14 +42,14 @@ namespace Aquila.Fight
                 return;
             }
 
-            var int_type = (ushort)type;
-            Toolkit.Tools.SetBitValue(_state_description, int_type , true);
+            var int_type = (uint)type;
+            Toolkit.Tools.SetBitValue_U32(_state_description, int_type , true);
         }
 
         /// <summary>
         /// 技能使用结果的状态描述
         /// </summary>
-        public int _state_description;
+        public uint _state_description;
 
         /// <summary>
         /// 造成的伤害
