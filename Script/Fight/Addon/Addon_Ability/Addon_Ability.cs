@@ -32,6 +32,9 @@ namespace  Aquila.Fight.Addon
 
         public override void OnUpdate(float delta_time,float real_elapsed)
         {
+            if(!_init_flag)
+                return;
+            
             foreach (var spec in _spec_arr)
                 spec.OnUpdate(delta_time);
         }
@@ -110,7 +113,8 @@ namespace  Aquila.Fight.Addon
             base.Init(actor, targetGameObject, targetTransform);
             if(!InitSpec())
                 return;
-            
+
+            _init_flag = true;
         }
         public override void Dispose()
         {
@@ -120,8 +124,9 @@ namespace  Aquila.Fight.Addon
                     ReferencePool.Release(spec);
             }
 
-            _spec_arr = null;
-            _meta = null;
+            _spec_arr  = null;
+            _meta      = null;
+            _init_flag = false;
             base.Dispose();
             
         }
@@ -145,5 +150,10 @@ namespace  Aquila.Fight.Addon
         /// 持有的技能
         /// </summary>
         private AbilitySpecBase[] _spec_arr = null;
+
+        /// <summary>
+        /// 初始化标记
+        /// </summary>
+        private bool _init_flag = false;
     }
 }

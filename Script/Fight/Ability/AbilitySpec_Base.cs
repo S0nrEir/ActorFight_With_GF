@@ -294,7 +294,7 @@ namespace Aquila.Fight
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
             spec.Setup(meta);
             spec._owner = instance;
-            return null;
+            return spec;
         }
     }
 }
