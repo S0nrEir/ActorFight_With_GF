@@ -71,7 +71,7 @@ namespace Aquila.Fight
                 _cost_effect.Apply(_owner,ref result);
 
             foreach (var effect in _effect_list)
-                effect.Apply(effect.Meta.Target_None == 1 ? instance : _owner,ref result);
+                effect.Apply(effect.Meta.Target == 1 ? instance : _owner , ref result);
 
             if (!OnAfterAbility(ref result))
                 return false;

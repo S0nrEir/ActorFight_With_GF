@@ -24,7 +24,7 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
         Take = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
-        Target_None = _buf.ReadInt();
+        Target = _buf.ReadInt();
         EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         PostInit();
     }
@@ -63,9 +63,9 @@ public sealed partial class Effect :  Bright.Config.BeanBase
     /// </summary>
     public float Period { get; private set; }
     /// <summary>
-    /// 目标类型，目前没用
+    /// 目标类型，0=我方，1=敌方
     /// </summary>
-    public int Target_None { get; private set; }
+    public int Target { get; private set; }
     /// <summary>
     /// 影响的数值类型
     /// </summary>
@@ -93,7 +93,7 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         + "ModifierType:" + ModifierType + ","
         + "Take:" + Take + ","
         + "Period:" + Period + ","
-        + "Target_None:" + Target_None + ","
+        + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "}";
     }

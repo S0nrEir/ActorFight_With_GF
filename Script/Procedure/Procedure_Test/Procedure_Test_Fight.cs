@@ -20,7 +20,7 @@ namespace Aquila.Procedure
                 return;
 
             //test ability
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().AbilityToSingleTarget(_actor_id_1, _actor_id_2, 1);
+            GameEntry.Module.GetModule<Module_Proxy_Actor>().AbilityToSingleTarget(_actor_id_1, _actor_id_2, 1000);
         }
         
         /// <summary>
