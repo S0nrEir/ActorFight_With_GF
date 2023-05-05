@@ -68,10 +68,10 @@ namespace Aquila.Fight
             
             //扣除cost
             if(_cost_effect != null)
-                _cost_effect.Apply(_owner);
+                _cost_effect.Apply(_owner,ref result);
 
             foreach (var effect in _effect_list)
-                effect.Apply(effect.Meta.Target_None == 1 ? instance : _owner);
+                effect.Apply(effect.Meta.Target_None == 1 ? instance : _owner,ref result);
 
             if (!OnAfterAbility(ref result))
                 return false;
@@ -94,14 +94,6 @@ namespace Aquila.Fight
         public virtual bool OnAfterAbility(ref AbilityResult result)
         {
             return true;
-        }
-
-        /// <summary>
-        /// 是否可使用技能，可以返回true
-        /// </summary>
-        public virtual bool CanUseAbility()
-        {
-            return CostOK() && CDOK();
         }
 
         /// <summary>

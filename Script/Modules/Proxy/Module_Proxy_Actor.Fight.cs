@@ -50,28 +50,29 @@ namespace  Aquila.Module
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        public AbilityResult AbilityToSingleTarget(TActorBase castor,TActorBase target,int ability_meta_id)
+        public AbilityResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
         {
+            
             //obtain ability result
             var result = default(AbilityResult);
             result.Init();
-            result._castor_actor_id = castor.ActorID;
-            result._target_actor_id = target.ActorID;
+            result._castor_actor_id = castor_id;
+            result._target_actor_id = target_id;
             
             //检查类型走不同的流程
-            if (castor is null || target is null)
-            {
-                Log.Warning("<color=yellow>castor is null || target is null</color>");
-                result.SetState(AbilityResultDescTypeEnum.INVALID);
-                return result;
-            }
+            // if (castor is null || target is null)
+            // {
+            //     Log.Warning("<color=yellow>castor is null || target is null</color>");
+            //     result.SetState(AbilityResultDescTypeEnum.INVALID);
+            //     return result;
+            // }
             
             //拿技能组件
-            var castor_instance = TryGet(castor.ActorID);
+            var castor_instance = TryGet(castor_id);
             Addon_Ability ability_addon = null; 
             if (!castor_instance.has)
             {
-                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
@@ -79,14 +80,14 @@ namespace  Aquila.Module
             ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
             if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
             {
-                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
-            var target_instance = TryGet(target.ActorID);
+            var target_instance = TryGet(target_id);
             if (!target_instance.has)
             {
-                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 

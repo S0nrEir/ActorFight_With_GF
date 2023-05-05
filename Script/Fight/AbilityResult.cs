@@ -18,7 +18,7 @@ namespace Aquila.Fight
         public void Init()
         {
             _state_description = 0b_0000_0000_0000_0000;
-            _dealed_damage     = 0;
+            _dealed_damage     = 0f;
             _target_actor_id   = 0;
             _castor_actor_id   = 0;
         }
@@ -26,7 +26,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 增加造成的伤害
         /// </summary>
-        public void AddDealedDamage(int dmg)
+        public void AddDealedDamage(float dmg)
         {
             _dealed_damage += dmg;
         }
@@ -54,7 +54,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 造成的伤害
         /// </summary>
-        public int _dealed_damage;
+        public float _dealed_damage;
 
         /// <summary>
         /// 目标id

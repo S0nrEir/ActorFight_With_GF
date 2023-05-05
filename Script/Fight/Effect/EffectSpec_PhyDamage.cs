@@ -13,7 +13,7 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_PhyDamage : EffectSpec_Base
     {
-        public override void Apply(Module_Proxy_Actor.ActorInstance instance)
+        public override void Apply(Module_Proxy_Actor.ActorInstance instance,ref AbilityResult result)
         {
             var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();
             if (attr_addon is null)
@@ -33,6 +33,7 @@ namespace Aquila.Fight
             
             var final_value = Tools.Fight.CalcPhysicDamage( Meta.ModifierNumric, def.value );
             attr_addon.SetBaseValue(Meta.EffectType, final_value);
+            result.AddDealedDamage((int)final_value);
         }
 
         public EffectSpec_PhyDamage(Effect meta) : base(meta)
