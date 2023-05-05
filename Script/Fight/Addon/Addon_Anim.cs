@@ -1,5 +1,5 @@
 ﻿using Aquila.Fight.Actor;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon

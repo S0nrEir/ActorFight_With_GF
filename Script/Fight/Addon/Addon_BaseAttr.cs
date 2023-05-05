@@ -105,8 +105,7 @@ namespace Aquila.Fight.Addon
 
         #endregion
 
-        #region priv
-
+        //----------------------priv----------------------
         /// <summary>
         /// 取消所有修正，重置数值为未修正的状态
         /// </summary>
@@ -160,8 +159,6 @@ namespace Aquila.Fight.Addon
             }
             return false;
         }
-
-        #endregion
 
 
         //----------------------------override----------------------------

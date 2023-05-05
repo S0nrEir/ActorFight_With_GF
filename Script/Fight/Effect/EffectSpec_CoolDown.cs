@@ -18,12 +18,6 @@ namespace Aquila.Fight
             _remain = 0f;
         }
         
-        public override void Clear()
-        {
-        }
-
-        
-        
         /// <summary>
         /// 剩余时间
         /// </summary>

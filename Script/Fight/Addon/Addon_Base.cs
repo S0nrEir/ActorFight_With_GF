@@ -31,9 +31,9 @@ namespace Aquila.Fight.Addon
 
         public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            Actor = actor;
+            Actor            = actor;
             TargetGameObject = target_go;
-            TargetTransform = target_transform;
+            TargetTransform  = target_transform;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )

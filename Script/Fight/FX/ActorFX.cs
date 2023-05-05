@@ -1,7 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 

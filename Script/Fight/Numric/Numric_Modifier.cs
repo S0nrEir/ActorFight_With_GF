@@ -40,11 +40,11 @@ namespace Aquila.Numric
         /// </summary>
         public float Calc( float original_val )
         {
-            if ( _modified )
-            {
-                Log.Warning( "this modifier has modified" );
-                return 0f;
-            }
+            // if ( _modified )
+            // {
+            //     Log.Warning( "this modifier has modified" );
+            //     return 0f;
+            // }
 
             switch ( _type )
             {

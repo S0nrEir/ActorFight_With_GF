@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using Aquila.Numric;
 using Aquila.Toolkit;
 using Cfg.common;
@@ -16,15 +17,15 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Cost : EffectSpec_Base
     {
-        public override void Apply(TActorBase actor, Addon_Base[] addon)
+        public override void Apply(Module_Proxy_Actor.ActorInstance instance)
         {
-            var attr_addon = Tools.Actor.FilterAddon<Addon_BaseAttrNumric>(addon);
-            if (attr_addon != null)
-            {
-                var curr_value = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP);
-                curr_value.value += Meta.ModifierNumric;
-                var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
-            }
+            var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if(attr_addon is null)
+                return;
+            
+            var curr_value = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP);
+            curr_value.value += Meta.ModifierNumric;
+            var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
         }
 
         /// <summary>
@@ -37,20 +38,7 @@ namespace Aquila.Fight
 
         public EffectSpec_Cost(Effect meta) : base(meta)
         {
-            _modifier = ReferencePool.Acquire<Numric_Modifier>();
-            _modifier.Setup(meta.ModifierType,meta.ModifierNumric);
         }
-        
-        public override void Clear()
-        {
-            ReferencePool.Release(_modifier);
-            _modifier = null;
-        }
-        
-        /// <summary>
-        /// 对应的数值修改器
-        /// </summary>
-        private Numric_Modifier _modifier = null;
 
     }
    

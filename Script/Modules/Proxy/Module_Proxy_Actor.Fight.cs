@@ -1,3 +1,4 @@
+using Aquila.Fight;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
@@ -49,21 +50,19 @@ namespace  Aquila.Module
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        /// <param name="castor_">施法者</param>
-        /// <param name="target">目标</param>
-        /// <param name="ability_meta_id">技能元数据id</param>
-        /// <returns></returns>
         public AbilityResult AbilityToSingleTarget(TActorBase castor,TActorBase target,int ability_meta_id)
         {
             //obtain ability result
             var result = default(AbilityResult);
             result.Init();
+            result._castor_actor_id = castor.ActorID;
+            result._target_actor_id = target.ActorID;
             
             //检查类型走不同的流程
             if (castor is null || target is null)
             {
                 Log.Warning("<color=yellow>castor is null || target is null</color>");
-                result.SetState(AbilityResultTypeEnum.INVALID);
+                result.SetState(AbilityResultDescTypeEnum.INVALID);
                 return result;
             }
             
@@ -72,91 +71,29 @@ namespace  Aquila.Module
             Addon_Ability ability_addon = null; 
             if (!castor_instance.has)
             {
-                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
             //检查释放条件
             ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
-            if (!ability_addon.CanUseAbility(ability_meta_id))
+            if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
             {
-                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
             var target_instance = TryGet(target.ActorID);
             if (!target_instance.has)
             {
-                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
+            ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
+            
             //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
-            result.SetState(AbilityResultTypeEnum.HIT);
             return result;
         }
-    }
-
-    /// <summary>
-    /// 技能结果
-    /// </summary>
-    public struct AbilityResult
-    {
-        public void Init()
-        {
-            _ability_result = AbilityResultTypeEnum.INVALID;
-            _state_description = 0b_0000_0000_0000_0000;
-        }
-
-        public void SetState(AbilityResultTypeEnum type)
-        {
-            _ability_result = type;
-        }
-
-        /// <summary>
-        /// 是否成功
-        /// </summary>
-        public AbilityResultTypeEnum _ability_result;
-
-        /// <summary>
-        /// 技能结果的状态描述
-        /// </summary>
-        public int _state_description;
-    }
-
-    /// <summary>
-    /// 技能结果
-    /// </summary>
-    public enum AbilityResultTypeEnum
-    {
-        /// <summary>
-        /// 无效
-        /// </summary>
-        INVALID = -1,
-        
-        /// <summary>
-        /// 命中
-        /// </summary>
-        HIT = 0,
-        
-        /// <summary>
-        /// miss
-        /// </summary>
-        MISS,
-        
-        /// <summary>
-        /// 施法者不存在
-        /// </summary>
-        NO_CASTOR,
-        
-        /// <summary>
-        /// 没有目标
-        /// </summary>
-        NO_TARGET,
-        
-        /// <summary>
-        /// 无法使用
-        /// </summary>
-        CANT_USE,
     }
 }

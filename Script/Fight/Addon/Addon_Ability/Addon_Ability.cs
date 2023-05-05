@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Aquila.Fight.Actor;
+using Aquila.Module;
 using Cfg.common;
 using Cfg.role;
 using GameFramework;
@@ -14,19 +15,37 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
+        /// <summary>
+        /// 使用技能
+        /// </summary>
+        public bool UseAbility(int ability_id, Module_Proxy_Actor.ActorInstance target,ref AbilityResult result)
+        {
+            var spec = GetAbilitySpec(ability_id);
+            if (spec is null)
+            {
+                Log.Warning("<color=yellow>Addon_Ability.UseAbility--->spec is null</color>");
+                return false;
+            }
+
+            return spec.UseAbility(target,ref result);
+        }
+
         public override void OnUpdate(float delta_time,float real_elapsed)
         {
             foreach (var spec in _spec_arr)
                 spec.OnUpdate(delta_time);
         }
 
-        public bool CanUseAbility(int meta_id)
+        /// <summary>
+        /// 是否可使用技能，可以返回true
+        /// </summary>
+        public bool CanUseAbility(int meta_id,ref AbilityResult result)
         {
             var spec = GetAbilitySpec(meta_id);
             if (spec is null)
                 return false;
 
-            return spec.CanUseAbility();
+            return spec.CanUseAbility(ref result);
         }
 
         //----------------------priv----------------------

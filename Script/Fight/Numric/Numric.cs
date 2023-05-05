@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using GameFramework;
 using UnityGameFramework.Runtime;
 
@@ -51,11 +52,16 @@ namespace Aquila.Numric
         /// </summary>
         protected virtual float ReCalc()
         {
-            _correction_value = 0f;
+            // _correction_value = 0f;
+            // var iter = _correction.GetEnumerator();
+            // while ( iter.MoveNext() )
+            //     _correction_value += iter.Current.Calc( _value );
+            
+            _correction_value = BaseValue;
             var iter = _correction.GetEnumerator();
-            while ( iter.MoveNext() )
-                _correction_value += iter.Current.Calc( _value );
-
+            while (iter.MoveNext())
+                _correction_value += iter.Current.Calc(_correction_value);
+            
             return _correction_value;
         }
 
