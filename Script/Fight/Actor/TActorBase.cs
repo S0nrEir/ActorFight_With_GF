@@ -1,7 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using GameFramework;
 using System;
 using System.Collections.Generic;
