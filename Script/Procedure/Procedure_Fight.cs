@@ -30,7 +30,7 @@ namespace Aquila.Procedure
             _procedure_owner = procedureOwner;
             if ( !InitializeData( procedureOwner ) )
             {
-                Log.Error( "procedure data initialize Failed!" );
+                Log.Error( "procedure data initialize failed!" );
                 return;
             }
 

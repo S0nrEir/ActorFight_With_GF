@@ -13,7 +13,6 @@ namespace Aquila.Procedure
     /// </summary>
     public partial class Procedure_Test : ProcedureBase
     {
-
         //tip:命令模式：通过接口或者抽象类将输入和输入的逻辑解耦
         private void RunInput()
         {

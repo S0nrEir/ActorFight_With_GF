@@ -136,8 +136,8 @@ namespace Aquila.Procedure
         /// </summary>
         private void NextProcedure()
         {
-            //ChangeState<Procedure_Test_Fight>( _procedure_owner );
-            //return;
+            ChangeState<Procedure_Test_Fight>( _procedure_owner );
+            return;
             if ( GameEntry.Procedure._is_enter_test_scene )
             {
                 ChangeState<Procedure_Test>( _procedure_owner );

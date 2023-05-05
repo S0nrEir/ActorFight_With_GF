@@ -3,7 +3,10 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using GameFramework.Resource;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 using UnityGameFramework.Runtime;
 
@@ -90,11 +93,9 @@ namespace Aquila.Procedure
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_scene );
         }
 
-        //@override:
-
-        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
+        private void OnFireActionPerformed(InputAction.CallbackContext ctx)
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if(ctx.interaction is PressInteraction)
                 TestFight();
         }
 
@@ -105,10 +106,36 @@ namespace Aquila.Procedure
             //加载场景，加载两个测试用的战斗actor
             LoadScene();
             LoadActor();
+            //加载临时输入配置
+            GameEntry.Resource.LoadAsset( @"Assets/Samples/Input System/1.3.0/Simple Demo/SimpleControls.inputactions", new LoadAssetCallbacks
+                (
+                    //succ callback
+                    (assetName, asset, duration, userData) => 
+                    {
+                        var action_asset = ( asset as InputActionAsset );
+                        if ( action_asset is null || action_asset.actionMaps.Count == 0)
+                        {
+                            Debug.LogError( $"action_asset is null || action_asset.actionMaps.Count == 0" );
+                            return;
+                        }
+                        var map = action_asset.FindActionMap("gameplay",true); 
+                        _fire_action = map.FindAction( "fire", true );
+                        _fire_action.performed += OnFireActionPerformed;
+                        _fire_action.Enable();
+                        action_asset.Enable();
+                    },
+                    //faild callback
+                    (assetName, status, errorMessage, userData) =>
+                    {
+                    }
+                ) 
+            );
         }
         
         private int _actor_id_2 = 0;
         private int _actor_id_1 = 0;
+        
+        private InputAction _fire_action = null;
         
         /// <summary>
         /// 加载actor1
@@ -128,7 +155,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 加载完成
         /// </summary>
-        private const int _load_flag_finish = 0b_1000;
+        private const int _load_flag_finish = 0b_0111;
 
         /// <summary>
         /// 当前的加载状态
