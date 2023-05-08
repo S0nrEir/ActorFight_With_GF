@@ -25,7 +25,6 @@ namespace Aquila.Fight
              
             var curr_value = attr_addon.GetCurrMPCorrection();
             curr_value += Meta.ModifierNumric;
-            // var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
             var res = attr_addon.SetCurrMP(curr_value);
         }
 

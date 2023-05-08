@@ -1,8 +1,5 @@
 ﻿using Aquila.Fight.Actor;
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Module;
-using UnityEditor.Search;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -97,22 +94,6 @@ namespace Aquila.Fight.Addon
         {
             _actor_instance = null;
         }
-
-        /// <summary>
-        /// 检查，返回addon错误码
-        /// </summary>
-        // public virtual uint Valid () 
-        // {
-        //     return AddonValidErrorCodeEnum.NONE;
-        // }
-
-        /// <summary>
-        /// 通知actor一个event
-        /// </summary>
-        //public void NotifyActor ( ActorEventEnum type, object[] param )
-        //{
-        //    var intType = (int)type;
-        //}
     }
 
 }
