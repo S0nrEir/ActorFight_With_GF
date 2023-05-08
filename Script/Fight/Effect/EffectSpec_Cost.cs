@@ -22,10 +22,11 @@ namespace Aquila.Fight
             var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();
             if(attr_addon is null)
                 return;
-            
-            var curr_value = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP);
-            curr_value.value += Meta.ModifierNumric;
-            var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
+             
+            var curr_value = attr_addon.GetCurrMPCorrection();
+            curr_value += Meta.ModifierNumric;
+            // var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
+            var res = attr_addon.SetCurrMP(curr_value);
         }
 
         /// <summary>

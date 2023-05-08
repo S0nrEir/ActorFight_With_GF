@@ -54,8 +54,8 @@ namespace Cfg.Enum
         /// </summary>
         SPW = 8,
         /// <summary>
-        /// 职业
+        /// 最大值
         /// </summary>
-        Class = 9,
+        Max = 9,
     }
 }

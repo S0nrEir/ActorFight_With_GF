@@ -6,6 +6,7 @@ using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
+//todo：对于当前生命，当前魔法这类变更没有来源依据（比如modifier）属性，无需使用修正值，只需要baseValue即可
 namespace Aquila.Fight.Addon
 {
     /// <summary>
@@ -45,7 +46,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Attr type, float value_to_set )
+        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Base_Attr type, float value_to_set )
         {
             var int_type = ( int ) type;
             if ( OverLen( int_type ) )
@@ -53,6 +54,40 @@ namespace Aquila.Fight.Addon
 
             _numric_arr[int_type].SetBaseVal( value_to_set );
             return (true, _numric_arr[int_type].BaseValue);
+        }
+        
+        /// <summary>
+        /// 设置HP值
+        /// </summary>
+        public (bool set_succ, float value_after_set) SetCurrHP(float value_to_set)
+        {
+            _hp.SetBaseVal(value_to_set);
+            return (true, _hp.CorrectionValue);
+        }
+
+        /// <summary>
+        /// 设置MP值
+        /// </summary>
+        public (bool set_succ, float value_after_set) SetCurrMP(float value_to_set)
+        {
+            _mp.SetBaseVal(value_to_set);
+            return (true, _mp.CorrectionValue);
+        }
+
+        /// <summary>
+        /// 获取当前hp的修正值
+        /// </summary>
+        public float GetCurrHPCorrection()
+        {
+            return _hp.CorrectionValue;
+        }
+
+        /// <summary>
+        /// 获取当前mp的修正值
+        /// </summary>
+        public float GetCurrMPCorrection()
+        {
+            return _mp.CorrectionValue;
         }
 
         /// <summary>
@@ -128,23 +163,26 @@ namespace Aquila.Fight.Addon
             //#todo设置属性暂时是一个个设置，想个办法走loop
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
             //max hp
-            SetBaseValue( Actor_Attr.Max_HP, meta.HP );
-            //curr hp
-            SetBaseValue( Actor_Attr.Curr_HP, meta.HP );
-            //str
-            SetBaseValue( Actor_Attr.STR, meta.STR );
-            //def
-            SetBaseValue( Actor_Attr.DEF, meta.DEF );
-            //agi
-            SetBaseValue( Actor_Attr.AGI, meta.AGI );
-            //mvt
-            SetBaseValue( Actor_Attr.MVT, meta.MVT );
-            //spw
-            SetBaseValue( Actor_Attr.SPW, meta.SPW );
+            var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );
+            SetCurrHP(res.value_after_set);
             //mp
-            SetBaseValue( Actor_Attr.Max_MP, meta.MP );
+            res = SetBaseValue( Actor_Base_Attr.MP, meta.MP );
+            SetCurrMP(res.value_after_set);
+            //str
+            SetBaseValue( Actor_Base_Attr.STR, meta.STR );
+            //def
+            SetBaseValue( Actor_Base_Attr.DEF, meta.DEF );
+            //agi
+            SetBaseValue( Actor_Base_Attr.AGI, meta.AGI );
+            //mvt
+            SetBaseValue( Actor_Base_Attr.MVT, meta.MVT );
+            //spw
+            SetBaseValue( Actor_Base_Attr.SPW, meta.SPW );
+            
             //curr mp
-            SetBaseValue( Actor_Attr.Curr_MP, meta.MP );
+            // SetBaseValue( Actor_Attr.Curr_MP, meta.MP );
+            // //curr hp
+            // SetBaseValue( Actor_Attr.Curr_HP, meta.HP );
         }
 
         /// <summary>
@@ -163,8 +201,7 @@ namespace Aquila.Fight.Addon
         //----------------------------override----------------------------
         public override string ToString()
         {
-            return $"<color=green>curr hp:{GetCorrectionFinalValue(Actor_Attr.Curr_HP).value}</color>\n"+
-                   $"<color=green>curr mp:{GetCorrectionFinalValue(Actor_Attr.Curr_MP).value}</color>";
+            return $"<color=green>curr hp:{GetCurrHPCorrection()},curr mp:{GetCurrMPCorrection()}</color>";
         }
 
         public override void Reset()
@@ -192,6 +229,10 @@ namespace Aquila.Fight.Addon
                 }
                 _numric_arr = null;
             }
+            ReferencePool.Release(_hp);
+            ReferencePool.Release(_mp);
+            _hp = null;
+            _mp = null;
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BASEATTR;
@@ -199,7 +240,7 @@ namespace Aquila.Fight.Addon
         public override void OnAdd()
         {
             if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Attr.Max ];
+                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max ];
 
             var len = _numric_arr.Length;
             for ( var i = 0; i < len; i++ )
@@ -209,6 +250,9 @@ namespace Aquila.Fight.Addon
                 else
                     Log.Warning( "Numric arr not not null on add!" );
             }
+
+            _hp = ReferencePool.Acquire<Numric.Numric>();
+            _mp = ReferencePool.Acquire<Numric.Numric>();
         }
 
         //----------------------------fields----------------------------
@@ -216,5 +260,15 @@ namespace Aquila.Fight.Addon
         /// 所有的数值集合
         /// </summary>
         private Numric.Numric_ActorBaseAttr[] _numric_arr = null;
+
+        /// <summary>
+        /// 血量
+        /// </summary>
+        private Numric.Numric _hp = null;
+        
+        /// <summary>
+        /// 魔法
+        /// </summary>
+        private Numric.Numric _mp = null;
     }
 }

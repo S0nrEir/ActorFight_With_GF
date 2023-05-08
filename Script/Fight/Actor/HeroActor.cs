@@ -3,6 +3,7 @@ using Aquila.Fight.FSM;
 using Aquila.Toolkit;
 using GameFramework.Event;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -35,24 +36,17 @@ namespace Aquila.Fight.Actor
         #endregion
 
         public ActorStateTypeEnum CurrState => _fsm_addon.CurrState;
-
-        #region public methods
-
-        #endregion
-
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
-
-        protected override void InitAddons(object user_data)
+        
+        protected override void OnInitActor(object user_data)
         {
-            base.InitAddons( user_data );
-            if ( !( user_data is HeroActorEntityData ) )
-            {
-                Log.Warning( "user_data is not HeroActorEntityData" );
-                return;
-            }
-            var data = user_data as HeroActorEntityData;
-            Setup( data._role_meta_id );
-
+            if(user_data is HeroActorEntityData)
+                Setup((user_data as HeroActorEntityData)._role_meta_id);
+        }
+        
+        protected override void AddAddon()
+        {
+            base.AddAddon();
             _base_attr_addon    = AddAddon<Addon_BaseAttrNumric>();
             _data_addon         = AddAddon<Addon_Data>();
             _fsm_addon          = AddAddon<Addon_HeroState>();
@@ -62,6 +56,11 @@ namespace Aquila.Fight.Actor
             //_nav_addon          = AddAddon<Addon_Nav>();
             _fx_addon           = AddAddon<Addon_FX>();
             _ability_addon      = AddAddon<Addon_Ability>();
+        }
+        
+        protected override void InitAddons(Module_Proxy_Actor.ActorInstance instance)
+        {
+            base.InitAddons(instance);
         }
 
         protected override void OnRecycle()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Aquila.Module;
+using UnityEditor.Search;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -22,10 +23,10 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置玩家的actor实例
         /// </summary>
-        public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
-        {
-            _actor_instance = instance;
-        }
+        // public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
+        // {
+        //     _actor_instance = instance;
+        // }
 
         public abstract AddonTypeEnum AddonType { get; }
 
@@ -34,6 +35,11 @@ namespace Aquila.Fight.Addon
             Actor            = actor;
             TargetGameObject = target_go;
             TargetTransform  = target_transform;
+        }
+
+        public virtual void Init(Module_Proxy_Actor.ActorInstance instance)
+        {
+            _actor_instance = instance;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -85,11 +91,11 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// 清理资源，所属actor回收会调用
+        /// 清理资源，所属actor回收时调用
         /// </summary>
         public virtual void Dispose ()
         {
-            
+            _actor_instance = null;
         }
 
         /// <summary>

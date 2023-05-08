@@ -186,11 +186,12 @@ namespace Aquila.Fight
             if (attr_addon is null)
                 return false;
             
-            var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
-            if(!res.get_succ)
-                Log.Warning("!res.get_succ");
-            
-            return _cost_effect.Calc(res.value) > 0;
+            // var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
+            // if(!res.get_succ)
+                // Log.Warning("!res.get_succ");
+
+            var cur_mp = attr_addon.GetCurrMPCorrection();
+            return _cost_effect.Calc(cur_mp) > 0;
         }
 
         /// <summary>
