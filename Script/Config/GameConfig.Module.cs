@@ -7,12 +7,12 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// Ä£¿éÅäÖÃ
+        /// æ¨¡å—é…ç½®
         /// </summary>
         public static class Module
         {
             /// <summary>
-            /// µØ¿éÄ£¿ékeyName
+            /// åœ°å—æ¨¡å—keyName
             /// </summary>
             public const string MODULE_TERRAIN_ENVIR_KEY = "Terrain";
         }

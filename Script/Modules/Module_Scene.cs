@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Aquila.Module
 {
     /// <summary>
-    /// 场景管理模块
+    /// 鍦烘櫙绠＄悊妯″潡
     /// </summary>
     public class Module_Scene : GameFrameworkModuleBase
     {
@@ -35,7 +35,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 地块模块
+        /// 鍦板潡妯″潡
         /// </summary>
         private Module_Terrain _terrain_module = null;
     }

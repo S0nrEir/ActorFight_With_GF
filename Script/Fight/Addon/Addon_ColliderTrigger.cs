@@ -12,7 +12,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 碰撞检测触发类addon，比较特殊的addon，因为要依赖于monobehavior的回调做碰撞检测。
     /// </summary>
-    public class Addon_ColliderTrigger : AddonBase
+    public class Addon_ColliderTrigger : Addon_Base
     {
         /// <summary>
         /// 设置碰撞大小
@@ -83,12 +83,7 @@ namespace Aquila.Fight.Addon
             _triggerdActorIDSet?.Clear();
             _triggerCounter = 0;
         }
-
-        public override void SetEnable ( bool enable ) 
-        {
-            _enable = enable;
-        }
-
+        
         public override void Dispose ()
         {
             base.Dispose();
@@ -142,7 +137,7 @@ namespace Aquila.Fight.Addon
             //boxCollider.center = Vector3.zero;
         }
 
-        public void Init ( AddonBase addon ,Action<object> onTriggerEnter)
+        public void Init ( Addon_Base addon ,Action<object> on_trigger_enter)
         {
             if (addon == null || addon.Actor == null)
                 return;
@@ -152,19 +147,19 @@ namespace Aquila.Fight.Addon
 
             _collider = addon.TargetGameObject.GetOrAddComponent<BoxCollider>();
             _collider.isTrigger = true;
-            _onTriggerEnter = onTriggerEnter;
+            _on_trigger_enter = on_trigger_enter;
             InitFlag = true;
         }
 
         public void Dispose()
         {
             _collider = null;
-            _onTriggerEnter = null;
+            _on_trigger_enter = null;
         }
 
         private void OnTriggerEnter ( Collider other )
         {
-            if (!InitFlag || _onTriggerEnter == null)
+            if (!InitFlag || _on_trigger_enter == null)
                 return;
 
             //#TODO Tag检查，enable检查
@@ -172,7 +167,7 @@ namespace Aquila.Fight.Addon
             //if (actor == null)
             //    throw new GameFrameworkException( "actor == null!" );
 
-            _onTriggerEnter.Invoke( other.gameObject );
+            _on_trigger_enter.Invoke( other.gameObject );
         }
 
         /// <summary>
@@ -183,7 +178,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 碰撞回调
         /// </summary>
-        private Action<object> _onTriggerEnter = null;
+        private Action<object> _on_trigger_enter = null;
 
         private Collider _collider = null;
     }

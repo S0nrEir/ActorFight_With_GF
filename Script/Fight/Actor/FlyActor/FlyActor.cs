@@ -10,9 +10,9 @@ namespace Aquila.Fight.Actor
     /// </summary>
     public abstract class FlyActor : TActorBase
     {
-        public override void Setup (int actorID)
+        public override void Setup (int actor_id)
         {
-            _targetActorID = actorID;
+            _target_actor_id = actor_id;
         }
 
         private void Hide ()
@@ -60,7 +60,7 @@ namespace Aquila.Fight.Actor
             base.OnRecycle();
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT );
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
-            _targetActorID = -1;
+            _target_actor_id = -1;
         }
 
         public override void Reset ()
@@ -80,13 +80,13 @@ namespace Aquila.Fight.Actor
 
         #endregion
 
-        private void DoDamage ( ITakeDamageBehavior otherActor )
+        private void DoDamage ( ITakeDamageBehavior other_actor )
         {
-            if (otherActor is null)
+            if (other_actor is null)
                 return;
 
             //#TODO
-            otherActor.TakeDamage( 0 );
+            other_actor.TakeDamage( 0 );
         }
 
         //子弹只有一种状态，不用加fsm
@@ -96,7 +96,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 目标actorID
         /// </summary>
-        protected int _targetActorID = -1;
+        protected int _target_actor_id = -1;
     }
 
 }

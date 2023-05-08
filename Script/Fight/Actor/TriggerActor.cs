@@ -1,6 +1,6 @@
 ﻿using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -17,12 +17,12 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 触发
         /// </summary>
-        public void Trigger( string assetPath, float duration )
+        public void Trigger( string asset_path, float duration )
         {
             _effectAddon.ShowEffectAsync
                 (
                     ACTOR_ID_POOL.Gen(),
-                    assetPath,
+                    asset_path,
                     duration,
                     ( effectEntityData, effect ) => Tools.Fight.BindEffect( effectEntityData, effect )
                 );

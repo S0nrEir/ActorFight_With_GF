@@ -16,25 +16,25 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
-        public (bool succ, float value) GetCorrectionAttr( int actor_id_, Actor_Attr type_ )
+        public (bool succ, float value) GetCorrectionAttr( int actor_id, Actor_Attr type )
         {
-            var res = TryGet( actor_id_ );
+            var res = TryGet( actor_id );
             if(!res.has)
                 return (false,0f);
 
-            return res.instance.GetAddon<Addon_BaseAttrNumric>().GetCorrectionFinalValue( type_ );
+            return res.instance.GetAddon<Addon_BaseAttrNumric>().GetCorrectionFinalValue( type );
         }
 
         /// <summary>
         /// 获取指定actor的对应基础属性
         /// </summary>
-        public (bool succ, float value) GetActorBaseAttr( int actor_id_ , Actor_Attr type_ )
+        public (bool succ, float value) GetActorBaseAttr( int actor_id , Actor_Attr type )
         {
-            var res = TryGet( actor_id_ );
+            var res = TryGet( actor_id );
             if ( !res.has )
                 return (false, 0f);
 
-            return res.instance.GetAddon<Addon_BaseAttrNumric>().GetBaseValue( type_ );
+            return res.instance.GetAddon<Addon_BaseAttrNumric>().GetBaseValue( type );
         }
 
         #endregion

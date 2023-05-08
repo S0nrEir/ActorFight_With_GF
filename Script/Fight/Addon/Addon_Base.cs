@@ -1,6 +1,7 @@
 ﻿using Aquila.Fight.Actor;
 using System.Collections;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -8,15 +9,31 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// addon基类 by yhc 
     /// </summary>
-    public abstract partial class AddonBase
+    public abstract partial class Addon_Base
     {
+        /// <summary>
+        /// 让该addon持有该actor的所有其他addon
+        /// </summary>
+        public void SetActorAddons(Addon_Base[] addons)
+        {
+            _actor_addons = addons;
+        }
+        
+        /// <summary>
+        /// 设置玩家的actor实例
+        /// </summary>
+        public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
+        {
+            _actor_instance = instance;
+        }
+
         public abstract AddonTypeEnum AddonType { get; }
 
-        public virtual void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            Actor = actor;
-            TargetGameObject = targetGameObject;
-            TargetTransform = targetTransform;
+            Actor            = actor;
+            TargetGameObject = target_go;
+            TargetTransform  = target_transform;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -44,16 +61,15 @@ namespace Aquila.Fight.Addon
 
         public TActorBase Actor { get; private set; }
 
-        //#封装do方法，统一处理
         /// <summary>
-        /// 开关
+        /// actor持有的addon
         /// </summary>
-        public bool Enable => _enable;
+        protected Addon_Base[] _actor_addons = null;
 
         /// <summary>
-        /// 开关默认开
+        /// 持有的actor实例
         /// </summary>
-        protected bool _enable = true;
+        protected Module_Proxy_Actor.ActorInstance _actor_instance = null;
 
         /// <summary>
         /// 当组件被添加到actor上
@@ -79,12 +95,10 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 检查，返回addon错误码
         /// </summary>
-        public virtual uint Valid () 
-        {
-            return AddonValidErrorCodeEnum.NONE;
-        }
-
-        public abstract void SetEnable ( bool enable );
+        // public virtual uint Valid () 
+        // {
+        //     return AddonValidErrorCodeEnum.NONE;
+        // }
 
         /// <summary>
         /// 通知actor一个event

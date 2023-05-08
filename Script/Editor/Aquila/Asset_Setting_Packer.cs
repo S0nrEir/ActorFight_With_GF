@@ -6,14 +6,8 @@ using UnityEngine;
 
 namespace Aquila.Editor
 {
-    /// <summary>
-    /// �༭��������
-    /// </summary>
     public partial class AquilaEditor
     {
-        /// <summary>
-        /// ����ļ���
-        /// </summary>
         private static string[] _include_dic = new string[]
         {
             ".vs",
@@ -24,30 +18,15 @@ namespace Aquila.Editor
             "ProjectSettings",
             "UserSettings",
         };
-
-        /// <summary>
-        /// ������zip�ļ���
-        /// </summary>
+        
         private static string _file_name = @"/AssetSetting.zip";
-
-        /// <summary>
-        /// ��Ӧ��meta�ļ�
-        /// </summary>
+        
         private static string _meta_file_name = @"/AssetSetting.zip.meta";
-
-        /// <summary>
-        /// ����·��
-        /// </summary>
+        
         private static string _create_path = Application.dataPath + _file_name;
-
-        /// <summary>
-        /// Ĭ�ϵ�ѹ������
-        /// </summary>
+        
         private const int _default_compress_level = 5;
-
-        /// <summary>
-        /// ���AssetSettingΪZip�����ҷŵ�applicationĿ¼��
-        /// </summary>
+        
         [MenuItem( "Aquila/PackAssetSetting" )]
         public static void PackAssetSetting()
         {
@@ -79,10 +58,7 @@ namespace Aquila.Editor
             }
             Debug.Log( "<color=white>zip finished.</color>" );
         }
-
-        /// <summary>
-        /// ǰ�ò������������ļ��Ѿ����ڣ���ɾ��
-        /// </summary>
+        
         private static void PrevOp()
         {
             //��ɾ��ԭ�ļ�
@@ -113,10 +89,7 @@ namespace Aquila.Editor
 
             return size;
         }
-
-        /// <summary>
-        /// ѹ�������ļ�
-        /// </summary>
+        
         private static long ZipFile( ZipOutputStream stream, string file )
         {
             if ( !File.Exists( file ) )
@@ -126,7 +99,7 @@ namespace Aquila.Editor
             }
             //512000000 bytes
             FileInfo file_info = new FileInfo( file );
-            byte[] buffer = new byte[file.Length];//�ļ����̫�󣬴��ڻ�������С���ᱨ��������������������Ҫѭ����ȡ
+            byte[] buffer = new byte[file.Length];
             var size = 0l;
             //size = fs.Read( buffer, 0, buffer.Length );
             size = file_info.Length;

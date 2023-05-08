@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Aquila.Fight;
-using Aquila.Fight.Addon;
+﻿using Aquila.Fight;
 using Cfg.common;
-using UnityEngine;
+using Cfg.Enum;
 
-namespace  Aquila.Toolkit
+namespace Aquila.Toolkit
 {
-    public static partial class Tools
+    public partial class Tools
     {
         /// <summary>
         /// 技能工具类
@@ -15,12 +12,22 @@ namespace  Aquila.Toolkit
         public static class Ability
         {
             /// <summary>
-            /// 创建一个技能逻辑实例
+            /// 根据配表类型生成对应的effect逻辑实例
             /// </summary>
-            // public static AbilitySpecBase CreateAbilitySpec(TB_AbilityBase meta_)
-            // {
-            //     
-            // }
+            public static EffectSpec_Base CreateEffectSpec(Effect meta)
+            {
+                switch (meta.Type)
+                {
+                    case EffectType.PhyDamage:
+                        return new EffectSpec_PhyDamage(meta);
+                    
+                    default:
+                        return null;
+                }
+
+                return null;
+            }
+
         }//end class Ability
     }//end class Tools
 }

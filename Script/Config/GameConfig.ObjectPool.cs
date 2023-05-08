@@ -7,12 +7,12 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// ¶ÔÏó³ØÅäÖÃÏà¹Ø
+        /// å¯¹è±¡æ± é…ç½®ç›¸å…³
         /// </summary>
         public static class ObjectPool
         {
             /// <summary>
-            /// µØ¿é¶ÔÏó³ØÃû³Æ
+            /// åœ°å—å¯¹è±¡æ± åç§°
             /// </summary>
             public const string OBJECT_POOL_TERRAIN_NAME = "Object_Terrain";
         }

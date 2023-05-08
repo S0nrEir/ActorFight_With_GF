@@ -1,5 +1,6 @@
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Toolkit;
 using GameFramework;
 
 namespace Aquila.Module
@@ -10,17 +11,16 @@ namespace Aquila.Module
         /// <summary>
         /// 战斗代理Actor类，表示Actor在Proxy中的表示，封装了Actor和对应的Addon
         /// </summary>
-        private class Proxy_Actor_Instance : IReference
+        public class ActorInstance : IReference
         {
-            #region pub
-
-            public void Setup( TActorBase actor, AddonBase[] addons )
+            //-----------------pub-----------------
+            public void Setup( TActorBase actor, Addon_Base[] addons )
             {
                 _actor = actor;
                 _addon_arr = addons;
             }
 
-            public Proxy_Actor_Instance() { }
+            public ActorInstance() { }
 
             /// <summary>
             /// 返回该实例持有的actor
@@ -33,23 +33,20 @@ namespace Aquila.Module
             /// <summary>
             /// 获取actor持有的指定类型的addon，没有返回空
             /// </summary>
-            public T GetAddon<T>() where T : AddonBase
+            public T GetAddon<T>() where T : Addon_Base
             {
-                if ( _addon_arr is null || _addon_arr.Length == 0 )
-                    return null;
-
-                foreach ( var addon in _addon_arr )
-                {
-                    if ( addon is T )
-                        return addon as T;
-                }
-
-                return null;
+                return Tools.Actor.FilterAddon<T>(_addon_arr);
             }
 
-            #endregion
+            /// <summary>
+            /// 获取该实例的苏哟有addon
+            /// </summary>
+            public Addon_Base[] AllAddons()
+            {
+                return _addon_arr;
+            }
 
-            #region fields
+            //-----------------fields-----------------
 
             /// <summary>
             /// 持有的Actor
@@ -59,9 +56,7 @@ namespace Aquila.Module
             /// <summary>
             /// actor持有的addon集合
             /// </summary>
-            private AddonBase[] _addon_arr = null;
-
-            #endregion
+            private Addon_Base[] _addon_arr = null;
 
             public void Clear()
             {

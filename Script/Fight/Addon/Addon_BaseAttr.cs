@@ -26,16 +26,16 @@ namespace Aquila.Fight.Addon
     /// zzz_Numric_Modifier_3 |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3
     /// ----------------------+----------------------+----------------------+----------------
     /// </summary>
-    public class Addon_BaseAttrNumric : AddonBase
+    public class Addon_BaseAttrNumric : Addon_Base
     {
         #region pub
 
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ, float value) GetBaseValue( Actor_Attr type_ )
+        public (bool get_succ, float value) GetBaseValue( Actor_Attr type )
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
                 return (false, 0f);
 
@@ -45,9 +45,9 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Attr type_, float value_to_set )
+        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Attr type, float value_to_set )
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
                 return (false, _numric_arr[int_type].BaseValue);
 
@@ -58,11 +58,11 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type_ )
+        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type ,float default_value = 0f)
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
-                return (false, 0f);
+                return (false, default_value);
 
             return (true, _numric_arr[int_type].CorrectionValue);
         }
@@ -70,43 +70,42 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个装备类型的数值修饰器
         /// </summary>
-        public bool SetEquipModifier( Numric_Modify_Type_Enum type_, Numric_Modifier modifier_ )
+        public bool SetEquipModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
                 return false;
 
-            return _numric_arr[int_type].AddEquipModifier( modifier_ );
+            return _numric_arr[int_type].AddEquipModifier( modifier );
         }
 
         /// <summary>
         /// 设置一个buff类型的数值修饰器
         /// </summary>
-        public bool SetBuffModifier( Actor_Attr type_, Numric_Modifier modifier_ )
+        public bool SetBuffModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
                 return false;
 
-            return _numric_arr[int_type].AddBuffModifier( modifier_ );
+            return _numric_arr[int_type].AddBuffModifier( modifier );
         }
 
         /// <summary>
         /// 设置一个职业修正的数值修饰器
         /// </summary>
-        public bool SetClassModifier( Actor_Attr type_, Numric_Modifier modifier_ )
+        public bool SetClassModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type_;
+            var int_type = ( int ) type;
             if ( OverLen( int_type ) )
                 return false;
 
-            return _numric_arr[int_type].AddClassModifier( modifier_ );
+            return _numric_arr[int_type].AddClassModifier( modifier );
         }
 
         #endregion
 
-        #region priv
-
+        //----------------------priv----------------------
         /// <summary>
         /// 取消所有修正，重置数值为未修正的状态
         /// </summary>
@@ -160,11 +159,13 @@ namespace Aquila.Fight.Addon
             }
             return false;
         }
-
-        #endregion
-
-
+        
         //----------------------------override----------------------------
+        public override string ToString()
+        {
+            return $"<color=green>curr hp:{GetCorrectionFinalValue(Actor_Attr.Curr_HP).value}</color>\n"+
+                   $"<color=green>curr mp:{GetCorrectionFinalValue(Actor_Attr.Curr_MP).value}</color>";
+        }
 
         public override void Reset()
         {
@@ -172,9 +173,9 @@ namespace Aquila.Fight.Addon
             ResetNumricArr();
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_go, target_transform );
         }
 
         public override void Dispose()
@@ -208,11 +209,6 @@ namespace Aquila.Fight.Addon
                 else
                     Log.Warning( "Numric arr not not null on add!" );
             }
-        }
-
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
         }
 
         //----------------------------fields----------------------------

@@ -14,15 +14,15 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 初始化设置
         /// </summary>
-        public void Setup ( int actorID, int effectActorID, int effectMetaID ,int impactID)
+        public void Setup ( int actor_id, int effect_actor_id, int effectMetaID ,int impact_id)
         {
             Clear();
-            ActorID = actorID;
-            EffectActorID = effectActorID;
+            ActorID = actor_id;
+            EffectActorID = effect_actor_id;
             //#todo分离Effect表数据
             //EffectMeta = TableManager.GetEffectByID( effectMetaID, 0 );
             //EffectMeta = null;
-            ImpactID = impactID;
+            ImpactID = impact_id;
         }
 
         public void Clear ()
@@ -58,10 +58,10 @@ namespace Aquila.Fight.Buff
         /// </summary>
         private float _remainTime = 0f;
 
-        public static BuffEntity Gen (int actorID,int effectActorID,int effectMetaID,int impactID)
+        public static BuffEntity Gen (int actor_id,int effect_actor_id,int effect_meta_id,int impact_id)
         {
             var entity = ReferencePool.Acquire<BuffEntity>();
-            entity.Setup( actorID, effectActorID, effectMetaID ,impactID);
+            entity.Setup( actor_id, effect_actor_id, effect_meta_id ,impact_id);
             return entity;
         }
     }

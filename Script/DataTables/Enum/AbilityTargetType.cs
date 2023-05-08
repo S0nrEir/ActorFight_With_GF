@@ -9,21 +9,30 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Effect影响的tag类型
+    /// Ability目标类型
     /// </summary>
-    public enum EffectTagType
+    [System.Flags]
+    public enum AbilityTargetType
     {
         /// <summary>
-        /// 无效0
+        /// 自身
         /// </summary>
-        Invalid = 0,
+        Self = 1,
         /// <summary>
-        /// 消耗类型枚举，消耗某项数值1
+        /// 敌方
         /// </summary>
-        Cost = 1,
+        Enemy = 2,
         /// <summary>
-        /// 冷却10
+        /// 友方
         /// </summary>
-        CoolDown = 2,
+        Ally = 4,
+        /// <summary>
+        /// 中立
+        /// </summary>
+        Neutral = 8,
+        /// <summary>
+        /// 自身和友方单位
+        /// </summary>
+        Self_Ally = Self|Ally,
     }
 }

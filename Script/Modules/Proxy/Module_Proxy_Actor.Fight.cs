@@ -1,3 +1,4 @@
+using Aquila.Fight;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
@@ -49,100 +50,50 @@ namespace  Aquila.Module
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        /// <param name="castor_">施法者</param>
-        /// <param name="target_">目标</param>
-        /// <param name="ability_meta_id_">技能元数据id</param>
-        /// <returns></returns>
-        public AbilityResult AbilityToSingleTarget(TActorBase castor_,TActorBase target_,int ability_meta_id_)
+        public AbilityHitResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
         {
             //obtain ability result
-            var result = default(AbilityResult);
+            var result = default(AbilityHitResult);
             result.Init();
-            
-            //检查类型走不同的流程
-            if (castor_ is null || target_ is null)
-            {
-                Log.Warning("<color=yellow>castor_ is null || target_ is null</color>");
-                result.SetState(AbilityResultTypeEnum.INVALID);
-                return result;
-            }
+            result._castor_actor_id = castor_id;
+            result._target_actor_id = target_id;
             
             //拿技能组件
-            var castor_instance = TryGet(castor_.ActorID);
+            var castor_instance = TryGet(castor_id);
             Addon_Ability ability_addon = null; 
             if (!castor_instance.has)
             {
-                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
 
             //检查释放条件
             ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
-            if (!ability_addon.CanUseAbility(ability_meta_id_))
+            if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
             {
-                result.SetState(AbilityResultTypeEnum.CANT_USE);
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
                 return result;
             }
+
+            var target_instance = TryGet(target_id);
+            if (!target_instance.has)
+            {
+                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+                return result;
+            }
+
+            ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
             
-            result.SetState(AbilityResultTypeEnum.HIT);
+            //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
+            //refresh actor info,refresh actor ui
+
+            Log.Info("<color=green>castor info:</color>");
+            Log.Info(ability_addon.ToString());
+            
+            ability_addon = target_instance.instance.GetAddon<Addon_Ability>();
+            Log.Info("<color=green>target info:</color>");
+            Log.Info(ability_addon.ToString());
             return result;
         }
-    }
-
-    /// <summary>
-    /// 技能结果
-    /// </summary>
-    public struct AbilityResult
-    {
-        public void Init()
-        {
-            _ability_result = AbilityResultTypeEnum.INVALID;
-        }
-
-        public void SetState(AbilityResultTypeEnum type)
-        {
-            _ability_result = type;
-        }
-
-        /// <summary>
-        /// 是否成功
-        /// </summary>
-        public AbilityResultTypeEnum _ability_result;
-    }
-
-    /// <summary>
-    /// 技能结果
-    /// </summary>
-    public enum AbilityResultTypeEnum
-    {
-        /// <summary>
-        /// 无效
-        /// </summary>
-        INVALID = -1,
-        
-        /// <summary>
-        /// 命中
-        /// </summary>
-        HIT = 0,
-        
-        /// <summary>
-        /// miss
-        /// </summary>
-        MISS,
-        
-        /// <summary>
-        /// 施法者不存在
-        /// </summary>
-        NO_CASTOR,
-        
-        /// <summary>
-        /// 没有目标
-        /// </summary>
-        NO_TARGET,
-        
-        /// <summary>
-        /// 无法使用
-        /// </summary>
-        CANT_USE,
     }
 }

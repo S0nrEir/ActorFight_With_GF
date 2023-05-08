@@ -7,7 +7,7 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// È«¾ÖÅäÖÃTagsÀà
+        /// å…¨å±€é…ç½®Tagsç±»
         /// </summary>
         public static class Tags
         {
@@ -17,12 +17,12 @@ namespace Aquila.Config
             public static string ACTOR = "Actor";
 
             /// <summary>
-            /// Õ½¶·µØ¿é¸ù½Úµã
+            /// æˆ˜æ–—åœ°å—æ ¹èŠ‚ç‚¹
             /// </summary>
             public static string TERRAIN_ROOT = "TerrainRoot";
 
             /// <summary>
-            /// µØ¿é½Úµã
+            /// åœ°å—èŠ‚ç‚¹
             /// </summary>
             public static string TERRAIN_BLOCK = "TerrainBlock";
         }

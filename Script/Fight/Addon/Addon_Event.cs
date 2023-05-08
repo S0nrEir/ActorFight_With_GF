@@ -9,7 +9,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// actor的Event组件，只保留于Actor内部，event也只能通知到自己的Actor，这样做是为了让actor，state，addon互相解耦
     /// </summary>
-    public class Addon_Event : AddonBase
+    public class Addon_Event : Addon_Base
     {
         #region public
 
@@ -19,11 +19,11 @@ namespace Aquila.Fight.Addon
         public void Trigger( ActorEventEnum type, object[] param )
         {
             //Debug.Log( $"<color=green>Actor{Actor.ActorID}--->Trigger:{type}</color>" );
-            var intType = ( int ) type;
-            if ( !_eventDic.TryGetValue( intType, out var action ) )
+            var int_type = ( int ) type;
+            if ( !_eventDic.TryGetValue( int_type, out var action ) )
                 return;
 
-            action?.Invoke( intType, param );
+            action?.Invoke( int_type, param );
         }
 
         /// <summary>
@@ -74,12 +74,6 @@ namespace Aquila.Fight.Addon
         {
             _eventDic = new Dictionary<int, Action<int, object[]>>();
         }
-
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         public override void Reset()
         {
             base.Reset();
@@ -93,14 +87,9 @@ namespace Aquila.Fight.Addon
             _eventDic = null;
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
-        }
-
-        public override uint Valid()
-        {
-            return _eventDic is null ? base.Valid() : AddonValidErrorCodeEnum.NONE_EVENT;
+            base.Init( actor, target_go, target_transform );
         }
 
         /// <summary>
