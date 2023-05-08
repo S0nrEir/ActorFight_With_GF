@@ -47,8 +47,12 @@ namespace Aquila.Module
             }
 
             _proxy_actor_dic.TryGetValue( id, out var actor_case );
-            actor_case.Clear();
-            return _proxy_actor_dic.Remove( id ) && _registered_id_set.Remove( id );
+            if (actor_case != null)
+            {
+                actor_case.Clear();
+                return _proxy_actor_dic.Remove( id ) && _registered_id_set.Remove( id );
+            }
+            return false;
         }
 
         #endregion

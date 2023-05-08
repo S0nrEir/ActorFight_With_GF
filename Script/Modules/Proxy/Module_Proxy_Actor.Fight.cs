@@ -50,22 +50,13 @@ namespace  Aquila.Module
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        public AbilityResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
+        public AbilityHitResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
         {
-            
             //obtain ability result
-            var result = default(AbilityResult);
+            var result = default(AbilityHitResult);
             result.Init();
             result._castor_actor_id = castor_id;
             result._target_actor_id = target_id;
-            
-            //检查类型走不同的流程
-            // if (castor is null || target is null)
-            // {
-            //     Log.Warning("<color=yellow>castor is null || target is null</color>");
-            //     result.SetState(AbilityResultDescTypeEnum.INVALID);
-            //     return result;
-            // }
             
             //拿技能组件
             var castor_instance = TryGet(castor_id);

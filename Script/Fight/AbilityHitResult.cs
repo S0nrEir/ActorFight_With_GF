@@ -8,9 +8,9 @@ using XLua.Cast;
 namespace Aquila.Fight
 {
     /// <summary>
-    /// 描述技能的使用结果
+    /// 描述技能的命中结果
     /// </summary>
-    public struct AbilityResult
+    public struct AbilityHitResult
     {
         /// <summary>
         /// 初始化

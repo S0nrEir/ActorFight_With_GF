@@ -57,7 +57,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能
         /// </summary>
-        public virtual bool UseAbility(Module_Proxy_Actor.ActorInstance instance,ref AbilityResult result)
+        public virtual bool UseAbility(Module_Proxy_Actor.ActorInstance instance,ref AbilityHitResult result)
         {
             if (!OnPreAbility(ref result))
                 return false;
@@ -83,7 +83,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能前置函数
         /// </summary>
-        public virtual bool OnPreAbility(ref AbilityResult result)
+        public virtual bool OnPreAbility(ref AbilityHitResult result)
         {
             return true;
         }
@@ -91,7 +91,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能后置函数
         /// </summary>
-        public virtual bool OnAfterAbility(ref AbilityResult result)
+        public virtual bool OnAfterAbility(ref AbilityHitResult result)
         {
             return true;
         }
@@ -99,7 +99,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 是否可使用技能，可以返回true
         /// </summary>
-        public virtual bool CanUseAbility(ref AbilityResult result)
+        public virtual bool CanUseAbility(ref AbilityHitResult result)
         {
             var succ = true;
             if (!CostOK())

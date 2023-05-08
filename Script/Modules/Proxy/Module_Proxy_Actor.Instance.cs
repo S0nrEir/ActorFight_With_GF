@@ -13,8 +13,7 @@ namespace Aquila.Module
         /// </summary>
         public class ActorInstance : IReference
         {
-            #region pub
-
+            //-----------------pub-----------------
             public void Setup( TActorBase actor, Addon_Base[] addons )
             {
                 _actor = actor;
@@ -47,9 +46,7 @@ namespace Aquila.Module
                 return _addon_arr;
             }
 
-            #endregion
-
-            #region fields
+            //-----------------fields-----------------
 
             /// <summary>
             /// 持有的Actor
@@ -60,8 +57,6 @@ namespace Aquila.Module
             /// actor持有的addon集合
             /// </summary>
             private Addon_Base[] _addon_arr = null;
-
-            #endregion
 
             public void Clear()
             {

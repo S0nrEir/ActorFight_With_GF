@@ -18,7 +18,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility(int ability_id, Module_Proxy_Actor.ActorInstance target,ref AbilityResult result)
+        public bool UseAbility(int ability_id, Module_Proxy_Actor.ActorInstance target,ref AbilityHitResult result)
         {
             var spec = GetAbilitySpec(ability_id);
             if (spec is null)
@@ -42,7 +42,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 是否可使用技能，可以返回true
         /// </summary>
-        public bool CanUseAbility(int meta_id,ref AbilityResult result)
+        public bool CanUseAbility(int meta_id,ref AbilityHitResult result)
         {
             var spec = GetAbilitySpec(meta_id);
             if (spec is null)
@@ -128,7 +128,6 @@ namespace  Aquila.Fight.Addon
             _meta      = null;
             _init_flag = false;
             base.Dispose();
-            
         }
 
         public override void Reset()

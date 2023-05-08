@@ -69,8 +69,7 @@ namespace Aquila.Fight.Actor
         {
 
         }
-
-
+        
         public void SetQuaternion( Quaternion rotation_to_set )
         {
             CachedTransform.rotation = rotation_to_set;
@@ -152,26 +151,25 @@ namespace Aquila.Fight.Actor
 
             gameObject.tag = tag;
         }
-
-        /// <summary>
-        /// 为actor的所有addon设置他们持有的actor的Addon
-        /// </summary>
+        
         //#todo:有没有更好的办法让actor的addon持有其他兄弟addon？
-        private void SetAllAddons()
+        /// <summary>
+        /// 设置所有addon持有自身的actorInstance和其他addon
+        /// </summary>
+        private void SetAllAddonInstance(Module_Proxy_Actor.ActorInstance instance)
         {
-            var addon_arr = GetAllAddon();
-            if(addon_arr is null || addon_arr.Length == 0)
+            var addons = GetAllAddon();
+            if(addons is null || addons.Length == 0)
                 return;
 
-            foreach (var addon in _addonDic.Values)
-                addon.SetActorAddons(addon_arr);
+            foreach (var addon in addons)
+                addon.SetActorInstace(instance);
         }
 
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
@@ -186,6 +184,8 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
+            SetAllAddonInstance(null);
+            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister(ActorID);
             UnRegister();
             HostID = GlobalVar.INVALID_GUID;
             ExtensionRecycle();
@@ -207,7 +207,11 @@ namespace Aquila.Fight.Actor
         {
             base.OnInit( userData );
             InitAddons( userData );
-            SetAllAddons();
+            // SetAllAddons();
+            
+            var res = GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
+            if(res.succ)
+                SetAllAddonInstance(res.instance);
             
             _allAddonInitDone = true;
         }
