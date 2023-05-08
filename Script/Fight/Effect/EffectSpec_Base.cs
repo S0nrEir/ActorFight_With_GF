@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using Aquila.Numric;
 using Cfg.common;
 using GameFramework;
-using UnityEngine;
 
 namespace Aquila.Fight
 {
@@ -14,25 +12,37 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base
     {
-        protected EffectSpec_Base(Effect meta_)
+        protected EffectSpec_Base(Effect meta)
         {
-            Meta = meta_;
+            Meta = meta;
+            _modifier = ReferencePool.Acquire<Numric_Modifier>();
+            _modifier.Setup(Meta.ModifierType,Meta.ModifierNumric);
         }
 
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply(TActorBase actor, AddonBase[] addon_)
+        public virtual void Apply(Module_Proxy_Actor.ActorInstance instance,ref AbilityHitResult result)
         {
             
         }
 
+        public virtual void Clear()
+        {
+            ReferencePool.Release(_modifier);
+            _modifier = null;
+        }
+        
         /// <summary>
         /// 元数据
         /// </summary>
         public Effect Meta { get; private set; } = null;
 
-        public abstract void Clear();
+        /// <summary>
+        /// 对应的数值修改器
+        /// </summary>
+        protected Numric_Modifier _modifier = null;
+
     }
    
 }

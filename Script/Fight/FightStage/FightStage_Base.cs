@@ -13,7 +13,7 @@ namespace  Aquila.Fight
         /// <summary>
         /// 阶段开始
         /// </summary>
-        public virtual bool Start(AbilityResult result)
+        public virtual bool Start(AbilityHitResult result)
         {
             return true;
         }
@@ -21,7 +21,7 @@ namespace  Aquila.Fight
         /// <summary>
         /// 阶段结束
         /// </summary>
-        public virtual bool Finish(AbilityResult result)
+        public virtual bool Finish(AbilityHitResult result)
         {
             return true;
         }

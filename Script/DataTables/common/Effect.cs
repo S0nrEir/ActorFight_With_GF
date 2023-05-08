@@ -22,7 +22,10 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         Type = (Enum.EffectType)_buf.ReadInt();
         ModifierNumric = _buf.ReadFloat();
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
-        Take = (Enum.EffectTakeType)_buf.ReadInt();
+        Take = (Enum.DurationPolicy)_buf.ReadInt();
+        Period = _buf.ReadFloat();
+        Target = _buf.ReadInt();
+        EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         PostInit();
     }
 
@@ -40,7 +43,7 @@ public sealed partial class Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.EffectTagType Tag { get; private set; }
     /// <summary>
-    /// Effect类型
+    /// Effect的类型
     /// </summary>
     public Enum.EffectType Type { get; private set; }
     /// <summary>
@@ -52,9 +55,21 @@ public sealed partial class Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.NumricModifierType ModifierType { get; private set; }
     /// <summary>
-    /// 生效时机
+    /// 生效策略
     /// </summary>
-    public Enum.EffectTakeType Take { get; private set; }
+    public Enum.DurationPolicy Take { get; private set; }
+    /// <summary>
+    /// 生效周期，单位毫秒
+    /// </summary>
+    public float Period { get; private set; }
+    /// <summary>
+    /// 目标类型，0=我方，1=敌方
+    /// </summary>
+    public int Target { get; private set; }
+    /// <summary>
+    /// 影响的数值类型
+    /// </summary>
+    public Enum.Actor_Attr EffectType { get; private set; }
 
     public const int __ID__ = -458280172;
     public override int GetTypeId() => __ID__;
@@ -77,6 +92,9 @@ public sealed partial class Effect :  Bright.Config.BeanBase
         + "ModifierNumric:" + ModifierNumric + ","
         + "ModifierType:" + ModifierType + ","
         + "Take:" + Take + ","
+        + "Period:" + Period + ","
+        + "Target:" + Target + ","
+        + "EffectType:" + EffectType + ","
         + "}";
     }
     

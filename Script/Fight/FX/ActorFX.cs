@@ -1,7 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -92,7 +92,7 @@ namespace Aquila.Fight
         {
             base.OnHide( isShutdown, userData );
             //#todo这里对entity进行扩展
-            var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ActorEffect ).Helper as EntityGroupHelperBase;
+            var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ACTOR_FX ).Helper as EntityGroupHelperBase;
             if ( helperNode != null )
                 CachedTransform.SetParent( helperNode.transform );
         }
@@ -151,12 +151,12 @@ namespace Aquila.Fight
             TimesUpFlag = flag;
         }
 
-        public void Setup ( int id, float surTime, int actorID, string path )
+        public void Setup ( int id, float sur_time, int actor_id, string path )
         {
             ID = id;
-            SurvivalTime = surTime;
+            SurvivalTime = sur_time;
             AssetPath = path;
-            ActorID = actorID.ToString();
+            ActorID = actor_id.ToString();
         }
 
         public int ID = -1;

@@ -40,13 +40,13 @@ namespace Aquila.Fight
         /// <summary>
         /// 从流程类型中获取一个值
         /// </summary>
-        public float GetValue( FightPrcdTypeEnum type, float defaultValue = 0f )
+        public float GetValue( FightPrcdTypeEnum type, float default_value = 0f )
         {
             if ( _attachValueDic is null )
-                return defaultValue;
+                return default_value;
 
-            _attachValueDic.TryGetValue( ( int ) type, out defaultValue );
-            return defaultValue;
+            _attachValueDic.TryGetValue( ( int ) type, out default_value );
+            return default_value;
         }
 
         /// <summary>

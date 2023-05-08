@@ -1,7 +1,7 @@
 ﻿using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Module;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -30,7 +30,7 @@ namespace Aquila.Procedure
             _procedure_owner = procedureOwner;
             if ( !InitializeData( procedureOwner ) )
             {
-                Log.Error( "procedure data initialize Failed!" );
+                Log.Error( "procedure data initialize failed!" );
                 return;
             }
 

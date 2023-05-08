@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Aquila.ToolKit;
+using Aquila.Toolkit;
 using UnityEngine;
 using GameFramework;
 
@@ -15,36 +15,31 @@ namespace Aquila.GameTag
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove(UInt32 tag_to_remove_)
+        public void Remove(UInt32 tag_to_remove)
         {
-            _tag = Tools.SetBitValue_U32(_tag,tag_to_remove_,false);
+            _tag = Tools.SetBitValue_U32(_tag,tag_to_remove,false);
         }
 
         /// <summary>
         /// 添加一个Tag
         /// </summary>
-        public void Add(UInt32 bit_to_add_)
+        public void Add(UInt32 bit_to_add)
         {
-            _tag = Tools.SetBitValue_U32(_tag, bit_to_add_, true); 
+            _tag = Tools.SetBitValue_U32(_tag, bit_to_add, true); 
         }
 
         /// <summary>
         /// 是否包含某项tag
         /// </summary>
         /// <param name="bit_tag_">要检查的位tag</param>
-        public bool Contains(UInt32 bit_tag_)
+        public bool Contains(UInt32 bit_tag)
         {
-            return Tools.GetBitValue_U32(_tag, bit_tag_ - 1);
+            return Tools.GetBitValue_U32(_tag, bit_tag - 1);
         }
 
         public TagContainer()
         {
         }
-
-        // public void Clear()
-        // {
-        //     _tag = 0;
-        // }
         
         /// <summary>
         /// 保存的tag

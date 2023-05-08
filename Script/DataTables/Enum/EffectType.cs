@@ -21,5 +21,9 @@ namespace Cfg.Enum
         /// 消耗类Effect
         /// </summary>
         Cost = 2,
+        /// <summary>
+        /// 物理伤害
+        /// </summary>
+        PhyDamage = 3,
     }
 }

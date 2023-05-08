@@ -7,12 +7,12 @@ namespace Aquila.Config
     public partial class GameConfig
     {
         /// <summary>
-        /// ³¡¾°Ïà¹Ø
+        /// åœºæ™¯ç›¸å…³
         /// </summary>
         public class Scene
         {
             /// <summary>
-            /// Ö÷Ïà»úÄ¬ÈÏÊÀ½ç¿Õ¼ä×ø±êÎ»ÖÃ//#todo½â¾öexcelÖĞÊı¾İÊ××Ö·û²»ÄÜÎª'-'µÄÇé¿ö
+            /// ä¸»ç›¸æœºé»˜è®¤ä¸–ç•Œç©ºé—´åæ ‡ä½ç½®//#todoè§£å†³excelä¸­æ•°æ®é¦–å­—ç¬¦ä¸èƒ½ä¸º'-'çš„æƒ…å†µ
             /// </summary>
             /// </summary>
             public static Vector3 MAIN_CAMERA_DEFAULT_POSITION { get; } = new Vector3( -2.75f, 5.95f, -3.91f );

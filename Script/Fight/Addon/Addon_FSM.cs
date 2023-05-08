@@ -9,26 +9,23 @@ namespace Aquila.Fight.Addon
     /// <summary>
     ///为什么没用GF的FSM，因为Actor想要通过自身来对状态进行控制，而不是像GF的FSM那样以状态为主导，连Actor自身的逻辑都要包含在GFFSM中
     /// </summary>
-    public class Addon_FSM : AddonBase
+    public class Addon_FSM : Addon_Base
     {
         public ActorStateTypeEnum CurrState => ( ActorStateTypeEnum ) ActorFsm.CurrState._stateID;
 
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( int targetStateID, object enterParam, object exitParam )
+        public bool SwitchTo( int target_state_id, object enter_param, object exit_param )
         {
-            if ( !Enable )
-                return false;
-
             //没有持有该状态
-            if ( !ActorFsm.HasState( targetStateID ) )
+            if ( !ActorFsm.HasState( target_state_id ) )
             {
-                Debug.Log( "dosent has state:" + targetStateID );
+                Debug.Log( "dosent has state:" + target_state_id );
                 return false;
             }
 
-            ActorFsm.SwitchTo( targetStateID, enterParam, exitParam );
+            ActorFsm.SwitchTo( target_state_id, enter_param, exit_param );
 
 //#if UNITY_EDITOR
 //            var inspector = Actor.gameObject.GetComponent<ActorInspector>();
@@ -41,17 +38,14 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( ActorStateTypeEnum type, object enterParam, object exitParam )
+        public bool SwitchTo( ActorStateTypeEnum type, object enter_param, object exit_param )
         {
-            if ( !Enable )
-                return false;
-
-            return SwitchTo( ( int ) type, enterParam, exitParam );
+            return SwitchTo( ( int ) type, enter_param, exit_param );
         }
 
-        public override void Init( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( actor, target_go, target_transform );
         }
 
         /// <summary>
@@ -104,21 +98,11 @@ namespace Aquila.Fight.Addon
             SwitchTo( StateList[0]._stateID, null, null );
         }
 
-        public override void SetEnable( bool enable )
-        {
-            _enable = enable;
-        }
-
         /// <summary>
         /// fsm
         /// </summary>
         public ActorFSM ActorFsm { get; private set; }
-
-        /// <summary>
-        /// 指定类型的acator
-        /// </summary>
-        //public virtual TActorBase TypedActor { get; }
-
+        
         /// <summary>
         /// state list,放在第一个位置的state将成为默认进入的state
         /// </summary>

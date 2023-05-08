@@ -4,27 +4,27 @@ namespace Aquila.Config
     {
 
         /// <summary>
-        /// ≤„º∂≈‰÷√œ‡πÿ
+        /// Â±ÇÁ∫ßÈÖçÁΩÆÁõ∏ÂÖ≥
         /// </summary>
         public static class Layer
         {
             /// <summary>
-            /// µÿøÈ≤„º∂
+            /// Âú∞ÂùóÂ±ÇÁ∫ß
             /// </summary>
             public const string LAYER_TERRAIN_BLOCK = "TerrainBlock";
 
             /// <summary>
-            /// floor≤„º∂
+            /// floorÂ±ÇÁ∫ß
             /// </summary>
             public const string LAYER_NAME_FLOOR = "Floor";
 
             /// <summary>
-            /// ƒ¨»œ≤„º∂
+            /// ÈªòËÆ§Â±ÇÁ∫ß
             /// </summary>
             public const string LAYER_NAME_DEFAULT = "Default";
 
             /// <summary>
-            /// ∫Û¥¶¿Ì≤„º∂
+            /// ÂêéÂ§ÑÁêÜÂ±ÇÁ∫ß
             /// </summary>
             public const string LAYER_NAME_POST_PROCESSING = "PostProcessing";
         }

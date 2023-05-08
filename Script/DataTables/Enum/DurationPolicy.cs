@@ -9,9 +9,9 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// 技能生效时机
+    /// Effect生效策略
     /// </summary>
-    public enum EffectTakeType
+    public enum DurationPolicy
     {
         /// <summary>
         /// 立即

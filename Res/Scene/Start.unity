@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9762d8803919d84cbf340506f65a27f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameEntry: {fileID: 1085289478}
+  _game_entry: {fileID: 1085289478}
 --- !u!1 &1064450293
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +767,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_EntranceProcedureTypeName
-      value: Aquila.Procedure.Procedure_Enter
+      value: Aquila.Procedure.Procedure_Fight
       objectReference: {fileID: 0}
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.size

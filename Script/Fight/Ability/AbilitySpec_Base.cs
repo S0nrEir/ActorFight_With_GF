@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using Aquila.Fight.Actor;
+using Aquila.Fight.Addon;
 using Aquila.GameTag;
+using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.common;
 using Cfg.Enum;
 using GameFramework;
@@ -22,69 +27,94 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove(UInt32 bit_to_remove_)
+        public void Remove(UInt32 bit_to_remove)
         {
-            _ability_tag.Remove(bit_to_remove_ - 1);
+            _ability_tag.Remove(bit_to_remove - 1);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void Add(UInt32 bit_to_add_)
+        public void Add(UInt32 bit_to_add)
         {
-            _ability_tag.Add(bit_to_add_ - 1);
+            _ability_tag.Add(bit_to_add - 1);
         }
 
         /// <summary>
         /// 包含某个tag
         /// </summary>
-        public bool ContainsTag(UInt32 bit_tag_)
+        public bool ContainsTag(UInt32 bit_tag)
         {
-            return _ability_tag.Contains(bit_tag_);
+            return _ability_tag.Contains(bit_tag);
         }
 
-        public virtual void Setup(AbilityBase meta_)
+        public virtual void Setup(AbilityBase meta)
         {
-            Meta = meta_;
-            InitCDEffect();
-            InitCostEffect();
+            Meta = meta;
+            InitEffectSpec();
         }
         
         /// <summary>
         /// 使用技能
         /// </summary>
-        public virtual bool UseAbility()
+        public virtual bool UseAbility(Module_Proxy_Actor.ActorInstance instance,ref AbilityHitResult result)
         {
-            OnPreAbility();
+            if (!OnPreAbility(ref result))
+                return false;
+            
             //刷新CD
-            _cd_effect._remain = _cd_effect._total_duration;
-            //todo扣除cost
-            OnAfterAbility();
+            if (_cd_effect != null)
+                _cd_effect._remain = _cd_effect._total_duration;
+            
+            //扣除cost
+            if(_cost_effect != null)
+                _cost_effect.Apply(_owner,ref result);
+
+            foreach (var effect in _effect_list)
+                effect.Apply(effect.Meta.Target == 1 ? instance : _owner , ref result);
+
+            if (!OnAfterAbility(ref result))
+                return false;
+            
+            result.SetState(AbilityResultDescTypeEnum.HIT);
             return true;
         }
 
         /// <summary>
         /// 使用技能前置函数
         /// </summary>
-        public virtual void OnPreAbility()
+        public virtual bool OnPreAbility(ref AbilityHitResult result)
         {
-            
+            return true;
         }
 
         /// <summary>
         /// 使用技能后置函数
         /// </summary>
-        public virtual void OnAfterAbility()
+        public virtual bool OnAfterAbility(ref AbilityHitResult result)
         {
-            
+            return true;
         }
 
         /// <summary>
         /// 是否可使用技能，可以返回true
         /// </summary>
-        public virtual bool CanUseAbility()
+        public virtual bool CanUseAbility(ref AbilityHitResult result)
         {
-            return CostOK() && CDOK();
+            var succ = true;
+            if (!CostOK())
+            {
+                succ = false;
+                result.SetState(AbilityResultDescTypeEnum.COST_NOT_ENOUGH);
+            }
+
+            if (!CDOK())
+            {
+                succ = false;
+                result.SetState(AbilityResultDescTypeEnum.CD_NOT_OK);
+            }
+
+            return succ;
         }
 
         /// <summary>
@@ -92,21 +122,31 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Clear()
         {
-            //处理CD和Cost
-            Meta = null;
+            if (_effect_list != null && _effect_list.Count != 0)
+            {
+                foreach (var effect in _effect_list)
+                    effect?.Clear();
+            
+                _effect_list.Clear();    
+            }
+
+            _effect_list = null;
+            Meta         = null;
             _ability_tag = null;
-            _cd_effect.Clear();
-            _cost_effect.Clear();
-            _cd_effect = null;
+            _cd_effect   = null;
             _cost_effect = null;
+            _owner       = null;
+            //处理CD和Cost
+            _cost_effect?.Clear();
+            _cd_effect?.Clear();
         }
 
         /// <summary>
         /// 刷帧，处理CD
         /// </summary>
-        public virtual void OnUpdate(float delta_time_)
+        public virtual void OnUpdate(float delta_time)
         {
-            _cd_effect._remain -= delta_time_;
+            _cd_effect._remain -= delta_time;
         }
 
         //-------------------priv-------------------
@@ -117,6 +157,20 @@ namespace Aquila.Fight
         {
             return _cd_effect._remain <= 0f;
         }
+        
+        /// <summary>
+        /// 拿到该技能持有的指定effectSpec，拿不到返回null
+        /// </summary>
+        protected EffectSpec_Base GetSpec(int id)
+        {
+            foreach (var effect_spec in _effect_list)
+            {
+                if (effect_spec.Meta.id == id)
+                    return effect_spec;
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// 检查技能消耗
@@ -125,14 +179,26 @@ namespace Aquila.Fight
         {
             if (_cost_effect is null)
                 return true;
-
+            
             //#todo技能消耗目前暂时只消耗魔法值，剩下的后面再补
             //因为都独立开来了，拿不到技能所属的addon和actor，暂时想到的解决办法：通过proxy拿他们的代理实例
-            var meta = _cost_effect.Meta;
-            if(meta.ModifierType == )
-            return _cost_effect.Calc() > 0;
+            var attr_addon = _owner.GetAddon<Addon_BaseAttrNumric>();
+            if (attr_addon is null)
+                return false;
+            
+            var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
+            if(!res.get_succ)
+                Log.Warning("!res.get_succ");
+            
+            return _cost_effect.Calc(res.value) > 0;
         }
 
+        /// <summary>
+        /// 该技能持有的effect逻辑集合
+        /// </summary>
+        //#todo:能不能改成不用list
+        private List<EffectSpec_Base> _effect_list = null;
+        
         /// <summary>
         /// 表数据
         /// </summary>
@@ -153,63 +219,66 @@ namespace Aquila.Fight
         /// </summary>
         private EffectSpec_Cost _cost_effect = null;
         
+        /// <summary>
+        /// 持有的actor代理实例，技能的持有者
+        /// </summary>
+        public Module_Proxy_Actor.ActorInstance _owner = null;
+        
         public AbilitySpecBase()
         {
             _ability_tag = new TagContainer();
         }
 
         // private bool _active = false;
+        /// <summary>
+        /// 初始化Cost相关逻辑
+        /// </summary>
+        private void InitCostEffect(Effect effect)
+        {
+            _cost_effect = new EffectSpec_Cost(effect);
+        }
         
         /// <summary>
         /// 初始化技能CD相关逻辑
         /// </summary>
-        private void InitCDEffect()
+        private void InitCDEffect(Effect effect)
         {
-            _cd_effect = null;
-            if(Meta is null)
-                return;
-
-            Effect effect_meta = null;
-            foreach (var effect_id in Meta.effects)
-            {
-                effect_meta = GameEntry.DataTable.Table<TB_Effect>().Get(effect_id);
-                if (effect_meta is null)
-                {
-                    Log.Warning($"effect_meta is null,id:{effect_id}");
-                    continue;
-                }
-
-                if (effect_meta.Type == EffectType.CoolDown)
-                {
-                    _cd_effect = new EffectSpec_CoolDown(effect_meta);
-                    return;
-                }
-            }
+            _cd_effect = new EffectSpec_CoolDown(effect);
         }
 
         /// <summary>
-        /// 初始化Cost相关逻辑
+        /// 
         /// </summary>
-        private void InitCostEffect()
+        private void InitEffectSpec()
         {
-            _cost_effect = null;
-            if(Meta is null)
+            if(Meta is null || Meta.effects is null)
                 return;
 
+            //默认持有16个effect
+            _effect_list = new List<EffectSpec_Base>(16);
             Effect effect_meta = null;
             foreach (var effect_id in Meta.effects)
             {
                 effect_meta = GameEntry.DataTable.Table<TB_Effect>().Get(effect_id);
                 if (effect_meta is null)
                 {
-                    Log.Warning($"effect_meta is null,id:{effect_id}");
+                    Log.Warning("InitEffectSpec--->effect_meta is null");
                     continue;
                 }
 
-                if (effect_meta.Type == EffectType.Cost)
+                switch (effect_meta.Type)
                 {
-                    _cost_effect = new EffectSpec_Cost(effect_meta);
-                    return;
+                    case EffectType.Cost:
+                        InitCostEffect(effect_meta);
+                        break;
+                    
+                    case EffectType.CoolDown:
+                        InitCDEffect(effect_meta);
+                        break;
+                    
+                    default:
+                        _effect_list.Add(Tools.Ability.CreateEffectSpec(effect_meta));
+                        break;
                 }
             }
         }
@@ -217,14 +286,15 @@ namespace Aquila.Fight
         /// <summary>
         /// 根据表格配置生成一个spec实例
         /// </summary>
-        /// <param name="meta_">技能元数据</param>
-        /// <param name="addon_arr_">携带的各个组件</param>
+        /// <param name="meta">技能元数据</param>
+        /// <param name="instance">携带的各个组件</param>
         /// <returns></returns>
-        public static AbilitySpecBase Gen( AbilityBase meta_)
+        public static AbilitySpecBase Gen( AbilityBase meta,Module_Proxy_Actor.ActorInstance instance)
         {
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
-            spec.Setup(meta_);
-            return null;
+            spec.Setup(meta);
+            spec._owner = instance;
+            return spec;
         }
     }
 }

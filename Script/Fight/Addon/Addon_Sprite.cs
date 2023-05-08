@@ -8,7 +8,7 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// Actor的sprite组件类
     /// </summary>
-    public class SpriteAddon : AddonBase
+    public class SpriteAddon : Addon_Base
     {
         public override AddonTypeEnum AddonType => AddonTypeEnum.SPRITE;
 
@@ -22,11 +22,7 @@ namespace Aquila.Fight.Addon
             }
             //#todo_spriteRender组件初始化
         }
-
-        public override void SetEnable( bool enable )
-        {
-        }
-
+        
         /// <summary>
         /// 精灵图渲染器
         /// </summary>

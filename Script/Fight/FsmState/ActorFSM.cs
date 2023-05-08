@@ -13,20 +13,20 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 状态切换
         /// </summary>
-        public void SwitchTo ( int targetStateID, object enterParam, object exitParam )
+        public void SwitchTo ( int target_state_id, object enter_param, object exit_param )
         {
             if (_currState != null)
-                _currState.OnLeave(exitParam);
+                _currState.OnLeave(exit_param);
 
-            var next = GetState( targetStateID );
+            var next = GetState( target_state_id );
             if (next is null)
             {
-                Debug.LogError( $"<color=red>cant find state with id:{targetStateID}/color>" );
+                Debug.LogError( $"<color=red>cant find state with id:{target_state_id}/color>" );
                 return;
             }
 
             _currState = next;
-            _currState.OnEnter( enterParam );
+            _currState.OnEnter( enter_param );
         }
 
         /// <summary>
@@ -51,12 +51,12 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 是否有某个state
         /// </summary>
-        public bool HasState ( int stateID )
+        public bool HasState ( int state_id )
         {
             if (_stateDic.Count == 0)
                 return false;
 
-            return _stateDic.TryGetValue( stateID, out var _ );
+            return _stateDic.TryGetValue( state_id, out var _ );
         }
 
         /// <summary>

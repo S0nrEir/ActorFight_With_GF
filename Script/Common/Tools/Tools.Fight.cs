@@ -1,18 +1,35 @@
-﻿using Aquila.Config;
-using Aquila.Fight;
+﻿using Aquila.Fight;
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace Aquila.ToolKit
+namespace Aquila.Toolkit
 {
-    public static partial class Tools
+    public partial class Tools
     {
         /// <summary>
         /// 战斗相关工具类
         /// </summary>
         public static class Fight
         {
+            /// <summary>
+            /// 对一个单体目标使用技能
+            /// </summary>
+            public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
+            {
+                var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+            }
+
+            /// <summary>
+            /// 计算物理伤害，返回计算后的生命值
+            /// </summary>
+            public static float CalcPhysicDamage(float damage, float def)
+            {
+                var final = Mathf.Floor(damage - def);
+                return final > 0 ? final : 1f;
+            }
+
             /// <summary>
             /// 获取一个xz坐标的坐标key，失败返回-1
             /// </summary>
@@ -74,21 +91,21 @@ namespace Aquila.ToolKit
             /// </summary>
             /// <param name="effectEntityData">特效实体数据</param>
             /// <param name="effect">特效实体</param>
-            public static void BindEffect( ActorEffectEntityData effectEntityData, ActorFX effect )
+            public static void BindEffect( ActorEffectEntityData effect_entity_data, ActorFX effect )
             {
                 var actor = effect.Actor;
-                if ( actor == null || effectEntityData is null )
+                if ( actor == null || effect_entity_data is null )
                     return;
 
-                if ( string.IsNullOrEmpty( effectEntityData._effectPointName ) )
+                if ( string.IsNullOrEmpty( effect_entity_data._effectPointName ) )
                     return;
 
                 //#todo还是改用find方式了，因为你不知道又有别的什么go会被放进来
-                var effectPoint = actor.CachedTransform.Find( effectEntityData._effectPointName );
+                var effectPoint = actor.CachedTransform.Find( effect_entity_data._effectPointName );
                 if ( effectPoint == null )
                 {
                     effectPoint = Tools.AddChild( actor.CachedTransform );
-                    effectPoint.gameObject.name = effectEntityData._effectPointName;
+                    effectPoint.gameObject.name = effect_entity_data._effectPointName;
 
                     effectPoint.localScale = UnityEngine.Vector3.one;
                     effectPoint.localEulerAngles = UnityEngine.Vector3.zero;
@@ -102,7 +119,7 @@ namespace Aquila.ToolKit
                 effect.CachedTransform.SetParent( effectPoint );
                 effect.CachedTransform.localScale = UnityEngine.Vector3.one;
 
-                effect.CachedTransform.localPosition = effectEntityData._localPositionOffset;
+                effect.CachedTransform.localPosition = effect_entity_data._localPositionOffset;
                 effect.CachedTransform.eulerAngles = UnityEngine.Vector3.zero;
                 effect.CachedTransform.localEulerAngles = UnityEngine.Vector3.zero;
             }
