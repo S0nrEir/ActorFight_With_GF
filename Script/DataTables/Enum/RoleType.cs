@@ -9,25 +9,17 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Effect的类型
+    /// 角色类型
     /// </summary>
-    public enum EffectType
+    public enum RoleType
     {
         /// <summary>
-        /// 冷却类effect
+        /// 我方可操作的角色单位
         /// </summary>
-        CoolDown = 1,
+        Hero = 1,
         /// <summary>
-        /// 消耗类Effect
+        /// 随从，我方的AI单位
         /// </summary>
-        Cost = 2,
-        /// <summary>
-        /// 物理伤害
-        /// </summary>
-        PhyDamage = 3,
-        /// <summary>
-        /// 召唤物
-        /// </summary>
-        Summon = 4,
+        Minion = 2,
     }
 }

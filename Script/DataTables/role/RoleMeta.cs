@@ -31,6 +31,7 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
         SPW = _buf.ReadFloat();
         Class = _buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AbilityBaseID = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AbilityBaseID[i] = _e;}}
+        RoleType = (Enum.RoleType)_buf.ReadInt();
         PostInit();
     }
 
@@ -95,6 +96,7 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
     /// 角色持有的技能，索引AbilityBase表
     /// </summary>
     public int[] AbilityBaseID { get; private set; }
+    public Enum.RoleType RoleType { get; private set; }
 
     public const int __ID__ = 1444141619;
     public override int GetTypeId() => __ID__;
@@ -125,6 +127,7 @@ public sealed partial class RoleMeta :  Bright.Config.BeanBase
         + "SPW:" + SPW + ","
         + "Class:" + Class + ","
         + "AbilityBaseID:" + Bright.Common.StringUtil.CollectionToString(AbilityBaseID) + ","
+        + "RoleType:" + RoleType + ","
         + "}";
     }
     
