@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
@@ -27,23 +26,23 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove(UInt32 bit_to_remove)
+        public void RemoveTag(ushort bit_to_remove)
         {
-            _ability_tag.Remove(bit_to_remove - 1);
+            _ability_tag.Remove(bit_to_remove);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void Add(UInt32 bit_to_add)
+        public void AddTag(ushort bit_to_add)
         {
-            _ability_tag.Add(bit_to_add - 1);
+            _ability_tag.Add(bit_to_add);
         }
 
         /// <summary>
         /// 包含某个tag
         /// </summary>
-        public bool ContainsTag(UInt32 bit_tag)
+        public bool ContainsTag(ushort bit_tag)
         {
             return _ability_tag.Contains(bit_tag);
         }
@@ -77,6 +76,7 @@ namespace Aquila.Fight
                 return false;
             
             result.SetState(AbilityResultDescTypeEnum.HIT);
+            _ability_tag.Add(0);
             return true;
         }
 
@@ -147,6 +147,10 @@ namespace Aquila.Fight
         public virtual void OnUpdate(float delta_time)
         {
             _cd_effect._remain -= delta_time;
+            if (_cd_effect._remain <= 0 && _ability_tag.Contains(0))
+            {
+                _ability_tag.Remove(0);
+            }
         }
 
         //-------------------priv-------------------
@@ -191,7 +195,15 @@ namespace Aquila.Fight
                 // Log.Warning("!res.get_succ");
 
             var cur_mp = attr_addon.GetCurrMPCorrection();
-            return _cost_effect.Calc(cur_mp) > 0;
+            return _cost_effect.Calc(cur_mp) >= 0;
+        }
+
+        /// <summary>
+        /// tag发生改变的回调
+        /// </summary>
+        private void OnTagChange(Int64 old_tag, Int64 new_tag)
+        {
+            Log.Info($"tag changed,tag:{new_tag}");
         }
 
         /// <summary>
@@ -227,10 +239,9 @@ namespace Aquila.Fight
         
         public AbilitySpecBase()
         {
-            _ability_tag = new TagContainer();
+            _ability_tag = new TagContainer(OnTagChange);
         }
-
-        // private bool _active = false;
+        
         /// <summary>
         /// 初始化Cost相关逻辑
         /// </summary>

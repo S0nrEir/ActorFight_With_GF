@@ -42,8 +42,8 @@ namespace Aquila.Fight
                 return;
             }
 
-            var int_type = (uint)type;
-            Toolkit.Tools.SetBitValue_U32(_state_description, int_type , true);
+            var int_type = (ushort)type;
+            Toolkit.Tools.SetBitValue_i64(_state_description, int_type , true);
         }
 
         /// <summary>
