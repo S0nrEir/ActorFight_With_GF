@@ -14,15 +14,30 @@ namespace  Aquila.Extension
         /// <summary>
         /// 获取一个指定类型的对象池对象，拿不到返回null
         /// </summary>
-        public Aquila_Object_Base GenObject<T>() where T : Aquila_Object_Base
+        public T GenObject<T>() where T : Aquila_Object_Base
         {
             var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
-            if (pool == null)
+            if (pool is null)
             {
                 Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
                 return null;
             }
             return pool.Spawn() as T;
+        }
+
+        /// <summary>
+        /// 回收
+        /// </summary>
+        public bool UnSpawn<T>(object obj) where T : Aquila_Object_Base
+        {
+            var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
+            if (pool is null)
+            {
+                Log.Warning("<color=yellow>Component_InfoBoard.UnSpawn--->pool == null</color>");
+                return false;
+            }
+            pool.Unspawn(obj);
+            return true;
         }
 
         //-----------------------priv-----------------------

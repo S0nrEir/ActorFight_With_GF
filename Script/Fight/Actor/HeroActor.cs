@@ -49,13 +49,13 @@ namespace Aquila.Fight.Actor
             base.AddAddon();
             _base_attr_addon = AddAddon<Addon_BaseAttrNumric>();
             _data_addon      = AddAddon<Addon_Data>();
+            _ability_addon   = AddAddon<Addon_Ability>();
             _fsm_addon       = AddAddon<Addon_HeroState>();
             _anim_addon      = AddAddon<Addon_Anim>();
             _move_addon      = AddAddon<Addon_Move>();
-            _info_addon      = AddAddon<Addon_InfoBoard>();
+            // _info_addon      = AddAddon<Addon_InfoBoard>();
             //_nav_addon        = AddAddon<Addon_Nav>();
             _fx_addon        = AddAddon<Addon_FX>();
-            _ability_addon   = AddAddon<Addon_Ability>();
             _hp_addon        = AddAddon<Addon_HP>();
         }
         
@@ -123,9 +123,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 信息板组件
         /// </summary>
-        private Addon_InfoBoard _info_addon { get; set; } = null;
-
-        
+        // private Addon_InfoBoard _info_addon { get; set; } = null;
         
         /// <summary>
         /// 导航组件

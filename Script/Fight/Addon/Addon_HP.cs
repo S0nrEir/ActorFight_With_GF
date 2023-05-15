@@ -39,13 +39,14 @@ namespace Aquila.Fight.Addon
 
         public override void Init(TActorBase actor, GameObject target_go, Transform target_transform)
         {
-            base.Init(actor, target_go, target_transform); 
-            _hp_obj = GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Spawn();
+            base.Init(actor, target_go, target_transform);
+            _hp_obj = GameEntry.InfoBoard.GenObject<Object_HPBar>();
         }
 
         public override void Dispose()
         {
-            GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
+            // GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
+            GameEntry.InfoBoard.UnSpawn<Object_HPBar>(_hp_obj);
             base.Dispose();
         }
 
