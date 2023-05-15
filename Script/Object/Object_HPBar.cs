@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Aquila.Config;
+using Aquila.Item;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Aquila.ObjectPool
 
         public void Setup(GameObject go)
         {
-            _hp_bar = Tools.GetComponent<HPBarItem>(go.transform);
+            _hp_bar = Tools.GetComponent<Item_HPBar>(go.transform);
             if (_hp_bar == null)
                 Log.Warning("<color=yellow>_hp_bar == null</color>");
         }
@@ -61,39 +62,6 @@ namespace Aquila.ObjectPool
             return obj;
         }
 
-        private HPBarItem _hp_bar = null;
-    }
-
-    public class HPBarItem : MonoBehaviour
-    {
-        public float Value()
-        {
-            return _hp_slider.value;
-        }
-
-        /// <summary>
-        /// 设置slider的信息
-        /// </summary>
-        public void SetValue(int curr,int max)
-        {
-            if(_hp_slider == null)
-            {
-                Log.Info("<color=yellow>_hp_slider == null</color>");
-                return;
-            }
-            
-            _hp_slider.value = (float)curr / max;
-            _max_num_text.text = max.ToString();
-            _curr_num_text.text = curr.ToString();
-        }
-
-        public void Init()
-        {
-            
-        }
-        
-        [SerializeField] private Slider _hp_slider = null;
-        [SerializeField] private Text _max_num_text;
-        [SerializeField] private Text _curr_num_text;
+        private Item_HPBar _hp_bar = null;
     }
 }
