@@ -20,7 +20,7 @@ namespace Aquila.ObjectPool
             _hp_bar.SetValue(curr,max);
         }
 
-        public void Setup(GameObject go)
+        public override void Setup(GameObject go)
         {
             _hp_bar = Tools.GetComponent<Item_HPBar>(go.transform);
             if (_hp_bar == null)
@@ -57,8 +57,8 @@ namespace Aquila.ObjectPool
         public static Object_HPBar Gen(GameObject go)
         {
             var obj = ReferencePool.Acquire<Object_HPBar>();
-            obj.Initialize(GameConfig.ObjectPool.OBJECT_POOL_HP_BAR_NAME,go);
-            obj.Setup(go);
+            obj.Initialize(go);
+            // obj.Setup(go);
             return obj;
         }
 

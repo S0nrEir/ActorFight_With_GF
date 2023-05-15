@@ -40,7 +40,7 @@ namespace Aquila.Fight.Addon
         public override void Init(TActorBase actor, GameObject target_go, Transform target_transform)
         {
             base.Init(actor, target_go, target_transform);
-            _hp_obj = GameEntry.InfoBoard.GenObject<Object_HPBar>();
+            _hp_obj = GameEntry.InfoBoard.GenHPBar();
             // _hp_obj.Setup();
             //set pos
             

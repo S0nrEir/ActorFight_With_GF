@@ -5,12 +5,16 @@ using UnityEngine;
 
 namespace Aquila.ObjectPool
 {
-
     /// <summary>
     /// 对象池对象扩展基类,Target基于GameObject
     /// </summary>
     public abstract class Aquila_Object_Base : ObjectBase
     {
+        
+        public virtual void Setup(GameObject go)
+        {
+        }
+        
         protected override void OnSpawn()
         {
             base.OnSpawn();

@@ -66,8 +66,6 @@ namespace Aquila.Procedure
         private void PreloadInfoBoard()
         {
             GameEntry.InfoBoard.Preload();
-            _preload_flags |= _infoboard_load_finish;
-            OnPreLoadFinished();
         }
 
         /// <summary>

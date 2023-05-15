@@ -14,22 +14,52 @@ namespace  Aquila.Extension
     public class Component_InfoBoard : GameFrameworkComponent
     {
         /// <summary>
+        /// 获取一个hpbar，获取不到返回null
+        /// </summary>
+        public Object_HPBar GenHPBar()
+        {
+            Object_HPBar obj = GenObject<Object_HPBar>();
+            if (obj is null)//对象池里没对象，先创建
+            {
+                if (_hp_bar_prefab == null)
+                {
+                    Log.Warning("<color=red>Component_InfoBoard.GenHPBar()--->obj is null</color>");
+                    return null;
+                }
+
+                var go = Instantiate(_hp_bar_prefab) as GameObject;
+                InitTransform(go.transform);
+                //spanw obj
+                var pool = GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar));
+                pool.Register(Object_HPBar.Gen(go), false );
+                obj = pool.Spawn();
+            }
+            obj.Setup(obj.Target as GameObject);
+            return obj;
+        }
+        
+        /// <summary>
+        /// 初始化变换
+        /// </summary>
+        private void InitTransform(Transform tran)
+        {
+            tran.SetParent(_root);
+            tran.localScale = Vector3.one;
+        }
+        
+        /// <summary>
         /// 获取一个指定类型的对象池对象，拿不到返回null
         /// </summary>
-        public T GenObject<T>() where T : Aquila_Object_Base
+        private T GenObject<T>() where T : Aquila_Object_Base
         {
-            return null;
-            // var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
-            // if (pool is null)
-            // {
-            //     Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
-            //     return null;
-            // }
-            //
-            // var obj = pool.Spawn() as T;
-            // GameEntry.Resource.LoadAsset();
-            //
-            // return false;
+            var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
+            if (pool is null)
+            {
+                Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
+                return null;
+            }
+            
+            return pool.Spawn() as T;
         }
 
         /// <summary>
@@ -74,7 +104,7 @@ namespace  Aquila.Extension
                                 Log.Warning("<color=yellow>procedure preload is null</color>");
                                 return;
                             }
-                            //#todo:主动通知流程加载完成，因为GF只有异步加载，所以先这样做了
+                            //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
                             procedure.NotifyFlag(Procedure_Prelaod._infoboard_load_finish);
                         },
                         (assetName, status, errorMessage, userData) =>
