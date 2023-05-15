@@ -19,17 +19,17 @@ namespace Aquila.GameTag
         {
             var old_tag = _tag;
             _tag = Tools.SetBitValue_i64(_tag,tag_to_remove,false);
-            _tag_change_callback?.Invoke(old_tag,_tag);
+            _tag_change_callback?.Invoke(old_tag,_tag,tag_to_remove);
         }
 
         /// <summary>
         /// 添加一个Tag
         /// </summary>
-        public void Add(ushort bit_to_add)
+        public void Add(ushort tag_to_add)
         {
             var old_tag = _tag;
-            _tag = Tools.SetBitValue_i64(_tag, bit_to_add, true);
-            _tag_change_callback?.Invoke(old_tag,_tag);
+            _tag = Tools.SetBitValue_i64(_tag, tag_to_add, true);
+            _tag_change_callback?.Invoke(old_tag,_tag,tag_to_add);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Aquila.GameTag
         {
         }
 
-        public TagContainer(Action<Int64,Int64> callback)
+        public TagContainer(Action<Int64,Int64,ushort> callback)
         {
             _tag_change_callback = callback;
         }
@@ -57,6 +57,6 @@ namespace Aquila.GameTag
         /// <summary>
         /// tag发生变化时的回调
         /// </summary>
-        private Action<Int64, Int64> _tag_change_callback = null;
+        private Action<Int64, Int64,ushort> _tag_change_callback = null;
     }
 }
