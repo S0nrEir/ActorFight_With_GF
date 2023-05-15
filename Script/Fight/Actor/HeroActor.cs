@@ -47,15 +47,16 @@ namespace Aquila.Fight.Actor
         protected override void AddAddon()
         {
             base.AddAddon();
-            _base_attr_addon    = AddAddon<Addon_BaseAttrNumric>();
-            _data_addon         = AddAddon<Addon_Data>();
-            _fsm_addon          = AddAddon<Addon_HeroState>();
-            _anim_addon         = AddAddon<Addon_Anim>();
-            _move_addon         = AddAddon<Addon_Move>();
-            _hp_addon           = AddAddon<Addon_InfoBoard>();
-            //_nav_addon          = AddAddon<Addon_Nav>();
-            _fx_addon           = AddAddon<Addon_FX>();
-            _ability_addon      = AddAddon<Addon_Ability>();
+            _base_attr_addon = AddAddon<Addon_BaseAttrNumric>();
+            _data_addon      = AddAddon<Addon_Data>();
+            _fsm_addon       = AddAddon<Addon_HeroState>();
+            _anim_addon      = AddAddon<Addon_Anim>();
+            _move_addon      = AddAddon<Addon_Move>();
+            _info_addon      = AddAddon<Addon_InfoBoard>();
+            //_nav_addon        = AddAddon<Addon_Nav>();
+            _fx_addon        = AddAddon<Addon_FX>();
+            _ability_addon   = AddAddon<Addon_Ability>();
+            _hp_addon        = AddAddon<Addon_HP>();
         }
         
         protected override void InitAddons(Module_Proxy_Actor.ActorInstance instance)
@@ -122,8 +123,10 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 信息板组件
         /// </summary>
-        private Addon_InfoBoard _hp_addon { get; set; } = null;
+        private Addon_InfoBoard _info_addon { get; set; } = null;
 
+        
+        
         /// <summary>
         /// 导航组件
         /// </summary>
@@ -148,6 +151,11 @@ namespace Aquila.Fight.Actor
         /// 技能组件
         /// </summary>
         private Addon_Ability _ability_addon = null;
+
+        /// <summary>
+        /// 血条显示组件
+        /// </summary>
+        private Addon_HP _hp_addon = null;
     }
 
     public class HeroActorEntityData : EntityData

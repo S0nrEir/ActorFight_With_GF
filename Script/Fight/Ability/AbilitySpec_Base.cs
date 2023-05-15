@@ -201,7 +201,7 @@ namespace Aquila.Fight
         /// <summary>
         /// tag发生改变的回调
         /// </summary>
-        private void OnTagChange(Int64 old_tag, Int64 new_tag)
+        private void OnTagChange(Int64 old_tag, Int64 new_tag,ushort changed_tag)
         {
             Log.Info($"tag changed,tag:{new_tag}");
         }
