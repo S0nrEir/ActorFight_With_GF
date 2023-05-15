@@ -49,6 +49,12 @@ namespace Aquila
             private set;
         }
 
+        public static Component_InfoBoard InfoBoard
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 初始化自定义组件
         /// </summary>
@@ -59,6 +65,7 @@ namespace Aquila
             Lua       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
             Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
             TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
+            InfoBoard = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
         }
     }
 }

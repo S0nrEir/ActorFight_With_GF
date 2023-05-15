@@ -44,6 +44,7 @@ namespace Aquila.Procedure
 
             PreLoadTables();
             PreLoadObejct();
+            PreloadInfoBoard();
             //测试配表
             //GameEntry.DataTable.Test();
         }
@@ -53,13 +54,22 @@ namespace Aquila.Procedure
             base.OnLeave( procedureOwner, isShutdown );
         }
 
+        private void PreloadInfoBoard()
+        {
+            GameEntry.InfoBoard.Preload();
+            _preload_flags |= _infoboard_load_finish;
+            OnPreLoadFinished();
+        }
+
         /// <summary>
         /// 预加载数据表
         /// </summary>
         private void PreLoadTables()
         {
-            _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
+            // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
+            _preload_flags |= _table_load_finish;
             OnPreLoadFinished();
+            
             return;
 
             //---------------------------废弃代码----------------------------------
@@ -127,7 +137,8 @@ namespace Aquila.Procedure
                 pool.Unspawn( obj.Target );
 
             obj_arr = null;
-            _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
+            // _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
+            _preload_flags |= _terrain_load_finish;
             OnPreLoadFinished();
         }
 
@@ -172,25 +183,30 @@ namespace Aquila.Procedure
         private int _preload_flags = 0;
 
         /// <summary>
-        /// 数据表加载标记位偏移位置
-        /// </summary>
-        private const ushort _table_load_flag_bit_offset = 0;
-
-        /// <summary>
-        /// 地块加载标记位偏移位置
-        /// </summary>
-        private const ushort _terrain_load_flag_bit_offset = 1;
-
-        /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preload_state_finish = 0;
+        private const int _preload_state_finish = 0b_0000_0111;
 
         /// <summary>
         /// 预加载初始化标记
         /// </summary>
-        private const int _preload_state_init = 0b_0000_0000_0011;
+        private const int _preload_state_init = 0b_0000_0000_0000;
 
+        /// <summary>
+        /// 地块加载完成标记
+        /// </summary>
+        private const int _terrain_load_finish = 0b_0000_0000_0001;
+
+        /// <summary>
+        /// 数据表加载完成
+        /// </summary>
+        private const int _table_load_finish = 0b_0000_0000_0010;
+
+        /// <summary>
+        /// 对象池对象加载完成标记
+        /// </summary>
+        private const int _infoboard_load_finish = 0b_0000_0000_0100;
+        
         /// <summary>
         /// 状态机拥有者
         /// </summary>
