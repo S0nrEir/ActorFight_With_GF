@@ -9,6 +9,14 @@ namespace Aquila.Toolkit
     /// </summary>
     public partial class Tools
     {
+        /// <summary>
+        /// 世界坐标转换到canvas屏幕坐标
+        /// </summary>
+        public Vector3 World2Screen(Vector3 world_pos)
+        {
+            return Vector3.zero;
+        }
+
         public static void SetParent( Transform child, Transform parent )
         {
             if ( child.parent == parent )

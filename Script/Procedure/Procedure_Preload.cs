@@ -16,6 +16,15 @@ namespace Aquila.Procedure
     public class Procedure_Prelaod : ProcedureBase
     {
         /// <summary>
+        /// 主动通知某一个加载标记完成，并且检查预加载状态
+        /// </summary>
+        public void NotifyFlag(int flag)
+        {
+            _preload_flags |= flag;
+            OnPreLoadFinished();
+        }
+
+        /// <summary>
         /// 当任意模块资源预加载完成
         /// </summary>
         private void OnPreLoadFinished()
@@ -205,7 +214,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 对象池对象加载完成标记
         /// </summary>
-        private const int _infoboard_load_finish = 0b_0000_0000_0100;
+        public const int _infoboard_load_finish = 0b_0000_0000_0100;
         
         /// <summary>
         /// 状态机拥有者

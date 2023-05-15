@@ -41,6 +41,9 @@ namespace Aquila.Fight.Addon
         {
             base.Init(actor, target_go, target_transform);
             _hp_obj = GameEntry.InfoBoard.GenObject<Object_HPBar>();
+            // _hp_obj.Setup();
+            //set pos
+            
         }
 
         public override void Dispose()
