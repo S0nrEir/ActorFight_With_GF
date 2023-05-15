@@ -56,24 +56,24 @@ namespace Aquila.Procedure
             _actor_id_1 = ACTOR_ID_POOL.Gen();
             var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
                 (
-                    role_meta_id: _temp_role_meta_id_1,
+                    role_meta_id: 1,
                     actor_id: _actor_id_1,
-                    asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
+                    asset_path: @"Assets/Res/Prefab/Example/Aquila_Test_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
-                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = _temp_role_meta_id_1 }
+                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = 1 }
                 );
 
             //actor2
             _actor_id_2 = ACTOR_ID_POOL.Gen();
             var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
                 (
-                    role_meta_id: _temp_role_meta_id_1,
+                    role_meta_id: 2,
                     actor_id: _actor_id_2,
-                    asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
+                    asset_path: @"Assets/Res/Prefab/Example/Aquila_Test_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
-                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = _temp_role_meta_id_2 }
+                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = 2 }
                 );
 
             if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
@@ -81,7 +81,23 @@ namespace Aquila.Procedure
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_2 );
+            SetActorPosition(entity_1.Logic as TActorBase, entity_2.Logic as TActorBase);
             OnLoadFinish();
+        }
+        
+        /// <summary>
+        /// 临时初始化
+        /// </summary>
+        private void SetActorPosition(TActorBase my_actor,TActorBase enemy_actor)
+        {
+            if (my_actor is null || enemy_actor is null)
+            {
+                Log.Info("<color=warning>my_actor is null || enemy_actor is null</color>");
+                return;
+            }
+
+            my_actor.SetWorldPosition(new Vector3(0,0.8f,-3.29f));
+            enemy_actor.SetWorldPosition(new Vector3(0,0.5f,1.6f));
         }
 
         /// <summary>
@@ -161,15 +177,5 @@ namespace Aquila.Procedure
         /// 当前的加载状态
         /// </summary>
         private int _load_flag_curr_state = 0b_0000;
-
-        /// <summary>
-        /// 角色属性表id
-        /// </summary>
-        private int _temp_role_meta_id_1 = 1;
-
-        /// <summary>
-        /// 角色属性表id
-        /// </summary>
-        private int _temp_role_meta_id_2 = 2;
     }
 }

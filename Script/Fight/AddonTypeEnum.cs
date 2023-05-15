@@ -86,6 +86,11 @@ namespace Aquila.Fight.Addon
             ABILITY,
             
             /// <summary>
+            /// HP显示组件
+            /// </summary>
+            HP,
+            
+            /// <summary>
             /// 基础类型
             /// </summary>
             BASE = 999,
