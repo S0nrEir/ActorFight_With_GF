@@ -12,9 +12,11 @@ namespace Aquila.Toolkit
         /// <summary>
         /// 世界坐标转换到canvas屏幕坐标
         /// </summary>
-        public Vector3 World2Screen(Vector3 world_pos)
+        public static Vector3 World2ScreenPos(Vector3 world_pos,Camera world_camera,RectTransform rect,Camera rect_camera)
         {
-            return Vector3.zero;
+            var screen_pos = world_camera.WorldToScreenPoint(world_pos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, screen_pos, rect_camera, out var rect_pos);
+            return rect_pos;
         }
 
         public static void SetParent( Transform child, Transform parent )

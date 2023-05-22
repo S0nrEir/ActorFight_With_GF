@@ -53,13 +53,12 @@ namespace  Aquila.Extension
         private T GenObject<T>() where T : Aquila_Object_Base
         {
             var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
-            if (pool is null)
-            {
-                Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
-                return null;
-            }
+            if (pool is not null)
+                return pool.Spawn() as T;
             
-            return pool.Spawn() as T;
+            Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
+            return null;
+
         }
 
         /// <summary>
@@ -88,7 +87,7 @@ namespace  Aquila.Extension
             
             GameEntry.Resource.LoadAsset
                 (
-                    @"Assets/Res/Prefab/Common/HPBar.prefab",
+                    @"Assets/Res/Prefab/Item/HPBar.prefab",
                     new LoadAssetCallbacks((assetName, asset, duration, userData) =>
                         {
                             _hp_bar_prefab = asset as GameObject;
@@ -98,8 +97,7 @@ namespace  Aquila.Extension
                                 return;
                             }
 
-                            var procedure = GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() as Procedure_Prelaod;
-                            if (procedure is null)
+                            if (GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is not Procedure_Prelaod procedure)
                             {
                                 Log.Warning("<color=yellow>procedure preload is null</color>");
                                 return;
@@ -132,6 +130,9 @@ namespace  Aquila.Extension
         // }
         
         //-----------------------fields-----------------------
+        public Canvas Canvas => _canvas;
+        public Camera Camera => _camera;
+
         private bool _init_flag = false;
 
         /// <summary>
@@ -148,6 +149,11 @@ namespace  Aquila.Extension
         /// hpbar预设
         /// </summary>
         private GameObject _hp_bar_prefab = null;
+
+        /// <summary>
+        /// Rect相机
+        /// </summary>
+        public Camera RectCamera => _camera;
 
         /// <summary>
         /// 显示用的相机
