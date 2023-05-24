@@ -32,7 +32,6 @@ namespace Aquila.Procedure
             if ( _preload_flags != _preload_state_finish )
                 return;
 
-            Log.Info( "preload finished!", LogColorTypeEnum.White );
             System.GC.Collect();
 
             //测试进入战斗流程

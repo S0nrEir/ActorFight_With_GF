@@ -4,8 +4,8 @@
 // Homepage: https://gameframework.cn/
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
-
 using System;
+using UnityEngine;
 
 namespace GameFramework.Fsm
 {
@@ -78,6 +78,7 @@ namespace GameFramework.Fsm
                 throw new GameFrameworkException("FSM is invalid.");
             }
 
+            Debug.Log($"<color=white>change procedure </color><color=green><{fsmImplement.CurrentStateName}> -> <{typeof(TState).Name}></color>");
             fsmImplement.ChangeState<TState>();
         }
 

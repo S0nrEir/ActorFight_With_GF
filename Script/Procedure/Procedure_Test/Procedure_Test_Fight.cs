@@ -95,7 +95,6 @@ namespace Aquila.Procedure
                 Log.Info("<color=warning>my_actor is null || enemy_actor is null</color>");
                 return;
             }
-
             my_actor.SetWorldPosition(new Vector3(0,0.8f,-3.29f));
             enemy_actor.SetWorldPosition(new Vector3(0,0.5f,1.6f));
         }

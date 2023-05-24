@@ -18,7 +18,6 @@ namespace  Aquila.Extension
         /// </summary>
         public Object_HPBar GenHPBar()
         {
-            Log.Info("<color=white>Component_InfoBoard.GenHPBar()</color>");
             Object_HPBar obj = GenObject<Object_HPBar>(typeof(Object_HPBar).Name);
             if (obj is null)//对象池里没对象，先创建
             {
@@ -82,7 +81,6 @@ namespace  Aquila.Extension
         {
             if (_init_flag)
             {
-                Log.Info("<color>Component_InfoBoard has been inited</color>");
                 return;
             }
 
@@ -107,7 +105,6 @@ namespace  Aquila.Extension
                                 Log.Warning("<color=yellow>procedure preload is null</color>");
                                 return;
                             }
-                            Log.Info("<color=white>InfoBoard preload finish.</color>");
                             //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
                             procedure.NotifyFlag(Procedure_Prelaod._infoboard_load_finish);
                         },
@@ -116,7 +113,6 @@ namespace  Aquila.Extension
                             Log.Warning("<color=yellow>hpbar asset doesnt exit!</color>");
                         })
                 );
-            Log.Info("<color=white>InfoBoard.Preload()->Finish</color>");
             _init_flag = true;
         }
 
