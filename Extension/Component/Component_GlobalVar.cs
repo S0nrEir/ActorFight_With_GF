@@ -47,7 +47,6 @@ namespace  Aquila.Extension
 
         private Camera GetMainCamera()
         {
-            Log.Info("<color=white>Component_GlobalVar.GetMainCamera()</color>");
             var camera_go = GameObject.FindWithTag("MainCamera");
             if (camera_go == null)
             {
@@ -62,7 +61,7 @@ namespace  Aquila.Extension
         protected override void Awake()
         {
             base.Awake();
-            GetMainCamera();
+            _main_camera = GetMainCamera();
         }
     }
 
