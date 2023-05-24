@@ -86,7 +86,7 @@ namespace Aquila.Procedure
         }
         
         /// <summary>
-        /// 临时初始化
+        /// 临时初始化，设置Actor的位置
         /// </summary>
         private void SetActorPosition(TActorBase my_actor,TActorBase enemy_actor)
         {

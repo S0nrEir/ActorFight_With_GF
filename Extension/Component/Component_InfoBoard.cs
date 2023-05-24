@@ -123,6 +123,17 @@ namespace  Aquila.Extension
         }
         
         //-----------------------fields-----------------------
+        public RectTransform Rect
+        {
+            get
+            {
+                if (_rect == null)
+                    _rect = _root.GetComponent<RectTransform>();
+
+                return _rect;
+            }
+        }
+        private RectTransform _rect = null;
         
         /// <summary>
         /// 渲染信息板的画布
