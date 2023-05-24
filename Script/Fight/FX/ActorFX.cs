@@ -1,4 +1,5 @@
 ﻿using Aquila.Config;
+using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
@@ -30,7 +31,7 @@ namespace Aquila.Fight
             if (_inspector == null)
                 _inspector = gameObject.AddComponent<ActorEffectInspector>();
 
-            _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : GlobalVar.INVALID_ID, Entity.EntityAssetName );
+            _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : Component_GlobalVar.InvalidID, Entity.EntityAssetName );
 #endif
         }
 

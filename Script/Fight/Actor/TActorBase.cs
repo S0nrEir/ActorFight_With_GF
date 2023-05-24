@@ -5,6 +5,7 @@ using Aquila.Toolkit;
 using GameFramework;
 using System;
 using System.Collections.Generic;
+using Aquila.Extension;
 using GameFramework.ObjectPool;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -182,7 +183,7 @@ namespace Aquila.Fight.Actor
             
             GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister(ActorID);
             UnRegister();
-            HostID = GlobalVar.INVALID_GUID;
+            HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
             gameObject.tag = String.Empty;
@@ -299,7 +300,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void OnInitActor(object user_data)
         {
-            
         }
 
         protected TActorBase()
@@ -332,7 +332,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 宿主ID
         /// </summary>
-        public ulong HostID { get; private set; } = GlobalVar.INVALID_GUID;
+        public ulong HostID { get; private set; } = Component_GlobalVar.InvalidGUID;
 
         /// <summary>
         /// 组件初始化标记

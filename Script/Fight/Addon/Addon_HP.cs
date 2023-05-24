@@ -46,14 +46,7 @@ namespace Aquila.Fight.Addon
                 return;
             
             //#todo:是否考虑换成UIFollowTarget
-            var board_pos = Tools.World2ScreenPos_V2
-                (
-                    _actor_transform.position,
-                    GlobalVar.Main_Camera,
-                    GameEntry.InfoBoard.Rect,
-                    GameEntry.InfoBoard.Camera
-                );
-            _hp_obj.SetScreenPos(board_pos);
+            _hp_obj.SetScreenPos(GameEntry.InfoBoard.WorldPos2BoardRectPos(_actor_transform.position,GameEntry.GlobalVar.MainCamera));
         }
 
         public override void OnAdd()

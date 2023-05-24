@@ -49,7 +49,19 @@ namespace Aquila
             private set;
         }
 
+        /// <summary>
+        /// 信息板组件
+        /// </summary>
         public static Component_InfoBoard InfoBoard
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 全局实例组件
+        /// </summary>
+        public static Component_GlobalVar GlobalVar
         {
             get;
             private set;
@@ -66,6 +78,7 @@ namespace Aquila
             Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
             TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
             InfoBoard = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
+            GlobalVar = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
         }
     }
 }

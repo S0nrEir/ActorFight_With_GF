@@ -76,6 +76,17 @@ namespace  Aquila.Extension
             return true;
         }
 
+        /// <summary>
+        /// 世界坐标转信息板的矩形空间坐标
+        /// </summary>
+        public Vector2 WorldPos2BoardRectPos(Vector3 world_pos,Camera world_camera)
+        {
+            var screen_pos = RectTransformUtility.WorldToScreenPoint(world_camera, world_pos);
+            RectTransformUtility.ScreenPointToWorldPointInRectangle(Rect, screen_pos, Camera,
+                out var board_pos);
+            return board_pos;
+        }
+
         //-----------------------priv-----------------------
         public void Preload()
         {

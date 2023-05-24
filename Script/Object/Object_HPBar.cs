@@ -12,20 +12,20 @@ namespace Aquila.ObjectPool
 {
     public class Object_HPBar : Aquila_Object_Base
     {
+        
         /// <summary>
         /// 获取持有的UI对象的RectTransform
         /// </summary>
-        public RectTransform Rect()
-        {
-            return _hp_bar.RectTransform;
-        }
+        // public RectTransform Rect()
+        // {
+        //     return _hp_bar.RectTransform;
+        // }
 
         /// <summary>
         /// 设置对象在屏幕空间中的位置
         /// </summary>
         public void SetScreenPos(Vector3 pos)
         {
-            Debug.Log(pos);
             _hp_bar.RectTransform.position = pos; 
         }
 
