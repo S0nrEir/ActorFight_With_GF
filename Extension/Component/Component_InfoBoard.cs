@@ -18,7 +18,8 @@ namespace  Aquila.Extension
         /// </summary>
         public Object_HPBar GenHPBar()
         {
-            Object_HPBar obj = GenObject<Object_HPBar>();
+            Log.Info("<color=white>Component_InfoBoard.GenHPBar()</color>");
+            Object_HPBar obj = GenObject<Object_HPBar>(typeof(Object_HPBar).Name);
             if (obj is null)//对象池里没对象，先创建
             {
                 if (_hp_bar_prefab == null)
@@ -50,15 +51,15 @@ namespace  Aquila.Extension
         /// <summary>
         /// 获取一个指定类型的对象池对象，拿不到返回null
         /// </summary>
-        private T GenObject<T>() where T : Aquila_Object_Base
+        private T GenObject<T>(string pool_name) where T : Aquila_Object_Base
         {
-            var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
-            if (pool is not null)
+            var type_name = nameof(T);
+            var pool = GameEntry.ObjectPool.GetObjectPool<T>(pool_name);
+            if (pool != null)
                 return pool.Spawn() as T;
             
             Log.Warning("<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>");
             return null;
-
         }
 
         /// <summary>
@@ -79,15 +80,19 @@ namespace  Aquila.Extension
         //-----------------------priv-----------------------
         public void Preload()
         {
-            if(_init_flag)
+            if (_init_flag)
+            {
+                Log.Info("<color>Component_InfoBoard has been inited</color>");
                 return;
-            
+            }
+
             //创建对象池
-            var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>(nameof(Object_HPBar),0xf).ExpireTime = 360f;
+            var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>(typeof(Object_HPBar).Name, 0xf);
+            pool.ExpireTime = 360f;
             
             GameEntry.Resource.LoadAsset
                 (
-                    @"Assets/Res/Prefab/Item/HPBar.prefab",
+                    @"Assets/Res/Prefab/UI/Item/HPBar.prefab",
                     new LoadAssetCallbacks((assetName, asset, duration, userData) =>
                         {
                             _hp_bar_prefab = asset as GameObject;
@@ -102,6 +107,7 @@ namespace  Aquila.Extension
                                 Log.Warning("<color=yellow>procedure preload is null</color>");
                                 return;
                             }
+                            Log.Info("<color=white>InfoBoard preload finish.</color>");
                             //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
                             procedure.NotifyFlag(Procedure_Prelaod._infoboard_load_finish);
                         },
@@ -110,29 +116,31 @@ namespace  Aquila.Extension
                             Log.Warning("<color=yellow>hpbar asset doesnt exit!</color>");
                         })
                 );
-            
+            Log.Info("<color=white>InfoBoard.Preload()->Finish</color>");
             _init_flag = true;
-        }
-
-        private void Start()
-        {
-            // _init_flag = true;
         }
 
         protected override void Awake()
         {
             base.Awake();
+            _init_flag = false;
         }
-
-        // private void Update()
-        // {
-        //     throw new NotImplementedException();
-        // }
         
         //-----------------------fields-----------------------
+        
+        /// <summary>
+        /// 渲染信息板的画布
+        /// </summary>
         public Canvas Canvas => _canvas;
+        
+        /// <summary>
+        /// 渲染信息板用的相机
+        /// </summary>
         public Camera Camera => _camera;
 
+        /// <summary>
+        /// 初始化标记
+        /// </summary>
         private bool _init_flag = false;
 
         /// <summary>
@@ -149,11 +157,6 @@ namespace  Aquila.Extension
         /// hpbar预设
         /// </summary>
         private GameObject _hp_bar_prefab = null;
-
-        /// <summary>
-        /// Rect相机
-        /// </summary>
-        public Camera RectCamera => _camera;
 
         /// <summary>
         /// 显示用的相机

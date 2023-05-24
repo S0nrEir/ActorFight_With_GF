@@ -1,5 +1,7 @@
+using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.ObjectPool;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -8,7 +10,8 @@ namespace Aquila.Fight.Addon
 {
     public class Addon_HP : Addon_Base
     {
-        //------------pub------------
+        //-------------------------pub-------------------------
+        
         /// <summary>
         /// 基于当前血量刷新slider
         /// </summary>
@@ -27,12 +30,32 @@ namespace Aquila.Fight.Addon
             _hp_obj.SetValue((int)cur,(int)max.value);
         }
 
+        /// <summary>
+        /// 设置hp slider的值
+        /// </summary>
         public void SetValue(int cur,int max)
         {
             _hp_obj.SetValue(cur,max);
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.HP;
+
+        public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        {
+            if(_hp_obj is null)
+                return;
+            
+            //#todo:是否考虑换成UIFollowTarget
+            var board_pos = Tools.World2ScreenPos
+                (
+                    _actor_transform.position, 
+                    GlobalVar.Main_Camera,
+                    _hp_obj.Rect(),
+                    GameEntry.InfoBoard.Camera
+                );
+            _hp_obj.SetScreenPos(board_pos);
+        }
+
         public override void OnAdd()
         {
         }
@@ -40,20 +63,27 @@ namespace Aquila.Fight.Addon
         public override void Init(TActorBase actor, GameObject target_go, Transform target_transform)
         {
             base.Init(actor, target_go, target_transform);
+            _actor_transform = _actor_instance.Actor.transform;
             _hp_obj = GameEntry.InfoBoard.GenHPBar();
             // _hp_obj.Setup();
             //set pos
-            
         }
 
         public override void Dispose()
         {
             // GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
             GameEntry.InfoBoard.UnSpawn<Object_HPBar>(_hp_obj);
+            _hp_obj          = null;
+            _actor_transform = null;
             base.Dispose();
         }
 
         private Object_HPBar _hp_obj = null;
+
+        /// <summary>
+        /// 持有缓存的actor的transform
+        /// </summary>
+        private Transform _actor_transform = null;
     }
    
 }
