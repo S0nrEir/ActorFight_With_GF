@@ -172,7 +172,7 @@ namespace Aquila.Fight.Addon
         public override void Reset ()
         {
             base.Reset();
-            PlayStandAnim();
+            // PlayStandAnim();
         }
 
         /// <summary>
