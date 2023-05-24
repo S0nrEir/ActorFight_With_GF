@@ -820,7 +820,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1936275137}
   - component: {fileID: 1936275139}
-  - component: {fileID: 1936275138}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -843,14 +842,6 @@ Transform:
   m_Father: {fileID: 1361959893}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &1936275138
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1936275136}
-  m_Enabled: 1
 --- !u!20 &1936275139
 Camera:
   m_ObjectHideFlags: 0
@@ -860,7 +851,7 @@ Camera:
   m_GameObject: {fileID: 1936275136}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 3
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -882,7 +873,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -996,6 +987,14 @@ PrefabInstance:
     - target: {fileID: 11405216, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_AvailableProcedureTypeNames.Array.data[5]
       value: Aquila.Procedure.Procedure_Test_Fight
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447582, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11451924, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11494652, guid: adb3eb1c35fcff14f89fba7b05c9d71c, type: 3}
       propertyPath: m_EntityGroups.Array.size

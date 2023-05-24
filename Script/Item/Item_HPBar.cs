@@ -1,11 +1,27 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
+using Tools = Aquila.Toolkit.Tools;
 
 namespace Aquila.Item
 {
     public class Item_HPBar : MonoBehaviour
     {
+        /// <summary>
+        /// 持有的RectTransform
+        /// </summary>
+        public RectTransform RectTransform
+        {
+            get
+            {
+                if (_rect == null)
+                    _rect = Tools.GetComponent<RectTransform>(transform);
+
+                return _rect;
+            }
+        }
+
         public float Value()
         {
             return _hp_slider.value;
@@ -41,5 +57,10 @@ namespace Aquila.Item
         /// hp显示文字
         /// </summary>
         [SerializeField] private Text _text_num = null;
+
+        /// <summary>
+        ///  持有的rectTransform
+        /// </summary>
+        private RectTransform _rect = null;
     }
 }
