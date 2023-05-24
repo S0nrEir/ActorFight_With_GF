@@ -65,7 +65,7 @@ namespace Aquila.Fight.Addon
         public override void Dispose()
         {
             // GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
-            GameEntry.InfoBoard.UnSpawn<Object_HPBar>(_hp_obj);
+            GameEntry.InfoBoard.UnSpawn<Object_HPBar>(typeof(Object_HPBar).Name,_hp_obj);
             _hp_obj          = null;
             _actor_transform = null;
             base.Dispose();

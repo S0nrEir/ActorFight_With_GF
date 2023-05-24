@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Aquila.Item;
 using Aquila.ObjectPool;
 using Aquila.Procedure;
+using GameFramework;
 using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -13,6 +15,30 @@ namespace  Aquila.Extension
     
     public class Component_InfoBoard : GameFrameworkComponent
     {
+        /// <summary>
+        /// 生成一个伤害数字实例
+        /// </summary>
+        public void GenDamageNumber(string num,Vector3 world_pos)
+        {
+            var obj = GenObject<Object_DamageNumber>(typeof(Object_DamageNumber).Name);
+            if (obj is null)
+            {
+                var go = Instantiate(_dmg_number_prefab);
+                InitTransform(go.transform);
+                var pool = GameEntry.ObjectPool.GetObjectPool<Object_DamageNumber>(typeof(Object_DamageNumber).Name);
+                pool.Register(Object_DamageNumber.Gen(go),false );
+                obj = pool.Spawn();
+            }
+            //init
+            obj.Setup(obj.Target as GameObject);
+            //set pos
+            var rect_pos = WorldPos2BoardRectPos(world_pos, GameEntry.GlobalVar.MainCamera);
+            obj.SetPos(rect_pos);
+            obj.SetNumber(num,Color.red);
+            //添加到队列中
+            _damage_number_queue.Enqueue(obj);
+        }
+
         /// <summary>
         /// 获取一个hpbar，获取不到返回null
         /// </summary>
@@ -30,7 +56,7 @@ namespace  Aquila.Extension
                 var go = Instantiate(_hp_bar_prefab) as GameObject;
                 InitTransform(go.transform);
                 //spanw obj
-                var pool = GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar));
+                var pool = GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(typeof(Object_HPBar).Name);
                 pool.Register(Object_HPBar.Gen(go), false );
                 obj = pool.Spawn();
             }
@@ -64,9 +90,9 @@ namespace  Aquila.Extension
         /// <summary>
         /// 回收
         /// </summary>
-        public bool UnSpawn<T>(object obj) where T : Aquila_Object_Base
+        public bool UnSpawn<T>(string pool_name,object obj) where T : Aquila_Object_Base
         {
-            var pool = GameEntry.ObjectPool.GetObjectPool<T>(nameof(T));
+            var pool = GameEntry.ObjectPool.GetObjectPool<T>(pool_name);
             if (pool is null)
             {
                 Log.Warning("<color=yellow>Component_InfoBoard.UnSpawn--->pool == null</color>");
@@ -95,10 +121,9 @@ namespace  Aquila.Extension
                 return;
             }
 
-            //创建对象池
-            var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>(typeof(Object_HPBar).Name, 0xf);
-            pool.ExpireTime = 360f;
-            
+            //创建hpbar对象池和资源
+            var hp_pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>(typeof(Object_HPBar).Name, 0xf);
+            hp_pool.ExpireTime = 360f;
             GameEntry.Resource.LoadAsset
                 (
                     @"Assets/Res/Prefab/UI/Item/HPBar.prefab",
@@ -111,26 +136,96 @@ namespace  Aquila.Extension
                                 return;
                             }
 
-                            if (GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is not Procedure_Prelaod procedure)
+                            if (GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure)
                             {
-                                Log.Warning("<color=yellow>procedure preload is null</color>");
-                                return;
+                                //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
+                                procedure.NotifyFlag(Procedure_Prelaod._infoboard_hpbar_load_finish);
                             }
-                            //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
-                            procedure.NotifyFlag(Procedure_Prelaod._infoboard_load_finish);
                         },
-                        (assetName, status, errorMessage, userData) =>
+                        LoadAssetFaildCallBack
+                ));
+            
+            //damage number对象池和资源
+            var dm_pool =GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_DamageNumber>(typeof(Object_DamageNumber).Name);
+            dm_pool.ExpireTime = hp_pool.ExpireTime;
+            
+            GameEntry.Resource.LoadAsset
+                (
+                    @"Assets/Res/Prefab/UI/Item/DamageNumber.prefab",
+                    new LoadAssetCallbacks(
+                        (assetName, asset, duration, userData) =>
                         {
-                            Log.Warning("<color=yellow>hpbar asset doesnt exit!</color>");
-                        })
+                            _dmg_number_prefab = asset as GameObject;
+                            if (_dmg_number_prefab == null)
+                            {
+                                Log.Warning("<color=yellow>DamageNumber.prefab convert faild</color>");
+                            }
+
+                            if (GameEntry.Procedure.CurrentProcedure is Procedure_Prelaod procedure)
+                            {
+                                procedure.NotifyFlag(Procedure_Prelaod._infoboard_dmgnumber_load_finish);
+                            }
+                        },
+                        LoadAssetFaildCallBack
+                    )
                 );
+            
             _init_flag = true;
+        }
+
+        /// <summary>
+        /// 处理正在显示中的DamageNumber
+        /// </summary>
+        private void UpdateSpawningDamageNumber(float delta_time)
+        {
+            if(_damage_number_queue.Count == 0)
+                return;
+
+            var dmg_obj = _damage_number_queue.Dequeue();
+            while (dmg_obj != null)
+            {
+                if (dmg_obj.TimesUp())
+                {
+                    _damage_number_unspawn_queue.Enqueue(dmg_obj);
+                    dmg_obj = _damage_number_queue.Dequeue();
+                    continue;
+                }
+                
+                dmg_obj.Move(delta_time);
+                dmg_obj = _damage_number_queue.Dequeue();
+            }
+            
+            if(_damage_number_unspawn_queue.Count == 0)
+                return;
+            
+            dmg_obj = _damage_number_unspawn_queue.Dequeue();
+            while (dmg_obj != null)
+            {
+                //do unspawn
+                UnSpawn<Object_DamageNumber>(typeof(Object_DamageNumber).Name,dmg_obj);
+                dmg_obj = _damage_number_unspawn_queue.Dequeue();
+            }
         }
 
         protected override void Awake()
         {
             base.Awake();
             _init_flag = false;
+            _damage_number_queue = new Queue<Object_DamageNumber>(0xf);
+            _damage_number_unspawn_queue = new Queue<Object_DamageNumber>(0xf);
+        }
+
+        /// <summary>
+        /// 刷帧，主要处理伤害数字
+        /// </summary>
+        private void Update()
+        {
+            UpdateSpawningDamageNumber(Time.deltaTime);
+        }
+
+        private void LoadAssetFaildCallBack(string assetName, LoadResourceStatus status, string errorMessage, object userData)
+        {
+            Log.Warning($"$<color=yellow>load asset {assetName} faild,status:{status.ToString()}</color>");
         }
         
         //-----------------------fields-----------------------
@@ -177,8 +272,23 @@ namespace  Aquila.Extension
         private GameObject _hp_bar_prefab = null;
 
         /// <summary>
+        /// 伤害数字预设
+        /// </summary>
+        private GameObject _dmg_number_prefab = null;
+
+        /// <summary>
         /// 显示用的相机
         /// </summary>
         [SerializeField] private Camera _camera = null;
+
+        /// <summary>
+        /// 保存并且处理伤害数字实例的队列
+        /// </summary>
+        private Queue<Object_DamageNumber> _damage_number_queue = null;
+
+        /// <summary>
+        /// 伤害数字实例的回收队列
+        /// </summary>
+        private Queue<Object_DamageNumber> _damage_number_unspawn_queue = null;
     }
 }

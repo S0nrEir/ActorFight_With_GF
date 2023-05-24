@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Aquila.Config;
 using Aquila.Item;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.ObjectPool
@@ -75,7 +71,6 @@ namespace Aquila.ObjectPool
         {
             var obj = ReferencePool.Acquire<Object_HPBar>();
             obj.Initialize(go);
-            // obj.Setup(go);
             return obj;
         }
 
