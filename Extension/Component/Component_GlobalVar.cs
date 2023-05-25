@@ -30,10 +30,7 @@ namespace  Aquila.Extension
             get
             {
                 if (_main_camera == null)
-                {
                     _main_camera = GetMainCamera();
-                    DontDestroyOnLoad(_main_camera.gameObject);
-                }
 
                 return _main_camera;
             }
@@ -53,7 +50,7 @@ namespace  Aquila.Extension
                 Log.Warning("<color=yellow>faild to get main camera</color>");
                 return null;
             }
-
+            DontDestroyOnLoad(camera_go);
             return camera_go.GetComponent<Camera>();
         }
 
