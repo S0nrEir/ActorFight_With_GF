@@ -191,7 +191,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preload_state_finish = 0b_0000_1111;
+        private const int _preload_state_finish = 0b_0000_0111;
 
         /// <summary>
         /// 预加载初始化标记
@@ -208,9 +208,9 @@ namespace Aquila.Procedure
         /// </summary>
         private const int _table_load_finish = 0b_0000_0000_0010;
 
-        // 对象池对象加载完成标记
+        
         public const int _infoboard_hpbar_load_finish = 0b_0000_0000_0100;
-        public const int _infoboard_dmgnumber_load_finish = 0b_0000_0000_1000;
+        public const int _infoboard_dmgnumber_load_finish = 0b_0000_0000_1000
         
         /// <summary>
         /// 状态机拥有者
