@@ -39,7 +39,7 @@ namespace Aquila.Fight
             var cur_hp = attr_addon.GetCurrHPCorrection();
             var final = cur_hp + Meta.ModifierNumric;
             attr_addon.SetCurrHP(final);
-            result.AddDealedDamage(final);
+            result.AddDealedDamage(Meta.ModifierNumric);
         }
 
         public EffectSpec_PhyDamage(Effect meta) : base(meta)
