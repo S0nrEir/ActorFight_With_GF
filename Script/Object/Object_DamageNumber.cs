@@ -16,7 +16,7 @@ namespace  Aquila.ObjectPool
         {
             _passed_time += delta_time;
             //在这里要算上速度
-            _rect.position =  _rect.position + new Vector3(_damage_number._random_dir.x,_damage_number._random_dir.y,0f) * Speed;
+            _rect.position += new Vector3(_damage_number._random_dir.x,_damage_number._random_dir.y,0f) * Speed;
         }
  
         /// <summary>
@@ -97,12 +97,12 @@ namespace  Aquila.ObjectPool
         /// <summary>
         /// 统一3秒后销毁
         /// </summary>
-        private const float Duration = 3f;
+        private const float Duration = 1.5f;
 
         /// <summary>
         /// 飘字速度
         /// </summary>
-        private const float Speed = 0.05f;
+        private const float Speed = 0.005f;
         
         /// <summary>
         /// dmgNum实例的矩形变换组件

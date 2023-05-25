@@ -99,6 +99,9 @@ namespace  Aquila.Module
             Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             Log.Info("<color=green>target info:</color>");
             Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            
+            //show damage number
+            GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
             return result;
         }
     }

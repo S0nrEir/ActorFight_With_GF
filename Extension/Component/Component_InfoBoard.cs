@@ -9,6 +9,7 @@ using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using Object = UnityEngine.Object;
+using Object_DamageNumber = Aquila.ObjectPool.Object_DamageNumber;
 
 namespace  Aquila.Extension
 {
@@ -16,9 +17,9 @@ namespace  Aquila.Extension
     public class Component_InfoBoard : GameFrameworkComponent
     {
         /// <summary>
-        /// 生成一个伤害数字实例
+        /// 显示一个伤害数字实例
         /// </summary>
-        public void GenDamageNumber(string num,Vector3 world_pos)
+        public void ShowDamageNumber(string num,Vector3 world_pos)
         {
             var obj = GenObject<Object_DamageNumber>(typeof(Object_DamageNumber).Name);
             if (obj is null)
@@ -36,7 +37,8 @@ namespace  Aquila.Extension
             obj.SetPos(rect_pos);
             obj.SetNumber(num,Color.red);
             //添加到队列中
-            _damage_number_queue.Enqueue(obj);
+            // _damage_number_queue.Enqueue(obj);
+            _damage_number_spawn_dic.Add(obj.GetHashCode(),obj);
         }
 
         /// <summary>
@@ -178,41 +180,74 @@ namespace  Aquila.Extension
         /// </summary>
         private void UpdateSpawningDamageNumber(float delta_time)
         {
-            if(_damage_number_queue.Count == 0)
-                return;
-
-            var dmg_obj = _damage_number_queue.Dequeue();
-            while (dmg_obj != null)
+            Object_DamageNumber temp = null;
+            if (_damage_number_spawn_dic.Count != 0)
             {
-                if (dmg_obj.TimesUp())
+                var iter = _damage_number_spawn_dic.GetEnumerator();
+                while (iter.MoveNext())
                 {
-                    _damage_number_unspawn_queue.Enqueue(dmg_obj);
-                    dmg_obj = _damage_number_queue.Dequeue();
-                    continue;
+                    temp = iter.Current.Value;
+                    if (temp.TimesUp())
+                    {
+                        //remove
+                        _damage_number_unspawn_set.Add(iter.Current.Key);
+                        continue;
+                    }
+                    else
+                    {
+                        temp.Move(delta_time);
+                    }
                 }
-                
-                dmg_obj.Move(delta_time);
-                dmg_obj = _damage_number_queue.Dequeue();
             }
-            
-            if(_damage_number_unspawn_queue.Count == 0)
-                return;
-            
-            dmg_obj = _damage_number_unspawn_queue.Dequeue();
-            while (dmg_obj != null)
+
+            if (_damage_number_unspawn_set.Count != 0)
             {
-                //do unspawn
-                UnSpawn<Object_DamageNumber>(typeof(Object_DamageNumber).Name,dmg_obj);
-                dmg_obj = _damage_number_unspawn_queue.Dequeue();
+                foreach (var key in _damage_number_unspawn_set)
+                {
+                    if (_damage_number_spawn_dic.TryGetValue(key, out temp))
+                    {
+                        _damage_number_spawn_dic.Remove(key);
+                        UnSpawn<Object_DamageNumber>(typeof(Object_DamageNumber).Name, temp.Target);
+                    }
+                }
+                _damage_number_unspawn_set.Clear();
             }
+
+            // Object_DamageNumber temp_obj = null;
+            // if (_damage_number_queue.Count != 0)
+            // {
+            //     while (_damage_number_queue.Count > 0)
+            //     {
+            //         temp_obj = _damage_number_queue.Peek();
+            //         if (temp_obj.TimesUp())
+            //         {
+            //             _damage_number_queue.Dequeue();
+            //             _damage_number_unspawn_queue.Enqueue(temp_obj);
+            //             continue;
+            //         }
+            //
+            //         temp_obj.Move(delta_time);
+            //     }   
+            // }//end if
+            //
+            // if (_damage_number_unspawn_queue.Count != 0)
+            // {
+            //     while (_damage_number_unspawn_queue.Count > 0)
+            //     {
+            //         temp_obj = _damage_number_unspawn_queue.Dequeue();
+            //         UnSpawn<Object_DamageNumber>(typeof(Object_DamageNumber).Name,temp_obj.Target);
+            //     }   
+            // }//end if
         }
 
         protected override void Awake()
         {
             base.Awake();
             _init_flag = false;
-            _damage_number_queue = new Queue<Object_DamageNumber>(0xf);
-            _damage_number_unspawn_queue = new Queue<Object_DamageNumber>(0xf);
+            _damage_number_spawn_dic = new Dictionary<int, Object_DamageNumber>(0xf);
+            _damage_number_unspawn_set = new HashSet<int>(0xf);
+            // _damage_number_queue = new Queue<Object_DamageNumber>(0xf);
+            // _damage_number_unspawn_queue = new Queue<Object_DamageNumber>(0xf);
         }
 
         /// <summary>
@@ -282,13 +317,23 @@ namespace  Aquila.Extension
         [SerializeField] private Camera _camera = null;
 
         /// <summary>
-        /// 保存并且处理伤害数字实例的队列
+        /// 管理已经放出的DamageNumber实例
         /// </summary>
-        private Queue<Object_DamageNumber> _damage_number_queue = null;
+        private Dictionary<int, Object_DamageNumber> _damage_number_spawn_dic = null;
 
         /// <summary>
-        /// 伤害数字实例的回收队列
+        /// 准备释放的DamageNumber集合管理
         /// </summary>
-        private Queue<Object_DamageNumber> _damage_number_unspawn_queue = null;
+        private HashSet<int> _damage_number_unspawn_set = null;
+
+        // /// <summary>
+        // /// 保存并且处理伤害数字实例的队列
+        // /// </summary>
+        // private Queue<Object_DamageNumber> _damage_number_queue = null;
+        //
+        // /// <summary>
+        // /// 伤害数字实例的回收队列
+        // /// </summary>
+        // private Queue<Object_DamageNumber> _damage_number_unspawn_queue = null;
     }
 }

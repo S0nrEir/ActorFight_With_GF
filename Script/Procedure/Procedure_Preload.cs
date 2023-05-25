@@ -210,7 +210,7 @@ namespace Aquila.Procedure
 
         
         public const int _infoboard_hpbar_load_finish = 0b_0000_0000_0100;
-        public const int _infoboard_dmgnumber_load_finish = 0b_0000_0000_1000
+        public const int _infoboard_dmgnumber_load_finish = 0b_0000_0000_1000;
         
         /// <summary>
         /// 状态机拥有者
