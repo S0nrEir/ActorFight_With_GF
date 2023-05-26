@@ -212,32 +212,6 @@ namespace  Aquila.Extension
                 }
                 _damage_number_unspawn_set.Clear();
             }
-
-            // Object_DamageNumber temp_obj = null;
-            // if (_damage_number_queue.Count != 0)
-            // {
-            //     while (_damage_number_queue.Count > 0)
-            //     {
-            //         temp_obj = _damage_number_queue.Peek();
-            //         if (temp_obj.TimesUp())
-            //         {
-            //             _damage_number_queue.Dequeue();
-            //             _damage_number_unspawn_queue.Enqueue(temp_obj);
-            //             continue;
-            //         }
-            //
-            //         temp_obj.Move(delta_time);
-            //     }   
-            // }//end if
-            //
-            // if (_damage_number_unspawn_queue.Count != 0)
-            // {
-            //     while (_damage_number_unspawn_queue.Count > 0)
-            //     {
-            //         temp_obj = _damage_number_unspawn_queue.Dequeue();
-            //         UnSpawn<Object_DamageNumber>(typeof(Object_DamageNumber).Name,temp_obj.Target);
-            //     }   
-            // }//end if
         }
 
         protected override void Awake()
