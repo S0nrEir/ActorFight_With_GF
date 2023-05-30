@@ -75,7 +75,7 @@ namespace Aquila.Fight
             if (!OnAfterAbility(ref result))
                 return false;
             
-            result.SetState(AbilityResultDescTypeEnum.HIT);
+            result.SetState(AbilityHitResultTypeEnum.HIT);
             _ability_tag.Add(0);
             return true;
         }
@@ -105,13 +105,13 @@ namespace Aquila.Fight
             if (!CostOK())
             {
                 succ = false;
-                result.SetState(AbilityResultDescTypeEnum.COST_NOT_ENOUGH);
+                result.SetState(AbilityHitResultTypeEnum.COST_NOT_ENOUGH);
             }
 
             if (!CDOK())
             {
                 succ = false;
-                result.SetState(AbilityResultDescTypeEnum.CD_NOT_OK);
+                result.SetState(AbilityHitResultTypeEnum.CD_NOT_OK);
             }
 
             return succ;

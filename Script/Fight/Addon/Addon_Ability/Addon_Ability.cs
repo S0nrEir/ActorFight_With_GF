@@ -35,7 +35,7 @@ namespace  Aquila.Fight.Addon
             if(!_init_flag)
                 return;
             
-            foreach (var spec in _spec_arr)
+            foreach (var spec in _specArr)
                 spec.OnUpdate(delta_time);
         }
 
@@ -57,13 +57,13 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private AbilitySpecBase GetAbilitySpec(int meta_id)
         {
-            if (_spec_arr is null || _spec_arr.Length == 0)
+            if (_specArr is null || _specArr.Length == 0)
             {
                 Log.Warning(" <color=yellow>is null || _spec_arr.Length == 0</color>");
                 return null;
             }
 
-            foreach (var temp_spec in _spec_arr)
+            foreach (var temp_spec in _specArr)
             {
                 if ( temp_spec.Meta.id == meta_id)
                     return temp_spec;
@@ -77,26 +77,26 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var role_meta = GameEntry.DataTable.Tables.TB_RoleMeta.Get(Actor.RoleMetaID);
-            if (role_meta is null)
+            var roleMeta = GameEntry.DataTable.Tables.TB_RoleMeta.Get(Actor.RoleMetaID);
+            if (roleMeta is null)
             {
                 Log.Warning("Addon_Ability.Init()->role_meta is null");
                 return false;
             }
             
-            var ids = role_meta.AbilityBaseID;
-            _spec_arr = new AbilitySpecBase[ids.Length];
-            AbilityBase ability_base_meta = null;
-            var len = _spec_arr.Length;
+            var ids = roleMeta.AbilityBaseID;
+            _specArr = new AbilitySpecBase[ids.Length];
+            AbilityBase abilityBaseMeta = null;
+            var len = _specArr.Length;
             for (var i = 0; i < len && i < ids.Length; i++)
             {
-                ability_base_meta = GameEntry.DataTable.Tables.TB_AbilityBase.Get(ids[i]);
-                if (ability_base_meta is null)
+                abilityBaseMeta = GameEntry.DataTable.Tables.TB_AbilityBase.Get(ids[i]);
+                if (abilityBaseMeta is null)
                 {
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");
                     return false;
                 }
-                _spec_arr[i] = AbilitySpecBase.Gen(ability_base_meta,_actor_instance);
+                _specArr[i] = AbilitySpecBase.Gen(abilityBaseMeta,_actor_instance);
             }
             return true;
         }
@@ -118,13 +118,13 @@ namespace  Aquila.Fight.Addon
         }
         public override void Dispose()
         {
-            if (_spec_arr is { Length: > 0 })
+            if (_specArr is { Length: > 0 })
             {
-                foreach (var spec in _spec_arr)
+                foreach (var spec in _specArr)
                     ReferencePool.Release(spec);
             }
 
-            _spec_arr  = null;
+            _specArr  = null;
             // _meta      = null;
             _init_flag = false;
             base.Dispose();
@@ -148,7 +148,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 持有的技能
         /// </summary>
-        private AbilitySpecBase[] _spec_arr = null;
+        private AbilitySpecBase[] _specArr = null;
 
         /// <summary>
         /// 初始化标记

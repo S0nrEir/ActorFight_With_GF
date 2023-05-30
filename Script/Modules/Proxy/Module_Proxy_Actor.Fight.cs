@@ -1,10 +1,6 @@
 using Aquila.Fight;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using GameFramework;
-using UnityEngine;
-using UnityEngine.Networking;
-using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
 
 namespace  Aquila.Module
 {
@@ -42,12 +38,53 @@ namespace  Aquila.Module
     //this.Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
     //技能数据(this)的持有者(asc)获取对应类型的effectSpec实例
     //然后将该实例应用于owner
-
+    
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
     public partial class Module_Proxy_Actor
     {
+        /// <summary>
+        /// 单对单释放技能
+        /// </summary>
+        public AbilityUseResult Ability2SingleTarget(int castorID, int targetID, int abilityMetaID)
+        {
+            //obtain ability result
+            var result = default(AbilityUseResult);
+            result.Init();
+            result._castorID = castorID;
+            result._targetID = targetID;
+
+            var castorInstance = TryGet(castorID);
+            if (!castorInstance.has)
+            {
+                result._stateDescription =
+                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                // return result;
+            }
+
+            var targetInstance = TryGet(targetID);
+            if (!targetInstance.has)
+            {
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_TARGET, true);
+                // return result;
+            }
+
+            var meta = GameEntry.DataTable.Tables.TB_AbilityBase.Get(abilityMetaID);
+            if (meta is null)
+            {
+                result._stateDescription =
+                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_META, true);
+                // return result;
+            }
+
+            if (castorInstance.instance.Actor is IDoAbilityBehavior)
+                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(null);
+
+            return result;
+        }
+
         /// <summary>
         /// 单对单释放技能
         /// </summary>

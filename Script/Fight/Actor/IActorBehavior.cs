@@ -61,7 +61,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能
         /// </summary>
-        void DoAbilityAction (object param);
+        void UseAbility (object param);
     }
 
     /// <summary>

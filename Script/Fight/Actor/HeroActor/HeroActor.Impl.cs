@@ -31,7 +31,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 使用技能
         /// </summary>
-        public void DoAbilityAction(object param)
+        public void UseAbility(object param)
         {   
             SwitchTo(ActorStateTypeEnum.ABILITY_STATE,new object[]{param},null);
         }
