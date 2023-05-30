@@ -25,6 +25,7 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_map = new System.Collections.Generic.Dictionary<int, int>(n * 3 / 2);for(var i = 0 ; i < n ; i++) { int _k;  _k = _buf.ReadInt(); int _v;  _v = _buf.ReadInt();     test_map.Add(_k, _v);}}
         test_vector = _buf.ReadUnityVector3();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_arr = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); test_arr[i] = _e;}}
+        test_string = _buf.ReadString();
         PostInit();
     }
 
@@ -65,6 +66,10 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
     /// 测试数组或集合
     /// </summary>
     public int[] test_arr { get; private set; }
+    /// <summary>
+    /// 测试字符串
+    /// </summary>
+    public string test_string { get; private set; }
 
     public const int __ID__ = -876445296;
     public override int GetTypeId() => __ID__;
@@ -89,6 +94,7 @@ public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase
         + "test_map:" + Bright.Common.StringUtil.CollectionToString(test_map) + ","
         + "test_vector:" + test_vector + ","
         + "test_arr:" + Bright.Common.StringUtil.CollectionToString(test_arr) + ","
+        + "test_string:" + test_string + ","
         + "}";
     }
     

@@ -22,20 +22,6 @@ namespace Aquila.Fight
                 return;
             }
 
-            // var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_HP);
-            // if (!res.get_succ)
-            // {
-            //     Log.Warning("<color=red>EffectSpec_Damage--->!res.get_succ</color>");
-            //     return;
-            // }
-            //
-            // var def = attr_addon.GetCorrectionFinalValue(Actor_Attr.DEF);
-            //
-            // var final_value = Tools.Fight.CalcPhysicDamage( Meta.ModifierNumric, def.value );
-            // // attr_addon.SetBaseValue(Meta.EffectType, final_value);
-            // attr_addon.SetCurrHP(final_value);
-            // result.AddDealedDamage((int)final_value);
-
             var cur_hp = attr_addon.GetCurrHPCorrection();
             var final = cur_hp + Meta.ModifierNumric;
             attr_addon.SetCurrHP(final);
