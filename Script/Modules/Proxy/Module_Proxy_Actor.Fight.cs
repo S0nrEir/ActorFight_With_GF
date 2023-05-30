@@ -3,6 +3,7 @@ using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityGameFramework.Runtime;
 
 namespace  Aquila.Module
@@ -83,22 +84,22 @@ namespace  Aquila.Module
             }
 
 
-            Log.Info("<color=green>--------before use--------</color>");
-            Log.Info("<color=green>castor info:</color>");
-            Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            Log.Info("<color=green>target info:</color>");
-            Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>--------before use--------</color>");
+            // Log.Info("<color=green>castor info:</color>");
+            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>target info:</color>");
+            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             
             ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
             
             //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
             //refresh actor info,refresh actor ui
 
-            Log.Info("<color=green>--------after use--------</color>");
-            Log.Info("<color=green>castor info:</color>");
-            Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            Log.Info("<color=green>target info:</color>");
-            Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>--------after use--------</color>");
+            // Log.Info("<color=green>castor info:</color>");
+            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>target info:</color>");
+            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             
             //show damage number
             GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
