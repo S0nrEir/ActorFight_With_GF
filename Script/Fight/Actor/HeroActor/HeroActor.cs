@@ -9,32 +9,8 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
-    public class HeroActor :
-        TActorBase,
-        ISwitchStateBehavior,
-        IDieBehavior
+    public partial class HeroActor : TActorBase
     {
-
-        #region impl
-        public void Die()
-        {
-            SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
-        }
-
-        public void TakeDamage( int dmg )
-        {
-        }
-
-        /// <summary>
-        /// switch state
-        /// </summary>
-        public void SwitchTo( ActorStateTypeEnum state_type, object[] enter_param, object[] exist_param )
-        {
-            _fsm_addon.SwitchTo( state_type, enter_param, exist_param );
-        }
-
-        #endregion
-
         public ActorStateTypeEnum CurrState => _fsm_addon.CurrState;
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
         
@@ -76,7 +52,7 @@ namespace Aquila.Fight.Actor
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
             //更新状态机
-            _fsm_addon?.OnUpdateDate( elapseSeconds, realElapseSeconds );
+            _fsm_addon?.OnUpdate( elapseSeconds, realElapseSeconds );
             //更新技能系统数据（CD等）
             _ability_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
             //信息板位置更新

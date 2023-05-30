@@ -80,7 +80,7 @@ namespace  Aquila.Extension
         /// </summary>
         private T GenObject<T>(string pool_name) where T : Aquila_Object_Base
         {
-            var type_name = nameof(T);
+            // var type_name = nameof(T);
             var pool = GameEntry.ObjectPool.GetObjectPool<T>(pool_name);
             if (pool != null)
                 return pool.Spawn() as T;

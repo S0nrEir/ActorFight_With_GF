@@ -15,6 +15,9 @@ namespace Aquila.Fight
         bool HitCorrectTarget ( object obj );
     }
 
+    /// <summary>
+    /// 死亡
+    /// </summary>
     public interface IDieBehavior
     {
         void Die ();
@@ -55,8 +58,10 @@ namespace Aquila.Fight
     /// </summary>
     public interface IDoAbilityBehavior
     {
-        //#todo技能使用接口待修改
-        void DoAbilityAction ();
+        /// <summary>
+        /// 使用技能
+        /// </summary>
+        void DoAbilityAction (object param);
     }
 
     /// <summary>
@@ -66,17 +71,4 @@ namespace Aquila.Fight
     {
         void TakeDamage ( int dmg );
     }
-
-    public interface IDoDamageBehavior
-    {
-        void DoDamage ( float dmg );
-    }
-
-    /// <summary>
-    /// 造成伤害
-    /// </summary>
-    //public interface DoDamageBehavior
-    //{
-    //    void DoDmage ();
-    //}
 }

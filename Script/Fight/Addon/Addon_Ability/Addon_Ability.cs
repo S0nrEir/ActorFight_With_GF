@@ -125,7 +125,7 @@ namespace  Aquila.Fight.Addon
             }
 
             _spec_arr  = null;
-            _meta      = null;
+            // _meta      = null;
             _init_flag = false;
             base.Dispose();
         }
@@ -140,10 +140,10 @@ namespace  Aquila.Fight.Addon
             base.OnRemove();
         }
 
-        /// <summary>
-        /// 技能元数据
-        /// </summary>
-        private TB_AbilityBase _meta = null;
+        // /// <summary>
+        // /// 技能元数据
+        // /// </summary>
+        // private TB_AbilityBase _meta = null;
         
         /// <summary>
         /// 持有的技能
