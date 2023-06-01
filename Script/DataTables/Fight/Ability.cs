@@ -8,35 +8,35 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace Cfg.common
+namespace Cfg.Fight
 {
    
-public partial class TB_AbilityBase
+public partial class Ability
 {
-    private readonly Dictionary<int, common.AbilityBase> _dataMap;
-    private readonly List<common.AbilityBase> _dataList;
+    private readonly Dictionary<int, Fight.Table_AbilityBase> _dataMap;
+    private readonly List<Fight.Table_AbilityBase> _dataList;
     
-    public TB_AbilityBase(ByteBuf _buf)
+    public Ability(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, common.AbilityBase>();
-        _dataList = new List<common.AbilityBase>();
+        _dataMap = new Dictionary<int, Fight.Table_AbilityBase>();
+        _dataList = new List<Fight.Table_AbilityBase>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            common.AbilityBase _v;
-            _v = common.AbilityBase.DeserializeAbilityBase(_buf);
+            Fight.Table_AbilityBase _v;
+            _v = Fight.Table_AbilityBase.DeserializeTable_AbilityBase(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, common.AbilityBase> DataMap => _dataMap;
-    public List<common.AbilityBase> DataList => _dataList;
+    public Dictionary<int, Fight.Table_AbilityBase> DataMap => _dataMap;
+    public List<Fight.Table_AbilityBase> DataList => _dataList;
 
-    public common.AbilityBase GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public common.AbilityBase Get(int key) => _dataMap[key];
-    public common.AbilityBase this[int key] => _dataMap[key];
+    public Fight.Table_AbilityBase GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Fight.Table_AbilityBase Get(int key) => _dataMap[key];
+    public Fight.Table_AbilityBase this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

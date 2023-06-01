@@ -8,58 +8,51 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-
-
-namespace Cfg.common
+namespace Cfg.Common
 {
-
-public sealed partial class Scripts :  Bright.Config.BeanBase 
+   
+public partial class Scripts
 {
-    public Scripts(ByteBuf _buf) 
+    private readonly Dictionary<int, Common.Table_Scripts> _dataMap;
+    private readonly List<Common.Table_Scripts> _dataList;
+    
+    public Scripts(ByteBuf _buf)
     {
-        id = _buf.ReadInt();
-        AssetPath = _buf.ReadString();
-        Type = (Enum.Script_Type)_buf.ReadInt();
+        _dataMap = new Dictionary<int, Common.Table_Scripts>();
+        _dataList = new List<Common.Table_Scripts>();
+        
+        for(int n = _buf.ReadSize() ; n > 0 ; --n)
+        {
+            Common.Table_Scripts _v;
+            _v = Common.Table_Scripts.DeserializeTable_Scripts(_buf);
+            _dataList.Add(_v);
+            _dataMap.Add(_v.id, _v);
+        }
         PostInit();
     }
 
-    public static Scripts DeserializeScripts(ByteBuf _buf)
+    public Dictionary<int, Common.Table_Scripts> DataMap => _dataMap;
+    public List<Common.Table_Scripts> DataList => _dataList;
+
+    public Common.Table_Scripts GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Common.Table_Scripts Get(int key) => _dataMap[key];
+    public Common.Table_Scripts this[int key] => _dataMap[key];
+
+    public void Resolve(Dictionary<string, object> _tables)
     {
-        return new common.Scripts(_buf);
-    }
-
-    /// <summary>
-    /// id
-    /// </summary>
-    public int id { get; private set; }
-    /// <summary>
-    /// 脚本路径
-    /// </summary>
-    public string AssetPath { get; private set; }
-    /// <summary>
-    /// 注入脚本类型
-    /// </summary>
-    public Enum.Script_Type Type { get; private set; }
-
-    public const int __ID__ = -1856307227;
-    public override int GetTypeId() => __ID__;
-
-    public  void Resolve(Dictionary<string, object> _tables)
-    {
+        foreach(var v in _dataList)
+        {
+            v.Resolve(_tables);
+        }
         PostResolve();
     }
 
-    public  void TranslateText(System.Func<string, string, string> translator)
+    public void TranslateText(System.Func<string, string, string> translator)
     {
-    }
-
-    public override string ToString()
-    {
-        return "{ "
-        + "id:" + id + ","
-        + "AssetPath:" + AssetPath + ","
-        + "Type:" + Type + ","
-        + "}";
+        foreach(var v in _dataList)
+        {
+            v.TranslateText(translator);
+        }
     }
     
     partial void PostInit();

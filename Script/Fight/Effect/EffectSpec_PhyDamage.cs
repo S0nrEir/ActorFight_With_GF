@@ -1,9 +1,6 @@
-﻿using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
+﻿using Aquila.Fight.Addon;
 using Aquila.Module;
-using Aquila.Toolkit;
-using Cfg.common;
-using Cfg.Enum;
+using Cfg.Common;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -28,7 +25,7 @@ namespace Aquila.Fight
             result.AddDealedDamage(Meta.ModifierNumric);
         }
 
-        public EffectSpec_PhyDamage(Effect meta) : base(meta)
+        public EffectSpec_PhyDamage(Table_Effect meta) : base(meta)
         {
         }
     }

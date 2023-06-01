@@ -71,7 +71,7 @@ namespace  Aquila.Module
                 // return result;
             }
 
-            var meta = GameEntry.DataTable.Tables.TB_AbilityBase.Get(abilityMetaID);
+            var meta = GameEntry.DataTable.Tables.Ability.Get(abilityMetaID);
             if (meta is null)
             {
                 result._stateDescription =
@@ -80,7 +80,7 @@ namespace  Aquila.Module
             }
 
             if (castorInstance.instance.Actor is IDoAbilityBehavior)
-                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(null);
+                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(meta);
 
             return result;
         }

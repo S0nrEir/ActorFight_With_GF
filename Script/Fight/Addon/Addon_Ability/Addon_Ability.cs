@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Fight.Actor;
 using Aquila.Module;
-using Cfg.common;
-using Cfg.role;
+using Cfg.Fight;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+
 namespace  Aquila.Fight.Addon
 {
     /// <summary>
@@ -77,20 +75,19 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.DataTable.Tables.TB_RoleMeta.Get(Actor.RoleMetaID);
+            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(Actor.RoleMetaID);
             if (roleMeta is null)
             {
                 Log.Warning("Addon_Ability.Init()->role_meta is null");
                 return false;
             }
-            
             var ids = roleMeta.AbilityBaseID;
             _specArr = new AbilitySpecBase[ids.Length];
-            AbilityBase abilityBaseMeta = null;
+            Table_AbilityBase abilityBaseMeta = null;
             var len = _specArr.Length;
             for (var i = 0; i < len && i < ids.Length; i++)
             {
-                abilityBaseMeta = GameEntry.DataTable.Tables.TB_AbilityBase.Get(ids[i]);
+                abilityBaseMeta = GameEntry.DataTable.Tables.Ability.Get(ids[i]);
                 if (abilityBaseMeta is null)
                 {
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");

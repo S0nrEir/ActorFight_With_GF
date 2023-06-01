@@ -2,6 +2,7 @@
 using Aquila.Module;
 using Aquila.ObjectPool;
 using Aquila.Toolkit;
+using Cfg.Common;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
@@ -162,7 +163,7 @@ namespace Aquila.Procedure
             else
             {
                 var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-                var scene_script_meta = GameEntry.DataTable.Table<Cfg.common.TB_Scripts>().Get( 10000 );
+                var scene_script_meta = GameEntry.DataTable.Table<Scripts>().Get( 10000 );
                 procedure_variable.SetValue( new Procedure_Fight_Data()
                 {
                     _scene_script_meta = scene_script_meta,

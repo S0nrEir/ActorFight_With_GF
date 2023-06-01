@@ -10,24 +10,23 @@ using System.Collections.Generic;
 
 
 
-namespace Cfg.common
+namespace Cfg.Fight
 {
 
-public sealed partial class AbilityBase :  Bright.Config.BeanBase 
+public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase 
 {
-    public AbilityBase(ByteBuf _buf) 
+    public Table_AbilityTimeline(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        name = _buf.ReadString();
-        desc = _buf.ReadString();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);effects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); effects[i] = _e;}}
-        TargetType = (Enum.AbilityTargetType)_buf.ReadInt();
+        AssetPath = _buf.ReadString();
+        Duration = _buf.ReadFloat();
+        TriggerTime = _buf.ReadFloat();
         PostInit();
     }
 
-    public static AbilityBase DeserializeAbilityBase(ByteBuf _buf)
+    public static Table_AbilityTimeline DeserializeTable_AbilityTimeline(ByteBuf _buf)
     {
-        return new common.AbilityBase(_buf);
+        return new Fight.Table_AbilityTimeline(_buf);
     }
 
     /// <summary>
@@ -35,23 +34,19 @@ public sealed partial class AbilityBase :  Bright.Config.BeanBase
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// 名字
+    /// Timeline资产路径
     /// </summary>
-    public string name { get; private set; }
+    public string AssetPath { get; private set; }
     /// <summary>
-    /// 描述
+    /// 总时长，单位秒
     /// </summary>
-    public string desc { get; private set; }
+    public float Duration { get; private set; }
     /// <summary>
-    /// 携带的effect集合
+    /// 触发秒数
     /// </summary>
-    public int[] effects { get; private set; }
-    /// <summary>
-    /// 目标类型
-    /// </summary>
-    public Enum.AbilityTargetType TargetType { get; private set; }
+    public float TriggerTime { get; private set; }
 
-    public const int __ID__ = -1922790536;
+    public const int __ID__ = -1709568676;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
@@ -67,10 +62,9 @@ public sealed partial class AbilityBase :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "name:" + name + ","
-        + "desc:" + desc + ","
-        + "effects:" + Bright.Common.StringUtil.CollectionToString(effects) + ","
-        + "TargetType:" + TargetType + ","
+        + "AssetPath:" + AssetPath + ","
+        + "Duration:" + Duration + ","
+        + "TriggerTime:" + TriggerTime + ","
         + "}";
     }
     

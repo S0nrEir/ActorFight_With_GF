@@ -8,127 +8,51 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-
-
-namespace Cfg.role
+namespace Cfg.Role
 {
-
-public sealed partial class RoleMeta :  Bright.Config.BeanBase 
+   
+public partial class RoleMeta
 {
-    public RoleMeta(ByteBuf _buf) 
+    private readonly Dictionary<int, Role.Table_RoleMeta> _dataMap;
+    private readonly List<Role.Table_RoleMeta> _dataList;
+    
+    public RoleMeta(ByteBuf _buf)
     {
-        id = _buf.ReadInt();
-        name = _buf.ReadString();
-        desc = _buf.ReadString();
-        HP = _buf.ReadInt();
-        MP = _buf.ReadInt();
-        ATK = _buf.ReadFloat();
-        DEF = _buf.ReadFloat();
-        SPD = _buf.ReadFloat();
-        MVT = _buf.ReadFloat();
-        STR = _buf.ReadFloat();
-        AGI = _buf.ReadFloat();
-        SPW = _buf.ReadFloat();
-        Class = _buf.ReadInt();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AbilityBaseID = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AbilityBaseID[i] = _e;}}
-        RoleType = (Enum.RoleType)_buf.ReadInt();
+        _dataMap = new Dictionary<int, Role.Table_RoleMeta>();
+        _dataList = new List<Role.Table_RoleMeta>();
+        
+        for(int n = _buf.ReadSize() ; n > 0 ; --n)
+        {
+            Role.Table_RoleMeta _v;
+            _v = Role.Table_RoleMeta.DeserializeTable_RoleMeta(_buf);
+            _dataList.Add(_v);
+            _dataMap.Add(_v.id, _v);
+        }
         PostInit();
     }
 
-    public static RoleMeta DeserializeRoleMeta(ByteBuf _buf)
+    public Dictionary<int, Role.Table_RoleMeta> DataMap => _dataMap;
+    public List<Role.Table_RoleMeta> DataList => _dataList;
+
+    public Role.Table_RoleMeta GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Role.Table_RoleMeta Get(int key) => _dataMap[key];
+    public Role.Table_RoleMeta this[int key] => _dataMap[key];
+
+    public void Resolve(Dictionary<string, object> _tables)
     {
-        return new role.RoleMeta(_buf);
-    }
-
-    /// <summary>
-    /// 这是id
-    /// </summary>
-    public int id { get; private set; }
-    /// <summary>
-    /// 名字
-    /// </summary>
-    public string name { get; private set; }
-    /// <summary>
-    /// 描述
-    /// </summary>
-    public string desc { get; private set; }
-    /// <summary>
-    /// 血量
-    /// </summary>
-    public int HP { get; private set; }
-    /// <summary>
-    /// 魔法
-    /// </summary>
-    public int MP { get; private set; }
-    /// <summary>
-    /// 基础攻击力系数
-    /// </summary>
-    public float ATK { get; private set; }
-    /// <summary>
-    /// 基础防御力
-    /// </summary>
-    public float DEF { get; private set; }
-    /// <summary>
-    /// 基础速度
-    /// </summary>
-    public float SPD { get; private set; }
-    /// <summary>
-    /// 基础移动力
-    /// </summary>
-    public float MVT { get; private set; }
-    /// <summary>
-    /// 力量
-    /// </summary>
-    public float STR { get; private set; }
-    /// <summary>
-    /// 敏捷
-    /// </summary>
-    public float AGI { get; private set; }
-    /// <summary>
-    /// 法伤
-    /// </summary>
-    public float SPW { get; private set; }
-    /// <summary>
-    /// 职业，索引Role_Class枚举
-    /// </summary>
-    public int Class { get; private set; }
-    /// <summary>
-    /// 角色持有的技能，索引AbilityBase表
-    /// </summary>
-    public int[] AbilityBaseID { get; private set; }
-    public Enum.RoleType RoleType { get; private set; }
-
-    public const int __ID__ = 1444141619;
-    public override int GetTypeId() => __ID__;
-
-    public  void Resolve(Dictionary<string, object> _tables)
-    {
+        foreach(var v in _dataList)
+        {
+            v.Resolve(_tables);
+        }
         PostResolve();
     }
 
-    public  void TranslateText(System.Func<string, string, string> translator)
+    public void TranslateText(System.Func<string, string, string> translator)
     {
-    }
-
-    public override string ToString()
-    {
-        return "{ "
-        + "id:" + id + ","
-        + "name:" + name + ","
-        + "desc:" + desc + ","
-        + "HP:" + HP + ","
-        + "MP:" + MP + ","
-        + "ATK:" + ATK + ","
-        + "DEF:" + DEF + ","
-        + "SPD:" + SPD + ","
-        + "MVT:" + MVT + ","
-        + "STR:" + STR + ","
-        + "AGI:" + AGI + ","
-        + "SPW:" + SPW + ","
-        + "Class:" + Class + ","
-        + "AbilityBaseID:" + Bright.Common.StringUtil.CollectionToString(AbilityBaseID) + ","
-        + "RoleType:" + RoleType + ","
-        + "}";
+        foreach(var v in _dataList)
+        {
+            v.TranslateText(translator);
+        }
     }
     
     partial void PostInit();

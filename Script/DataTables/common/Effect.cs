@@ -8,94 +8,51 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-
-
-namespace Cfg.common
+namespace Cfg.Common
 {
-
-public sealed partial class Effect :  Bright.Config.BeanBase 
+   
+public partial class Effect
 {
-    public Effect(ByteBuf _buf) 
+    private readonly Dictionary<int, Common.Table_Effect> _dataMap;
+    private readonly List<Common.Table_Effect> _dataList;
+    
+    public Effect(ByteBuf _buf)
     {
-        id = _buf.ReadInt();
-        Tag = (Enum.EffectTagType)_buf.ReadInt();
-        Type = (Enum.EffectType)_buf.ReadInt();
-        ModifierNumric = _buf.ReadFloat();
-        ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
-        Take = (Enum.DurationPolicy)_buf.ReadInt();
-        Period = _buf.ReadFloat();
-        Target = _buf.ReadInt();
-        EffectType = (Enum.Actor_Attr)_buf.ReadInt();
+        _dataMap = new Dictionary<int, Common.Table_Effect>();
+        _dataList = new List<Common.Table_Effect>();
+        
+        for(int n = _buf.ReadSize() ; n > 0 ; --n)
+        {
+            Common.Table_Effect _v;
+            _v = Common.Table_Effect.DeserializeTable_Effect(_buf);
+            _dataList.Add(_v);
+            _dataMap.Add(_v.id, _v);
+        }
         PostInit();
     }
 
-    public static Effect DeserializeEffect(ByteBuf _buf)
+    public Dictionary<int, Common.Table_Effect> DataMap => _dataMap;
+    public List<Common.Table_Effect> DataList => _dataList;
+
+    public Common.Table_Effect GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Common.Table_Effect Get(int key) => _dataMap[key];
+    public Common.Table_Effect this[int key] => _dataMap[key];
+
+    public void Resolve(Dictionary<string, object> _tables)
     {
-        return new common.Effect(_buf);
-    }
-
-    /// <summary>
-    /// id
-    /// </summary>
-    public int id { get; private set; }
-    /// <summary>
-    /// 携带的Tag类型，添加时添加tag，移除时，移除tag
-    /// </summary>
-    public Enum.EffectTagType Tag { get; private set; }
-    /// <summary>
-    /// Effect的类型
-    /// </summary>
-    public Enum.EffectType Type { get; private set; }
-    /// <summary>
-    /// 修改器数值
-    /// </summary>
-    public float ModifierNumric { get; private set; }
-    /// <summary>
-    /// 数值修改器类型
-    /// </summary>
-    public Enum.NumricModifierType ModifierType { get; private set; }
-    /// <summary>
-    /// 生效策略
-    /// </summary>
-    public Enum.DurationPolicy Take { get; private set; }
-    /// <summary>
-    /// 生效周期，单位毫秒
-    /// </summary>
-    public float Period { get; private set; }
-    /// <summary>
-    /// 目标类型，0=我方，1=敌方
-    /// </summary>
-    public int Target { get; private set; }
-    /// <summary>
-    /// 影响的数值类型
-    /// </summary>
-    public Enum.Actor_Attr EffectType { get; private set; }
-
-    public const int __ID__ = -458280172;
-    public override int GetTypeId() => __ID__;
-
-    public  void Resolve(Dictionary<string, object> _tables)
-    {
+        foreach(var v in _dataList)
+        {
+            v.Resolve(_tables);
+        }
         PostResolve();
     }
 
-    public  void TranslateText(System.Func<string, string, string> translator)
+    public void TranslateText(System.Func<string, string, string> translator)
     {
-    }
-
-    public override string ToString()
-    {
-        return "{ "
-        + "id:" + id + ","
-        + "Tag:" + Tag + ","
-        + "Type:" + Type + ","
-        + "ModifierNumric:" + ModifierNumric + ","
-        + "ModifierType:" + ModifierType + ","
-        + "Take:" + Take + ","
-        + "Period:" + Period + ","
-        + "Target:" + Target + ","
-        + "EffectType:" + EffectType + ","
-        + "}";
+        foreach(var v in _dataList)
+        {
+            v.TranslateText(translator);
+        }
     }
     
     partial void PostInit();

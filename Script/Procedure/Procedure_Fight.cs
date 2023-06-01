@@ -6,6 +6,7 @@ using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System;
+using Cfg.Common;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -100,7 +101,7 @@ namespace Aquila.Procedure
         private void MainCameraInitializeSetting()
         {
             _main_camera = GameEntry.GlobalVar.MainCamera;
-            var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
+            var scene_config = GameEntry.DataTable.Tables.SceneConfig;
             _main_camera.transform.eulerAngles = scene_config.Main_Camera_Default_Euler;
             //_main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
             _main_camera.transform.position = GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION;
@@ -158,7 +159,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 场景脚本表数据
         /// </summary>
-        public Cfg.common.Scripts _scene_script_meta = null;
+        public Table_Scripts _scene_script_meta = null;
     }
 
     /// <summary>

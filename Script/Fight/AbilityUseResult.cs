@@ -11,10 +11,10 @@ namespace Aquila.Fight
     {
         public void Init()
         {
-            _succ = false;
-            _abilityID = -1;
-            _castorID  = -1;
-            _targetID  = -1;
+            _succ             = false;
+            _abilityID        = -1;
+            _castorID         = -1;
+            _targetID         = -1;
             _stateDescription = 0b_0000_0000;
         }
 

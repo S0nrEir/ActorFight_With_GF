@@ -8,35 +8,35 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-namespace Cfg.role
+namespace Cfg.Fight
 {
    
-public partial class TB_RoleBaseAttr
+public partial class AbilityTimeline
 {
-    private readonly Dictionary<int, role.RoleBaseAttr> _dataMap;
-    private readonly List<role.RoleBaseAttr> _dataList;
+    private readonly Dictionary<int, Fight.Table_AbilityTimeline> _dataMap;
+    private readonly List<Fight.Table_AbilityTimeline> _dataList;
     
-    public TB_RoleBaseAttr(ByteBuf _buf)
+    public AbilityTimeline(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, role.RoleBaseAttr>();
-        _dataList = new List<role.RoleBaseAttr>();
+        _dataMap = new Dictionary<int, Fight.Table_AbilityTimeline>();
+        _dataList = new List<Fight.Table_AbilityTimeline>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            role.RoleBaseAttr _v;
-            _v = role.RoleBaseAttr.DeserializeRoleBaseAttr(_buf);
+            Fight.Table_AbilityTimeline _v;
+            _v = Fight.Table_AbilityTimeline.DeserializeTable_AbilityTimeline(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, role.RoleBaseAttr> DataMap => _dataMap;
-    public List<role.RoleBaseAttr> DataList => _dataList;
+    public Dictionary<int, Fight.Table_AbilityTimeline> DataMap => _dataMap;
+    public List<Fight.Table_AbilityTimeline> DataList => _dataList;
 
-    public role.RoleBaseAttr GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public role.RoleBaseAttr Get(int key) => _dataMap[key];
-    public role.RoleBaseAttr this[int key] => _dataMap[key];
+    public Fight.Table_AbilityTimeline GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Fight.Table_AbilityTimeline Get(int key) => _dataMap[key];
+    public Fight.Table_AbilityTimeline this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

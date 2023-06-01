@@ -2,6 +2,7 @@
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
+using Cfg.Role;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -146,7 +147,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private void ResetNumricArr()
         {
-            var meta = GameEntry.DataTable.Table<Cfg.role.TB_RoleMeta>().Get( Actor.RoleMetaID );
+            var meta = GameEntry.DataTable.Table<Cfg.Role.RoleMeta>().Get( Actor.RoleMetaID );
             if ( meta is null )
             {
                 Log.Warning( $"<color=yellow>meta is null,meta id = {Actor.RoleMetaID}</color>" );
@@ -158,7 +159,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置基础属性
         /// </summary>
-        private void SetBaseAttr( Cfg.role.RoleMeta meta )
+        private void SetBaseAttr( Table_RoleMeta meta )
         {
             //#todo设置属性暂时是一个个设置，想个办法走loop
             var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();

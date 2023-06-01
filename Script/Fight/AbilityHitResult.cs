@@ -26,7 +26,7 @@ namespace Aquila.Fight
             _dealed_damage += dmg;
         }
 
-        /// <summary>222
+        /// <summary>
         /// 设置状态
         /// </summary>
         public void SetState(AbilityHitResultTypeEnum type)
@@ -50,7 +50,7 @@ namespace Aquila.Fight
         /// 造成的伤害
         /// </summary>
         public float _dealed_damage;
-
+        
         /// <summary>
         /// 目标id
         /// </summary>

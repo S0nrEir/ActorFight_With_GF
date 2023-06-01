@@ -14,11 +14,11 @@ namespace Cfg.Enum
     public enum RoleType
     {
         /// <summary>
-        /// 我方可操作的角色单位
+        /// 主要的角色单位
         /// </summary>
         Hero = 1,
         /// <summary>
-        /// 随从，我方的AI单位
+        /// 随从，AI单位
         /// </summary>
         Minion = 2,
     }

@@ -79,10 +79,14 @@ namespace Aquila.Fight.FSM
             _time += deltaTime;
             if(_abilityFinishFlag)
                 _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE,null,null);
+            
+            //在对应的hurtPoint施加buff
+            
         }
         
         public HeroAbilityState( int state_id ) : base( state_id )
         {
+            
         }
 
         /// <summary>

@@ -1,8 +1,6 @@
-using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Numric;
-using Cfg.common;
+using Cfg.Common;
 using GameFramework;
 
 namespace Aquila.Fight
@@ -12,7 +10,7 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base
     {
-        protected EffectSpec_Base(Effect meta)
+        protected EffectSpec_Base(Table_Effect meta)
         {
             Meta = meta;
             _modifier = ReferencePool.Acquire<Numric_Modifier>();
@@ -36,7 +34,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 元数据
         /// </summary>
-        public Effect Meta { get; private set; } = null;
+        public Table_Effect Meta { get; private set; } = null;
 
         /// <summary>
         /// 对应的数值修改器

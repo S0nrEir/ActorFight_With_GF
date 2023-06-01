@@ -1,6 +1,6 @@
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Cfg.common;
+using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -28,7 +28,7 @@ namespace Aquila.Fight
             return _modifier.Calc(val_to_modify);
         }
 
-        public EffectSpec_Cost(Effect meta) : base(meta)
+        public EffectSpec_Cost(Table_Effect meta) : base(meta)
         {
         }
 
