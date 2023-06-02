@@ -2,6 +2,7 @@
 using Aquila.Extension;
 using GameFramework;
 using System.Collections.Generic;
+using Cfg.Common;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityGameFramework.Runtime;
@@ -124,7 +125,7 @@ namespace Aquila.Module
     {
         public int x_width = 0;
         public int z_width = 0;
-        public Cfg.common.Scripts _scene_script_meta = null;
+        public Table_Scripts _scene_script_meta = null;
 
         /// <summary>
         /// 检查字段有效性

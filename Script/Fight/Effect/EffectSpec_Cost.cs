@@ -1,14 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Aquila.Numric;
-using Aquila.Toolkit;
-using Cfg.common;
-using Cfg.Enum;
-using GameFramework;
-using UnityEngine;
+using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -22,10 +14,10 @@ namespace Aquila.Fight
             var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();
             if(attr_addon is null)
                 return;
-            
-            var curr_value = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP);
-            curr_value.value += Meta.ModifierNumric;
-            var res = attr_addon.SetBaseValue(Actor_Attr.Curr_MP, curr_value.value);
+             
+            var curr_value = attr_addon.GetCurrMPCorrection();
+            curr_value += Meta.ExtensionParam.FloatParam_1;
+            var res = attr_addon.SetCurrMP(curr_value);
         }
 
         /// <summary>
@@ -36,7 +28,7 @@ namespace Aquila.Fight
             return _modifier.Calc(val_to_modify);
         }
 
-        public EffectSpec_Cost(Effect meta) : base(meta)
+        public EffectSpec_Cost(Table_Effect meta) : base(meta)
         {
         }
 

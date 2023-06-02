@@ -1,6 +1,4 @@
 ﻿using Aquila.Fight.Actor;
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Module;
 using UnityEngine;
 
@@ -21,12 +19,12 @@ namespace Aquila.Fight.Addon
         
         /// <summary>
         /// 设置玩家的actor实例
-        /// </summary>
-        public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
-        {
-            _actor_instance = instance;
-        }
-
+        /// </summary>q3w
+        // public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
+        // {
+        //     _actor_instance = instance;
+        // }
+        
         public abstract AddonTypeEnum AddonType { get; }
 
         public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
@@ -34,6 +32,11 @@ namespace Aquila.Fight.Addon
             Actor            = actor;
             TargetGameObject = target_go;
             TargetTransform  = target_transform;
+        }
+
+        public virtual void Init(Module_Proxy_Actor.ActorInstance instance)
+        {
+            _actor_instance = instance;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -85,28 +88,12 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// 清理资源，所属actor回收会调用
+        /// 清理资源，所属actor回收时调用
         /// </summary>
         public virtual void Dispose ()
         {
-            
+            _actor_instance = null;
         }
-
-        /// <summary>
-        /// 检查，返回addon错误码
-        /// </summary>
-        // public virtual uint Valid () 
-        // {
-        //     return AddonValidErrorCodeEnum.NONE;
-        // }
-
-        /// <summary>
-        /// 通知actor一个event
-        /// </summary>
-        //public void NotifyActor ( ActorEventEnum type, object[] param )
-        //{
-        //    var intType = (int)type;
-        //}
     }
 
 }

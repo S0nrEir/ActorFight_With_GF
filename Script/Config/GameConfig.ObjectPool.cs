@@ -15,6 +15,11 @@ namespace Aquila.Config
             /// 地块对象池名称
             /// </summary>
             public const string OBJECT_POOL_TERRAIN_NAME = "Object_Terrain";
+
+            /// <summary>
+            /// HPBar对象池名称
+            /// </summary>
+            public const string OBJECT_POOL_HP_BAR_NAME = "Object_HPBar";
         }
     }
 }

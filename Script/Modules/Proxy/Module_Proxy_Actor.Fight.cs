@@ -1,9 +1,6 @@
 using Aquila.Fight;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using GameFramework;
-using UnityEngine;
-using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
 
 namespace  Aquila.Module
 {
@@ -41,12 +38,53 @@ namespace  Aquila.Module
     //this.Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
     //技能数据(this)的持有者(asc)获取对应类型的effectSpec实例
     //然后将该实例应用于owner
-
+    
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
     public partial class Module_Proxy_Actor
     {
+        /// <summary>
+        /// 单对单释放技能
+        /// </summary>
+        public AbilityUseResult Ability2SingleTarget(int castorID, int targetID, int abilityMetaID)
+        {
+            //obtain ability result
+            var result = default(AbilityUseResult);
+            result.Init();
+            result._castorID = castorID;
+            result._targetID = targetID;
+
+            var castorInstance = TryGet(castorID);
+            if (!castorInstance.has)
+            {
+                result._stateDescription =
+                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                // return result;
+            }
+
+            var targetInstance = TryGet(targetID);
+            if (!targetInstance.has)
+            {
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_TARGET, true);
+                // return result;
+            }
+
+            var meta = GameEntry.DataTable.Tables.Ability.Get(abilityMetaID);
+            if (meta is null)
+            {
+                result._stateDescription =
+                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_META, true);
+                // return result;
+            }
+
+            if (castorInstance.instance.Actor is IDoAbilityBehavior)
+                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(meta);
+
+            return result;
+        }
+
         /// <summary>
         /// 单对单释放技能
         /// </summary>
@@ -82,17 +120,26 @@ namespace  Aquila.Module
                 return result;
             }
 
+
+            // Log.Info("<color=green>--------before use--------</color>");
+            // Log.Info("<color=green>castor info:</color>");
+            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>target info:</color>");
+            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            
             ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
             
             //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
             //refresh actor info,refresh actor ui
 
-            Log.Info("<color=green>castor info:</color>");
-            Log.Info(ability_addon.ToString());
+            // Log.Info("<color=green>--------after use--------</color>");
+            // Log.Info("<color=green>castor info:</color>");
+            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+            // Log.Info("<color=green>target info:</color>");
+            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             
-            ability_addon = target_instance.instance.GetAddon<Addon_Ability>();
-            Log.Info("<color=green>target info:</color>");
-            Log.Info(ability_addon.ToString());
+            //show damage number
+            GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
             return result;
         }
     }

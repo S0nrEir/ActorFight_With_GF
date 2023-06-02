@@ -2,6 +2,7 @@
 using Aquila.Toolkit;
 using GameFramework;
 using System;
+using Cfg.Common;
 using XLua;
 
 namespace Aquila.Extension
@@ -85,7 +86,7 @@ namespace Aquila.Extension
             /// <summary>
             /// 设置脚本运行时参数
             /// </summary>
-            public bool SetUp( Cfg.common.Scripts meta, LuaTable table )
+            public bool SetUp( Table_Scripts meta, LuaTable table )
             {
                 //Type_Name    = type_name;
                 _script_meta = meta;
@@ -100,7 +101,7 @@ namespace Aquila.Extension
             /// <summary>
             /// 脚本表格数据
             /// </summary>
-            public Cfg.common.Scripts _script_meta = null;
+            public Table_Scripts _script_meta = null;
 
             /// <summary>
             /// 脚本key

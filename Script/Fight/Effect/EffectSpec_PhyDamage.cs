@@ -1,9 +1,6 @@
-﻿using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
+﻿using Aquila.Fight.Addon;
 using Aquila.Module;
-using Aquila.Toolkit;
-using Cfg.common;
-using Cfg.Enum;
+using Cfg.Common;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -22,24 +19,14 @@ namespace Aquila.Fight
                 return;
             }
 
-            var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_HP);
-            if (!res.get_succ)
-            {
-                Log.Warning("<color=red>EffectSpec_Damage--->!res.get_succ</color>");
-                return;
-            }
-
-            var def = attr_addon.GetCorrectionFinalValue(Actor_Attr.DEF);
-            
-            var final_value = Tools.Fight.CalcPhysicDamage( Meta.ModifierNumric, def.value );
-            attr_addon.SetBaseValue(Meta.EffectType, final_value);
-            result.AddDealedDamage((int)final_value);
+            var cur_hp = attr_addon.GetCurrHPCorrection();
+            var final = cur_hp + Meta.ExtensionParam.FloatParam_1;
+            attr_addon.SetCurrHP(final);
+            result.AddDealedDamage(Meta.ExtensionParam.FloatParam_1);
         }
 
-        public EffectSpec_PhyDamage(Effect meta) : base(meta)
+        public EffectSpec_PhyDamage(Table_Effect meta) : base(meta)
         {
         }
-        
     }
-   
 }

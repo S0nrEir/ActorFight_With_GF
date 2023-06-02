@@ -39,7 +39,7 @@ namespace Aquila.Module
             }
 
             /// <summary>
-            /// 获取该实例的苏哟有addon
+            /// 获取该实例的所有addon
             /// </summary>
             public Addon_Base[] AllAddons()
             {

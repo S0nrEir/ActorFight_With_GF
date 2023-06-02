@@ -1,5 +1,5 @@
 ﻿using Aquila.Fight;
-using Cfg.common;
+using Cfg.Common;
 using Cfg.Enum;
 
 namespace Aquila.Toolkit
@@ -14,7 +14,7 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 根据配表类型生成对应的effect逻辑实例
             /// </summary>
-            public static EffectSpec_Base CreateEffectSpec(Effect meta)
+            public static EffectSpec_Base CreateEffectSpec(Table_Effect meta)
             {
                 switch (meta.Type)
                 {

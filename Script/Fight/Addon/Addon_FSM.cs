@@ -72,8 +72,9 @@ namespace Aquila.Fight.Addon
             return Actor as T;
         }
 
-        public void OnUpdateDate( float elapseSeconds, float realElapseSeconds )
+        public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
+            base.OnUpdate(elapseSeconds, realElapseSeconds);
             ActorFsm.Update( elapseSeconds );
         }
 

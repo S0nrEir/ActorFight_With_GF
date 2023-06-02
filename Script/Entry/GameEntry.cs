@@ -19,20 +19,20 @@ namespace Aquila
             //扩展初始化
             AwaitableExtensions.SubscribeEvent();
             //初始化相机
-            GlobalVar.GetMainCamera();
+            // GlobalVar.GetMainCamera();
             
             DontDestroyOnLoad( this );
         }
+        
+        // void Update()
+        // {
+        //     Module.Update();
+        // }
 
-        void Update()
-        {
-            Module.Update();
-        }
-
-        private void FixedUpdate()
-        {
-            //GameFrameworkModule.FixedUpdate();
-        }
+        // private void FixedUpdate()
+        // {
+        //     //GameFrameworkModule.FixedUpdate();
+        // }
     }
 
 }
