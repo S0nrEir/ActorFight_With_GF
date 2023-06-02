@@ -9,7 +9,7 @@ namespace Aquila.Fight
     {
         public EffectSpec_CoolDown(Table_Effect meta) : base(meta)
         {
-            _total_duration = meta.ModifierNumric;
+            _total_duration = meta.ExtensionParam.FloatParam_1;
             _remain = 0f;
         }
         

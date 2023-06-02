@@ -20,12 +20,13 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         Tag = (Enum.EffectTagType)_buf.ReadInt();
         Type = (Enum.EffectType)_buf.ReadInt();
-        ModifierNumric = _buf.ReadFloat();
+        ExtensionParam = Struct.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
         Take = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
         Target = _buf.ReadInt();
         EffectType = (Enum.Actor_Attr)_buf.ReadInt();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         PostInit();
     }
 
@@ -47,9 +48,9 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.EffectType Type { get; private set; }
     /// <summary>
-    /// 修改器数值
+    /// 额外参数（float,float,float,int,int,int）
     /// </summary>
-    public float ModifierNumric { get; private set; }
+    public Struct.EffectExtensionParam ExtensionParam { get; private set; }
     /// <summary>
     /// 数值修改器类型
     /// </summary>
@@ -70,17 +71,23 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// 影响的数值类型
     /// </summary>
     public Enum.Actor_Attr EffectType { get; private set; }
+    /// <summary>
+    /// 派生effect
+    /// </summary>
+    public int[] DeriveEffects { get; private set; }
 
     public const int __ID__ = 1812133477;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        ExtensionParam?.Resolve(_tables);
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        ExtensionParam?.TranslateText(translator);
     }
 
     public override string ToString()
@@ -89,12 +96,13 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "id:" + id + ","
         + "Tag:" + Tag + ","
         + "Type:" + Type + ","
-        + "ModifierNumric:" + ModifierNumric + ","
+        + "ExtensionParam:" + ExtensionParam + ","
         + "ModifierType:" + ModifierType + ","
         + "Take:" + Take + ","
         + "Period:" + Period + ","
         + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
+        + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
         + "}";
     }
     

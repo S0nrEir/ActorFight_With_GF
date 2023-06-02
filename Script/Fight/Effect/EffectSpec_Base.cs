@@ -14,7 +14,7 @@ namespace Aquila.Fight
         {
             Meta = meta;
             _modifier = ReferencePool.Acquire<Numric_Modifier>();
-            _modifier.Setup(Meta.ModifierType,Meta.ModifierNumric);
+            _modifier.Setup(Meta.ModifierType,Meta.ExtensionParam.FloatParam_1);
         }
 
         /// <summary>

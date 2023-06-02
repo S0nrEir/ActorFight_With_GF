@@ -19,12 +19,12 @@ namespace Aquila.Fight.Addon
         
         /// <summary>
         /// 设置玩家的actor实例
-        /// </summary>
+        /// </summary>q3w
         // public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
         // {
         //     _actor_instance = instance;
         // }
-
+        
         public abstract AddonTypeEnum AddonType { get; }
 
         public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )

@@ -114,9 +114,9 @@ namespace Aquila.Procedure
             //     return;
             
             SetActorTransform(entity_1.Logic as HeroActor,new Vector3(0,0.8f,-3.29f),Vector3.zero);
-            SetActorTransform(entity_2.Logic as HeroActor,new Vector3(0,0.5f,1.6f),Vector3.zero);
-            SetActorTransform(entity_3.Logic as HeroActor,new Vector3(1,0.5f,1.6f),Vector3.zero);
-            SetActorTransform(entity_4.Logic as HeroActor,new Vector3(2,0.5f,1.6f),Vector3.zero);
+            SetActorTransform(entity_2.Logic as HeroActor,new Vector3(-2.87f,0.5f,1.6f),new Vector3(0,180f,0));
+            SetActorTransform(entity_3.Logic as HeroActor,new Vector3(-0.34f,0.5f,1.6f),new Vector3(0,180f,0));
+            SetActorTransform(entity_4.Logic as HeroActor,new Vector3(2,0.5f,1.6f),new Vector3(0,180f,0));
 
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );

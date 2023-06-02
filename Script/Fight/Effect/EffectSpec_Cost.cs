@@ -16,7 +16,7 @@ namespace Aquila.Fight
                 return;
              
             var curr_value = attr_addon.GetCurrMPCorrection();
-            curr_value += Meta.ModifierNumric;
+            curr_value += Meta.ExtensionParam.FloatParam_1;
             var res = attr_addon.SetCurrMP(curr_value);
         }
 
