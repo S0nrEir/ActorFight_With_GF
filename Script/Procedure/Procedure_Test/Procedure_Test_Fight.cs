@@ -113,10 +113,10 @@ namespace Aquila.Procedure
             // if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
             //     return;
             
-            SetActorPosition(entity_1.Logic as HeroActor,new Vector3(0,0.8f,-3.29f));
-            SetActorPosition(entity_2.Logic as HeroActor,new Vector3(0,0.5f,1.6f));
-            SetActorPosition(entity_3.Logic as HeroActor,new Vector3(1,0.5f,1.6f));
-            SetActorPosition(entity_4.Logic as HeroActor,new Vector3(2,0.5f,1.6f));
+            SetActorTransform(entity_1.Logic as HeroActor,new Vector3(0,0.8f,-3.29f),Vector3.zero);
+            SetActorTransform(entity_2.Logic as HeroActor,new Vector3(0,0.5f,1.6f),Vector3.zero);
+            SetActorTransform(entity_3.Logic as HeroActor,new Vector3(1,0.5f,1.6f),Vector3.zero);
+            SetActorTransform(entity_4.Logic as HeroActor,new Vector3(2,0.5f,1.6f),Vector3.zero);
 
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
@@ -130,14 +130,15 @@ namespace Aquila.Procedure
         /// <summary>
         /// 临时初始化，设置Actor的位置
         /// </summary>
-        private void SetActorPosition(TActorBase actor,Vector3 pos)
+        private void SetActorTransform(TActorBase actor,Vector3 position,Vector3 rotation)
         {
             if (actor is null)
             {
                 Log.Info("<color=warning>my_actor is null || enemy_actor is null</color>");
                 return;
             }
-            actor.SetWorldPosition(pos);
+            actor.SetWorldPosition(position);
+            actor.SetRotation(rotation);
         }
 
         /// <summary>

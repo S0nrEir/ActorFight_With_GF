@@ -99,6 +99,17 @@ namespace Aquila.Fight.Actor
             CachedTransform.position = pos_to_set;
         }
 
+        /// <summary>
+        /// 基于欧拉角设置旋转
+        /// </summary>
+        public void SetRotation(Vector3 rotation)
+        {
+            if(CachedTransform == null)
+                return;
+
+            CachedTransform.rotation = Quaternion.Euler(rotation);
+        }
+
         public void SetWorldPosition( Vector2 pos_to_set )
         {
             Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID}</color>" );

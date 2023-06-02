@@ -28,7 +28,7 @@ namespace Aquila.Fight.Actor
             _ability_addon   = AddAddon<Addon_Ability>();
             _fsm_addon       = AddAddon<Addon_HeroState>();
             _anim_addon      = AddAddon<Addon_Anim>();
-            _move_addon      = AddAddon<Addon_Move>();
+            // _move_addon      = AddAddon<Addon_Move>();
             // _info_addon      = AddAddon<Addon_InfoBoard>();
             //_nav_addon        = AddAddon<Addon_Nav>();
             _fx_addon        = AddAddon<Addon_FX>();
