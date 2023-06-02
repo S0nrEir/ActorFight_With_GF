@@ -16,6 +16,7 @@ namespace GameFramework.Procedure
     internal sealed class ProcedureManager : GameFrameworkModule, IProcedureManager
     {
         private IFsmManager m_FsmManager;
+        //fsm.cs
         private IFsm<IProcedureManager> m_ProcedureFsm;
 
         /// <summary>

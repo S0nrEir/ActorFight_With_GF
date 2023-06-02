@@ -6,6 +6,7 @@ using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System;
+using Cfg.Common;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -52,7 +53,7 @@ namespace Aquila.Procedure
                 (
                     1,
                     entity_id,
-                    @"Assets/Res/Prefab/Aquila_001.prefab",
+                    @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     0,
                     0,
                     new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
@@ -99,8 +100,8 @@ namespace Aquila.Procedure
         /// </summary>
         private void MainCameraInitializeSetting()
         {
-            _main_camera = GlobalVar.Main_Camera;
-            var scene_config = GameEntry.DataTable.Tables.TB_SceneConfig;
+            _main_camera = GameEntry.GlobalVar.MainCamera;
+            var scene_config = GameEntry.DataTable.Tables.SceneConfig;
             _main_camera.transform.eulerAngles = scene_config.Main_Camera_Default_Euler;
             //_main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
             _main_camera.transform.position = GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION;
@@ -158,7 +159,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 场景脚本表数据
         /// </summary>
-        public Cfg.common.Scripts _scene_script_meta = null;
+        public Table_Scripts _scene_script_meta = null;
     }
 
     /// <summary>

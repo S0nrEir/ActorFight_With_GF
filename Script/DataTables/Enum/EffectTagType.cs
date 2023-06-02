@@ -25,5 +25,9 @@ namespace Cfg.Enum
         /// 冷却10
         /// </summary>
         CoolDown = 2,
+        /// <summary>
+        /// 中毒
+        /// </summary>
+        Tox = 3,
     }
 }

@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Aquila.Numric;
-using Cfg.common;
-using GameFramework;
-using UnityEngine;
+using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -12,9 +7,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_CoolDown : EffectSpec_Base
     {
-        public EffectSpec_CoolDown(Effect meta) : base(meta)
+        public EffectSpec_CoolDown(Table_Effect meta) : base(meta)
         {
-            _total_duration = meta.ModifierNumric;
+            _total_duration = meta.ExtensionParam.FloatParam_1;
             _remain = 0f;
         }
         

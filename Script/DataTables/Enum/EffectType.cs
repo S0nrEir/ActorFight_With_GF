@@ -25,5 +25,9 @@ namespace Cfg.Enum
         /// 物理伤害
         /// </summary>
         PhyDamage = 3,
+        /// <summary>
+        /// 召唤物
+        /// </summary>
+        Summon = 4,
     }
 }

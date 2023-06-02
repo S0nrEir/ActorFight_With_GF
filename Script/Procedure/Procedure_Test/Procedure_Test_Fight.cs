@@ -17,13 +17,23 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_Test_Fight : ProcedureBase
     {
-        private void TestFight()
+        private void OnFireActionPerformed(InputAction.CallbackContext ctx)
         {
+            // if(ctx.interaction is PressInteraction)
+            //     TestFight();
+            
+            if(ctx.interaction is not PressInteraction)
+                return;
+            
             if(_load_flag_curr_state != _load_flag_finish)
                 return;
 
             //test ability
             GameEntry.Module.GetModule<Module_Proxy_Actor>().AbilityToSingleTarget(_actor_id_1, _actor_id_2, 1000);
+        }
+        
+        private void TestFight()
+        {
         }
         
         /// <summary>
@@ -56,32 +66,79 @@ namespace Aquila.Procedure
             _actor_id_1 = ACTOR_ID_POOL.Gen();
             var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
                 (
-                    role_meta_id: _temp_role_meta_id_1,
+                    role_meta_id: 1,
                     actor_id: _actor_id_1,
-                    asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
+                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
-                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = _temp_role_meta_id_1 }
+                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = 1 }
                 );
 
             //actor2
             _actor_id_2 = ACTOR_ID_POOL.Gen();
             var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
                 (
-                    role_meta_id: _temp_role_meta_id_1,
+                    role_meta_id: 2,
                     actor_id: _actor_id_2,
-                    asset_path: @"Assets/Res/Prefab/Aquila_001.prefab",
+                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
-                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = _temp_role_meta_id_2 }
+                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = 2 }
                 );
 
-            if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
-                return;
+            //actor3
+            _actor_id_3 = ACTOR_ID_POOL.Gen();
+            var entity_3 = await actor_fac.ShowActorAsync<HeroActor>
+            (
+                role_meta_id:2,
+                actor_id:_actor_id_3,
+                asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                grid_x:1,
+                grid_z:1,
+                new HeroActorEntityData(_actor_id_3){_role_meta_id = 2}
+            );
+
+            //actor4
+            _actor_id_4 = ACTOR_ID_POOL.Gen();
+            var entity_4 = await actor_fac.ShowActorAsync<HeroActor>
+            (
+                role_meta_id:2,
+                actor_id:_actor_id_4,
+                asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                grid_x:1,
+                grid_z:1,
+                new HeroActorEntityData(_actor_id_4){_role_meta_id = 2}
+            );
+            
+            // if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
+            //     return;
+            
+            SetActorTransform(entity_1.Logic as HeroActor,new Vector3(0,0.8f,-3.29f),Vector3.zero);
+            SetActorTransform(entity_2.Logic as HeroActor,new Vector3(-2.87f,0.5f,1.6f),new Vector3(0,180f,0));
+            SetActorTransform(entity_3.Logic as HeroActor,new Vector3(-0.34f,0.5f,1.6f),new Vector3(0,180f,0));
+            SetActorTransform(entity_4.Logic as HeroActor,new Vector3(2,0.5f,1.6f),new Vector3(0,180f,0));
+
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_2 );
+            _load_flag_curr_state = Tools.OrBitValue(_load_flag_curr_state, _load_flag_actor_3);
+            _load_flag_curr_state = Tools.OrBitValue(_load_flag_curr_state, _load_flag_actor_4);
+            
             OnLoadFinish();
+        }
+        
+        /// <summary>
+        /// 临时初始化，设置Actor的位置
+        /// </summary>
+        private void SetActorTransform(TActorBase actor,Vector3 position,Vector3 rotation)
+        {
+            if (actor is null)
+            {
+                Log.Info("<color=warning>my_actor is null || enemy_actor is null</color>");
+                return;
+            }
+            actor.SetWorldPosition(position);
+            actor.SetRotation(rotation);
         }
 
         /// <summary>
@@ -93,17 +150,11 @@ namespace Aquila.Procedure
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_scene );
         }
 
-        private void OnFireActionPerformed(InputAction.CallbackContext ctx)
-        {
-            if(ctx.interaction is PressInteraction)
-                TestFight();
-        }
-
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             _load_flag_curr_state = 0b_0000;
             // base.OnEnter( procedureOwner );
-            //加载场景，加载两个测试用的战斗actor
+            //加载场景，加载4个测试用的战斗actor
             LoadScene();
             LoadActor();
             //加载临时输入配置
@@ -134,42 +185,44 @@ namespace Aquila.Procedure
         
         private int _actor_id_2 = 0;
         private int _actor_id_1 = 0;
+        private int _actor_id_3 = 0;
+        private int _actor_id_4 = 0;
         
         private InputAction _fire_action = null;
         
         /// <summary>
         /// 加载actor1
         /// </summary>
-        private int _load_flag_actor_1 = 0b_0001;
+        private int _load_flag_actor_1 = 0b_0000_0001;
 
         /// <summary>
         /// 加载actor2
         /// </summary>
-        private int _load_flag_actor_2 = 0b_0010;
+        private int _load_flag_actor_2 = 0b_0000_0010;
 
+        /// <summary>
+        /// 加载actor3
+        /// </summary>
+        private int _load_flag_actor_3 = 0b_0000_0100;
+        
+        /// <summary>
+        /// 加载actor4
+        /// </summary>
+        private int _load_flag_actor_4 = 0b_0000_1000;
+        
         /// <summary>
         /// 加载场景
         /// </summary>
-        private int _load_flag_scene = 0b_0100;
+        private int _load_flag_scene = 0b_0001_0000;
 
         /// <summary>
         /// 加载完成
         /// </summary>
-        private const int _load_flag_finish = 0b_0111;
+        private const int _load_flag_finish = 0b_0001_1111;
 
         /// <summary>
         /// 当前的加载状态
         /// </summary>
         private int _load_flag_curr_state = 0b_0000;
-
-        /// <summary>
-        /// 角色属性表id
-        /// </summary>
-        private int _temp_role_meta_id_1 = 1;
-
-        /// <summary>
-        /// 角色属性表id
-        /// </summary>
-        private int _temp_role_meta_id_2 = 2;
     }
 }

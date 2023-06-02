@@ -5,6 +5,8 @@ using Aquila.Toolkit;
 using GameFramework;
 using System;
 using System.Collections.Generic;
+using Aquila.Extension;
+using GameFramework.ObjectPool;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.Addon_Base;
@@ -97,6 +99,17 @@ namespace Aquila.Fight.Actor
             CachedTransform.position = pos_to_set;
         }
 
+        /// <summary>
+        /// 基于欧拉角设置旋转
+        /// </summary>
+        public void SetRotation(Vector3 rotation)
+        {
+            if(CachedTransform == null)
+                return;
+
+            CachedTransform.rotation = Quaternion.Euler(rotation);
+        }
+
         public void SetWorldPosition( Vector2 pos_to_set )
         {
             Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID}</color>" );
@@ -151,20 +164,6 @@ namespace Aquila.Fight.Actor
 
             gameObject.tag = tag;
         }
-        
-        //#todo:有没有更好的办法让actor的addon持有其他兄弟addon？
-        /// <summary>
-        /// 设置所有addon持有自身的actorInstance和其他addon
-        /// </summary>
-        private void SetAllAddonInstance(Module_Proxy_Actor.ActorInstance instance)
-        {
-            var addons = GetAllAddon();
-            if(addons is null || addons.Length == 0)
-                return;
-
-            foreach (var addon in addons)
-                addon.SetActorInstace(instance);
-        }
 
         //--------------------override--------------------
         protected override void OnShow( object userData )
@@ -184,38 +183,38 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            SetAllAddonInstance(null);
+            //dispose all addon
+            var iter = _addonDic.GetEnumerator();
+            Addon_Base addon = null;
+            while ( iter.MoveNext() )
+            {
+                addon = iter.Current.Value;
+                addon.Dispose();
+            }
+            
             GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister(ActorID);
             UnRegister();
-            HostID = GlobalVar.INVALID_GUID;
+            HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
             gameObject.tag = String.Empty;
-            //dispose all addon
-            //var iter = _addonDic.GetEnumerator();
-            //AddonBase base_addon = null;
-            //while ( iter.MoveNext() )
-            //{
-            //    base_addon = iter.Current.Value;
-            //    base_addon.Dispose();
-            //}
-
             base.OnRecycle();
         }
 
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            InitAddons( userData );
-            // SetAllAddons();
-            
+            OnInitActor(userData);
+            AddAddon();
             var res = GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
             if(res.succ)
-                SetAllAddonInstance(res.instance);
+                InitAddons( res.instance );
             
             _allAddonInitDone = true;
         }
 
+        
+        
         /// <summary>
         /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
@@ -231,9 +230,7 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 重置自己和addon的数据为初始值，而非清理，
-        /// 建议的调用时机：初始化；回收时，
-        /// 目前的调用时机：Reset，ShowEntity后
+        /// 重置自己和addon的数据为初始值
         /// </summary>
         public virtual void Reset()
         {
@@ -253,13 +250,12 @@ namespace Aquila.Fight.Actor
         {
             if ( TryGetAddon<T>( out var addon_to_add ) )
             {
-                Log.Debug( $"addon <color=white>{typeof( T )}</color> has exist on this actor:{Name}" );
+                Log.Debug( $"addon <color=white>{typeof( T ).ToString()}</color> has exist on this actor:{Name}" );
                 return addon_to_add;
             }
             else
             {
                 addon_to_add = new T();
-                addon_to_add.Init( this, gameObject, CachedTransform );
                 _addonDic.Add( typeof( T ).GetHashCode(), addon_to_add );
 
                 addon_to_add.OnAdd();
@@ -289,9 +285,32 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons(object user_data)
+        protected virtual void InitAddons(Module_Proxy_Actor.ActorInstance instance)
+        {
+            var addons = GetAllAddon();
+            foreach (var addon in addons)
+            {
+                addon.Init(instance);
+                //#todo:找时间删掉下面版本的init函数，只保留上面的
+                addon.Init(this,gameObject,CachedTransform);
+                addon.Reset();
+            }
+            // Reset();
+        }
+
+        /// <summary>
+        /// 添加addon
+        /// </summary>
+        protected virtual void AddAddon()
         {
             _event_addon = AddAddon<Addon_Event>();
+        }
+
+        /// <summary>
+        /// Actor自定义数据的初始化
+        /// </summary>
+        protected virtual void OnInitActor(object user_data)
+        {
         }
 
         protected TActorBase()
@@ -324,7 +343,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 宿主ID
         /// </summary>
-        public ulong HostID { get; private set; } = GlobalVar.INVALID_GUID;
+        public ulong HostID { get; private set; } = Component_GlobalVar.InvalidGUID;
 
         /// <summary>
         /// 组件初始化标记

@@ -4,6 +4,7 @@ using GameFramework;
 using GameFramework.Resource;
 using System.Collections.Generic;
 using System.IO;
+using Cfg.Common;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using XLua;
@@ -33,7 +34,7 @@ namespace Aquila.Extension
         }
 
         //-----------------public-----------------
-        public void Load( Cfg.common.Scripts meta_ )
+        public void Load( Table_Scripts meta_ )
         {
             Load( meta_, meta_.id );
         }
@@ -41,7 +42,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 加载一个脚本实例//#todo__lua的执行结果返回参数怎么获得,尤其是在resourceModeLoad下
         /// </summary>
-        public void Load( Cfg.common.Scripts meta, int id )
+        public void Load( Table_Scripts meta, int id )
         {
             if ( meta is null )
             {

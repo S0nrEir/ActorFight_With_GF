@@ -48,9 +48,14 @@ namespace Aquila.Fight.Actor
             RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
         }
 
-        protected override void InitAddons (object user_data)
+        // protected override void InitAddons (object user_data)
+        // {
+        //     base.InitAddons(user_data);
+        // }
+
+        protected override void AddAddon()
         {
-            base.InitAddons(user_data);
+            base.AddAddon();
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
             _moveAddon    = AddAddon<Addon_Move>();
         }

@@ -8,88 +8,51 @@
 using Bright.Serialization;
 using System.Collections.Generic;
 
-
-
-namespace Cfg.role
+namespace Cfg.Role
 {
-
-public sealed partial class RoleBaseAttr :  Bright.Config.BeanBase 
+   
+public partial class RoleBaseAttr
 {
-    public RoleBaseAttr(ByteBuf _buf) 
+    private readonly Dictionary<int, Role.Table_RoleBaseAttr> _dataMap;
+    private readonly List<Role.Table_RoleBaseAttr> _dataList;
+    
+    public RoleBaseAttr(ByteBuf _buf)
     {
-        id = _buf.ReadInt();
-        name = _buf.ReadString();
-        desc = _buf.ReadString();
-        RoleClass = (Enum.Role_Class)_buf.ReadInt();
-        test_boolean = _buf.ReadBool();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_map = new System.Collections.Generic.Dictionary<int, int>(n * 3 / 2);for(var i = 0 ; i < n ; i++) { int _k;  _k = _buf.ReadInt(); int _v;  _v = _buf.ReadInt();     test_map.Add(_k, _v);}}
-        test_vector = _buf.ReadUnityVector3();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_arr = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); test_arr[i] = _e;}}
+        _dataMap = new Dictionary<int, Role.Table_RoleBaseAttr>();
+        _dataList = new List<Role.Table_RoleBaseAttr>();
+        
+        for(int n = _buf.ReadSize() ; n > 0 ; --n)
+        {
+            Role.Table_RoleBaseAttr _v;
+            _v = Role.Table_RoleBaseAttr.DeserializeTable_RoleBaseAttr(_buf);
+            _dataList.Add(_v);
+            _dataMap.Add(_v.id, _v);
+        }
         PostInit();
     }
 
-    public static RoleBaseAttr DeserializeRoleBaseAttr(ByteBuf _buf)
+    public Dictionary<int, Role.Table_RoleBaseAttr> DataMap => _dataMap;
+    public List<Role.Table_RoleBaseAttr> DataList => _dataList;
+
+    public Role.Table_RoleBaseAttr GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Role.Table_RoleBaseAttr Get(int key) => _dataMap[key];
+    public Role.Table_RoleBaseAttr this[int key] => _dataMap[key];
+
+    public void Resolve(Dictionary<string, object> _tables)
     {
-        return new role.RoleBaseAttr(_buf);
-    }
-
-    /// <summary>
-    /// 这是id
-    /// </summary>
-    public int id { get; private set; }
-    /// <summary>
-    /// 名字
-    /// </summary>
-    public string name { get; private set; }
-    /// <summary>
-    /// 描述
-    /// </summary>
-    public string desc { get; private set; }
-    /// <summary>
-    /// 职业
-    /// </summary>
-    public Enum.Role_Class RoleClass { get; private set; }
-    /// <summary>
-    /// 测试布尔值
-    /// </summary>
-    public bool test_boolean { get; private set; }
-    /// <summary>
-    /// 测试键值对
-    /// </summary>
-    public System.Collections.Generic.Dictionary<int, int> test_map { get; private set; }
-    /// <summary>
-    /// 测试向量
-    /// </summary>
-    public UnityEngine.Vector3 test_vector { get; private set; }
-    /// <summary>
-    /// 测试数组或集合
-    /// </summary>
-    public int[] test_arr { get; private set; }
-
-    public const int __ID__ = -876445296;
-    public override int GetTypeId() => __ID__;
-
-    public  void Resolve(Dictionary<string, object> _tables)
-    {
+        foreach(var v in _dataList)
+        {
+            v.Resolve(_tables);
+        }
         PostResolve();
     }
 
-    public  void TranslateText(System.Func<string, string, string> translator)
+    public void TranslateText(System.Func<string, string, string> translator)
     {
-    }
-
-    public override string ToString()
-    {
-        return "{ "
-        + "id:" + id + ","
-        + "name:" + name + ","
-        + "desc:" + desc + ","
-        + "RoleClass:" + RoleClass + ","
-        + "test_boolean:" + test_boolean + ","
-        + "test_map:" + Bright.Common.StringUtil.CollectionToString(test_map) + ","
-        + "test_vector:" + test_vector + ","
-        + "test_arr:" + Bright.Common.StringUtil.CollectionToString(test_arr) + ","
-        + "}";
+        foreach(var v in _dataList)
+        {
+            v.TranslateText(translator);
+        }
     }
     
     partial void PostInit();

@@ -14,9 +14,9 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 获取SceneConfig表实例
             /// </summary>
-            public static Cfg.single.TB_SceneConfig GetSceneConfig()
+            public static Cfg.Single.SceneConfig GetSceneConfig()
             {
-                return GameEntry.DataTable.Tables.TB_SceneConfig;
+                return GameEntry.DataTable.Tables.SceneConfig;
             }
         }
     }

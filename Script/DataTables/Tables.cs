@@ -14,51 +14,56 @@ namespace Cfg
 public partial class Tables
 {
     public item.TbItem TbItem {get; }
-    public role.TB_RoleBaseAttr TB_RoleBaseAttr {get; }
-    public single.TB_SceneConfig TB_SceneConfig {get; }
-    public common.TB_Scripts TB_Scripts {get; }
-    public role.TB_RoleMeta TB_RoleMeta {get; }
-    public common.TB_AbilityBase TB_AbilityBase {get; }
-    public common.TB_Effect TB_Effect {get; }
+    public Role.RoleBaseAttr RoleBaseAttr {get; }
+    public Single.SceneConfig SceneConfig {get; }
+    public Common.Scripts Scripts {get; }
+    public Fight.Ability Ability {get; }
+    public Fight.AbilityTimeline AbilityTimeline {get; }
+    public Common.Effect Effect {get; }
+    public Role.RoleMeta RoleMeta {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
         var tables = new System.Collections.Generic.Dictionary<string, object>();
         TbItem = new item.TbItem(loader("item_tbitem")); 
         tables.Add("item.TbItem", TbItem);
-        TB_RoleBaseAttr = new role.TB_RoleBaseAttr(loader("role_tb_rolebaseattr")); 
-        tables.Add("role.TB_RoleBaseAttr", TB_RoleBaseAttr);
-        TB_SceneConfig = new single.TB_SceneConfig(loader("single_tb_sceneconfig")); 
-        tables.Add("single.TB_SceneConfig", TB_SceneConfig);
-        TB_Scripts = new common.TB_Scripts(loader("common_tb_scripts")); 
-        tables.Add("common.TB_Scripts", TB_Scripts);
-        TB_RoleMeta = new role.TB_RoleMeta(loader("role_tb_rolemeta")); 
-        tables.Add("role.TB_RoleMeta", TB_RoleMeta);
-        TB_AbilityBase = new common.TB_AbilityBase(loader("common_tb_abilitybase")); 
-        tables.Add("common.TB_AbilityBase", TB_AbilityBase);
-        TB_Effect = new common.TB_Effect(loader("common_tb_effect")); 
-        tables.Add("common.TB_Effect", TB_Effect);
+        RoleBaseAttr = new Role.RoleBaseAttr(loader("role_rolebaseattr")); 
+        tables.Add("Role.RoleBaseAttr", RoleBaseAttr);
+        SceneConfig = new Single.SceneConfig(loader("single_sceneconfig")); 
+        tables.Add("Single.SceneConfig", SceneConfig);
+        Scripts = new Common.Scripts(loader("common_scripts")); 
+        tables.Add("Common.Scripts", Scripts);
+        Ability = new Fight.Ability(loader("fight_ability")); 
+        tables.Add("Fight.Ability", Ability);
+        AbilityTimeline = new Fight.AbilityTimeline(loader("fight_abilitytimeline")); 
+        tables.Add("Fight.AbilityTimeline", AbilityTimeline);
+        Effect = new Common.Effect(loader("common_effect")); 
+        tables.Add("Common.Effect", Effect);
+        RoleMeta = new Role.RoleMeta(loader("role_rolemeta")); 
+        tables.Add("Role.RoleMeta", RoleMeta);
 
         PostInit();
         TbItem.Resolve(tables); 
-        TB_RoleBaseAttr.Resolve(tables); 
-        TB_SceneConfig.Resolve(tables); 
-        TB_Scripts.Resolve(tables); 
-        TB_RoleMeta.Resolve(tables); 
-        TB_AbilityBase.Resolve(tables); 
-        TB_Effect.Resolve(tables); 
+        RoleBaseAttr.Resolve(tables); 
+        SceneConfig.Resolve(tables); 
+        Scripts.Resolve(tables); 
+        Ability.Resolve(tables); 
+        AbilityTimeline.Resolve(tables); 
+        Effect.Resolve(tables); 
+        RoleMeta.Resolve(tables); 
         PostResolve();
     }
 
     public void TranslateText(System.Func<string, string, string> translator)
     {
         TbItem.TranslateText(translator); 
-        TB_RoleBaseAttr.TranslateText(translator); 
-        TB_SceneConfig.TranslateText(translator); 
-        TB_Scripts.TranslateText(translator); 
-        TB_RoleMeta.TranslateText(translator); 
-        TB_AbilityBase.TranslateText(translator); 
-        TB_Effect.TranslateText(translator); 
+        RoleBaseAttr.TranslateText(translator); 
+        SceneConfig.TranslateText(translator); 
+        Scripts.TranslateText(translator); 
+        Ability.TranslateText(translator); 
+        AbilityTimeline.TranslateText(translator); 
+        Effect.TranslateText(translator); 
+        RoleMeta.TranslateText(translator); 
     }
     
     partial void PostInit();

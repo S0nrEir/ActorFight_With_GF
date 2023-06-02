@@ -124,9 +124,14 @@ namespace Aquila.Fight.Actor
             _triggerAddon.SetTriggerLmt( int.MaxValue );
         }
 
-        protected override void InitAddons( object user_data )
+        // protected override void InitAddons( object user_data )
+        // {
+        //     base.InitAddons( user_data );
+        // }
+
+        protected override void AddAddon()
         {
-            base.InitAddons( user_data );
+            base.AddAddon();
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
             _effectAddon = AddAddon<Addon_FX>();
         }

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.common;
+using Cfg.Common;
 using Cfg.Enum;
+using Cfg.Fight;
 using GameFramework;
 using UnityGameFramework.Runtime;
 
@@ -27,28 +27,28 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove(UInt32 bit_to_remove)
+        public void RemoveTag(ushort bit_to_remove)
         {
-            _ability_tag.Remove(bit_to_remove - 1);
+            _tagContainer.Remove(bit_to_remove);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void Add(UInt32 bit_to_add)
+        public void AddTag(ushort bit_to_add)
         {
-            _ability_tag.Add(bit_to_add - 1);
+            _tagContainer.Add(bit_to_add);
         }
 
         /// <summary>
         /// 包含某个tag
         /// </summary>
-        public bool ContainsTag(UInt32 bit_tag)
+        public bool ContainsTag(ushort bit_tag)
         {
-            return _ability_tag.Contains(bit_tag);
+            return _tagContainer.Contains(bit_tag);
         }
 
-        public virtual void Setup(AbilityBase meta)
+        public virtual void Setup(Table_AbilityBase meta)
         {
             Meta = meta;
             InitEffectSpec();
@@ -76,7 +76,8 @@ namespace Aquila.Fight
             if (!OnAfterAbility(ref result))
                 return false;
             
-            result.SetState(AbilityResultDescTypeEnum.HIT);
+            result.SetState(AbilityHitResultTypeEnum.HIT);
+            _tagContainer.Add(0);
             return true;
         }
 
@@ -105,13 +106,13 @@ namespace Aquila.Fight
             if (!CostOK())
             {
                 succ = false;
-                result.SetState(AbilityResultDescTypeEnum.COST_NOT_ENOUGH);
+                result.SetState(AbilityHitResultTypeEnum.COST_NOT_ENOUGH);
             }
 
             if (!CDOK())
             {
                 succ = false;
-                result.SetState(AbilityResultDescTypeEnum.CD_NOT_OK);
+                result.SetState(AbilityHitResultTypeEnum.CD_NOT_OK);
             }
 
             return succ;
@@ -132,7 +133,7 @@ namespace Aquila.Fight
 
             _effect_list = null;
             Meta         = null;
-            _ability_tag = null;
+            _tagContainer = null;
             _cd_effect   = null;
             _cost_effect = null;
             _owner       = null;
@@ -147,6 +148,10 @@ namespace Aquila.Fight
         public virtual void OnUpdate(float delta_time)
         {
             _cd_effect._remain -= delta_time;
+            if (_cd_effect._remain <= 0 && _tagContainer.Contains(0))
+            {
+                _tagContainer.Remove(0);
+            }
         }
 
         //-------------------priv-------------------
@@ -186,11 +191,20 @@ namespace Aquila.Fight
             if (attr_addon is null)
                 return false;
             
-            var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
-            if(!res.get_succ)
-                Log.Warning("!res.get_succ");
-            
-            return _cost_effect.Calc(res.value) > 0;
+            // var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
+            // if(!res.get_succ)
+                // Log.Warning("!res.get_succ");
+
+            var cur_mp = attr_addon.GetCurrMPCorrection();
+            return _cost_effect.Calc(cur_mp) >= 0;
+        }
+
+        /// <summary>
+        /// tag发生改变的回调
+        /// </summary>
+        private void OnTagChange(Int64 old_tag, Int64 new_tag,ushort changed_tag)
+        {
+            Log.Info($"tag changed,tag:{new_tag}");
         }
 
         /// <summary>
@@ -202,12 +216,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 表数据
         /// </summary>
-        public AbilityBase Meta { get; private set; } = null;
+        public Table_AbilityBase Meta { get; private set; } = null;
 
         /// <summary>
         /// 该技能持有的tag
         /// </summary>
-        private TagContainer _ability_tag = null;
+        private TagContainer _tagContainer = null;
 
         /// <summary>
         /// 技能CD
@@ -226,14 +240,13 @@ namespace Aquila.Fight
         
         public AbilitySpecBase()
         {
-            _ability_tag = new TagContainer();
+            _tagContainer = new TagContainer(OnTagChange);
         }
-
-        // private bool _active = false;
+        
         /// <summary>
         /// 初始化Cost相关逻辑
         /// </summary>
-        private void InitCostEffect(Effect effect)
+        private void InitCostEffect(Table_Effect effect)
         {
             _cost_effect = new EffectSpec_Cost(effect);
         }
@@ -241,7 +254,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 初始化技能CD相关逻辑
         /// </summary>
-        private void InitCDEffect(Effect effect)
+        private void InitCDEffect(Table_Effect effect)
         {
             _cd_effect = new EffectSpec_CoolDown(effect);
         }
@@ -254,12 +267,12 @@ namespace Aquila.Fight
             if(Meta is null || Meta.effects is null)
                 return;
 
-            //默认持有16个effect
+            //默认持有16个effecteeeee
             _effect_list = new List<EffectSpec_Base>(16);
-            Effect effect_meta = null;
+            Table_Effect effect_meta = null;
             foreach (var effect_id in Meta.effects)
             {
-                effect_meta = GameEntry.DataTable.Table<TB_Effect>().Get(effect_id);
+                effect_meta = GameEntry.DataTable.Table<Effect>().Get(effect_id);
                 if (effect_meta is null)
                 {
                     Log.Warning("InitEffectSpec--->effect_meta is null");
@@ -289,7 +302,7 @@ namespace Aquila.Fight
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>
         /// <returns></returns>
-        public static AbilitySpecBase Gen( AbilityBase meta,Module_Proxy_Actor.ActorInstance instance)
+        public static AbilitySpecBase Gen( Table_AbilityBase meta,Module_Proxy_Actor.ActorInstance instance)
         {
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
             spec.Setup(meta);

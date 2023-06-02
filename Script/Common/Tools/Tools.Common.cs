@@ -1,4 +1,5 @@
 ﻿using System;
+using GameFramework;
 using UnityEngine;
 
 namespace Aquila.Toolkit
@@ -155,23 +156,32 @@ namespace Aquila.Toolkit
             comp = go.AddComponent<T>();
             return true;
         }
-        
-        
-        /// <summary>
-        /// 返回Int数据中某一位是否为1
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
-        /// <returns>true表示该位为1，false表示该位为0</returns>
-        public static bool GetBitValue_U32( uint value, uint index )
-        {
-            if ( index > 31 )
-                throw new ArgumentOutOfRangeException( "index" ); //索引出错
 
-            var val = index << 1;
-            return ( value & val ) == val;
+
+        /// <summary>
+        /// 返回64位int数据中是否包含指定位数
+        /// </summary>
+        public static bool GetBitValue_i64(Int64 value, ushort index)
+        {
+            if (index > 63)
+                throw new GameFrameworkException("index > 63!");
+
+            var val = 1 << index;
+            return (value & val) == val;
         }
-        
+
+        /// <summary>
+        /// 设定64位int数据中某一位的值
+        /// </summary>
+        public static Int64 SetBitValue_i64(Int64 value, ushort index, bool bit_value)
+        {
+            if (index > 63)
+                throw new GameFrameworkException("index > 63!");
+            
+            var val = 1 << index;
+            return (bit_value ? ( value | val ) : ( value & ~val ));
+        }
+
         /// <summary>
         /// 返回Int数据中某一位是否为1
         /// </summary>
@@ -187,22 +197,6 @@ namespace Aquila.Toolkit
             return ( value & val ) == val;
         }
 
-        /// <summary>
-        /// 设定Int数据中某一位的值
-        /// </summary>
-        /// <param name="value">位设定前的值</param>
-        /// <param name="index">32位数据的从右向左的偏移位索引(0~31)</param>
-        /// <param name="bitValue">true设该位为1,false设为0</param>
-        /// <returns>返回位设定后的值</returns>
-        public static uint SetBitValue_U32( uint value, uint index, bool bit_value )
-        {
-            if ( index > 31 )
-                throw new ArgumentOutOfRangeException( "index" ); //索引出错
-
-            var val = index << 1;
-            return bit_value ? ( value | val ) : ( value & ~val );
-        }
-        
         /// <summary>
         /// 设定Int数据中某一位的值
         /// </summary>

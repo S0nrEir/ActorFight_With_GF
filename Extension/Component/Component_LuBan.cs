@@ -1,6 +1,5 @@
 ﻿using Bright.Serialization;
-using Cfg.role;
-using Cfg.single;
+using Cfg.Role;
 using GameFramework;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +18,7 @@ namespace Aquila.Extension
         [XLua.DoNotGen]
         public void Test()
         {
-            var meta = Table<TB_RoleBaseAttr>().Get(10001);
+            var meta = Table<RoleBaseAttr>().Get(10001);
         }
 
         /// <summary>
