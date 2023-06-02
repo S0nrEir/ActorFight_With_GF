@@ -68,7 +68,7 @@ namespace Aquila.Procedure
                 (
                     role_meta_id: 1,
                     actor_id: _actor_id_1,
-                    asset_path: @"Assets/Res/Prefab/Example/Aquila_Test_001.prefab",
+                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
                     new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = 1 }
@@ -80,7 +80,7 @@ namespace Aquila.Procedure
                 (
                     role_meta_id: 2,
                     actor_id: _actor_id_2,
-                    asset_path: @"Assets/Res/Prefab/Example/Aquila_Test_002.prefab",
+                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
                     new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = 2 }
@@ -92,7 +92,7 @@ namespace Aquila.Procedure
             (
                 role_meta_id:2,
                 actor_id:_actor_id_3,
-                asset_path:@"Assets/Res/Prefab/Example/Aquila_Test_002.prefab",
+                asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x:1,
                 grid_z:1,
                 new HeroActorEntityData(_actor_id_3){_role_meta_id = 2}
@@ -104,7 +104,7 @@ namespace Aquila.Procedure
             (
                 role_meta_id:2,
                 actor_id:_actor_id_4,
-                asset_path:@"Assets/Res/Prefab/Example/Aquila_Test_002.prefab",
+                asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x:1,
                 grid_z:1,
                 new HeroActorEntityData(_actor_id_4){_role_meta_id = 2}
