@@ -1,6 +1,10 @@
 ﻿using Aquila.Fight.Addon;
 using System.Collections.Generic;
+using Aquila.Timeline;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
 
 namespace Aquila.Fight.FSM
 {
@@ -66,10 +70,29 @@ namespace Aquila.Fight.FSM
             _time = 0f;
             //播放timeline开始计时
             //根据时间节点来做相应的行为
+
+            var timeline = _director.playableAsset as TimelineAsset;
+            if ( timeline is null )
+            {
+                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->timeline is null</color>" );
+                return;
+            }
+
+            _asset = Tools.GetFirstClipAssetFromTrack<PlayableAsset_Anim>( Tools.GetTrackFromTimeline<PlayableTrack_Anim>( timeline ) );
+
+            if ( _asset is null )
+            {
+                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->clip is null</color>" );
+                return;
+            }
+
+            _director.Play();
         }
 
         public override void OnLeave(params object[] param)
         {
+            _director = null;
+            _asset = null;
             base.OnLeave(param);
         }
 
@@ -81,7 +104,11 @@ namespace Aquila.Fight.FSM
                 _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE,null,null);
             
             //在对应的hurtPoint施加buff
-             
+            if (_director.time >= _asset._triggerTime && !_asset._triggerFlag)
+            {
+                _asset._triggerFlag = true;
+                //apply effect
+            }
         }
         
         public HeroAbilityState( int state_id ) : base( state_id )
@@ -98,6 +125,16 @@ namespace Aquila.Fight.FSM
         /// 进入该状态时间
         /// </summary>
         private float _time = 0f;
+
+        /// <summary>
+        /// 轨道资源
+        /// </summary>
+        private PlayableAsset_Anim _asset = null;
+        
+        /// <summary>
+        /// 这里从playableDirector组件拿
+        /// </summary>
+        private PlayableDirector _director = null;
     }
 
     /// <summary>

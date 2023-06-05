@@ -53,7 +53,7 @@ namespace Aquila.Fight.Actor
             base.OnUpdate( elapseSeconds, realElapseSeconds );
             //更新状态机
             _fsm_addon?.OnUpdate( elapseSeconds, realElapseSeconds );
-            //更新技能系统数据（CD等）
+            //更新技能数据（CD之类的）
             _ability_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
             //信息板位置更新
             _hp_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
