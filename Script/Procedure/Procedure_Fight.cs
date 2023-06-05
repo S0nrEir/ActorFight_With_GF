@@ -56,7 +56,7 @@ namespace Aquila.Procedure
                     @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     0,
                     0,
-                    new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
+                    new HeroActorEntityData( entity_id ) { _roleMetaID = 1 }
                 );
 
             //_actor_fac_module.Start( param );

@@ -1,6 +1,8 @@
 ﻿using Aquila.Fight.Actor;
+using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Aquila.Fight.Addon
 {
@@ -22,11 +24,15 @@ namespace Aquila.Fight.Addon
             //动画机是挂在GameObject上的,制作GameObject的时候手动加上去，这里只尝试获取
             _animator = Tools.GetComponent<Animator>( Actor.gameObject );
 
-            if (_animator == null)
-            {
+            if ( _animator == null )
                 Debug.LogError( "<color=red>faild to get animator</color>" );
-                _animator = Actor.gameObject.AddComponent<Animator>();
-            }
+        }
+
+        //
+        //#todo动态设置playableAseet？
+        public override void Init( Module_Proxy_Actor.ActorInstance instance )
+        {
+            base.Init( instance );
         }
 
         public override void Dispose ()
@@ -86,6 +92,7 @@ namespace Aquila.Fight.Addon
         /// 当前的动画名称
         /// </summary>
         public string CurrClipName { get; private set; } = string.Empty;
+
         /// <summary>
         /// 动画机
         /// </summary>
@@ -99,24 +106,6 @@ namespace Aquila.Fight.Addon
             Animator.StringToHash("Idle"),//待机
             Animator.StringToHash("Ability"),//技能
             Animator.StringToHash("Walk"),//行走
-            // Animator.StringToHash( "Stand" ),//待机
-            // Animator.StringToHash( "Run" ),//移动
-            // //Animator.StringToHash( "Attack" ),//攻击1
-            // Animator.StringToHash( "Hit" ),//命中
-            // Animator.StringToHash( "Die" ),//死亡
-            //
-            // Animator.StringToHash( "Attack1" ),//攻击1
-            // Animator.StringToHash( "Attack2" ),//攻击2
-            // Animator.StringToHash( "Attack3" ),//攻击3
-            // Animator.StringToHash( "Skill1" ),//技能1
-            // Animator.StringToHash( "Skill2" ),//技能2
-            // Animator.StringToHash( "Skill3" ),//技能3
-            // Animator.StringToHash( "Skill4" ),//技能4
-            // Animator.StringToHash( "Skill5" ),//技能5
-            // Animator.StringToHash( "Skill6" ),//技能6
-            // Animator.StringToHash( "KnockBack" ),//击退
-            // Animator.StringToHash( "Interaction" ),//
-            // Animator.StringToHash( "Vertigo" ),//
         };
     }
 }

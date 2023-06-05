@@ -11,28 +11,29 @@ namespace Aquila.Fight.Actor
 {
     public partial class HeroActor : TActorBase
     {
-        public ActorStateTypeEnum CurrState => _fsm_addon.CurrState;
+        public ActorStateTypeEnum CurrState => _fsmAddon.CurrState;
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
         
-        protected override void OnInitActor(object user_data)
+        protected override void OnInitActor(object userData)
         {
-            if(user_data is HeroActorEntityData)
-                Setup((user_data as HeroActorEntityData)._role_meta_id);
+            if( userData is HeroActorEntityData)
+                Setup(( userData as HeroActorEntityData )._roleMetaID );
         }
         
         protected override void AddAddon()
         {
             base.AddAddon();
-            _base_attr_addon = AddAddon<Addon_BaseAttrNumric>();
-            _data_addon      = AddAddon<Addon_Data>();
-            _ability_addon   = AddAddon<Addon_Ability>();
-            _fsm_addon       = AddAddon<Addon_HeroState>();
-            _anim_addon      = AddAddon<Addon_Anim>();
+            _baseAttrAddon      = AddAddon<Addon_BaseAttrNumric>();
+            _dataAddon          = AddAddon<Addon_Data>();
+            _abilityAddon       = AddAddon<Addon_Ability>();
+            _fsmAddon           = AddAddon<Addon_HeroState>();
+            //_anim_addon       = AddAddon<Addon_Anim>();
             // _move_addon      = AddAddon<Addon_Move>();
             // _info_addon      = AddAddon<Addon_InfoBoard>();
             //_nav_addon        = AddAddon<Addon_Nav>();
-            _fx_addon        = AddAddon<Addon_FX>();
-            _hp_addon        = AddAddon<Addon_HP>();
+            _fxAddon            = AddAddon<Addon_FX>();
+            _hpAddon            = AddAddon<Addon_HP>();
+            _timelineAddon      = AddAddon<Addon_Timeline>();
         }
         
         protected override void InitAddons(Module_Proxy_Actor.ActorInstance instance)
@@ -52,11 +53,11 @@ namespace Aquila.Fight.Actor
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
             //更新状态机
-            _fsm_addon?.OnUpdate( elapseSeconds, realElapseSeconds );
+            _fsmAddon?.OnUpdate( elapseSeconds, realElapseSeconds );
             //更新技能数据（CD之类的）
-            _ability_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
+            _abilityAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
             //信息板位置更新
-            _hp_addon?.OnUpdate(elapseSeconds,realElapseSeconds);
+            _hpAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
         }
 
         protected override void Register()
@@ -88,17 +89,17 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 状态机组件
         /// </summary>
-        private Addon_FSM _fsm_addon { get; set; } = null;
+        private Addon_FSM _fsmAddon { get; set; } = null;
 
         /// <summary>
         /// 动画组件
         /// </summary>
-        private Addon_Anim _anim_addon { get; set; } = null;
+        //private Addon_Anim _anim_addon { get; set; } = null;
 
         /// <summary>
         /// 移动组件
         /// </summary>
-        private Addon_Move _move_addon { get; set; } = null;
+        private Addon_Move _moveAddon { get; set; } = null;
 
         /// <summary>
         /// 信息板组件
@@ -108,43 +109,48 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 导航组件
         /// </summary>
-        private Addon_Nav _nav_addon { get; set; } = null;
+        private Addon_Nav _navAddon { get; set; } = null;
 
         /// <summary>
         /// 特效组件
         /// </summary>
-        private Addon_FX _fx_addon { get; set; } = null;
+        private Addon_FX _fxAddon { get; set; } = null;
 
         /// <summary>
         /// 数据组件
         /// </summary>
-        private Addon_Data _data_addon { get; set; } = null;
+        private Addon_Data _dataAddon { get; set; } = null;
 
         /// <summary>
         /// 基础属性数值组件
         /// </summary>
-        private Addon_BaseAttrNumric _base_attr_addon { get; set; } = null;
+        private Addon_BaseAttrNumric _baseAttrAddon { get; set; } = null;
 
         /// <summary>
         /// 技能组件
         /// </summary>
-        private Addon_Ability _ability_addon = null;
+        private Addon_Ability _abilityAddon = null;
 
         /// <summary>
         /// 血条显示组件
         /// </summary>
-        private Addon_HP _hp_addon = null;
+        private Addon_HP _hpAddon = null;
+
+        /// <summary>
+        /// timeline组件
+        /// </summary>
+        private Addon_Timeline _timelineAddon = null;
     }
 
     public class HeroActorEntityData : EntityData
     {
-        public HeroActorEntityData( int entity_id ) : base( entity_id, typeof( HeroActor ).GetHashCode() )
+        public HeroActorEntityData( int entityID ) : base( entityID, typeof( HeroActor ).GetHashCode() )
         {
         }
 
         /// <summary>
         /// 角色role meta表id
         /// </summary>
-        public int _role_meta_id = -1;
+        public int _roleMetaID = -1;
     }
 }

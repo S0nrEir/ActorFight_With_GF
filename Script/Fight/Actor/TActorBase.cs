@@ -212,8 +212,6 @@ namespace Aquila.Fight.Actor
             
             _allAddonInitDone = true;
         }
-
-        
         
         /// <summary>
         /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除

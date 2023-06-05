@@ -34,6 +34,7 @@ namespace Aquila.Fight.Addon
             TargetTransform  = target_transform;
         }
 
+        //#todo_把所有别的版本的adodn init函数替换为下面的Init函数
         public virtual void Init(Module_Proxy_Actor.ActorInstance instance)
         {
             _actor_instance = instance;

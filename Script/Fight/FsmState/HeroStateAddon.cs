@@ -67,10 +67,6 @@ namespace Aquila.Fight.FSM
                 return;
             }
 
-            _time = 0f;
-            //播放timeline开始计时
-            //根据时间节点来做相应的行为
-
             var timeline = _director.playableAsset as TimelineAsset;
             if ( timeline is null )
             {
@@ -79,13 +75,16 @@ namespace Aquila.Fight.FSM
             }
 
             _asset = Tools.GetFirstClipAssetFromTrack<PlayableAsset_Anim>( Tools.GetTrackFromTimeline<PlayableTrack_Anim>( timeline ) );
-
             if ( _asset is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->clip is null</color>" );
                 return;
             }
 
+            _time = 0f;
+            _abilityFinishFlag = false;
+            //播放timeline开始计时
+            //根据时间节点来做相应的行为
             _director.Play();
         }
 
@@ -100,8 +99,12 @@ namespace Aquila.Fight.FSM
         {
             base.OnUpdate(deltaTime);
             _time += deltaTime;
-            if(_abilityFinishFlag)
-                _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE,null,null);
+
+            if ( _abilityFinishFlag )
+            {
+                _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
+                return;
+            }
             
             //在对应的hurtPoint施加buff
             if (_director.time >= _asset._triggerTime && !_asset._triggerFlag)
@@ -109,6 +112,9 @@ namespace Aquila.Fight.FSM
                 _asset._triggerFlag = true;
                 //apply effect
             }
+
+            if ( _director.time >= _time )
+                _abilityFinishFlag = true;
         }
         
         public HeroAbilityState( int state_id ) : base( state_id )

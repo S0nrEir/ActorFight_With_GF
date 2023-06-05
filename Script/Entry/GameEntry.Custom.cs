@@ -67,6 +67,12 @@ namespace Aquila
             private set;
         }
 
+        public static Component_Timeline Timeline
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 初始化自定义组件
         /// </summary>
@@ -76,9 +82,10 @@ namespace Aquila
             DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
             Lua       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
             Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
-            TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
+            //TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
             InfoBoard = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
             GlobalVar = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
+            Timeline  = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
         }
     }
 }

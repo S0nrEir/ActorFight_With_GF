@@ -71,7 +71,7 @@ namespace Aquila.Procedure
                     asset_path: @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
-                    new HeroActorEntityData( _actor_id_1 ) { _role_meta_id = 1 }
+                    new HeroActorEntityData( _actor_id_1 ) { _roleMetaID = 1 }
                 );
 
             //actor2
@@ -83,7 +83,7 @@ namespace Aquila.Procedure
                     asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
-                    new HeroActorEntityData( _actor_id_2 ) { _role_meta_id = 2 }
+                    new HeroActorEntityData( _actor_id_2 ) { _roleMetaID = 2 }
                 );
 
             //actor3
@@ -95,7 +95,7 @@ namespace Aquila.Procedure
                 asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x:1,
                 grid_z:1,
-                new HeroActorEntityData(_actor_id_3){_role_meta_id = 2}
+                new HeroActorEntityData(_actor_id_3){ _roleMetaID = 2}
             );
 
             //actor4
@@ -107,7 +107,7 @@ namespace Aquila.Procedure
                 asset_path:@"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x:1,
                 grid_z:1,
-                new HeroActorEntityData(_actor_id_4){_role_meta_id = 2}
+                new HeroActorEntityData(_actor_id_4){ _roleMetaID = 2}
             );
             
             // if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )

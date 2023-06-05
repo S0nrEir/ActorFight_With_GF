@@ -91,6 +91,11 @@ namespace Aquila.Fight.Addon
             HP,
             
             /// <summary>
+            /// TIMELINE组件
+            /// </summary>
+            TIMELINE,
+
+            /// <summary>
             /// 基础类型
             /// </summary>
             BASE = 999,
