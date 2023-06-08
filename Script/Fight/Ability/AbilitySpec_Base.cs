@@ -98,25 +98,39 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// 是否可以使用技能，
+        /// </summary>
+        public virtual int CanUseAbility()
+        {
+            if ( !CostOK() )
+                return ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH;
+
+            if ( !CDOK() )
+                return ( int ) AbilityUseResultTypeEnum.CD_NOT_OK;
+
+            return 0;
+        }
+
+        /// <summary>
         /// 是否可使用技能，可以返回true
         /// </summary>
-        public virtual bool CanUseAbility(ref AbilityHitResult result)
-        {
-            var succ = true;
-            if (!CostOK())
-            {
-                succ = false;
-                result.SetState(AbilityHitResultTypeEnum.COST_NOT_ENOUGH);
-            }
+        //public virtual bool CanUseAbility(ref AbilityHitResult result)
+        //{
+        //    var succ = true;
+        //    if (!CostOK())
+        //    {
+        //        succ = false;
+        //        result.SetState(AbilityHitResultTypeEnum.COST_NOT_ENOUGH);
+        //    }
 
-            if (!CDOK())
-            {
-                succ = false;
-                result.SetState(AbilityHitResultTypeEnum.CD_NOT_OK);
-            }
+        //    if (!CDOK())
+        //    {
+        //        succ = false;
+        //        result.SetState(AbilityHitResultTypeEnum.CD_NOT_OK);
+        //    }
 
-            return succ;
-        }
+        //    return succ;
+        //}
 
         /// <summary>
         /// 清理数据

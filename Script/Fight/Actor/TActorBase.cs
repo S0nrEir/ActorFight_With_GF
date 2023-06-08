@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -276,6 +276,8 @@ namespace Aquila.Fight.Actor
             var idx = 0;
             foreach ( var kv in _addonDic )
                 addons[idx++] = kv.Value;
+
+            var iter = _addonDic.GetEnumerator();
 
             return addons;
         }

@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using System.Collections.Generic;
@@ -59,7 +59,8 @@ namespace Aquila.Fight.Addon
         public override void OnAdd()
         {
             ActorFsm = new ActorFSM();
-            ActorFsm.Setup( Actor );
+            //ActorFsm.Setup( Actor );
+            ActorFsm.Setup( _actor_instance );
 
             foreach ( var state in StateList )
                 ActorFsm.AddState( state );

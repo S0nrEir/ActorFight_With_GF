@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;

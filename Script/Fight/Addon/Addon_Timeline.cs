@@ -11,7 +11,7 @@ namespace Aquila.Fight.Addon
     public class Addon_Timeline : Addon_Base
     {
         /// <summary>
-        /// »ñÈ¡µ±Ç°µÄ²¥·Å×´Ì¬
+        /// è·å–å½“å‰çš„æ’­æ”¾çŠ¶æ€
         /// </summary>
         public PlayState State()
         {
@@ -19,7 +19,7 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
-        /// ²¥·ÅÒ»¸öTimeline
+        /// æ’­æ”¾ä¸€ä¸ªTimeline
         /// </summary>
         public void Play( string assetPath )
         {
@@ -48,7 +48,7 @@ namespace Aquila.Fight.Addon
         public override AddonTypeEnum AddonType => AddonTypeEnum.TIMELINE;
 
         /// <summary>
-        /// ³ÖÓĞµÄ²¥·Å×é¼ş
+        /// æŒæœ‰çš„æ’­æ”¾ç»„ä»¶
         /// </summary>
         private PlayableDirector _director = null;
     }

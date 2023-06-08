@@ -1,17 +1,14 @@
-using Aquila.Fight.Actor;
 using Aquila.ObjectPool;
 using GameFramework.ObjectPool;
 using GameFramework.Resource;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Playables;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Extension
 {
     /// <summary>
-    /// timeline×é¼ş
+    /// timelineç»„ä»¶
     /// </summary>
     public class Component_Timeline : GameFrameworkComponent
     {
@@ -26,7 +23,7 @@ namespace Aquila.Extension
             var timelineObject = _assetPool.Spawn(assetPath);
             if ( timelineObject == null )
             {
-                //³ØÀïÃ»ÓĞ¾Í¼ÓÔØ
+                //æ± é‡Œæ²¡æœ‰å°±åŠ è½½
                 GameEntry.Resource.LoadAsset
                     ( 
                         assetPath, 
@@ -49,7 +46,7 @@ namespace Aquila.Extension
 
         //---------------priv---------------
         /// <summary>
-        /// ¼ÓÔØ³É¹¦
+        /// åŠ è½½æˆåŠŸ 
         /// </summary>
         private void OnLoadAssetSucc( string assetName, object asset, float duration, object userData )
         {
@@ -61,7 +58,7 @@ namespace Aquila.Extension
             }
 
             var obj = Object_PlayableAsset.Create( assetName, playableAsset );
-            //#todo¿¼ÂÇ³ÖÓĞdirectorµÄ½ÇÉ«ÒÑ¾­ËÀÍöµÄÇé¿ö
+            //#todoè€ƒè™‘æŒæœ‰directorçš„è§’è‰²å·²ç»æ­»äº¡çš„æƒ…å†µ
             _assetPool.Register( obj, false );
             var playData = userData as LoadPlayableAssetData;
             if ( playData is null )
@@ -74,7 +71,7 @@ namespace Aquila.Extension
         }
 
         /// <summary>
-        /// ¼ÓÔØÊ§°Ü
+        /// åŠ è½½å¤±è´¥
         /// </summary>
         private void OnLoadAssetFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
@@ -92,26 +89,27 @@ namespace Aquila.Extension
             _assetPool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_PlayableAsset>( nameof( Object_PlayableAsset ) );
             _assetPool.ExpireTime = 3600f;
             _loadAssetCallBack = new LoadAssetCallbacks( OnLoadAssetSucc, OnLoadAssetFaild );
+            _assetCache = new Dictionary<string, PlayableAsset>();
         }
 
         /// <summary>
-        /// playableAsset»º´æ
+        /// playableAssetç¼“å­˜
         /// </summary>
         private Dictionary<string, PlayableAsset> _assetCache = null;
 
         /// <summary>
-        /// ¶ÔÏó³Ø
+        /// å¯¹è±¡æ± 
         /// </summary>
         private IObjectPool<Object_PlayableAsset> _assetPool = null;
 
         /// <summary>
-        /// ×Ê²ú¼ÓÔØ»Øµ÷
+        /// èµ„äº§åŠ è½½å›è°ƒ
         /// </summary>
         private LoadAssetCallbacks _loadAssetCallBack = null;
 
 
         /// <summary>
-        /// timeline assetµÄ¼ÓÔØ²ÎÊı
+        /// timeline assetçš„åŠ è½½å‚æ•°
         /// </summary>
         private class LoadPlayableAssetData
         {

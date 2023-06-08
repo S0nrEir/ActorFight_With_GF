@@ -1,10 +1,12 @@
-﻿using Aquila.Fight.Addon;
+using Aquila.Fight.Addon;
 using System.Collections.Generic;
 using Aquila.Timeline;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityGameFramework.Runtime;
 using Aquila.Toolkit;
+using Cfg.Fight;
+using Aquila.Event;
 
 namespace Aquila.Fight.FSM
 {
@@ -58,69 +60,99 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class HeroAbilityState : ActorStateBase
     {
+        /// <summary>
+        /// 检查技能数据是否合法
+        /// </summary>
+        private bool IsAbilityDataValid( object[] param )
+        {
+            int state = 0;
+            if ( param is null || param.Length == 0 )
+            {
+                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>" );
+                state |= ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META;
+                return false;
+            }
+            var result = param[0] as EventArg_AbilityUseResult;
+            _abilityMeta = GameEntry.DataTable.Tables.Ability.Get(result._abilityID);
+            if ( _abilityMeta is null )
+            {
+                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->_abilityMeta is null</color>" );
+                state |= ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META;
+            }
+
+            _timelineMeta = GameEntry.DataTable.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
+            if ( _timelineMeta is null )
+            {
+                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->timeline meta is null</color>" );
+                state |= ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META;
+            }
+            //检查CD和消耗
+            var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
+            if ( abilityAddon is null )
+                state |= ( int ) AbilityUseResultTypeEnum.NONE_PARAM;
+
+            state |= abilityAddon.CanUseAbility( _abilityMeta.id );
+            //#todo检查施法者和目标
+            result._succ = state == ( int ) AbilityUseResultTypeEnum.SUCC;
+            var succ = result._succ;
+            GameEntry.Event.Fire( _fsm.GetActorInstance(), result );
+            return succ;
+        }
+
         public override void OnEnter(params object[] param)
         {
             base.OnEnter(param);
-            if (param is null || param.Length == 0)
-            {
-                Log.Warning("<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>");
-                return;
-            }
-
-            var timeline = _director.playableAsset as TimelineAsset;
-            if ( timeline is null )
-            {
-                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->timeline is null</color>" );
-                return;
-            }
-
-            _asset = Tools.GetFirstClipAssetFromTrack<PlayableAsset_Anim>( Tools.GetTrackFromTimeline<PlayableTrack_Anim>( timeline ) );
-            if ( _asset is null )
-            {
-                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->clip is null</color>" );
-                return;
-            }
+            if ( !IsAbilityDataValid( param ) )
+                _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
 
             _time = 0f;
             _abilityFinishFlag = false;
-            //播放timeline开始计时
-            //根据时间节点来做相应的行为
-            _director.Play();
+            GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );
         }
 
+        public override void OnUpdate( float deltaTime )
+        {
+            base.OnUpdate( deltaTime );
+            _time += deltaTime;
+            if (!_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
+            {
+                var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
+                if ( abilityAddon is null )
+                {
+                    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
+                    return;
+                }
+                //这里走公用接口
+                //abilityAddon.UseAbility( _abilityMeta.id,)
+                _abilityFinishFlag = true;
+            }
+
+            if ( _time >= _timelineMeta.Duration )
+                _fsm.SwitchTo( (int) ActorStateTypeEnum.IDLE_STATE,null,null);
+        }
         public override void OnLeave(params object[] param)
         {
-            _director = null;
-            _asset = null;
             base.OnLeave(param);
+            //#todo施法结束回调
+            _timelineMeta = null;
+            _abilityMeta = null;
         }
 
-        public override void OnUpdate(float deltaTime)
-        {
-            base.OnUpdate(deltaTime);
-            _time += deltaTime;
-
-            if ( _abilityFinishFlag )
-            {
-                _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
-                return;
-            }
-            
-            //在对应的hurtPoint施加buff
-            if (_director.time >= _asset._triggerTime && !_asset._triggerFlag)
-            {
-                _asset._triggerFlag = true;
-                //apply effect
-            }
-
-            if ( _director.time >= _time )
-                _abilityFinishFlag = true;
-        }
         
         public HeroAbilityState( int state_id ) : base( state_id )
         {
             
         }
+
+        /// <summary>
+        /// 技能数据
+        /// </summary>
+        private Table_AbilityBase _abilityMeta = null;
+
+        /// <summary>
+        /// 技能timeline配置
+        /// </summary>
+        private Table_AbilityTimeline _timelineMeta = null;
 
         /// <summary>
         /// 技能完成标记
@@ -131,16 +163,6 @@ namespace Aquila.Fight.FSM
         /// 进入该状态时间
         /// </summary>
         private float _time = 0f;
-
-        /// <summary>
-        /// 轨道资源
-        /// </summary>
-        private PlayableAsset_Anim _asset = null;
-        
-        /// <summary>
-        /// 这里从playableDirector组件拿
-        /// </summary>
-        private PlayableDirector _director = null;
     }
 
     /// <summary>

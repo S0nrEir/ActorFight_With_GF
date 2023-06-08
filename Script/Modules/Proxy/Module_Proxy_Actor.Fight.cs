@@ -47,11 +47,10 @@ namespace  Aquila.Module
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        public AbilityUseResult Ability2SingleTarget(int castorID, int targetID, int abilityMetaID)
+        public void Ability2SingleTarget(int castorID, int targetID, int abilityMetaID)
         {
             //obtain ability result
-            var result = default(AbilityUseResult);
-            result.Init();
+            var result = Tools.Fight.GenAbilityUseResult( false, (int)AbilityUseResultTypeEnum.SUCC, castorID, targetID, abilityMetaID );
             result._castorID = castorID;
             result._targetID = targetID;
 
@@ -63,84 +62,74 @@ namespace  Aquila.Module
                 // return result;
             }
 
-            var targetInstance = TryGet(targetID);
-            if (!targetInstance.has)
-            {
-                result._stateDescription = Tools.SetBitValue(result._stateDescription,
-                    (int)AbilityUseResultTypeEnum.NO_TARGET, true);
-                // return result;
-            }
-
-            var meta = GameEntry.DataTable.Tables.Ability.Get(abilityMetaID);
-            if (meta is null)
-            {
-                result._stateDescription =
-                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_META, true);
-                // return result;
-            }
+            //var targetInstance = TryGet(targetID);
+            //if (!targetInstance.has)
+            //{
+            //    result._stateDescription = Tools.SetBitValue(result._stateDescription,
+            //        (int)AbilityUseResultTypeEnum.NO_TARGET, true);
+            //    // return result;
+            //}
 
             if (castorInstance.instance.Actor is IDoAbilityBehavior)
-                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(meta);
-
-            return result;
+                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(result);
         }
 
         /// <summary>
         /// 单对单释放技能
         /// </summary>
-        public AbilityHitResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
-        {
-            //obtain ability result
-            var result = default(AbilityHitResult);
-            result.Init();
-            result._castor_actor_id = castor_id;
-            result._target_actor_id = target_id;
+        //public AbilityHitResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
+        //{
+        //    //obtain ability result
+        //    var result = default(AbilityHitResult);
+        //    result.Init();
+        //    result._castor_actor_id = castor_id;
+        //    result._target_actor_id = target_id;
             
-            //拿技能组件
-            var castor_instance = TryGet(castor_id);
-            Addon_Ability ability_addon = null; 
-            if (!castor_instance.has)
-            {
-                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-                return result;
-            }
+        //    //拿技能组件
+        //    var castor_instance = TryGet(castor_id);
+        //    Addon_Ability ability_addon = null; 
+        //    if (!castor_instance.has)
+        //    {
+        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+        //        return result;
+        //    }
 
-            //检查释放条件
-            ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
-            if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
-            {
-                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-                return result;
-            }
+        //    //检查释放条件
+        //    ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
+        //    if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
+        //    {
+        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+        //        return result;
+        //    }
 
-            var target_instance = TryGet(target_id);
-            if (!target_instance.has)
-            {
-                // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-                return result;
-            }
+        //    var target_instance = TryGet(target_id);
+        //    if (!target_instance.has)
+        //    {
+        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
+        //        return result;
+        //    }
 
 
-            // Log.Info("<color=green>--------before use--------</color>");
-            // Log.Info("<color=green>castor info:</color>");
-            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            // Log.Info("<color=green>target info:</color>");
-            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+        //    // Log.Info("<color=green>--------before use--------</color>");
+        //    // Log.Info("<color=green>castor info:</color>");
+        //    // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+        //    // Log.Info("<color=green>target info:</color>");
+        //    // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             
-            ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
+        //    ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
             
-            //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
-            //refresh actor info,refresh actor ui
+        //    //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
+        //    //refresh actor info,refresh actor ui
 
-            // Log.Info("<color=green>--------after use--------</color>");
-            // Log.Info("<color=green>castor info:</color>");
-            // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            // Log.Info("<color=green>target info:</color>");
-            // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+        //    // Log.Info("<color=green>--------after use--------</color>");
+        //    // Log.Info("<color=green>castor info:</color>");
+        //    // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
+        //    // Log.Info("<color=green>target info:</color>");
+        //    // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
             
-            //show damage number
-            GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
-            return result;
-        }
+        //    //show damage number
+        //    GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
+        //    return result;
+        //}
     }
 }

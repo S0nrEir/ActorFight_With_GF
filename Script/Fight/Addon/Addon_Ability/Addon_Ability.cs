@@ -38,16 +38,28 @@ namespace  Aquila.Fight.Addon
         }
 
         /// <summary>
+        /// 是否可使用技能，0=可以，1=cost不够，2=cd未准备好，3=无效
+        /// </summary>
+        public int CanUseAbility( int metaID )
+        {
+            var spec = GetAbilitySpec( metaID );
+            if ( spec is null )
+                return (int)AbilityUseResultTypeEnum.NONE_PARAM;
+
+            return spec.CanUseAbility();
+        }
+
+        /// <summary>
         /// 是否可使用技能，可以返回true
         /// </summary>
-        public bool CanUseAbility(int meta_id,ref AbilityHitResult result)
-        {
-            var spec = GetAbilitySpec(meta_id);
-            if (spec is null)
-                return false;
+        //public bool CanUseAbility(int meta_id,ref AbilityHitResult result)
+        //{
+        //    var spec = GetAbilitySpec(meta_id);
+        //    if (spec is null)
+        //        return false;
 
-            return spec.CanUseAbility(ref result);
-        }
+        //    return spec.CanUseAbility(ref result);
+        //}
 
         //----------------------priv----------------------
         /// <summary>

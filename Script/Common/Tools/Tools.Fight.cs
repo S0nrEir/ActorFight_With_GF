@@ -1,6 +1,7 @@
-﻿using Aquila.Fight;
+using Aquila.Event;
+using Aquila.Fight;
 using Aquila.Fight.Addon;
-using Aquila.Module;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -14,12 +15,26 @@ namespace Aquila.Toolkit
         public static class Fight
         {
             /// <summary>
+            /// 生成一个AbilityUseResult实例
+            /// </summary>
+            public static EventArg_AbilityUseResult GenAbilityUseResult(bool succ,int state,int castorID,int targetID,int abilityID)
+            {
+                EventArg_AbilityUseResult result = ReferencePool.Acquire<EventArg_AbilityUseResult>();
+                result._succ = succ;
+                result._stateDescription = state;
+                result._castorID = castorID;
+                result._targetID = targetID;
+                result._abilityID = abilityID;
+                return result;
+            }
+
+            /// <summary>
             /// 对一个单体目标使用技能
             /// </summary>
-            public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
-            {
-                var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
-            }
+            //public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
+            //{
+            //    var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+            //}
 
             /// <summary>
             /// 计算物理伤害，返回计算后的生命值
@@ -35,7 +50,6 @@ namespace Aquila.Toolkit
             /// </summary>
             /// <param name="x">x坐标</param>
             /// <param name="z">z坐标</param>
-            /// <returns>失败返回-1</returns>
             public static int Coord2UniqueKey( int x, int z )
             {
                 var result = x * Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Precision + z;

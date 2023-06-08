@@ -88,20 +88,10 @@ namespace Aquila.Fight
         NO_TARGET,
         
         /// <summary>
-        /// 技能冷却中
-        /// </summary>
-        CD_NOT_OK,
-        
-        /// <summary>
         /// 无法使用
         /// </summary>
         CANT_USE,
-        
-        /// <summary>
-        /// 技能消耗不够
-        /// </summary>
-        COST_NOT_ENOUGH,
-        
+
         /// <summary>
         /// 造成了暴击
         /// </summary>
