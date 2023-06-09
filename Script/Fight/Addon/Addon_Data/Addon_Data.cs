@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Cfg.Role;
 using GameFramework;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Aquila.Fight.Addon
 {
     /// <summary>
-    /// 数据组件 by yhc 
+    /// 数据组件
     /// </summary>
     public partial class Addon_Data : Addon_Base
     {

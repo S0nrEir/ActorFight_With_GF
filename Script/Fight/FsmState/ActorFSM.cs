@@ -1,8 +1,7 @@
 using Aquila.Fight.Actor;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityGameFramework.Runtime;
-using static Aquila.Module.Module_Proxy_Actor;
+using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.FSM
 {

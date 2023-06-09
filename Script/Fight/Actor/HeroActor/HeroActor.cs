@@ -1,11 +1,6 @@
-﻿using Aquila.Fight.Addon;
+using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
-using Aquila.Toolkit;
-using GameFramework.Event;
-using System.Collections.Generic;
 using Aquila.Module;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -24,7 +19,6 @@ namespace Aquila.Fight.Actor
         {
             base.AddAddon();
             _baseAttrAddon      = AddAddon<Addon_BaseAttrNumric>();
-            _dataAddon          = AddAddon<Addon_Data>();
             _abilityAddon       = AddAddon<Addon_Ability>();
             _fsmAddon           = AddAddon<Addon_HeroState>();
             //_anim_addon       = AddAddon<Addon_Anim>();
@@ -36,7 +30,7 @@ namespace Aquila.Fight.Actor
             _timelineAddon      = AddAddon<Addon_Timeline>();
         }
         
-        protected override void InitAddons(Module_Proxy_Actor.ActorInstance instance)
+        protected override void InitAddons( Module_ProxyActor.ActorInstance instance)
         {
             base.InitAddons(instance);
         }
@@ -115,11 +109,6 @@ namespace Aquila.Fight.Actor
         /// 特效组件
         /// </summary>
         private Addon_FX _fxAddon { get; set; } = null;
-
-        /// <summary>
-        /// 数据组件
-        /// </summary>
-        private Addon_Data _dataAddon { get; set; } = null;
 
         /// <summary>
         /// 基础属性数值组件

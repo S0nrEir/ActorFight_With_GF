@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Enum;
@@ -162,7 +162,7 @@ namespace Aquila.Fight.Addon
         private void SetBaseAttr( Table_RoleMeta meta )
         {
             //#todo设置属性暂时是一个个设置，想个办法走loop
-            var proxy_module = GameEntry.Module.GetModule<Module_Proxy_Actor>();
+            var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
             //max hp
             var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );
             SetCurrHP(res.value_after_set);

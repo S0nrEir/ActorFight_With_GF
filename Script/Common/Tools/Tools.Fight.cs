@@ -27,15 +27,7 @@ namespace Aquila.Toolkit
                 result._abilityID = abilityID;
                 return result;
             }
-
-            /// <summary>
-            /// 对一个单体目标使用技能
-            /// </summary>
-            //public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
-            //{
-            //    var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
-            //}
-
+            
             /// <summary>
             /// 计算物理伤害，返回计算后的生命值
             /// </summary>

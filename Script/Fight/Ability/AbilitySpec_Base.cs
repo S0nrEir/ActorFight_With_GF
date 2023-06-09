@@ -57,7 +57,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能
         /// </summary>
-        public virtual bool UseAbility(Module_Proxy_Actor.ActorInstance instance,ref AbilityHitResult result)
+        public virtual bool UseAbility( Module_ProxyActor.ActorInstance instance,ref AbilityHitResult result)
         {
             if (!OnPreAbility(ref result))
                 return false;
@@ -250,7 +250,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 持有的actor代理实例，技能的持有者
         /// </summary>
-        public Module_Proxy_Actor.ActorInstance _owner = null;
+        public Module_ProxyActor.ActorInstance _owner = null;
         
         public AbilitySpecBase()
         {
@@ -316,7 +316,7 @@ namespace Aquila.Fight
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>
         /// <returns></returns>
-        public static AbilitySpecBase Gen( Table_AbilityBase meta,Module_Proxy_Actor.ActorInstance instance)
+        public static AbilitySpecBase Gen( Table_AbilityBase meta, Module_ProxyActor.ActorInstance instance)
         {
             var spec = ReferencePool.Acquire<AbilitySpecBase>();
             spec.Setup(meta);

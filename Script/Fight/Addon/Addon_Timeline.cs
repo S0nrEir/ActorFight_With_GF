@@ -31,7 +31,7 @@ namespace Aquila.Fight.Addon
             base.Init( actor, target_go, target_transform );
         }
 
-        public override void Init( Module_Proxy_Actor.ActorInstance instance )
+        public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );
             _director = Tools.GetComponent<PlayableDirector>( instance.Actor.transform );

@@ -42,7 +42,7 @@ namespace  Aquila.Module
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
-    public partial class Module_Proxy_Actor
+    public partial class Module_ProxyActor
     {
         /// <summary>
         /// 单对单释放技能
@@ -73,63 +73,5 @@ namespace  Aquila.Module
             if (castorInstance.instance.Actor is IDoAbilityBehavior)
                 (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(result);
         }
-
-        /// <summary>
-        /// 单对单释放技能
-        /// </summary>
-        //public AbilityHitResult AbilityToSingleTarget(int castor_id,int target_id,int ability_meta_id)
-        //{
-        //    //obtain ability result
-        //    var result = default(AbilityHitResult);
-        //    result.Init();
-        //    result._castor_actor_id = castor_id;
-        //    result._target_actor_id = target_id;
-            
-        //    //拿技能组件
-        //    var castor_instance = TryGet(castor_id);
-        //    Addon_Ability ability_addon = null; 
-        //    if (!castor_instance.has)
-        //    {
-        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-        //        return result;
-        //    }
-
-        //    //检查释放条件
-        //    ability_addon = castor_instance.instance.GetAddon<Addon_Ability>();
-        //    if (!ability_addon.CanUseAbility(ability_meta_id,ref result))
-        //    {
-        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-        //        return result;
-        //    }
-
-        //    var target_instance = TryGet(target_id);
-        //    if (!target_instance.has)
-        //    {
-        //        // result.SetState(AbilityResultDescTypeEnum.CANT_USE);
-        //        return result;
-        //    }
-
-
-        //    // Log.Info("<color=green>--------before use--------</color>");
-        //    // Log.Info("<color=green>castor info:</color>");
-        //    // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-        //    // Log.Info("<color=green>target info:</color>");
-        //    // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            
-        //    ability_addon.UseAbility(ability_meta_id, target_instance.instance, ref result);
-            
-        //    //#todo:使用玩技能后玩家面板如何表现，考虑在这里更新，或者effect的实现里更新？（我觉得在这里更新比较好 by boxing）
-        //    //refresh actor info,refresh actor ui
-
-        //    // Log.Info("<color=green>--------after use--------</color>");
-        //    // Log.Info("<color=green>castor info:</color>");
-        //    // Log.Info(castor_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-        //    // Log.Info("<color=green>target info:</color>");
-        //    // Log.Info(target_instance.instance.GetAddon<Addon_BaseAttrNumric>().ToString());
-            
-        //    //show damage number
-        //    GameEntry.InfoBoard.ShowDamageNumber($"{(result._dealed_damage).ToString()}",target_instance.instance.Actor.CachedTransform.position);
-        //    return result;
-        //}
     }
 }

@@ -1,8 +1,6 @@
 using Aquila.Fight.Addon;
 using System.Collections.Generic;
-using Aquila.Timeline;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
 using UnityGameFramework.Runtime;
 using Aquila.Toolkit;
 using Cfg.Fight;
@@ -99,6 +97,35 @@ namespace Aquila.Fight.FSM
             return succ;
         }
 
+        /// <summary>
+        /// 尝试使用技能，到触发时间使用技能
+        /// </summary>
+        private void TryUseAbility(float deltaTime)
+        {
+            _time += deltaTime;
+            if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
+            {
+                var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
+                if ( abilityAddon is null )
+                {
+                    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
+                    return;
+                }
+                //continue:这里走公用接口，将效果施加到actor上
+                //abilityAddon.UseAbility( _abilityMeta.id,)
+                _abilityFinishFlag = true;
+            }
+        }
+
+        /// <summary>
+        /// 技能完成检查代码
+        /// </summary>
+        private void FinishAbility()
+        {
+            if ( _time >= _timelineMeta.Duration )
+                _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
+        }
+
         public override void OnEnter(params object[] param)
         {
             base.OnEnter(param);
@@ -113,22 +140,8 @@ namespace Aquila.Fight.FSM
         public override void OnUpdate( float deltaTime )
         {
             base.OnUpdate( deltaTime );
-            _time += deltaTime;
-            if (!_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
-            {
-                var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
-                if ( abilityAddon is null )
-                {
-                    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
-                    return;
-                }
-                //这里走公用接口
-                //abilityAddon.UseAbility( _abilityMeta.id,)
-                _abilityFinishFlag = true;
-            }
-
-            if ( _time >= _timelineMeta.Duration )
-                _fsm.SwitchTo( (int) ActorStateTypeEnum.IDLE_STATE,null,null);
+            TryUseAbility(deltaTime);
+            FinishAbility();
         }
         public override void OnLeave(params object[] param)
         {

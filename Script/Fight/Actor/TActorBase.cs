@@ -174,7 +174,7 @@ namespace Aquila.Fight.Actor
         protected override void OnHide( bool isShutdown, object userData )
         {
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister( ActorID );
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
         }
 
@@ -192,7 +192,7 @@ namespace Aquila.Fight.Actor
                 addon.Dispose();
             }
             
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister(ActorID);
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister(ActorID);
             UnRegister();
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
@@ -206,7 +206,7 @@ namespace Aquila.Fight.Actor
             base.OnInit( userData );
             OnInitActor(userData);
             AddAddon();
-            var res = GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
+            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this, GetAllAddon() );
             if(res.succ)
                 InitAddons( res.instance );
             
@@ -285,7 +285,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons(Module_Proxy_Actor.ActorInstance instance)
+        protected virtual void InitAddons( Module_ProxyActor.ActorInstance instance)
         {
             var addons = GetAllAddon();
             foreach (var addon in addons)

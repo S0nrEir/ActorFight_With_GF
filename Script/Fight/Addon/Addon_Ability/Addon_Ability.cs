@@ -16,7 +16,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility(int ability_id, Module_Proxy_Actor.ActorInstance target,ref AbilityHitResult result)
+        public bool UseAbility(int ability_id, Module_ProxyActor.ActorInstance target,ref AbilityHitResult result)
         {
             var spec = GetAbilitySpec(ability_id);
             if (spec is null)

@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Module;
 using Aquila.ObjectPool;
 using Aquila.Toolkit;
@@ -156,7 +156,10 @@ namespace Aquila.Procedure
         {
             ChangeState<Procedure_Test_Fight>( _procedure_owner );
             return;
+
+#pragma warning disable CS0162 // 检测到无法访问的代码
             if ( GameEntry.Procedure._is_enter_test_scene )
+#pragma warning restore CS0162 // 检测到无法访问的代码
             {
                 ChangeState<Procedure_Test>( _procedure_owner );
             }

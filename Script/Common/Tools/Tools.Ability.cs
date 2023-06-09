@@ -1,4 +1,4 @@
-﻿using Aquila.Fight;
+using Aquila.Fight;
 using Cfg.Common;
 using Cfg.Enum;
 
@@ -24,8 +24,6 @@ namespace Aquila.Toolkit
                     default:
                         return null;
                 }
-
-                return null;
             }
 
         }//end class Ability

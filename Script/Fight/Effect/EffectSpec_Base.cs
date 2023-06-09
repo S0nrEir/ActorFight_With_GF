@@ -20,7 +20,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply(Module_Proxy_Actor.ActorInstance instance,ref AbilityHitResult result)
+        public virtual void Apply( Module_ProxyActor.ActorInstance instance,ref AbilityHitResult result)
         {
             
         }

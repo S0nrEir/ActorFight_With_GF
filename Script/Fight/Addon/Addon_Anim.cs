@@ -30,7 +30,7 @@ namespace Aquila.Fight.Addon
 
         //
         //#todo动态设置playableAseet？
-        public override void Init( Module_Proxy_Actor.ActorInstance instance )
+        public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );
         }
