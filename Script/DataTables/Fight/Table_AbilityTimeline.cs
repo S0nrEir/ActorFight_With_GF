@@ -42,7 +42,7 @@ public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase
     /// </summary>
     public float Duration { get; private set; }
     /// <summary>
-    /// 触发秒数
+    /// 触发时间
     /// </summary>
     public float TriggerTime { get; private set; }
 
