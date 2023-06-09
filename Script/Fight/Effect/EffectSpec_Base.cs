@@ -1,3 +1,4 @@
+using Aquila.Event;
 using Aquila.Module;
 using Aquila.Numric;
 using Cfg.Common;
@@ -20,7 +21,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply( Module_ProxyActor.ActorInstance instance,ref AbilityHitResult result)
+        public virtual void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result)
         {
             
         }

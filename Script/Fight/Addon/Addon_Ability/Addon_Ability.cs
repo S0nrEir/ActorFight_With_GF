@@ -1,3 +1,4 @@
+using Aquila.Event;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Cfg.Fight;
@@ -16,7 +17,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility(int ability_id, Module_ProxyActor.ActorInstance target,ref AbilityHitResult result)
+        public bool UseAbility(int ability_id, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
         {
             var spec = GetAbilitySpec(ability_id);
             if (spec is null)
@@ -25,7 +26,7 @@ namespace  Aquila.Fight.Addon
                 return false;
             }
 
-            return spec.UseAbility(target,ref result);
+            return spec.UseAbility( target , result );
         }
 
         public override void OnUpdate(float delta_time,float real_elapsed)
@@ -63,7 +64,7 @@ namespace  Aquila.Fight.Addon
 
         //----------------------priv----------------------
         /// <summary>
-        /// 获取指定逻辑类型，获取不到返回空
+        /// 获取指定的技能逻辑实例，获取不到返回空
         /// </summary>
         private AbilitySpecBase GetAbilitySpec(int meta_id)
         {
@@ -93,13 +94,13 @@ namespace  Aquila.Fight.Addon
                 Log.Warning("Addon_Ability.Init()->role_meta is null");
                 return false;
             }
-            var ids = roleMeta.AbilityBaseID;
-            _specArr = new AbilitySpecBase[ids.Length];
+            var abilityIdSet = roleMeta.AbilityBaseID;
+            _specArr = new AbilitySpecBase[abilityIdSet.Length];
             Table_AbilityBase abilityBaseMeta = null;
             var len = _specArr.Length;
-            for (var i = 0; i < len && i < ids.Length; i++)
+            for (var i = 0; i < len && i < abilityIdSet.Length; i++)
             {
-                abilityBaseMeta = GameEntry.DataTable.Tables.Ability.Get(ids[i]);
+                abilityBaseMeta = GameEntry.DataTable.Tables.Ability.Get( abilityIdSet[i]);
                 if (abilityBaseMeta is null)
                 {
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");

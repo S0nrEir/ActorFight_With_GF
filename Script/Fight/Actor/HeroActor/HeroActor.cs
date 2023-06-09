@@ -62,7 +62,6 @@ namespace Aquila.Fight.Actor
         protected override void UnRegister()
         {
             base.UnRegister();
-
         }
 
         public override void Reset()

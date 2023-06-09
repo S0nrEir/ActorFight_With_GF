@@ -45,11 +45,6 @@ namespace Aquila.Fight
         /// 没有timeline配置参数
         /// </summary>
         NONE_TIMELINE_META,
-
-        /// <summary>
-        /// 无效，未初始化
-        /// </summary>
-        INVALID = 999,
     }
 
 

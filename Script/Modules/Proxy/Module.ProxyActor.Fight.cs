@@ -1,8 +1,11 @@
+using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
+using GameFramework;
+using UnityGameFramework.Runtime;
 
-namespace  Aquila.Module
+namespace Aquila.Module
 {
     //AbilityAddon：AbilitySpec
     //AbilitySpec:技能使用逻辑，持有一些GameplayEffectSpec，技能逻辑，持有技能元数据；尝试使用技能；是否可使用（CD？消耗？）；技能前摇；使用技能；
@@ -38,40 +41,94 @@ namespace  Aquila.Module
     //this.Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
     //技能数据(this)的持有者(asc)获取对应类型的effectSpec实例
     //然后将该实例应用于owner
-    
+
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
     public partial class Module_ProxyActor
     {
         /// <summary>
+        /// 将一个effect施加到actor上
+        /// </summary>
+        public void ApplyEffect2Actor( int castorID, int targetID, int abilityID )
+        {
+            var result = ReferencePool.Acquire<AbilityResult_Hit>();
+            result._dealedDamage = 0f;
+            result._stateDescription = 0;
+            result._castorActorID = castorID;
+            result._targetActorID = targetID;
+
+            var castorInstance = TryGet( castorID );
+            if ( !castorInstance.has )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
+                return;
+            }
+
+            var targetInstance = TryGet( targetID );
+            if ( !targetInstance.has )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                return;
+            }
+
+            var addon = castorInstance.instance.GetAddon<Addon_Ability>();
+            if ( addon is null )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has</color>" );
+                return;
+            }
+
+            addon.UseAbility( abilityID, targetInstance.instance, result );
+            GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
+
+            TryRefreshActorUI( castorInstance.instance );
+            TryRefreshActorUI( targetInstance.instance );
+        }
+
+        /// <summary>
         /// 单对单释放技能
         /// </summary>
-        public void Ability2SingleTarget(int castorID, int targetID, int abilityMetaID)
+        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID )
         {
-            //obtain ability result
-            var result = Tools.Fight.GenAbilityUseResult( false, (int)AbilityUseResultTypeEnum.SUCC, castorID, targetID, abilityMetaID );
-            result._castorID = castorID;
-            result._targetID = targetID;
+            AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
+            result._succ = false;
+            result._stateDescription = 0;
+            if ( Get( castorID ) != null )
+                result._castorID = castorID;
+            else
+                result._castorID = -1;
 
-            var castorInstance = TryGet(castorID);
-            if (!castorInstance.has)
+            if ( Get( targetID ) != null )
+                result._targetID = targetID;
+            else
+                result._targetID = -1;
+
+            //result._castorID = castorID;
+            //result._targetID = targetID;
+            result._abilityID = abilityMetaID;
+
+            var castorInstance = TryGet( castorID );
+            if ( !castorInstance.has )
             {
                 result._stateDescription =
-                    Tools.SetBitValue(result._stateDescription, (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                    Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
                 // return result;
             }
 
-            //var targetInstance = TryGet(targetID);
-            //if (!targetInstance.has)
-            //{
-            //    result._stateDescription = Tools.SetBitValue(result._stateDescription,
-            //        (int)AbilityUseResultTypeEnum.NO_TARGET, true);
-            //    // return result;
-            //}
+            if ( castorInstance.instance.Actor is IDoAbilityBehavior )
+                ( castorInstance.instance.Actor as IDoAbilityBehavior ).UseAbility( result );
 
-            if (castorInstance.instance.Actor is IDoAbilityBehavior)
-                (castorInstance.instance.Actor as IDoAbilityBehavior).UseAbility(result);
+            GameEntry.Event.Fire( castorInstance, EventArg_OnUseAblity.Create( result ) );
+            ReferencePool.Release( result );
+        }
+
+        /// <summary>
+        /// 尝试刷新Actor对应的UI，比如头顶的血条之类的
+        /// </summary>
+        public void TryRefreshActorUI( ActorInstance instance )
+        {
+
         }
     }
 }

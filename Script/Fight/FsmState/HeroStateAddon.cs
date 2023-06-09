@@ -64,37 +64,51 @@ namespace Aquila.Fight.FSM
         private bool IsAbilityDataValid( object[] param )
         {
             int state = 0;
+            var succ = true;
             if ( param is null || param.Length == 0 )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>" );
-                state |= ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META;
+                state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
                 return false;
             }
-            var result = param[0] as EventArg_AbilityUseResult;
+            var result = param[0] as AbilityResult_Use;
             _abilityMeta = GameEntry.DataTable.Tables.Ability.Get(result._abilityID);
             if ( _abilityMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->_abilityMeta is null</color>" );
-                state |= ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META;
+                state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META, true );
             }
 
             _timelineMeta = GameEntry.DataTable.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
             if ( _timelineMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->timeline meta is null</color>" );
-                state |= ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META;
+                state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
             }
             //检查CD和消耗
             var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
             if ( abilityAddon is null )
-                state |= ( int ) AbilityUseResultTypeEnum.NONE_PARAM;
+                state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
+            
 
-            state |= abilityAddon.CanUseAbility( _abilityMeta.id );
+            var canUseFlag = abilityAddon.CanUseAbility( _abilityMeta.id );
+            if( canUseFlag != 0)
+                state = Tools.SetBitValue( state, (ushort)canUseFlag , true );
             //#todo检查施法者和目标
-            result._succ = state == ( int ) AbilityUseResultTypeEnum.SUCC;
-            var succ = result._succ;
-            GameEntry.Event.Fire( _fsm.GetActorInstance(), result );
-            return succ;
+
+            //到最后设置succ
+            result._stateDescription = state;
+            if ( result.StateFlagIsClean() )
+            {
+                result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.SUCC, true );
+                result._succ = true;
+            }
+            else
+            {
+                result._succ = false;
+            }
+
+            return result._succ;
         }
 
         /// <summary>
