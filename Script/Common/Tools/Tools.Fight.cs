@@ -14,28 +14,12 @@ namespace Aquila.Toolkit
         /// </summary>
         public static class Fight
         {
-
             /// <summary>
-            /// 生成一个AbilityUseResult实例
-            /// </summary>
-            //public static AbilityResult_Use GenAbilityUseResultParam(bool succ,int state,int castorID,int targetID,int abilityID)
-            //{
-            //    AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
-            //    result._succ = succ;
-            //    result._stateDescription = state;
-            //    result._castorID = castorID;
-            //    result._targetID = targetID;
-            //    result._abilityID = abilityID;
-            //    return result;
-            //}
-            
-            /// <summary>
-            /// 计算物理伤害，返回计算后的生命值
-            /// </summary>
-            public static float CalcPhysicDamage(float damage, float def)
+            /// 累加伤害
+            /// </summary
+            public static int AddDealedDamage(int value,int toAdd)
             {
-                var final = Mathf.Floor(damage - def);
-                return final > 0 ? final : 1f;
+                return value + toAdd;
             }
 
             /// <summary>

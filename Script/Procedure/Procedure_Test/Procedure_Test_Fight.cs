@@ -30,6 +30,7 @@ namespace Aquila.Procedure
 
             //test ability
             //GameEntry.Module.GetModule<Module_Proxy_Actor>().AbilityToSingleTarget(_actor_id_1, _actor_id_2, 1000);
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actor_id_1, _actor_id_2, _testAbilityMetaID );
         }
 
         private void TestFight()
@@ -224,5 +225,10 @@ namespace Aquila.Procedure
         /// 当前的加载状态
         /// </summary>
         private int _load_flag_curr_state = 0b_0000;
+
+        /// <summary>
+        /// 测试技能ID
+        /// </summary>
+        private int _testAbilityMetaID = 1000;
     }
 }

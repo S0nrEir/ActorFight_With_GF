@@ -5,6 +5,7 @@ using UnityGameFramework.Runtime;
 using Aquila.Toolkit;
 using Cfg.Fight;
 using Aquila.Event;
+using Aquila.Module;
 
 namespace Aquila.Fight.FSM
 {
@@ -108,6 +109,8 @@ namespace Aquila.Fight.FSM
                 result._succ = false;
             }
 
+            _castorID = result._castorID;
+            _targetID = result._targetID;
             return result._succ;
         }
 
@@ -126,7 +129,7 @@ namespace Aquila.Fight.FSM
                     return;
                 }
                 //continue:这里走公用接口，将效果施加到actor上
-                //abilityAddon.UseAbility( _abilityMeta.id,)
+                GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect2Actor( _castorID, _targetID, _abilityMeta.id );
                 _abilityFinishFlag = true;
             }
         }
@@ -163,6 +166,8 @@ namespace Aquila.Fight.FSM
             //#todo施法结束回调
             _timelineMeta = null;
             _abilityMeta = null;
+            _castorID = -1;
+            _targetID = -1;
         }
 
         
@@ -170,6 +175,16 @@ namespace Aquila.Fight.FSM
         {
             
         }
+
+        /// <summary>
+        /// 施法者ActorID
+        /// </summary>
+        private int _castorID = -1;
+
+        /// <summary>
+        /// 目标ActorID
+        /// </summary>
+        private int _targetID = -1;
 
         /// <summary>
         /// 技能数据

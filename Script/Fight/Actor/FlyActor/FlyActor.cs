@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Addon;
+using Aquila.Fight.Addon;
 using GameFramework.Event;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -91,7 +91,7 @@ namespace Aquila.Fight.Actor
                 return;
 
             //#TODO
-            other_actor.TakeDamage( 0 );
+            //other_actor.TakeDamage( 0 );
         }
 
         //子弹只有一种状态，不用加fsm

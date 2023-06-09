@@ -1,8 +1,4 @@
 using GameFramework;
-using GameFramework.Event;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aquila.Event
 {
@@ -13,7 +9,7 @@ namespace Aquila.Event
     {
         public void Clear()
         {
-            
+
         }
 
         /// <summary>
@@ -24,7 +20,7 @@ namespace Aquila.Event
         /// <summary>
         /// 造成的伤害
         /// </summary>
-        public float _dealedDamage = 0f;
+        public int _dealedDamage = 0;
 
         /// <summary>
         /// 目标ActorID
