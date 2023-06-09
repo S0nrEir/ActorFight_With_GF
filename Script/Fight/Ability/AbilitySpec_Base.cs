@@ -71,13 +71,12 @@ namespace Aquila.Fight
             if ( _cost_effect != null )
                 _cost_effect.Apply( _owner, result );
 
-            foreach ( var effect in _effect_list )
+            foreach ( var effect in _effectList )
                 effect.Apply( effect.Meta.Target == 1 ? target : _owner, result );
 
             if ( !OnAfterAbility( result ) )
                 return false;
 
-            _tagContainer.Add( 0 );
             return true;
         }
 
@@ -137,15 +136,15 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Clear()
         {
-            if ( _effect_list != null && _effect_list.Count != 0 )
+            if ( _effectList != null && _effectList.Count != 0 )
             {
-                foreach ( var effect in _effect_list )
+                foreach ( var effect in _effectList )
                     effect?.Clear();
 
-                _effect_list.Clear();
+                _effectList.Clear();
             }
 
-            _effect_list = null;
+            _effectList = null;
             Meta = null;
             _tagContainer = null;
             _cd_effect = null;
@@ -162,10 +161,10 @@ namespace Aquila.Fight
         public virtual void OnUpdate( float delta_time )
         {
             _cd_effect._remain -= delta_time;
-            if ( _cd_effect._remain <= 0 && _tagContainer.Contains( 0 ) )
-            {
-                _tagContainer.Remove( 0 );
-            }
+            //if ( _cd_effect._remain <= 0 && _tagContainer.Contains( 0 ) )
+            //{
+            //    _tagContainer.Remove( 0 );
+            //}
         }
 
         //-------------------priv-------------------
@@ -182,7 +181,7 @@ namespace Aquila.Fight
         /// </summary>
         protected EffectSpec_Base GetSpec( int id )
         {
-            foreach ( var effect_spec in _effect_list )
+            foreach ( var effect_spec in _effectList )
             {
                 if ( effect_spec.Meta.id == id )
                     return effect_spec;
@@ -216,16 +215,16 @@ namespace Aquila.Fight
         /// <summary>
         /// tag发生改变的回调
         /// </summary>
-        private void OnTagChange( Int64 old_tag, Int64 new_tag, ushort changed_tag )
+        private void OnTagChange( Int64 oldTag, Int64 newTag, ushort changedIndex )
         {
-            Log.Info( $"tag changed,tag:{new_tag}" );
+            Log.Info( $"tag changed,tag:{newTag}" );
         }
 
         /// <summary>
         /// 该技能持有的effect逻辑集合
         /// </summary>
         //#todo:能不能改成不用list
-        private List<EffectSpec_Base> _effect_list = null;
+        private List<EffectSpec_Base> _effectList = null;
 
         /// <summary>
         /// 表数据
@@ -282,7 +281,7 @@ namespace Aquila.Fight
                 return;
 
             //默认持有16个effecteeeee
-            _effect_list = new List<EffectSpec_Base>( 16 );
+            _effectList = new List<EffectSpec_Base>( 16 );
             Table_Effect effect_meta = null;
             foreach ( var effect_id in Meta.effects )
             {
@@ -304,7 +303,7 @@ namespace Aquila.Fight
                         break;
 
                     default:
-                        _effect_list.Add( Tools.Ability.CreateEffectSpec( effect_meta ) );
+                        _effectList.Add( Tools.Ability.CreateEffectSpec( effect_meta ) );
                         break;
                 }
             }
