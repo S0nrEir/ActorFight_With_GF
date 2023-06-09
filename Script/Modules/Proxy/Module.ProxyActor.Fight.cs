@@ -53,7 +53,7 @@ namespace Aquila.Module
         public void ApplyEffect2Actor( int castorID, int targetID, int abilityID )
         {
             var result = ReferencePool.Acquire<AbilityResult_Hit>();
-            result._dealedDamage = 0f;
+            result._dealedDamage = 0;
             result._stateDescription = 0;
             result._castorActorID = castorID;
             result._targetActorID = targetID;
