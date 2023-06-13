@@ -43,7 +43,7 @@ namespace Aquila.Procedure
         {
             base.OnInit( procedureOwner );
             _load_terrain_callBack = new GameFramework.Resource.LoadAssetCallbacks( LoadTerrainSuccCallBack, LoadAssetFaildCallBack );
-            _procedure_owner = procedureOwner;
+            _procedureOwner = procedureOwner;
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
@@ -154,14 +154,14 @@ namespace Aquila.Procedure
         /// </summary>
         private void NextProcedure()
         {
-            ChangeState<Procedure_Test_Fight>( _procedure_owner );
+            ChangeState<Procedure_Test_Fight>( _procedureOwner );
             return;
 
 #pragma warning disable CS0162 // 检测到无法访问的代码
             if ( GameEntry.Procedure._is_enter_test_scene )
 #pragma warning restore CS0162 // 检测到无法访问的代码
             {
-                ChangeState<Procedure_Test>( _procedure_owner );
+                ChangeState<Procedure_Test>( _procedureOwner );
             }
             else
             {
@@ -172,8 +172,8 @@ namespace Aquila.Procedure
                     _scene_script_meta = scene_script_meta,
                     _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
                 } );
-                _procedure_owner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
-                ChangeState<Procedure_Fight>( _procedure_owner );
+                _procedureOwner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
+                ChangeState<Procedure_Fight>( _procedureOwner );
             }
         }
 
@@ -219,7 +219,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 状态机拥有者
         /// </summary>
-        private IFsm<IProcedureManager> _procedure_owner = null;
+        private IFsm<IProcedureManager> _procedureOwner = null;
     }
 
 }
