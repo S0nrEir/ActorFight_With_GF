@@ -5,9 +5,9 @@ namespace Aquila.Fight.FSM
     /// <summary>
     /// 描述actor的状态
     /// </summary>
-    public abstract class ActorStateBase
+    public abstract class ActorState_Base
     {
-        public ActorStateBase( int state_id )
+        public ActorState_Base( int state_id )
         {
             _stateID = state_id;
         }
@@ -19,17 +19,17 @@ namespace Aquila.Fight.FSM
             _stateID = -1;
         }
 
-        public virtual void OnUpdate( float delta_time )
+        public virtual void OnUpdate( float deltaTime )
         {
 
         }
 
-        public virtual void OnLeave( params object[] param )
+        public virtual void OnLeave( object param )
         {
 
         }
 
-        public virtual void OnEnter( params object[] param )
+        public virtual void OnEnter( object param )
         {
 
         }

@@ -26,18 +26,18 @@ namespace Aquila.Fight
 
             gameObject.name = $"Actor_Effect_{ID}";
 
-#if UNITY_EDITOR
-            _inspector = gameObject.GetComponent<ActorEffectInspector>();
-            if (_inspector == null)
-                _inspector = gameObject.AddComponent<ActorEffectInspector>();
-
-            _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : Component_GlobalVar.InvalidID, Entity.EntityAssetName );
-#endif
+// #if UNITY_EDITOR
+//             _inspector = gameObject.GetComponent<ActorEffectInspector>();
+//             if (_inspector == null)
+//                 _inspector = gameObject.AddComponent<ActorEffectInspector>();
+//
+//             _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : Component_GlobalVar.InvalidID, Entity.EntityAssetName );
+// #endif
         }
 
         #endregion
 
-        #region private 
+        //-----------------------private----------------------- 
 
         /// <summary>
         /// 特效存活时间到
@@ -48,10 +48,9 @@ namespace Aquila.Fight
             _actor.Trigger( ActorEventEnum.EFFECT_TIMES_UP, this );
             TimesUpFlag = true;
         }
+        
 
-        #endregion
-
-        #region override
+        //----------------------- override-----------------------
         protected override void OnUpdate ( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
@@ -65,10 +64,10 @@ namespace Aquila.Fight
                     OnTimesUp();
             }
 
-#if UNITY_EDITOR
-            if (_inspector != null)
-                _inspector.SetPassedTime( PassedTime, TimesUpFlag );
-#endif
+// #if UNITY_EDITOR
+//             if (_inspector != null)
+//                 _inspector.SetPassedTime( PassedTime, TimesUpFlag );
+// #endif
         }
 
         protected override void OnShow ( object userData )
@@ -92,15 +91,11 @@ namespace Aquila.Fight
         protected override void OnHide( bool isShutdown, object userData )
         {
             base.OnHide( isShutdown, userData );
-            //#todo这里对entity进行扩展
+            //#这里是对entity的额外处理
             var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ACTOR_FX ).Helper as EntityGroupHelperBase;
-            if ( helperNode != null )
+            if ( helperNode != null ) 
                 CachedTransform.SetParent( helperNode.transform );
         }
-
-        #endregion
-
-        #region fields
 
         /// <summary>
         /// 特效ID
@@ -137,52 +132,51 @@ namespace Aquila.Fight
         /// </summary>
         public bool IsForever = false;
 
-        private ActorEffectInspector _inspector = null;
-        #endregion
+        // private ActorEffectInspector _inspector = null;
     }
 
     /// <summary>
     /// 信息调试脚本
     /// </summary>
-    internal class ActorEffectInspector : MonoBehaviour
-    {
-        public void SetPassedTime ( float n, bool flag )
-        {
-            PassedTime = n;
-            TimesUpFlag = flag;
-        }
-
-        public void Setup ( int id, float sur_time, int actor_id, string path )
-        {
-            ID = id;
-            SurvivalTime = sur_time;
-            AssetPath = path;
-            ActorID = actor_id.ToString();
-        }
-
-        public int ID = -1;
-
-        public bool TimesUpFlag = false;
-
-        /// <summary>
-        /// 经过时间
-        /// </summary>
-        public float PassedTime = -1f;
-
-        /// <summary>
-        /// 存活时间
-        /// </summary>
-        public float SurvivalTime = -1f;
-
-        /// <summary>
-        /// 资源路径
-        /// </summary>
-        public string AssetPath = string.Empty;
-
-        /// <summary>
-        /// 被持有的actor
-        /// </summary>
-        public string ActorID = string.Empty;
-
-    }
+    // internal class ActorEffectInspector : MonoBehaviour
+    // {
+    //     public void SetPassedTime ( float n, bool flag )
+    //     {
+    //         PassedTime = n;
+    //         TimesUpFlag = flag;
+    //     }
+    //
+    //     public void Setup ( int id, float sur_time, int actor_id, string path )
+    //     {
+    //         ID = id;
+    //         SurvivalTime = sur_time;
+    //         AssetPath = path;
+    //         ActorID = actor_id.ToString();
+    //     }
+    //
+    //     public int ID = -1;
+    //
+    //     public bool TimesUpFlag = false;
+    //
+    //     /// <summary>
+    //     /// 经过时间
+    //     /// </summary>
+    //     public float PassedTime = -1f;
+    //
+    //     /// <summary>
+    //     /// 存活时间
+    //     /// </summary>
+    //     public float SurvivalTime = -1f;
+    //
+    //     /// <summary>
+    //     /// 资源路径
+    //     /// </summary>
+    //     public string AssetPath = string.Empty;
+    //
+    //     /// <summary>
+    //     /// 被持有的actor
+    //     /// </summary>
+    //     public string ActorID = string.Empty;
+    //
+    // }
 }

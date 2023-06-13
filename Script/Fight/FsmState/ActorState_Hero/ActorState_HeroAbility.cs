@@ -1,77 +1,31 @@
+using Aquila.Event;
 using Aquila.Fight.Addon;
-using System.Collections.Generic;
-using UnityEngine.Playables;
-using UnityGameFramework.Runtime;
+using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Fight;
-using Aquila.Event;
-using Aquila.Module;
+using UnityEngine.Playables;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
     /// <summary>
-    /// 英雄状态addon by yhc
-    /// </summary>
-    public class Addon_HeroState : Addon_FSM
-    {
-        public override List<ActorStateBase> StateList => new List<ActorStateBase>
-        {
-            new HeroIdleState((int)ActorStateTypeEnum.IDLE_STATE),
-            new HeroMoveState((int)ActorStateTypeEnum.MOVE_STATE),
-            new HeroAbilityState((int)ActorStateTypeEnum.ABILITY_STATE),
-            new HeroDieState((int)ActorStateTypeEnum.DIE_STATE),
-        };
-
-        public override void Reset()
-        {
-            base.Reset();
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-    }
-
-    /// <summary>
-    /// 待机状态
-    /// </summary>
-    public class HeroIdleState : ActorStateBase
-    {
-        public HeroIdleState( int stateID ) : base( stateID )
-        { }
-    }
-
-    /// <summary>
-    /// 移动状态
-    /// </summary>
-    public class HeroMoveState : ActorStateBase
-    {
-        public HeroMoveState( int stateID ) : base( stateID )
-        {
-
-        }
-    }
-
-    /// <summary>
     /// 使用技能状态
     /// </summary>
-    public class HeroAbilityState : ActorStateBase
+    public class ActorState_HeroAbility : ActorState_Base
     {
         /// <summary>
         /// 检查技能数据是否合法
         /// </summary>
-        private bool IsAbilityDataValid( object[] param )
+        private bool IsAbilityDataValid( object param )
         {
             int state = 0;
-            if ( param is null || param.Length == 0 )
+            if ( param is null || param is not AbilityResult_Use)
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
                 return false;
             }
-            var result = param[0] as AbilityResult_Use;
+            var result = param as AbilityResult_Use;
             _abilityMeta = GameEntry.DataTable.Tables.Ability.Get(result._abilityID);
             if ( _abilityMeta is null )
             {
@@ -138,7 +92,7 @@ namespace Aquila.Fight.FSM
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
         }
 
-        public override void OnEnter(params object[] param)
+        public override void OnEnter( object param)
         {
             base.OnEnter(param);
             if ( !IsAbilityDataValid( param ) )
@@ -158,7 +112,7 @@ namespace Aquila.Fight.FSM
             TryUseAbility(deltaTime);
             FinishAbility();
         }
-        public override void OnLeave(params object[] param)
+        public override void OnLeave( object param)
         {
             base.OnLeave(param);
             //#todo施法结束回调
@@ -167,7 +121,7 @@ namespace Aquila.Fight.FSM
             _castorID = -1;
             _targetID = -1;
         }
-        public HeroAbilityState( int state_id ) : base( state_id )
+        public ActorState_HeroAbility( int state_id ) : base( state_id )
         {
             
         }
@@ -201,15 +155,5 @@ namespace Aquila.Fight.FSM
         /// 进入该状态时间
         /// </summary>
         private float _time = 0f;
-    }
-
-    /// <summary>
-    /// 英雄死亡状态
-    /// </summary>
-    public class HeroDieState : ActorStateBase
-    {
-        public HeroDieState( int state_id ) : base( state_id )
-        {
-        }
     }
 }

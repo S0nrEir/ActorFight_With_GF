@@ -113,7 +113,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// state list,放在第一个位置的state将成为默认进入的state
         /// </summary>
-        public virtual List<ActorStateBase> StateList { get; private set; } = new List<ActorStateBase>();
+        public virtual List<ActorState_Base> StateList { get; private set; } = new List<ActorState_Base>();
 
     }
 }

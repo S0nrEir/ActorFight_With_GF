@@ -21,26 +21,26 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 状态切换
         /// </summary>
-        public void SwitchTo ( int target_state_id, object enter_param, object exit_param )
+        public void SwitchTo ( int targetStateID, object enterParam, object exitParam )
         {
             if (_currState != null)
-                _currState.OnLeave(exit_param);
+                _currState.OnLeave(exitParam);
 
-            var next = GetState( target_state_id );
+            var next = GetState( targetStateID );
             if (next is null)
             {
-                Debug.LogError( $"<color=red>cant find state with id:{target_state_id}/color>" );
+                Debug.LogError( $"<color=red>cant find state with id:{targetStateID}/color>" );
                 return;
             }
 
             _currState = next;
-            _currState.OnEnter( enter_param );
+            _currState.OnEnter( enterParam );
         }
 
         /// <summary>
         /// 添加状态
         /// </summary>
-        public bool AddState ( ActorStateBase state )
+        public bool AddState ( ActorState_Base state )
         {
             if (state is null)
                 return false;
@@ -70,9 +70,9 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 获取该状态机持有的所有状态
         /// </summary>
-        public ActorStateBase[] AllState ()
+        public ActorState_Base[] AllState ()
         {
-            var stateArr = new ActorStateBase[_stateDic.Count];
+            var stateArr = new ActorState_Base[_stateDic.Count];
             var idx = 0;
             var iter = _stateDic.GetEnumerator();
 
@@ -82,7 +82,7 @@ namespace Aquila.Fight.FSM
             return stateArr;
         }
 
-        private ActorStateBase GetState ( int stateID )
+        private ActorState_Base GetState ( int stateID )
         {
             if (_stateDic is null)
             {
@@ -101,7 +101,7 @@ namespace Aquila.Fight.FSM
 
         public void Setup( ActorInstance actorIns )
         {
-            _stateDic = new Dictionary<int, ActorStateBase>();
+            _stateDic = new Dictionary<int, ActorState_Base>();
             _instance = actorIns;
         }
 
@@ -109,7 +109,7 @@ namespace Aquila.Fight.FSM
         {
             if (_stateDic != null)
             {
-                ActorStateBase state = null;
+                ActorState_Base state = null;
                 foreach (var item in _stateDic)
                 {
                     state = item.Value;
@@ -128,7 +128,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 当前运行中状态
         /// </summary>
-        public ActorStateBase CurrState
+        public ActorState_Base CurrState
         {
             get { return _currState; }
         }
@@ -136,12 +136,12 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 当前的指向状态
         /// </summary>
-        protected ActorStateBase _currState;
+        protected ActorState_Base _currState;
 
         /// <summary>
         /// FSM持有的状态集合
         /// </summary>
-        private Dictionary<int, ActorStateBase> _stateDic;
+        private Dictionary<int, ActorState_Base> _stateDic;
 
         private Actor_Hero _actor;
 
