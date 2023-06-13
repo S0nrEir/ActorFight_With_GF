@@ -64,7 +64,7 @@ namespace Aquila.Procedure
         {
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
-            _actor_id_1 = ACTOR_ID_POOL.Gen();
+            _actor_id_1 = ActorIDPool.Gen();
             var entity_1 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
                     role_meta_id: 1,
@@ -76,7 +76,7 @@ namespace Aquila.Procedure
                 );
 
             //actor2
-            _actor_id_2 = ACTOR_ID_POOL.Gen();
+            _actor_id_2 = ActorIDPool.Gen();
             var entity_2 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
                     role_meta_id: 2,
@@ -88,7 +88,7 @@ namespace Aquila.Procedure
                 );
 
             //actor3
-            _actor_id_3 = ACTOR_ID_POOL.Gen();
+            _actor_id_3 = ActorIDPool.Gen();
             var entity_3 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
                 role_meta_id: 2,
@@ -100,7 +100,7 @@ namespace Aquila.Procedure
             );
 
             //actor4
-            _actor_id_4 = ACTOR_ID_POOL.Gen();
+            _actor_id_4 = ActorIDPool.Gen();
             var entity_4 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
                 role_meta_id: 2,

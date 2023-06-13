@@ -95,7 +95,7 @@ namespace Aquila.Module
         /// </summary>
         private async void TestLoadActor()
         {
-            var entity_id = ACTOR_ID_POOL.Gen();
+            var entity_id = ActorIDPool.Gen();
             var actor = await ShowActorAsync<Actor_Base>
                    (
                        1,

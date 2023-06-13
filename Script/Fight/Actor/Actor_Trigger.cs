@@ -21,7 +21,7 @@ namespace Aquila.Fight.Actor
         {
             _effectAddon.ShowEffectAsync
                 (
-                    ACTOR_ID_POOL.Gen(),
+                    ActorIDPool.Gen(),
                     asset_path,
                     duration,
                     ( effectEntityData, effect ) => Tools.Fight.BindEffect( effectEntityData, effect )

@@ -1,12 +1,11 @@
-﻿using System;
-using UnityGameFramework.Runtime;
+﻿using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
     /// <summary>
     /// ActorID池
     /// </summary>
-    public class ACTOR_ID_POOL
+    public class ActorIDPool
     {
         public const int Invalid = -1;
 

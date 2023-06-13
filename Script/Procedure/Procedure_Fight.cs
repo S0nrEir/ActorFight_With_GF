@@ -44,7 +44,7 @@ namespace Aquila.Procedure
             param._sceneScriptMeta = _data._sceneScriptMeta;
 
             _terrainModule.Start( param );
-            var entityID = ACTOR_ID_POOL.Gen();
+            var entityID = ActorIDPool.Gen();
             var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<Actor_Hero>
                 (
                     1,
