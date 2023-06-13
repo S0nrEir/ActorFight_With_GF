@@ -143,7 +143,7 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private Dictionary<int, ActorStateBase> _stateDic;
 
-        private TActorBase _actor;
+        private Actor_Hero _actor;
 
         private ActorInstance _instance = null;
     }
