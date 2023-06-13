@@ -3,7 +3,7 @@ using Aquila.Fight.FSM;
 namespace Aquila.Fight.Actor
 {
     //hero actor的各个实现
-    public partial class HeroActor : 
+    public partial class Actor_Hero : 
         ISwitchStateBehavior,
         IDieBehavior,
         IDoAbilityBehavior

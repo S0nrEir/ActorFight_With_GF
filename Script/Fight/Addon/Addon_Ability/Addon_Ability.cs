@@ -117,7 +117,7 @@ namespace  Aquila.Fight.Addon
         {
         }
 
-        public override void Init(TActorBase actor, GameObject targetGameObject, Transform targetTransform)
+        public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
         {
             base.Init(actor, targetGameObject, targetTransform);
             if(!InitSpec())

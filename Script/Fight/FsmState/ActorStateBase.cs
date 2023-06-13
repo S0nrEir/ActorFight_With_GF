@@ -37,7 +37,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 初始化
         /// </summary>
-        public virtual void Init( ActorFSM fsm, TActorBase actor )
+        public virtual void Init( ActorFSM fsm, Actor_Base actor )
         {
             _fsm = fsm;
             _actor = actor;
@@ -56,7 +56,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// acotr
         /// </summary>
-        protected TActorBase _actor;
+        protected Actor_Base _actor;
     }
 
     //-----------------------sub state-----------------------

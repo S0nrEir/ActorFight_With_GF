@@ -8,7 +8,7 @@ namespace Aquila.Fight
     /// </summary>
     public struct FightPrcd
     {
-        public FightPrcd( TActorBase source, FightPrcdTypeEnum[] type, float[] value )
+        public FightPrcd( Actor_Base source, FightPrcdTypeEnum[] type, float[] value )
         {
             Source = source;
             _attachValueDic = new Dictionary<int, float>( 10 );
@@ -62,7 +62,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 本次prcd的发起方
         /// </summary>
-        public TActorBase Source { get; private set; }
+        public Actor_Hero Source { get; private set; }
     }
 
     /// <summary>

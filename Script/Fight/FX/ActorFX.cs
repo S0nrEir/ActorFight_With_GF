@@ -15,7 +15,7 @@ namespace Aquila.Fight
     {
 
         #region public
-        public void Setup ( int id, float survivalTime, TActorBase parentActor = null, bool isForever = false )
+        public void Setup ( int id, float survivalTime, Actor_Base parentActor = null, bool isForever = false )
         {
             ID = id;
             SurvivalTime = survivalTime;
@@ -125,12 +125,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 被持有的actor
         /// </summary>
-        public TActorBase Actor => _actor;
+        public Actor_Base Actor => _actor;
 
         /// <summary>
         /// 被持有的actor
         /// </summary>
-        private TActorBase _actor = null;
+        private Actor_Base _actor = null;
 
         /// <summary>
         /// 永久显示

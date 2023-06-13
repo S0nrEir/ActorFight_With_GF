@@ -18,7 +18,7 @@ namespace Aquila.Fight.Addon
             CurrClipName = string.Empty;
         }
 
-        public override void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init ( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
             //动画机是挂在GameObject上的,制作GameObject的时候手动加上去，这里只尝试获取

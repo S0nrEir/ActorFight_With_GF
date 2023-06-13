@@ -26,7 +26,7 @@ namespace Aquila.Fight.Addon
             GameEntry.Timeline.Play( assetPath ,_director);
         }
 
-        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
         }

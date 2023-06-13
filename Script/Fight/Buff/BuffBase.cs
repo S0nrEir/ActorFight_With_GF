@@ -18,7 +18,7 @@ namespace Aquila.Fight.Buff
             return true;
         }
 
-        public void ApplyCache ( TActorBase actor )
+        public void ApplyCache ( Actor_Base actor )
         {
             if (!_cache.TryGetValue( actor.ActorID, out var list ))
                 return;
@@ -137,7 +137,7 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 根据actor创建一个特效
         /// </summary>
-        public void CreateEffect ( TActorBase actor, BuffEntity entity )
+        public void CreateEffect ( Actor_Base actor, BuffEntity entity )
         {
             //if (!actor.TryGetAddon<EffectAddon>( out var addon ))
             //    return;

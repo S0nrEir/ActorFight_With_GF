@@ -65,7 +65,7 @@ namespace Aquila.Procedure
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
             _actor_id_1 = ACTOR_ID_POOL.Gen();
-            var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_1 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
                     role_meta_id: 1,
                     actor_id: _actor_id_1,
@@ -77,7 +77,7 @@ namespace Aquila.Procedure
 
             //actor2
             _actor_id_2 = ACTOR_ID_POOL.Gen();
-            var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_2 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
                     role_meta_id: 2,
                     actor_id: _actor_id_2,
@@ -89,7 +89,7 @@ namespace Aquila.Procedure
 
             //actor3
             _actor_id_3 = ACTOR_ID_POOL.Gen();
-            var entity_3 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_3 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
                 role_meta_id: 2,
                 actor_id: _actor_id_3,
@@ -101,7 +101,7 @@ namespace Aquila.Procedure
 
             //actor4
             _actor_id_4 = ACTOR_ID_POOL.Gen();
-            var entity_4 = await actor_fac.ShowActorAsync<HeroActor>
+            var entity_4 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
                 role_meta_id: 2,
                 actor_id: _actor_id_4,
@@ -111,13 +111,13 @@ namespace Aquila.Procedure
                 new HeroActorEntityData( _actor_id_4 ) { _roleMetaID = 2 }
             );
 
-            // if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
+            // if ( !( entity_1.Logic is Actor_Hero ) || !( entity_2.Logic is Actor_Hero ) )
             //     return;
 
-            SetActorTransform( entity_1.Logic as HeroActor, new Vector3( 0, 0.8f, -3.29f ), Vector3.zero );
-            SetActorTransform( entity_2.Logic as HeroActor, new Vector3( -2.87f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
-            SetActorTransform( entity_3.Logic as HeroActor, new Vector3( -0.34f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
-            SetActorTransform( entity_4.Logic as HeroActor, new Vector3( 2, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_1.Logic as Actor_Hero, new Vector3( 0, 0.8f, -3.29f ), Vector3.zero );
+            SetActorTransform( entity_2.Logic as Actor_Hero, new Vector3( -2.87f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_3.Logic as Actor_Hero, new Vector3( -0.34f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_4.Logic as Actor_Hero, new Vector3( 2, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
 
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
@@ -131,7 +131,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 临时初始化，设置Actor的位置
         /// </summary>
-        private void SetActorTransform( TActorBase actor, Vector3 position, Vector3 rotation )
+        private void SetActorTransform( Actor_Hero actor, Vector3 position, Vector3 rotation )
         {
             if ( actor is null )
             {

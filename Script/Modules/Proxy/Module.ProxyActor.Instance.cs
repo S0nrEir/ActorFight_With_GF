@@ -14,7 +14,7 @@ namespace Aquila.Module
         public class ActorInstance : IReference
         {
             //-----------------pub-----------------
-            public void Setup( TActorBase actor, Addon_Base[] addons )
+            public void Setup( Actor_Base actor, Addon_Base[] addons )
             {
                 _actor = actor;
                 _addon_arr = addons;
@@ -25,7 +25,7 @@ namespace Aquila.Module
             /// <summary>
             /// 返回该实例持有的actor
             /// </summary>
-            public TActorBase Actor
+            public Actor_Base Actor
             {
                 get => _actor;
             }
@@ -51,7 +51,7 @@ namespace Aquila.Module
             /// <summary>
             /// 持有的Actor
             /// </summary>
-            private TActorBase _actor = null;
+            private Actor_Base _actor = null;
 
             /// <summary>
             /// actor持有的addon集合

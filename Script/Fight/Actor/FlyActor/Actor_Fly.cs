@@ -6,7 +6,7 @@ namespace Aquila.Fight.Actor
     /// <summary>
     /// 飞行类actor
     /// </summary>
-    public abstract class Actor_Fly : TActorBase
+    public abstract class Actor_Fly : Actor_Base
     {
         public override void Setup( int actor_id )
         {

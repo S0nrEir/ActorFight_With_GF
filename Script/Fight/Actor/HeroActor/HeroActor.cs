@@ -4,7 +4,7 @@ using Aquila.Module;
 
 namespace Aquila.Fight.Actor
 {
-    public partial class HeroActor : TActorBase
+    public partial class Actor_Hero : Actor_Base
     {
         public ActorStateTypeEnum CurrState => _fsmAddon.CurrState;
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
@@ -132,7 +132,7 @@ namespace Aquila.Fight.Actor
 
     public class HeroActorEntityData : EntityData
     {
-        public HeroActorEntityData( int entityID ) : base( entityID, typeof( HeroActor ).GetHashCode() )
+        public HeroActorEntityData( int entityID ) : base( entityID, typeof( Actor_Hero ).GetHashCode() )
         {
         }
 

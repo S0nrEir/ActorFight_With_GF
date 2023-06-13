@@ -9,8 +9,8 @@ namespace Aquila.Fight.Actor
     /// <summary>
     /// 触发类actor，用于陷阱
     /// </summary>
-    public class TriggerActor :
-        TActorBase,
+    public class Actor_Trigger :
+        Actor_Base,
         ISwitchStateBehavior,
         ITriggerHitBehavior
     {
@@ -159,7 +159,7 @@ namespace Aquila.Fight.Actor
         public int index = -1;
         public (float x, float y) stepWH;
 
-        public TriggerActorEntityData( int entityID ) : base( entityID, typeof( TriggerActor ).GetHashCode() )
+        public TriggerActorEntityData( int entityID ) : base( entityID, typeof( Actor_Trigger ).GetHashCode() )
         {
         }
     }

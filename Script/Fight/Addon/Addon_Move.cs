@@ -184,7 +184,7 @@ namespace Aquila.Fight.Addon
             SetSpeed( 1f );
         }
 
-        public override void Init ( TActorBase actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init ( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
         {
             base.Init( actor, targetGameObject, targetTransform );
             _controller = Tools.GetComponent<CharacterController>( Actor.gameObject );

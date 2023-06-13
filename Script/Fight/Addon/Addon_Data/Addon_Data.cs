@@ -27,7 +27,7 @@ namespace Aquila.Fight.Addon
 
         }
 
-        public override void Init( TActorBase actor, GameObject target_gameobject, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_gameobject, Transform target_transform )
         {
             base.Init( actor, target_gameobject, target_transform );
             _meta = GameEntry.DataTable.Table<RoleMeta>().Get( actor.RoleMetaID );

@@ -27,7 +27,7 @@ namespace Aquila.Fight.Addon
         
         public abstract AddonTypeEnum AddonType { get; }
 
-        public virtual void Init ( TActorBase actor, GameObject target_go, Transform target_transform )
+        public virtual void Init ( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             Actor            = actor;
             TargetGameObject = target_go;
@@ -66,7 +66,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public GameObject TargetGameObject { get; private set;  }
 
-        public TActorBase Actor { get; private set; }
+        public Actor_Base Actor { get; private set; }
 
         /// <summary>
         /// actor持有的addon

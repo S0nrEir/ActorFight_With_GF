@@ -42,7 +42,7 @@ namespace Aquila.Module
                 int grid_x,
                 int grid_z,
                 object user_data
-            ) where T : TActorBase
+            ) where T : Actor_Base
         {
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
@@ -55,15 +55,15 @@ namespace Aquila.Module
                     user_data
                 );
             //#todo_根据actor类型决定传入函数的tag值，不要写死
-            OnShowActorSucc( result.Logic as TActorBase, role_meta_id, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
-            OnShowActorSuccBasedOnTerrain( result.Logic as TActorBase, grid_x, grid_z );
+            OnShowActorSucc( result.Logic as Actor_Base, role_meta_id, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
+            OnShowActorSuccBasedOnTerrain( result.Logic as Actor_Base, grid_x, grid_z );
             return result;
         }
 
         /// <summary>
         /// actor生成回调
         /// </summary>
-        private void OnShowActorSucc( TActorBase actor, int role_meta_id, string tag )
+        private void OnShowActorSucc( Actor_Base actor, int role_meta_id, string tag )
         {
             //actor.Setup( role_meta_id, tag );
         }
@@ -71,7 +71,7 @@ namespace Aquila.Module
         /// <summary>
         /// 基于地块的actor生成回调
         /// </summary>
-        private void OnShowActorSuccBasedOnTerrain( TActorBase actor, int grid_x, int grid_z )
+        private void OnShowActorSuccBasedOnTerrain( Actor_Base actor, int grid_x, int grid_z )
         {
             var terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
             var terrain = terrain_module.Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
@@ -96,7 +96,7 @@ namespace Aquila.Module
         private async void TestLoadActor()
         {
             var entity_id = ACTOR_ID_POOL.Gen();
-            var actor = await ShowActorAsync<HeroActor>
+            var actor = await ShowActorAsync<Actor_Base>
                    (
                        1,
                        entity_id,

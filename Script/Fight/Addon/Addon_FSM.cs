@@ -44,7 +44,7 @@ namespace Aquila.Fight.Addon
             return SwitchTo( ( int ) type, enter_param, exit_param );
         }
 
-        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
         }
@@ -73,7 +73,7 @@ namespace Aquila.Fight.Addon
         {
         }
 
-        public virtual T GetTypedActor<T>() where T : TActorBase
+        public virtual T GetTypedActor<T>() where T : Actor_Base
         {
             return Actor as T;
         }

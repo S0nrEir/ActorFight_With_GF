@@ -1,22 +1,19 @@
-using Aquila.Config;
+using Aquila.Extension;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
 using System;
 using System.Collections.Generic;
-using Aquila.Extension;
-using GameFramework.ObjectPool;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using static Aquila.Fight.Addon.Addon_Base;
 
 namespace Aquila.Fight.Actor
 {
     /// <summary>
     /// Actor基类
     /// </summary>
-    public abstract partial class TActorBase : EntityLogic
+    public abstract partial class Actor_Base : EntityLogic
     {
         #region public methods
         /// <summary>
@@ -71,7 +68,7 @@ namespace Aquila.Fight.Actor
         {
 
         }
-        
+
         public void SetQuaternion( Quaternion rotation_to_set )
         {
             CachedTransform.rotation = rotation_to_set;
@@ -102,12 +99,12 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 基于欧拉角设置旋转
         /// </summary>
-        public void SetRotation(Vector3 rotation)
+        public void SetRotation( Vector3 rotation )
         {
-            if(CachedTransform == null)
+            if ( CachedTransform == null )
                 return;
 
-            CachedTransform.rotation = Quaternion.Euler(rotation);
+            CachedTransform.rotation = Quaternion.Euler( rotation );
         }
 
         public void SetWorldPosition( Vector2 pos_to_set )
@@ -130,7 +127,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 自定义初始设置
         /// </summary>
-        public void Setup ( int role_meta_id, string tag )
+        public void Setup( int role_meta_id, string tag )
         {
             SetRoleMetaID( role_meta_id );
             SetTag( tag );
@@ -191,8 +188,8 @@ namespace Aquila.Fight.Actor
                 addon = iter.Current.Value;
                 addon.Dispose();
             }
-            
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister(ActorID);
+
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             UnRegister();
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
@@ -204,15 +201,15 @@ namespace Aquila.Fight.Actor
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            OnInitActor(userData);
+            OnInitActor( userData );
             AddAddon();
             var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this, GetAllAddon() );
-            if(res.succ)
+            if ( res.succ )
                 InitAddons( res.instance );
-            
+
             _allAddonInitDone = true;
         }
-        
+
         /// <summary>
         /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
         /// </summary>
@@ -239,7 +236,7 @@ namespace Aquila.Fight.Actor
                     iter.Current.Value?.Reset();
             }
         }
-        
+
 
         /// <summary>
         /// 为自身添加一个Addon
@@ -285,14 +282,14 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons( Module_ProxyActor.ActorInstance instance)
+        protected virtual void InitAddons( Module_ProxyActor.ActorInstance instance )
         {
             var addons = GetAllAddon();
-            foreach (var addon in addons)
+            foreach ( var addon in addons )
             {
-                addon.Init(instance);
+                addon.Init( instance );
                 //#todo:找时间删掉下面版本的init函数，只保留上面的
-                addon.Init(this,gameObject,CachedTransform);
+                addon.Init( this, gameObject, CachedTransform );
                 addon.Reset();
             }
             // Reset();
@@ -309,11 +306,11 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// Actor自定义数据的初始化
         /// </summary>
-        protected virtual void OnInitActor(object user_data)
+        protected virtual void OnInitActor( object user_data )
         {
         }
 
-        protected TActorBase()
+        protected Actor_Base()
         {
 
         }
