@@ -1,10 +1,4 @@
 using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
-using Aquila.Toolkit;
-using GameFramework;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
@@ -13,29 +7,29 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public abstract class ActorStateBase
     {
-        public ActorStateBase ( int state_id )
+        public ActorStateBase( int state_id )
         {
             _stateID = state_id;
         }
 
-        public virtual void Dispose ()
+        public virtual void Dispose()
         {
-            _fsm     = null;
-            _actor   = null;
+            _fsm = null;
+            _actor = null;
             _stateID = -1;
         }
 
-        public virtual void OnUpdate ( float delta_time )
+        public virtual void OnUpdate( float delta_time )
         {
 
         }
 
-        public virtual void OnLeave ( params object[] param )
+        public virtual void OnLeave( params object[] param )
         {
 
         }
 
-        public virtual void OnEnter ( params object[] param )
+        public virtual void OnEnter( params object[] param )
         {
 
         }
@@ -43,7 +37,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 初始化
         /// </summary>
-        public virtual void Init ( ActorFSM fsm, TActorBase actor )
+        public virtual void Init( ActorFSM fsm, TActorBase actor )
         {
             _fsm = fsm;
             _actor = actor;

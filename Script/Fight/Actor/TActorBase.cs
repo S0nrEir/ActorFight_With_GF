@@ -121,7 +121,7 @@ namespace Aquila.Fight.Actor
                     new Vector3
                         (
                             pos_to_set.x,
-                            Tools.Fight.TerrainPositionY( string.Empty, pos_to_set.x, pos_to_set.y ), //#todo设置坐标加上layer
+                            Tools.Fight.TerrainPositionY( string.Empty, pos_to_set.x, pos_to_set.y ), //记得设置坐标加上layer
                             pos_to_set.y
                         )
                 );

@@ -13,7 +13,6 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 获取actorInstance
         /// </summary>
-        /// <returns></returns>
         public ActorInstance GetActorInstance()
         {
             return _instance;
@@ -99,16 +98,6 @@ namespace Aquila.Fight.FSM
         {
             _currState?.OnUpdate( deltaTime );
         }
-
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <param name="actor"></param>
-        //public void Setup ( TActorBase actor )
-        //{
-        //    _stateDic = new Dictionary<int, ActorStateBase>();
-        //    _actor = actor;
-        //}
 
         public void Setup( ActorInstance actorIns )
         {

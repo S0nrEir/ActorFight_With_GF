@@ -13,9 +13,6 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 尝试从一组addon中获取指定类型的addon，拿不到返回null
             /// </summary>
-            /// <param name="addons">addon集合</param>
-            /// <typeparam name="T">要指定的类型</typeparam>
-            /// <returns></returns>
             public static T FilterAddon<T>(Addon_Base[] addons) where T : Addon_Base
             {
                 if ( addons is null || addons.Length == 0 )
