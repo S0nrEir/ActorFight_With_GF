@@ -7,10 +7,9 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Module
 {
     //Module_Proxy_Actor的部分类，用于管理各类Actor实例
-    public partial class Module_Proxy_Actor
+    public partial class Module_ProxyActor
     {
-        #region pub
-
+        //----------------pub----------------
         /// <summary>
         /// 将actor注册到代理中，成功返回true
         /// </summary>
@@ -55,9 +54,7 @@ namespace Aquila.Module
             return false;
         }
 
-        #endregion
-
-        #region private 
+        //---------------- private 
 
         /// <summary>
         /// </summary>
@@ -140,9 +137,7 @@ namespace Aquila.Module
             ReleaseAll();
         }
 
-        #endregion
-
-        #region fields
+        //----------------fields
 
         /// <summary>
         /// actor索引集合，保存了战斗中所有的ActorProxy
@@ -153,7 +148,5 @@ namespace Aquila.Module
         /// 注册的ID集合
         /// </summary>
         private HashSet<int> _registered_id_set = null;
-
-        #endregion
     }
 }

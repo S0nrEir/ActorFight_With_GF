@@ -19,9 +19,9 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 切换状态
         /// </summary>
-        public void SwitchTo( ActorStateTypeEnum state_type, object[] enter_param, object[] exist_param )
+        public void SwitchTo( ActorStateTypeEnum state_type, object enter_param, object exist_param )
         {
-            _fsm_addon.SwitchTo( state_type, enter_param, exist_param );
+            _fsmAddon.SwitchTo( state_type, enter_param, exist_param );
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void UseAbility(object param)
         {   
-            SwitchTo(ActorStateTypeEnum.ABILITY_STATE,new object[]{param},null);
+            SwitchTo(ActorStateTypeEnum.ABILITY_STATE, param ,null);
         }
     }
 }

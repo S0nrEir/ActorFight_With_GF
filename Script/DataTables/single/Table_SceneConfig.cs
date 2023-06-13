@@ -23,6 +23,7 @@ public sealed partial class Table_SceneConfig :  Bright.Config.BeanBase
         Fight_Scene_Default_Y_Width = _buf.ReadInt();
         Fight_Scene_Terrain_Coordinate_Range = _buf.ReadInt();
         Fight_Scene_Terrain_Coordinate_Precision = _buf.ReadInt();
+        MainCameraDefaultPosition = _buf.ReadUnityVector3();
         PostInit();
     }
 
@@ -55,6 +56,10 @@ public sealed partial class Table_SceneConfig :  Bright.Config.BeanBase
     /// 场景地块两位数坐标精度系数
     /// </summary>
     public int Fight_Scene_Terrain_Coordinate_Precision { get; private set; }
+    /// <summary>
+    /// 主相机默认世界空间坐标位置
+    /// </summary>
+    public UnityEngine.Vector3 MainCameraDefaultPosition { get; private set; }
 
     public const int __ID__ = -58264649;
     public override int GetTypeId() => __ID__;
@@ -77,6 +82,7 @@ public sealed partial class Table_SceneConfig :  Bright.Config.BeanBase
         + "Fight_Scene_Default_Y_Width:" + Fight_Scene_Default_Y_Width + ","
         + "Fight_Scene_Terrain_Coordinate_Range:" + Fight_Scene_Terrain_Coordinate_Range + ","
         + "Fight_Scene_Terrain_Coordinate_Precision:" + Fight_Scene_Terrain_Coordinate_Precision + ","
+        + "MainCameraDefaultPosition:" + MainCameraDefaultPosition + ","
         + "}";
     }
     

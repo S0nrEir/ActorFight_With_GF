@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using GameFramework;
@@ -120,7 +120,6 @@ namespace Aquila.Fight.Buff
             //}
             //_entityDic.Add( objID, entity );
             //return entity;
-            //#todo增加配表buff
             return null;
         }
 
@@ -132,7 +131,6 @@ namespace Aquila.Fight.Buff
             //var effectActorID = ACTOR_ID_POOL.Gen();
             //var entity = BuffEntity.Gen( objID, effectActorID, impactMeta.EffectId, impactID );
             //return entity;
-            //#todo---effect和impact表
             return null;
         }
 

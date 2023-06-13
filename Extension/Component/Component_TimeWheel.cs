@@ -238,37 +238,8 @@ namespace Aquila.Extension
                     _remove_queue.Enqueue( iter.Current );
                 }
             }
-            //#todo要移除的task放到remove task中
             RemoveUnusedTask();
             HandleMoveTasks();
-            #region
-            //foreach ( var task in _tasks )
-            //{
-            //    if ( task.DestroyFlag )
-            //    {
-            //        RemoveTask( task );
-            //        continue;
-            //    }
-
-            //    task.CallBack();
-            //    //周期任务，放到下一个刻度槽
-            //    if ( task.Repeat )
-            //    {
-            //        //todo:move task
-            //        //计算时间和下一位置的时间刻度，放到别的bucket里
-            //        _owner.AddTask( task );
-            //        RemoveTask( task );
-            //    }
-            //    else
-            //    {
-            //        //task.SetAsDestroy();
-            //        //GameEntry.TimeWheel.RemoveTask( task.ID );
-            //        var temp_id = task.ID;
-            //        if ( !RemoveTask( task ) )
-            //            Log.Error( $"faild to remove task id={temp_id}" );
-            //    }
-            //}
-            #endregion
         }
 
         private void HandleMoveTasks()

@@ -49,6 +49,10 @@ public partial class SceneConfig
     /// 场景地块两位数坐标精度系数
     /// </summary>
      public int Fight_Scene_Terrain_Coordinate_Precision => _data.Fight_Scene_Terrain_Coordinate_Precision;
+    /// <summary>
+    /// 主相机默认世界空间坐标位置
+    /// </summary>
+     public UnityEngine.Vector3 MainCameraDefaultPosition => _data.MainCameraDefaultPosition;
 
     public void Resolve(Dictionary<string, object> _tables)
     {

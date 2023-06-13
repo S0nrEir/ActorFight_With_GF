@@ -1,6 +1,8 @@
-﻿using System;
 using GameFramework;
+using System;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace Aquila.Toolkit
 {
@@ -9,6 +11,42 @@ namespace Aquila.Toolkit
     /// </summary>
     public partial class Tools
     {
+
+        /// <summary>
+        /// 从一个timeline track中获取对应类型的clip的asset，如果track有多个clip，则只返回第一个，拿不到返回空
+        /// </summary>
+        public static T GetFirstClipAssetFromTrack<T>( TrackAsset track ) where T : PlayableAsset
+        {
+            if ( track is null )
+                return null;
+
+            var clips = track.GetClips();
+            foreach ( var clip in clips )
+            {
+                if ( clip.asset is T )
+                    return clip.asset as T;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取timeline中指定类型的track，拿不到返回null
+        /// </summary>
+        public static T GetTrackFromTimeline<T>( TimelineAsset timeline ) where T : TrackAsset
+        {
+            var tracks = timeline.GetOutputTracks();
+            if ( tracks is null )
+                return null;
+
+            foreach ( var track in tracks )
+            {
+                if ( track is T )
+                    return track as T;
+            }
+
+            return null;
+        }
+
         public static void SetParent( Transform child, Transform parent )
         {
             if ( child.parent == parent )
@@ -161,25 +199,25 @@ namespace Aquila.Toolkit
         /// <summary>
         /// 返回64位int数据中是否包含指定位数
         /// </summary>
-        public static bool GetBitValue_i64(Int64 value, ushort index)
+        public static bool GetBitValue_i64( Int64 value, ushort index )
         {
-            if (index > 63)
-                throw new GameFrameworkException("index > 63!");
+            if ( index > 63 )
+                throw new GameFrameworkException( "index > 63!" );
 
             var val = 1 << index;
-            return (value & val) == val;
+            return ( value & val ) == val;
         }
 
         /// <summary>
         /// 设定64位int数据中某一位的值
         /// </summary>
-        public static Int64 SetBitValue_i64(Int64 value, ushort index, bool bit_value)
+        public static Int64 SetBitValue_i64( Int64 value, ushort index, bool bit_value )
         {
-            if (index > 63)
-                throw new GameFrameworkException("index > 63!");
-            
+            if ( index > 63 )
+                throw new GameFrameworkException( "index > 63!" );
+
             var val = 1 << index;
-            return (bit_value ? ( value | val ) : ( value & ~val ));
+            return ( bit_value ? ( value | val ) : ( value & ~val ) );
         }
 
         /// <summary>

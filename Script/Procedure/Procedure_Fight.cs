@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -21,14 +21,14 @@ namespace Aquila.Procedure
         {
             base.OnInit( procedureOwner );
             //_input_module       = GameEntry.Module.GetModule<Module_Input>();
-            _terrain_module     = GameEntry.Module.GetModule<Module_Terrain>();
+            _terrainModule        = GameEntry.Module.GetModule<Module_Terrain>();
             //_actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
         }
 
         protected override async void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _procedure_owner = procedureOwner;
+            _procedureOwner = procedureOwner;
             if ( !InitializeData( procedureOwner ) )
             {
                 Log.Error( "procedure data initialize failed!" );
@@ -39,24 +39,20 @@ namespace Aquila.Procedure
             MainCameraInitializeSetting();
 
             var param = ReferencePool.Acquire<Fight_Param>();
-            param.x_width = scene_config.Fight_Scene_Default_X_Width;
-            param.z_width = scene_config.Fight_Scene_Default_Y_Width;
-            param._scene_script_meta = _data._scene_script_meta;
+            param.x_width          = scene_config.Fight_Scene_Default_X_Width;
+            param.z_width          = scene_config.Fight_Scene_Default_Y_Width;
+            param._sceneScriptMeta = _data._sceneScriptMeta;
 
-            //if ( !_scene_module.Start( param ) )
-            //    Log.Error( "scene_module start failed" );
-
-            //_input_module.Start( param );
-            _terrain_module.Start( param );
-            var entity_id = ACTOR_ID_POOL.Gen();
+            _terrainModule.Start( param );
+            var entityID = ACTOR_ID_POOL.Gen();
             var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<HeroActor>
                 (
                     1,
-                    entity_id,
+                    entityID,
                     @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     0,
                     0,
-                    new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
+                    new HeroActorEntityData( entityID ) { _roleMetaID = 1 }
                 );
 
             //_actor_fac_module.Start( param );
@@ -66,9 +62,9 @@ namespace Aquila.Procedure
         {
             //_terrain_module.End();
             //_input_module.End();
-            _terrain_module.End();
+            _terrainModule.End();
             //_actor_fac_module.End();
-            _procedure_owner = null;
+            _procedureOwner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
                 Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
 
@@ -100,17 +96,17 @@ namespace Aquila.Procedure
         /// </summary>
         private void MainCameraInitializeSetting()
         {
-            _main_camera = GameEntry.GlobalVar.MainCamera;
-            var scene_config = GameEntry.DataTable.Tables.SceneConfig;
-            _main_camera.transform.eulerAngles = scene_config.Main_Camera_Default_Euler;
-            //_main_camera.transform.eulerAngles = GameConfig.Scene.MAIN_CAMERA_DEFAULT_EULER;
-            _main_camera.transform.position = GameConfig.Scene.MAIN_CAMERA_DEFAULT_POSITION;
+            _mainCamera = GameEntry.GlobalVar.MainCamera;
+            var sceneConfig = GameEntry.DataTable.Tables.SceneConfig;
+            _mainCamera.transform.eulerAngles = sceneConfig.Main_Camera_Default_Euler;
+            _mainCamera.transform.position = sceneConfig.MainCameraDefaultPosition;
+
         }
 
         /// <summary>
         /// 场景主相机
         /// </summary>
-        private Camera _main_camera = null;
+        private Camera _mainCamera = null;
 
         /// <summary>
         /// 模块
@@ -120,7 +116,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 地块模块
         /// </summary>
-        private Module_Terrain _terrain_module = null;
+        private Module_Terrain _terrainModule = null;
 
         /// <summary>
         /// actor工厂模块
@@ -140,26 +136,26 @@ namespace Aquila.Procedure
         /// <summary>
         /// 流程持有者
         /// </summary>
-        private IFsm<IProcedureManager> _procedure_owner = null;
+        private IFsm<IProcedureManager> _procedureOwner = null;
     }
 
     internal class Procedure_Fight_Data : IReference
     {
         public void Clear()
         {
-            _chunk_name = string.Empty;
-            _scene_script_meta = null;
+            _chunkName = string.Empty;
+            _sceneScriptMeta = null;
         }
 
         /// <summary>
         /// 模块名称
         /// </summary>
-        public string _chunk_name = string.Empty;
+        public string _chunkName = string.Empty;
 
         /// <summary>
         /// 场景脚本表数据
         /// </summary>
-        public Table_Scripts _scene_script_meta = null;
+        public Table_Scripts _sceneScriptMeta = null;
     }
 
     /// <summary>

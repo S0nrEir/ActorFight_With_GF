@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework;
@@ -21,7 +21,6 @@ namespace Aquila.Module
         /// </summary>
         public void CloseUI( int form_id )
         {
-            //#todo
         }
 
         /// <summary>
@@ -29,7 +28,6 @@ namespace Aquila.Module
         /// </summary>
         public void PushUI(int form_id,object user_data)
         {
-            //#todo
         }
 
         #endregion
