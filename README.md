@@ -1,8 +1,7 @@
 # ActorFight_With_GF
-这是一个基于E大GF框架的战斗模块
+一个基于GF框架的战斗例子，随便写写。。。持续施工
 ------------------------------------------------------------
-引用库/项目<br />
-unity GameFrameWork前端框架 [GameFramework](https://github.com/EllanJiang/GameFramework)<br />
-FingerCaster基于GF的扩展[GameFrameworkExtension](https://github.com/FingerCaster/UGFExtensions)<br />
-XLua[XLua](https://github.com/Tencent/xLua)<br />
+引用/库<br />
+Unity GameFrameWork前端框架 [GameFramework](https://github.com/EllanJiang/GameFramework)<br />
+D佬的GF扩展[GameFrameworkExtension](https://github.com/FingerCaster/UGFExtensions)<br />
 LuBan[LuBan](https://github.com/focus-creative-games/luban)
