@@ -65,7 +65,7 @@ namespace Aquila.Fight
 
             //刷新CD
             if ( _cdEffect != null )
-                _cdEffect._remain = _cdEffect._total_duration;
+                _cdEffect._remain = _cdEffect._totalDuration;
 
             //扣除cost
             if ( _costEffect != null )

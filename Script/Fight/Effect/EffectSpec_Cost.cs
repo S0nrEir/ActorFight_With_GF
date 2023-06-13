@@ -24,9 +24,9 @@ namespace Aquila.Fight
         /// <summary>
         /// 计算消耗后的值
         /// </summary>
-        public float Calc(float val_to_modify)
+        public float Calc(float valToModify)
         {
-            return _modifier.Calc(val_to_modify);
+            return _modifier.Calc(valToModify);
         }
 
         public EffectSpec_Cost(Table_Effect meta) : base(meta)
