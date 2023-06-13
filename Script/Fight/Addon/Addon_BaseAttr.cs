@@ -34,7 +34,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ, float value) GetBaseValue( Actor_Attr type )
+        public (bool getSucc, float value) GetBaseValue( Actor_Attr type )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )

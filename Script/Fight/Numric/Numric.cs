@@ -24,21 +24,21 @@ namespace Aquila.Numric
         {
             get
             {
-                if ( _change_flag )
+                if ( _changeFlag )
                 {
-                    _change_flag = false;
+                    _changeFlag = false;
                     return ReCalc();
                 }
-                return _correction_value;
+                return _correctionValue;
             }
         }
 
         /// <summary>
         /// 移除一个基础值修饰器
         /// </summary>
-        public bool RemoveBaseModifier(Numric_Modifier to_remove)
+        public bool RemoveBaseModifier(Numric_Modifier toRemove)
         {
-            var succ = _correction.Remove( to_remove );
+            var succ = _correction.Remove( toRemove );
             if ( !succ )
                 Log.Error("remove numric modifier faild!");
 
@@ -52,12 +52,12 @@ namespace Aquila.Numric
         /// </summary>
         protected virtual float ReCalc()
         {
-            _correction_value = BaseValue;
+            _correctionValue = BaseValue;
             var iter = _correction.GetEnumerator();
             while (iter.MoveNext())
-                _correction_value += iter.Current.Calc(_correction_value);
+                _correctionValue += iter.Current.Calc(_correctionValue);
             
-            return _correction_value;
+            return _correctionValue;
         }
 
         public Numric()
@@ -69,7 +69,7 @@ namespace Aquila.Numric
         /// </summary>
         public virtual void SetBaseVal( float base_val )
         {
-            _change_flag = true;
+            _changeFlag = true;
             _value = base_val;
             if ( _correction is null )
                 _correction = new GameFrameworkLinkedList<Numric_Modifier>();
@@ -81,10 +81,10 @@ namespace Aquila.Numric
         public virtual void Clear()
         {
             _value = 0f;
-            _correction_value = 0f;
+            _correctionValue = 0f;
             _correction.Clear();
             _correction = null;
-            _change_flag = false;
+            _changeFlag = false;
         }
         #endregion
 
@@ -93,7 +93,7 @@ namespace Aquila.Numric
         /// <summary>
         /// 变更标记
         /// </summary>
-        protected bool _change_flag = false;
+        protected bool _changeFlag = false;
 
         /// <summary>
         /// 该数值类型的基础值
@@ -103,7 +103,7 @@ namespace Aquila.Numric
         /// <summary>
         /// 修正加成值，保存所有修正运算后的结果
         /// </summary>
-        protected float _correction_value;
+        protected float _correctionValue;
 
         /// <summary>
         /// 基础值修正
