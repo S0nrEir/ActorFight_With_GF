@@ -76,16 +76,6 @@ namespace Aquila.Procedure
             // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
             _preloadFlag |= _tableLoadFinish;
             OnPreLoadFinished();
-            
-            return;
-
-            //---------------------------废弃代码----------------------------------
-            //加载数据表
-            //if ( !GameEntry.DataTable.LoadDataTable() )
-            //    throw new GameFrameworkException( "load data table faild!" );
-
-            //_preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
-            //OnPreLoadFinished();
         }
 
         /// <summary>
