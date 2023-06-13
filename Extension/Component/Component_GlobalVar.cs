@@ -29,10 +29,10 @@ namespace  Aquila.Extension
         {
             get
             {
-                if (_main_camera == null)
-                    _main_camera = GetMainCamera();
+                if (_mainCamera == null)
+                    _mainCamera = GetMainCamera();
 
-                return _main_camera;
+                return _mainCamera;
             }
         }
         
@@ -40,7 +40,7 @@ namespace  Aquila.Extension
         /// <summary>
         /// 主相机
         /// </summary>
-        private Camera _main_camera = null;
+        private Camera _mainCamera = null;
 
         private Camera GetMainCamera()
         {
@@ -58,7 +58,7 @@ namespace  Aquila.Extension
         protected override void Awake()
         {
             base.Awake();
-            _main_camera = GetMainCamera();
+            _mainCamera = GetMainCamera();
         }
     }
 
