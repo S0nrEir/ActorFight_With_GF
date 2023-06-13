@@ -85,15 +85,6 @@ namespace Aquila.Fight.Actor
 
         #endregion
 
-        private void DoDamage ( ITakeDamageBehavior other_actor )
-        {
-            if (other_actor is null)
-                return;
-
-            //#TODO
-            //other_actor.TakeDamage( 0 );
-        }
-
         //子弹只有一种状态，不用加fsm
         protected Addon_Move _moveAddon               = null;
         protected Addon_ColliderTrigger _triggerAddon = null;

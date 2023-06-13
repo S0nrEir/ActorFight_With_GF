@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.FSM;
+using Aquila.Fight.FSM;
 using System.Collections.Generic;
 
 //接口类型，实现相应行为的actor实现此接口,用于规范Actor的行为
@@ -50,7 +50,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 切换状态
         /// </summary>
-        void SwitchTo ( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam );
+        void SwitchTo ( ActorStateTypeEnum stateType, object enterParam, object existParam );
     }
 
     /// <summary>
@@ -62,13 +62,5 @@ namespace Aquila.Fight
         /// 使用技能
         /// </summary>
         void UseAbility (object param);
-    }
-
-    /// <summary>
-    /// 承受伤害
-    /// </summary>
-    public interface ITakeDamageBehavior
-    {
-        void TakeDamage ( int dmg );
     }
 }

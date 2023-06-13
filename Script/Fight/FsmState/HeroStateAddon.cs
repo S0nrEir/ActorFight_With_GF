@@ -65,7 +65,6 @@ namespace Aquila.Fight.FSM
         private bool IsAbilityDataValid( object[] param )
         {
             int state = 0;
-            var succ = true;
             if ( param is null || param.Length == 0 )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>" );
@@ -95,18 +94,14 @@ namespace Aquila.Fight.FSM
             var canUseFlag = abilityAddon.CanUseAbility( _abilityMeta.id );
             if( canUseFlag != 0)
                 state = Tools.SetBitValue( state, (ushort)canUseFlag , true );
-            //#todo检查施法者和目标
 
             //到最后设置succ
             result._stateDescription = state;
-            if ( result.StateFlagIsClean() )
+            result._succ = result.StateFlagIsClean();
+            if ( result._succ )
             {
                 result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.SUCC, true );
                 result._succ = true;
-            }
-            else
-            {
-                result._succ = false;
             }
 
             _castorID = result._castorID;
@@ -135,7 +130,7 @@ namespace Aquila.Fight.FSM
         }
 
         /// <summary>
-        /// 技能完成检查代码
+        /// 技能完成检查
         /// </summary>
         private void FinishAbility()
         {
@@ -147,7 +142,10 @@ namespace Aquila.Fight.FSM
         {
             base.OnEnter(param);
             if ( !IsAbilityDataValid( param ) )
+            {
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
+                return;
+            }
 
             _time = 0f;
             _abilityFinishFlag = false;
@@ -169,8 +167,6 @@ namespace Aquila.Fight.FSM
             _castorID = -1;
             _targetID = -1;
         }
-
-        
         public HeroAbilityState( int state_id ) : base( state_id )
         {
             

@@ -86,7 +86,7 @@ namespace Aquila.Extension
 
         private void Start()
         {
-            _assetPool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_PlayableAsset>( nameof( Object_PlayableAsset ) );
+            _assetPool = GameEntry.ObjectPool.CreateMultiSpawnObjectPool<Object_PlayableAsset>( nameof( Object_PlayableAsset ) );
             _assetPool.ExpireTime = 3600f;
             _loadAssetCallBack = new LoadAssetCallbacks( OnLoadAssetSucc, OnLoadAssetFaild );
             _assetCache = new Dictionary<string, PlayableAsset>();

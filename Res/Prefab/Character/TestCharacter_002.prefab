@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 13681452}
   - component: {fileID: 3668655356348723783}
   - component: {fileID: 3141805065268469661}
+  - component: {fileID: 504457885133676003}
   m_Layer: 0
   m_Name: TestCharacter_002
   m_TagString: Player
@@ -91,6 +92,23 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!320 &504457885133676003
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 0}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &629156792
 GameObject:
   m_ObjectHideFlags: 0

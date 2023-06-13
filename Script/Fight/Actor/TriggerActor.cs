@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Addon;
+using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Toolkit;
 using UnityEngine;
@@ -61,7 +61,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 状态切换
         /// </summary>
-        public void SwitchTo( ActorStateTypeEnum stateType, object[] enterParam, object[] existParam )
+        public void SwitchTo( ActorStateTypeEnum stateType, object enterParam, object existParam )
         {
             Log.Info( $"<color=white>TriggerActor--->SwitchTo,ActorID:{ActorID}<color>" );
         }

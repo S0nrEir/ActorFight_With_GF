@@ -1,4 +1,4 @@
-﻿using GameFramework;
+using GameFramework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +19,6 @@ namespace Aquila.Fight.Buff
             Clear();
             ActorID = actor_id;
             EffectActorID = effect_actor_id;
-            //#todo分离Effect表数据
             //EffectMeta = TableManager.GetEffectByID( effectMetaID, 0 );
             //EffectMeta = null;
             ImpactID = impact_id;
