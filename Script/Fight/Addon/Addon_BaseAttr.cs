@@ -7,7 +7,7 @@ using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-//todo：对于当前生命，当前魔法这类变更没有来源依据（比如modifier）属性，无需使用修正值，只需要baseValue即可
+//对于当前生命，当前魔法这类变更没有来源依据（比如modifier）属性，无需使用修正值，只需要baseValue即可
 namespace Aquila.Fight.Addon
 {
     /// <summary>
@@ -22,11 +22,11 @@ namespace Aquila.Fight.Addon
     /// yyy_Numric_Modifier_1 |yyy_Numric_Modifier_1  |yyy_Numric_Modifier_1  |yyy_Numric_Modifier_1
     /// yyy_Numric_Modifier_2 |yyy_Numric_Modifier_2  |yyy_Numric_Modifier_2  |yyy_Numric_Modifier_2
     /// yyy_Numric_Modifier_3 |yyy_Numric_Modifier_3  |yyy_Numric_Modifier_3  |yyy_Numric_Modifier_3
-    /// -----------------------+----------------------+----------------------+----------------
+    /// ----------------------+-----------------------+-----------------------+----------------------
     /// zzz_Numric_Modifier_1 |zzz_Numric_Modifier_1  |zzz_Numric_Modifier_1  |zzz_Numric_Modifier_1
     /// zzz_Numric_Modifier_2 |zzz_Numric_Modifier_2  |zzz_Numric_Modifier_2  |zzz_Numric_Modifier_2
     /// zzz_Numric_Modifier_3 |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3  |zzz_Numric_Modifier_3
-    /// ----------------------+----------------------+----------------------+----------------
+    /// ----------------------+-----------------------+-----------------------+---------------------
     /// </summary>
     public class Addon_BaseAttrNumric : Addon_Base
     {
@@ -161,7 +161,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private void SetBaseAttr( Table_RoleMeta meta )
         {
-            //#todo设置属性暂时是一个个设置，想个办法走loop
+            //现在是写死的，很蛋疼
             var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
             //max hp
             var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );

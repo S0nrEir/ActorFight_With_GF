@@ -115,7 +115,6 @@ namespace  Aquila.Fight.Addon
         public override AddonTypeEnum AddonType => AddonTypeEnum.ABILITY;
         public override void OnAdd()
         {
-            //#todo从哪里初始化表和spec？
         }
 
         public override void Init(TActorBase actor, GameObject targetGameObject, Transform targetTransform)

@@ -28,8 +28,6 @@ namespace Aquila.Fight.Addon
                 Debug.LogError( "<color=red>faild to get animator</color>" );
         }
 
-        //
-        //#todo动态设置playableAseet？
         public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );

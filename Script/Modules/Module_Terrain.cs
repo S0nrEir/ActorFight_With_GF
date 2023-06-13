@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Extension;
 using Aquila.ObjectPool;
 using Aquila.Toolkit;
@@ -15,7 +15,6 @@ namespace Aquila.Module
     public class Module_Terrain : GameFrameworkModuleBase
     {
         #region public
-        //#todo所有的地块获取，都要从对象池里拿TerrainObject
 
         public override void Start( object param )
         {

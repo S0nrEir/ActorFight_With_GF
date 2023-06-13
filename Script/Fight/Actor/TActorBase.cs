@@ -367,7 +367,7 @@ namespace Aquila.Fight.Actor
 
     //#region ActorInspector
     ///// <summary>
-    ///// #todo用于记录actord信息的面板,抽时间写成inspector
+    ///// 用于记录actord信息的面板,抽时间写成inspector
     ///// </summary>
     //internal class ActorInspector : MonoBehaviour
     //{

@@ -1,4 +1,4 @@
-﻿using GameFramework;
+using GameFramework;
 using Aquila.Fight.Actor;
 using System;
 using System.Collections.Generic;
@@ -162,7 +162,7 @@ namespace Aquila.Fight.Addon
             if (!InitFlag || _on_trigger_enter == null)
                 return;
 
-            //#TODO Tag检查，enable检查
+            //Tag检查，enable检查
             //var actor = other.gameObject.GetComponent<TActorBase>();
             //if (actor == null)
             //    throw new GameFrameworkException( "actor == null!" );
