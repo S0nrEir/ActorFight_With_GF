@@ -73,7 +73,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 获取一个指定类型的对象池对象，拿不到返回null
         /// </summary>
-        private T GenObject<T>( string pool_name ) where T : Aquila_Object_Base
+        private T GenObject<T>( string pool_name ) where T : Object_Base
         {
             // var type_name = nameof(T);
             var pool = GameEntry.ObjectPool.GetObjectPool<T>( pool_name );
@@ -87,7 +87,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 回收
         /// </summary>
-        public bool UnSpawn<T>( string pool_name, object obj ) where T : Aquila_Object_Base
+        public bool UnSpawn<T>( string pool_name, object obj ) where T : Object_Base
         {
             var pool = GameEntry.ObjectPool.GetObjectPool<T>( pool_name );
             if ( pool is null )

@@ -6,23 +6,14 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.ObjectPool
 {
-    public class Object_HPBar : Aquila_Object_Base
+    public class Object_HPBar : Object_Base
     {
-        
-        /// <summary>
-        /// 获取持有的UI对象的RectTransform
-        /// </summary>
-        // public RectTransform Rect()
-        // {
-        //     return _hp_bar.RectTransform;
-        // }
-
         /// <summary>
         /// 设置对象在屏幕空间中的位置
         /// </summary>
         public void SetScreenPos(Vector3 pos)
         {
-            _hp_bar.RectTransform.position = pos; 
+            _hpBarItem.RectTransform.position = pos; 
         }
 
         /// <summary>
@@ -30,14 +21,14 @@ namespace Aquila.ObjectPool
         /// </summary>
         public void SetValue(int curr, int max)
         {
-            _hp_bar.SetValue(curr,max);
+            _hpBarItem.SetValue(curr,max);
         }
 
         public override void Setup(GameObject go)
         {
-            _hp_bar = Tools.GetComponent<Item_HPBar>(go.transform);
-            if (_hp_bar == null)
-                Log.Warning("<color=yellow>_hp_bar == null</color>");
+            _hpBarItem = Tools.GetComponent<Item_HPBar>(go.transform);
+            if (_hpBarItem == null)
+                Log.Warning("<color=yellow>_hpBarItem == null</color>");
         }
 
         /// <summary>
@@ -45,7 +36,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public float Value()
         {
-            return _hp_bar.Value();  
+            return _hpBarItem.Value();  
         }
 
         protected override void OnSpawn()
@@ -60,7 +51,7 @@ namespace Aquila.ObjectPool
 
         protected override void Release(bool isShutdown)
         {
-            _hp_bar = null;
+            _hpBarItem = null;
             base.Release(isShutdown);
         }
 
@@ -74,6 +65,6 @@ namespace Aquila.ObjectPool
             return obj;
         }
 
-        private Item_HPBar _hp_bar = null;
+        private Item_HPBar _hpBarItem = null;
     }
 }

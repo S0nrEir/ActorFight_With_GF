@@ -108,7 +108,7 @@ namespace Aquila.Procedure
             //默认创建四十个地块
             var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
 
-            Aquila_Object_Base[] obj_arr = new Aquila_Object_Base[default_create_count];
+            Object_Base[] obj_arr = new Object_Base[default_create_count];
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
             var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;

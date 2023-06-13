@@ -8,14 +8,14 @@ namespace Aquila.ObjectPool
     /// <summary>
     /// 地块对象
     /// </summary>
-    public class Object_Terrain : Aquila_Object_Base
+    public class Object_Terrain : Object_Base
     {
         public bool SetNameTest( string name )
         {
             if ( string.IsNullOrEmpty( name ) )
                 return false;
 
-            Target_GO.name = name;
+            _targetGameObject.name = name;
             return true;
         }
 
@@ -24,7 +24,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public void SetName( string name )
         {
-            Target_GO.name = name;
+            _targetGameObject.name = name;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public void SetParent( Transform parent )
         {
-            Tools.SetParent( Target_GO.transform, parent );
+            Tools.SetParent( _targetGameObject.transform, parent );
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public void SetLocalPosition( float x, float z )
         {
-            Target_GO.transform.localPosition = new Vector3( x, 0, z );
+            _targetGameObject.transform.localPosition = new Vector3( x, 0, z );
             WorldHangPosition = WorldPosition + GameConfig.Terrain.TERRAIN_HANG_POINT_OFFSET;
         }
 
@@ -61,7 +61,7 @@ namespace Aquila.ObjectPool
         {
             Coordinate = new Vector3Int( x, 0, z );
             UniqueKey = Tools.Fight.Coord2UniqueKey( Coordinate.x, Coordinate.z );
-            Target_GO.name = $"{x}_{z}";
+            _targetGameObject.name = $"{x}_{z}";
         }
 
         /// <summary>
@@ -99,12 +99,12 @@ namespace Aquila.ObjectPool
         protected override void OnSpawn()
         {
             base.OnSpawn();
-            Tools.SetTag( GameConfig.Tags.TERRAIN_BLOCK, Target_GO, true );
-            Tools.SetLayer( GameConfig.Layer.LAYER_TERRAIN_BLOCK, Target_GO, true );
-            _mesh_render = Tools.GetComponent<MeshRenderer>( Target_GO, "Mesh" );
+            Tools.SetTag( GameConfig.Tags.TERRAIN_BLOCK, _targetGameObject, true );
+            Tools.SetLayer( GameConfig.Layer.LAYER_TERRAIN_BLOCK, _targetGameObject, true );
+            _mesh_render = Tools.GetComponent<MeshRenderer>( _targetGameObject, "Mesh" );
             if ( _mesh_render == null )
             {
-                var child = Target_GO.transform.Find( "Mesh" );
+                var child = _targetGameObject.transform.Find( "Mesh" );
                 if ( child == null )
                     throw new GameFrameworkException( "faild to get Mesh child!" );
 
@@ -147,7 +147,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public Vector3 WorldPosition
         {
-            get { return Target_GO.transform.position; }
+            get { return _targetGameObject.transform.position; }
         }
 
         /// <summary>
