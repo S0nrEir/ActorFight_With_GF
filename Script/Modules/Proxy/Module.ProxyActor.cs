@@ -9,7 +9,7 @@ namespace Aquila.Module
     /// <summary>
     /// Actor代理模块
     /// </summary>
-    public partial class Module_Proxy_Actor : GameFrameworkModuleBase
+    public partial class Module_ProxyActor : GameFrameworkModuleBase
     {
         #region pub
         

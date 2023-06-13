@@ -12,18 +12,18 @@ namespace Aquila.Procedure
     /// </summary>
     public partial class Procedure_Test : ProcedureBase
     {
-        private int counter = 0;
-        private void TimeWheelTest()
-        {
-            GameEntry.TimeWheel.AddTask( Extension.TimeWheel_Task.GenRepeat
-                   (
-                       1f,
-                       () =>
-                       {
-                           Debug.Log( $"testing...{counter++}" );
-                       }
-                   ) );
-        }
+        //private int counter = 0;
+        //private void TimeWheelTest()
+        //{
+        //    GameEntry.TimeWheel.AddTask( Extension.TimeWheel_Task.GenRepeat
+        //           (
+        //               1f,
+        //               () =>
+        //               {
+        //                   Debug.Log( $"testing...{counter++}" );
+        //               }
+        //           ) );
+        //}
     }
 
 }

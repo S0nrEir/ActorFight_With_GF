@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -121,7 +121,7 @@ namespace Aquila.Fight.Actor
                     new Vector3
                         (
                             pos_to_set.x,
-                            Tools.Fight.TerrainPositionY( string.Empty, pos_to_set.x, pos_to_set.y ), //#todo设置坐标加上layer
+                            Tools.Fight.TerrainPositionY( string.Empty, pos_to_set.x, pos_to_set.y ), //记得设置坐标加上layer
                             pos_to_set.y
                         )
                 );
@@ -174,7 +174,7 @@ namespace Aquila.Fight.Actor
         protected override void OnHide( bool isShutdown, object userData )
         {
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister( ActorID );
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
         }
 
@@ -192,7 +192,7 @@ namespace Aquila.Fight.Actor
                 addon.Dispose();
             }
             
-            GameEntry.Module.GetModule<Module_Proxy_Actor>().UnRegister(ActorID);
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister(ActorID);
             UnRegister();
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
@@ -206,14 +206,12 @@ namespace Aquila.Fight.Actor
             base.OnInit( userData );
             OnInitActor(userData);
             AddAddon();
-            var res = GameEntry.Module.GetModule<Module_Proxy_Actor>().Register( this, GetAllAddon() );
+            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this, GetAllAddon() );
             if(res.succ)
                 InitAddons( res.instance );
             
             _allAddonInitDone = true;
         }
-
-        
         
         /// <summary>
         /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
@@ -279,13 +277,15 @@ namespace Aquila.Fight.Actor
             foreach ( var kv in _addonDic )
                 addons[idx++] = kv.Value;
 
+            var iter = _addonDic.GetEnumerator();
+
             return addons;
         }
 
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons(Module_Proxy_Actor.ActorInstance instance)
+        protected virtual void InitAddons( Module_ProxyActor.ActorInstance instance)
         {
             var addons = GetAllAddon();
             foreach (var addon in addons)
@@ -367,7 +367,7 @@ namespace Aquila.Fight.Actor
 
     //#region ActorInspector
     ///// <summary>
-    ///// #todo用于记录actord信息的面板,抽时间写成inspector
+    ///// 用于记录actord信息的面板,抽时间写成inspector
     ///// </summary>
     //internal class ActorInspector : MonoBehaviour
     //{

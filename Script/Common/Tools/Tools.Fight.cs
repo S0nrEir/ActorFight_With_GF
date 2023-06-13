@@ -1,6 +1,7 @@
-﻿using Aquila.Fight;
+using Aquila.Event;
+using Aquila.Fight;
 using Aquila.Fight.Addon;
-using Aquila.Module;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -14,20 +15,11 @@ namespace Aquila.Toolkit
         public static class Fight
         {
             /// <summary>
-            /// 对一个单体目标使用技能
-            /// </summary>
-            public static void UseAbilityToSinglePlayer(int castor_id,int target_id,int meta_id)
+            /// 累加伤害
+            /// </summary
+            public static int AddDealedDamage(int value,int toAdd)
             {
-                var proxy = GameEntry.Module.GetModule<Module_Proxy_Actor>();
-            }
-
-            /// <summary>
-            /// 计算物理伤害，返回计算后的生命值
-            /// </summary>
-            public static float CalcPhysicDamage(float damage, float def)
-            {
-                var final = Mathf.Floor(damage - def);
-                return final > 0 ? final : 1f;
+                return value + toAdd;
             }
 
             /// <summary>
@@ -35,7 +27,6 @@ namespace Aquila.Toolkit
             /// </summary>
             /// <param name="x">x坐标</param>
             /// <param name="z">z坐标</param>
-            /// <returns>失败返回-1</returns>
             public static int Coord2UniqueKey( int x, int z )
             {
                 var result = x * Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Precision + z;
@@ -100,7 +91,7 @@ namespace Aquila.Toolkit
                 if ( string.IsNullOrEmpty( effect_entity_data._effectPointName ) )
                     return;
 
-                //#todo还是改用find方式了，因为你不知道又有别的什么go会被放进来
+                //还是改用find方式了，因为你不知道又有别的什么go会被放进来
                 var effectPoint = actor.CachedTransform.Find( effect_entity_data._effectPointName );
                 if ( effectPoint == null )
                 {

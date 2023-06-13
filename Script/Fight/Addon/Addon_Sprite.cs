@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -20,7 +18,6 @@ namespace Aquila.Fight.Addon
                 Log.Warning( "sprite_go == null", LogColorTypeEnum.Red );
                 return;
             }
-            //#todo_spriteRender组件初始化
         }
         
         /// <summary>

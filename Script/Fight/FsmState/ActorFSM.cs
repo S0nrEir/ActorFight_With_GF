@@ -1,7 +1,7 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.FSM
 {
@@ -10,6 +10,14 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class ActorFSM
     {
+        /// <summary>
+        /// 获取actorInstance
+        /// </summary>
+        public ActorInstance GetActorInstance()
+        {
+            return _instance;
+        }
+
         /// <summary>
         /// 状态切换
         /// </summary>
@@ -43,7 +51,7 @@ namespace Aquila.Fight.FSM
                 return false;
             }
 
-            state.Init( this, _actor );
+            state.Init( this, _instance.Actor );
             _stateDic.Add( state._stateID, state );
             return true;
         }
@@ -91,14 +99,10 @@ namespace Aquila.Fight.FSM
             _currState?.OnUpdate( deltaTime );
         }
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <param name="actor"></param>
-        public void Setup ( TActorBase actor )
+        public void Setup( ActorInstance actorIns )
         {
             _stateDic = new Dictionary<int, ActorStateBase>();
-            _actor = actor;
+            _instance = actorIns;
         }
 
         public void Dispose ()
@@ -117,6 +121,7 @@ namespace Aquila.Fight.FSM
                 _stateDic = null;
                 _actor = null;
                 _currState = null;
+                _instance = null;
             }
         }
 
@@ -139,6 +144,8 @@ namespace Aquila.Fight.FSM
         private Dictionary<int, ActorStateBase> _stateDic;
 
         private TActorBase _actor;
+
+        private ActorInstance _instance = null;
     }
 
 }

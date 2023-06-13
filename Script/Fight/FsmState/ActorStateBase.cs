@@ -1,10 +1,4 @@
-﻿using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
-using Aquila.Toolkit;
-using GameFramework;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityGameFramework.Runtime;
+using Aquila.Fight.Actor;
 
 namespace Aquila.Fight.FSM
 {
@@ -13,29 +7,29 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public abstract class ActorStateBase
     {
-        public ActorStateBase ( int state_id )
+        public ActorStateBase( int state_id )
         {
             _stateID = state_id;
         }
 
-        public virtual void Dispose ()
+        public virtual void Dispose()
         {
             _fsm = null;
             _actor = null;
             _stateID = -1;
         }
 
-        public virtual void OnUpdate ( float delta_time )
+        public virtual void OnUpdate( float delta_time )
         {
 
         }
 
-        public virtual void OnLeave ( params object[] param )
+        public virtual void OnLeave( params object[] param )
         {
 
         }
 
-        public virtual void OnEnter ( params object[] param )
+        public virtual void OnEnter( params object[] param )
         {
 
         }
@@ -43,7 +37,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 初始化
         /// </summary>
-        public virtual void Init ( ActorFSM fsm, TActorBase actor )
+        public virtual void Init( ActorFSM fsm, TActorBase actor )
         {
             _fsm = fsm;
             _actor = actor;
@@ -169,7 +163,7 @@ namespace Aquila.Fight.FSM
     //             return;
     //         }
     //
-    //         //#todo有的obj没有动画，先这样处理
+    //         //有的obj没有动画，先这样处理
     //         //if ( _actor.TryGetAddon<Addon_Anim> ( out var addon ) && addon.CurrClipName != "Run" )
     //         //    addon.PlayRunAnim ();
     //
@@ -196,7 +190,7 @@ namespace Aquila.Fight.FSM
     //     {
     //         //_actor.SetWorldPosition( new Vector3( xList[0], Utils.FightScene.TerrainPositionY( xList[0], zList[0], 0f ), zList[0] ) );
     //         //_navAddon.SamplePosition(_actor.CachedTransform.position);
-    //         _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Tools.Fight.TerrainPositionY (string.Empty, xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );//#todo修改layer
+    //         _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Tools.Fight.TerrainPositionY (string.Empty, xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );//#修改layer
     //     }
     //
     //     /// <summary>

@@ -1,6 +1,7 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
+using Aquila.Module;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -48,6 +49,18 @@ namespace Aquila.Fight.Addon
             base.Init( actor, target_go, target_transform );
         }
 
+        public override void Init( Module_ProxyActor.ActorInstance instance )
+        {
+            base.Init( instance );
+
+            ActorFsm = new ActorFSM();
+            //ActorFsm.Setup( Actor );
+            ActorFsm.Setup( _actor_instance );
+
+            foreach ( var state in StateList )
+                ActorFsm.AddState( state );
+        }
+
         /// <summary>
         /// addon type
         /// </summary>
@@ -58,13 +71,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public override void OnAdd()
         {
-            ActorFsm = new ActorFSM();
-            ActorFsm.Setup( Actor );
-
-            foreach ( var state in StateList )
-                ActorFsm.AddState( state );
-
-            //GameEntry.Timer.RegisterFrameLateUpate( this, ActorFsm.Update );
         }
 
         public virtual T GetTypedActor<T>() where T : TActorBase

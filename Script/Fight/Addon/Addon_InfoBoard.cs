@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using UnityEngine;
@@ -17,7 +17,7 @@ namespace Aquila.Fight.Addon
         {
         }
 
-        public override void Init(Module_Proxy_Actor.ActorInstance instance)
+        public override void Init( Module_ProxyActor.ActorInstance instance)
         {
             base.Init(instance);
         }

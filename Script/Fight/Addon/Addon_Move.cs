@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using System.Collections.Generic;
@@ -81,7 +81,7 @@ namespace Aquila.Fight.Addon
             var nextPos = Vector3.zero;
             nextPos.x = _path_list[_pathIndex].x;
             nextPos.z = _path_list[_pathIndex].y;
-            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//#todo修改layer
+            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//修改layer
             var actor_pos = Actor.CachedTransform.position;
 
             Rotate( _path_list[_pathIndex] );
@@ -110,11 +110,11 @@ namespace Aquila.Fight.Addon
             Vector3 next_pos = Vector3.zero;
             next_pos.x = _path_list[_pathIndex + 1].x;
             next_pos.z = _path_list[_pathIndex + 1].y;
-            next_pos.y = Tools.Fight.TerrainPositionY(string.Empty, next_pos.x, next_pos.z, 0f );//#todo修改layer
+            next_pos.y = Tools.Fight.TerrainPositionY(string.Empty, next_pos.x, next_pos.z, 0f );//修改layer
 
             _cachedTargetPos.x = _path_list[_pathIndex].x;
             _cachedTargetPos.z = _path_list[_pathIndex].y;
-            _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z, 0f );//#todo修改layer
+            _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z, 0f );//修改layer
 
             var dis = Vector3.Distance( Actor.CachedTransform.position, next_pos );
             if (dis <= 0.1f)

@@ -44,8 +44,7 @@ namespace Aquila.Fight.Addon
         {
             if(_hp_obj is null)
                 return;
-            
-            //#todo:是否考虑换成UIFollowTarget
+
             _hp_obj.SetScreenPos(GameEntry.InfoBoard.WorldPos2BoardRectPos(_actor_transform.position,GameEntry.GlobalVar.MainCamera));
         }
 

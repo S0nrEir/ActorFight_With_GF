@@ -103,7 +103,7 @@ namespace Aquila.Module
                        @"Assets/Res/Prefab/Aquila_001.prefab",
                        0,
                        0,
-                       new HeroActorEntityData( entity_id ) { _role_meta_id = 1 }
+                       new HeroActorEntityData( entity_id ) { _roleMetaID = 1 }
                    );
             Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
         }

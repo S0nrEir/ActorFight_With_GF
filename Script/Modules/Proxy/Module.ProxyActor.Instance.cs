@@ -6,7 +6,7 @@ using GameFramework;
 namespace Aquila.Module
 {
     //Module_Proxy_Actor的部分类，用于描述Actor代理的instance
-    public partial class Module_Proxy_Actor
+    public partial class Module_ProxyActor
     {
         /// <summary>
         /// 战斗代理Actor类，表示Actor在Proxy中的表示，封装了Actor和对应的Addon

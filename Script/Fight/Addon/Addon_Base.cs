@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Module;
 using UnityEngine;
 
@@ -34,7 +34,11 @@ namespace Aquila.Fight.Addon
             TargetTransform  = target_transform;
         }
 
-        public virtual void Init(Module_Proxy_Actor.ActorInstance instance)
+        //#todo_把所有别的版本的adodn init函数替换为下面的Init函数
+        /// <summary>
+        /// addon的初始化，addon的数据初始化在这里做
+        /// </summary>
+        public virtual void Init( Module_ProxyActor.ActorInstance instance)
         {
             _actor_instance = instance;
         }
@@ -72,7 +76,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 持有的actor实例
         /// </summary>
-        protected Module_Proxy_Actor.ActorInstance _actor_instance = null;
+        protected Module_ProxyActor.ActorInstance _actor_instance = null;
 
         /// <summary>
         /// 当组件被添加到actor上

@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using Aquila.Fight.Actor;
 using System;
 using System.Collections.Generic;
@@ -179,7 +179,7 @@ namespace Aquila.Fight.Addon
         public float _duration = 0f;
 
         /// <summary>
-        /// 特效节点#todo改成读取配置
+        /// 特效节点是否改成读取配置
         /// </summary>
         public string _effectPointName = "EffectPotin";
 
