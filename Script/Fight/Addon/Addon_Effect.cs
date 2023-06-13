@@ -13,7 +13,7 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_FX : Addon_Base
     {
-        #region public
+        //-----------------------public-----------------------
 
         /// <summary>
         /// 显示一个特效
@@ -22,20 +22,20 @@ namespace Aquila.Fight.Addon
         /// <param name="assetPath">资源路径</param>
         /// <param name="duration">持续时间，0为一直显示</param>
         /// <param name="callBack">回调</param>
-        public async void ShowEffectAsync( int fx_id, string asset_path, float duration , Action<ActorEffectEntityData, ActorFX> callBack )
+        public async void ShowEffectAsync( int fxID, string assetPath, float duration , Action<ActorEffectEntityData, ActorFX> callBack )
         {
-            if ( string.IsNullOrEmpty( asset_path ) )
+            if ( string.IsNullOrEmpty( assetPath ) )
                 return;
 
-            var effectEntityData = new ActorEffectEntityData(fx_id);
+            var effectEntityData = new ActorEffectEntityData(fxID);
             effectEntityData._duration = duration;
-            effectEntityData.ModelPath = asset_path;
+            effectEntityData.ModelPath = assetPath;
             var task = await AwaitableExtensions.ShowEntity
                 (
                     Aquila.GameEntry.Entity,
-                    fx_id,
+                    fxID,
                     typeof( ActorFX ),
-                    asset_path,
+                    assetPath,
                     GameConfig.Entity.GROUP_ACTOR_FX,
                     GameConfig.Entity.PRIORITY_ACTOR,
                     effectEntityData
@@ -44,18 +44,16 @@ namespace Aquila.Fight.Addon
             var actorEffect = task.Logic as ActorFX;
             if ( actorEffect is null )
             {
-                Log.Error( $"create actor effect faild--->id:{fx_id}" );
+                Log.Error( $"create actor effect faild--->id:{fxID}" );
                 return;
             }
 
-            actorEffect.Setup( fx_id, duration, Actor, duration <= 0 );
+            actorEffect.Setup( fxID, duration, Actor, duration <= 0 );
             Add( actorEffect.ID, actorEffect );
             callBack?.Invoke( effectEntityData, actorEffect );
         }
 
-        #endregion
-
-        #region private
+        //----------------------- private-----------------------
 
         /// <summary>
         /// 添加到集合中
@@ -126,8 +124,6 @@ namespace Aquila.Fight.Addon
 
             return null;
         }
-
-        #endregion
 
         //------------------------override------------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.EFFECT;

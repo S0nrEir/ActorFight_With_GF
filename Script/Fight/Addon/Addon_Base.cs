@@ -17,21 +17,13 @@ namespace Aquila.Fight.Addon
             _actor_addons = addons;
         }
         
-        /// <summary>
-        /// 设置玩家的actor实例
-        /// </summary>q3w
-        // public void SetActorInstace(Module_Proxy_Actor.ActorInstance instance)
-        // {
-        //     _actor_instance = instance;
-        // }
-        
         public abstract AddonTypeEnum AddonType { get; }
 
-        public virtual void Init ( Actor_Base actor, GameObject target_go, Transform target_transform )
+        public virtual void Init ( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
         {
             Actor            = actor;
-            TargetGameObject = target_go;
-            TargetTransform  = target_transform;
+            TargetGameObject = targetGameObject;
+            TargetTransform  = targetTransform;
         }
 
         //#todo_把所有别的版本的adodn init函数替换为下面的Init函数
@@ -40,7 +32,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public virtual void Init( Module_ProxyActor.ActorInstance instance)
         {
-            _actor_instance = instance;
+            _actorInstance = instance;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -76,7 +68,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 持有的actor实例
         /// </summary>
-        protected Module_ProxyActor.ActorInstance _actor_instance = null;
+        protected Module_ProxyActor.ActorInstance _actorInstance = null;
 
         /// <summary>
         /// 当组件被添加到actor上
@@ -96,7 +88,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public virtual void Dispose ()
         {
-            _actor_instance = null;
+            _actorInstance = null;
         }
     }
 

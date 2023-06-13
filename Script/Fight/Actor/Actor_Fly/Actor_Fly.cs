@@ -8,9 +8,9 @@ namespace Aquila.Fight.Actor
     /// </summary>
     public abstract class Actor_Fly : Actor_Base
     {
-        public override void Setup( int actor_id )
+        public override void Setup( int actorID )
         {
-            _target_actor_id = actor_id;
+            _targetActorID = actorID;
         }
 
         private void Hide()
@@ -63,7 +63,7 @@ namespace Aquila.Fight.Actor
             base.OnRecycle();
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT );
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
-            _target_actor_id = -1;
+            _targetActorID = -1;
         }
 
         public override void Reset()
@@ -90,7 +90,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 目标actorID
         /// </summary>
-        protected int _target_actor_id = -1;
+        protected int _targetActorID = -1;
     }
 
 }
