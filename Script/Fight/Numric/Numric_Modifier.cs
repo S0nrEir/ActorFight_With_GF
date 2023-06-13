@@ -97,23 +97,5 @@ namespace Aquila.Numric
         /// 修改系数
         /// </summary>
         private float _value_fac = 0f;
-
-        //#todo数值修改方式，具体数值
-        //关联到数据组件，还有buff之类的，他们都可以持有数值修改器，装备什么的也行
-        //#todo_修改数值后如何改回去？
-        //因为数据组件的修正值，是计算后的值，
-
-        //Modifier如何应用于Numric:
-        //addonBase的接口
-
-        //Base = 100,fac=0.25,add=0,final=100
-        //1.添加
-        //add=base*fac=25
-        //final = base+add=125
-        //2.移除
-        //temp=base-base*(1-fac)=25
-        //temp*=-1
-        //add+=temp=0
-        //final=base+add=100
     }
 }

@@ -163,7 +163,7 @@ namespace Aquila.Fight.FSM
     //             return;
     //         }
     //
-    //         //#todo有的obj没有动画，先这样处理
+    //         //有的obj没有动画，先这样处理
     //         //if ( _actor.TryGetAddon<Addon_Anim> ( out var addon ) && addon.CurrClipName != "Run" )
     //         //    addon.PlayRunAnim ();
     //
@@ -190,7 +190,7 @@ namespace Aquila.Fight.FSM
     //     {
     //         //_actor.SetWorldPosition( new Vector3( xList[0], Utils.FightScene.TerrainPositionY( xList[0], zList[0], 0f ), zList[0] ) );
     //         //_navAddon.SamplePosition(_actor.CachedTransform.position);
-    //         _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Tools.Fight.TerrainPositionY (string.Empty, xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );//#todo修改layer
+    //         _navAddon.SetDestination ( new Vector3 ( xList[xList.Count - 1], Tools.Fight.TerrainPositionY (string.Empty, xList[xList.Count - 1], zList[zList.Count - 1], 0f ), zList[zList.Count - 1] ) );//#修改layer
     //     }
     //
     //     /// <summary>
