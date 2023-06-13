@@ -11,7 +11,7 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_Event : Addon_Base
     {
-        #region public
+        //----------------------- public-----------------------
 
         /// <summary>
         /// 发送一个event
@@ -66,8 +66,8 @@ namespace Aquila.Fight.Addon
         {
             return _eventDic.Remove( intType );
         }
-        #endregion
-
+        
+        //-----------------------override-----------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.EVENT;
 
         public override void OnAdd()
@@ -87,7 +87,7 @@ namespace Aquila.Fight.Addon
             _eventDic = null;
         }
 
-        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
         }

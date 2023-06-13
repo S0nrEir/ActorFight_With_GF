@@ -13,7 +13,7 @@ namespace Aquila.Item
         /// <summary>
         /// 飘字的随即方向
         /// </summary>
-        public Vector2 _random_dir = Vector2.zero;
+        public Vector2 _randomDir = Vector2.zero;
         
         /// <summary>
         /// 文本

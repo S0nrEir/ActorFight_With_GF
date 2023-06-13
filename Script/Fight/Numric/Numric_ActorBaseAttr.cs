@@ -14,7 +14,7 @@ namespace Aquila.Numric
         {
             get
             {
-                if ( !_change_flag )
+                if ( !_changeFlag )
                     return _total;
 
                 _total = 0f;

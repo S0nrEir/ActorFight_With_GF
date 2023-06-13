@@ -5,7 +5,7 @@ using UnityGameFramework.Runtime;
 namespace Aquila.Fight.Actor
 {
     //TActorBase的扩展类，专门写适用于具体项目需求，对应于TActorbase的扩展函数、属性和字段
-    public abstract partial class TActorBase
+    public abstract partial class Actor_Base
     {
         /// <summary>
         /// 扩展回收，专门用于Actor在调用OnRecycle时对于扩展的Recycle

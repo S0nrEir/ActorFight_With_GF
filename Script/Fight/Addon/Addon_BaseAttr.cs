@@ -30,48 +30,47 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_BaseAttrNumric : Addon_Base
     {
-        #region pub
-
+        //-----------------------pub-----------------------
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool get_succ, float value) GetBaseValue( Actor_Attr type )
+        public (bool getSucc, float value) GetBaseValue( Actor_Attr type )
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
                 return (false, 0f);
 
-            return (true, _numric_arr[int_type].BaseValue);
+            return (true, _numricArr[intType].BaseValue);
         }
 
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool set_succ, float value_after_set) SetBaseValue( Actor_Base_Attr type, float value_to_set )
+        public (bool setSucc, float valueAfterSet) SetBaseValue( Actor_Base_Attr type, float valueToSet )
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
-                return (false, _numric_arr[int_type].BaseValue);
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
+                return (false, _numricArr[intType].BaseValue);
 
-            _numric_arr[int_type].SetBaseVal( value_to_set );
-            return (true, _numric_arr[int_type].BaseValue);
+            _numricArr[intType].SetBaseVal( valueToSet );
+            return (true, _numricArr[intType].BaseValue);
         }
         
         /// <summary>
         /// 设置HP值
         /// </summary>
-        public (bool set_succ, float value_after_set) SetCurrHP(float value_to_set)
+        public (bool setSucc, float valueAfterSet) SetCurrHP(float valueToSet)
         {
-            _hp.SetBaseVal(value_to_set);
+            _hp.SetBaseVal(valueToSet);
             return (true, _hp.CorrectionValue);
         }
 
         /// <summary>
         /// 设置MP值
         /// </summary>
-        public (bool set_succ, float value_after_set) SetCurrMP(float value_to_set)
+        public (bool setSucc, float valueAfterSet) SetCurrMP(float valueToSet)
         {
-            _mp.SetBaseVal(value_to_set);
+            _mp.SetBaseVal(valueToSet);
             return (true, _mp.CorrectionValue);
         }
 
@@ -94,13 +93,13 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool get_succ, float value) GetCorrectionFinalValue( Actor_Attr type ,float default_value = 0f)
+        public (bool getSucc, float value) GetCorrectionFinalValue( Actor_Attr type ,float default_value = 0f)
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
                 return (false, default_value);
 
-            return (true, _numric_arr[int_type].CorrectionValue);
+            return (true, _numricArr[intType].CorrectionValue);
         }
 
         /// <summary>
@@ -108,11 +107,11 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SetEquipModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
                 return false;
 
-            return _numric_arr[int_type].AddEquipModifier( modifier );
+            return _numricArr[intType].AddEquipModifier( modifier );
         }
 
         /// <summary>
@@ -120,11 +119,11 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SetBuffModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
                 return false;
 
-            return _numric_arr[int_type].AddBuffModifier( modifier );
+            return _numricArr[intType].AddBuffModifier( modifier );
         }
 
         /// <summary>
@@ -132,14 +131,13 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool SetClassModifier( Actor_Attr type, Numric_Modifier modifier )
         {
-            var int_type = ( int ) type;
-            if ( OverLen( int_type ) )
+            var intType = ( int ) type;
+            if ( OverLen( intType ) )
                 return false;
 
-            return _numric_arr[int_type].AddClassModifier( modifier );
+            return _numricArr[intType].AddClassModifier( modifier );
         }
-
-        #endregion
+        
 
         //----------------------priv----------------------
         /// <summary>
@@ -165,10 +163,10 @@ namespace Aquila.Fight.Addon
             var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
             //max hp
             var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );
-            SetCurrHP(res.value_after_set);
+            SetCurrHP(res.valueAfterSet);
             //mp
             res = SetBaseValue( Actor_Base_Attr.MP, meta.MP );
-            SetCurrMP(res.value_after_set);
+            SetCurrMP(res.valueAfterSet);
             //str
             SetBaseValue( Actor_Base_Attr.STR, meta.STR );
             //def
@@ -189,11 +187,11 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 检查数值是否正确，不正确返回true
         /// </summary>
-        private bool OverLen( int int_type )
+        private bool OverLen( int intType )
         {
-            if ( _numric_arr is null || int_type >= _numric_arr.Length )
+            if ( _numricArr is null || intType >= _numricArr.Length )
             {
-                Log.Warning( $"attr int type {int_type.ToString()} is over len:{_numric_arr.Length}" );
+                Log.Warning( $"attr int type {intType.ToString()} is over len:{_numricArr.Length}" );
                 return true;
             }
             return false;
@@ -211,7 +209,7 @@ namespace Aquila.Fight.Addon
             ResetNumricArr();
         }
 
-        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
         }
@@ -219,16 +217,16 @@ namespace Aquila.Fight.Addon
         public override void Dispose()
         {
             base.Dispose();
-            if ( _numric_arr != null )
+            if ( _numricArr != null )
             {
-                var len = _numric_arr.Length;
+                var len = _numricArr.Length;
                 for ( var i = 0; i < len; i++ )
                 {
                     //_numric_arr[i].Clear();
-                    ReferencePool.Release( _numric_arr[i] );
-                    _numric_arr[i] = null;
+                    ReferencePool.Release( _numricArr[i] );
+                    _numricArr[i] = null;
                 }
-                _numric_arr = null;
+                _numricArr = null;
             }
             ReferencePool.Release(_hp);
             ReferencePool.Release(_mp);
@@ -240,14 +238,14 @@ namespace Aquila.Fight.Addon
 
         public override void OnAdd()
         {
-            if ( _numric_arr is null )
-                _numric_arr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max ];
+            if ( _numricArr is null )
+                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max ];
 
-            var len = _numric_arr.Length;
+            var len = _numricArr.Length;
             for ( var i = 0; i < len; i++ )
             {
-                if ( _numric_arr[i] is null )
-                    _numric_arr[i] = ReferencePool.Acquire<Numric_ActorBaseAttr>();
+                if ( _numricArr[i] is null )
+                    _numricArr[i] = ReferencePool.Acquire<Numric_ActorBaseAttr>();
                 else
                     Log.Warning( "Numric arr not not null on add!" );
             }
@@ -260,7 +258,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 所有的数值集合
         /// </summary>
-        private Numric.Numric_ActorBaseAttr[] _numric_arr = null;
+        private Numric.Numric_ActorBaseAttr[] _numricArr = null;
 
         /// <summary>
         /// 血量

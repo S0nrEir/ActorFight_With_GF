@@ -1,11 +1,7 @@
-using GameFramework;
-using Aquila.Fight.Actor;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using Aquila.Fight.Addon;
-using Aquila.Fight;
 
 namespace Aquila.Fight.Addon
 {

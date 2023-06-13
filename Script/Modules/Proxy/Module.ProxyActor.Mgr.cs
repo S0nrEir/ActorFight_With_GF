@@ -13,7 +13,7 @@ namespace Aquila.Module
         /// <summary>
         /// 将actor注册到代理中，成功返回true
         /// </summary>
-        public (bool succ,ActorInstance instance) Register( TActorBase actor, Addon_Base[] addons )
+        public (bool succ,ActorInstance instance) Register( Actor_Base actor, Addon_Base[] addons )
         {
             if ( actor is null )
             {

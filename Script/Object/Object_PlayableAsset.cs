@@ -1,16 +1,16 @@
 using GameFramework;
 using GameFramework.ObjectPool;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Aquila.ObjectPool
 {
+    /// <summary>
+    /// PlayableAssetå¯¹è±¡
+    /// </summary>
     public class Object_PlayableAsset : ObjectBase
     {
         /// <summary>
-        /// ´´½¨Ò»¸öObject_PlayableAsset»º´æ¶ÔÏó
+        /// åˆ›å»ºä¸€ä¸ªObject_PlayableAssetç¼“å­˜å¯¹è±¡
         /// </summary>
         public static Object_PlayableAsset Create(string name,PlayableAsset asset)
         {

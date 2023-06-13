@@ -7,16 +7,16 @@ using UnityEngine;
 
 namespace  Aquila.ObjectPool
 {
-    public class Object_DamageNumber : Aquila_Object_Base
+    public class Object_DamageNumber : Object_Base
     {
         /// <summary>
         /// 按照既定方向移动
         /// </summary>
-        public void Move(float delta_time)
+        public void Move(float deltaTime)
         {
-            _passed_time += delta_time;
+            _passedTime += deltaTime;
             //在这里要算上速度
-            _rect.position += new Vector3(_damage_number._random_dir.x,_damage_number._random_dir.y,0f) * Speed;
+            _rect.position += new Vector3(_damageNumberItem._randomDir.x,_damageNumberItem._randomDir.y,0f) * Speed;
         }
  
         /// <summary>
@@ -24,7 +24,7 @@ namespace  Aquila.ObjectPool
         /// </summary>
         public bool TimesUp()
         {
-            return _passed_time >= Duration;
+            return _passedTime >= Duration;
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace  Aquila.ObjectPool
         /// </summary>
         public void SetNumber(string number, Color color )
         {
-            _damage_number._text.text = number;
-            _damage_number._text.color = color;
+            _damageNumberItem._text.text = number;
+            _damageNumberItem._text.color = color;
         }
 
         /// <summary>
@@ -47,20 +47,20 @@ namespace  Aquila.ObjectPool
         public override void Setup(GameObject go)
         {
             base.Setup(go);
-            _damage_number = Tools.GetComponent<Item_DamageNumber>(go.transform);
+            _damageNumberItem = Tools.GetComponent<Item_DamageNumber>(go.transform);
             _rect = Tools.GetComponent<RectTransform>(go.transform);
             var random = Random.insideUnitCircle;
             //数字只能往上飘，处理一下
             if (random.y < 0)
                 random.y *= -1;
 
-            _damage_number._random_dir = random.normalized;
+            _damageNumberItem._randomDir = random.normalized;
         }
 
         protected override void Release(bool isShutdown)
         {
             _rect = null;
-            _damage_number = null;
+            _damageNumberItem = null;
             base.Release(isShutdown);
         }
 
@@ -71,9 +71,9 @@ namespace  Aquila.ObjectPool
 
         protected override void OnUnspawn()
         {
-            _damage_number._text.text  = string.Empty;
-            _damage_number._random_dir = Vector2.zero;
-            _passed_time               = 0f;
+            _damageNumberItem._text.text  = string.Empty;
+            _damageNumberItem._randomDir  = Vector2.zero;
+            _passedTime                   = 0f;
             base.OnUnspawn();
         }
 
@@ -87,12 +87,12 @@ namespace  Aquila.ObjectPool
         /// <summary>
         /// 持有的伤害数字对象
         /// </summary>
-        private Item_DamageNumber _damage_number = null;
+        private Item_DamageNumber _damageNumberItem = null;
 
         /// <summary>
         /// 出生到目前为止的经过时间
         /// </summary>
-        private float _passed_time = 0f;
+        private float _passedTime = 0f;
 
         /// <summary>
         /// 统一3秒后销毁

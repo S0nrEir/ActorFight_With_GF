@@ -23,6 +23,6 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 精灵图渲染器
         /// </summary>
-        private SpriteRenderer _sprite_renderer = null;
+        private SpriteRenderer _spriteRender = null;
     }
 }

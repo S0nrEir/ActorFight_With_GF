@@ -64,60 +64,60 @@ namespace Aquila.Procedure
         {
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
-            _actor_id_1 = ACTOR_ID_POOL.Gen();
-            var entity_1 = await actor_fac.ShowActorAsync<HeroActor>
+            _actor_id_1 = ActorIDPool.Gen();
+            var entity_1 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
-                    role_meta_id: 1,
-                    actor_id: _actor_id_1,
-                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
+                    1,
+                    _actor_id_1,
+                    @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
                     new HeroActorEntityData( _actor_id_1 ) { _roleMetaID = 1 }
                 );
 
             //actor2
-            _actor_id_2 = ACTOR_ID_POOL.Gen();
-            var entity_2 = await actor_fac.ShowActorAsync<HeroActor>
+            _actor_id_2 = ActorIDPool.Gen();
+            var entity_2 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
-                    role_meta_id: 2,
-                    actor_id: _actor_id_2,
-                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                    2,
+                    _actor_id_2,
+                    @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
                     new HeroActorEntityData( _actor_id_2 ) { _roleMetaID = 2 }
                 );
 
             //actor3
-            _actor_id_3 = ACTOR_ID_POOL.Gen();
-            var entity_3 = await actor_fac.ShowActorAsync<HeroActor>
+            _actor_id_3 = ActorIDPool.Gen();
+            var entity_3 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
-                role_meta_id: 2,
-                actor_id: _actor_id_3,
-                asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                2,
+                _actor_id_3,
+                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x: 1,
                 grid_z: 1,
                 new HeroActorEntityData( _actor_id_3 ) { _roleMetaID = 2 }
             );
 
             //actor4
-            _actor_id_4 = ACTOR_ID_POOL.Gen();
-            var entity_4 = await actor_fac.ShowActorAsync<HeroActor>
+            _actor_id_4 = ActorIDPool.Gen();
+            var entity_4 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
-                role_meta_id: 2,
-                actor_id: _actor_id_4,
-                asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                2,
+                _actor_id_4,
+                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x: 1,
                 grid_z: 1,
                 new HeroActorEntityData( _actor_id_4 ) { _roleMetaID = 2 }
             );
 
-            // if ( !( entity_1.Logic is HeroActor ) || !( entity_2.Logic is HeroActor ) )
+            // if ( !( entity_1.Logic is Actor_Hero ) || !( entity_2.Logic is Actor_Hero ) )
             //     return;
 
-            SetActorTransform( entity_1.Logic as HeroActor, new Vector3( 0, 0.8f, -3.29f ), Vector3.zero );
-            SetActorTransform( entity_2.Logic as HeroActor, new Vector3( -2.87f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
-            SetActorTransform( entity_3.Logic as HeroActor, new Vector3( -0.34f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
-            SetActorTransform( entity_4.Logic as HeroActor, new Vector3( 2, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_1.Logic as Actor_Hero, new Vector3( 0, 0.8f, -3.29f ), Vector3.zero );
+            SetActorTransform( entity_2.Logic as Actor_Hero, new Vector3( -2.87f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_3.Logic as Actor_Hero, new Vector3( -0.34f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
+            SetActorTransform( entity_4.Logic as Actor_Hero, new Vector3( 2, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
 
 
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_actor_1 );
@@ -131,7 +131,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 临时初始化，设置Actor的位置
         /// </summary>
-        private void SetActorTransform( TActorBase actor, Vector3 position, Vector3 rotation )
+        private void SetActorTransform( Actor_Hero actor, Vector3 position, Vector3 rotation )
         {
             if ( actor is null )
             {
@@ -145,7 +145,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 场景回调
         /// </summary>
-        private void OnSceneLoaded( Scene scene_, LoadSceneMode mode_ )
+        private void OnSceneLoaded( Scene scene, LoadSceneMode mode )
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_scene );

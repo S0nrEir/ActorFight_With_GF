@@ -1,21 +1,19 @@
 using Aquila.Fight.Addon;
-using GameFramework.Event;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
     /// <summary>
     /// 飞行类actor
     /// </summary>
-    public abstract class FlyActor : TActorBase
+    public abstract class Actor_Fly : Actor_Base
     {
-        public override void Setup (int actor_id)
+        public override void Setup( int actorID )
         {
-            _target_actor_id = actor_id;
+            _targetActorID = actorID;
         }
 
-        private void Hide ()
+        private void Hide()
         {
             SetWorldPosition( Vector3.zero );
             GameEntry.Entity.HideEntity( ActorID );
@@ -23,25 +21,25 @@ namespace Aquila.Fight.Actor
 
         #region override
 
-        protected virtual void OnColliderTriggerCountLmt ( int evnetID, object[] param )
+        protected virtual void OnColliderTriggerCountLmt( int evnetID, object[] param )
         {
-            if (param == null || param.Length == 0)
+            if ( param == null || param.Length == 0 )
                 return;
 
             //DoDamage( param[0] as ITakeDamageBehavior );
             Hide();
         }
 
-        protected virtual void ColliderTriggerHit ( int evnetID, object[] param )
+        protected virtual void ColliderTriggerHit( int evnetID, object[] param )
         {
-            if (param == null || param.Length == 0)
+            if ( param == null || param.Length == 0 )
                 return;
 
             //DoDamage( param[0] as ITakeDamageBehavior );
             Hide();
         }
 
-        protected override void OnShow ( object userData )
+        protected override void OnShow( object userData )
         {
             base.OnShow( userData );
             RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT, OnColliderTriggerCountLmt );
@@ -57,18 +55,18 @@ namespace Aquila.Fight.Actor
         {
             base.AddAddon();
             _triggerAddon = AddAddon<Addon_ColliderTrigger>();
-            _moveAddon    = AddAddon<Addon_Move>();
+            _moveAddon = AddAddon<Addon_Move>();
         }
 
-        protected override void OnRecycle ()
+        protected override void OnRecycle()
         {
             base.OnRecycle();
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT );
             UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
-            _target_actor_id = -1;
+            _targetActorID = -1;
         }
 
-        public override void Reset ()
+        public override void Reset()
         {
             base.Reset();
             _moveAddon.Reset();
@@ -86,13 +84,13 @@ namespace Aquila.Fight.Actor
         #endregion
 
         //子弹只有一种状态，不用加fsm
-        protected Addon_Move _moveAddon               = null;
+        protected Addon_Move _moveAddon = null;
         protected Addon_ColliderTrigger _triggerAddon = null;
 
         /// <summary>
         /// 目标actorID
         /// </summary>
-        protected int _target_actor_id = -1;
+        protected int _targetActorID = -1;
     }
 
 }

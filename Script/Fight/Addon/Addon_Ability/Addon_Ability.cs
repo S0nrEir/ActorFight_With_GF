@@ -17,9 +17,9 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility(int ability_id, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
+        public bool UseAbility(int abilityID, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
         {
-            var spec = GetAbilitySpec(ability_id);
+            var spec = GetAbilitySpec(abilityID);
             if (spec is null)
             {
                 Log.Warning("<color=yellow>Addon_Ability.UseAbility--->spec is null</color>");
@@ -29,13 +29,13 @@ namespace  Aquila.Fight.Addon
             return spec.UseAbility( target , result );
         }
 
-        public override void OnUpdate(float delta_time,float real_elapsed)
+        public override void OnUpdate(float deltaTime,float realElapsed)
         {
-            if(!_init_flag)
+            if(!_initFlag)
                 return;
             
             foreach (var spec in _specArr)
-                spec.OnUpdate(delta_time);
+                spec.OnUpdate(deltaTime);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 获取指定的技能逻辑实例，获取不到返回空
         /// </summary>
-        private AbilitySpecBase GetAbilitySpec(int meta_id)
+        private AbilitySpecBase GetAbilitySpec(int metaID)
         {
             if (_specArr is null || _specArr.Length == 0)
             {
@@ -74,10 +74,10 @@ namespace  Aquila.Fight.Addon
                 return null;
             }
 
-            foreach (var temp_spec in _specArr)
+            foreach (var tempSpec in _specArr)
             {
-                if ( temp_spec.Meta.id == meta_id)
-                    return temp_spec;
+                if ( tempSpec.Meta.id == metaID)
+                    return tempSpec;
             }
 
             return null;
@@ -106,7 +106,7 @@ namespace  Aquila.Fight.Addon
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");
                     return false;
                 }
-                _specArr[i] = AbilitySpecBase.Gen(abilityBaseMeta,_actor_instance);
+                _specArr[i] = AbilitySpecBase.Gen(abilityBaseMeta,_actorInstance);
             }
             return true;
         }
@@ -117,13 +117,13 @@ namespace  Aquila.Fight.Addon
         {
         }
 
-        public override void Init(TActorBase actor, GameObject targetGameObject, Transform targetTransform)
+        public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
         {
             base.Init(actor, targetGameObject, targetTransform);
             if(!InitSpec())
                 return;
 
-            _init_flag = true;
+            _initFlag = true;
         }
         public override void Dispose()
         {
@@ -135,7 +135,7 @@ namespace  Aquila.Fight.Addon
 
             _specArr  = null;
             // _meta      = null;
-            _init_flag = false;
+            _initFlag = false;
             base.Dispose();
         }
 
@@ -162,6 +162,6 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _init_flag = false;
+        private bool _initFlag = false;
     }
 }
