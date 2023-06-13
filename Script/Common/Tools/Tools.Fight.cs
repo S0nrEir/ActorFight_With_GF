@@ -91,7 +91,7 @@ namespace Aquila.Toolkit
                 if ( string.IsNullOrEmpty( effect_entity_data._effectPointName ) )
                     return;
 
-                //#todo还是改用find方式了，因为你不知道又有别的什么go会被放进来
+                //还是改用find方式了，因为你不知道又有别的什么go会被放进来
                 var effectPoint = actor.CachedTransform.Find( effect_entity_data._effectPointName );
                 if ( effectPoint == null )
                 {

@@ -10,17 +10,6 @@ namespace Aquila.Toolkit
         /// </summary>
         public static class Actor
         {
-
-
-            //#todo应该为Actor_Attr属性配置一个invalid枚举，并且在匹配失败时返回invalid，目前返回的是max
-            /// <summary>
-            /// Actor_Base_Attr到Actor_Attr枚举的映射，没有返回Max，并且不会匹配HP和MP
-            /// </summary>
-            public static Actor_Attr BaseAttr2NormalAttrEnum(Actor_Base_Attr type)
-            {
-                return Actor_Attr.Max;
-            }
-
             /// <summary>
             /// 尝试从一组addon中获取指定类型的addon，拿不到返回null
             /// </summary>
