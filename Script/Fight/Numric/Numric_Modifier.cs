@@ -32,13 +32,13 @@ namespace Aquila.Numric
         public void Setup( NumricModifierType type ,float fac)
         {
             _type = type;
-            _value_fac = fac;
+            valueFac = fac;
         }
 
         /// <summary>
         /// 计算，传入初始值，设置并返回修改后的实际值
         /// </summary>
-        public float Calc( float original_val )
+        public float Calc( float originalVal )
         {
             // if ( _modified )
             // {
@@ -49,15 +49,15 @@ namespace Aquila.Numric
             switch ( _type )
             {
                 case NumricModifierType.Sum:
-                    _value_after_modify = original_val + _value_fac;
+                    _valueAfterModifying = originalVal + valueFac;
                     break;
 
                 case NumricModifierType.Mult:
-                    _value_after_modify = original_val * _value_fac;
+                    _valueAfterModifying = originalVal * valueFac;
                     break;
                 
                 case NumricModifierType.Dive:
-                    _value_after_modify = original_val / _value_fac;
+                    _valueAfterModifying = originalVal / valueFac;
                     break;
                 
                 default:
@@ -66,12 +66,12 @@ namespace Aquila.Numric
                     break;
             }
             _modified = true;
-            return _value_after_modify;
+            return _valueAfterModifying;
         }
 
         public void Clear()
         {
-            _value_after_modify = 0;
+            _valueAfterModifying = 0;
             _type = NumricModifierType.None;
             _modified = false;
         }
@@ -91,11 +91,11 @@ namespace Aquila.Numric
         /// <summary>
         /// 修正值
         /// </summary>
-        private float _value_after_modify = 0f;
+        private float _valueAfterModifying = 0f;
 
         /// <summary>
         /// 修改系数
         /// </summary>
-        private float _value_fac = 0f;
+        private float valueFac = 0f;
     }
 }

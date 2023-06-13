@@ -8,7 +8,7 @@ namespace Aquila.ObjectPool
     /// <summary>
     /// 对象池对象扩展基类,Target基于GameObject
     /// </summary>
-    public abstract class Aquila_Object_Base : ObjectBase
+    public abstract class Object_Base : ObjectBase
     {
         
         public virtual void Setup(GameObject go)
@@ -18,20 +18,20 @@ namespace Aquila.ObjectPool
         protected override void OnSpawn()
         {
             base.OnSpawn();
-            Target_GO = Target as GameObject;
-            if ( Target_GO == null )
+            _targetGameObject = Target as GameObject;
+            if ( _targetGameObject == null )
                 throw new GameFrameworkException( "faild to convert Target as GameObject!!!" );
 
-            Tools.SetActive( Target_GO, true );
+            Tools.SetActive( _targetGameObject, true );
         }
 
         protected override void OnUnspawn()
         {
             base.OnUnspawn();
-            if ( Target_GO == null )
+            if ( _targetGameObject == null )
                 return;
 
-            Tools.SetActive( Target_GO, false );
+            Tools.SetActive( _targetGameObject, false );
         }
 
         /// <summary>
@@ -39,16 +39,16 @@ namespace Aquila.ObjectPool
         /// </summary>
         protected override void Release( bool isShutdown )
         {
-            if ( Target_GO == null )
+            if ( _targetGameObject == null )
                 return;
 
-            Target_GO = null;
+            _targetGameObject = null;
             Object.Destroy( Target as GameObject );
         }
 
         /// <summary>
         /// target game object
         /// </summary>
-        protected GameObject Target_GO = null;
+        protected GameObject _targetGameObject = null;
     }
 }

@@ -17,16 +17,16 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( int target_state_id, object enter_param, object exit_param )
+        public bool SwitchTo( int targetStateID, object enterParam, object exitParam )
         {
             //没有持有该状态
-            if ( !ActorFsm.HasState( target_state_id ) )
+            if ( !ActorFsm.HasState( targetStateID ) )
             {
-                Debug.Log( "dosent has state:" + target_state_id );
+                Debug.Log( "dosent has state:" + targetStateID );
                 return false;
             }
 
-            ActorFsm.SwitchTo( target_state_id, enter_param, exit_param );
+            ActorFsm.SwitchTo( targetStateID, enterParam, exitParam );
 
 //#if UNITY_EDITOR
 //            var inspector = Actor.gameObject.GetComponent<ActorInspector>();
@@ -39,12 +39,12 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 转换状态
         /// </summary>
-        public bool SwitchTo( ActorStateTypeEnum type, object enter_param, object exit_param )
+        public bool SwitchTo( ActorStateTypeEnum type, object enterParam, object exitParam )
         {
-            return SwitchTo( ( int ) type, enter_param, exit_param );
+            return SwitchTo( ( int ) type, enterParam, exitParam );
         }
 
-        public override void Init( TActorBase actor, GameObject target_go, Transform target_transform )
+        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
         {
             base.Init( actor, target_go, target_transform );
         }
@@ -55,7 +55,7 @@ namespace Aquila.Fight.Addon
 
             ActorFsm = new ActorFSM();
             //ActorFsm.Setup( Actor );
-            ActorFsm.Setup( _actor_instance );
+            ActorFsm.Setup( instance );
 
             foreach ( var state in StateList )
                 ActorFsm.AddState( state );
@@ -73,7 +73,7 @@ namespace Aquila.Fight.Addon
         {
         }
 
-        public virtual T GetTypedActor<T>() where T : TActorBase
+        public virtual T GetTypedActor<T>() where T : Actor_Base
         {
             return Actor as T;
         }
@@ -113,7 +113,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// state list,放在第一个位置的state将成为默认进入的state
         /// </summary>
-        public virtual List<ActorStateBase> StateList { get; private set; } = new List<ActorStateBase>();
+        public virtual List<ActorState_Base> StateList { get; private set; } = new List<ActorState_Base>();
 
     }
 }

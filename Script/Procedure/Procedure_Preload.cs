@@ -76,16 +76,6 @@ namespace Aquila.Procedure
             // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
             _preloadFlag |= _tableLoadFinish;
             OnPreLoadFinished();
-            
-            return;
-
-            //---------------------------废弃代码----------------------------------
-            //加载数据表
-            //if ( !GameEntry.DataTable.LoadDataTable() )
-            //    throw new GameFrameworkException( "load data table faild!" );
-
-            //_preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit, false );
-            //OnPreLoadFinished();
         }
 
         /// <summary>
@@ -118,7 +108,7 @@ namespace Aquila.Procedure
             //默认创建四十个地块
             var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
 
-            Aquila_Object_Base[] obj_arr = new Aquila_Object_Base[default_create_count];
+            Object_Base[] obj_arr = new Object_Base[default_create_count];
             ObjectPool.Object_Terrain temp_obj = null;
             GameObject temp_go = null;
             var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;

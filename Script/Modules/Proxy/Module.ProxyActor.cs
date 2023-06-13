@@ -1,6 +1,5 @@
 using Aquila.Extension;
 using Aquila.Fight.Addon;
-using Aquila.Numric;
 using Cfg.Enum;
 
 namespace Aquila.Module
@@ -11,14 +10,13 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_ProxyActor : GameFrameworkModuleBase
     {
-        #region pub
-        
+        //-----------------------pub-----------------------
         /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
-        public (bool succ, float value) GetCorrectionAttr( int actor_id, Actor_Attr type )
+        public (bool succ, float value) GetCorrectionAttr( int actorID, Actor_Attr type )
         {
-            var res = TryGet( actor_id );
+            var res = TryGet( actorID );
             if(!res.has)
                 return (false,0f);
 
@@ -28,18 +26,16 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor的对应基础属性
         /// </summary>
-        public (bool succ, float value) GetActorBaseAttr( int actor_id , Actor_Attr type )
+        public (bool succ, float value) GetActorBaseAttr( int actorID , Actor_Attr type )
         {
-            var res = TryGet( actor_id );
+            var res = TryGet( actorID );
             if ( !res.has )
                 return (false, 0f);
 
             return res.instance.GetAddon<Addon_BaseAttrNumric>().GetBaseValue( type );
         }
 
-        #endregion
-
-        #region override
+        //----------------------- override-----------------------
 
         public override void Start( object param )
         {
@@ -60,8 +56,5 @@ namespace Aquila.Module
         }
 
         protected override bool Contains_Sub_Module => false;
-
-        #endregion
     }
-
 }

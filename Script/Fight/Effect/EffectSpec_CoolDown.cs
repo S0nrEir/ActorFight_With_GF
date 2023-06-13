@@ -9,7 +9,7 @@ namespace Aquila.Fight
     {
         public EffectSpec_CoolDown(Table_Effect meta) : base(meta)
         {
-            _total_duration = meta.ExtensionParam.FloatParam_1;
+            _totalDuration = meta.ExtensionParam.FloatParam_1;
             _remain = 0f;
         }
         
@@ -21,7 +21,7 @@ namespace Aquila.Fight
         /// <summary>
         /// cool down
         /// </summary>
-        public float _total_duration = 0f;
+        public float _totalDuration = 0f;
     }
    
 }

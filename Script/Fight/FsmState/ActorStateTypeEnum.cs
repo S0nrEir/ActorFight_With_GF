@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Aquila.Fight.FSM
+﻿namespace Aquila.Fight.FSM
 {
     /// <summary>
     /// Actor通用状态枚举

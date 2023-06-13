@@ -16,10 +16,10 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool IsReachDestination()
         {
-            if ( !_open_flag )
+            if ( !_openFlag )
                 return false;
 
-            var isReached = ( TargetTransform.position - _target_pos ).sqrMagnitude <= StopDistance;
+            var isReached = ( TargetTransform.position - _targetPos ).sqrMagnitude <= StopDistance;
             return isReached;
         }
 
@@ -35,7 +35,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置目标点
         /// </summary>
-        public void SetDestination( Vector3 target_pos )
+        public void SetDestination( Vector3 targetPos )
         {
             //var navPath = new NavMeshPath();
             //var isFoundPath = NavMesh.CalculatePath( Actor.CachedTransform.position, targetPos, NavMesh.AllAreas, navPath );
@@ -51,12 +51,12 @@ namespace Aquila.Fight.Addon
 
             _agent.isStopped = false;
             //_agent.SetPath( navPath );
-            _target_pos = target_pos;
+            _targetPos = targetPos;
 
             SetStopDistance( .001f );
-            _open_flag = true;
+            _openFlag = true;
             //_agent.SetPath( navPath );
-            _agent.SetDestination( _target_pos );
+            _agent.SetDestination( _targetPos );
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Aquila.Fight.Addon
             if ( !_agent.isOnNavMesh )
                 return;
 
-            Warp( _target_pos );
+            Warp( _targetPos );
             StopInmidiate();
         }
 
@@ -106,7 +106,7 @@ namespace Aquila.Fight.Addon
 
             _agent.ResetPath();
             _agent.isStopped = true;
-            _target_pos = Vector3.zero;
+            _targetPos = Vector3.zero;
         }
 
         //------------------------override------------------------
@@ -148,8 +148,8 @@ namespace Aquila.Fight.Addon
             base.Reset();
             SetStopDistance( 1f );
             SetSpeed( 1f );
-            _target_pos = Vector3.zero;
-            _open_flag   = false;
+            _targetPos = Vector3.zero;
+            _openFlag   = false;
 
             //if ( !Actor.TryGetAddon<Addon_Data>( out var _dataAddon ) )
             //    _agent.speed = 1f;
@@ -159,12 +159,12 @@ namespace Aquila.Fight.Addon
             //}
         }
 
-        private bool _open_flag = false;
+        private bool _openFlag = false;
 
         /// <summary>
         /// 目标点
         /// </summary>
-        private Vector3 _target_pos;
+        private Vector3 _targetPos;
 
         /// <summary>
         /// 停止距离

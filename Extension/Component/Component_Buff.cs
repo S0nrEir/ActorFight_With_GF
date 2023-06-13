@@ -83,7 +83,7 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 应用一个缓存buff
         /// </summary>
-        public void ApplyCachedBuff( TActorBase actor )
+        public void ApplyCachedBuff( Actor_Hero actor )
         {
             if ( actor is null )
                 return;
