@@ -21,7 +21,7 @@ namespace Aquila.Procedure
         /// </summary>
         public void NotifyFlag(int flag)
         {
-            _preload_flags |= flag;
+            _preloadFlag |= flag;
             OnPreLoadFinished();
         }
 
@@ -30,7 +30,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void OnPreLoadFinished()
         {
-            if ( _preload_flags != _preload_state_finish )
+            if ( _preloadFlag != _preloadStateFinish )
                 return;
 
             System.GC.Collect();
@@ -49,7 +49,7 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _preload_flags = _preload_state_init;
+            _preloadFlag = _preloadStateInit;
 
             PreLoadTables();
             PreLoadObejct();
@@ -74,7 +74,7 @@ namespace Aquila.Procedure
         private void PreLoadTables()
         {
             // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
-            _preload_flags |= _table_load_finish;
+            _preloadFlag |= _tableLoadFinish;
             OnPreLoadFinished();
             
             return;
@@ -145,7 +145,7 @@ namespace Aquila.Procedure
 
             obj_arr = null;
             // _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
-            _preload_flags |= _terrain_load_finish;
+            _preloadFlag |= _terrainLoadFinish;
             OnPreLoadFinished();
         }
 
@@ -169,8 +169,8 @@ namespace Aquila.Procedure
                 var scene_script_meta = GameEntry.DataTable.Table<Scripts>().Get( 10000 );
                 procedure_variable.SetValue( new Procedure_Fight_Data()
                 {
-                    _scene_script_meta = scene_script_meta,
-                    _chunk_name = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
+                    _sceneScriptMeta = scene_script_meta,
+                    _chunkName = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
                 } );
                 _procedureOwner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
                 ChangeState<Procedure_Fight>( _procedureOwner );
@@ -190,31 +190,37 @@ namespace Aquila.Procedure
         /// <summary>
         /// 各个资源模块的加载标记
         /// </summary>
-        private int _preload_flags = 0;
+        private int _preloadFlag = 0;
 
         /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preload_state_finish = 0b_0000_0111;
+        private const int _preloadStateFinish = 0b_0000_0111;
 
         /// <summary>
         /// 预加载初始化标记
         /// </summary>
-        private const int _preload_state_init = 0b_0000_0000_0000;
+        private const int _preloadStateInit = 0b_0000_0000_0000;
 
         /// <summary>
         /// 地块加载完成标记
         /// </summary>
-        private const int _terrain_load_finish = 0b_0000_0000_0001;
+        private const int _terrainLoadFinish = 0b_0000_0000_0001;
 
         /// <summary>
         /// 数据表加载完成
         /// </summary>
-        private const int _table_load_finish = 0b_0000_0000_0010;
+        private const int _tableLoadFinish = 0b_0000_0000_0010;
 
-        
-        public const int _infoboard_hpbar_load_finish = 0b_0000_0000_0100;
-        public const int _infoboard_dmgnumber_load_finish = 0b_0000_0000_1000;
+        /// <summary>
+        /// hpbar加载完成
+        /// </summary>
+        public const int _infoboardHPBarLoadFinish = 0b_0000_0000_0100;
+
+        /// <summary>
+        /// 伤害数字加载完成
+        /// </summary>
+        public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_1000;
         
         /// <summary>
         /// 状态机拥有者
