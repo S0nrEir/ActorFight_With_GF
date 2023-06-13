@@ -13,49 +13,32 @@ namespace Aquila.Module
     public class Module_Actor_Fac : GameFrameworkModuleBase
     {
         //--------------------public--------------------
-        /// <summary>
-        /// 获取一个actor，获取的地方移到了Proxy_Actor，这里不用了
-        /// </summary>
-        //public T GetActor<T>( int actor_id ) where T: TActorBase
-        //{
-        //    if ( !_open_flag )
-        //    {
-        //        Log.Error( "!_open_flag" );
-        //        return null;
-        //    }
-
-        //    if ( _actor_cache_dic is null || _actor_cache_dic.Count == 0 )
-        //        return null;
-
-        //    _actor_cache_dic.TryGetValue( actor_id, out var actor );
-        //    return actor as T;
-        //}
 
         /// <summary>
         /// 异步显示一个actor，注意，调用该接口前使用await关键字进行等待
         /// </summary>
         public async Task<Entity> ShowActorAsync<T>
             (
-                int role_meta_id,
-                int actor_id,
-                string asset_path,
+                int roleMetaID,
+                int actorID,
+                string assetPath,
                 int grid_x,
                 int grid_z,
-                object user_data
+                object userData
             ) where T : Actor_Base
         {
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
                     GameEntry.Entity,
-                    actor_id,
+                    actorID,
                     typeof( T ),
-                    asset_path,
+                    assetPath,
                     Config.GameConfig.Entity.GROUP_HERO_ACTOR,
                     Config.GameConfig.Entity.PRIORITY_ACTOR,
-                    user_data
+                    userData
                 );
             //#todo_根据actor类型决定传入函数的tag值，不要写死
-            OnShowActorSucc( result.Logic as Actor_Base, role_meta_id, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
+            OnShowActorSucc( result.Logic as Actor_Base, roleMetaID, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
             OnShowActorSuccBasedOnTerrain( result.Logic as Actor_Base, grid_x, grid_z );
             return result;
         }
@@ -63,7 +46,7 @@ namespace Aquila.Module
         /// <summary>
         /// actor生成回调
         /// </summary>
-        private void OnShowActorSucc( Actor_Base actor, int role_meta_id, string tag )
+        private void OnShowActorSucc( Actor_Base actor, int roleMetaID, string tag )
         {
             //actor.Setup( role_meta_id, tag );
         }

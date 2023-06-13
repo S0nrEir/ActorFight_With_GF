@@ -14,7 +14,7 @@ namespace Aquila.Module
     /// </summary>
     public class Module_Terrain : GameFrameworkModuleBase
     {
-        #region public
+        //-----------------------public-----------------------
 
         public override void Start( object param )
         {
@@ -26,7 +26,7 @@ namespace Aquila.Module
             GameEntry.Lua.Load( meta );
             //GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ), GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
 
-            _gen_flag = true;
+            _genFlag = true;
         }
 
         public override void End()
@@ -34,7 +34,7 @@ namespace Aquila.Module
             RemoveAll();
             //GameEntry.Lua.UnLoad( GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
             GameEntry.Lua.UnLoadAllRunningData();
-            _gen_flag = false;
+            _genFlag = false;
             base.End();
         }
 
@@ -44,27 +44,27 @@ namespace Aquila.Module
         /// </summary>
         private void GenerateFightSceneTerrain( int x_width, int z_width )
         {
-            if ( _gen_flag )
+            if ( _genFlag )
             {
                 Log.Info( $"already generate terrain!", LogColorTypeEnum.Orange );
                 return;
             }
 
             EnsureInit();
-            _terrain_cache_dic.Clear();
-            _terrain_go_cache_dic.Clear();
+            _terrainCacheDic.Clear();
+            _terrainGoCacheDic.Clear();
             Object_Terrain terrain = null;
             var pool = GameEntry.ObjectPool.GetObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
-            var x_offset = 0f;
-            var z_offset = 0f;
+            var xOffset = 0f;
+            var zOffset = 0f;
             var scene_config = GameEntry.DataTable.Tables.SceneConfig;
             for ( int z = 0; z < z_width; z++ )
             {
-                z_offset = scene_config.Terrain_Block_Offset_Distance * z;
-                x_offset = 0f;
+                zOffset = scene_config.Terrain_Block_Offset_Distance * z;
+                xOffset = 0f;
                 for ( int x = 0; x < x_width; x++ )
                 {
-                    x_offset = scene_config.Terrain_Block_Offset_Distance * x;
+                    xOffset = scene_config.Terrain_Block_Offset_Distance * x;
                     terrain = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
                     //safety chk
                     if ( terrain == null )
@@ -76,7 +76,7 @@ namespace Aquila.Module
                     terrain.SetParent( Root_GO.transform );
                     terrain.SetCoordinate( x, z );
                     terrain.SetHeight( 0 );
-                    terrain.SetLocalPosition( x_offset, z_offset );
+                    terrain.SetLocalPosition( xOffset, zOffset );
                     terrain.SetState( TerrainStateTypeEnum.NONE );
                     AddToCache( terrain );
                 }
@@ -88,15 +88,15 @@ namespace Aquila.Module
         /// </summary>
         private void RemoveAll()
         {
-            if ( _terrain_go_cache_dic != null )
-                _terrain_go_cache_dic.Clear();
+            if ( _terrainGoCacheDic != null )
+                _terrainGoCacheDic.Clear();
 
-            if ( _terrain_cache_dic != null )
+            if ( _terrainCacheDic != null )
             {
-                foreach( var kv in _terrain_cache_dic )
+                foreach( var kv in _terrainCacheDic )
                     RemoveFromCache( kv.Key );
 
-                _terrain_cache_dic.Clear();
+                _terrainCacheDic.Clear();
             }
         }
 
@@ -113,7 +113,7 @@ namespace Aquila.Module
         /// </summary>
         public Object_Terrain Get( int uniqueKey )
         {
-            _terrain_cache_dic.TryGetValue( uniqueKey, out var terrain );
+            _terrainCacheDic.TryGetValue( uniqueKey, out var terrain );
             return terrain;
         }
 
@@ -125,13 +125,11 @@ namespace Aquila.Module
             if ( go == null )
                 return null;
 
-            _terrain_go_cache_dic.TryGetValue( go, out var terrain );
+            _terrainGoCacheDic.TryGetValue( go, out var terrain );
             return terrain;
         }
 
-        #endregion
-
-        #region private 
+        //-----------------------private----------------------- 
 
         /// <summary>
         /// 从地块缓存中移除
@@ -144,7 +142,7 @@ namespace Aquila.Module
 
             var pool = GameEntry.ObjectPool.GetObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
             pool.Unspawn( terrain.Target );
-            return _terrain_cache_dic.Remove( key );
+            return _terrainCacheDic.Remove( key );
         }
 
         /// <summary>
@@ -159,47 +157,46 @@ namespace Aquila.Module
             if ( go == null )
                 return false;
 
-            if ( _terrain_cache_dic.ContainsKey( terrain.UniqueKey ) || _terrain_go_cache_dic.ContainsKey( go ) )
+            if ( _terrainCacheDic.ContainsKey( terrain.UniqueKey ) || _terrainGoCacheDic.ContainsKey( go ) )
                 return false;
 
-            _terrain_cache_dic.Add( terrain.UniqueKey, terrain );
-            _terrain_go_cache_dic.Add( go, terrain );
+            _terrainCacheDic.Add( terrain.UniqueKey, terrain );
+            _terrainGoCacheDic.Add( go, terrain );
             return true;
         }
-
-        #endregion
-
+        
+        //-----------------------override-----------------------
         public override void OnClose()
         {
-            _root_go = null;
-            _terrain_cache_dic?.Clear();
-            Log.Info( "_terrain_cache_dic?.Clear()", LogColorTypeEnum.White );
-            _terrain_cache_dic = null;
+            _rootGameObject = null;
+            _terrainCacheDic?.Clear();
+            Log.Info( "_terrainCacheDic?.Clear()", LogColorTypeEnum.White );
+            _terrainCacheDic = null;
 
-            _terrain_go_cache_dic?.Clear();
-            _terrain_go_cache_dic = null;
+            _terrainGoCacheDic?.Clear();
+            _terrainGoCacheDic = null;
         }
 
         public override void EnsureInit()
         {
             var scene_config = GameEntry.DataTable.Tables.SceneConfig;
             var size = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width;
-            if ( _terrain_cache_dic is null )
-                _terrain_cache_dic = new Dictionary<int, Object_Terrain>( size );
+            if ( _terrainCacheDic is null )
+                _terrainCacheDic = new Dictionary<int, Object_Terrain>( size );
 
-            if ( _terrain_go_cache_dic is null )
-                _terrain_go_cache_dic = new Dictionary<GameObject, Object_Terrain>( size );
+            if ( _terrainGoCacheDic is null )
+                _terrainGoCacheDic = new Dictionary<GameObject, Object_Terrain>( size );
         }
 
         /// <summary>
         /// 地块缓存
         /// </summary>
-        private Dictionary<int, Object_Terrain> _terrain_cache_dic = null;
+        private Dictionary<int, Object_Terrain> _terrainCacheDic = null;
 
         /// <summary>
         /// 地块gameobject索引
         /// </summary>
-        private Dictionary<GameObject, Object_Terrain> _terrain_go_cache_dic = null;
+        private Dictionary<GameObject, Object_Terrain> _terrainGoCacheDic = null;
 
         /// <summary>
         /// 所有地块的根节点
@@ -208,32 +205,32 @@ namespace Aquila.Module
         {
             get
             {
-                if ( _root_go == null )
+                if ( _rootGameObject == null )
                 {
                     //拿不到就找
-                    _root_go = GameObject.FindGameObjectWithTag( GameConfig.Tags.TERRAIN_ROOT );
+                    _rootGameObject = GameObject.FindGameObjectWithTag( GameConfig.Tags.TERRAIN_ROOT );
                     //找不到就创建
-                    if ( _root_go == null )
+                    if ( _rootGameObject == null )
                     {
-                        _root_go = new GameObject( GameConfig.Tags.TERRAIN_ROOT );
-                        _root_go.transform.position = Vector3.zero;
-                        _root_go.transform.localScale = Vector3.one;
-                        _root_go.transform.rotation = Quaternion.Euler( Vector3.zero );
-                        Object.DontDestroyOnLoad( _root_go );
+                        _rootGameObject                      = new GameObject( GameConfig.Tags.TERRAIN_ROOT );
+                        _rootGameObject.transform.position   = Vector3.zero;
+                        _rootGameObject.transform.localScale = Vector3.one;
+                        _rootGameObject.transform.rotation   = Quaternion.Euler( Vector3.zero );
+                        Object.DontDestroyOnLoad( _rootGameObject );
                     }
                 }
-                return _root_go;
+                return _rootGameObject;
             }
         }
 
         /// <summary>
         /// 地块根节点
         /// </summary>
-        private GameObject _root_go = null;
+        private GameObject _rootGameObject = null;
 
         /// <summary>
         /// 生成标记
         /// </summary>
-        private bool _gen_flag = false;
+        private bool _genFlag = false;
     }//end of class
 }

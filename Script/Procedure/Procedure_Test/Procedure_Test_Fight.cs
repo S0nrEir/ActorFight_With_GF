@@ -67,9 +67,9 @@ namespace Aquila.Procedure
             _actor_id_1 = ActorIDPool.Gen();
             var entity_1 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
-                    role_meta_id: 1,
-                    actor_id: _actor_id_1,
-                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
+                    1,
+                    _actor_id_1,
+                    @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
                     grid_x: 0,
                     grid_z: 0,
                     new HeroActorEntityData( _actor_id_1 ) { _roleMetaID = 1 }
@@ -79,9 +79,9 @@ namespace Aquila.Procedure
             _actor_id_2 = ActorIDPool.Gen();
             var entity_2 = await actor_fac.ShowActorAsync<Actor_Hero>
                 (
-                    role_meta_id: 2,
-                    actor_id: _actor_id_2,
-                    asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                    2,
+                    _actor_id_2,
+                    @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                     grid_x: 1,
                     grid_z: 1,
                     new HeroActorEntityData( _actor_id_2 ) { _roleMetaID = 2 }
@@ -91,9 +91,9 @@ namespace Aquila.Procedure
             _actor_id_3 = ActorIDPool.Gen();
             var entity_3 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
-                role_meta_id: 2,
-                actor_id: _actor_id_3,
-                asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                2,
+                _actor_id_3,
+                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x: 1,
                 grid_z: 1,
                 new HeroActorEntityData( _actor_id_3 ) { _roleMetaID = 2 }
@@ -103,9 +103,9 @@ namespace Aquila.Procedure
             _actor_id_4 = ActorIDPool.Gen();
             var entity_4 = await actor_fac.ShowActorAsync<Actor_Hero>
             (
-                role_meta_id: 2,
-                actor_id: _actor_id_4,
-                asset_path: @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
+                2,
+                _actor_id_4,
+                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
                 grid_x: 1,
                 grid_z: 1,
                 new HeroActorEntityData( _actor_id_4 ) { _roleMetaID = 2 }
@@ -145,7 +145,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 场景回调
         /// </summary>
-        private void OnSceneLoaded( Scene scene_, LoadSceneMode mode_ )
+        private void OnSceneLoaded( Scene scene, LoadSceneMode mode )
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             _load_flag_curr_state = Tools.OrBitValue( _load_flag_curr_state, _load_flag_scene );
