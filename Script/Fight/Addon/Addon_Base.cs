@@ -35,6 +35,9 @@ namespace Aquila.Fight.Addon
         }
 
         //#todo_把所有别的版本的adodn init函数替换为下面的Init函数
+        /// <summary>
+        /// addon的初始化，addon的数据初始化在这里做
+        /// </summary>
         public virtual void Init( Module_ProxyActor.ActorInstance instance)
         {
             _actor_instance = instance;

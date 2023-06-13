@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
@@ -20,8 +20,8 @@ namespace Aquila.Fight.FSM
 
         public virtual void Dispose ()
         {
-            _fsm = null;
-            _actor = null;
+            _fsm     = null;
+            _actor   = null;
             _stateID = -1;
         }
 

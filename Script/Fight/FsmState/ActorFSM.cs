@@ -52,7 +52,7 @@ namespace Aquila.Fight.FSM
                 return false;
             }
 
-            state.Init( this, _actor );
+            state.Init( this, _instance.Actor );
             _stateDic.Add( state._stateID, state );
             return true;
         }
