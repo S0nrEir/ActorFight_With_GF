@@ -48,9 +48,9 @@ namespace Aquila.Module
     public partial class Module_ProxyActor
     {
         /// <summary>
-        /// 将一个effect施加到actor上
+        /// 生效技能或effect
         /// </summary>
-        public void ApplyEffect2Actor( int castorID, int targetID, int abilityID )
+        public void AffectAbility( int castorID, int targetID, int abilityID )
         {
             var result = ReferencePool.Acquire<AbilityResult_Hit>();
             result._dealedDamage = 0;
@@ -82,6 +82,9 @@ namespace Aquila.Module
             addon.UseAbility( abilityID, targetInstance.instance, result );
             GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
 
+            GameEntry.Event.Fire(castorInstance,EventArg_OnHitAbility.Create(result));
+            ReferencePool.Release(result);
+            
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
         }

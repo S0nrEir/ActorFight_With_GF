@@ -78,7 +78,7 @@ namespace Aquila.Fight.FSM
                     return;
                 }
                 //continue:这里走公用接口，将效果施加到actor上
-                GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect2Actor( _castorID, _targetID, _abilityMeta.id );
+                GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, _targetID, _abilityMeta.id );
                 _abilityFinishFlag = true;
             }
         }
