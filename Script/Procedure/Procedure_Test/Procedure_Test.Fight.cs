@@ -157,7 +157,7 @@ namespace Aquila.Procedure
             LoadScene();
             LoadActor();
             //加载临时输入配置
-            GameEntry.Resource.LoadAsset( @"Assets/Samples/Input System/1.3.0/Simple Demo/SimpleControls.inputactions", new LoadAssetCallbacks
+            GameEntry.Resource.LoadAsset( @"Assets/Samples/InputSystem/1_3_0/SimpleDemo/SimpleControls.inputactions", new LoadAssetCallbacks
                 (
                     //succ callback
                     ( assetName, asset, duration, userData ) =>
