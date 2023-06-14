@@ -82,8 +82,8 @@ namespace Aquila.Module
             addon.UseAbility( abilityID, targetInstance.instance, result );
             GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
 
-            TryRefreshActorUI( castorInstance.instance );
-            TryRefreshActorUI( targetInstance.instance );
+            TryRefreshActorHPUI( castorInstance.instance );
+            TryRefreshActorHPUI( targetInstance.instance );
         }
 
         /// <summary>
@@ -124,11 +124,12 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 尝试刷新Actor对应的UI，比如头顶的血条之类的
+        /// 尝试刷新actor头顶的血条UI
         /// </summary>
-        public void TryRefreshActorUI( ActorInstance instance )
+        public void TryRefreshActorHPUI( ActorInstance instance )
         {
-
+            var addon = instance.GetAddon<Addon_HP>();
+            addon.Refresh();
         }
     }
 }

@@ -61,8 +61,8 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (bool setSucc, float valueAfterSet) SetCurrHP(float valueToSet)
         {
-            _hp.SetBaseVal(valueToSet);
-            return (true, _hp.CorrectionValue);
+            _currHP.SetBaseVal(valueToSet);
+            return (true, _currHP.CorrectionValue);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (bool setSucc, float valueAfterSet) SetCurrMP(float valueToSet)
         {
-            _mp.SetBaseVal(valueToSet);
-            return (true, _mp.CorrectionValue);
+            _currMP.SetBaseVal(valueToSet);
+            return (true, _currMP.CorrectionValue);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public float GetCurrHPCorrection()
         {
-            return _hp.CorrectionValue;
+            return _currHP.CorrectionValue;
         }
 
         /// <summary>
@@ -87,13 +87,13 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public float GetCurrMPCorrection()
         {
-            return _mp.CorrectionValue;
+            return _currMP.CorrectionValue;
         }
 
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool getSucc, float value) GetCorrectionFinalValue( Actor_Attr type ,float default_value = 0f)
+        public (bool getSucc, float value) GetCorrectionFinalValue( Actor_Base_Attr type ,float default_value = 0f)
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -105,7 +105,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个装备类型的数值修饰器
         /// </summary>
-        public bool SetEquipModifier( Actor_Attr type, Numric_Modifier modifier )
+        public bool SetEquipModifier( Actor_Base_Attr type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -117,7 +117,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个buff类型的数值修饰器
         /// </summary>
-        public bool SetBuffModifier( Actor_Attr type, Numric_Modifier modifier )
+        public bool SetBuffModifier( Actor_Base_Attr type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -129,7 +129,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个职业修正的数值修饰器
         /// </summary>
-        public bool SetClassModifier( Actor_Attr type, Numric_Modifier modifier )
+        public bool SetClassModifier( Actor_Base_Attr type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -161,12 +161,13 @@ namespace Aquila.Fight.Addon
         {
             //现在是写死的，很蛋疼
             var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
-            //max hp
+            //max hp & curr hp
             var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );
             SetCurrHP(res.valueAfterSet);
-            //mp
+            //max mp & curr mp
             res = SetBaseValue( Actor_Base_Attr.MP, meta.MP );
             SetCurrMP(res.valueAfterSet);
+            
             //str
             SetBaseValue( Actor_Base_Attr.STR, meta.STR );
             //def
@@ -177,11 +178,6 @@ namespace Aquila.Fight.Addon
             SetBaseValue( Actor_Base_Attr.MVT, meta.MVT );
             //spw
             SetBaseValue( Actor_Base_Attr.SPW, meta.SPW );
-            
-            //curr mp
-            // SetBaseValue( Actor_Attr.Curr_MP, meta.MP );
-            // //curr hp
-            // SetBaseValue( Actor_Attr.Curr_HP, meta.HP );
         }
 
         /// <summary>
@@ -228,10 +224,10 @@ namespace Aquila.Fight.Addon
                 }
                 _numricArr = null;
             }
-            ReferencePool.Release(_hp);
-            ReferencePool.Release(_mp);
-            _hp = null;
-            _mp = null;
+            ReferencePool.Release(_currHP);
+            ReferencePool.Release(_currMP);
+            _currHP = null;
+            _currMP = null;
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BASEATTR;
@@ -250,8 +246,8 @@ namespace Aquila.Fight.Addon
                     Log.Warning( "Numric arr not not null on add!" );
             }
 
-            _hp = ReferencePool.Acquire<Numric.Numric>();
-            _mp = ReferencePool.Acquire<Numric.Numric>();
+            _currHP = ReferencePool.Acquire<Numric.Numric>();
+            _currMP = ReferencePool.Acquire<Numric.Numric>();
         }
 
         //----------------------------fields----------------------------
@@ -263,11 +259,11 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 血量
         /// </summary>
-        private Numric.Numric _hp = null;
+        private Numric.Numric _currHP = null;
         
         /// <summary>
         /// 魔法
         /// </summary>
-        private Numric.Numric _mp = null;
+        private Numric.Numric _currMP = null;
     }
 }
