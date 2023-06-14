@@ -80,7 +80,6 @@ namespace Aquila.Fight.Addon
 
         public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            base.OnUpdate(elapseSeconds, realElapseSeconds);
             ActorFsm.Update( elapseSeconds );
         }
 
