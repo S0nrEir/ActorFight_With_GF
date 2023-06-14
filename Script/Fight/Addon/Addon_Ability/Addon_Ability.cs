@@ -91,7 +91,7 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(Actor.RoleMetaID);
+            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(_actorInstance.Actor.RoleMetaID);
             if (roleMeta is null)
             {
                 Log.Warning("Addon_Ability.Init()->role_meta is null");

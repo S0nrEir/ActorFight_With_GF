@@ -49,7 +49,6 @@ namespace Aquila.Fight.Addon
             base.Init( instance );
 
             ActorFsm = new ActorFSM();
-            //ActorFsm.Setup( Actor );
             ActorFsm.Setup( instance );
 
             foreach ( var state in StateList )
