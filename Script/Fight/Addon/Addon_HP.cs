@@ -1,4 +1,5 @@
 using Aquila.Fight.Actor;
+using Aquila.Module;
 using Aquila.ObjectPool;
 using Cfg.Enum;
 using UnityEngine;
@@ -54,15 +55,20 @@ namespace Aquila.Fight.Addon
         public override void Init(Actor_Base actor, GameObject target_go, Transform target_transform)
         {
             base.Init(actor, target_go, target_transform);
-            _actorTransform = _actorInstance.Actor.transform;
+        }
+
+        public override void Init(Module_ProxyActor.ActorInstance instance)
+        {
+            base.Init(instance);
             _hpObj = GameEntry.InfoBoard.GenHPBar();
+            Refresh();
         }
 
         public override void Dispose()
         {
             // GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
             GameEntry.InfoBoard.UnSpawn<Object_HPBar>(typeof(Object_HPBar).Name,_hpObj);
-            _hpObj          = null;
+            _hpObj           = null;
             _actorTransform  = null;
             base.Dispose();
         }
