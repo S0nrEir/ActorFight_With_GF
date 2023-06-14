@@ -17,20 +17,15 @@ namespace Aquila.Fight.Addon
         {
             CurrClipName = string.Empty;
         }
-
-        public override void Init ( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
+        
+        public override void Init( Module_ProxyActor.ActorInstance instance )
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init( instance );
             //动画机是挂在GameObject上的,制作GameObject的时候手动加上去，这里只尝试获取
             _animator = Tools.GetComponent<Animator>( Actor.gameObject );
 
             if ( _animator == null )
                 Debug.LogError( "<color=red>faild to get animator</color>" );
-        }
-
-        public override void Init( Module_ProxyActor.ActorInstance instance )
-        {
-            base.Init( instance );
         }
 
         public override void Dispose ()

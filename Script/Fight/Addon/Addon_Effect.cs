@@ -2,6 +2,7 @@ using Aquila.Config;
 using Aquila.Fight.Actor;
 using System;
 using System.Collections.Generic;
+using Aquila.Module;
 using UGFExtensions.Await;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -128,9 +129,9 @@ namespace Aquila.Fight.Addon
         //------------------------override------------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.EFFECT;
 
-        public override void Init( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init(Module_ProxyActor.ActorInstance instance)
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init(instance);
         }
 
         public override void Dispose()

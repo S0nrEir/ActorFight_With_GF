@@ -140,19 +140,6 @@ namespace Aquila.Fight.Addon
         
 
         //----------------------priv----------------------
-        /// <summary>
-        /// 取消所有修正，重置数值为未修正的状态
-        /// </summary>
-        private void ResetNumricArr()
-        {
-            var meta = GameEntry.DataTable.Table<Cfg.Role.RoleMeta>().Get( Actor.RoleMetaID );
-            if ( meta is null )
-            {
-                Log.Warning( $"<color=yellow>meta is null,meta id = {Actor.RoleMetaID}</color>" );
-                return;
-            }
-            SetBaseAttr( meta );
-        }
 
         /// <summary>
         /// 设置基础属性
@@ -202,12 +189,14 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
-            ResetNumricArr();
-        }
-
-        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
-        {
-            base.Init( actor, target_go, target_transform );
+            //修改所有数值为为修正的状态
+            var meta = GameEntry.DataTable.Table<Cfg.Role.RoleMeta>().Get( _actorInstance.Actor.RoleMetaID );
+            if ( meta is null )
+            {
+                Log.Warning( $"<color=yellow>meta is null,meta id = {_actorInstance.Actor.RoleMetaID}</color>" );
+                return;
+            }
+            SetBaseAttr( meta );
         }
 
         public override void Dispose()
