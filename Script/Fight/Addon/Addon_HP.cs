@@ -61,6 +61,7 @@ namespace Aquila.Fight.Addon
         {
             base.Init(instance);
             _hpObj = GameEntry.InfoBoard.GenHPBar();
+            _actorTransform = instance.Actor.transform;
             Refresh();
         }
 
