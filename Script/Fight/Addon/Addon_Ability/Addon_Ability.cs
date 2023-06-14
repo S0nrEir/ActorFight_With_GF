@@ -3,6 +3,7 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using Cfg.Fight;
 using GameFramework;
+using UnityEditor;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -23,6 +24,8 @@ namespace  Aquila.Fight.Addon
             if (spec is null)
             {
                 Log.Warning("<color=yellow>Addon_Ability.UseAbility--->spec is null</color>");
+                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityHitResultTypeEnum.NONE_SPEC, true);
                 return false;
             }
 

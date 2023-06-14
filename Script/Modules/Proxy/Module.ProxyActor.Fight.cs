@@ -90,6 +90,47 @@ namespace Aquila.Module
         }
 
         /// <summary>
+        /// 单对多释放技能
+        /// </summary>
+        public void Ability2MultiTarget(int castorID, int[] targetIDArr, int abilityMetaID)
+        {
+            AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
+            result._abilityID = abilityMetaID;
+            var castorInstance = Get(castorID);
+            if (castorInstance == null)
+            {
+                result._succ = false;
+                result._stateDescription = 0;
+                result._castorID = -1;
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                ReferencePool.Release( result );
+                return;
+            }
+            result._castorID = castorID;
+
+            var eventArg = EventArg_OnUseAblity.Create(result);
+            foreach (var targetID in targetIDArr)
+            {
+                //拿不到target
+                if (Get(targetID) == null)
+                {
+                    result._targetID = -1;
+                    result._stateDescription = Tools.SetBitValue(eventArg._resultParam._stateDescription,(int)AbilityUseResultTypeEnum.NO_TARGET, true);
+                    eventArg._resultParam = result;
+                    GameEntry.Event.Fire(this,eventArg);
+                    continue;
+                }
+                eventArg._resultParam._targetID = targetID;
+                (castorInstance.Actor as IDoAbilityBehavior)?.UseAbility( result );
+                eventArg._resultParam = result;
+                GameEntry.Event.Fire(this,eventArg);
+            }
+            ReferencePool.Release( result );
+        }
+
+        /// <summary>
         /// 单对单释放技能
         /// </summary>
         public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID )

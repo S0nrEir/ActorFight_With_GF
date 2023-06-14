@@ -68,11 +68,15 @@ namespace Aquila.Fight
                 _cdEffect._remain = _cdEffect._totalDuration;
 
             //扣除cost
-            if ( _costEffect != null )
+            if (_costEffect != null)
                 _costEffect.Apply( _owner, result );
 
-            foreach ( var effect in _effectList )
+            foreach (var effect in _effectList)
+            {
                 effect.Apply( effect.Meta.Target == 1 ? target : _owner, result );
+                result._stateDescription =
+                    Tools.SetBitValue(result._stateDescription, (int)AbilityHitResultTypeEnum.HIT, true);
+            }
 
             if ( !OnAfterAbility( result ) )
                 return false;
