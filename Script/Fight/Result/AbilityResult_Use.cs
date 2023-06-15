@@ -26,8 +26,7 @@ namespace Aquila.Event
                    !Tools.GetBitValue( _stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) &&
                    !Tools.GetBitValue( _stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET );
         }
-
-
+        
         public void Clear()
         {
         }
@@ -43,9 +42,9 @@ namespace Aquila.Event
         public int _castorID;
 
         /// <summary>
-        /// 目标ID
+        /// 目标ID集合
         /// </summary>
-        public int _targetID;
+        public int[] _targetIDArr;
 
         /// <summary>
         /// 技能ID
