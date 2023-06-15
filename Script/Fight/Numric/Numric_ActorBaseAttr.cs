@@ -94,16 +94,17 @@ namespace Aquila.Numric
 
         
         /// <summary>
-        /// 遍历一个修饰器集合并返回修正后的值
+        /// 遍历一个修饰器集合并返回修正后的值（变化后的值）
         /// </summary>
         private float Enumrate( float val, GameFrameworkLinkedList<Numric_Modifier> linked_list )
         {
             var iter = linked_list.GetEnumerator();
+            var changedVal = 0f;
             while ( iter.MoveNext() )
-                val += iter.Current.Calc( _value );
+                changedVal += iter.Current.Calc( _value );
 
             iter.Dispose();
-            return val;
+            return changedVal;
         }
 
         private void EnsureInit( )

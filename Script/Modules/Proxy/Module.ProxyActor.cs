@@ -14,7 +14,7 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
-        public (bool succ, float value) GetCorrectionAttr( int actorID, Actor_Attr type )
+        public (bool succ, float value) GetCorrectionAttr( int actorID, Actor_Base_Attr type )
         {
             var res = TryGet( actorID );
             if(!res.has)

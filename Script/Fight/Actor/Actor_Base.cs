@@ -278,11 +278,8 @@ namespace Aquila.Fight.Actor
             foreach ( var addon in addons )
             {
                 addon.Init( instance );
-                //#todo:找时间删掉下面版本的init函数，只保留上面的
-                addon.Init( this, gameObject, CachedTransform );
                 addon.Reset();
             }
-            // Reset();
         }
 
         /// <summary>

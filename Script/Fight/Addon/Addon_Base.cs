@@ -18,15 +18,7 @@ namespace Aquila.Fight.Addon
         }
         
         public abstract AddonTypeEnum AddonType { get; }
-
-        public virtual void Init ( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
-        {
-            Actor            = actor;
-            TargetGameObject = targetGameObject;
-            TargetTransform  = targetTransform;
-        }
-
-        //#todo_把所有别的版本的adodn init函数替换为下面的Init函数
+        
         /// <summary>
         /// addon的初始化，addon的数据初始化在这里做
         /// </summary>

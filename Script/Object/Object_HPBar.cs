@@ -13,15 +13,22 @@ namespace Aquila.ObjectPool
         /// </summary>
         public void SetScreenPos(Vector3 pos)
         {
-            _hpBarItem.RectTransform.position = pos; 
+            _hpBarItem._rect.position = pos;
         }
 
         /// <summary>
-        /// 设置数值
+        /// 设置slider的值
         /// </summary>
         public void SetValue(int curr, int max)
         {
-            _hpBarItem.SetValue(curr,max);
+            if (_hpBarItem._hp_slider == null)
+            {
+                Log.Warning("<color=yellow>Object_HPBar.SetValue()--->_hp_slider == null</color>");
+                return;
+            }
+
+            _hpBarItem._hp_slider.value = (float)curr / max;
+            _hpBarItem._text_num.text = $"{curr}/{max}";
         }
 
         public override void Setup(GameObject go)
@@ -36,7 +43,7 @@ namespace Aquila.ObjectPool
         /// </summary>
         public float Value()
         {
-            return _hpBarItem.Value();  
+            return _hpBarItem._hp_slider.value;
         }
 
         protected override void OnSpawn()

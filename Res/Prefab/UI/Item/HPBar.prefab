@@ -450,6 +450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hp_slider: {fileID: 4333842522114898343}
   _text_num: {fileID: 1072352029}
+  _rect: {fileID: 8444741198148262553}
 --- !u!1 &8750608866099328003
 GameObject:
   m_ObjectHideFlags: 0

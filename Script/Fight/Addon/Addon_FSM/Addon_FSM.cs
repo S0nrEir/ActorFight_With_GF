@@ -44,17 +44,11 @@ namespace Aquila.Fight.Addon
             return SwitchTo( ( int ) type, enterParam, exitParam );
         }
 
-        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
-        {
-            base.Init( actor, target_go, target_transform );
-        }
-
         public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );
 
             ActorFsm = new ActorFSM();
-            //ActorFsm.Setup( Actor );
             ActorFsm.Setup( instance );
 
             foreach ( var state in StateList )
@@ -80,7 +74,6 @@ namespace Aquila.Fight.Addon
 
         public override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            base.OnUpdate(elapseSeconds, realElapseSeconds);
             ActorFsm.Update( elapseSeconds );
         }
 

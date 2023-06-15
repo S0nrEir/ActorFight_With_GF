@@ -3,6 +3,7 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using Cfg.Fight;
 using GameFramework;
+using UnityEditor;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -23,6 +24,8 @@ namespace  Aquila.Fight.Addon
             if (spec is null)
             {
                 Log.Warning("<color=yellow>Addon_Ability.UseAbility--->spec is null</color>");
+                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityHitResultTypeEnum.NONE_SPEC, true);
                 return false;
             }
 
@@ -88,7 +91,7 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(Actor.RoleMetaID);
+            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(_actorInstance.Actor.RoleMetaID);
             if (roleMeta is null)
             {
                 Log.Warning("Addon_Ability.Init()->role_meta is null");
@@ -117,14 +120,25 @@ namespace  Aquila.Fight.Addon
         {
         }
 
-        public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
+        // public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
+        // {
+        //     base.Init(actor, targetGameObject, targetTransform);
+        //     if(!InitSpec())
+        //         return;
+        //
+        //     _initFlag = true;
+        // }
+        
+        
+        public override void Init(Module_ProxyActor.ActorInstance instance)
         {
-            base.Init(actor, targetGameObject, targetTransform);
+            base.Init(instance);
             if(!InitSpec())
                 return;
-
+            
             _initFlag = true;
         }
+        
         public override void Dispose()
         {
             if (_specArr is { Length: > 0 })
@@ -132,12 +146,13 @@ namespace  Aquila.Fight.Addon
                 foreach (var spec in _specArr)
                     ReferencePool.Release(spec);
             }
-
+        
             _specArr  = null;
             // _meta      = null;
             _initFlag = false;
             base.Dispose();
         }
+
 
         public override void Reset()
         {

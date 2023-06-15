@@ -48,9 +48,9 @@ namespace Aquila.Module
     public partial class Module_ProxyActor
     {
         /// <summary>
-        /// 将一个effect施加到actor上
+        /// 生效技能或effect
         /// </summary>
-        public void ApplyEffect2Actor( int castorID, int targetID, int abilityID )
+        public void AffectAbility( int castorID, int targetID, int abilityID )
         {
             var result = ReferencePool.Acquire<AbilityResult_Hit>();
             result._dealedDamage = 0;
@@ -82,8 +82,71 @@ namespace Aquila.Module
             addon.UseAbility( abilityID, targetInstance.instance, result );
             GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
 
-            TryRefreshActorUI( castorInstance.instance );
-            TryRefreshActorUI( targetInstance.instance );
+            GameEntry.Event.Fire(castorInstance,EventArg_OnHitAbility.Create(result));
+            ReferencePool.Release(result);
+            
+            TryRefreshActorHPUI( castorInstance.instance );
+            TryRefreshActorHPUI( targetInstance.instance );
+        }
+
+        /// <summary>
+        /// 单对多释放技能
+        /// </summary>
+        public void Ability2MultiTarget(int castorID, int[] targetIDArr, int abilityMetaID)
+        {
+            AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
+            result._abilityID = abilityMetaID;
+            result._succ = false;
+            var castorInstance = Get(castorID);
+            if (castorInstance == null)
+            {
+                result._succ = false;
+                result._stateDescription = 0;
+                result._castorID = -1;
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                ReferencePool.Release( result );
+                return;
+            }
+            result._castorID = castorID;
+
+            if (targetIDArr is null || targetIDArr.Length == 0 || !TargetIDValid(targetIDArr))
+            {
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_TARGET, true);
+                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                ReferencePool.Release( result );
+                return;
+            }
+            
+            result._targetIDArr = targetIDArr;
+            (castorInstance.Actor as IDoAbilityBehavior)?.UseAbility( result );
+
+            #region  nouse
+            // var eventArg = EventArg_OnUseAblity.Create(result);
+            //单独把actor的逻辑拿出来
+            //在这里保存所有的targetid，到triggerTime的时候触发
+            //在状态机里，到触发时间抛出所有事件
+            //#todo对于多个目标，如果有一个无效目标，该怎么处理？
+            // (castorInstance.Actor as IDoAbilityBehavior)?.UseAbility( result );
+            // foreach (var targetID in targetIDArr)
+            // {
+            //     //拿不到target
+            //     if (Get(targetID) == null)
+            //     {
+            //         result._targetID = -1;
+            //         result._stateDescription = Tools.SetBitValue(eventArg._resultParam._stateDescription,(int)AbilityUseResultTypeEnum.NO_TARGET, true);
+            //         eventArg._resultParam = result;
+            //         GameEntry.Event.Fire(this,eventArg);
+            //         continue;
+            //     }
+            //     eventArg._resultParam._targetID = targetID;
+            //     GameEntry.Event.Fire(this,eventArg);
+            // }
+            // ReferencePool.Release( result );
+            
+            #endregion
         }
 
         /// <summary>
@@ -94,20 +157,32 @@ namespace Aquila.Module
             AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
             result._succ = false;
             result._stateDescription = 0;
+            result._castorID = -1;
             if ( Get( castorID ) != null )
                 result._castorID = castorID;
             else
+            {
+                result._stateDescription = 0;
                 result._castorID = -1;
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                    (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
+                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                ReferencePool.Release( result );
+                return;   
+            }
 
             if ( Get( targetID ) != null )
-                result._targetID = targetID;
+                result._targetIDArr = new int[]{ targetID };
             else
-                result._targetID = -1;
+            {                
+                result._stateDescription = Tools.SetBitValue(result._stateDescription,
+                (int)AbilityUseResultTypeEnum.NO_TARGET, true);
+                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                ReferencePool.Release( result );
+                return;
+            }
 
-            //result._castorID = castorID;
-            //result._targetID = targetID;
             result._abilityID = abilityMetaID;
-
             var castorInstance = TryGet( castorID );
             if ( !castorInstance.has )
             {
@@ -115,20 +190,32 @@ namespace Aquila.Module
                     Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
                 // return result;
             }
-
-            if ( castorInstance.instance.Actor is IDoAbilityBehavior )
-                ( castorInstance.instance.Actor as IDoAbilityBehavior ).UseAbility( result );
-
-            GameEntry.Event.Fire( castorInstance, EventArg_OnUseAblity.Create( result ) );
-            ReferencePool.Release( result );
+            ( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            // GameEntry.Event.Fire( castorInstance, EventArg_OnUseAblity.Create( result ) );
+            // ReferencePool.Release( result );
         }
 
         /// <summary>
-        /// 尝试刷新Actor对应的UI，比如头顶的血条之类的
+        /// 尝试刷新actor头顶的血条UI
         /// </summary>
-        public void TryRefreshActorUI( ActorInstance instance )
+        public void TryRefreshActorHPUI( ActorInstance instance )
         {
-
+            var addon = instance.GetAddon<Addon_HP>();
+            addon.Refresh();
+        }
+        
+        //----------------------- priv -----------------------
+        /// <summary>
+        /// 多个ID是否都有效（拿得到），有一个无效就返回false
+        /// </summary>
+        public bool TargetIDValid(int[] targetIDArr)
+        {
+            foreach (var targetID in targetIDArr)
+            {
+                if (Get(targetID) is null)
+                    return false;
+            }
+            return true;
         }
     }
 }

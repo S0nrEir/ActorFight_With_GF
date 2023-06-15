@@ -3,6 +3,7 @@ using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Fight;
+using GameFramework;
 using UnityEngine.Playables;
 using UnityGameFramework.Runtime;
 
@@ -21,7 +22,7 @@ namespace Aquila.Fight.FSM
             int state = 0;
             if ( param is null || param is not AbilityResult_Use)
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->param is null || param.Length == 0</color>" );
+                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
                 return false;
             }
@@ -29,14 +30,14 @@ namespace Aquila.Fight.FSM
             _abilityMeta = GameEntry.DataTable.Tables.Ability.Get(result._abilityID);
             if ( _abilityMeta is null )
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->_abilityMeta is null</color>" );
+                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->_abilityMeta is null</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META, true );
             }
 
             _timelineMeta = GameEntry.DataTable.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
             if ( _timelineMeta is null )
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.OnEnter()--->timeline meta is null</color>" );
+                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
             }
             //检查CD和消耗
@@ -59,7 +60,8 @@ namespace Aquila.Fight.FSM
             }
 
             _castorID = result._castorID;
-            _targetID = result._targetID;
+            // _targetIDArr = result._targetIDArr;
+            _result = result;
             return result._succ;
         }
 
@@ -77,8 +79,13 @@ namespace Aquila.Fight.FSM
                     Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
                     return;
                 }
+                
+                //activeAbility
                 //continue:这里走公用接口，将效果施加到actor上
-                GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect2Actor( _castorID, _targetID, _abilityMeta.id );
+                foreach (var targetID in _result._targetIDArr)
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id );
+                
+                GameEntry.Event.Fire(_fsm.GetActorInstance(),EventArg_OnUseAblity.Create(_result));
                 _abilityFinishFlag = true;
             }
         }
@@ -119,7 +126,11 @@ namespace Aquila.Fight.FSM
             _timelineMeta = null;
             _abilityMeta = null;
             _castorID = -1;
-            _targetID = -1;
+            
+            if(_result != null)
+                ReferencePool.Release(_result);
+            
+            _result = null;
         }
         public ActorState_HeroAbility( int state_id ) : base( state_id )
         {
@@ -132,10 +143,15 @@ namespace Aquila.Fight.FSM
         private int _castorID = -1;
 
         /// <summary>
-        /// 目标ActorID
+        /// 目标Actor的ID集合
         /// </summary>
-        private int _targetID = -1;
+        // private int[] _targetIDArr = null;
 
+        /// <summary>
+        /// 使用状态结果
+        /// </summary>
+        private AbilityResult_Use _result = null;
+        
         /// <summary>
         /// 技能数据
         /// </summary>

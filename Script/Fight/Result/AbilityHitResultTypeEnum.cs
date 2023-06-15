@@ -17,21 +17,11 @@ namespace Aquila.Fight
         /// </summary>
         HIT = 0,
         
-        ///// <summary>
-        ///// 施法者不存在
-        ///// </summary>
-        //NO_CASTOR,
+        /// <summary>
+        /// 没有技能实例
+        /// </summary>
+        NONE_SPEC,
         
-        ///// <summary>
-        ///// 没有目标
-        ///// </summary>
-        //NO_TARGET,
-        
-        ///// <summary>
-        ///// 无法使用
-        ///// </summary>
-        //CANT_USE,
-
         /// <summary>
         /// 造成了暴击
         /// </summary>
