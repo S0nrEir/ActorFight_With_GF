@@ -2,6 +2,7 @@
 using Aquila.Fight.Addon;
 using System;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -86,10 +87,10 @@ namespace Aquila.Fight.Addon
             _eventDic?.Clear();
             _eventDic = null;
         }
-
-        public override void Init( Actor_Base actor, GameObject target_go, Transform target_transform )
+        
+        public override void Init(Module_ProxyActor.ActorInstance instance)
         {
-            base.Init( actor, target_go, target_transform );
+            base.Init(instance);
         }
 
         /// <summary>

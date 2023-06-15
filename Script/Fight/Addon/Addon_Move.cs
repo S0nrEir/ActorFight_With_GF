@@ -1,6 +1,7 @@
 using Aquila.Fight.Actor;
 using Aquila.Toolkit;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -183,9 +184,9 @@ namespace Aquila.Fight.Addon
             SetSpeed( 1f );
         }
 
-        public override void Init ( Actor_Base actor, GameObject targetGameObject, Transform targetTransform )
+        public override void Init(Module_ProxyActor.ActorInstance instance)
         {
-            base.Init( actor, targetGameObject, targetTransform );
+            base.Init(instance);
             _controller = Tools.GetComponent<CharacterController>( Actor.gameObject );
 
             if (_controller == null)

@@ -119,7 +119,6 @@ namespace Aquila.Fight.FSM
 
                 _stateDic.Clear();
                 _stateDic = null;
-                _actor = null;
                 _currState = null;
                 _instance = null;
             }
@@ -143,8 +142,9 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private Dictionary<int, ActorState_Base> _stateDic;
 
-        private Actor_Hero _actor;
-
+        /// <summary>
+        /// actor实例
+        /// </summary>
         private ActorInstance _instance = null;
     }
 
