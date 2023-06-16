@@ -29,5 +29,9 @@ namespace Cfg.Enum
         /// 召唤物
         /// </summary>
         Summon = 4,
+        /// <summary>
+        /// 周期性固定数值伤害
+        /// </summary>
+        PeriodFixedDamage = 5,
     }
 }
