@@ -55,9 +55,6 @@ namespace Aquila.Fight
             if ( Meta is null || Meta.effects is null )
                 return;
 
-            //_costEffect = new EffectSpec_Cost( GameEntry.DataTable.Table<Effect>().Get( Meta.CostEffectID ) );
-            //_cdEffect = new EffectSpec_CoolDown( GameEntry.DataTable.Table<Effect>().Get( Meta.CoolDownEffectID ) );
-
             _costEffect = ReferencePool.Acquire<EffectSpec_Cost>();
             _costEffect.Init( GameEntry.DataTable.Table<Effect>().Get( Meta.CostEffectID ) );
             _cdEffect = ReferencePool.Acquire<EffectSpec_CoolDown>();

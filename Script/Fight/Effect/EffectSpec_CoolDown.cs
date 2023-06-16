@@ -14,12 +14,6 @@ namespace Aquila.Fight
             _remain = 0f;
         }
 
-        public EffectSpec_CoolDown(Table_Effect meta) : base(meta)
-        {
-            _totalDuration = meta.ExtensionParam.FloatParam_1;
-            _remain = 0f;
-        }
-
         public EffectSpec_CoolDown()
         {
             

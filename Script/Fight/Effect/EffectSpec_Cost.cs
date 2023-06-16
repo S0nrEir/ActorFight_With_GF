@@ -37,13 +37,8 @@ namespace Aquila.Fight
 
         public EffectSpec_Cost()
         {
-            
-        }
 
-        public EffectSpec_Cost(Table_Effect meta) : base(meta)
-        {
         }
-
     }
    
 }

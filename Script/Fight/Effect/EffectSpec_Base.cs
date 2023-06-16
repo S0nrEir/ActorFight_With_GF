@@ -14,9 +14,6 @@ namespace Aquila.Fight
         public virtual void Init( Table_Effect meta )
         {
             Meta = meta;
-            //_modifier = ReferencePool.Acquire<Numric_Modifier>();
-            //_modifier.Setup( Meta.ModifierType, Meta.ExtensionParam.FloatParam_1 );
-            //_modifier = new Numric_Modifier( Cfg.Enum.NumricModifierType.None, 0f );
         }
 
         /// <summary>
@@ -29,8 +26,6 @@ namespace Aquila.Fight
 
         public void Clear()
         {
-            //ReferencePool.Release(_modifier);
-            //_modifier = null;
             _modifier = default;
         }
 
@@ -42,9 +37,6 @@ namespace Aquila.Fight
         protected EffectSpec_Base( Table_Effect meta )
         {
             Init( meta );
-            //Meta = meta;
-            //_modifier = ReferencePool.Acquire<Numric_Modifier>();
-            //_modifier.Setup(Meta.ModifierType,Meta.ExtensionParam.FloatParam_1);
         }
 
         /// <summary>
