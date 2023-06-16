@@ -52,7 +52,11 @@ namespace Aquila.Fight
         public virtual void Setup( Table_AbilityBase meta )
         {
             Meta = meta;
-            InitEffectSpec();
+            if ( Meta is null || Meta.effects is null )
+                return;
+
+            _costEffect = new EffectSpec_Cost( GameEntry.DataTable.Table<Effect>().Get( Meta.CostEffectID ) );
+            _cdEffect = new EffectSpec_CoolDown( GameEntry.DataTable.Table<Effect>().Get( Meta.CoolDownEffectID ) );
         }
 
         /// <summary>
@@ -71,11 +75,16 @@ namespace Aquila.Fight
             if (_costEffect != null)
                 _costEffect.Apply( _owner, result );
 
-            foreach (var effect in _effectList)
+            //#todo因为要处理持续性的effect，不需要effectList了（在释放技能的时候遍历实例化），cd和cost类型的effect在这个时候也会被遍历到，是否考虑把这两个类型的effect单独放到技能表单独的两个字段里？
+            Table_Effect effectMeta = null;
+            EffectSpec_Base tempEffect = null;
+            foreach ( var effectID in Meta.effects )
             {
-                effect.Apply( effect.Meta.Target == 1 ? target : _owner, result );
-                result._stateDescription =
-                    Tools.SetBitValue(result._stateDescription, (int)AbilityHitResultTypeEnum.HIT, true);
+                effectMeta = GameEntry.DataTable.Table<Effect>().Get( effectID );
+                tempEffect = Tools.Ability.CreateEffectSpec( effectMeta );
+                
+                tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
+                //duration effect:
             }
 
             if ( !OnAfterAbility( result ) )
@@ -91,7 +100,7 @@ namespace Aquila.Fight
         {
             return true;
         }
-
+            
         /// <summary>
         /// 使用技能后置函数
         /// </summary>
@@ -119,23 +128,14 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Clear()
         {
-            if ( _effectList != null && _effectList.Count != 0 )
-            {
-                foreach ( var effect in _effectList )
-                    effect?.Clear();
-
-                _effectList.Clear();
-            }
-
-            _effectList = null;
             Meta = null;
+            //处理CD和Cost
+            _costEffect?.Clear();
+            _cdEffect?.Clear();
             _tagContainer = null;
             _cdEffect = null;
             _costEffect = null;
             _owner = null;
-            //处理CD和Cost
-            _costEffect?.Clear();
-            _cdEffect?.Clear();
         }
 
         /// <summary>
@@ -144,10 +144,6 @@ namespace Aquila.Fight
         public virtual void OnUpdate( float delta_time )
         {
             _cdEffect._remain -= delta_time;
-            //if ( _cdEffect._remain <= 0 && _tagContainer.Contains( 0 ) )
-            //{
-            //    _tagContainer.Remove( 0 );
-            //}
         }
 
         //-------------------priv-------------------
@@ -157,20 +153,6 @@ namespace Aquila.Fight
         private bool CDOK()
         {
             return _cdEffect._remain <= 0f;
-        }
-
-        /// <summary>
-        /// 拿到该技能持有的指定effectSpec，拿不到返回null
-        /// </summary>
-        protected EffectSpec_Base GetSpec( int id )
-        {
-            foreach ( var effect_spec in _effectList )
-            {
-                if ( effect_spec.Meta.id == id )
-                    return effect_spec;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -186,10 +168,6 @@ namespace Aquila.Fight
             if ( attr_addon is null )
                 return false;
 
-            // var res = attr_addon.GetCorrectionFinalValue(Actor_Attr.Curr_MP,0f);
-            // if(!res.get_succ)
-            // Log.Warning("!res.get_succ");
-
             var cur_mp = attr_addon.GetCurrMPCorrection();
             return _costEffect.Calc( cur_mp ) >= 0;
         }
@@ -201,12 +179,6 @@ namespace Aquila.Fight
         {
             Log.Info( $"tag changed,tag:{newTag}" );
         }
-
-        /// <summary>
-        /// 该技能持有的effect逻辑集合
-        /// </summary>
-        //#todo:能不能改成不用list
-        private List<EffectSpec_Base> _effectList = null;
 
         /// <summary>
         /// 表数据
@@ -236,59 +208,6 @@ namespace Aquila.Fight
         public AbilitySpecBase()
         {
             _tagContainer = new TagContainer( OnTagChange );
-        }
-
-        /// <summary>
-        /// 初始化Cost相关逻辑
-        /// </summary>
-        private void InitCostEffect( Table_Effect effect )
-        {
-            _costEffect = new EffectSpec_Cost( effect );
-        }
-
-        /// <summary>
-        /// 初始化技能CD相关逻辑
-        /// </summary>
-        private void InitCDEffect( Table_Effect effect )
-        {
-            _cdEffect = new EffectSpec_CoolDown( effect );
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void InitEffectSpec()
-        {
-            if ( Meta is null || Meta.effects is null )
-                return;
-
-            //默认持有16个effect
-            _effectList = new List<EffectSpec_Base>( 16 );
-            Table_Effect effect_meta = null;
-            foreach ( var effectID in Meta.effects )
-            {
-                effect_meta = GameEntry.DataTable.Table<Effect>().Get( effectID );
-                if ( effect_meta is null )
-                {
-                    Log.Warning( "InitEffectSpec--->effect_meta is null" );
-                    continue;
-                }
-
-                switch ( effect_meta.Type )
-                {
-                    case EffectType.Cost:
-                        InitCostEffect( effect_meta );
-                        break;
-
-                    case EffectType.CoolDown:
-                        InitCDEffect( effect_meta );
-                        break;
-
-                    default:
-                        _effectList.Add( Tools.Ability.CreateEffectSpec( effect_meta ) );
-                        break;
-                }
-            }
         }
 
         /// <summary>
