@@ -9,29 +9,44 @@ namespace Aquila.Fight
     /// <summary>
     /// effect逻辑基类
     /// </summary>
-    public abstract class EffectSpec_Base
+    public abstract class EffectSpec_Base : IReference
     {
-        protected EffectSpec_Base(Table_Effect meta)
+        public virtual void Init( Table_Effect meta )
         {
             Meta = meta;
-            _modifier = ReferencePool.Acquire<Numric_Modifier>();
-            _modifier.Setup(Meta.ModifierType,Meta.ExtensionParam.FloatParam_1);
+            //_modifier = ReferencePool.Acquire<Numric_Modifier>();
+            //_modifier.Setup( Meta.ModifierType, Meta.ExtensionParam.FloatParam_1 );
+            //_modifier = new Numric_Modifier( Cfg.Enum.NumricModifierType.None, 0f );
         }
 
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result)
+        public virtual void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )
         {
-            
+
         }
 
-        public virtual void Clear()
+        public void Clear()
         {
-            ReferencePool.Release(_modifier);
-            _modifier = null;
+            //ReferencePool.Release(_modifier);
+            //_modifier = null;
+            _modifier = default;
         }
-        
+
+        protected EffectSpec_Base()
+        {
+
+        }
+
+        protected EffectSpec_Base( Table_Effect meta )
+        {
+            Init( meta );
+            //Meta = meta;
+            //_modifier = ReferencePool.Acquire<Numric_Modifier>();
+            //_modifier.Setup(Meta.ModifierType,Meta.ExtensionParam.FloatParam_1);
+        }
+
         /// <summary>
         /// 元数据
         /// </summary>
@@ -40,8 +55,6 @@ namespace Aquila.Fight
         /// <summary>
         /// 对应的数值修改器
         /// </summary>
-        protected Numric_Modifier _modifier = null;
-
+        protected Numric_Modifier _modifier;
     }
-   
 }

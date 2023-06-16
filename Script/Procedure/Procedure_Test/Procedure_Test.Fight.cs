@@ -27,12 +27,12 @@ namespace Aquila.Procedure
 
             if ( _loadFlagCurrState != _loadFlagFinish )
                 return;
-            
+
             //单对单，测试物理伤害
-            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actor_id_1, _actorID2 , _testAbilityMetaID );
-            
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
+
             //单对多，测试物理伤害
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
+            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
         }
 
         /// <summary>
