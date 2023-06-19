@@ -131,6 +131,9 @@ namespace Aquila.Fight.Impact
 
         //----------------------- fields -----------------------
 
+        /// <summary>
+        /// set是无序的 不能用，试试双缓冲List来处理，一个保存当前，一个保存要移除的
+        /// </summary>
         private HashSet<int> _attachedEntitySet = null;
 
         private ImpactDataPool _pool = null;
