@@ -77,7 +77,6 @@ namespace Aquila.Fight
             if (_costEffect != null)
                 _costEffect.Apply( _owner, result );
 
-            //#todo因为要处理持续性的effect，不需要effectList了（在释放技能的时候遍历实例化），cd和cost类型的effect在这个时候也会被遍历到，是否考虑把这两个类型的effect单独放到技能表单独的两个字段里？
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;
             foreach ( var effectID in Meta.effects )
@@ -168,7 +167,6 @@ namespace Aquila.Fight
             if ( _costEffect is null )
                 return true;
 
-            //因为都独立开来了，拿不到技能所属的addon和actor，暂时想到的解决办法：通过proxy拿他们的代理实例
             var attr_addon = _owner.GetAddon<Addon_BaseAttrNumric>();
             if ( attr_addon is null )
                 return false;
