@@ -1,8 +1,4 @@
 using Cfg.Enum;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aquila.Fight.Impact
 {

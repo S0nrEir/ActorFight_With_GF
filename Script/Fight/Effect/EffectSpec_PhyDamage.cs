@@ -12,7 +12,6 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_PhyDamage : EffectSpec_Base
     {
-
         public override void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result)
         {
             var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();

@@ -8,7 +8,6 @@ using Cfg.Enum;
 using Cfg.Fight;
 using GameFramework;
 using System;
-using System.Collections.Generic;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -74,7 +73,7 @@ namespace Aquila.Fight
                 _cdEffect._remain = _cdEffect._totalDuration;
 
             //扣除cost
-            if (_costEffect != null)
+            if ( _costEffect != null )
                 _costEffect.Apply( _owner, result );
 
             Table_Effect effectMeta = null;
@@ -84,7 +83,7 @@ namespace Aquila.Fight
                 effectMeta = GameEntry.DataTable.Table<Effect>().Get( effectID );
                 if ( effectMeta is null )
                 {
-                    Log.Warning($"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
+                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
                     break;
                 }
                 tempEffect = Tools.Ability.CreateEffectSpec( effectMeta );
@@ -94,8 +93,7 @@ namespace Aquila.Fight
                     break;
                 }
 
-                if ( tempEffect.Meta.Policy == DurationPolicy.Instant ||
-                     tempEffect.Meta.Policy == DurationPolicy.Infinite)
+                if ( tempEffect.Meta.Policy != DurationPolicy.Instant )
                 {
                     GameEntry.Impact.Attach( tempEffect );
                 }
@@ -121,7 +119,7 @@ namespace Aquila.Fight
         {
             return true;
         }
-            
+
         /// <summary>
         /// 使用技能后置函数
         /// </summary>

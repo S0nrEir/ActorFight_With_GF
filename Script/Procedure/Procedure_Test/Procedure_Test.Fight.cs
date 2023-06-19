@@ -151,6 +151,12 @@ namespace Aquila.Procedure
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
+            base.OnEnter( procedureOwner );
+            FightOnEnter();
+        }
+
+        private void FightOnEnter()
+        {
             _loadFlagCurrState = 0b_0000;
             // base.OnEnter( procedureOwner );
             //加载场景，加载4个测试用的战斗actor

@@ -144,8 +144,8 @@ namespace Aquila.Procedure
         /// </summary>
         private void NextProcedure()
         {
-            ChangeState<Procedure_Test_Fight>( _procedureOwner );
-            return;
+            //ChangeState<Procedure_Test_Fight>( _procedureOwner );
+            //return;
 
 #pragma warning disable CS0162 // 检测到无法访问的代码
             if ( GameEntry.Procedure._is_enter_test_scene )
