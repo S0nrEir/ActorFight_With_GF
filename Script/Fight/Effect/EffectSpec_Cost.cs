@@ -32,7 +32,9 @@ namespace Aquila.Fight
         public override void Init( Table_Effect meta )
         {
             base.Init( meta );
-            _modifier = new Numric.Numric_Modifier( meta.ModifierType,meta.ExtensionParam.FloatParam_1 );
+            //todo_modifier每次初始化都要走子类的重写，这块能不能改一下
+            //_modifier = new Numric.Numric_Modifier( meta.ModifierType,meta.ExtensionParam.FloatParam_1 );
+            _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
         }
 
         public EffectSpec_Cost()

@@ -1,5 +1,6 @@
 using Cfg.Enum;
 using GameFramework;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -10,10 +11,16 @@ namespace Aquila.Numric
     /// </summary>
     public struct Numric_Modifier
     {
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public float ValueFac()
+        {
+            return _valueFac;
+        }
+
         public Numric_Modifier( NumricModifierType type, float fac )
         {
             _type = type;
-            valueFac = fac;
+            _valueFac = fac;
             _valueAfterModifying = 0f;
             _modified = false;
         }
@@ -21,10 +28,11 @@ namespace Aquila.Numric
         /// <summary>
         /// 设置修改器的类型
         /// </summary>
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public void Setup( NumricModifierType type ,float fac)
         {
             _type = type;
-            valueFac = fac;
+            _valueFac = fac;
         }
 
         /// <summary>
@@ -35,15 +43,15 @@ namespace Aquila.Numric
             switch ( _type )
             {
                 case NumricModifierType.Sum:
-                    _valueAfterModifying = originalVal + valueFac;
+                    _valueAfterModifying = originalVal + _valueFac;
                     break;
 
                 case NumricModifierType.Mult:
-                    _valueAfterModifying = originalVal * valueFac;
+                    _valueAfterModifying = originalVal * _valueFac;
                     break;
                 
                 case NumricModifierType.Dive:
-                    _valueAfterModifying = originalVal / valueFac;
+                    _valueAfterModifying = originalVal / _valueFac;
                     break;
                 
                 default:
@@ -51,16 +59,16 @@ namespace Aquila.Numric
                     // throw new GameFrameworkException( "invalid modifier type!" );
                     break;
             }
-            _modified = true;
+            //_modified = true;
             return _valueAfterModifying;
         }
 
-        public void Clear()
-        {
-            _valueAfterModifying = 0;
-            _type = NumricModifierType.None;
-            _modified = false;
-        }
+        //public void Clear()
+        //{
+        //    _valueAfterModifying = 0;
+        //    _type = NumricModifierType.None;
+        //    _modified = false;
+        //}
 
         /// <summary>
         /// 修改标记
@@ -82,6 +90,6 @@ namespace Aquila.Numric
         /// <summary>
         /// 修改系数
         /// </summary>
-        private float valueFac;
+        private float _valueFac;
     }
 }

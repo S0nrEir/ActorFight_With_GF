@@ -82,11 +82,28 @@ namespace Aquila.Fight
             foreach ( var effectID in Meta.effects )
             {
                 effectMeta = GameEntry.DataTable.Table<Effect>().Get( effectID );
+                if ( effectMeta is null )
+                {
+                    Log.Warning($"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
+                    break;
+                }
                 tempEffect = Tools.Ability.CreateEffectSpec( effectMeta );
-                
-                tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
-                ReferencePool.Release( tempEffect );
-                //duration effect:
+                if ( tempEffect is null )
+                {
+                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
+                    break;
+                }
+
+                if ( tempEffect.Meta.Policy == DurationPolicy.Instant ||
+                     tempEffect.Meta.Policy == DurationPolicy.Infinite)
+                {
+                    GameEntry.Impact.Attach( tempEffect );
+                }
+                else
+                {
+                    tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
+                    ReferencePool.Release( tempEffect );
+                }
             }
 
             if ( !OnAfterAbility( result ) )

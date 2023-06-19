@@ -13,7 +13,7 @@ namespace Aquila.Toolkit
         public static class Ability
         {
             /// <summary>
-            /// 根据配表类型生成对应的effect逻辑实例
+            /// 根据配表类型生成对应的effect逻辑实例，拿不到返回null
             /// </summary>
             public static EffectSpec_Base CreateEffectSpec(Table_Effect meta)
             {
@@ -26,6 +26,7 @@ namespace Aquila.Toolkit
                         break;
 
                     case EffectType.PeriodFixedDamage:
+                        effect = ReferencePool.Acquire<EffectSpec_PeriodFixedDamage>();
                         break;
 
                     default:

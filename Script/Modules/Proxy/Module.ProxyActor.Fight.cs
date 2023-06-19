@@ -48,7 +48,15 @@ namespace Aquila.Module
     public partial class Module_ProxyActor
     {
         /// <summary>
-        /// 生效技能或effect
+        /// 生效一个impact
+        /// </summary>
+        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect )
+        {
+
+        }
+
+        /// <summary>
+        /// 生效技能
         /// </summary>
         public void AffectAbility( int castorID, int targetID, int abilityID )
         {
@@ -82,9 +90,9 @@ namespace Aquila.Module
             addon.UseAbility( abilityID, targetInstance.instance, result );
             GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
 
-            GameEntry.Event.Fire(castorInstance,EventArg_OnHitAbility.Create(result));
-            ReferencePool.Release(result);
-            
+            GameEntry.Event.Fire( castorInstance, EventArg_OnHitAbility.Create( result ) );
+            ReferencePool.Release( result );
+
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
         }
@@ -92,36 +100,36 @@ namespace Aquila.Module
         /// <summary>
         /// 单对多释放技能
         /// </summary>
-        public void Ability2MultiTarget(int castorID, int[] targetIDArr, int abilityMetaID)
+        public void Ability2MultiTarget( int castorID, int[] targetIDArr, int abilityMetaID )
         {
             AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
             result._abilityID = abilityMetaID;
             result._succ = false;
-            var castorInstance = Get(castorID);
-            if (castorInstance == null)
+            var castorInstance = Get( castorID );
+            if ( castorInstance == null )
             {
                 result._succ = false;
                 result._stateDescription = 0;
                 result._castorID = -1;
-                result._stateDescription = Tools.SetBitValue(result._stateDescription,
-                    (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
-                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
+                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
                 ReferencePool.Release( result );
                 return;
             }
             result._castorID = castorID;
 
-            if (targetIDArr is null || targetIDArr.Length == 0 || !TargetIDValid(targetIDArr))
+            if ( targetIDArr is null || targetIDArr.Length == 0 || !TargetIDValid( targetIDArr ) )
             {
-                result._stateDescription = Tools.SetBitValue(result._stateDescription,
-                    (int)AbilityUseResultTypeEnum.NO_TARGET, true);
-                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
+                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
                 ReferencePool.Release( result );
                 return;
             }
-            
+
             result._targetIDArr = targetIDArr;
-            (castorInstance.Actor as IDoAbilityBehavior)?.UseAbility( result );
+            ( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
 
             #region  nouse
             // var eventArg = EventArg_OnUseAblity.Create(result);
@@ -145,7 +153,7 @@ namespace Aquila.Module
             //     GameEntry.Event.Fire(this,eventArg);
             // }
             // ReferencePool.Release( result );
-            
+
             #endregion
         }
 
@@ -164,20 +172,20 @@ namespace Aquila.Module
             {
                 result._stateDescription = 0;
                 result._castorID = -1;
-                result._stateDescription = Tools.SetBitValue(result._stateDescription,
-                    (int)AbilityUseResultTypeEnum.NO_CASTOR, true);
-                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
+                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
                 ReferencePool.Release( result );
-                return;   
+                return;
             }
 
             if ( Get( targetID ) != null )
-                result._targetIDArr = new int[]{ targetID };
+                result._targetIDArr = new int[] { targetID };
             else
-            {                
-                result._stateDescription = Tools.SetBitValue(result._stateDescription,
-                (int)AbilityUseResultTypeEnum.NO_TARGET, true);
-                GameEntry.Event.Fire(this,EventArg_OnUseAblity.Create(result));
+            {
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
+                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
                 ReferencePool.Release( result );
                 return;
             }
@@ -203,16 +211,16 @@ namespace Aquila.Module
             var addon = instance.GetAddon<Addon_HP>();
             addon.Refresh();
         }
-        
+
         //----------------------- priv -----------------------
         /// <summary>
         /// 多个ID是否都有效（拿得到），有一个无效就返回false
         /// </summary>
-        public bool TargetIDValid(int[] targetIDArr)
+        public bool TargetIDValid( int[] targetIDArr )
         {
-            foreach (var targetID in targetIDArr)
+            foreach ( var targetID in targetIDArr )
             {
-                if (Get(targetID) is null)
+                if ( Get( targetID ) is null )
                     return false;
             }
             return true;

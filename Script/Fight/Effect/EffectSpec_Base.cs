@@ -14,6 +14,7 @@ namespace Aquila.Fight
         public virtual void Init( Table_Effect meta )
         {
             Meta = meta;
+            _modifier = default;
         }
 
         /// <summary>
@@ -24,9 +25,10 @@ namespace Aquila.Fight
 
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             _modifier = default;
+            Meta = null;
         }
 
         protected EffectSpec_Base()

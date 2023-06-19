@@ -1,4 +1,4 @@
-﻿using Bright.Serialization;
+using Bright.Serialization;
 using Cfg.Role;
 using GameFramework;
 using System.Collections.Generic;
