@@ -28,25 +28,25 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void RemoveTag( ushort bit_to_remove )
+        public void RemoveTag( ushort bitToRemove )
         {
-            _tagContainer.Remove( bit_to_remove );
+            _tagContainer.Remove( bitToRemove );
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void AddTag( ushort bit_to_add )
+        public void AddTag( ushort bitToAdd )
         {
-            _tagContainer.Add( bit_to_add );
+            _tagContainer.Add( bitToAdd );
         }
 
         /// <summary>
         /// 包含某个tag
         /// </summary>
-        public bool ContainsTag( ushort bit_tag )
+        public bool ContainsTag( ushort bitTag )
         {
-            return _tagContainer.Contains( bit_tag );
+            return _tagContainer.Contains( bitTag );
         }
 
         public virtual void Setup( Table_AbilityBase meta )
