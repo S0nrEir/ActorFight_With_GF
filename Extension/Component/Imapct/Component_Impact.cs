@@ -16,7 +16,6 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 将一个effect添加为impact
         /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public void Attach( EffectSpec_Base effect, int castorActorID, int targetActorID )
         {
             //new entity
@@ -122,7 +121,7 @@ namespace Aquila.Fight.Impact
         {
             foreach ( var entity in _curr )
             {
-                ref var impactData = ref _pool.Get( entity );
+                ref ImpactData impactData = ref _pool.Get( entity );
                 impactData._elapsed += Time.deltaTime;
                 //impact时间到了，而且不是永久性的imapct
                 if ( impactData._elapsed >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite )
@@ -147,6 +146,7 @@ namespace Aquila.Fight.Impact
             {
                 var impactData = _pool.Get( entity );
                 RemoveEffect( impactData._effectIndex );
+                //#todo:onEffectDestroy
                 RecycleImpactEntity( entity );
                 _pool.Remove( entity );
             }
