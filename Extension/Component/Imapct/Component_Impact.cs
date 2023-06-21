@@ -133,8 +133,8 @@ namespace Aquila.Fight.Impact
             {
                 ref var impactData = ref _pool.Get( entity );
                 impactData._remain += Time.deltaTime;
-                //结束，保留在当前位置等待释放
-                if ( impactData._remain >= impactData._duration )
+                //impact时间到了，而且不是永久性的imapct
+                if ( impactData._remain >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite)
                     continue;
 
                 //生效
@@ -159,8 +159,8 @@ namespace Aquila.Fight.Impact
                 _pool.Remove( entity );
             }
             _curr.Clear();
-            //交换entity实例缓存
 
+            //交换entity实例缓存
             _tempBuffer = _curr;
             _curr = _next;
             _next = _tempBuffer;
