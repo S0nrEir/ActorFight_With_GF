@@ -50,9 +50,26 @@ namespace Aquila.Module
         /// <summary>
         /// 生效一个impact
         /// </summary>
-        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect )
+        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect)
         {
+            var result = ReferencePool.Acquire<AbilityResult_Hit>();
+            result._dealedDamage = 0;
+            result._stateDescription = 0;
+            result._castorActorID = castorID;
+            result._targetActorID = targetID;
 
+            var target = TryGet( targetID );
+            if ( !target.has )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
+                return;
+            }
+
+            effect.Apply( target.instance, result );
+            GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
+            GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.instance.Actor.CachedTransform.position );
+            ReferencePool.Release( result );
+            TryRefreshActorHPUI( target.instance );
         }
 
         /// <summary>

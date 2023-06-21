@@ -48,11 +48,11 @@ namespace Aquila.Fight.Impact
 
             public ImpactDataPool( int defaultCapcity )
             {
-                _impactDataArr = new ImpactData[defaultCapcity];
-                _recycleImpactDataArr = new int[defaultCapcity];
-                _attachedEntityArr = new int[defaultCapcity];
+                _impactDataArr          = new ImpactData[defaultCapcity];
+                _recycleImpactDataArr   = new int[defaultCapcity];
+                _attachedEntityArr      = new int[defaultCapcity];
                 _recycleImpactDataCount = 0;
-                _impactDataCount = 0;
+                _impactDataCount        = 0;
             }
 
             /// <summary>

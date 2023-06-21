@@ -1,4 +1,5 @@
 using Cfg.Enum;
+using System;
 
 namespace Aquila.Fight.Impact
 {
@@ -38,6 +39,11 @@ namespace Aquila.Fight.Impact
             /// 生效策略（周期or持续）
             /// </summary>
             public DurationPolicy _policy;
+
+            /// <summary>
+            /// 经过时长
+            /// </summary>
+            public float _remain;
 
             /// <summary>
             /// 施加后立生效
