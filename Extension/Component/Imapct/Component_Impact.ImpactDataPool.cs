@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Impact
@@ -13,6 +14,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 获取一个entity持有的impact数据
             /// </summary>
+            [MethodImpl( MethodImplOptions.AggressiveInlining )]
             public ref ImpactData Get( int entity )
             {
                 return ref _impactDataArr[_attachedEntityArr[entity]];
@@ -21,6 +23,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 移除一个entity持有的ImpactData组件
             /// </summary>
+            [MethodImpl( MethodImplOptions.AggressiveInlining )]
             public void Remove( int entity )
             {
                 //移除，放到回收池里
@@ -33,6 +36,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 添加一个entity到数据池内
             /// </summary>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public ref ImpactData Add( int entity )
             {
                 //回收池有，先从回收池拿
