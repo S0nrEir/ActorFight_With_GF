@@ -24,12 +24,14 @@ namespace Aquila.Fight
             var cur_hp = attr_addon.GetCurrHPCorrection();
             var final = cur_hp + Meta.ExtensionParam.FloatParam_1;
             attr_addon.SetCurrHP(final);
-            //result.AddDealedDamage(Meta.ExtensionParam.FloatParam_1);
-            //result._dealedDamage += Meta.ExtensionParam.FloatParam_1;
             result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)Meta.ExtensionParam.FloatParam_1 );
         }
 
-        public EffectSpec_PhyDamage(Table_Effect meta) : base(meta)
+        public EffectSpec_PhyDamage()
+        {
+
+        }
+        public EffectSpec_PhyDamage( Table_Effect meta ) : base( meta )
         {
         }
     }

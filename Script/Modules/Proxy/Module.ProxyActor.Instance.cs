@@ -19,7 +19,7 @@ namespace Aquila.Module
                 _actor = actor;
                 _addon_arr = addons;
             }
-
+            
             public ActorInstance() { }
 
             /// <summary>
@@ -35,6 +35,7 @@ namespace Aquila.Module
             /// </summary>
             public T GetAddon<T>() where T : Addon_Base
             {
+                //#todo优化：别用遍历查找的方式检查然后获取addon
                 return Tools.Actor.FilterAddon<T>(_addon_arr);
             }
 

@@ -14,7 +14,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 显示一个伤害数字实例
         /// </summary>
-        public void ShowDamageNumber( string num, Vector3 world_pos )
+        public void ShowDamageNumber( string num, Vector3 worldPos )
         {
             var obj = GenObject<Object_DamageNumber>( typeof( Object_DamageNumber ).Name );
             if ( obj is null )
@@ -28,7 +28,7 @@ namespace Aquila.Extension
             //init
             obj.Setup( obj.Target as GameObject );
             //set pos
-            var rect_pos = WorldPos2BoardRectPos( world_pos, GameEntry.GlobalVar.MainCamera );
+            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.GlobalVar.MainCamera );
             obj.SetPos( rect_pos );
             obj.SetNumber( num, Color.red );
             //添加到队列中

@@ -1,4 +1,5 @@
-﻿using Aquila.Extension;
+using Aquila.Extension;
+using Aquila.Fight.Impact;
 
 namespace Aquila
 {
@@ -73,19 +74,26 @@ namespace Aquila
             private set;
         }
 
+        public static Component_Impact Impact
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 初始化自定义组件
         /// </summary>
         private static void InitCustomComponents()
         {
-            Timer     = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
-            DataTable = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
-            Lua       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
-            Module    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
+            Timer       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
+            DataTable   = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
+            Lua         = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
+            Module      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
             //TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
-            InfoBoard = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
-            GlobalVar = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
-            Timeline  = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
+            InfoBoard   = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
+            GlobalVar   = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
+            Timeline    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
+            Impact      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
         }
     }
 }
