@@ -115,6 +115,7 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 获取一个effect实例
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private EffectSpec_Base GetEffect( int key )
         {
             if ( _effectDic.TryGetValue( key, out var effectSpec ) )
