@@ -40,8 +40,7 @@ namespace Aquila.Fight.Impact
             InitImpactData( ref impactData, effect, castorActorID, targetActorID, key );
             _curr.Add( entity );
             AddEffect( key, effect );
-
-            //todo:effectOnAwake 
+            
             if ( impactData._effectOnAwake )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effect );
         }

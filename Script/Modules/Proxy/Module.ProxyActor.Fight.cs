@@ -147,31 +147,6 @@ namespace Aquila.Module
 
             result._targetIDArr = targetIDArr;
             ( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
-
-            #region  nouse
-            // var eventArg = EventArg_OnUseAblity.Create(result);
-            //单独把actor的逻辑拿出来
-            //在这里保存所有的targetid，到triggerTime的时候触发
-            //在状态机里，到触发时间抛出所有事件
-            //#todo对于多个目标，如果有一个无效目标，该怎么处理？
-            // (castorInstance.Actor as IDoAbilityBehavior)?.UseAbility( result );
-            // foreach (var targetID in targetIDArr)
-            // {
-            //     //拿不到target
-            //     if (Get(targetID) == null)
-            //     {
-            //         result._targetID = -1;
-            //         result._stateDescription = Tools.SetBitValue(eventArg._resultParam._stateDescription,(int)AbilityUseResultTypeEnum.NO_TARGET, true);
-            //         eventArg._resultParam = result;
-            //         GameEntry.Event.Fire(this,eventArg);
-            //         continue;
-            //     }
-            //     eventArg._resultParam._targetID = targetID;
-            //     GameEntry.Event.Fire(this,eventArg);
-            // }
-            // ReferencePool.Release( result );
-
-            #endregion
         }
 
         /// <summary>
