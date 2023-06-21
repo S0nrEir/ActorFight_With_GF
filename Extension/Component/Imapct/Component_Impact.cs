@@ -59,7 +59,7 @@ namespace Aquila.Fight.Impact
             impactData._effectOnAwake = effect.Meta.EffectOnAwake;
             impactData._period        = effect.Meta.Period;
             impactData._policy        = effect.Meta.Policy;
-            impactData._remain        = 0f;
+            impactData._elapsed       = 0f;
         }
 
         /// <summary>
@@ -132,13 +132,13 @@ namespace Aquila.Fight.Impact
             foreach ( var entity in _curr )
             {
                 ref var impactData = ref _pool.Get( entity );
-                impactData._remain += Time.deltaTime;
+                impactData._elapsed += Time.deltaTime;
                 //impact时间到了，而且不是永久性的imapct
-                if ( impactData._remain >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite)
+                if ( impactData._elapsed >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite)
                     continue;
 
                 //生效
-                if ( impactData._remain >= impactData._period )
+                if ( impactData._elapsed >= impactData._period )
                 {
                     var effectSpec = GetEffect( impactData._effectIndex );
                     if ( effectSpec is null )

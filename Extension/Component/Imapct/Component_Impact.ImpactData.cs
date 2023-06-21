@@ -43,7 +43,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 经过时长
             /// </summary>
-            public float _remain;
+            public float _elapsed;
 
             /// <summary>
             /// 施加后立生效
