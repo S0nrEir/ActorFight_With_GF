@@ -51,6 +51,7 @@ namespace Aquila.Fight.Impact
             impactData._period = effect.Meta.Period;
             impactData._policy = effect.Meta.Policy;
             impactData._elapsed = 0f;
+            impactData._interval = 0f;
         }
 
         /// <summary>
@@ -123,12 +124,16 @@ namespace Aquila.Fight.Impact
             {
                 ref ImpactData impactData = ref _pool.Get( entity );
                 impactData._elapsed += Time.deltaTime;
+                impactData._interval += Time.deltaTime;
                 //impact时间到了，而且不是永久性的imapct
                 if ( impactData._elapsed >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite )
+                {
+                    _invalid.Add( entity );
                     continue;
+                }
 
                 //生效
-                if ( impactData._elapsed >= impactData._period )
+                if ( impactData._interval >= impactData._period )
                 {
                     var effectSpec = GetEffect( impactData._effectIndex );
                     if ( effectSpec is null )
@@ -137,19 +142,22 @@ namespace Aquila.Fight.Impact
                         continue;
                     }
                     GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effectSpec );
+
+                    impactData._interval = 0f;
                 }
                 _next.Add( entity );
-            }
+            }//end foreach
 
             //清掉无效或者已经过期的imapct
-            foreach ( var entity in _curr )
+            foreach ( var entity in _invalid )
             {
                 var impactData = _pool.Get( entity );
                 RemoveEffect( impactData._effectIndex );
                 //#todo:onEffectDestroy
                 RecycleImpactEntity( entity );
                 _pool.Remove( entity );
-            }
+            }//end foreach
+            _invalid.Clear();
             _curr.Clear();
 
             //交换entity实例缓存
@@ -174,6 +182,7 @@ namespace Aquila.Fight.Impact
             _pool                     = new ImpactDataPool( _defaultEntityCount );
             _curr                     = new List<int>( _defaultEntityCount / 2 );
             _next                     = new List<int>( _defaultEntityCount / 2 );
+            _invalid                  = new List<int>( _defaultEntityCount / 2 );
         }
 
         //----------------------- fields -----------------------
@@ -186,6 +195,7 @@ namespace Aquila.Fight.Impact
 
         private List<int> _curr = null;
         private List<int> _next = null;
+        private List<int> _invalid = null;
         private List<int> _tempBuffer = null;
 
         /// <summary>

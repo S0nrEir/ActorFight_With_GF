@@ -29,10 +29,12 @@ namespace Aquila.Procedure
                 return;
 
             //单对单，测试物理伤害
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
+            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
 
             //单对多，测试物理伤害
             //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
+
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
         }
 
         /// <summary>
@@ -233,6 +235,6 @@ namespace Aquila.Procedure
         /// <summary>
         /// 测试技能ID
         /// </summary>
-        private int _testAbilityMetaID = 1000;
+        private int _testAbilityMetaID = 1002;
     }
 }

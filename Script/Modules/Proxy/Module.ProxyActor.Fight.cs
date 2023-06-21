@@ -50,7 +50,7 @@ namespace Aquila.Module
         /// <summary>
         /// 生效一个impact
         /// </summary>
-        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect)
+        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect )
         {
             var result = ReferencePool.Acquire<AbilityResult_Hit>();
             result._dealedDamage = 0;
@@ -105,7 +105,8 @@ namespace Aquila.Module
             }
 
             addon.UseAbility( abilityID, targetInstance.instance, result );
-            GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
+            if ( result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
 
             GameEntry.Event.Fire( castorInstance, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );

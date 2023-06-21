@@ -46,6 +46,11 @@ namespace Aquila.Fight.Impact
             public float _elapsed;
 
             /// <summary>
+            /// 生效时长
+            /// </summary>
+            public float _interval;
+
+            /// <summary>
             /// 施加后立生效
             /// </summary>
             public bool _effectOnAwake;

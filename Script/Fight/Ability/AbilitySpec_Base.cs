@@ -95,7 +95,7 @@ namespace Aquila.Fight
 
                 if ( tempEffect.Meta.Policy != DurationPolicy.Instant )
                 {
-                    GameEntry.Impact.Attach( tempEffect );
+                    GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
                 }
                 else
                 {
