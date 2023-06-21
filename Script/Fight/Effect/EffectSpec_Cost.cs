@@ -18,7 +18,7 @@ namespace Aquila.Fight
              
             var curr_value = attr_addon.GetCurrMPCorrection();
             curr_value += Meta.ExtensionParam.FloatParam_1;
-            var res = attr_addon.SetCurrMP(curr_value);
+            attr_addon.SetCurrMP(curr_value);
         }
 
         /// <summary>
@@ -29,10 +29,18 @@ namespace Aquila.Fight
             return _modifier.Calc(valToModify);
         }
 
-        public EffectSpec_Cost(Table_Effect meta) : base(meta)
+        public override void Init( Table_Effect meta )
         {
+            base.Init( meta );
+            //todo_modifier每次初始化都要走子类的重写，这块能不能改一下
+            //_modifier = new Numric.Numric_Modifier( meta.ModifierType,meta.ExtensionParam.FloatParam_1 );
+            _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
         }
 
+        public EffectSpec_Cost()
+        {
+
+        }
     }
    
 }

@@ -20,6 +20,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         name = _buf.ReadString();
         desc = _buf.ReadString();
+        CostEffectID = _buf.ReadInt();
+        CoolDownEffectID = _buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);effects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); effects[i] = _e;}}
         Timeline = _buf.ReadInt();
         PostInit();
@@ -42,6 +44,14 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
     /// 描述
     /// </summary>
     public string desc { get; private set; }
+    /// <summary>
+    /// 技能消耗
+    /// </summary>
+    public int CostEffectID { get; private set; }
+    /// <summary>
+    /// 技能冷却
+    /// </summary>
+    public int CoolDownEffectID { get; private set; }
     /// <summary>
     /// 携带的effect集合
     /// </summary>
@@ -69,6 +79,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         + "id:" + id + ","
         + "name:" + name + ","
         + "desc:" + desc + ","
+        + "CostEffectID:" + CostEffectID + ","
+        + "CoolDownEffectID:" + CoolDownEffectID + ","
         + "effects:" + Bright.Common.StringUtil.CollectionToString(effects) + ","
         + "Timeline:" + Timeline + ","
         + "}";

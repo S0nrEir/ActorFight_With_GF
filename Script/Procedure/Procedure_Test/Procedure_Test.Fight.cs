@@ -27,12 +27,14 @@ namespace Aquila.Procedure
 
             if ( _loadFlagCurrState != _loadFlagFinish )
                 return;
-            
+
             //单对单，测试物理伤害
-            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actor_id_1, _actorID2 , _testAbilityMetaID );
-            
+            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
+
             //单对多，测试物理伤害
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
+            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
+
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
         }
 
         /// <summary>
@@ -151,6 +153,12 @@ namespace Aquila.Procedure
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
+            base.OnEnter( procedureOwner );
+            FightOnEnter();
+        }
+
+        private void FightOnEnter()
+        {
             _loadFlagCurrState = 0b_0000;
             // base.OnEnter( procedureOwner );
             //加载场景，加载4个测试用的战斗actor
@@ -227,6 +235,6 @@ namespace Aquila.Procedure
         /// <summary>
         /// 测试技能ID
         /// </summary>
-        private int _testAbilityMetaID = 1000;
+        private int _testAbilityMetaID = 1002;
     }
 }

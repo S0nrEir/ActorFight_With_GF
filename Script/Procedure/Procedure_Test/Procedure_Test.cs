@@ -1,4 +1,4 @@
-﻿using GameFramework.Fsm;
+using GameFramework.Fsm;
 using GameFramework.Procedure;
 using GameFramework.Resource;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-
+            //ImpactTest();
             // LoadScript();
             //InputTest();
             //TimeWheelTest();
