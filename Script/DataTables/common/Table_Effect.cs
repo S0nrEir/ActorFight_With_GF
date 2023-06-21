@@ -25,6 +25,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         EffectOnAwake = _buf.ReadBool();
         Policy = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
+        Duration = _buf.ReadFloat();
         Target = _buf.ReadInt();
         EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
@@ -65,9 +66,13 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.DurationPolicy Policy { get; private set; }
     /// <summary>
-    /// 生效周期，单位毫秒
+    /// 生效周期，单位秒
     /// </summary>
     public float Period { get; private set; }
+    /// <summary>
+    /// 持续时间,单位秒
+    /// </summary>
+    public float Duration { get; private set; }
     /// <summary>
     /// 目标类型，0=我方，1=敌方
     /// </summary>
@@ -106,6 +111,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "EffectOnAwake:" + EffectOnAwake + ","
         + "Policy:" + Policy + ","
         + "Period:" + Period + ","
+        + "Duration:" + Duration + ","
         + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
