@@ -135,8 +135,8 @@ namespace Aquila.Extension
 
                              if ( GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure )
                              {
-                                //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
-                                procedure.NotifyFlag( Procedure_Prelaod._infoboardHPBarLoadFinish );
+                                 //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
+                                 procedure.NotifyFlag( Procedure_Prelaod._infoboardHPBarLoadFinish );
                              }
                          },
                         LoadAssetFaildCallBack
