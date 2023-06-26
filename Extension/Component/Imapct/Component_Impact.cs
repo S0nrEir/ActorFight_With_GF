@@ -43,6 +43,7 @@ namespace Aquila.Fight.Impact
         /// </summary>
         private void ImpactDataSystem()
         {
+            EffectSpec_Base tempEffect = null;
             foreach ( var entity in _curr )
             {
                 ref ImpactData impactData = ref _pool.Get( entity );
@@ -58,13 +59,13 @@ namespace Aquila.Fight.Impact
                 //生效
                 if ( impactData._interval >= impactData._period )
                 {
-                    var effectSpec = GetEffect( impactData._effectIndex );
-                    if ( effectSpec is null )
+                    tempEffect = GetEffect( impactData._effectIndex );
+                    if ( tempEffect is null )
                     {
                         Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectIndex}</color>" );
                         continue;
                     }
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effectSpec );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, tempEffect );
 
                     impactData._interval = 0f;
                 }
@@ -75,8 +76,9 @@ namespace Aquila.Fight.Impact
             foreach ( var entity in _invalid )
             {
                 var impactData = _pool.Get( entity );
+                tempEffect = GetEffect( impactData._effectIndex );
+                tempEffect.OnDestroy();
                 RemoveEffect( impactData._effectIndex );
-                //#todo:onEffectDestroy
                 RecycleImpactEntity( entity );
                 _pool.Remove( entity );
             }//end foreach

@@ -100,6 +100,7 @@ namespace Aquila.Fight
                 else
                 {
                     tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
+                    tempEffect.OnDestroy();
                     ReferencePool.Release( tempEffect );
                 }
             }
