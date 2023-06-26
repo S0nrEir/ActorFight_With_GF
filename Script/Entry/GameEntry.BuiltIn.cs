@@ -1,4 +1,4 @@
-﻿using UnityGameFramework.Runtime;
+using UnityGameFramework.Runtime;
 
 namespace Aquila
 {
@@ -35,13 +35,13 @@ namespace Aquila
         //}
 
         /// <summary>
-        /// 获取数据表组件。
+        /// 获取内部数据表组件，内部表只给程序读取，也只给程序配置，不开放给外部
         /// </summary>
-        //public static DataTableComponent DataTable
-        //{
-        //    get;
-        //    private set;
-        //}
+        public static DataTableComponent InternalTable
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// 获取调试组件。
@@ -161,9 +161,9 @@ namespace Aquila
         }
 
         /// <summary>
-        /// 获取界面组件。
+        /// 获取界面组件，内部UI组件
         /// </summary>
-        public static UIComponent UI
+        public static UIComponent BaseUI
         {
             get;
             private set;
@@ -183,24 +183,24 @@ namespace Aquila
         /// </summary>
         private static void InitBuiltinComponents()
         {
-            Base         = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
-            Config       = UnityGameFramework.Runtime.GameEntry.GetComponent<ConfigComponent>();
-            //DataNode   = UnityGameFramework.Runtime.GameEntry.GetComponent<DataNodeComponent>();
-            //DataTable  = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
-            Debugger     = UnityGameFramework.Runtime.GameEntry.GetComponent<DebuggerComponent>();
-            Download     = UnityGameFramework.Runtime.GameEntry.GetComponent<DownloadComponent>();
-            Entity       = UnityGameFramework.Runtime.GameEntry.GetComponent<EntityComponent>();
-            Event        = UnityGameFramework.Runtime.GameEntry.GetComponent<EventComponent>();
-            Fsm          = UnityGameFramework.Runtime.GameEntry.GetComponent<FsmComponent>();
-            Localization = UnityGameFramework.Runtime.GameEntry.GetComponent<LocalizationComponent>();
-            Network      = UnityGameFramework.Runtime.GameEntry.GetComponent<NetworkComponent>();
-            ObjectPool   = UnityGameFramework.Runtime.GameEntry.GetComponent<ObjectPoolComponent>();
-            Procedure    = UnityGameFramework.Runtime.GameEntry.GetComponent<ProcedureComponent>();
-            Resource     = UnityGameFramework.Runtime.GameEntry.GetComponent<ResourceComponent>();
-            Scene        = UnityGameFramework.Runtime.GameEntry.GetComponent<SceneComponent>();
-            Setting      = UnityGameFramework.Runtime.GameEntry.GetComponent<SettingComponent>();
-            Sound        = UnityGameFramework.Runtime.GameEntry.GetComponent<SoundComponent>();
-            UI           = UnityGameFramework.Runtime.GameEntry.GetComponent<UIComponent>();
+            Base          = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
+            Config        = UnityGameFramework.Runtime.GameEntry.GetComponent<ConfigComponent>();
+            //DataNode    = UnityGameFramework.Runtime.GameEntry.GetComponent<DataNodeComponent>();
+            InternalTable = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
+            Debugger      = UnityGameFramework.Runtime.GameEntry.GetComponent<DebuggerComponent>();
+            Download      = UnityGameFramework.Runtime.GameEntry.GetComponent<DownloadComponent>();
+            Entity        = UnityGameFramework.Runtime.GameEntry.GetComponent<EntityComponent>();
+            Event         = UnityGameFramework.Runtime.GameEntry.GetComponent<EventComponent>();
+            Fsm           = UnityGameFramework.Runtime.GameEntry.GetComponent<FsmComponent>();
+            Localization  = UnityGameFramework.Runtime.GameEntry.GetComponent<LocalizationComponent>();
+            Network       = UnityGameFramework.Runtime.GameEntry.GetComponent<NetworkComponent>();
+            ObjectPool    = UnityGameFramework.Runtime.GameEntry.GetComponent<ObjectPoolComponent>();
+            Procedure     = UnityGameFramework.Runtime.GameEntry.GetComponent<ProcedureComponent>();
+            Resource      = UnityGameFramework.Runtime.GameEntry.GetComponent<ResourceComponent>();
+            Scene         = UnityGameFramework.Runtime.GameEntry.GetComponent<SceneComponent>();
+            Setting       = UnityGameFramework.Runtime.GameEntry.GetComponent<SettingComponent>();
+            Sound         = UnityGameFramework.Runtime.GameEntry.GetComponent<SoundComponent>();
+            BaseUI        = UnityGameFramework.Runtime.GameEntry.GetComponent<UIComponent>();
             WebRequest   = UnityGameFramework.Runtime.GameEntry.GetComponent<WebRequestComponent>();
         }
 

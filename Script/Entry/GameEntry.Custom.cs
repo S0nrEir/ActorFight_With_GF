@@ -8,6 +8,9 @@ namespace Aquila
     /// </summary>
     public partial class GameEntry
     {
+        /// <summary>
+        /// 数据表
+        /// </summary>
         public static Component_LuBan DataTable
         {
             get;
@@ -60,7 +63,7 @@ namespace Aquila
         }
 
         /// <summary>
-        /// 全局实例组件
+        /// 全局实例和变量组件
         /// </summary>
         public static Component_GlobalVar GlobalVar
         {
@@ -68,13 +71,28 @@ namespace Aquila
             private set;
         }
 
+        /// <summary>
+        /// Timeline组件
+        /// </summary>
         public static Component_Timeline Timeline
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Impact组件
+        /// </summary>
         public static Component_Impact Impact
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// UI组件
+        /// </summary>
+        public static Component_UI UI
         {
             get;
             private set;
@@ -94,6 +112,7 @@ namespace Aquila
             GlobalVar   = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
             Timeline    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
             Impact      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
+            UI          = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
         }
     }
 }
