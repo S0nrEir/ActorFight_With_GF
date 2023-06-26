@@ -20,7 +20,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 当effect销毁
         /// </summary>
-        public virtual void OnDestroy()
+        public virtual void OnEffectEnd()
         {
             
         }

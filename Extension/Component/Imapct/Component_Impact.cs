@@ -77,7 +77,7 @@ namespace Aquila.Fight.Impact
             {
                 var impactData = _pool.Get( entity );
                 tempEffect = GetEffect( impactData._effectIndex );
-                tempEffect.OnDestroy();
+                tempEffect.OnEffectEnd();
                 RemoveEffect( impactData._effectIndex );
                 RecycleImpactEntity( entity );
                 _pool.Remove( entity );
