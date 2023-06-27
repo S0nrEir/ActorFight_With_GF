@@ -392,7 +392,23 @@ namespace Aquila.Editor.DataTableTools
             }
         }
 
-        public bool SetCodeTemplate(string codeTemplateFileName, Encoding encoding)
+        public bool SetCodeTemplate_V2( string codeTemplate, Encoding encoding )
+        {
+            try
+            {
+                //m_CodeTemplate = File.ReadAllText( codeTemplateFileName, encoding );
+                m_CodeTemplate = codeTemplate;
+                Debug.Log( "Set code template success." );
+                return true;
+            }
+            catch ( Exception exception )
+            {
+                Debug.LogError( exception.Message);
+                return false;
+            }
+        }
+
+        public bool SetCodeTemplate_V1(string codeTemplateFileName, Encoding encoding)
         {
             try
             {

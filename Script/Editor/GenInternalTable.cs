@@ -17,7 +17,7 @@ namespace Aquila.Editor
 
         private static string[] _txtFiles = new string[]
             {
-                "UIForm.txt"
+                "UIForm"
             };
 
         [MenuItem( "Aquila/GenInternalTable" )]

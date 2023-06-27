@@ -29,7 +29,8 @@ namespace Aquila.Editor.DataTableTools
 
         public static void GenerateCodeFile( DataTableProcessor dataTableProcessor, string dataTableName )
         {
-            dataTableProcessor.SetCodeTemplate( _tempLateCode, Encoding.UTF8 );
+            //dataTableProcessor.SetCodeTemplate_V1( _tempLateCode, Encoding.UTF8 );
+            dataTableProcessor.SetCodeTemplate_V2( _tempLateCode, Encoding.UTF8 );
             dataTableProcessor.SetCodeGenerator( DataTableCodeGenerator );
 
             string csharpCodeFileName = Utility.Path.GetRegularPath( Path.Combine( CSharpCodePath, "DR" + dataTableName + ".cs" ) );
