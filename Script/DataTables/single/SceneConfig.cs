@@ -53,6 +53,10 @@ public partial class SceneConfig
     /// 主相机默认世界空间坐标位置
     /// </summary>
      public UnityEngine.Vector3 MainCameraDefaultPosition => _data.MainCameraDefaultPosition;
+    /// <summary>
+    /// hpbar的偏移位置
+    /// </summary>
+     public UnityEngine.Vector3 HPBarPosOffset => _data.HPBarPosOffset;
 
     public void Resolve(Dictionary<string, object> _tables)
     {

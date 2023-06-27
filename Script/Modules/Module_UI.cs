@@ -40,7 +40,7 @@ namespace Aquila.Module
         {
             base.EnsureInit();
             if ( _cached_UI_Component == null )
-                _cached_UI_Component = GameEntry.UI;
+                _cached_UI_Component = GameEntry.BaseUI;
         }
 
         public override void End()
