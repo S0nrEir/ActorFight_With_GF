@@ -18,6 +18,14 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// 当effect销毁
+        /// </summary>
+        public virtual void OnEffectEnd()
+        {
+            
+        }
+
+        /// <summary>
         /// 将effect施加到actor上
         /// </summary>
         public virtual void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )

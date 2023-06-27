@@ -37,6 +37,60 @@ namespace Aquila.Fight.Impact
         }
 
         //----------------------- priv -----------------------
+        
+        /// <summary>
+        /// 轮询处理impact数据
+        /// </summary>
+        private void ImpactDataSystem()
+        {
+            EffectSpec_Base tempEffect = null;
+            foreach ( var entity in _curr )
+            {
+                ref ImpactData impactData = ref _pool.Get( entity );
+                impactData._elapsed += Time.deltaTime;
+                impactData._interval += Time.deltaTime;
+                //impact时间到了，而且不是永久性的imapct
+                if ( impactData._elapsed >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite )
+                {
+                    _invalid.Add( entity );
+                    continue;
+                }
+
+                //生效
+                if ( impactData._interval >= impactData._period )
+                {
+                    tempEffect = GetEffect( impactData._effectIndex );
+                    if ( tempEffect is null )
+                    {
+                        Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectIndex}</color>" );
+                        continue;
+                    }
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, tempEffect );
+
+                    impactData._interval = 0f;
+                }
+                _next.Add( entity );
+            }//end foreach
+
+            //清掉无效或者已经过期的imapct
+            foreach ( var entity in _invalid )
+            {
+                var impactData = _pool.Get( entity );
+                tempEffect = GetEffect( impactData._effectIndex );
+                tempEffect.OnEffectEnd();
+                RemoveEffect( impactData._effectIndex );
+                RecycleImpactEntity( entity );
+                _pool.Remove( entity );
+            }//end foreach
+            _invalid.Clear();
+            _curr.Clear();
+
+            //交换entity实例缓存
+            _tempBuffer = _curr;
+            _curr       = _next;
+            _next       = _tempBuffer;
+        }
+
         /// <summary>
         /// 初始化一个impact数据
         /// </summary>
@@ -120,50 +174,7 @@ namespace Aquila.Fight.Impact
         /// </summary>
         private void Update()
         {
-            foreach ( var entity in _curr )
-            {
-                ref ImpactData impactData = ref _pool.Get( entity );
-                impactData._elapsed += Time.deltaTime;
-                impactData._interval += Time.deltaTime;
-                //impact时间到了，而且不是永久性的imapct
-                if ( impactData._elapsed >= impactData._duration && impactData._policy != Cfg.Enum.DurationPolicy.Infinite )
-                {
-                    _invalid.Add( entity );
-                    continue;
-                }
-
-                //生效
-                if ( impactData._interval >= impactData._period )
-                {
-                    var effectSpec = GetEffect( impactData._effectIndex );
-                    if ( effectSpec is null )
-                    {
-                        Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectIndex}</color>" );
-                        continue;
-                    }
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effectSpec );
-
-                    impactData._interval = 0f;
-                }
-                _next.Add( entity );
-            }//end foreach
-
-            //清掉无效或者已经过期的imapct
-            foreach ( var entity in _invalid )
-            {
-                var impactData = _pool.Get( entity );
-                RemoveEffect( impactData._effectIndex );
-                //#todo:onEffectDestroy
-                RecycleImpactEntity( entity );
-                _pool.Remove( entity );
-            }//end foreach
-            _invalid.Clear();
-            _curr.Clear();
-
-            //交换entity实例缓存
-            _tempBuffer = _curr;
-            _curr = _next;
-            _next = _tempBuffer;
+            ImpactDataSystem();
         }
 
 

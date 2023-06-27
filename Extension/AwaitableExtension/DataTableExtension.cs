@@ -1,4 +1,4 @@
-﻿using Aquila.Config;
+using Aquila.Config;
 using GameFramework.DataTable;
 using System;
 using UnityEngine;
@@ -8,7 +8,7 @@ namespace UGFExtensions
 {
     public static class DataTableExtension
     {
-        private const string DataRowClassPrefixName = "MRG.DR";
+        private const string DataRowClassPrefixName = "DR";
         internal static readonly char[] DataSplitSeparators = new char[] { '\t' };
         internal static readonly char[] DataTrimSeparators = new char[] { '\"' };
 
