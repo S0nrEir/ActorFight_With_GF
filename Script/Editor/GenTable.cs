@@ -16,18 +16,18 @@ namespace  Aquila.Editor
     public class GenTable
     {
         /// <summary>
-        /// 调用表格生成工具
+        /// 调用luban表生成工具，生成luban表配置对应的代码文件和bytes资源文件
         /// </summary>
         [MenuItem("Aquila/GenTable")]
-        public static void GenerateTale()
+        public static void GenTable_()
         {
             try
             {
                 Process pr = new Process();
-                var _bat_path = new DirectoryInfo(@Application.dataPath).Parent.FullName + "/DataTable/";
+                var batPath = new DirectoryInfo(@Application.dataPath).Parent.FullName + "/DataTable/";
                 pr.StartInfo.CreateNoWindow = true;
-                pr.StartInfo.WorkingDirectory = _bat_path;
-                pr.StartInfo.FileName = _bat_path + "gen_code_bin.bat";
+                pr.StartInfo.WorkingDirectory = batPath;
+                pr.StartInfo.FileName = batPath + "gen_code_bin.bat";
                 pr.Start();
                 pr.WaitForExit();
             }
