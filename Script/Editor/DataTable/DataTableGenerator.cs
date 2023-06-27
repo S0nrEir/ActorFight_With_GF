@@ -1,5 +1,11 @@
+//------------------------------------------------------------
+// Game Framework
+// Copyright © 2013-2021 Jiang Yin. All rights reserved.
+// Homepage: https://gameframework.cn/
+// Feedback: mailto:ellan@gameframework.cn
+//------------------------------------------------------------
+
 using GameFramework;
-using StarForce.Editor.DataTableTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Aquila.Editor
+namespace Aquila.Editor.DataTableTools
 {
     public class DataTableGenerator
     {
