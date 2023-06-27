@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-06-27 18:40:20.403
+// 生成时间：2023-06-27 18:49:37.463
 //------------------------------------------------------------
 
 using GameFramework;
@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UGFExtensions;
 using UnityGameFramework.Runtime;
 
 namespace StarForce

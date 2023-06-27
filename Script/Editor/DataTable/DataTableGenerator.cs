@@ -368,6 +368,7 @@ namespace Aquila.Editor.DataTableTools
             "using System.IO;\n" +
             "using System.Text;\n" +
             "using UnityEngine;\n" +
+            "using UGFExtensions;\n"+//这里缺少一行using，自己加上
             "using UnityGameFramework.Runtime;\n\n" +
             "namespace __DATA_TABLE_NAME_SPACE__\n" +
             "{\n" +
