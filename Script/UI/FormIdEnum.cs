@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Aquila.UI
 {
-    public enum FormID : byte
+    public enum FormIdEnum : byte
     {
         
     }
