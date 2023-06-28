@@ -94,6 +94,10 @@ namespace Aquila.Extension
         {
             base.Awake();
             _bytesPath = $"{Application.dataPath}/Res/DataTables/";
+        }
+
+        private void Start()
+        {
             LoadDataTable();
         }
 
