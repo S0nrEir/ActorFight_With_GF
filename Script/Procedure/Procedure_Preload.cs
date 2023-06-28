@@ -4,8 +4,11 @@ using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
+using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using System.Collections.Generic;
+using UGFExtensions;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -19,7 +22,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 主动通知某一个加载标记完成，并且检查预加载状态
         /// </summary>
-        public void NotifyFlag(int flag)
+        public void NotifyFlag( int flag )
         {
             _preloadFlag |= flag;
             OnPreLoadFinished();
@@ -51,6 +54,9 @@ namespace Aquila.Procedure
             base.OnEnter( procedureOwner );
             _preloadFlag = _preloadStateInit;
 
+            GameEntry.Event.Subscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
+
+            PreloadInternalTable();
             PreLoadTables();
             PreLoadObejct();
             PreloadInfoBoard();
@@ -60,12 +66,29 @@ namespace Aquila.Procedure
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
+            GameEntry.Event.Unsubscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
             base.OnLeave( procedureOwner, isShutdown );
         }
 
         private void PreloadInfoBoard()
         {
             GameEntry.InfoBoard.Preload();
+        }
+
+        /// <summary>
+        /// 预加载内部数据表
+        /// </summary>
+        private void PreloadInternalTable()
+        {
+            _datatableLoadedSet = new HashSet<string>();
+            foreach ( var tableName in _internalForms )
+                _datatableLoadedSet.Add( tableName );
+
+            foreach ( var tableName in _internalForms )
+            {
+                var assetPath = @$"Assets/Res/DataTables/Internal/{tableName}.txt";
+                GameEntry.DataTable.LoadDataTable(tableName,assetPath,null);
+            }
         }
 
         /// <summary>
@@ -168,6 +191,32 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
+        ///  表加载成功回调
+        /// </summary>
+        private void OnLoadDataTableSucc( object sender, GameEventArgs e )
+        {
+            var arg = e as LoadDataTableSuccessEventArgs;
+            if ( arg is null )
+                return;
+
+            var iter = _datatableLoadedSet.GetEnumerator();
+            while ( iter.MoveNext() )
+            {
+                if ( arg.DataTableAssetName.Contains( iter.Current ) )
+                {
+                    _datatableLoadedSet.Remove( iter.Current );
+                    break;
+                }
+            }
+
+            if ( _datatableLoadedSet.Count == 0 )
+            {
+                _preloadFlag |= _datatableLoadFinish;
+                OnPreLoadFinished();
+            }
+        }
+
+        /// <summary>
         /// 加载资源失败回调
         /// </summary>
         private void LoadAssetFaildCallBack( string assetName, GameFramework.Resource.LoadResourceStatus status, string errorMessage, object userData ) => throw new GameFrameworkException( $"Load asset {assetName} faild!" );
@@ -185,7 +234,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preloadStateFinish = 0b_0000_0111;
+        private const int _preloadStateFinish = 0b_0001_1111;
 
         /// <summary>
         /// 预加载初始化标记
@@ -211,7 +260,17 @@ namespace Aquila.Procedure
         /// 伤害数字加载完成
         /// </summary>
         public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_1000;
-        
+
+        /// <summary>
+        /// 数据表加载标记
+        /// </summary>
+        private const int _datatableLoadFinish = 0b_0000_0001_0000;
+
+        /// <summary>
+        /// 保存未加载完成的数据表
+        /// </summary>
+        private HashSet<string> _datatableLoadedSet = null;
+
         /// <summary>
         /// 状态机拥有者
         /// </summary>

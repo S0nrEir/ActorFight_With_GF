@@ -19,11 +19,11 @@ namespace Aquila.Editor
             "UserSettings",
         };
         
-        private static string _file_name = @"/AssetSetting.zip";
+        private static string _fileName = @"/AssetSetting.zip";
         
-        private static string _meta_file_name = @"/AssetSetting.zip.meta";
+        private static string _metaFileName = @"/AssetSetting.zip.meta";
         
-        private static string _create_path = Application.dataPath + _file_name;
+        private static string _create_path = Application.dataPath + _fileName;
         
         private const int _default_compress_level = 5;
         
@@ -62,12 +62,12 @@ namespace Aquila.Editor
         private static void PrevOp()
         {
             //��ɾ��ԭ�ļ�
-            var original_file = Application.dataPath + @"/" + _file_name;
+            var original_file = Application.dataPath + @"/" + _fileName;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
 
             //ɾ��meta�ļ�
-            original_file = Application.dataPath + @"/" + _meta_file_name;
+            original_file = Application.dataPath + @"/" + _metaFileName;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
         }
@@ -98,11 +98,11 @@ namespace Aquila.Editor
                 return 0;
             }
             //512000000 bytes
-            FileInfo file_info = new FileInfo( file );
+            FileInfo fileInfo = new FileInfo( file );
             byte[] buffer = new byte[file.Length];
-            var size = 0l;
+            var size = 0L;
             //size = fs.Read( buffer, 0, buffer.Length );
-            size = file_info.Length;
+            size = fileInfo.Length;
             ZipEntry entry = new ZipEntry( file );
             entry.DateTime = DateTime.Now;
             entry.Size = size;

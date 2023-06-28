@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-06-28 10:44:26.034
+// 生成时间：2023-06-28 18:27:33.512
 //------------------------------------------------------------
 
 using GameFramework;
@@ -20,14 +20,14 @@ using UnityGameFramework.Runtime;
 namespace Aquila.UI
 {
 	/// <summary>
-	/// 界面配置表。
+	/// 鐣岄潰閰嶇疆琛?。
 	/// </summary>
 	public class DRUIForm : DataRowBase
 	{
 		private int m_Id = 0;
 
 		/// <summary>
-		/// 获取界面编号。
+		/// 获取鐣岄潰缂栧彿。
 		/// </summary>
 		public override int Id
 {
@@ -37,7 +37,7 @@ namespace Aquila.UI
 			
 }		
 }        /// <summary>
-        /// 获取策划备注。
+        /// 获取绛栧垝澶囨敞。
         /// </summary>
         public string Comment
         {
@@ -46,7 +46,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取资源名称。
+        /// 获取璧勬簮鍚嶇О。
         /// </summary>
         public string AssetName
         {
@@ -55,7 +55,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取界面组名称。
+        /// 获取鐣岄潰缁勫悕绉?鏄?惁鍏佽?澶氫釜鐣岄潰瀹炰緥。
         /// </summary>
         public string UIGroupName
         {
@@ -64,7 +64,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取是否允许多个界面实例。
+        /// 获取鏄?惁鏆傚仠琚?叾瑕嗙洊鐨勭晫闈?鎵撳紑闊虫晥。
         /// </summary>
         public bool AllowMultiInstance
         {
@@ -73,7 +73,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取是否暂停被其覆盖的界面。
+        /// 获取鍏抽棴闊虫晥。
         /// </summary>
         public bool PauseCoveredUIForm
         {
@@ -82,7 +82,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取打开音效。
+        /// 获取。
         /// </summary>
         public int OpenSound
         {
@@ -91,7 +91,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取关闭音效。
+        /// 获取。
         /// </summary>
         public int CloseSound
         {
