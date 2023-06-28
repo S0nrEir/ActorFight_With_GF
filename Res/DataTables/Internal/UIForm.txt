@@ -1,5 +1,5 @@
-#	ç•Œé¢é…ç½®è¡¨							
-#	Id	Comment	AssetName	UIGroupName	AllowMultiInstance	PauseCoveredUIForm	OpenSound	CloseSound
-#	INT	STRING	STRING	STRING	BOOL	BOOL	INT	INT
-#	ç•Œé¢ç¼–å·	ç­–åˆ’å¤‡æ³¨	èµ„æºåç§°	ç•Œé¢ç»„åç§°	æ˜¯å¦å…è®¸å¤šä¸ªç•Œé¢å®ä¾‹	æ˜¯å¦æš‚åœè¢«å…¶è¦†ç›–çš„ç•Œé¢	æ‰“å¼€éŸ³æ•ˆ	å…³é—­éŸ³æ•ˆ
-	1	æµ‹è¯•Form	Assets/Res/UI/TestForm.prefab	Main	FALSE	FALSE	0	0
+#	½çÃæÅäÖÃ±í								
+#	Id	Comment	AssetName	UIGroupName	AllowMultiInstance	PauseCoveredUIForm	OpenSound	CloseSound	HideJoystick
+#	INT	STRING	STRING	STRING	BOOL	BOOL	INT	INT	BOOL
+#	½çÃæ±àºÅ	²ß»®±¸×¢	×ÊÔ´Ãû³Æ	½çÃæ×éÃû³Æ	ÊÇ·ñÔÊĞí¶à¸ö½çÃæÊµÀı	ÊÇ·ñÔİÍ£±»Æä¸²¸ÇµÄ½çÃæ	´ò¿ªÒôĞ§	¹Ø±ÕÒôĞ§	Òş²ØÒÆ¶¯Ò¡¸Ë
+	0	²âÊÔ½çÃæ	Assets/Res/UI/TestForm.prefab	Menu	FALSE	FALSE	0	0	FALSE
