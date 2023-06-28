@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Aquila.Editor
 {
-    public partial class AquilaEditor
+    public class PackAssetSetting
     {
         private static string[] _include_dic = new string[]
         {
@@ -28,7 +28,7 @@ namespace Aquila.Editor
         private const int _default_compress_level = 5;
         
         [MenuItem( "Aquila/PackAssetSetting" )]
-        public static void PackAssetSetting()
+        public static void PackAssetSetting_()
         {
             PrevOp();
 
