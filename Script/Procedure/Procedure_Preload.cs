@@ -290,6 +290,7 @@ namespace Aquila.Procedure
             {
                 if ( assetName.Contains( iter.Current ) )
                 {
+                    //#todo不要用contains检查，抽空改了
                     _datatableLoadedSet.Remove( iter.Current );
                     break;
                 }
