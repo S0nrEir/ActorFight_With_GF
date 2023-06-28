@@ -216,6 +216,15 @@ namespace Aquila.Procedure
         /// 状态机拥有者
         /// </summary>
         private IFsm<IProcedureManager> _procedureOwner = null;
+
+        //#todo放到config里
+        /// <summary>
+        /// 预加载的form配置
+        /// </summary>
+        public static readonly string[] _internalForms = new string[]
+            {
+                "UIForm"
+            };
     }
 
 }
