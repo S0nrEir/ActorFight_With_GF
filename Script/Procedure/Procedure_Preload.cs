@@ -4,8 +4,11 @@ using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
+using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using System.Collections.Generic;
+using UGFExtensions;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -17,11 +20,20 @@ namespace Aquila.Procedure
     public class Procedure_Prelaod : ProcedureBase
     {
         /// <summary>
-        /// 主动通知某一个加载标记完成，并且检查预加载状态
+        /// HPBar加载完成
         /// </summary>
-        public void NotifyFlag(int flag)
+        public void LoadHPBarFinish()
         {
-            _preloadFlag |= flag;
+            _handler.HPBarLoadFinish();
+            OnPreLoadFinished();
+        }
+
+        /// <summary>
+        /// 伤害数字加载完成
+        /// </summary>
+        public void LoadDmgNumberFinish()
+        {
+            _handler.DmgNumberLoadFinish();
             OnPreLoadFinished();
         }
 
@@ -30,7 +42,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void OnPreLoadFinished()
         {
-            if ( _preloadFlag != _preloadStateFinish )
+            if ( !_handler.PreLoadFinish() )
                 return;
 
             System.GC.Collect();
@@ -49,9 +61,12 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _preloadFlag = _preloadStateInit;
+            _handler = new PreloadHandler( _internalForms );
+
+            GameEntry.Event.Subscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
 
             PreLoadTables();
+            PreloadInternalTable();
             PreLoadObejct();
             PreloadInfoBoard();
             //测试配表
@@ -60,6 +75,8 @@ namespace Aquila.Procedure
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
+            GameEntry.Event.Unsubscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
+            _handler = null;
             base.OnLeave( procedureOwner, isShutdown );
         }
 
@@ -69,12 +86,29 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
+        /// 预加载内部数据表
+        /// </summary>
+        private void PreloadInternalTable()
+        {
+            foreach ( var tableName in _internalForms )
+            {
+                var assetPath = @$"Assets/Res/DataTables/Internal/{tableName}.txt";
+                GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
+            }
+        }
+
+        /// <summary>
         /// 预加载数据表
         /// </summary>
         private void PreLoadTables()
         {
             // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
-            _preloadFlag |= _tableLoadFinish;
+            //_preloadFlag |= _tableLoadFinish;
+            //#todo别的预加载逻辑依赖luban数据表，所以luban数据表一开始先加载，不在预加载逻辑做，这里抽空改了
+            //if ( !GameEntry.LuBan.LoadDataTable() )
+            //    return;
+
+            _handler.LoadDataTableFinish();
             OnPreLoadFinished();
         }
 
@@ -134,8 +168,7 @@ namespace Aquila.Procedure
                 pool.Unspawn( obj.Target );
 
             obj_arr = null;
-            // _preload_flags = Tools.SetBitValue( _preload_flags, _terrain_load_flag_bit_offset, false );
-            _preloadFlag |= _terrainLoadFinish;
+            _handler.LoadTerrainFinish();
             OnPreLoadFinished();
         }
 
@@ -156,7 +189,7 @@ namespace Aquila.Procedure
             else
             {
                 var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-                var scene_script_meta = GameEntry.DataTable.Table<Scripts>().Get( 10000 );
+                var scene_script_meta = GameEntry.LuBan.Table<Scripts>().Get( 10000 );
                 procedure_variable.SetValue( new Procedure_Fight_Data()
                 {
                     _sceneScriptMeta = scene_script_meta,
@@ -165,6 +198,19 @@ namespace Aquila.Procedure
                 _procedureOwner.SetData( typeof( Procedure_Fight_Variable ).Name, procedure_variable );
                 ChangeState<Procedure_Fight>( _procedureOwner );
             }
+        }
+
+        /// <summary>
+        ///  表加载成功回调
+        /// </summary>
+        private void OnLoadDataTableSucc( object sender, GameEventArgs e )
+        {
+            var arg = e as LoadDataTableSuccessEventArgs;
+            if ( arg is null )
+                return;
+
+            _handler.OnDataTableLoadSucc( arg.DataTableAssetName );
+            OnPreLoadFinished();
         }
 
         /// <summary>
@@ -178,24 +224,106 @@ namespace Aquila.Procedure
         private GameFramework.Resource.LoadAssetCallbacks _load_terrain_callBack = null;
 
         /// <summary>
+        /// 状态机拥有者
+        /// </summary>
+        private IFsm<IProcedureManager> _procedureOwner = null;
+
+        /// <summary>
+        /// 预加载处理器
+        /// </summary>
+        private PreloadHandler _handler = null;
+
+        //#todo放到config里
+        /// <summary>
+        /// 预加载的form配置
+        /// </summary>
+        public static readonly string[] _internalForms = new string[]
+            {
+                "UIForm"
+            };
+    }
+
+    /// <summary>
+    /// 预加载处理器
+    /// </summary>
+    internal class PreloadHandler
+    {
+        /// <summary>
+        /// 地块加载完成
+        /// </summary>
+        public void LoadTerrainFinish()
+        {
+            _preloadFlag |= _terrainLoadFinish;
+        }
+
+        /// <summary>
+        /// 加载数据表完成
+        /// </summary>
+        public void LoadDataTableFinish()
+        {
+            _preloadFlag |= _tableLoadFinish;
+        }
+
+        /// <summary>
+        /// HPBar加载完成
+        /// </summary>
+        public void HPBarLoadFinish()
+        {
+            _preloadFlag |= _infoboardHPBarLoadFinish;
+        }
+
+        /// <summary>
+        /// 伤害数字加载完成
+        /// </summary>
+        public void DmgNumberLoadFinish()
+        {
+            _preloadFlag |= _infoboardDmgNumberLoadFinish;
+        }
+
+        /// <summary>
+        /// 内部数据表加载成功
+        /// </summary>
+        public void OnDataTableLoadSucc( string assetName )
+        {
+            var iter = _datatableLoadedSet.GetEnumerator();
+            while ( iter.MoveNext() )
+            {
+                if ( assetName.Contains( iter.Current ) )
+                {
+                    _datatableLoadedSet.Remove( iter.Current );
+                    break;
+                }
+            }
+
+            if ( _datatableLoadedSet.Count == 0 )
+                _preloadFlag |= _datatableLoadFinish;
+
+            //DataTableLoadFinish();
+        }
+
+        /// <summary>
+        /// 预加载全部完成
+        /// </summary>
+        public bool PreLoadFinish()
+        {
+            return _preloadFlag == _preloadStateFinish;
+        }
+
+
+        public PreloadHandler( string[] internalTableNames )
+        {
+            _preloadFlag = _preloadStateInit;
+
+            _datatableLoadedSet = new HashSet<string>();
+            foreach ( var name in internalTableNames )
+                _datatableLoadedSet.Add( name );
+        }
+
+        //------------fields------------
+        /// <summary>
         /// 各个资源模块的加载标记
         /// </summary>
         private int _preloadFlag = 0;
-
-        /// <summary>
-        /// 加载完成状态
-        /// </summary>
-        private const int _preloadStateFinish = 0b_0000_0111;
-
-        /// <summary>
-        /// 预加载初始化标记
-        /// </summary>
-        private const int _preloadStateInit = 0b_0000_0000_0000;
-
-        /// <summary>
-        /// 地块加载完成标记
-        /// </summary>
-        private const int _terrainLoadFinish = 0b_0000_0000_0001;
 
         /// <summary>
         /// 数据表加载完成
@@ -203,19 +331,38 @@ namespace Aquila.Procedure
         private const int _tableLoadFinish = 0b_0000_0000_0010;
 
         /// <summary>
-        /// hpbar加载完成
+        /// 地块加载完成标记
         /// </summary>
-        public const int _infoboardHPBarLoadFinish = 0b_0000_0000_0100;
+        private const int _terrainLoadFinish = 0b_0000_0000_0001;
 
         /// <summary>
         /// 伤害数字加载完成
         /// </summary>
         public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_1000;
-        
-        /// <summary>
-        /// 状态机拥有者
-        /// </summary>
-        private IFsm<IProcedureManager> _procedureOwner = null;
-    }
 
+        /// <summary>
+        /// 数据表加载标记
+        /// </summary>
+        private const int _datatableLoadFinish = 0b_0000_0001_0000;
+
+        /// <summary>
+        /// hpbar加载完成
+        /// </summary>
+        public const int _infoboardHPBarLoadFinish = 0b_0000_0000_0100;
+
+        /// <summary>
+        /// 加载完成状态
+        /// </summary>
+        private const int _preloadStateFinish = 0b_0001_1111;
+
+        /// <summary>
+        /// 预加载初始化标记
+        /// </summary>
+        private const int _preloadStateInit = 0b_0000_0000_0000;
+
+        /// <summary>
+        /// 保存未加载完成的数据表
+        /// </summary>
+        private HashSet<string> _datatableLoadedSet = null;
+    }
 }

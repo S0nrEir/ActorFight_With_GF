@@ -8,7 +8,7 @@ namespace UGFExtensions
 {
     public static class DataTableExtension
     {
-        private const string DataRowClassPrefixName = "DR";
+        private const string DataRowClassPrefixName = "Aquila.UI.DR";
         internal static readonly char[] DataSplitSeparators = new char[] { '\t' };
         internal static readonly char[] DataTrimSeparators = new char[] { '\"' };
 

@@ -37,7 +37,7 @@ namespace Aquila
         /// <summary>
         /// 获取内部数据表组件，内部表只给程序读取，也只给程序配置，不开放给外部
         /// </summary>
-        public static DataTableComponent InternalTable
+        public static DataTableComponent DataTable
         {
             get;
             private set;
@@ -186,7 +186,7 @@ namespace Aquila
             Base          = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
             Config        = UnityGameFramework.Runtime.GameEntry.GetComponent<ConfigComponent>();
             //DataNode    = UnityGameFramework.Runtime.GameEntry.GetComponent<DataNodeComponent>();
-            InternalTable = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
+            DataTable     = UnityGameFramework.Runtime.GameEntry.GetComponent<DataTableComponent>();
             Debugger      = UnityGameFramework.Runtime.GameEntry.GetComponent<DebuggerComponent>();
             Download      = UnityGameFramework.Runtime.GameEntry.GetComponent<DownloadComponent>();
             Entity        = UnityGameFramework.Runtime.GameEntry.GetComponent<EntityComponent>();

@@ -27,14 +27,14 @@ namespace Aquila.Fight.FSM
                 return false;
             }
             var result = param as AbilityResult_Use;
-            _abilityMeta = GameEntry.DataTable.Tables.Ability.Get(result._abilityID);
+            _abilityMeta = GameEntry.LuBan.Tables.Ability.Get(result._abilityID);
             if ( _abilityMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->_abilityMeta is null</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META, true );
             }
 
-            _timelineMeta = GameEntry.DataTable.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
+            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
             if ( _timelineMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );

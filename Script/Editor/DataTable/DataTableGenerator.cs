@@ -70,7 +70,7 @@ namespace Aquila.Editor.DataTableTools
             string dataTableName = ( string ) userData;
 
             codeContent.Replace( "__DATA_TABLE_CREATE_TIME__", DateTime.UtcNow.ToLocalTime().ToString( "yyyy-MM-dd HH:mm:ss.fff" ) );
-            codeContent.Replace( "__DATA_TABLE_NAME_SPACE__", "StarForce" );
+            codeContent.Replace( "__DATA_TABLE_NAME_SPACE__", "Aquila.UI" );
             codeContent.Replace( "__DATA_TABLE_CLASS_NAME__", "DR" + dataTableName );
             codeContent.Replace( "__DATA_TABLE_COMMENT__", dataTableProcessor.GetValue( 0, 1 ) + "。" );
             codeContent.Replace( "__DATA_TABLE_ID_COMMENT__", "获取" + dataTableProcessor.GetComment( dataTableProcessor.IdColumn ) + "。" );
@@ -372,22 +372,22 @@ namespace Aquila.Editor.DataTableTools
             "using UnityGameFramework.Runtime;\n\n" +
             "namespace __DATA_TABLE_NAME_SPACE__\n" +
             "{\n" +
-            "/// <summary>\n" +
-            "/// __DATA_TABLE_COMMENT__\n" +
-            "/// </summary>\n" +
-            "public class __DATA_TABLE_CLASS_NAME__ : DataRowBase\n" +
+            "\t/// <summary>\n" +
+            "\t/// __DATA_TABLE_COMMENT__\n" +
+            "\t/// </summary>\n" +
+            "\tpublic class __DATA_TABLE_CLASS_NAME__ : DataRowBase\n" +
+            "\t{\n" +
+            "\t\tprivate int m_Id = 0;\n\n" +
+            "\t\t/// <summary>\n" +
+            "\t\t/// __DATA_TABLE_ID_COMMENT__\n" +
+            "\t\t/// </summary>\n" +
+            "\t\tpublic override int Id\n" +
             "{\n" +
-            "private int m_Id = 0;\n\n" +
-            "/// <summary>\n" +
-            "/// __DATA_TABLE_ID_COMMENT__\n" +
-            "/// </summary>\n" +
-            "public override int Id\n" +
+            "\t\t\tget\n" +
             "{\n" +
-            "get\n" +
-            "{\n" +
-            "return m_Id;\n" +
-            "\n}" +
-            "\n}" +
+            "\t\t\t\treturn m_Id;\n" +
+            "\t\t\t\n}" +
+            "\t\t\n}" +
             "__DATA_TABLE_PROPERTIES__\n" +
             "__DATA_TABLE_PARSER__\n" +
             "__DATA_TABLE_PROPERTY_ARRAY__\n" +

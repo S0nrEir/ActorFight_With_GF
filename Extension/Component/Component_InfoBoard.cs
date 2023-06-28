@@ -114,9 +114,7 @@ namespace Aquila.Extension
         public void Preload()
         {
             if ( _init_flag )
-            {
                 return;
-            }
 
             //创建hpbar对象池和资源
             var hp_pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>( typeof( Object_HPBar ).Name, 0xf );
@@ -136,7 +134,8 @@ namespace Aquila.Extension
                              if ( GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure )
                              {
                                  //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
-                                 procedure.NotifyFlag( Procedure_Prelaod._infoboardHPBarLoadFinish );
+                                 //procedure.NotifyFlag( Procedure_Prelaod._infoboardHPBarLoadFinish );
+                                 procedure.LoadHPBarFinish();
                              }
                          },
                         LoadAssetFaildCallBack
@@ -160,7 +159,8 @@ namespace Aquila.Extension
 
                             if ( GameEntry.Procedure.CurrentProcedure is Procedure_Prelaod procedure )
                             {
-                                procedure.NotifyFlag( Procedure_Prelaod._infoboardDmgNumberLoadFinish );
+                                //procedure.NotifyFlag( Procedure_Prelaod._infoboardDmgNumberLoadFinish );
+                                procedure.LoadDmgNumberFinish();
                             }
                         },
                         LoadAssetFaildCallBack
