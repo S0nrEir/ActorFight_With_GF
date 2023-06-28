@@ -97,7 +97,7 @@ namespace Aquila.Procedure
         private void MainCameraInitializeSetting()
         {
             _mainCamera = GameEntry.GlobalVar.MainCamera;
-            var sceneConfig = GameEntry.DataTable.Tables.SceneConfig;
+            var sceneConfig = GameEntry.LuBan.Tables.SceneConfig;
             _mainCamera.transform.eulerAngles = sceneConfig.Main_Camera_Default_Euler;
             _mainCamera.transform.position = sceneConfig.MainCameraDefaultPosition;
 

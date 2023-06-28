@@ -156,7 +156,7 @@ namespace Aquila.Procedure
             else
             {
                 var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
-                var scene_script_meta = GameEntry.DataTable.Table<Scripts>().Get( 10000 );
+                var scene_script_meta = GameEntry.LuBan.Table<Scripts>().Get( 10000 );
                 procedure_variable.SetValue( new Procedure_Fight_Data()
                 {
                     _sceneScriptMeta = scene_script_meta,

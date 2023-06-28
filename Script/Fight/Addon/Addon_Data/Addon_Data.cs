@@ -39,7 +39,7 @@ namespace Aquila.Fight.Addon
         public override void Init(Module_ProxyActor.ActorInstance instance)
         {
             base.Init(instance);
-            _meta = GameEntry.DataTable.Table<RoleMeta>().Get( instance.Actor.RoleMetaID );
+            _meta = GameEntry.LuBan.Table<RoleMeta>().Get( instance.Actor.RoleMetaID );
             if ( _meta is null )
                 throw new GameFrameworkException( $"faild to set meta role id:{instance.Actor.RoleMetaID},meta is null" );
         }

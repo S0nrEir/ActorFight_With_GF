@@ -22,7 +22,7 @@ namespace Aquila.Module
             var temp = param as Fight_Param;
             GenerateFightSceneTerrain( temp.x_width,temp.z_width );
             //地形设置在地块加载之后
-            var meta = GameEntry.DataTable.Table<Scripts>().Get( 10000 );
+            var meta = GameEntry.LuBan.Table<Scripts>().Get( 10000 );
             GameEntry.Lua.Load( meta );
             //GameEntry.Lua.Load( GameEntry.DataTable.Tables.TB_Scripts.Get( 10000 ), GameConfig.Module.MODULE_TERRAIN_ENVIR_KEY );
 
@@ -57,7 +57,7 @@ namespace Aquila.Module
             var pool = GameEntry.ObjectPool.GetObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
             var xOffset = 0f;
             var zOffset = 0f;
-            var scene_config = GameEntry.DataTable.Tables.SceneConfig;
+            var scene_config = GameEntry.LuBan.Tables.SceneConfig;
             for ( int z = 0; z < z_width; z++ )
             {
                 zOffset = scene_config.Terrain_Block_Offset_Distance * z;
@@ -179,7 +179,7 @@ namespace Aquila.Module
 
         public override void EnsureInit()
         {
-            var scene_config = GameEntry.DataTable.Tables.SceneConfig;
+            var scene_config = GameEntry.LuBan.Tables.SceneConfig;
             var size = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width;
             if ( _terrainCacheDic is null )
                 _terrainCacheDic = new Dictionary<int, Object_Terrain>( size );

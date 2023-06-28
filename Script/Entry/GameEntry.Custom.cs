@@ -11,7 +11,7 @@ namespace Aquila
         /// <summary>
         /// 数据表
         /// </summary>
-        public static Component_LuBan DataTable
+        public static Component_LuBan LuBan
         {
             get;
             private set;
@@ -104,7 +104,7 @@ namespace Aquila
         private static void InitCustomComponents()
         {
             Timer       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timer>();
-            DataTable   = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
+            LuBan       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_LuBan>();
             Lua         = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Lua>();
             Module      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Module>();
             //TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();

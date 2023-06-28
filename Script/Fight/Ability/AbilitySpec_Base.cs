@@ -55,9 +55,9 @@ namespace Aquila.Fight
                 return;
 
             _costEffect = ReferencePool.Acquire<EffectSpec_Cost>();
-            _costEffect.Init( GameEntry.DataTable.Table<Effect>().Get( Meta.CostEffectID ) );
+            _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
             _cdEffect = ReferencePool.Acquire<EffectSpec_CoolDown>();
-            _cdEffect.Init( GameEntry.DataTable.Table<Effect>().Get( Meta.CoolDownEffectID ) );
+            _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Aquila.Fight
             EffectSpec_Base tempEffect = null;
             foreach ( var effectID in Meta.effects )
             {
-                effectMeta = GameEntry.DataTable.Table<Effect>().Get( effectID );
+                effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
                 if ( effectMeta is null )
                 {
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
