@@ -298,8 +298,6 @@ namespace Aquila.Procedure
 
             if ( _datatableLoadedSet.Count == 0 )
                 _preloadFlag |= _datatableLoadFinish;
-
-            //DataTableLoadFinish();
         }
 
         /// <summary>

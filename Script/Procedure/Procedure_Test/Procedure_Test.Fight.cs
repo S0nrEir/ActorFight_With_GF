@@ -20,9 +20,6 @@ namespace Aquila.Procedure
     {
         private void OnFireActionPerformed( InputAction.CallbackContext ctx )
         {
-            // if(ctx.interaction is PressInteraction)
-            //     TestFight();
-
             if ( ctx.interaction is not PressInteraction )
                 return;
 
