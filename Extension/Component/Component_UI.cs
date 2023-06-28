@@ -1,3 +1,4 @@
+using GameFramework.DataTable;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Aquila.Extension
         /// </summary>
         public void Open(int formID)
         {
-            
+
         }
 
         /// <summary>

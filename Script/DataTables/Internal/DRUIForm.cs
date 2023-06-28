@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-06-27 18:54:11.088
+// 生成时间：2023-06-28 10:44:26.034
 //------------------------------------------------------------
 
 using GameFramework;
@@ -17,7 +17,7 @@ using UnityEngine;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
-namespace StarForce
+namespace Aquila.UI
 {
 	/// <summary>
 	/// 界面配置表。
