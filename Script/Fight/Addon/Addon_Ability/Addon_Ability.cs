@@ -15,6 +15,16 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
+
+        /// <summary>
+        /// 获取cd
+        /// </summary>
+        public (float remain, float duration) CoolDown(int abilityID)
+        {
+            var spec = GetAbilitySpec(abilityID);
+            return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
+        }
+
         /// <summary>
         /// 使用技能
         /// </summary>

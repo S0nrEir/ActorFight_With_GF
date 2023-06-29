@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
@@ -20,7 +21,10 @@ namespace Aquila.UI
         /// </summary>
         private void OnIconItemClicked(int abilityID)
         {
-            
+            //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
+            //_abilityIdArr[2]:1002
+            //_enemyActorIdArr[0]:1001
+            _actorProxy.Ability2SingleTarget(_actorID,_enemyActorIdArr[0],_abilityIdArr[2]);
         }
 
         /// <summary>
@@ -68,9 +72,14 @@ namespace Aquila.UI
             _iconItemDic = null;
         }
 
-        private void Update()
+        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            
+            foreach (var id in _abilityIdArr)
+            {
+                var cd = _actorProxy.GetCoolDown(_actorID, id);
+                var percent = cd.remain / cd.duration;
+                _iconItemDic[id].CD(percent,percent.ToString());
+            }
         }
 
         protected override void OnReveal()
@@ -145,8 +154,13 @@ namespace Aquila.UI
             /// </summary>
             public void CD(float percent,string text)
             {
-                _cd.fillAmount = percent;
-                _text.text = text;
+                Tools.SetActive(_cd.gameObject,percent > 0);
+                Tools.SetActive(_text.gameObject,percent > 0);
+                if (percent > 0)
+                {
+                    _cd.fillAmount = percent;
+                    _text.text = text;
+                }
             }
             
             /// <summary>

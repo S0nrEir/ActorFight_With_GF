@@ -13,6 +13,20 @@ namespace Aquila.Module
         //-----------------------pub-----------------------
         
         /// <summary>
+        /// 获取一个技能的冷却
+        /// </summary>
+        public (float remain, float duration) GetCoolDown(int actorID,int abilityID)
+        {
+            var instance = Get(actorID);
+            if (instance is null)
+                return (1f, 1f);
+
+            var addon = instance.GetAddon<Addon_Ability>();
+            var cd = addon.CoolDown(abilityID);
+            return (cd.remain, cd.duration);
+        }
+
+        /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
         public (bool succ, float value) GetCorrectionAttr( int actorID, Actor_Base_Attr type )

@@ -25,6 +25,11 @@ namespace Aquila.Fight
         //子弹类技能怎么配置：技能表添加类型，比如召唤物，子弹类，蓄力，位移等，根据类型生成特殊的spec，使用技能时加载actor，路径就放在Numric字段----------暂时不用了，可以用effect来做
 
         /// <summary>
+        /// cd effect
+        /// </summary>
+        public EffectSpec_CoolDown CoolDown => _cdEffect;
+
+        /// <summary>
         /// 移除tag
         /// </summary>
         public void RemoveTag( ushort bitToRemove )
