@@ -6,8 +6,12 @@ namespace Aquial.UI
 	public enum FormIdEnum : byte 
 	{
 		/// <summary>
-		/// 测试Form
+		/// ���Խ���
 		/// <summary>
 		TestForm,
+		/// <summary>
+		/// ���ܽ���
+		/// <summary>
+		AbilityForm,
 	}
 }

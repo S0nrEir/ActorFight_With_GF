@@ -3,3 +3,4 @@
 #	INT	STRING	STRING	STRING	BOOL	BOOL	INT	INT	BOOL
 #	界面编号	策划备注	资源名称	界面组名称	是否允许多个界面实例	是否暂停被其覆盖的界面	打开音效	关闭音效	隐藏移动摇杆
 	0	测试界面	Assets/Res/UI/TestForm.prefab	Menu	FALSE	FALSE	0	0	FALSE
+	1	技能界面	Assets/Res/UI/AbilityForm.prefab	Menu	FALSE	FALSE	0	0	FALSE

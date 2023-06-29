@@ -3,7 +3,7 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.UI
 {
-    public class TestForm : UIFormLogic
+    public class Form_Test : UIFormLogic
     {
         protected override void OnOpen( object userData )
         {
