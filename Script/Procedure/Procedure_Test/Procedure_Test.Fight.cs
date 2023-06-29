@@ -19,23 +19,6 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_Test_Fight : ProcedureBase
     {
-        private void OnFireActionPerformed( InputAction.CallbackContext ctx )
-        {
-            if ( ctx.interaction is not PressInteraction )
-                return;
-
-            if ( _loadFlagCurrState != _loadFlagFinish )
-                return;
-
-            //单对单，测试物理伤害
-            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
-
-            //单对多，测试物理伤害
-            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2MultiTarget( _actorID1, new int[]{_actorID2,_actorID3,_actorID4}, _testAbilityMetaID );
-
-            //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
-        }
-
         /// <summary>
         /// 该流程加载是否完成
         /// </summary>
@@ -172,30 +155,6 @@ namespace Aquila.Procedure
             LoadActor();
             //加载临时输入配置
             //#todo输入配置现在走界面按钮
-            return;
-            GameEntry.Resource.LoadAsset( @"Assets/Samples/InputSystem/1_3_0/SimpleDemo/SimpleControls.inputactions", new LoadAssetCallbacks
-                (
-                    //succ callback
-                    ( assetName, asset, duration, userData ) =>
-                    {
-                        var action_asset = ( asset as InputActionAsset );
-                        if ( action_asset is null || action_asset.actionMaps.Count == 0 )
-                        {
-                            Debug.LogError( $"action_asset is null || action_asset.actionMaps.Count == 0" );
-                            return;
-                        }
-                        var map = action_asset.FindActionMap( "gameplay", true );
-                        _fireAction = map.FindAction( "fire", true );
-                        _fireAction.performed += OnFireActionPerformed;
-                        _fireAction.Enable();
-                        action_asset.Enable();
-                    },
-                    //faild callback
-                    ( assetName, status, errorMessage, userData ) =>
-                    {
-                    }
-                )
-            );
         }
 
         private int _actorID1 = 0;
@@ -203,7 +162,6 @@ namespace Aquila.Procedure
         private int _actorID3 = 0;
         private int _actorID4 = 0;
 
-        private InputAction _fireAction = null;
 
         /// <summary>
         /// 加载actor1
