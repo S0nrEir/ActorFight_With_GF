@@ -16,6 +16,14 @@ namespace Aquila.UI
     public class Form_Ability : UIFormLogic
     {
         /// <summary>
+        /// click事件
+        /// </summary>
+        private void OnIconItemClicked(int abilityID)
+        {
+            
+        }
+
+        /// <summary>
         /// 初始化缓存item
         /// </summary>
         private void InitItem()
@@ -32,8 +40,10 @@ namespace Aquila.UI
                 generated.transform.SetParent(_grid.transform);
                 generated.transform.localScale = Vector3.one;
                 generated.transform.eulerAngles = Vector3.zero;
+                Tools.SetActive(generated,true);
+                
                 tempItem = ReferencePool.Acquire<AbilityIconItem>();
-                tempItem.Setup(generated,id);
+                tempItem.Setup(generated,id,OnIconItemClicked);
                 _iconItemDic.Add(id,tempItem);
             }
         }
@@ -92,7 +102,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 模板
+        /// 模板item
         /// </summary>
         [SerializeField] private GameObject _tempGameObejct = null;
 
@@ -130,27 +140,54 @@ namespace Aquila.UI
         /// </summary>
         private class AbilityIconItem : IReference
         {
-            public void Setup(GameObject go,int abilityID)
+            /// <summary>
+            /// 设置CD
+            /// </summary>
+            public void CD(float percent,string text)
+            {
+                _cd.fillAmount = percent;
+                _text.text = text;
+            }
+            
+            /// <summary>
+            /// 初始化
+            /// </summary>
+            public void Setup(GameObject go,int abilityID,Action<int> _clickCallBack)
             {
                 _root = go;
                 _abilityID = abilityID;
+                _cd = Tools.GetComponent<Image>(go.transform, "cd");
+                _text = Tools.GetComponent<Text>(go.transform, "Text");
+                _abilityIdText = Tools.GetComponent<Text>(go.transform, "AbilityIdText");
+                _image = Tools.GetComponent<Image>(go, "Image");
+                _button = Tools.GetComponent<Button>(_image.gameObject);
                 
+                _button.onClick.AddListener(() => _clickCallBack.Invoke(abilityID));
+                
+                _abilityIdText.text = _abilityID.ToString();
                 
             }
 
+            /// <summary>
+            /// 清理
+            /// </summary>
             public void Clear()
             {
+                _button.onClick.RemoveAllListeners();
                 _root          = null;
                 _abilityID     = -1;
                 _cd            = null;
                 _text          = null;
                 _abilityIdText = null;
+                _button        = null;
+                _image         = null;
             }
             
             private Text _abilityIdText = null;
             private Text _text = null;
             private Image _cd = null;
-            
+            private Image _image = null;
+            private Button _button = null;
             /// <summary>
             /// 技能ID
             /// </summary>
