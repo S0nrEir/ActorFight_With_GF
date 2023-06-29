@@ -235,6 +235,8 @@ namespace Aquila.Procedure
         /// <summary>
         /// 测试技能ID
         /// </summary>
+#pragma warning disable 0414 // 删除未使用的私有成员
         private int _testAbilityMetaID = 1002;
+#pragma warning restore 0414 // 删除未使用的私有成员
     }
 }

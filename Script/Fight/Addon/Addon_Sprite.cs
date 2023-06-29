@@ -23,8 +23,8 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 精灵图渲染器
         /// </summary>
-#pragma warning disable IDE0051 // 删除未使用的私有成员
+#pragma warning disable 0414 // 删除未使用的私有成员
         private SpriteRenderer _spriteRender = null;
-#pragma warning restore IDE0051 // 删除未使用的私有成员
+#pragma warning restore 0414 // 删除未使用的私有成员
     }
 }

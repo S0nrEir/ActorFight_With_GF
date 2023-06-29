@@ -20,7 +20,7 @@ namespace Aquila.Fight.FSM
         private bool IsAbilityDataValid( object param )
         {
             int state = 0;
-            if ( param is null || param is not AbilityResult_Use)
+            if ( param is null || param is not AbilityResult_Use) 
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
