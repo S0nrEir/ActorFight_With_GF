@@ -394,8 +394,8 @@ namespace Aquila.Editor.DataTableTools
             "}\n" +
             "}\n";
 
-        private const string DataTablePath = @"Assets/Res/DataTables/Internal";
-        private const string CSharpCodePath = @"Assets/Script/DataTables/Internal";
+        private const string DataTablePath = @"Assets/Res/Config";
+        private const string CSharpCodePath = @"Assets/Script/Config/InternalTable";
         private static readonly Regex EndWithNumberRegex = new Regex( @"\d+$" );
         private static readonly Regex NameRegex = new Regex( @"^[A-Z][A-Za-z0-9_]*$" );
 
