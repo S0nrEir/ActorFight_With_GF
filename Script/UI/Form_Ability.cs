@@ -36,7 +36,7 @@ namespace Aquila.UI
 
             var result = param._resultParam;
             if ( !result._succ )
-                Log.Info( $"<color=white>{Tools.Fight.AbilityUseFaildDescription( result._stateDescription )}</colorj>" );
+                Log.Info( $"<color=white>{Tools.Fight.AbilityUseFaildDescription( result._stateDescription )}</color>" );
         }
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace Aquila.UI
         /// </summary>
         private void OnIconItemClicked( int abilityID )
         {
+            Debug.Log( "111111111" );
             //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
             //_abilityIdArr[2]:1002
             //_enemyActorIdArr[0]:1001
@@ -101,6 +102,8 @@ namespace Aquila.UI
             {
                 var cd = _actorProxy.GetCoolDown( _actorID, id );
                 var percent = cd.remain / cd.duration;
+                if ( percent >= 1f )
+                    ;
                 _iconItemDic[id].CD( percent, percent.ToString() );
             }
         }
@@ -209,15 +212,16 @@ namespace Aquila.UI
             /// </summary>
             public void Setup( GameObject go, int abilityID, Action<int> _clickCallBack )
             {
-                _root = go;
-                _abilityID = abilityID;
-                _cd = Tools.GetComponent<Image>( go.transform, "cd" );
-                _text = Tools.GetComponent<Text>( go.transform, "Text" );
-                _abilityIdText = Tools.GetComponent<Text>( go.transform, "AbilityIdText" );
-                _image = Tools.GetComponent<Image>( go, "Image" );
-                _button = Tools.GetComponent<Button>( _image.gameObject );
-
-                _button.onClick.AddListener( () => _clickCallBack.Invoke( abilityID ) );
+                _root                           = go;
+                _abilityID                      = abilityID;
+                _cd                             = Tools.GetComponent<Image>( go.transform, "cd" );
+                _text                           = Tools.GetComponent<Text>( go.transform, "Text" );
+                _abilityIdText                  = Tools.GetComponent<Text>( go.transform, "AbilityIdText" );
+                _image                          = Tools.GetComponent<Image>( go, "Image" );
+                //_button                       = Tools.GetComponent<Button>( go, "Button" );
+                _button                         = Tools.GetComponent<Button>( _image.gameObject );
+                clickCallBack = _clickCallBack;
+                _button.onClick.AddListener( OnClicked );
 
                 _abilityIdText.text = _abilityID.ToString();
 
@@ -228,6 +232,7 @@ namespace Aquila.UI
             /// </summary>
             public void Clear()
             {
+                clickCallBack = null;
                 _button.onClick.RemoveAllListeners();
                 _root = null;
                 _abilityID = -1;
@@ -236,6 +241,11 @@ namespace Aquila.UI
                 _abilityIdText = null;
                 _button = null;
                 _image = null;
+            }
+
+            private void OnClicked()
+            {
+                clickCallBack?.Invoke( _abilityID );
             }
 
             private Text _abilityIdText = null;
@@ -247,6 +257,7 @@ namespace Aquila.UI
             /// 技能ID
             /// </summary>
             private int _abilityID = -1;
+            private Action<int> clickCallBack = null;
 
             /// <summary>
             /// 根节点
