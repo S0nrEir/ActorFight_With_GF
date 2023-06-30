@@ -92,7 +92,8 @@ namespace Aquila.Procedure
         {
             foreach ( var tableName in _internalForms )
             {
-                var assetPath = @$"Assets/Res/DataTables/Internal/{tableName}.txt";
+                //#todo：配置成常量路径
+                var assetPath = @$"Assets/Res/Config/{tableName}.txt";
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
             }
         }
