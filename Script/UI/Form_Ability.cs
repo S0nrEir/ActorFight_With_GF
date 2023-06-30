@@ -1,21 +1,44 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
+using GameFramework.Event;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.UI
 {
+    
     /// <summary>
     /// 技能form
     /// </summary>
     public class Form_Ability : UIFormLogic
     {
+
+        /// <summary>
+        /// 技能命中
+        /// </summary>
+        public void OnAbilityHit( object sender, GameEventArgs arg )
+        {
+        }
+
+        /// <summary>
+        /// 使用技能
+        /// </summary
+        private void OnUseAbility( object sender, GameEventArgs arg )
+        {
+            var param = arg as EventArg_OnUseAblity;
+            if ( param is null )
+                return;
+
+            var result = param._resultParam;
+            if ( !result._succ )
+                Log.Info( $"<color=white>{Tools.Fight.AbilityUseFaildDescription(result._stateDescription)}</colorj>" );
+        }
+
         /// <summary>
         /// click事件
         /// </summary>
@@ -100,6 +123,9 @@ namespace Aquila.UI
             _actorProxy      = GameEntry.Module.GetModule<Module_ProxyActor>();
             InitItem();
             ReferencePool.Release(param);
+
+            GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
+            GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
         }
 
         protected override void OnClose(bool isShutdown, object userData)
@@ -107,6 +133,8 @@ namespace Aquila.UI
             _actorID = -1;
             _actorProxy = null;
             ClearItemCacheDic();
+            GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
+            GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit);
             base.OnClose(isShutdown, userData);
         }
 
@@ -220,7 +248,12 @@ namespace Aquila.UI
     public class Form_AbilityParam : IReference
     {
         public int _mainActorID = -1;
+        
         public int[] _enemyActorID = null;
+        
+        /// <summary>
+        /// {1000,1001,1002}
+        /// </summary>
         public int[] _abilityID = null;
         
         public void Clear()

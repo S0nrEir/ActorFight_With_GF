@@ -192,7 +192,7 @@ namespace Aquila.Module
                 // return result;
             }
             ( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
-            // GameEntry.Event.Fire( castorInstance, EventArg_OnUseAblity.Create( result ) );
+            GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
             // ReferencePool.Release( result );
         }
 

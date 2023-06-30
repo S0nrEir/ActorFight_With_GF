@@ -15,6 +15,31 @@ namespace Aquila.Toolkit
         public static class Fight
         {
             /// <summary>
+            /// 获取技能使用失败的状态描述
+            /// </summary>
+            public static string AbilityUseFaildDescription(int stateDescription)
+            {
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )
+                    return "技能无目标";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+                    return "无施法者";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH ) )
+                    return "法力值不够";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.CD_NOT_OK ) )
+                    return "技能还未准备就绪";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_PARAM ) )
+                    return "无技能参数";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+                    return "无施法者";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+                    return "无技能配置参数";
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+                    return "没有timeline配置参数";
+
+                return string.Empty;
+            }
+
+            /// <summary>
             /// 累加伤害
             /// </summary
             public static int AddDealedDamage(int value,int toAdd)
