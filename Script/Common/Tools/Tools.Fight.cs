@@ -19,6 +19,7 @@ namespace Aquila.Toolkit
             /// </summary>
             public static string AbilityUseFaildDescription(int stateDescription)
             {
+                //#todo：替换成多语言
                 if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )
                     return "技能无目标";
                 else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
