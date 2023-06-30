@@ -25,6 +25,20 @@ namespace Aquila.Fight
         //子弹类技能怎么配置：技能表添加类型，比如召唤物，子弹类，蓄力，位移等，根据类型生成特殊的spec，使用技能时加载actor，路径就放在Numric字段----------暂时不用了，可以用effect来做
 
         /// <summary>
+        /// 扣除技能消耗
+        /// </summary>
+        public void Deduct()
+        {
+            //刷新CD
+            if ( _cdEffect != null )
+                _cdEffect._remain = _cdEffect._totalDuration;
+
+            //扣除cost
+            if ( _costEffect != null )
+                _costEffect.Apply( _owner, null );
+        }
+
+        /// <summary>
         /// cd effect
         /// </summary>
         public EffectSpec_CoolDown CoolDown => _cdEffect;
@@ -73,13 +87,13 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            //刷新CD
-            if ( _cdEffect != null )
-                _cdEffect._remain = _cdEffect._totalDuration;
+            ////刷新CD
+            //if ( _cdEffect != null )
+            //    _cdEffect._remain = _cdEffect._totalDuration;
 
-            //扣除cost
-            if ( _costEffect != null )
-                _costEffect.Apply( _owner, result );
+            ////扣除cost
+            //if ( _costEffect != null )
+            //    _costEffect.Apply( _owner, result );
 
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;

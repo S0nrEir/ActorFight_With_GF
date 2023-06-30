@@ -16,6 +16,15 @@ namespace  Aquila.Fight.Addon
     {
         //----------------------pub----------------------
 
+        //#todo扣除技能消耗的逻辑这块想一下要不要写成这样
+        /// <summary>
+        /// 扣除技能消耗
+        /// </summary>
+        public void Deduct(int abilityID)
+        {
+            GetAbilitySpec( abilityID )?.Deduct();
+        }
+
         /// <summary>
         /// 获取cd
         /// </summary>
