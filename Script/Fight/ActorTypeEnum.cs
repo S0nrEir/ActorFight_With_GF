@@ -4,30 +4,6 @@ using UnityEngine;
 
 namespace Aquila.Fight.Actor
 {
-    /// <summary>
-    /// 阵营类型
-    /// </summary>
-    public enum ForceTypeEnum
-    {
-        //无效
-        Invalid = -1,
-        //区域
-        Zero = 0,
-        One,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        
-        //阵营
-        Eight,
-        Nine,
-        Maximun,
-    }
-
-
     public enum ActorTypeEnum
     {
         INVALID = -1,
