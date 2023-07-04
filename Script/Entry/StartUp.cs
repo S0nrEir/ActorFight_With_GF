@@ -15,7 +15,5 @@ public class StartUp : MonoBehaviour
     }
 
     [SerializeField] private GameObject _entryObject = null;
-
-    //#todo eventSystem别放在这里
     [SerializeField] private GameObject _eventSystem = null;
 }
