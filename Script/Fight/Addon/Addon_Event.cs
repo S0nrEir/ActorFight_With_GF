@@ -1,4 +1,4 @@
-﻿using Aquila.Fight.Actor;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Aquila.Fight.Addon
 {
     /// <summary>
-    /// actor的Event组件，只保留于Actor内部，event也只能通知到自己的Actor，这样做是为了让actor，state，addon互相解耦
+    /// actor的Event组件部分
     /// </summary>
     public class Addon_Event : Addon_Base
     {
@@ -19,7 +19,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public void Trigger( ActorEventEnum type, object[] param )
         {
-            //Debug.Log( $"<color=green>Actor{Actor.ActorID}--->Trigger:{type}</color>" );
             var int_type = ( int ) type;
             if ( !_eventDic.TryGetValue( int_type, out var action ) )
                 return;
@@ -32,8 +31,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool Register( int intType, Action<int, object[]> action )
         {
-            //Debug.Log( $"<color=white>Actor{Actor.ActorID}--->RegisterActorEvent{( (ActorEventEnum)intType ).ToString()}</color>" );
-
             //不需要listener，因为listener就是actor自己
             if ( _eventDic.ContainsKey( intType ) )
                 return false;
@@ -47,7 +44,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool Register( ActorEventEnum eventType, Action<int, object[]> action )
         {
-            //Debug.Log( $"<color=white>Actor{Actor.ActorID}--->RegisterActorEvent{eventType}</color>" );
             return Register( ( int ) eventType, action );
         }
 
@@ -56,7 +52,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool UnRegister( ActorEventEnum eventType )
         {
-            //Debug.Log( $"<color=green>Actor{Actor.ActorID}--->UnRegisterActorEvent{eventType}</color>" );
             return UnRegister( ( int ) eventType );
         }
 
