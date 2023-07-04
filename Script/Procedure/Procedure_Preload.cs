@@ -54,20 +54,18 @@ namespace Aquila.Procedure
         protected override void OnInit( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnInit( procedureOwner );
-            _load_terrain_callBack = new GameFramework.Resource.LoadAssetCallbacks( LoadTerrainSuccCallBack, LoadAssetFaildCallBack );
             _procedureOwner = procedureOwner;
         }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _handler = new PreloadHandler( _internalForms );
+            _handler = new PreloadHandler( Configs );
 
             GameEntry.Event.Subscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
 
             PreLoadTables();
             PreloadInternalTable();
-            PreLoadObejct();
             PreloadInfoBoard();
             //测试配表
             //GameEntry.DataTable.Test();
@@ -90,9 +88,10 @@ namespace Aquila.Procedure
         /// </summary>
         private void PreloadInternalTable()
         {
-            foreach ( var tableName in _internalForms )
+            foreach ( var tableName in Configs )
             {
-                var assetPath = @$"Assets/Res/DataTables/Internal/{tableName}.txt";
+                //#todo：配置成常量路径
+                var assetPath = @$"Assets/Res/Config/{tableName}.txt";
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
             }
         }
@@ -109,66 +108,6 @@ namespace Aquila.Procedure
             //    return;
 
             _handler.LoadDataTableFinish();
-            OnPreLoadFinished();
-        }
-
-        /// <summary>
-        /// 预加载地形的对象池对象
-        /// </summary>
-        private void PreLoadObejct()
-        {
-            GameEntry.Resource.LoadAsset
-                (
-                    //#todo这里的路径看配置成常量静态内部表
-                    @"Assets/Res/Prefab/Terrain/EmptyTerrain.prefab",
-                    _load_terrain_callBack
-                );
-        }
-
-        /// <summary>
-        /// 加载地块成功回调
-        /// </summary>
-        private void LoadTerrainSuccCallBack( string assetName, object asset, float duration, object userData )
-        {
-            //这里是为了提前创建好对象池和对象池内的数量，以便在后续的流程中使用，
-            //最后把他们释放掉也是因为如此
-            var go = asset as GameObject;
-            if ( go == null )
-                throw new GameFrameworkException( "terrain game object is null!" );
-
-            //默认的地块创建数量
-            var scene_config = Tools.Table.GetSceneConfig();
-            var default_create_count = scene_config.Fight_Scene_Default_X_Width * scene_config.Fight_Scene_Default_Y_Width + 10;
-            //默认创建四十个地块
-            var pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<ObjectPool.Object_Terrain>( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME, default_create_count, 3600f );
-
-            Object_Base[] obj_arr = new Object_Base[default_create_count];
-            ObjectPool.Object_Terrain temp_obj = null;
-            GameObject temp_go = null;
-            var root_go = GameEntry.Module.GetModule<Module_Terrain>().Root_GO;
-            if ( root_go == null )
-                throw new GameFrameworkException( "root_go == null" );
-
-            for ( var i = 0; i < default_create_count; i++ )
-            {
-                temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
-                if ( temp_obj == null )
-                {
-                    //第一次生成，池里没有现成的object，先生成新的，然后注册到池里，直到把池内填满
-                    //下次拿的时候就不用重新生成
-                    temp_go = Object.Instantiate( go );
-                    temp_go.tag = GameConfig.Tags.TERRAIN_BLOCK;
-                    temp_go.transform.SetParent( root_go.transform );
-                    pool.Register( Object_Terrain.Gen( temp_go ), false );
-                    temp_obj = pool.Spawn( GameConfig.ObjectPool.OBJECT_POOL_TERRAIN_NAME );
-                }
-                obj_arr[i] = temp_obj;
-            }
-            foreach ( var obj in obj_arr )
-                pool.Unspawn( obj.Target );
-
-            obj_arr = null;
-            _handler.LoadTerrainFinish();
             OnPreLoadFinished();
         }
 
@@ -214,16 +153,6 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 加载资源失败回调
-        /// </summary>
-        private void LoadAssetFaildCallBack( string assetName, GameFramework.Resource.LoadResourceStatus status, string errorMessage, object userData ) => throw new GameFrameworkException( $"Load asset {assetName} faild!" );
-
-        /// <summary>
-        /// 地块资源加载回调
-        /// </summary>
-        private GameFramework.Resource.LoadAssetCallbacks _load_terrain_callBack = null;
-
-        /// <summary>
         /// 状态机拥有者
         /// </summary>
         private IFsm<IProcedureManager> _procedureOwner = null;
@@ -237,7 +166,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 预加载的form配置
         /// </summary>
-        public static readonly string[] _internalForms = new string[]
+        public static readonly string[] Configs = new string[]
             {
                 "UIForm"
             };
@@ -248,14 +177,6 @@ namespace Aquila.Procedure
     /// </summary>
     internal class PreloadHandler
     {
-        /// <summary>
-        /// 地块加载完成
-        /// </summary>
-        public void LoadTerrainFinish()
-        {
-            _preloadFlag |= _terrainLoadFinish;
-        }
-
         /// <summary>
         /// 加载数据表完成
         /// </summary>
@@ -290,6 +211,7 @@ namespace Aquila.Procedure
             {
                 if ( assetName.Contains( iter.Current ) )
                 {
+                    //#考虑不要用contains检查，抽空改了
                     _datatableLoadedSet.Remove( iter.Current );
                     break;
                 }
@@ -297,8 +219,6 @@ namespace Aquila.Procedure
 
             if ( _datatableLoadedSet.Count == 0 )
                 _preloadFlag |= _datatableLoadFinish;
-
-            //DataTableLoadFinish();
         }
 
         /// <summary>
@@ -312,7 +232,7 @@ namespace Aquila.Procedure
 
         public PreloadHandler( string[] internalTableNames )
         {
-            _preloadFlag = _preloadStateInit;
+            _preloadFlag = 0;
 
             _datatableLoadedSet = new HashSet<string>();
             foreach ( var name in internalTableNames )
@@ -328,37 +248,27 @@ namespace Aquila.Procedure
         /// <summary>
         /// 数据表加载完成
         /// </summary>
-        private const int _tableLoadFinish = 0b_0000_0000_0010;
-
-        /// <summary>
-        /// 地块加载完成标记
-        /// </summary>
-        private const int _terrainLoadFinish = 0b_0000_0000_0001;
+        private const int _tableLoadFinish = 0b_0000_0000_0001;
 
         /// <summary>
         /// 伤害数字加载完成
         /// </summary>
-        public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_1000;
+        public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_0010;
 
         /// <summary>
         /// 数据表加载标记
         /// </summary>
-        private const int _datatableLoadFinish = 0b_0000_0001_0000;
+        private const int _datatableLoadFinish = 0b_0000_0000_0100;
 
         /// <summary>
         /// hpbar加载完成
         /// </summary>
-        public const int _infoboardHPBarLoadFinish = 0b_0000_0000_0100;
+        public const int _infoboardHPBarLoadFinish = 0b_0000_0000_1000;
 
         /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preloadStateFinish = 0b_0001_1111;
-
-        /// <summary>
-        /// 预加载初始化标记
-        /// </summary>
-        private const int _preloadStateInit = 0b_0000_0000_0000;
+        private const int _preloadStateFinish = 0b_0000_0000_1111;
 
         /// <summary>
         /// 保存未加载完成的数据表

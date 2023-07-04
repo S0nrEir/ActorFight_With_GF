@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-06-28 18:27:33.512
+// 生成时间：2023-06-30 17:08:50.780
 //------------------------------------------------------------
 
 using GameFramework;
@@ -20,14 +20,14 @@ using UnityGameFramework.Runtime;
 namespace Aquila.UI
 {
 	/// <summary>
-	/// 鐣岄潰閰嶇疆琛?。
+	/// 界面配置表。
 	/// </summary>
 	public class DRUIForm : DataRowBase
 	{
 		private int m_Id = 0;
 
 		/// <summary>
-		/// 获取鐣岄潰缂栧彿。
+		/// 获取界面编号。
 		/// </summary>
 		public override int Id
 {
@@ -37,7 +37,7 @@ namespace Aquila.UI
 			
 }		
 }        /// <summary>
-        /// 获取绛栧垝澶囨敞。
+        /// 获取策划备注。
         /// </summary>
         public string Comment
         {
@@ -46,7 +46,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取璧勬簮鍚嶇О。
+        /// 获取资源名称。
         /// </summary>
         public string AssetName
         {
@@ -55,7 +55,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取鐣岄潰缁勫悕绉?鏄?惁鍏佽?澶氫釜鐣岄潰瀹炰緥。
+        /// 获取界面组名称。
         /// </summary>
         public string UIGroupName
         {
@@ -64,7 +64,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取鏄?惁鏆傚仠琚?叾瑕嗙洊鐨勭晫闈?鎵撳紑闊虫晥。
+        /// 获取是否允许多个界面实例。
         /// </summary>
         public bool AllowMultiInstance
         {
@@ -73,7 +73,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取鍏抽棴闊虫晥。
+        /// 获取是否暂停被其覆盖的界面。
         /// </summary>
         public bool PauseCoveredUIForm
         {
@@ -82,7 +82,7 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取。
+        /// 获取打开音效。
         /// </summary>
         public int OpenSound
         {
@@ -91,9 +91,18 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取。
+        /// 获取关闭音效。
         /// </summary>
         public int CloseSound
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 获取隐藏移动摇杆。
+        /// </summary>
+        public bool HideJoystick
         {
             get;
             private set;
@@ -116,6 +125,7 @@ namespace Aquila.UI
             PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
             OpenSound = int.Parse(columnStrings[index++]);
             CloseSound = int.Parse(columnStrings[index++]);
+            HideJoystick = bool.Parse(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -135,6 +145,7 @@ namespace Aquila.UI
                     PauseCoveredUIForm = binaryReader.ReadBoolean();
                     OpenSound = binaryReader.Read7BitEncodedInt32();
                     CloseSound = binaryReader.Read7BitEncodedInt32();
+                    HideJoystick = binaryReader.ReadBoolean();
                 }
             }
 

@@ -20,7 +20,7 @@ namespace Aquila.Fight.FSM
         private bool IsAbilityDataValid( object param )
         {
             int state = 0;
-            if ( param is null || param is not AbilityResult_Use)
+            if ( param is null || param is not AbilityResult_Use) 
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
@@ -107,7 +107,9 @@ namespace Aquila.Fight.FSM
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
                 return;
             }
-
+            //技能消耗
+            _fsm.GetActorInstance().GetAddon<Addon_Ability>()?.Deduct( _abilityMeta.id );
+            //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始
             _time = 0f;
             _abilityFinishFlag = false;
             GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );

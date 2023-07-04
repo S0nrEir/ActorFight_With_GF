@@ -21,7 +21,7 @@ namespace Aquila.Editor
         private static void GenInternalTable_()
         {
             //foreach ( string dataTableName in ProcedurePreload.DataTableNames )
-            foreach ( string dataTableName in Procedure_Prelaod._internalForms )
+            foreach ( string dataTableName in Procedure_Prelaod.Configs )
             {
                 DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor( dataTableName );
                 if ( !DataTableGenerator.CheckRawData( dataTableProcessor, dataTableName ) )

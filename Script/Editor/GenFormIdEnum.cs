@@ -24,7 +24,7 @@ namespace Aquila.Editor
             generator.AppendLine( "\tpublic enum FormIdEnum : byte " );
             generator.AppendLine( "\t{" );
 
-            var fileName = @"Assets/Res/DataTables/Internal/UIForm.txt";
+            var fileName = @"Assets/Res/Config/UIForm.txt";
             var rows = File.ReadAllLines( fileName );
             var len = rows.Length;
             string row = string.Empty;

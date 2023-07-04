@@ -31,8 +31,6 @@ namespace Aquila.Extension
             var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.GlobalVar.MainCamera );
             obj.SetPos( rect_pos );
             obj.SetNumber( num, Color.red );
-            //添加到队列中
-            // _damage_number_queue.Enqueue(obj);
             _damage_number_spawn_dic.Add( obj.GetHashCode(), obj );
         }
 
@@ -132,11 +130,8 @@ namespace Aquila.Extension
                              }
 
                              if ( GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure )
-                             {
                                  //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
-                                 //procedure.NotifyFlag( Procedure_Prelaod._infoboardHPBarLoadFinish );
                                  procedure.LoadHPBarFinish();
-                             }
                          },
                         LoadAssetFaildCallBack
                 ) );
@@ -153,15 +148,10 @@ namespace Aquila.Extension
                         {
                             _dmg_number_prefab = asset as GameObject;
                             if ( _dmg_number_prefab == null )
-                            {
                                 Log.Warning( "<color=yellow>DamageNumber.prefab convert faild</color>" );
-                            }
 
                             if ( GameEntry.Procedure.CurrentProcedure is Procedure_Prelaod procedure )
-                            {
-                                //procedure.NotifyFlag( Procedure_Prelaod._infoboardDmgNumberLoadFinish );
                                 procedure.LoadDmgNumberFinish();
-                            }
                         },
                         LoadAssetFaildCallBack
                     )
@@ -215,8 +205,6 @@ namespace Aquila.Extension
             _init_flag = false;
             _damage_number_spawn_dic = new Dictionary<int, Object_DamageNumber>( 0xf );
             _damage_number_unspawn_set = new HashSet<int>( 0xf );
-            // _damage_number_queue = new Queue<Object_DamageNumber>(0xf);
-            // _damage_number_unspawn_queue = new Queue<Object_DamageNumber>(0xf);
         }
 
         /// <summary>
@@ -294,15 +282,5 @@ namespace Aquila.Extension
         /// 准备释放的DamageNumber集合管理
         /// </summary>
         private HashSet<int> _damage_number_unspawn_set = null;
-
-        // /// <summary>
-        // /// 保存并且处理伤害数字实例的队列
-        // /// </summary>
-        // private Queue<Object_DamageNumber> _damage_number_queue = null;
-        //
-        // /// <summary>
-        // /// 伤害数字实例的回收队列
-        // /// </summary>
-        // private Queue<Object_DamageNumber> _damage_number_unspawn_queue = null;
     }
 }

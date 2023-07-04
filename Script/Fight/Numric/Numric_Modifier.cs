@@ -73,9 +73,9 @@ namespace Aquila.Numric
         /// <summary>
         /// 修改标记
         /// </summary>
-#pragma warning disable IDE0052 // 未读的私有成员
+#pragma warning disable 0414 // 未读的私有成员
         private bool _modified;
-#pragma warning restore IDE0052 // 未读的私有成员
+#pragma warning restore 0414 // 未读的私有成员
 
         /// <summary>
         /// 数值修改方式
