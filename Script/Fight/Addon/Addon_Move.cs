@@ -24,7 +24,7 @@ namespace Aquila.Fight.Addon
             _controller.Move( Vector3.zero );
             _pathIndex = 0;
             _pathList?.Clear();
-            Actor.Trigger( ActorEventEnum.MOVE_TO_FINAL_POINT );
+            //Actor.Trigger( ActorEventEnum.MOVE_TO_FINAL_POINT );
         }
 
         public void SetPathList ( List<Vector2> pathArr )

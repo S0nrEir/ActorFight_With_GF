@@ -102,6 +102,7 @@ namespace Aquila.Fight.FSM
         public override void OnEnter( object param)
         {
             base.OnEnter(param);
+            //_fsm.GetActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.TEST, ( object ) "test param" );
             if ( !IsAbilityDataValid( param ) )
             {
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );

@@ -1,5 +1,8 @@
 using Aquila.Fight.Addon;
+using Aquila.Module;
 using System.Collections.Generic;
+using UnityGameFramework.Runtime;
+
 namespace Aquila.Fight.FSM
 {
     /// <summary>
@@ -7,6 +10,13 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class Addon_HeroFSM : Addon_FSM
     {
+        public override void Init( Module_ProxyActor.ActorInstance instance )
+        {
+            base.Init( instance );
+            //var eventAddon = _actorInstance.GetAddon<Addon_Event>();
+            //eventAddon.Register( ( int ) AddonEventTypeEnum.TEST, ( int ) AddonType, (addonType, param)=> Log.Debug( param + "---------------Addon_HeorFSM" ));
+        }
+
         public override List<ActorState_Base> StateList => new List<ActorState_Base>
         {
             new ActorState_HeroIdle((int)ActorStateTypeEnum.IDLE_STATE),

@@ -17,11 +17,11 @@ namespace Aquila.Fight.Actor
     {
         #region public methods
         /// <summary>
-        /// 触发Actor事件
+        /// 触发addon事件
         /// </summary>
-        public void Trigger( ActorEventEnum type, params object[] param )
+        public void Notify(int eventType,object param)
         {
-            _event_addon?.Trigger( type, param );
+            _eventAddon.Notify( eventType, param );
         }
 
         /// <summary>
@@ -39,24 +39,6 @@ namespace Aquila.Fight.Actor
                 return targetAddon != null;
             }
             return false;
-        }
-
-        /// <summary>
-        /// 注册事件到actor自身，OnShow时调用
-        /// </summary>
-        public void RegisterActorEvent( ActorEventEnum type, Action<int, object[]> action )
-        {
-            if ( !_event_addon.Register( type, action ) )
-                throw new GameFrameworkException( "!_eventAddon.Register( type, action )" );
-        }
-
-        /// <summary>
-        /// 注销事件到actor自身，回收时调用
-        /// </summary>
-        public void UnRegisterActorEvent( ActorEventEnum type )
-        {
-            if ( !_event_addon.UnRegister( type ) )
-                throw new GameFrameworkException( "!_eventAddon.UnRegister( type )" );
         }
         #endregion
 
@@ -155,11 +137,15 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
+            Register();
+            _eventAddon.Ready();
             base.OnShow( userData );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
+            UnRegister();
+
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
@@ -170,6 +156,9 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
+            //addon
+            _eventAddon.UnRegisterAll();
+
             //dispose all addon
             var iter = _addonDic.GetEnumerator();
             Addon_Base addon = null;
@@ -264,8 +253,6 @@ namespace Aquila.Fight.Actor
             foreach ( var kv in _addonDic )
                 addons[idx++] = kv.Value;
 
-            var iter = _addonDic.GetEnumerator();
-
             return addons;
         }
 
@@ -287,7 +274,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected virtual void AddAddon()
         {
-            _event_addon = AddAddon<Addon_Event>();
+            _eventAddon = AddAddon<Addon_Event>();
         }
 
         /// <summary>
@@ -337,7 +324,11 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 事件组件
         /// </summary>
-        private Addon_Event _event_addon = null;
+        protected Addon_Event _eventAddon = null;
+
+        /// <summary>
+        /// 数据组件
+        /// </summary>
         protected Addon_Data _dataAddon = null;
 
         /// <summary>

@@ -1,9 +1,7 @@
-﻿using Aquila.Config;
-using Aquila.Extension;
+using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -15,7 +13,7 @@ namespace Aquila.Fight
     {
 
         #region public
-        public void Setup ( int id, float survivalTime, Actor_Base parentActor = null, bool isForever = false )
+        public void Setup( int id, float survivalTime, Actor_Base parentActor = null, bool isForever = false )
         {
             ID = id;
             SurvivalTime = survivalTime;
@@ -26,13 +24,13 @@ namespace Aquila.Fight
 
             gameObject.name = $"Actor_Effect_{ID}";
 
-// #if UNITY_EDITOR
-//             _inspector = gameObject.GetComponent<ActorEffectInspector>();
-//             if (_inspector == null)
-//                 _inspector = gameObject.AddComponent<ActorEffectInspector>();
-//
-//             _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : Component_GlobalVar.InvalidID, Entity.EntityAssetName );
-// #endif
+            // #if UNITY_EDITOR
+            //             _inspector = gameObject.GetComponent<ActorEffectInspector>();
+            //             if (_inspector == null)
+            //                 _inspector = gameObject.AddComponent<ActorEffectInspector>();
+            //
+            //             _inspector.Setup( ID, survivalTime, _actor != null ? _actor.ActorID : Component_GlobalVar.InvalidID, Entity.EntityAssetName );
+            // #endif
         }
 
         #endregion
@@ -42,41 +40,41 @@ namespace Aquila.Fight
         /// <summary>
         /// 特效存活时间到
         /// </summary>
-        private void OnTimesUp ()
+        private void OnTimesUp()
         {
-            Log.Info( $"<color=white>OnTimesUp--->{Entity.EntityAssetName}</color>" );
-            _actor.Trigger( ActorEventEnum.EFFECT_TIMES_UP, this );
-            TimesUpFlag = true;
+            //Log.Info( $"<color=white>OnTimesUp--->{Entity.EntityAssetName}</color>" );
+            //_actor.Trigger( ActorEventEnum.EFFECT_TIMES_UP, this );
+            //TimesUpFlag = true;
         }
-        
+
 
         //----------------------- override-----------------------
-        protected override void OnUpdate ( float elapseSeconds, float realElapseSeconds )
+        protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
 
             PassedTime += elapseSeconds;
-            if (PassedTime >= SurvivalTime)
+            if ( PassedTime >= SurvivalTime )
             {
-                if (IsForever)
+                if ( IsForever )
                     PassedTime = 0f;
                 else
                     OnTimesUp();
             }
 
-// #if UNITY_EDITOR
-//             if (_inspector != null)
-//                 _inspector.SetPassedTime( PassedTime, TimesUpFlag );
-// #endif
+            // #if UNITY_EDITOR
+            //             if (_inspector != null)
+            //                 _inspector.SetPassedTime( PassedTime, TimesUpFlag );
+            // #endif
         }
 
-        protected override void OnShow ( object userData )
+        protected override void OnShow( object userData )
         {
             base.OnShow( userData );
             Tools.SetActive( gameObject, true );
         }
 
-        protected override void OnRecycle ()
+        protected override void OnRecycle()
         {
             base.OnRecycle();
             TimesUpFlag = false;
@@ -93,7 +91,7 @@ namespace Aquila.Fight
             base.OnHide( isShutdown, userData );
             //#这里是对entity的额外处理
             var helperNode = GameEntry.Entity.GetEntityGroup( GameConfig.Entity.GROUP_ACTOR_FX ).Helper as EntityGroupHelperBase;
-            if ( helperNode != null ) 
+            if ( helperNode != null )
                 CachedTransform.SetParent( helperNode.transform );
         }
 

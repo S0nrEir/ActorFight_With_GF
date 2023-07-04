@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Aquila.Fight.Addon
@@ -11,9 +11,34 @@ namespace Aquila.Fight.Addon
         public enum AddonTypeEnum
         {
             /// <summary>
+            /// 基础属性-数值组件
+            /// </summary>
+            NUMRIC_BASEATTR,
+
+            /// <summary>
+            /// 数据
+            /// </summary>
+            DATA,
+
+            /// <summary>
+            /// 技能组件
+            /// </summary>
+            ABILITY,
+
+            /// <summary>
+            /// 状态
+            /// </summary>
+            STATE_MATCHINE,
+
+            /// <summary>
+            /// 事件
+            /// </summary>
+            EVENT,
+
+            /// <summary>
             /// 动画
             /// </summary>
-            ANIM = 0,
+            ANIM,
 
             /// <summary>
             /// 移动
@@ -26,19 +51,9 @@ namespace Aquila.Fight.Addon
             NAV,
 
             /// <summary>
-            /// 状态
-            /// </summary>
-            STATE_MATCHINE,
-
-            /// <summary>
             /// 流程处理器
             /// </summary>
             PROCESSOR,
-
-            /// <summary>
-            /// 数据
-            /// </summary>
-            DATA,
 
             /// <summary>
             /// 信息板组件
@@ -49,11 +64,6 @@ namespace Aquila.Fight.Addon
             /// 寻路组件
             /// </summary>
             PATH_FINDER,
-
-            /// <summary>
-            /// Actor事件
-            /// </summary>
-            EVENT,
 
             /// <summary>
             /// 触发器
@@ -74,16 +84,6 @@ namespace Aquila.Fight.Addon
             /// 地图组件
             /// </summary>
             //MAP = 8,
-
-            /// <summary>
-            /// 基础属性-数值组件
-            /// </summary>
-            NUMRIC_BASEATTR,
-
-            /// <summary>
-            /// 技能组件
-            /// </summary>
-            ABILITY,
             
             /// <summary>
             /// HP显示组件
@@ -98,7 +98,7 @@ namespace Aquila.Fight.Addon
             /// <summary>
             /// 基础类型
             /// </summary>
-            BASE = 999,
+            InValid = 999,
         }
 
         /// <summary>
