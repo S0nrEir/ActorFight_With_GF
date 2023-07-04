@@ -58,7 +58,7 @@ namespace Aquila.Fight.Addon
             _hpObj = GameEntry.InfoBoard.GenHPBar();
             _actorTransform = instance.Actor.transform;
             Refresh();
-            _offset = GameEntry.DataTable.Tables.SceneConfig.HPBarPosOffset;
+            _offset = GameEntry.LuBan.Tables.SceneConfig.HPBarPosOffset;
             _cachedPos = _actorTransform.position;
         }
 

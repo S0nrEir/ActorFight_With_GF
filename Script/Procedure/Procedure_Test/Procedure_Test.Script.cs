@@ -1,4 +1,4 @@
-﻿using GameFramework.Procedure;
+using GameFramework.Procedure;
 using Cfg.Common;
 
 namespace Aquila.Procedure
@@ -7,7 +7,7 @@ namespace Aquila.Procedure
     {
         private void LoadScript()
         {
-            var meta = GameEntry.DataTable.Table<Scripts>().Get( 10001 );
+            var meta = GameEntry.LuBan.Table<Scripts>().Get( 10001 );
             GameEntry.Lua.Load( meta );
             //GameEntry.Lua.UnLoadAllRunningData();
         }

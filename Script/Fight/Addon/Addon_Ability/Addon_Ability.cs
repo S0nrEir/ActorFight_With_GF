@@ -15,6 +15,25 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
+
+        //#todo扣除技能消耗的逻辑这块想一下要不要写成这样
+        /// <summary>
+        /// 扣除技能消耗
+        /// </summary>
+        public void Deduct(int abilityID)
+        {
+            GetAbilitySpec( abilityID )?.Deduct();
+        }
+
+        /// <summary>
+        /// 获取cd
+        /// </summary>
+        public (float remain, float duration) CoolDown(int abilityID)
+        {
+            var spec = GetAbilitySpec(abilityID);
+            return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
+        }
+
         /// <summary>
         /// 使用技能
         /// </summary>
@@ -91,7 +110,7 @@ namespace  Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.DataTable.Tables.RoleMeta.Get(_actorInstance.Actor.RoleMetaID);
+            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get(_actorInstance.Actor.RoleMetaID);
             if (roleMeta is null)
             {
                 Log.Warning("Addon_Ability.Init()->role_meta is null");
@@ -103,7 +122,7 @@ namespace  Aquila.Fight.Addon
             var len = _specArr.Length;
             for (var i = 0; i < len && i < abilityIdSet.Length; i++)
             {
-                abilityBaseMeta = GameEntry.DataTable.Tables.Ability.Get( abilityIdSet[i]);
+                abilityBaseMeta = GameEntry.LuBan.Tables.Ability.Get( abilityIdSet[i]);
                 if (abilityBaseMeta is null)
                 {
                     Log.Warning("Addon_Ability.Init()->ability_base_meta is null");

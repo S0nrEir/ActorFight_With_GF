@@ -25,6 +25,25 @@ namespace Aquila.Fight
         //子弹类技能怎么配置：技能表添加类型，比如召唤物，子弹类，蓄力，位移等，根据类型生成特殊的spec，使用技能时加载actor，路径就放在Numric字段----------暂时不用了，可以用effect来做
 
         /// <summary>
+        /// 扣除技能消耗
+        /// </summary>
+        public void Deduct()
+        {
+            //刷新CD
+            if ( _cdEffect != null )
+                _cdEffect._remain = _cdEffect._totalDuration;
+
+            //扣除cost
+            if ( _costEffect != null )
+                _costEffect.Apply( _owner, null );
+        }
+
+        /// <summary>
+        /// cd effect
+        /// </summary>
+        public EffectSpec_CoolDown CoolDown => _cdEffect;
+
+        /// <summary>
         /// 移除tag
         /// </summary>
         public void RemoveTag( ushort bitToRemove )
@@ -55,9 +74,9 @@ namespace Aquila.Fight
                 return;
 
             _costEffect = ReferencePool.Acquire<EffectSpec_Cost>();
-            _costEffect.Init( GameEntry.DataTable.Table<Effect>().Get( Meta.CostEffectID ) );
+            _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
             _cdEffect = ReferencePool.Acquire<EffectSpec_CoolDown>();
-            _cdEffect.Init( GameEntry.DataTable.Table<Effect>().Get( Meta.CoolDownEffectID ) );
+            _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
         }
 
         /// <summary>
@@ -68,19 +87,19 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            //刷新CD
-            if ( _cdEffect != null )
-                _cdEffect._remain = _cdEffect._totalDuration;
+            ////刷新CD
+            //if ( _cdEffect != null )
+            //    _cdEffect._remain = _cdEffect._totalDuration;
 
-            //扣除cost
-            if ( _costEffect != null )
-                _costEffect.Apply( _owner, result );
+            ////扣除cost
+            //if ( _costEffect != null )
+            //    _costEffect.Apply( _owner, result );
 
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;
             foreach ( var effectID in Meta.effects )
             {
-                effectMeta = GameEntry.DataTable.Table<Effect>().Get( effectID );
+                effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
                 if ( effectMeta is null )
                 {
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );

@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-06-27 18:49:37.463
+// 生成时间：2023-06-30 17:08:50.780
 //------------------------------------------------------------
 
 using GameFramework;
@@ -17,25 +17,25 @@ using UnityEngine;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
-namespace StarForce
+namespace Aquila.UI
 {
-/// <summary>
-/// 界面配置表。
-/// </summary>
-public class DRUIForm : DataRowBase
-{
-private int m_Id = 0;
+	/// <summary>
+	/// 界面配置表。
+	/// </summary>
+	public class DRUIForm : DataRowBase
+	{
+		private int m_Id = 0;
 
-/// <summary>
-/// 获取界面编号。
-/// </summary>
-public override int Id
+		/// <summary>
+		/// 获取界面编号。
+		/// </summary>
+		public override int Id
 {
-get
+			get
 {
-return m_Id;
-
-}
+				return m_Id;
+			
+}		
 }        /// <summary>
         /// 获取策划备注。
         /// </summary>
@@ -98,6 +98,15 @@ return m_Id;
             get;
             private set;
         }
+
+        /// <summary>
+        /// 获取隐藏移动摇杆。
+        /// </summary>
+        public bool HideJoystick
+        {
+            get;
+            private set;
+        }
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -116,6 +125,7 @@ return m_Id;
             PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
             OpenSound = int.Parse(columnStrings[index++]);
             CloseSound = int.Parse(columnStrings[index++]);
+            HideJoystick = bool.Parse(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -135,6 +145,7 @@ return m_Id;
                     PauseCoveredUIForm = binaryReader.ReadBoolean();
                     OpenSound = binaryReader.Read7BitEncodedInt32();
                     CloseSound = binaryReader.Read7BitEncodedInt32();
+                    HideJoystick = binaryReader.ReadBoolean();
                 }
             }
 

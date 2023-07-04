@@ -190,7 +190,7 @@ namespace Aquila.Fight.Addon
         {
             base.Reset();
             //修改所有数值为为修正的状态
-            var meta = GameEntry.DataTable.Table<Cfg.Role.RoleMeta>().Get( _actorInstance.Actor.RoleMetaID );
+            var meta = GameEntry.LuBan.Table<Cfg.Role.RoleMeta>().Get( _actorInstance.Actor.RoleMetaID );
             if ( meta is null )
             {
                 Log.Warning( $"<color=yellow>meta is null,meta id = {_actorInstance.Actor.RoleMetaID}</color>" );

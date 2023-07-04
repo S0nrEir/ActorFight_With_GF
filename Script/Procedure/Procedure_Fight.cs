@@ -21,7 +21,6 @@ namespace Aquila.Procedure
         {
             base.OnInit( procedureOwner );
             //_input_module       = GameEntry.Module.GetModule<Module_Input>();
-            _terrainModule        = GameEntry.Module.GetModule<Module_Terrain>();
             //_actor_fac_module   = GameEntry.Module.GetModule<Module_Actor_Fac>();
         }
 
@@ -43,7 +42,6 @@ namespace Aquila.Procedure
             param.z_width          = scene_config.Fight_Scene_Default_Y_Width;
             param._sceneScriptMeta = _data._sceneScriptMeta;
 
-            _terrainModule.Start( param );
             var entityID = ActorIDPool.Gen();
             var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<Actor_Hero>
                 (
@@ -62,7 +60,6 @@ namespace Aquila.Procedure
         {
             //_terrain_module.End();
             //_input_module.End();
-            _terrainModule.End();
             //_actor_fac_module.End();
             _procedureOwner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
@@ -97,7 +94,7 @@ namespace Aquila.Procedure
         private void MainCameraInitializeSetting()
         {
             _mainCamera = GameEntry.GlobalVar.MainCamera;
-            var sceneConfig = GameEntry.DataTable.Tables.SceneConfig;
+            var sceneConfig = GameEntry.LuBan.Tables.SceneConfig;
             _mainCamera.transform.eulerAngles = sceneConfig.Main_Camera_Default_Euler;
             _mainCamera.transform.position = sceneConfig.MainCameraDefaultPosition;
 
@@ -112,11 +109,6 @@ namespace Aquila.Procedure
         /// 模块
         /// </summary>
         //private Module_Input _input_module = null;
-
-        /// <summary>
-        /// 地块模块
-        /// </summary>
-        private Module_Terrain _terrainModule = null;
 
         /// <summary>
         /// actor工厂模块

@@ -19,10 +19,12 @@ namespace Aquila.Fight.Addon
                 return;
             }
         }
-        
+
         /// <summary>
         /// 精灵图渲染器
         /// </summary>
+#pragma warning disable 0414 // 删除未使用的私有成员
         private SpriteRenderer _spriteRender = null;
+#pragma warning restore 0414 // 删除未使用的私有成员
     }
 }

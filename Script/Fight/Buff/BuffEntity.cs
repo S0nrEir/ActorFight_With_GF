@@ -55,7 +55,9 @@ namespace Aquila.Fight.Buff
         /// <summary>
         /// 剩余时间
         /// </summary>
+#pragma warning disable 0414 // 删除未读的私有成员
         private float _remainTime = 0f;
+#pragma warning restore 0414 // 删除未读的私有成员
 
         public static BuffEntity Gen (int actor_id,int effect_actor_id,int effect_meta_id,int impact_id)
         {

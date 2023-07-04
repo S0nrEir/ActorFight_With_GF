@@ -1,5 +1,6 @@
-﻿using Aquila.Module;
+using Aquila.Module;
 using Aquila.Toolkit;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
@@ -33,15 +34,8 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public bool SetCoordAndPosition( int grid_x, int grid_z )
         {
-            var terrain = GameEntry.Module.GetModule<Module_Terrain>().Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
-            if ( terrain is null || terrain.State != ObjectPool.TerrainStateTypeEnum.NONE )
-            {
-                Log.Warning( "terrain is null || terrain.State != ObjectPool.TerrainStateTypeEnum.NONE", LogColorTypeEnum.Yellow );
-                return false;
-            }
-
             SetCoord( grid_x, grid_z );
-            SetWorldPosition( terrain.WorldHangPosition );
+            SetWorldPosition( new Vector3( 0f, 0f, 0f ) );
 
             return true;
         }

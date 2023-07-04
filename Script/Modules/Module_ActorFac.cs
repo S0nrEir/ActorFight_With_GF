@@ -1,6 +1,5 @@
-﻿using Aquila.Extension;
+using Aquila.Extension;
 using Aquila.Fight.Actor;
-using Aquila.Toolkit;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
 using UnityGameFramework.Runtime;
@@ -39,7 +38,6 @@ namespace Aquila.Module
                 );
             //#todo_根据actor类型决定传入函数的tag值，不要写死
             OnShowActorSucc( result.Logic as Actor_Base, roleMetaID, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
-            OnShowActorSuccBasedOnTerrain( result.Logic as Actor_Base, grid_x, grid_z );
             return result;
         }
 
@@ -49,55 +47,15 @@ namespace Aquila.Module
         private void OnShowActorSucc( Actor_Base actor, int roleMetaID, string tag )
         {
             //actor.Setup( role_meta_id, tag );
+
+            actor.SetCoordAndPosition( 0, 0 );
         }
-
-        /// <summary>
-        /// 基于地块的actor生成回调
-        /// </summary>
-        private void OnShowActorSuccBasedOnTerrain( Actor_Base actor, int grid_x, int grid_z )
-        {
-            var terrain_module = GameEntry.Module.GetModule<Module_Terrain>();
-            var terrain = terrain_module.Get( Tools.Fight.Coord2UniqueKey( grid_x, grid_z ) );
-            //拿不到地块
-            if ( terrain is null )
-            {
-                Log.Info( "terrain is null", LogColorTypeEnum.Red );
-                return;
-            }
-
-            if ( terrain.State != ObjectPool.TerrainStateTypeEnum.NONE )
-            {
-                Log.Info( "terrain.State != ObjectPool.TerrainStateTypeEnum.NONE", LogColorTypeEnum.Red );
-                return;
-            }
-            actor.SetCoordAndPosition( grid_x, grid_z );
-        }
-
-        /// <summary>
-        /// 加载对应的actor
-        /// </summary>
-        private async void TestLoadActor()
-        {
-            var entity_id = ActorIDPool.Gen();
-            var actor = await ShowActorAsync<Actor_Base>
-                   (
-                       1,
-                       entity_id,
-                       @"Assets/Res/Prefab/Aquila_001.prefab",
-                       0,
-                       0,
-                       new HeroActorEntityData( entity_id ) { _roleMetaID = 1 }
-                   );
-            Log.Info( $"show actor succ,name:{actor.gameObject.name}" );
-        }
-
 
         public override void Start( object param )
         {
             base.Start( param );
             //TestLoadActor();
         }
-
         public override void End()
         {
             base.End();
