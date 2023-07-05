@@ -40,6 +40,6 @@ namespace Cfg.Enum
         /// <summary>
         /// 周期性生效effect，派发子effect
         /// </summary>
-        Period_Distribute = 7,
+        Period_Deriving = 7,
     }
 }

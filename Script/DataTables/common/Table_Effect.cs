@@ -50,7 +50,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public Enum.EffectType Type { get; private set; }
     /// <summary>
-    /// 额外参数（float,float,float,int,int,int）
+    /// 额外参数float_1,float_2,float_3,float_4,int_1,int_2,int_3,int_4
     /// </summary>
     public Struct.EffectExtensionParam ExtensionParam { get; private set; }
     /// <summary>

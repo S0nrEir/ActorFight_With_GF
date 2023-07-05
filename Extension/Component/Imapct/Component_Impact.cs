@@ -1,4 +1,5 @@
 using Aquila.Module;
+using GameFramework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -13,31 +14,99 @@ namespace Aquila.Fight.Impact
     public partial class Component_Impact : GameFrameworkComponent
     {
         //----------------------- pub -----------------------
+
+        /// <summary>
+        /// 获取附加在某actor上的某类型effect，拿不到返回空
+        /// </summary>
+        public EffectSpec_Base GetAttachedEffect<T>( int actorID) where T : EffectSpec_Base
+        {
+            var effectArr = GetAttachedEffect( actorID );
+            if ( effectArr is null || effectArr.Length == 0 )
+                return null;
+
+            foreach ( var effect in effectArr )
+            {
+                if ( effect is T )
+                    return effect as T;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取附加在某actor上的effect实例集合，拿不到返回一个空集合
+        /// </summary>
+        public EffectSpec_Base[] GetAttachedEffect( int actorID )
+        {
+            var indexList = GetMapIndex( actorID );
+            if ( indexList is null || indexList.Count == 0 )
+            {
+                Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
+                return new EffectSpec_Base[0];
+            }
+
+            var result = new EffectSpec_Base[indexList.Count];
+            var i = 0;
+            foreach ( var index in indexList )
+                result[i++] = GetEffect( index );
+
+            return result;
+        }
+
         /// <summary>
         /// 将一个effect添加为impact
         /// </summary>
         public void Attach( EffectSpec_Base effect, int castorActorID, int targetActorID )
         {
-            //new entity
-            var entity = NewImpactEntity();
-            var key = effect.GetHashCode();
-            if ( _effectDic.ContainsKey( key ) )
+            //已经有了，叠加层数
+            if ( HasSame( targetActorID, effect.GetType() ) )
             {
-                Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{key}</color>" );
-                return;
+                //#todo叠加层数是否重制持续时间？
+
+                ReferencePool.Release( effect );
             }
+            //没有，添加新的
+            else
+            {
+                //new entity
+                var entity = NewImpactEntity();
+                var key = effect.GetHashCode();
+                if ( _effectDic.ContainsKey( key ) )
+                {
+                    Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{key}</color>" );
+                    ReferencePool.Release( effect );
+                    return;
+                }
 
-            ref var impactData = ref _pool.Add( entity );
-            InitImpactData( ref impactData, effect, castorActorID, targetActorID, key );
-            _curr.Add( entity );
-            AddEffect( key, effect );
+                ref var impactData = ref _pool.Add( entity );
+                InitImpactData( ref impactData, effect, castorActorID, targetActorID, key );
+                _curr.Add( entity );
+                AddEffect( key, effect );
+                AddMapIndex( targetActorID, impactData._effectIndex );
 
-            if ( impactData._effectOnAwake )
-                GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effect );
+                if ( impactData._effectOnAwake )
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effect );
+            }
         }
 
         //----------------------- priv -----------------------
-        
+
+        /// <summary>
+        /// 是否已经有相同effect
+        /// </summary>
+        private bool HasSame(int targetID,Type type)
+        {
+            var effectArr = GetAttachedEffect( targetID );
+            if ( effectArr is null || effectArr.Length == 0 )
+                return false;
+
+            foreach ( var effect in effectArr )
+            {
+                if ( effect.GetType() == type )
+                    return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// 轮询处理impact数据
         /// </summary>
@@ -46,6 +115,7 @@ namespace Aquila.Fight.Impact
             EffectSpec_Base tempEffect = null;
             foreach ( var entity in _curr )
             {
+                //get
                 ref ImpactData impactData = ref _pool.Get( entity );
                 impactData._elapsed += Time.deltaTime;
                 impactData._interval += Time.deltaTime;
@@ -69,6 +139,9 @@ namespace Aquila.Fight.Impact
 
                     impactData._interval = 0f;
                 }
+                //仍然有效的impact添加进去
+                //因为这里curr是无效的impact和有效的impact集合
+                //不希望在curr里做removeAt这样的操作
                 _next.Add( entity );
             }//end foreach
 
@@ -78,17 +151,19 @@ namespace Aquila.Fight.Impact
                 var impactData = _pool.Get( entity );
                 tempEffect = GetEffect( impactData._effectIndex );
                 tempEffect.OnEffectEnd();
+                ReferencePool.Release( tempEffect );
                 RemoveEffect( impactData._effectIndex );
+                RemoveMapIndex( impactData._targetActorID, impactData._effectIndex );
                 RecycleImpactEntity( entity );
-                _pool.Remove( entity );
+                _pool.Recycle( entity );
             }//end foreach
             _invalid.Clear();
             _curr.Clear();
 
             //交换entity实例缓存
             _tempBuffer = _curr;
-            _curr       = _next;
-            _next       = _tempBuffer;
+            _curr = _next;
+            _next = _tempBuffer;
         }
 
         /// <summary>
@@ -106,6 +181,15 @@ namespace Aquila.Fight.Impact
             impactData._policy = effect.Meta.Policy;
             impactData._elapsed = 0f;
             impactData._interval = 0f;
+        }
+
+        /// <summary>
+        /// 通过一个effect实例修改impact数据
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ModifyImpactDataByEffect( ref ImpactData data, EffectSpec_Base effect )
+        {
+
         }
 
         /// <summary>
@@ -170,6 +254,39 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
+        /// 获取映射索引
+        /// </summary>
+        private LinkedList<int> GetMapIndex( int targetID )
+        {
+            if ( !_targetImpactDataMapDic.TryGetValue( targetID, out var list ) )
+                return null;
+
+            return list;
+        }
+
+        /// <summary>
+        /// 添加映射索引
+        /// </summary>
+        private void AddMapIndex( int targetID, int effectIndex )
+        {
+            if ( !_targetImpactDataMapDic.TryGetValue( targetID, out var list ) )
+                list = new LinkedList<int>();
+
+            list.AddLast( effectIndex );
+        }
+
+        /// <summary>
+        /// 移除映射索引
+        /// </summary>
+        private bool RemoveMapIndex( int targetID, int effectIndex )
+        {
+            if ( _targetImpactDataMapDic.TryGetValue( targetID, out var list ) )
+                return list.Remove( effectIndex );
+
+            return false;
+        }
+
+        /// <summary>
         /// buff&debuff轮询
         /// </summary>
         private void Update()
@@ -185,24 +302,30 @@ namespace Aquila.Fight.Impact
 
         private void EnsureInit()
         {
-            _effectDic                = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
-            _impactEntityArr          = new int[_defaultEntityCount];
-            _recycleImpactEntityArr   = new int[_defaultEntityCount];
-            _impactEntityCount        = 0;
+            _effectDic = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
+            _targetImpactDataMapDic = new Dictionary<int, LinkedList<int>>( _defaultCacheCapcity );
+            _impactEntityArr = new int[_defaultEntityCount];
+            _recycleImpactEntityArr = new int[_defaultEntityCount];
+            _impactEntityCount = 0;
             _recycleImpactEntityCount = 0;
-            _pool                     = new ImpactDataPool( _defaultEntityCount );
-            _curr                     = new List<int>( _defaultEntityCount / 2 );
-            _next                     = new List<int>( _defaultEntityCount / 2 );
-            _invalid                  = new List<int>( _defaultEntityCount / 2 );
+            _pool = new ImpactDataPool( _defaultEntityCount );
+            _curr = new List<int>( _defaultEntityCount / 2 );
+            _next = new List<int>( _defaultEntityCount / 2 );
+            _invalid = new List<int>( _defaultEntityCount / 2 );
         }
 
         //----------------------- fields -----------------------
         private ImpactDataPool _pool = null;
 
         /// <summary>
-        /// 存储的effect实例集合
+        /// 存储的effect实例集合,k=impactIndex
         /// </summary>
         private Dictionary<int, EffectSpec_Base> _effectDic = null;
+
+        /// <summary>
+        /// impact数据和附加对象的映射集合,k=targetID,v=effectIndex
+        /// </summary>
+        private Dictionary<int, LinkedList<int>> _targetImpactDataMapDic = null;
 
         private List<int> _curr = null;
         private List<int> _next = null;

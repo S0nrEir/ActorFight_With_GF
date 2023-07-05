@@ -105,7 +105,7 @@ namespace Aquila.Fight
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
                     break;
                 }
-                tempEffect = Tools.Ability.CreateEffectSpec( effectMeta );
+                tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectMeta );
                 if ( tempEffect is null )
                 {
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
