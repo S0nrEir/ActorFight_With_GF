@@ -20,12 +20,12 @@ namespace Aquila.Toolkit
                 EffectSpec_Base effect = null;
                 switch (meta.Type)
                 {
-                    case EffectType.PhyDamage:
+                    case EffectType.Instant_PhyDamage:
                         //return new EffectSpec_PhyDamage(meta);
                         effect = ReferencePool.Acquire<EffectSpec_PhyDamage>();
                         break;
 
-                    case EffectType.PeriodFixedDamage:
+                    case EffectType.Period_FixedDamage:
                         effect = ReferencePool.Acquire<EffectSpec_PeriodFixedDamage>();
                         break;
 

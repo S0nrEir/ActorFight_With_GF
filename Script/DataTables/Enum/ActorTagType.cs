@@ -15,6 +15,10 @@ namespace Cfg.Enum
     public enum ActorTagType
     {
         /// <summary>
+        /// 无
+        /// </summary>
+        None = -1,
+        /// <summary>
         /// 眩晕1
         /// </summary>
         Stun = 1,
@@ -23,8 +27,16 @@ namespace Cfg.Enum
         /// </summary>
         God = 2,
         /// <summary>
-        /// 施法中100
+        /// 中毒100
         /// </summary>
-        Casting = 4,
+        Tox = 4,
+        /// <summary>
+        /// 施法中1000
+        /// </summary>
+        Casting = 8,
+        /// <summary>
+        /// 流血10000
+        /// </summary>
+        Blood = 16,
     }
 }

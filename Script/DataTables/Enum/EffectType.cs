@@ -16,22 +16,30 @@ namespace Cfg.Enum
         /// <summary>
         /// 冷却类effect
         /// </summary>
-        CoolDown = 1,
+        Instant_CoolDown = 1,
         /// <summary>
         /// 消耗类Effect
         /// </summary>
-        Cost = 2,
+        Instant_Cost = 2,
         /// <summary>
         /// 物理伤害
         /// </summary>
-        PhyDamage = 3,
+        Instant_PhyDamage = 3,
         /// <summary>
         /// 召唤物
         /// </summary>
-        Summon = 4,
+        Instant_Summon = 4,
         /// <summary>
         /// 周期性固定数值伤害
         /// </summary>
-        PeriodFixedDamage = 5,
+        Period_FixedDamage = 5,
+        /// <summary>
+        /// 百分比生命值移除
+        /// </summary>
+        Instant_PercentageHealthRemove = 6,
+        /// <summary>
+        /// 周期性生效effect，派发子effect
+        /// </summary>
+        Period_Distribute = 7,
     }
 }
