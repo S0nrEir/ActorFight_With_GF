@@ -20,7 +20,7 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
-        public void Deduct(int abilityID)
+        private void Deduct(int abilityID)
         {
             GetAbilitySpec( abilityID )?.Deduct();
         }
@@ -72,18 +72,6 @@ namespace  Aquila.Fight.Addon
             return spec.CanUseAbility();
         }
 
-        /// <summary>
-        /// 是否可使用技能，可以返回true
-        /// </summary>
-        //public bool CanUseAbility(int meta_id,ref AbilityHitResult result)
-        //{
-        //    var spec = GetAbilitySpec(meta_id);
-        //    if (spec is null)
-        //        return false;
-
-        //    return spec.CanUseAbility(ref result);
-        //}
-
         //----------------------priv----------------------
         /// <summary>
         /// 获取指定的技能逻辑实例，获取不到返回空
@@ -104,7 +92,16 @@ namespace  Aquila.Fight.Addon
 
             return null;
         }
-        
+
+        /// <summary>
+        /// 当使用技能
+        /// </summary>
+        private void OnUseAbility( int addonType, object param )
+        {
+            if ( param is AddonParam_OnUseAbility temp )
+                Deduct( temp._abilityID );
+        }
+
         /// <summary>
         /// 初始化组件持有的技能和对应的spec
         /// </summary>
@@ -138,16 +135,6 @@ namespace  Aquila.Fight.Addon
         public override void OnAdd()
         {
         }
-
-        // public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
-        // {
-        //     base.Init(actor, targetGameObject, targetTransform);
-        //     if(!InitSpec())
-        //         return;
-        //
-        //     _initFlag = true;
-        // }
-        
         
         public override void Init(Module_ProxyActor.ActorInstance instance)
         {
@@ -156,6 +143,7 @@ namespace  Aquila.Fight.Addon
                 return;
             
             _initFlag = true;
+            instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) AddonType, OnUseAbility );
         }
         
         public override void Dispose()

@@ -9,6 +9,9 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public enum AddonEventTypeEnum
     {
-        TEST,
+        /// <summary>
+        /// 使用技能
+        /// </summary>
+        USE_ABILITY,
     }
 }
