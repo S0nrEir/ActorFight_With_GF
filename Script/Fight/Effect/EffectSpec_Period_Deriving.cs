@@ -12,9 +12,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Period_Deriving : EffectSpec_Base
     {
-        public override void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-            base.Apply( instance, result );
+            base.Apply( castor,target, result );
             var subEffect = Meta.DeriveEffects;
             Cfg.Common.Table_Effect meta = null;
             EffectSpec_Base effect = null;
@@ -34,6 +34,7 @@ namespace Aquila.Fight
         public override void Init( Table_Effect meta )
         {
             base.Init( meta );
+            _stackLimit = meta.ExtensionParam.IntParam_1;
             _resetDurationWhenOverride = meta.ExtensionParam.IntParam_2 == 1;
         }
 
@@ -43,11 +44,6 @@ namespace Aquila.Fight
             _resetDurationWhenOverride = false;
             base.Clear();
         }
-
-        /// <summary>
-        /// 叠加层数
-        /// </summary>
-        private int _stackCount = 0;
 
         /// <summary>
         /// 覆盖时重置持续时间

@@ -35,7 +35,7 @@ namespace Aquila.Fight
 
             //扣除cost
             if ( _costEffect != null )
-                _costEffect.Apply( _owner, null );
+                _costEffect.Apply( _owner, _owner, null );
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
+                    tempEffect.Apply( _owner, target, result );
                     tempEffect.OnEffectEnd();
                     ReferencePool.Release( tempEffect );
                 }

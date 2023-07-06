@@ -28,7 +28,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )
+        public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
 
         }
@@ -58,5 +58,15 @@ namespace Aquila.Fight
         /// 对应的数值修改器
         /// </summary>
         protected Numric_Modifier _modifier;
+
+        /// <summary>
+        /// 当前层数
+        /// </summary>
+        protected int _stackCount = 1;
+
+        /// <summary>
+        /// 层数上限
+        /// </summary>
+        protected int _stackLimit = 1;
     }
 }

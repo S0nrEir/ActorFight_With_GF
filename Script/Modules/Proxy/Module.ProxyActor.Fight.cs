@@ -58,6 +58,13 @@ namespace Aquila.Module
             result._castorActorID = castorID;
             result._targetActorID = targetID;
 
+            var castor = TryGet( castorID );
+            if ( !castor.has )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
+                return;
+            }
+
             var target = TryGet( targetID );
             if ( !target.has )
             {
@@ -65,7 +72,7 @@ namespace Aquila.Module
                 return;
             }
 
-            effect.Apply( target.instance, result );
+            effect.Apply( castor.instance, target.instance, result );
             GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
             GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.instance.Actor.CachedTransform.position );
             ReferencePool.Release( result );

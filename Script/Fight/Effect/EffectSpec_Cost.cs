@@ -10,9 +10,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Cost : EffectSpec_Base
     {
-        public override void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-            var attr_addon = instance.GetAddon<Addon_BaseAttrNumric>();
+            var attr_addon = target.GetAddon<Addon_BaseAttrNumric>();
             if(attr_addon is null)
                 return;
              
