@@ -18,7 +18,7 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 获取附加在某actor上的某类型effect，拿不到返回空
         /// </summary>
-        public EffectSpec_Base GetAttachedEffect<T>( int actorID) where T : EffectSpec_Base
+        public EffectSpec_Base GetAttachedEffect<T>( int actorID ) where T : EffectSpec_Base
         {
             var effectArr = GetAttachedEffect( actorID );
             if ( effectArr is null || effectArr.Length == 0 )
@@ -55,45 +55,72 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 将一个effect添加为impact
         /// </summary>
-        public void Attach( EffectSpec_Base effect, int castorActorID, int targetActorID )
+        public void Attach( EffectSpec_Base newEffect, int castorActorID, int targetActorID )
         {
+            var existEffect = GetEffectByID( targetActorID, newEffect.GetType() );
             //已经有了，叠加层数
-            if ( HasSame( targetActorID, effect.GetType() ) )
+            if ( existEffect != null )
             {
-                //#todo叠加层数是否重制持续时间？
+                //拿相应的impactData
+                ref var impactData = ref _pool.Get( existEffect._impactEntityIndex );
+                //叠加层数是否重制持续时间？
+                if ( impactData._resetDurationWhenOverride )
+                    impactData._elapsed = 0f;
 
-                ReferencePool.Release( effect );
+                //叠加层数
+                if ( impactData._stackCount < impactData._stackLimit )
+                    impactData._stackCount++;
+
+                ReferencePool.Release( newEffect );
             }
             //没有，添加新的
             else
             {
                 //new entity
                 var entity = NewImpactEntity();
-                var key = effect.GetHashCode();
+                var key = newEffect.GetHashCode();
                 if ( _effectDic.ContainsKey( key ) )
                 {
                     Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{key}</color>" );
-                    ReferencePool.Release( effect );
+                    ReferencePool.Release( newEffect );
                     return;
                 }
 
                 ref var impactData = ref _pool.Add( entity );
-                InitImpactData( ref impactData, effect, castorActorID, targetActorID, key );
+                InitImpactData( ref impactData, newEffect, castorActorID, targetActorID, key );
+                newEffect._impactEntityIndex = entity;
                 _curr.Add( entity );
-                AddEffect( key, effect );
+                AddEffect( key, newEffect );
                 AddMapIndex( targetActorID, impactData._effectIndex );
 
                 if ( impactData._effectOnAwake )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, effect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, newEffect );
             }
         }
 
         //----------------------- priv -----------------------
 
         /// <summary>
+        /// 拿到指定actor身上指定的effect，拿不到返回null
+        /// </summary>
+        private EffectSpec_Base GetEffectByID( int targetID, Type type )
+        {
+            var effectArr = GetAttachedEffect( targetID );
+            if ( effectArr is null || effectArr.Length == 0 )
+                return null;
+
+            foreach ( var effect in effectArr )
+            {
+                if ( effect.GetType() == type )
+                    return effect;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 是否已经有相同effect
         /// </summary>
-        private bool HasSame(int targetID,Type type)
+        private bool HasSame( int targetID, Type type )
         {
             var effectArr = GetAttachedEffect( targetID );
             if ( effectArr is null || effectArr.Length == 0 )
@@ -135,6 +162,7 @@ namespace Aquila.Fight.Impact
                         Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectIndex}</color>" );
                         continue;
                     }
+                    tempEffect.StackCount = impactData._stackCount;
                     GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, tempEffect );
 
                     impactData._interval = 0f;
@@ -169,24 +197,26 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 初始化一个impact数据
         /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int key )
         {
-            impactData._castorActorID = castorActorID;
-            impactData._targetActorID = targetActorID;
-            impactData._duration = effect.Meta.Duration;
-            impactData._effectIndex = key;
-            impactData._effectOnAwake = effect.Meta.EffectOnAwake;
-            impactData._period = effect.Meta.Period;
-            impactData._policy = effect.Meta.Policy;
-            impactData._elapsed = 0f;
-            impactData._interval = 0f;
+            impactData._castorActorID             = castorActorID;
+            impactData._targetActorID             = targetActorID;
+            impactData._duration                  = effect.Meta.Duration;
+            impactData._effectIndex               = key;
+            impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
+            impactData._period                    = effect.Meta.Period;
+            impactData._policy                    = effect.Meta.Policy;
+            impactData._elapsed                   = 0f;
+            impactData._interval                  = 0f;
+            impactData._stackCount                = effect.StackCount;
+            impactData._stackLimit                = effect.StackLimit;
+            impactData._resetDurationWhenOverride = effect.ResetWhenOverride;
         }
 
         /// <summary>
         /// 通过一个effect实例修改impact数据
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private void ModifyImpactDataByEffect( ref ImpactData data, EffectSpec_Base effect )
         {
 

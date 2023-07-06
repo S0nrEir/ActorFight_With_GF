@@ -9,6 +9,7 @@ using Cfg.Fight;
 using GameFramework;
 using System;
 using UnityGameFramework.Runtime;
+using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
 {
@@ -160,14 +161,14 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Clear()
         {
-            Meta = null;
+            Meta          = null;
             //处理CD和Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
             _tagContainer = null;
-            _cdEffect = null;
-            _costEffect = null;
-            _owner = null;
+            _cdEffect     = null;
+            _costEffect   = null;
+            _owner        = null;
         }
 
         /// <summary>

@@ -11,6 +11,33 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base : IReference
     {
+        /// <summary>
+        /// 当覆盖时重置
+        /// </summary>
+        public bool ResetWhenOverride
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// 叠加层数上限
+        /// </summary>
+        public int StackLimit
+        {
+            get => _stackLimit;
+            set => _stackLimit = value;
+        }
+
+        /// <summary>
+        /// 当前叠加层数
+        /// </summary>
+        public virtual int StackCount
+        {
+            get => _stackCount;
+            set => _stackCount = value;
+        }
+
         public virtual void Init( Table_Effect meta )
         {
             Meta = meta;
@@ -35,8 +62,12 @@ namespace Aquila.Fight
 
         public virtual void Clear()
         {
-            _modifier = default;
-            Meta = null;
+            _modifier          = default;
+            Meta               = null;
+            StackCount         = 0;
+            StackLimit         = 0;
+            _impactEntityIndex = 0;
+            ResetWhenOverride  = false;
         }
 
         protected EffectSpec_Base()
@@ -50,6 +81,21 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// 叠加层数
+        /// </summary>
+        private int _stackCount = 0;
+
+        /// <summary>
+        /// 叠加层数上限
+        /// </summary>
+        private int _stackLimit = 0;
+
+        /// <summary>
+        /// impact数据的实体索引
+        /// </summary>
+        public int _impactEntityIndex = 0;
+
+        /// <summary>
         /// 元数据
         /// </summary>
         public Table_Effect Meta { get; private set; } = null;
@@ -58,15 +104,5 @@ namespace Aquila.Fight
         /// 对应的数值修改器
         /// </summary>
         protected Numric_Modifier _modifier;
-
-        /// <summary>
-        /// 当前层数
-        /// </summary>
-        protected int _stackCount = 1;
-
-        /// <summary>
-        /// 层数上限
-        /// </summary>
-        protected int _stackLimit = 1;
     }
 }
