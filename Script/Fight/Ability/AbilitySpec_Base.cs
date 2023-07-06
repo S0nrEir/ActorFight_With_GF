@@ -15,15 +15,8 @@ namespace Aquila.Fight
     /// <summary>
     /// 技能逻辑基类
     /// </summary>
-    public /*abstract*/ class AbilitySpecBase : IReference
+    public abstract class AbilitySpecBase : IReference
     {
-        //CoolDown和Cost：拿CD和Cost类型的GE数据
-        //根据GE数据创建对应GESpec
-        //Spec持有数据
-        //EffectScriptableObject翻译成配表，包含CD和Cost
-        //#todo为tag添加移除和添加时的回调
-        //子弹类技能怎么配置：技能表添加类型，比如召唤物，子弹类，蓄力，位移等，根据类型生成特殊的spec，使用技能时加载actor，路径就放在Numric字段----------暂时不用了，可以用effect来做
-
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
