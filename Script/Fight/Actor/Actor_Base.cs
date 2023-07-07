@@ -16,6 +16,23 @@ namespace Aquila.Fight.Actor
     public abstract partial class Actor_Base : EntityLogic
     {
         #region public methods
+
+        /// <summary>
+        /// 移除tag
+        /// </summary>
+        public void RemoveTag( ushort tagToRemove )
+        {
+            _tagContainer.Remove( tagToRemove );
+        }
+
+        /// <summary>
+        /// 添加tag
+        /// </summary>
+        public void AddTag(ushort tagToAdd)
+        {
+            _tagContainer.Add( tagToAdd );
+        }
+
         /// <summary>
         /// 触发addon事件
         /// </summary>
