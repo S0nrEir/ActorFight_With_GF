@@ -9,14 +9,13 @@ using Cfg.Fight;
 using GameFramework;
 using System;
 using UnityGameFramework.Runtime;
-using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
 {
     /// <summary>
     /// 技能逻辑基类
     /// </summary>
-    public abstract class AbilitySpecBase : IReference
+    public /*abstract*/ class AbilitySpecBase : IReference
     {
         /// <summary>
         /// 扣除技能消耗
@@ -81,14 +80,6 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            ////刷新CD
-            //if ( _cdEffect != null )
-            //    _cdEffect._remain = _cdEffect._totalDuration;
-
-            ////扣除cost
-            //if ( _costEffect != null )
-            //    _costEffect.Apply( _owner, result );
-
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;
             foreach ( var effectID in Meta.effects )
@@ -113,8 +104,9 @@ namespace Aquila.Fight
                 else
                 {
                     tempEffect.Apply( _owner, target, result );
-                    tempEffect.OnEffectEnd();
-                    ReferencePool.Release( tempEffect );
+                    //tempEffect.OnEffectEnd(_owner,target);
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
+                    //ReferencePool.Release( tempEffect );
                 }
             }
 
@@ -207,9 +199,9 @@ namespace Aquila.Fight
         /// <summary>
         /// tag发生改变的回调
         /// </summary>
-        private void OnTagChange( Int64 oldTag, Int64 newTag, ushort changedIndex )
+        private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
         {
-            Log.Info( $"tag changed,tag:{newTag}" );
+            Log.Info( $"tag changed,tag:{changedTag}" );
         }
 
         /// <summary>

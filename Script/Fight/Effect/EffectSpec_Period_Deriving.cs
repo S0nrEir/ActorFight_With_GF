@@ -4,7 +4,6 @@ using Aquila.Toolkit;
 using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -14,9 +13,14 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Period_Deriving : EffectSpec_Base
     {
+        public override void OnEffectAwake( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
+        {
+            base.OnEffectAwake( castor, target );
+        }
+
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-            base.Apply( castor,target, result );
+            base.Apply( castor, target, result );
             Cfg.Common.Table_Effect meta = null;
             EffectSpec_Base newEffect = null;
             //这里并不能复用AbilitySpec的逻辑
@@ -41,9 +45,11 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    newEffect.Apply( castor, target, result );
-                    newEffect.OnEffectEnd();
-                    ReferencePool.Release( newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( castor, target, newEffect );
+                    //newEffect.Apply( castor, target, result );
+                    //newEffect.OnEffectEnd( castor, target );
+                    //ReferencePool.Release( newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
         }

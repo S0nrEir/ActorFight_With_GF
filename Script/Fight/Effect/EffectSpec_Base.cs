@@ -1,8 +1,11 @@
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Numric;
+using Aquila.Toolkit;
 using Cfg.Common;
+using Cfg.Enum;
 using GameFramework;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -45,9 +48,45 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// effect被唤起时
+        /// </summary>
+        public virtual void OnEffectAwake( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
+        {
+            //派发子effe
+            Cfg.Common.Table_Effect meta = null;
+            EffectSpec_Base newEffect = null;
+            //这里并不能复用AbilitySpec的逻辑
+            foreach ( var effectID in Meta.AwakeEffects )
+            {
+                meta = GameEntry.LuBan.Tables.Effect.Get( effectID );
+                if ( meta is null )
+                {
+                    Log.Warning( $"<color=yellow>EffectSpec_Period_Deriging.Apply()--->meta is null,id:{effectID}</color>" );
+                    continue;
+                }
+                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( meta );
+                if ( newEffect is null )
+                {
+                    Log.Warning( $"EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{meta.ToString()}" );
+                    break;
+                }
+
+                if ( newEffect.Meta.Policy != DurationPolicy.Instant )
+                {
+                    GameEntry.Impact.Attach( newEffect, castor.Actor.ActorID, target.Actor.ActorID );
+                }
+                else
+                {
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( castor, target, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
+                }
+            }
+        }
+
+        /// <summary>
         /// 当effect销毁
         /// </summary>
-        public virtual void OnEffectEnd()
+        public virtual void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             
         }
@@ -57,7 +96,6 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-
         }
 
         public virtual void Clear()

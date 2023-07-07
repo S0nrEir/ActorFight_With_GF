@@ -36,10 +36,18 @@ namespace Cfg.Enum
         /// <summary>
         /// 百分比生命值移除
         /// </summary>
-        Instant_PercentageHealthRemove = 6,
+        Instant_PercentageRemoveHealth = 6,
         /// <summary>
         /// 周期性生效effect，派发子effect
         /// </summary>
         Period_Deriving = 7,
+        /// <summary>
+        /// 为actor添加tag
+        /// </summary>
+        Awake_ActorTag = 8,
+        /// <summary>
+        /// 为Ability添加tag
+        /// </summary>
+        Period_AbilityTag = 9,
     }
 }

@@ -11,13 +11,11 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.UI
 {
-
     /// <summary>
     /// 技能form
     /// </summary>
     public class Form_Ability : UIFormLogic
     {
-
         /// <summary>
         /// 技能命中
         /// </summary>
@@ -47,8 +45,9 @@ namespace Aquila.UI
             Debug.Log( "111111111" );
             //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
             //_abilityIdArr[2]:1002
+            //_abilityIdArr[3]:1003
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], _abilityIdArr[2] );
+            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], _abilityIdArr[3] );
         }
 
         /// <summary>

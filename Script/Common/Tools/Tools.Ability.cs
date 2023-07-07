@@ -33,6 +33,10 @@ namespace Aquila.Toolkit
                         effect = ReferencePool.Acquire<EffectSpec_Period_Deriving>();
                         break;
 
+                    case EffectType.Instant_PercentageRemoveHealth:
+                        effect = ReferencePool.Acquire<EffectSpec_RemoveHealth>();
+                        break;
+
                     default:
                         return null;
                 }

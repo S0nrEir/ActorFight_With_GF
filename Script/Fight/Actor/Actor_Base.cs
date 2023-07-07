@@ -1,8 +1,8 @@
 using Aquila.Extension;
 using Aquila.Fight.Addon;
+using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
-using GameFramework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 触发addon事件
         /// </summary>
-        public void Notify(int eventType,object param)
+        public void Notify( int eventType, object param )
         {
             _eventAddon.Notify( eventType, param );
         }
@@ -145,7 +145,7 @@ namespace Aquila.Fight.Actor
         protected override void OnHide( bool isShutdown, object userData )
         {
             UnRegister();
-
+            _tagContainer.Reset();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
@@ -166,7 +166,10 @@ namespace Aquila.Fight.Actor
             {
                 addon = iter.Current.Value;
                 addon.Dispose();
+                addon = null;
             }
+            _addonDic.Clear();
+            _addonDic = null;
 
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             UnRegister();
@@ -174,6 +177,7 @@ namespace Aquila.Fight.Actor
             ExtensionRecycle();
             SetRoleMetaID( -1 );
             gameObject.tag = String.Empty;
+            _tagContainer = null;
             base.OnRecycle();
         }
 
@@ -187,6 +191,14 @@ namespace Aquila.Fight.Actor
                 InitAddons( res.instance );
 
             _allAddonInitDone = true;
+            _tagContainer = new TagContainer();
+        }
+
+        /// <summary>
+        /// Tag改变
+        /// </summary>
+        protected virtual void OnTagChange( int tag, int changedTag, bool isADD )
+        {
         }
 
         /// <summary>
@@ -335,6 +347,11 @@ namespace Aquila.Fight.Actor
         /// actor身上的组件保存，key为 type的hashCode
         /// </summary>
         private Dictionary<int, Addon_Base> _addonDic = new Dictionary<int, Addon_Base>();
+
+        /// <summary>
+        /// tag管理器
+        /// </summary>
+        protected TagContainer _tagContainer = null;
 
         #endregion
     }

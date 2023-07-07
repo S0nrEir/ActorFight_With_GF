@@ -71,7 +71,8 @@ namespace Aquila.Fight.Impact
                 if ( impactData._stackCount < impactData._stackLimit )
                     impactData._stackCount++;
 
-                ReferencePool.Release( newEffect );
+                //ReferencePool.Release( newEffect );
+                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect, false );
             }
             //没有，添加新的
             else
@@ -82,7 +83,8 @@ namespace Aquila.Fight.Impact
                 if ( _effectDic.ContainsKey( key ) )
                 {
                     Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{key}</color>" );
-                    ReferencePool.Release( newEffect );
+                    //ReferencePool.Release( newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect, false );
                     return;
                 }
 
@@ -94,7 +96,7 @@ namespace Aquila.Fight.Impact
                 AddMapIndex( targetActorID, impactData._effectIndex );
 
                 if ( impactData._effectOnAwake )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
             }
         }
 
@@ -163,7 +165,7 @@ namespace Aquila.Fight.Impact
                         continue;
                     }
                     tempEffect.StackCount = impactData._stackCount;
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectImpact( impactData._castorActorID, impactData._targetActorID, tempEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
 
                     impactData._interval = 0f;
                 }
@@ -178,8 +180,9 @@ namespace Aquila.Fight.Impact
             {
                 var impactData = _pool.Get( entity );
                 tempEffect = GetEffect( impactData._effectIndex );
-                tempEffect.OnEffectEnd();
-                ReferencePool.Release( tempEffect );
+                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
+                //tempEffect.OnEffectEnd();
+                //ReferencePool.Release( tempEffect );
                 RemoveEffect( impactData._effectIndex );
                 RemoveMapIndex( impactData._targetActorID, impactData._effectIndex );
                 RecycleImpactEntity( entity );

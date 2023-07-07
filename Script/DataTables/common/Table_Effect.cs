@@ -29,6 +29,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         Target = _buf.ReadInt();
         EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
         PostInit();
     }
 
@@ -85,6 +86,10 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// 派生effect
     /// </summary>
     public int[] DeriveEffects { get; private set; }
+    /// <summary>
+    /// effect被唤起时派生一次的effect
+    /// </summary>
+    public int[] AwakeEffects { get; private set; }
 
     public const int __ID__ = 1812133477;
     public override int GetTypeId() => __ID__;
@@ -115,6 +120,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
+        + "AwakeEffects:" + Bright.Common.StringUtil.CollectionToString(AwakeEffects) + ","
         + "}";
     }
     
