@@ -102,7 +102,7 @@ namespace Aquila.Fight
         {
             _modifier          = default;
             Meta               = null;
-            StackCount         = 0;
+            StackCount         = 1;
             StackLimit         = 0;
             _impactEntityIndex = 0;
             ResetWhenOverride  = false;
@@ -121,7 +121,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 叠加层数
         /// </summary>
-        private int _stackCount = 0;
+        private int _stackCount = 1;
 
         /// <summary>
         /// 叠加层数上限

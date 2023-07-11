@@ -40,7 +40,7 @@ namespace Cfg.Enum
         /// <summary>
         /// 周期性生效effect，派发子effect
         /// </summary>
-        Period_Deriving = 7,
+        Period_DerivingStack = 7,
         /// <summary>
         /// 为actor添加tag
         /// </summary>

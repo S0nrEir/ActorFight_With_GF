@@ -29,8 +29,8 @@ namespace Aquila.Toolkit
                         effect = ReferencePool.Acquire<EffectSpec_PeriodFixedDamage>();
                         break;
 
-                    case EffectType.Period_Deriving:
-                        effect = ReferencePool.Acquire<EffectSpec_Period_Deriving>();
+                    case EffectType.Period_DerivingStack:
+                        effect = ReferencePool.Acquire<EffectSpec_Period_DerivingStack>();
                         break;
 
                     case EffectType.Instant_PercentageRemoveHealth:

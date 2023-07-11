@@ -74,6 +74,15 @@ namespace Aquila.Fight.Addon
             return (true, _currMP.CorrectionValue);
         }
 
+        ///// <summary>
+        ///// 获取hp上限的修正值
+        ///// </summary>
+        //public float GetCurrHPMaxCorrection()
+        //{
+        //    var res = GetCorrectionFinalValue( Actor_Base_Attr.HP, 0f );
+        //    return res.value;
+        //}
+
         /// <summary>
         /// 获取当前hp的修正值
         /// </summary>
