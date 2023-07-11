@@ -44,7 +44,7 @@ namespace Aquila.Fight.Addon
 
             _triggerCounter++;
             //触发次数满了，销毁
-            Actor.Trigger( _triggerCounter >= _triggerCounterLmt ? ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT : ActorEventEnum.COLLIDER_TRIGGER_HIT, actor );
+            //Actor.Trigger( _triggerCounter >= _triggerCounterLmt ? ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT : ActorEventEnum.COLLIDER_TRIGGER_HIT, actor );
         }
 
         /// <summary>

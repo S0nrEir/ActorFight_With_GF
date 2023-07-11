@@ -32,7 +32,7 @@ namespace Aquila.Procedure
                 {
                     _mainActorID = _actorID1,
                     _enemyActorID = new int[] {_actorID2,_actorID3,_actorID4},
-                    _abilityID = new []{1000,1001,1002}
+                    _abilityID = new []{1000,1001,1002,1003}
                 });
             Log.Info( "<color=white>all set load finish</color>" );
         }

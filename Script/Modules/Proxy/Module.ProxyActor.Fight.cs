@@ -48,15 +48,50 @@ namespace Aquila.Module
     public partial class Module_ProxyActor
     {
         /// <summary>
-        /// 生效一个impact
+        /// 实现一个Effect的效果
         /// </summary>
-        public void AffectImpact( int castorID, int targetID, EffectSpec_Base effect )
+        public void ImplEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect )
         {
             var result = ReferencePool.Acquire<AbilityResult_Hit>();
             result._dealedDamage = 0;
             result._stateDescription = 0;
-            result._castorActorID = castorID;
-            result._targetActorID = targetID;
+            result._castorActorID = castor.Actor.ActorID;
+            result._targetActorID = target.Actor.ActorID;
+
+            if ( castor is null || target is null )
+            {
+                Log.Warning( $"<color=yellow>Module_ProxyActor.Fight=====>ImplImpact()--->castor is null || target is null</color>" );
+                //ReferencePool.Release( result );
+                InvalidEffect( castor, target, effect, false );
+                GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
+                return;
+            }
+            effect.Apply( castor, target, result );
+            GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
+            if ( result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.Actor.CachedTransform.position );
+
+            ReferencePool.Release( result );
+            TryRefreshActorHPUI( target );
+        }
+
+        /// <summary>
+        /// 生效一个impact
+        /// </summary>
+        public void ImplEffect( int castorID, int targetID, EffectSpec_Base effect )
+        {
+            //var result = ReferencePool.Acquire<AbilityResult_Hit>();
+            //result._dealedDamage = 0;
+            //result._stateDescription = 0;
+            //result._castorActorID = castorID;
+            //result._targetActorID = targetID;
+
+            var castor = TryGet( castorID );
+            if ( !castor.has )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
+                return;
+            }
 
             var target = TryGet( targetID );
             if ( !target.has )
@@ -64,12 +99,40 @@ namespace Aquila.Module
                 Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
                 return;
             }
+            //ImplEffect( castor.instance, target.instance, effect );
+            ImplEffect( Get( castorID ), Get( targetID ), effect );
+        }
 
-            effect.Apply( target.instance, result );
-            GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
-            GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.instance.Actor.CachedTransform.position );
+        /// <summary>
+        /// 调用一个effect的唤起效果
+        /// </summary>
+        public void ImplAwakeEffect( int castorID, int targetID, EffectSpec_Base effect )
+        {
+            ImplAwakeEffect( Get( castorID ), Get( targetID ), effect );
+        }
+
+        /// <summary>
+        /// 调用一个effect的唤起效果
+        /// </summary>
+        public void ImplAwakeEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect )
+        {
+            if ( castor is null || target is null )
+            {
+                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
+                return;
+            }
+
+            var result = ReferencePool.Acquire<AbilityResult_Hit>();
+            result._dealedDamage = 0;
+            result._stateDescription = 0;
+            result._castorActorID = castor.Actor.ActorID;
+            result._targetActorID = target.Actor.ActorID;
+
+            effect.OnEffectAwake( castor, target );
+
+            GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", target.Actor.CachedTransform.position );
+            GameEntry.Event.Fire( castor, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
-            TryRefreshActorHPUI( target.instance );
         }
 
         /// <summary>
@@ -113,6 +176,30 @@ namespace Aquila.Module
 
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
+        }
+
+        /// <summary>
+        /// 无效化一个effect
+        /// </summary>
+        public void InvalidEffect( int castorID, int targetID, EffectSpec_Base effect, bool callEnd = false )
+        {
+            InvalidEffect( Get( castorID ), Get( targetID ), effect, callEnd );
+        }
+
+        /// <summary>
+        /// 无效化一个effect
+        /// </summary>
+        public void InvalidEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect, bool callEnd = true )
+        {
+            if ( castor is null || target is null )
+            {
+                Log.Warning( $"<color=yellow>Module_ProxyActor.Fight=====>InvalidEffect()--->castor is null || target is null</color>" );
+                return;
+            }
+            if ( callEnd )
+                effect.OnEffectEnd( castor, target );
+
+            ReferencePool.Release( effect );
         }
 
         /// <summary>

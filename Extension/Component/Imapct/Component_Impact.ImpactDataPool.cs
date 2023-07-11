@@ -21,10 +21,10 @@ namespace Aquila.Fight.Impact
             }
 
             /// <summary>
-            /// 移除一个entity持有的ImpactData组件
+            /// 回收一个entity持有的ImpactData组件
             /// </summary>
             [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public void Remove( int entity )
+            public void Recycle( int entity )
             {
                 //移除，放到回收池里
                 if ( _recycleImpactDataCount == _recycleImpactDataArr.Length )

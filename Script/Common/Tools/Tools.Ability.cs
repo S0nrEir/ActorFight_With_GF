@@ -15,18 +15,30 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 根据配表类型生成对应的effect逻辑实例，拿不到返回null
             /// </summary>
-            public static EffectSpec_Base CreateEffectSpec(Table_Effect meta)
+            public static EffectSpec_Base CreateEffectSpecByReferencePool(Table_Effect meta)
             {
                 EffectSpec_Base effect = null;
                 switch (meta.Type)
                 {
-                    case EffectType.PhyDamage:
+                    case EffectType.Instant_PhyDamage:
                         //return new EffectSpec_PhyDamage(meta);
                         effect = ReferencePool.Acquire<EffectSpec_PhyDamage>();
                         break;
 
-                    case EffectType.PeriodFixedDamage:
+                    case EffectType.Period_FixedDamage:
                         effect = ReferencePool.Acquire<EffectSpec_PeriodFixedDamage>();
+                        break;
+
+                    case EffectType.Period_DerivingStack:
+                        effect = ReferencePool.Acquire<EffectSpec_Period_DerivingStack>();
+                        break;
+
+                    case EffectType.Instant_PercentageRemoveHealth:
+                        effect = ReferencePool.Acquire<EffectSpec_RemoveHealth>();
+                        break;
+
+                    case EffectType.Period_ActorTag:
+                        effect = ReferencePool.Acquire<EffectSpec_Period_ActorTag>();
                         break;
 
                     default:

@@ -11,39 +11,57 @@ namespace Aquila.GameTag
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void Remove( ushort tag_to_remove )
+        public void Remove( ushort tagToRemove )
         {
-            var old_tag = _tag;
-            _tag = Tools.SetBitValue_i64( _tag, tag_to_remove, false );
-            _tag_change_callback?.Invoke( old_tag, _tag, tag_to_remove );
+            //var oldTag = _tag;
+            //_tag = Tools.SetBitValue_i64( _tag, tagToRemove, false );
+            //_tagChangeCallBack?.Invoke( oldTag, _tag, false);
+
+            _tag = Tools.SetBitValue_i64( _tag, tagToRemove, false );
+            _tagChangeCallBack?.Invoke( _tag, tagToRemove, false );
         }
 
         /// <summary>
         /// 添加一个Tag
         /// </summary>
-        public void Add( ushort tag_to_add )
+        public void Add( ushort tagToAdd )
         {
-            var old_tag = _tag;
-            _tag = Tools.SetBitValue_i64( _tag, tag_to_add, true );
-            _tag_change_callback?.Invoke( old_tag, _tag, tag_to_add );
+            //var oldTag = _tag;
+            //_tag = Tools.SetBitValue_i64( _tag, tagToAdd, true );
+            //_tagChangeCallBack?.Invoke( oldTag, _tag, true );
+
+            _tag = Tools.SetBitValue_i64( _tag, tagToAdd, true );
+            _tagChangeCallBack?.Invoke( _tag, tagToAdd, true );
         }
 
         /// <summary>
         /// 是否包含某项tag
         /// </summary>
-        public bool Contains( ushort bit_tag )
+        public bool Contains( ushort bitTag )
         {
-            return Tools.GetBitValue_i64( _tag, bit_tag );
+            return Tools.GetBitValue_i64( _tag, bitTag );
         }
 
         public TagContainer()
         {
+            Reset();
         }
 
-        public TagContainer( Action<Int64, Int64, ushort> callback )
+        public TagContainer( Action<Int64, Int64, bool> callback )
         {
-            _tag_change_callback = callback;
+            _tagChangeCallBack = callback;
+            Reset();
         }
+
+        public void Reset()
+        {
+            _tag = 0;
+        }
+
+        /// <summary>
+        /// 当前tag
+        /// </summary>
+        public Int64 Tag => _tag;
 
         /// <summary>
         /// 保存的tag
@@ -51,8 +69,8 @@ namespace Aquila.GameTag
         private Int64 _tag = 0;
 
         /// <summary>
-        /// tag发生变化时的回调
+        /// tag变化回调
         /// </summary>
-        private Action<Int64, Int64, ushort> _tag_change_callback = null;
+        private Action<Int64, Int64, bool> _tagChangeCallBack = null;
     }
 }

@@ -42,8 +42,8 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
-            RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT, OnColliderTriggerCountLmt );
-            RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
+            //RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT, OnColliderTriggerCountLmt );
+            //RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
         }
 
         // protected override void InitAddons (object user_data)
@@ -61,8 +61,8 @@ namespace Aquila.Fight.Actor
         protected override void OnRecycle()
         {
             base.OnRecycle();
-            UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT );
-            UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
+            //UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_COUNT_LMT );
+            //UnRegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT );
             _targetActorID = -1;
         }
 

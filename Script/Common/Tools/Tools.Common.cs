@@ -211,10 +211,10 @@ namespace Aquila.Toolkit
         /// <summary>
         /// 设定64位int数据中某一位的值
         /// </summary>
-        public static Int64 SetBitValue_i64( Int64 value, ushort index, bool bit_value )
+        public static Int64 SetBitValue_i64( Int64 value, int index, bool bit_value )
         {
-            if ( index > 63 )
-                throw new GameFrameworkException( "index > 63!" );
+            //if ( index > 63 )
+            //    throw new GameFrameworkException( "index > 63!" );
 
             var val = 1 << index;
             return ( bit_value ? ( value | val ) : ( value & ~val ) );

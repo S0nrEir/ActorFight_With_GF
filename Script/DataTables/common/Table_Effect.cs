@@ -18,7 +18,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     public Table_Effect(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        Tag = (Enum.EffectTagType)_buf.ReadInt();
+        Tag = (Enum.ActorTagType)_buf.ReadInt();
         Type = (Enum.EffectType)_buf.ReadInt();
         ExtensionParam = Struct.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
@@ -29,6 +29,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         Target = _buf.ReadInt();
         EffectType = (Enum.Actor_Attr)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
         PostInit();
     }
 
@@ -42,15 +43,15 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// 携带的Tag类型，添加时添加tag，移除时，移除tag
+    /// 给角色添加的tag
     /// </summary>
-    public Enum.EffectTagType Tag { get; private set; }
+    public Enum.ActorTagType Tag { get; private set; }
     /// <summary>
     /// Effect的类型
     /// </summary>
     public Enum.EffectType Type { get; private set; }
     /// <summary>
-    /// 额外参数（float,float,float,int,int,int）
+    /// 额外参数float_1,float_2,float_3,float_4,int_1,int_2,int_3,int_4
     /// </summary>
     public Struct.EffectExtensionParam ExtensionParam { get; private set; }
     /// <summary>
@@ -85,6 +86,10 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// 派生effect
     /// </summary>
     public int[] DeriveEffects { get; private set; }
+    /// <summary>
+    /// effect被唤起时派生一次的effect
+    /// </summary>
+    public int[] AwakeEffects { get; private set; }
 
     public const int __ID__ = 1812133477;
     public override int GetTypeId() => __ID__;
@@ -115,6 +120,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
+        + "AwakeEffects:" + Bright.Common.StringUtil.CollectionToString(AwakeEffects) + ","
         + "}";
     }
     

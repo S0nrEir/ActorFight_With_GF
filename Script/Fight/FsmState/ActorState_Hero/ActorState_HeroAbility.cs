@@ -41,7 +41,7 @@ namespace Aquila.Fight.FSM
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
             }
             //检查CD和消耗
-            var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
+            var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
             if ( abilityAddon is null )
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
             
@@ -73,7 +73,7 @@ namespace Aquila.Fight.FSM
             _time += deltaTime;
             if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
             {
-                var abilityAddon = _fsm.GetActorInstance().GetAddon<Addon_Ability>();
+                var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
                 if ( abilityAddon is null )
                 {
                     Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
@@ -85,7 +85,7 @@ namespace Aquila.Fight.FSM
                 foreach (var targetID in _result._targetIDArr)
                     GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id );
                 
-                GameEntry.Event.Fire(_fsm.GetActorInstance(),EventArg_OnUseAblity.Create(_result));
+                GameEntry.Event.Fire(_fsm.ActorInstance(),EventArg_OnUseAblity.Create(_result));
                 _abilityFinishFlag = true;
             }
         }
@@ -102,13 +102,15 @@ namespace Aquila.Fight.FSM
         public override void OnEnter( object param)
         {
             base.OnEnter(param);
+            //_fsm.GetActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.TEST, ( object ) "test param" );
             if ( !IsAbilityDataValid( param ) )
             {
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
                 return;
             }
             //技能消耗
-            _fsm.GetActorInstance().GetAddon<Addon_Ability>()?.Deduct( _abilityMeta.id );
+            //_fsm.GetActorInstance().GetAddon<Addon_Ability>()?.Deduct( _abilityMeta.id );
+            _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
             //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始
             _time = 0f;
             _abilityFinishFlag = false;
