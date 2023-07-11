@@ -16,7 +16,6 @@ namespace Aquila.Extension
         /// </summary>
         public void ShowDamageNumber( string num, Vector3 worldPos )
         {
-            Debug.Log( "111111111111" );
             var obj = GenObject<Object_DamageNumber>( typeof( Object_DamageNumber ).Name );
             if ( obj is null )
             {
