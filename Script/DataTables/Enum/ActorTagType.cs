@@ -11,20 +11,31 @@ namespace Cfg.Enum
     /// <summary>
     /// 角色Tag类型枚举，描述角色状态
     /// </summary>
-    [System.Flags]
     public enum ActorTagType
     {
         /// <summary>
+        /// 无
+        /// </summary>
+        None = -1,
+        /// <summary>
         /// 眩晕1
         /// </summary>
-        Stun = 1,
+        Stun = 0,
         /// <summary>
         /// 无敌10
         /// </summary>
-        God = 2,
+        God = 1,
         /// <summary>
-        /// 施法中100
+        /// 中毒100
         /// </summary>
-        Casting = 4,
+        Tox = 2,
+        /// <summary>
+        /// 施法中1000
+        /// </summary>
+        Casting = 3,
+        /// <summary>
+        /// 流血10000
+        /// </summary>
+        Blood = 4,
     }
 }

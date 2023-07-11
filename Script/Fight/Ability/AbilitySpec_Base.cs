@@ -17,13 +17,6 @@ namespace Aquila.Fight
     /// </summary>
     public /*abstract*/ class AbilitySpecBase : IReference
     {
-        //CoolDown和Cost：拿CD和Cost类型的GE数据
-        //根据GE数据创建对应GESpec
-        //Spec持有数据
-        //EffectScriptableObject翻译成配表，包含CD和Cost
-        //#todo为tag添加移除和添加时的回调
-        //子弹类技能怎么配置：技能表添加类型，比如召唤物，子弹类，蓄力，位移等，根据类型生成特殊的spec，使用技能时加载actor，路径就放在Numric字段----------暂时不用了，可以用effect来做
-
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
@@ -35,7 +28,7 @@ namespace Aquila.Fight
 
             //扣除cost
             if ( _costEffect != null )
-                _costEffect.Apply( _owner, null );
+                _costEffect.Apply( _owner, _owner, null );
         }
 
         /// <summary>
@@ -87,14 +80,6 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            ////刷新CD
-            //if ( _cdEffect != null )
-            //    _cdEffect._remain = _cdEffect._totalDuration;
-
-            ////扣除cost
-            //if ( _costEffect != null )
-            //    _costEffect.Apply( _owner, result );
-
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;
             foreach ( var effectID in Meta.effects )
@@ -105,7 +90,7 @@ namespace Aquila.Fight
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
                     break;
                 }
-                tempEffect = Tools.Ability.CreateEffectSpec( effectMeta );
+                tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectMeta );
                 if ( tempEffect is null )
                 {
                     Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
@@ -118,9 +103,10 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    tempEffect.Apply( effectMeta.Target == 1 ? target : _owner, result );
-                    tempEffect.OnEffectEnd();
-                    ReferencePool.Release( tempEffect );
+                    tempEffect.Apply( _owner, target, result );
+                    //tempEffect.OnEffectEnd(_owner,target);
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
+                    //ReferencePool.Release( tempEffect );
                 }
             }
 
@@ -167,14 +153,14 @@ namespace Aquila.Fight
         /// </summary>
         public virtual void Clear()
         {
-            Meta = null;
+            Meta          = null;
             //处理CD和Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
             _tagContainer = null;
-            _cdEffect = null;
-            _costEffect = null;
-            _owner = null;
+            _cdEffect     = null;
+            _costEffect   = null;
+            _owner        = null;
         }
 
         /// <summary>
@@ -213,9 +199,9 @@ namespace Aquila.Fight
         /// <summary>
         /// tag发生改变的回调
         /// </summary>
-        private void OnTagChange( Int64 oldTag, Int64 newTag, ushort changedIndex )
+        private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
         {
-            Log.Info( $"tag changed,tag:{newTag}" );
+            Log.Info( $"tag changed,tag:{changedTag}" );
         }
 
         /// <summary>

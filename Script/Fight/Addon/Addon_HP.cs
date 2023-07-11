@@ -60,6 +60,8 @@ namespace Aquila.Fight.Addon
             Refresh();
             _offset = GameEntry.LuBan.Tables.SceneConfig.HPBarPosOffset;
             _cachedPos = _actorTransform.position;
+            //var eventAddon = _actorInstance.GetAddon<Addon_Event>();
+            //eventAddon.Register( ( int ) AddonEventTypeEnum.TEST, ( int ) AddonType, ( addonType, param ) => Log.Debug( param + "---------------Addon_HP" ) );
         }
 
         public override void Dispose()

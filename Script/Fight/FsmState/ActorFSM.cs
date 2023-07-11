@@ -13,7 +13,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 获取actorInstance
         /// </summary>
-        public ActorInstance GetActorInstance()
+        public ActorInstance ActorInstance()
         {
             return _instance;
         }

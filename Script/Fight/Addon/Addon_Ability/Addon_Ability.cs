@@ -1,13 +1,10 @@
 using Aquila.Event;
-using Aquila.Fight.Actor;
 using Aquila.Module;
 using Cfg.Fight;
 using GameFramework;
-using UnityEditor;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace  Aquila.Fight.Addon
+namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 技能组件
@@ -15,12 +12,10 @@ namespace  Aquila.Fight.Addon
     public partial class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
-
-        //#todo扣除技能消耗的逻辑这块想一下要不要写成这样
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
-        public void Deduct(int abilityID)
+        private void Deduct( int abilityID )
         {
             GetAbilitySpec( abilityID )?.Deduct();
         }
@@ -28,36 +23,36 @@ namespace  Aquila.Fight.Addon
         /// <summary>
         /// 获取cd
         /// </summary>
-        public (float remain, float duration) CoolDown(int abilityID)
+        public (float remain, float duration) CoolDown( int abilityID )
         {
-            var spec = GetAbilitySpec(abilityID);
+            var spec = GetAbilitySpec( abilityID );
             return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
         }
 
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility(int abilityID, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
+        public bool UseAbility( int abilityID, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-            var spec = GetAbilitySpec(abilityID);
-            if (spec is null)
+            var spec = GetAbilitySpec( abilityID );
+            if ( spec is null )
             {
-                Log.Warning("<color=yellow>Addon_Ability.UseAbility--->spec is null</color>");
-                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue(result._stateDescription,
-                    (int)AbilityHitResultTypeEnum.NONE_SPEC, true);
+                Log.Warning( "<color=yellow>Addon_Ability.UseAbility--->spec is null</color>" );
+                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
                 return false;
             }
 
-            return spec.UseAbility( target , result );
+            return spec.UseAbility( target, result );
         }
 
-        public override void OnUpdate(float deltaTime,float realElapsed)
+        public override void OnUpdate( float deltaTime, float realElapsed )
         {
-            if(!_initFlag)
+            if ( !_initFlag )
                 return;
-            
-            foreach (var spec in _specArr)
-                spec.OnUpdate(deltaTime);
+
+            foreach ( var spec in _specArr )
+                spec.OnUpdate( deltaTime );
         }
 
         /// <summary>
@@ -67,106 +62,94 @@ namespace  Aquila.Fight.Addon
         {
             var spec = GetAbilitySpec( metaID );
             if ( spec is null )
-                return (int)AbilityUseResultTypeEnum.NONE_PARAM;
+                return ( int ) AbilityUseResultTypeEnum.NONE_PARAM;
 
             return spec.CanUseAbility();
         }
-
-        /// <summary>
-        /// 是否可使用技能，可以返回true
-        /// </summary>
-        //public bool CanUseAbility(int meta_id,ref AbilityHitResult result)
-        //{
-        //    var spec = GetAbilitySpec(meta_id);
-        //    if (spec is null)
-        //        return false;
-
-        //    return spec.CanUseAbility(ref result);
-        //}
 
         //----------------------priv----------------------
         /// <summary>
         /// 获取指定的技能逻辑实例，获取不到返回空
         /// </summary>
-        private AbilitySpecBase GetAbilitySpec(int metaID)
+        private AbilitySpecBase GetAbilitySpec( int metaID )
         {
-            if (_specArr is null || _specArr.Length == 0)
+            if ( _specArr is null || _specArr.Length == 0 )
             {
-                Log.Warning(" <color=yellow>is null || _spec_arr.Length == 0</color>");
+                Log.Warning( " <color=yellow>is null || _spec_arr.Length == 0</color>" );
                 return null;
             }
 
-            foreach (var tempSpec in _specArr)
+            foreach ( var tempSpec in _specArr )
             {
-                if ( tempSpec.Meta.id == metaID)
+                if ( tempSpec.Meta.id == metaID )
                     return tempSpec;
             }
 
             return null;
         }
-        
+
+        /// <summary>
+        /// 当使用技能
+        /// </summary>
+        private void OnUseAbility( int addonType, object param )
+        {
+            if ( param is AddonParam_OnUseAbility temp )
+                Deduct( temp._abilityID );
+        }
+
         /// <summary>
         /// 初始化组件持有的技能和对应的spec
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get(_actorInstance.Actor.RoleMetaID);
-            if (roleMeta is null)
+            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get( _actorInstance.Actor.RoleMetaID );
+            if ( roleMeta is null )
             {
-                Log.Warning("Addon_Ability.Init()->role_meta is null");
+                Log.Warning( "Addon_Ability.Init()->role_meta is null" );
                 return false;
             }
             var abilityIdSet = roleMeta.AbilityBaseID;
             _specArr = new AbilitySpecBase[abilityIdSet.Length];
             Table_AbilityBase abilityBaseMeta = null;
             var len = _specArr.Length;
-            for (var i = 0; i < len && i < abilityIdSet.Length; i++)
+            for ( var i = 0; i < len && i < abilityIdSet.Length; i++ )
             {
-                abilityBaseMeta = GameEntry.LuBan.Tables.Ability.Get( abilityIdSet[i]);
-                if (abilityBaseMeta is null)
+                abilityBaseMeta = GameEntry.LuBan.Tables.Ability.Get( abilityIdSet[i] );
+                if ( abilityBaseMeta is null )
                 {
-                    Log.Warning("Addon_Ability.Init()->ability_base_meta is null");
+                    Log.Warning( "Addon_Ability.Init()->ability_base_meta is null" );
                     return false;
                 }
-                _specArr[i] = AbilitySpecBase.Gen(abilityBaseMeta,_actorInstance);
+                _specArr[i] = AbilitySpecBase.Gen( abilityBaseMeta, _actorInstance );
             }
             return true;
         }
-        
+
         //--------------------override--------------------
         public override AddonTypeEnum AddonType => AddonTypeEnum.ABILITY;
         public override void OnAdd()
         {
         }
 
-        // public override void Init(Actor_Base actor, GameObject targetGameObject, Transform targetTransform)
-        // {
-        //     base.Init(actor, targetGameObject, targetTransform);
-        //     if(!InitSpec())
-        //         return;
-        //
-        //     _initFlag = true;
-        // }
-        
-        
-        public override void Init(Module_ProxyActor.ActorInstance instance)
+        public override void Init( Module_ProxyActor.ActorInstance instance )
         {
-            base.Init(instance);
-            if(!InitSpec())
+            base.Init( instance );
+            if ( !InitSpec() )
                 return;
-            
+
             _initFlag = true;
+            instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) AddonType, OnUseAbility );
         }
-        
+
         public override void Dispose()
         {
-            if (_specArr is { Length: > 0 })
+            if ( _specArr is { Length: > 0 } )
             {
-                foreach (var spec in _specArr)
-                    ReferencePool.Release(spec);
+                foreach ( var spec in _specArr )
+                    ReferencePool.Release( spec );
             }
-        
-            _specArr  = null;
+
+            _specArr = null;
             // _meta      = null;
             _initFlag = false;
             base.Dispose();
@@ -187,7 +170,7 @@ namespace  Aquila.Fight.Addon
         // /// 技能元数据
         // /// </summary>
         // private TB_AbilityBase _meta = null;
-        
+
         /// <summary>
         /// 持有的技能
         /// </summary>

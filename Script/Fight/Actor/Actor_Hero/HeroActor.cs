@@ -1,6 +1,7 @@
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -77,7 +78,12 @@ namespace Aquila.Fight.Actor
         {
             base.OnHide( isShutdown, userData );
         }
-        
+
+        protected override void OnTagChange( long tag, long changedTag, bool isADD )
+        {
+            Log.Info( $"<color=green>tag changed!,tag:{tag},changedTag:{changedTag},is add:{isADD}</color>" );
+        }
+
         //----------------addon----------------
         /// <summary>
         /// 状态机组件

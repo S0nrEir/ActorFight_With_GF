@@ -21,7 +21,7 @@ namespace Aquila.Fight.Impact
             public int _targetActorID;
 
             /// <summary>
-            /// effect实例索引ID
+            /// effect实例hashCode的索引
             /// </summary>
             public int _effectIndex;
 
@@ -54,6 +54,21 @@ namespace Aquila.Fight.Impact
             /// 施加后立生效
             /// </summary>
             public bool _effectOnAwake;
+
+            /// <summary>
+            /// 叠加层数
+            /// </summary>
+            public int _stackCount;
+
+            /// <summary>
+            /// 叠加层数上限
+            /// </summary>
+            public int _stackLimit;
+
+            /// <summary>
+            /// 覆盖时重置时间
+            /// </summary>
+            public bool _resetDurationWhenOverride;
         }
     }
 }

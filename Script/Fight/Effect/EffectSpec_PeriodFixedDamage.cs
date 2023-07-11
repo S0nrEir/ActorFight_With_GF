@@ -1,11 +1,8 @@
 using Aquila.Event;
-using Aquila.Fight;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Common;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -22,10 +19,10 @@ namespace Aquila.Fight
             _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance instance, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             //get damage
-            var addon = instance.GetAddon<Addon_BaseAttrNumric>();
+            var addon = target.GetAddon<Addon_BaseAttrNumric>();
             if ( addon is null )
             {
                 Log.Warning( $"EffectSpec_PeriodFixedDamage.Apply()--->addon is null" );

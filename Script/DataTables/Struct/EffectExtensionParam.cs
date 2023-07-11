@@ -23,9 +23,11 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
         FloatParam_1 = _buf.ReadFloat();
         FloatParam_2 = _buf.ReadFloat();
         FloatParam_3 = _buf.ReadFloat();
+        FloatParam_4 = _buf.ReadFloat();
         IntParam_1 = _buf.ReadInt();
         IntParam_2 = _buf.ReadInt();
         IntParam_3 = _buf.ReadInt();
+        IntParam_4 = _buf.ReadInt();
         PostInit();
     }
 
@@ -47,6 +49,10 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
     /// </summary>
     public float FloatParam_3 { get; private set; }
     /// <summary>
+    /// 浮点参数4
+    /// </summary>
+    public float FloatParam_4 { get; private set; }
+    /// <summary>
     /// 整型参数_1
     /// </summary>
     public int IntParam_1 { get; private set; }
@@ -58,6 +64,10 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
     /// 整型参数_3
     /// </summary>
     public int IntParam_3 { get; private set; }
+    /// <summary>
+    /// 整型参数_4
+    /// </summary>
+    public int IntParam_4 { get; private set; }
 
     public const int __ID__ = -1637178376;
     public override int GetTypeId() => __ID__;
@@ -77,9 +87,11 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
         + "FloatParam_1:" + FloatParam_1 + ","
         + "FloatParam_2:" + FloatParam_2 + ","
         + "FloatParam_3:" + FloatParam_3 + ","
+        + "FloatParam_4:" + FloatParam_4 + ","
         + "IntParam_1:" + IntParam_1 + ","
         + "IntParam_2:" + IntParam_2 + ","
         + "IntParam_3:" + IntParam_3 + ","
+        + "IntParam_4:" + IntParam_4 + ","
         + "}";
     }
     
