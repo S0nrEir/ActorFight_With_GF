@@ -44,7 +44,7 @@ namespace Cfg.Enum
         /// <summary>
         /// 为actor添加tag
         /// </summary>
-        Awake_ActorTag = 8,
+        Period_ActorTag = 8,
         /// <summary>
         /// 为Ability添加tag
         /// </summary>

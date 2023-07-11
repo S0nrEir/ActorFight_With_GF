@@ -37,6 +37,10 @@ namespace Aquila.Toolkit
                         effect = ReferencePool.Acquire<EffectSpec_RemoveHealth>();
                         break;
 
+                    case EffectType.Period_ActorTag:
+                        effect = ReferencePool.Acquire<EffectSpec_Period_ActorTag>();
+                        break;
+
                     default:
                         return null;
                 }

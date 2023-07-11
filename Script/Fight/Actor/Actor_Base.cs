@@ -28,7 +28,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void AddTag(ushort tagToAdd)
+        public void AddTag( ushort tagToAdd )
         {
             _tagContainer.Add( tagToAdd );
         }
@@ -208,13 +208,13 @@ namespace Aquila.Fight.Actor
                 InitAddons( res.instance );
 
             _allAddonInitDone = true;
-            _tagContainer = new TagContainer();
+            _tagContainer = new TagContainer( OnTagChange );
         }
 
         /// <summary>
         /// Tag改变
         /// </summary>
-        protected virtual void OnTagChange( int tag, int changedTag, bool isADD )
+        protected virtual void OnTagChange( Int64 tag, Int64 changedTag, bool isADD )
         {
         }
 

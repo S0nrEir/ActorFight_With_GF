@@ -1,5 +1,4 @@
 using Aquila.Module;
-using GameFramework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -40,7 +39,8 @@ namespace Aquila.Fight.Impact
             var indexList = GetMapIndex( actorID );
             if ( indexList is null || indexList.Count == 0 )
             {
-                Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
+                //Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
+                //#todo这里不要用数组
                 return new EffectSpec_Base[0];
             }
 
@@ -97,6 +97,12 @@ namespace Aquila.Fight.Impact
 
                 if ( impactData._effectOnAwake )
                     GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
+
+                //唤起一次性的effect
+                if ( newEffect.Meta.AwakeEffects.Length != 0 )
+                {
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
+                }
             }
         }
 
@@ -180,7 +186,7 @@ namespace Aquila.Fight.Impact
             {
                 var impactData = _pool.Get( entity );
                 tempEffect = GetEffect( impactData._effectIndex );
-                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
+                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( impactData._castorActorID, impactData._targetActorID, tempEffect, true );
                 //tempEffect.OnEffectEnd();
                 //ReferencePool.Release( tempEffect );
                 RemoveEffect( impactData._effectIndex );
@@ -202,17 +208,17 @@ namespace Aquila.Fight.Impact
         /// </summary>
         private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int key )
         {
-            impactData._castorActorID             = castorActorID;
-            impactData._targetActorID             = targetActorID;
-            impactData._duration                  = effect.Meta.Duration;
-            impactData._effectIndex               = key;
-            impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
-            impactData._period                    = effect.Meta.Period;
-            impactData._policy                    = effect.Meta.Policy;
-            impactData._elapsed                   = 0f;
-            impactData._interval                  = 0f;
-            impactData._stackCount                = effect.StackCount;
-            impactData._stackLimit                = effect.StackLimit;
+            impactData._castorActorID = castorActorID;
+            impactData._targetActorID = targetActorID;
+            impactData._duration = effect.Meta.Duration;
+            impactData._effectIndex = key;
+            impactData._effectOnAwake = effect.Meta.EffectOnAwake;
+            impactData._period = effect.Meta.Period;
+            impactData._policy = effect.Meta.Policy;
+            impactData._elapsed = 0f;
+            impactData._interval = 0f;
+            impactData._stackCount = effect.StackCount;
+            impactData._stackLimit = effect.StackLimit;
             impactData._resetDurationWhenOverride = effect.ResetWhenOverride;
         }
 

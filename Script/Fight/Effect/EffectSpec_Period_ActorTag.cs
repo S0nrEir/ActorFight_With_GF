@@ -7,7 +7,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 为actor添加tag
     /// </summary>
-    public class EffectSpec_PeriodActorTag : EffectSpec_Base
+    public class EffectSpec_Period_ActorTag : EffectSpec_Base
     {
         public override void OnEffectAwake( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {

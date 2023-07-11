@@ -20,22 +20,22 @@ namespace Cfg.Enum
         /// <summary>
         /// 眩晕1
         /// </summary>
-        Stun = 1,
+        Stun = 0,
         /// <summary>
         /// 无敌10
         /// </summary>
-        God = 2,
+        God = 1,
         /// <summary>
         /// 中毒100
         /// </summary>
-        Tox = 3,
+        Tox = 2,
         /// <summary>
         /// 施法中1000
         /// </summary>
-        Casting = 4,
+        Casting = 3,
         /// <summary>
         /// 流血10000
         /// </summary>
-        Blood = 5,
+        Blood = 4,
     }
 }
