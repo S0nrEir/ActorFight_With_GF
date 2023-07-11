@@ -68,7 +68,9 @@ namespace Aquila.Module
             }
             effect.Apply( castor, target, result );
             GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
-            GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.Actor.CachedTransform.position );
+            if ( result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.Actor.CachedTransform.position );
+
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
         }

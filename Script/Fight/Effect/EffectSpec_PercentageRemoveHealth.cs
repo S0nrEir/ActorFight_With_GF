@@ -29,6 +29,7 @@ namespace Aquila.Fight
             var removeVal = _modifier.Calc( _maxHP );
             var curr = addon.GetCurrHPCorrection();
             addon.SetCurrHP( curr - removeVal );
+            result._dealedDamage += ( int ) removeVal;
         }
 
         public void SetModifier( float fac )
