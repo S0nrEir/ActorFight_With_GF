@@ -26,5 +26,10 @@ namespace Aquila.Fight
         /// 造成了暴击
         /// </summary>
         CRITICAL,
+
+        /// <summary>
+        /// 造成了治疗
+        /// </summary>
+        HEALING,
     }
 }
