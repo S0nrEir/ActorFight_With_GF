@@ -98,12 +98,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void PreLoadTables()
         {
-            // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
-            //_preloadFlag |= _tableLoadFinish;
-            //#todo别的预加载逻辑依赖luban数据表，所以luban数据表一开始先加载，不在预加载逻辑做，这里抽空改了
-            //if ( !GameEntry.LuBan.LoadDataTable() )
-            //    return;
-
+            GameEntry.LuBan.LoadDataTable();
             _handler.LoadDataTableFinish();
             OnPreLoadFinished();
         }
