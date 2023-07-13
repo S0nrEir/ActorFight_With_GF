@@ -18,6 +18,14 @@ namespace Aquila.Toolkit
             {
                 return @$"Assets/Res/Config/{tableFileName}.txt";
             }
+
+            /// <summary>
+            /// 脚本文件根目录
+            /// </summary>
+            public static string LuaScriptRootPath()
+            {
+                return @$"{Application.dataPath}/Script/Lua/";
+            }
         }
     }
 }
