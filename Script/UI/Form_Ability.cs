@@ -42,7 +42,6 @@ namespace Aquila.UI
         /// </summary>
         private void OnIconItemClicked( int abilityID )
         {
-            //Debug.Log( "111111111" );
             //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
             //_abilityIdArr[2]:1002
             //_abilityIdArr[3]:1003

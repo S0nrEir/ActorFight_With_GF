@@ -88,8 +88,7 @@ namespace Aquila.Procedure
         {
             foreach ( var tableName in Configs )
             {
-                //#todo：配置成常量路径
-                var assetPath = @$"Assets/Res/Config/{tableName}.txt";
+                var assetPath = Tools.Path.ConfigPath( tableName );
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
             }
         }
