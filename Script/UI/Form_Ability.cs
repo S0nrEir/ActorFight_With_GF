@@ -34,7 +34,7 @@ namespace Aquila.UI
 
             var result = param._resultParam;
             if ( !result._succ )
-                Log.Info( $"<color=white>{Tools.Fight.AbilityUseFaildDescription( result._stateDescription )}</color>" );
+                Log.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
         }
 
         /// <summary>
