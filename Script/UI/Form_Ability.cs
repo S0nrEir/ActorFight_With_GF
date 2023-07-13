@@ -121,7 +121,6 @@ namespace Aquila.UI
         protected override void OnOpen( object userData )
         {
             base.OnOpen( userData );
-            //var param = ( userData as FormParam )._userData;
             var param = Tools.UI.GetFormParam<Form_AbilityParam>( userData );
             if ( param is null )
                 return;
