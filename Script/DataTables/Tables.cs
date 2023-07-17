@@ -21,6 +21,7 @@ public partial class Tables
     public Fight.AbilityTimeline AbilityTimeline {get; }
     public Common.Effect Effect {get; }
     public Role.RoleMeta RoleMeta {get; }
+    public Single.GameText GameText {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -41,6 +42,8 @@ public partial class Tables
         tables.Add("Common.Effect", Effect);
         RoleMeta = new Role.RoleMeta(loader("role_rolemeta")); 
         tables.Add("Role.RoleMeta", RoleMeta);
+        GameText = new Single.GameText(loader("single_gametext")); 
+        tables.Add("Single.GameText", GameText);
 
         PostInit();
         TbItem.Resolve(tables); 
@@ -51,6 +54,7 @@ public partial class Tables
         AbilityTimeline.Resolve(tables); 
         Effect.Resolve(tables); 
         RoleMeta.Resolve(tables); 
+        GameText.Resolve(tables); 
         PostResolve();
     }
 
@@ -64,6 +68,7 @@ public partial class Tables
         AbilityTimeline.TranslateText(translator); 
         Effect.TranslateText(translator); 
         RoleMeta.TranslateText(translator); 
+        GameText.TranslateText(translator); 
     }
     
     partial void PostInit();

@@ -1,4 +1,4 @@
-﻿using Aquila.Toolkit;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
 using GameFramework.Resource;
@@ -361,8 +361,6 @@ namespace Aquila.Extension
         protected override void Awake()
         {
             base.Awake();
-            _lua_root_path = $"{Application.dataPath}/Script/Lua/";
-            //#todo给个初始capcity
             _load_asset_callbacks = new LoadAssetCallbacks( OnScriptLoadSucc, OnScriptLoadFaild );
             _script_cache_dic = new Dictionary<int, byte[]>();
             _script_running_dic = new Dictionary<int, Script_Running_Data>( 128 );
@@ -400,11 +398,6 @@ namespace Aquila.Extension
         /// 全局元表
         /// </summary>
         private static LuaTable _meta_table = null;
-
-        /// <summary>
-        /// 脚本路径根节点
-        /// </summary>
-        private static string _lua_root_path = string.Empty;
 
         private static float _gc_timer = 0f;
 

@@ -3,6 +3,7 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Aquila.UI;
+using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using GameFramework.Resource;
@@ -26,14 +27,12 @@ namespace Aquila.Procedure
         {
             if ( _loadFlagCurrState != _loadFlagFinish )
                 return;
-            
-            GameEntry.UI.Open(FormIdEnum.AbilityForm,
-                new Form_AbilityParam()
-                {
-                    _mainActorID = _actorID1,
-                    _enemyActorID = new int[] {_actorID2,_actorID3,_actorID4},
-                    _abilityID = new []{1000,1001,1002,1003}
-                });
+
+            var param = ReferencePool.Acquire<Form_AbilityParam>();
+            param._mainActorID = _actorID1;
+            param._enemyActorID = new int[] { _actorID2, _actorID3, _actorID4 };
+            param._abilityID = new int[] { 1000, 1001, 1002, 1003 };
+            GameEntry.UI.Open(FormIdEnum.AbilityForm,param);
             Log.Info( "<color=white>all set load finish</color>" );
         }
 
@@ -153,8 +152,6 @@ namespace Aquila.Procedure
             //加载场景，加载4个测试用的战斗actor
             LoadScene();
             LoadActor();
-            //加载临时输入配置
-            //#todo输入配置现在走界面按钮
         }
 
         private int _actorID1 = 0;

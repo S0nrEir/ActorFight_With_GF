@@ -34,7 +34,7 @@ namespace Aquila.UI
 
             var result = param._resultParam;
             if ( !result._succ )
-                Log.Info( $"<color=white>{Tools.Fight.AbilityUseFaildDescription( result._stateDescription )}</color>" );
+                Log.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
         }
 
         /// <summary>
@@ -42,12 +42,11 @@ namespace Aquila.UI
         /// </summary>
         private void OnIconItemClicked( int abilityID )
         {
-            //Debug.Log( "111111111" );
             //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
             //_abilityIdArr[2]:1002
             //_abilityIdArr[3]:1003
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], _abilityIdArr[3] );
+            _actorProxy.Ability2SingleTarget( _actorID, abilityID, _abilityIdArr[3] );
         }
 
         /// <summary>
@@ -121,7 +120,6 @@ namespace Aquila.UI
         protected override void OnOpen( object userData )
         {
             base.OnOpen( userData );
-            //var param = ( userData as FormParam )._userData;
             var param = Tools.UI.GetFormParam<Form_AbilityParam>( userData );
             if ( param is null )
                 return;

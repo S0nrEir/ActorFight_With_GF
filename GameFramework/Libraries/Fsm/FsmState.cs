@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -78,7 +78,7 @@ namespace GameFramework.Fsm
                 throw new GameFrameworkException("FSM is invalid.");
             }
 
-            Debug.Log($"<color=white>change procedure </color><color=green><{fsmImplement.CurrentStateName}> -> <{typeof(TState).Name}></color>");
+            Debug.Log($"<color=white>change procedure </color><color=green>【{fsmImplement.CurrentStateName}】 -> 【{typeof(TState).Name}】</color>");
             fsmImplement.ChangeState<TState>();
         }
 
