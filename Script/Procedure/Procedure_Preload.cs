@@ -1,6 +1,3 @@
-using Aquila.Config;
-using Aquila.Module;
-using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
@@ -9,7 +6,6 @@ using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System.Collections.Generic;
 using UGFExtensions;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
@@ -67,8 +63,6 @@ namespace Aquila.Procedure
             PreLoadTables();
             PreloadInternalTable();
             PreloadInfoBoard();
-            //测试配表
-            //GameEntry.DataTable.Test();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -90,8 +84,7 @@ namespace Aquila.Procedure
         {
             foreach ( var tableName in Configs )
             {
-                //#todo：配置成常量路径
-                var assetPath = @$"Assets/Res/Config/{tableName}.txt";
+                var assetPath = Tools.Path.ConfigPath( tableName );
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
             }
         }
@@ -101,12 +94,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void PreLoadTables()
         {
-            // _preload_flags = Tools.SetBitValue( _preload_flags, _table_load_flag_bit_offset, false );
-            //_preloadFlag |= _tableLoadFinish;
-            //#todo别的预加载逻辑依赖luban数据表，所以luban数据表一开始先加载，不在预加载逻辑做，这里抽空改了
-            //if ( !GameEntry.LuBan.LoadDataTable() )
-            //    return;
-
+            GameEntry.LuBan.LoadDataTable();
             _handler.LoadDataTableFinish();
             OnPreLoadFinished();
         }

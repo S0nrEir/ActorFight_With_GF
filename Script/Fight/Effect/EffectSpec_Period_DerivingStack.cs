@@ -37,7 +37,7 @@ namespace Aquila.Fight
                 {
                     Log.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{tempMeta.ToString()}</color>" );
                     break;
-                } 
+                }
 
                 if ( newEffect.Meta.Policy != DurationPolicy.Instant )
                 {
@@ -46,10 +46,9 @@ namespace Aquila.Fight
                 else
                 {
                     //叠层
-                    if (/* StackCount < StackLimit &&*/ newEffect is ICustomizeEffect )
+                    if ( newEffect is ICustomizableEffect )
                     {
-                        var fac = FacToParam( StackCount, StackLimit, Meta.ExtensionParam );
-                        ( newEffect as ICustomizeEffect ).SetModifier( fac );
+                        ( newEffect as ICustomizableEffect ).SetModifier( this );
                     }
                     GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( castor, target, newEffect );
                     //newEffect.Apply( castor, target, result );

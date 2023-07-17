@@ -278,7 +278,6 @@ namespace Aquila.Module
                     Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
                 // return result;
             }
-            //#todo：cost not enough
             //魔法消耗检查不能放在技能组件里，
             ( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
             GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );

@@ -96,11 +96,6 @@ namespace Aquila.Extension
             _bytesPath = $"{Application.dataPath}/Res/DataTables/";
         }
 
-        private void Start()
-        {
-            LoadDataTable();
-        }
-
         /// <summary>
         /// 使用自定义缓存表数据
         /// </summary>

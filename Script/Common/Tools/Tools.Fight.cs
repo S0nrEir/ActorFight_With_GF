@@ -1,7 +1,5 @@
-using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Addon;
-using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -15,27 +13,24 @@ namespace Aquila.Toolkit
         public static class Fight
         {
             /// <summary>
-            /// 获取技能使用失败的状态描述
+            /// 获取技能使用失败的多语言key
             /// </summary>
-            public static string AbilityUseFaildDescription(int stateDescription)
+            public static string UsingAbilityFaildDescription_l10n( int stateDescription )
             {
-                //#todo：替换成多语言
                 if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )
-                    return "技能无目标";
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTarget;
                 else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
-                    return "无施法者";
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoCastor;
                 else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH ) )
-                    return "法力值不够";
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotEnoughMana;
                 else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.CD_NOT_OK ) )
-                    return "技能还未准备就绪";
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
                 else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_PARAM ) )
-                    return "无技能参数";
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
-                    return "无施法者";
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
-                    return "无技能配置参数";
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
-                    return "没有timeline配置参数";
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoParam;
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META ) )
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoMeta;
+                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META ) )
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTimeline;
 
                 return string.Empty;
             }
@@ -43,7 +38,7 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 累加伤害
             /// </summary
-            public static int AddDealedDamage(int value,int toAdd)
+            public static int AddDealedDamage( int value, int toAdd )
             {
                 return value + toAdd;
             }
