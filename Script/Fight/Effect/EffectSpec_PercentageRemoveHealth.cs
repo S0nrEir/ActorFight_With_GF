@@ -9,7 +9,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 基于生命值上限百分比移除生命值
     /// </summary>
-    public class EffectSpec_RemoveHealth : EffectSpec_Base, ICustomizeEffect
+    public class EffectSpec_RemoveHealth : EffectSpec_Base, ICustomizableEffect
     {
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
@@ -32,8 +32,29 @@ namespace Aquila.Fight
             result._dealedDamage += ( int ) removeVal;
         }
 
-        public void SetModifier( float fac )
+        public void SetModifier( EffectSpec_Base parent)
         {
+            var parentExtension = parent.Meta.ExtensionParam;
+            float fac = 0f;
+            switch ( parent.StackCount )
+            {
+                case 1:
+                    fac = parentExtension.FloatParam_1;
+                    break;
+
+                case 2:
+                    fac = parentExtension.FloatParam_2;
+                    break;
+
+                case 3: 
+                    fac = parentExtension.FloatParam_3;
+                    break;
+
+                case 4:
+                    fac = parentExtension.FloatParam_4;
+                    break;
+            }
+
             _modifier.Setup( Meta.ModifierType, fac );
         }
 

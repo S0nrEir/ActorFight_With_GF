@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -523,7 +523,7 @@ namespace UnityGameFramework.Runtime
         /// 资源更新全部完成事件。
         /// </summary>
         public event EventHandler<GameFramework.Resource.ResourceUpdateAllCompleteEventArgs> ResourceUpdateAllComplete = null;
-        //#todo_---> new gf impl
+        //new gf impl
         public event EventHandler<ResourceVerifyStartEventArgs> ResourceVerifyStart;
         public event EventHandler<ResourceVerifySuccessEventArgs> ResourceVerifySuccess;
         public event EventHandler<ResourceVerifyFailureEventArgs> ResourceVerifyFailure;
@@ -1642,7 +1642,7 @@ namespace UnityGameFramework.Runtime
             return null;
         }
 
-        //#todo_ new gf impl
+        //new gf impl
         public void VerifyResources( int verifyResourceLengthPerFrame, VerifyResourcesCompleteCallback verifyResourcesCompleteCallback )
         {
             throw new NotImplementedException();

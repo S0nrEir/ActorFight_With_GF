@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------
+//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -19,7 +19,7 @@ namespace UnityGameFramework.Editor
     {
         private SerializedProperty m_AvailableProcedureTypeNames = null;
         private SerializedProperty m_EntranceProcedureTypeName = null;
-        //#自定义字段
+        //自定义字段
         private SerializedProperty _is_enter_test_procedure = null;
 
         private string[] m_ProcedureTypeNames = null;
