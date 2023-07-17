@@ -55,11 +55,6 @@ namespace Aquila.Fight.Actor
             _hpAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
         }
 
-        protected override void Register()
-        {
-            base.Register();
-        }
-
         protected override void UnRegister()
         {
             base.UnRegister();

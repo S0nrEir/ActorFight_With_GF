@@ -46,7 +46,7 @@ namespace Aquila.UI
             //_abilityIdArr[2]:1002
             //_abilityIdArr[3]:1003
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], _abilityIdArr[3] );
+            _actorProxy.Ability2SingleTarget( _actorID, abilityID, _abilityIdArr[3] );
         }
 
         /// <summary>

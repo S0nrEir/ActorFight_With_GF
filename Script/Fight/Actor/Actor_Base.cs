@@ -154,7 +154,7 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
-            Register();
+            //Register();
             _eventAddon.Ready();
             base.OnShow( userData );
         }
@@ -219,11 +219,11 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 注册GF消息，在OnShow的时候调用,#todo_可能是无用函数，日后考虑删除
+        /// 注册GF消息，在OnShow的时候调用,todo_可能是无用函数，日后考虑删除
         /// </summary>
-        protected virtual void Register()
-        {
-        }
+        //protected virtual void Register()
+        //{
+        //}
 
         /// <summary>
         /// 注销GF消息，在回收的时候调用,#todo_可能是无用函数，日后考虑删除

@@ -104,12 +104,12 @@ namespace Aquila.Fight.Actor
             base.OnRecycle();
         }
 
-        protected override void Register()
-        {
-            base.Register();
-            //RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
-            //RegisterActorEvent( ActorEventEnum.EFFECT_TIMES_UP, OnEffectTimsUp );
-        }
+        //protected override void Register()
+        //{
+        //    base.Register();
+        //    //RegisterActorEvent( ActorEventEnum.COLLIDER_TRIGGER_HIT, ColliderTriggerHit );
+        //    //RegisterActorEvent( ActorEventEnum.EFFECT_TIMES_UP, OnEffectTimsUp );
+        //}
 
         protected override void UnRegister()
         {
