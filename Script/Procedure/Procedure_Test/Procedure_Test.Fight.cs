@@ -152,8 +152,6 @@ namespace Aquila.Procedure
             //加载场景，加载4个测试用的战斗actor
             LoadScene();
             LoadActor();
-            //加载临时输入配置
-            //#todo输入配置现在走界面按钮
         }
 
         private int _actorID1 = 0;
