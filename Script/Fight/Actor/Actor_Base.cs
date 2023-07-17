@@ -154,14 +154,12 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
-            //Register();
             _eventAddon.Ready();
             base.OnShow( userData );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            UnRegister();
             _tagContainer.Reset();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
@@ -183,13 +181,11 @@ namespace Aquila.Fight.Actor
             {
                 addon = iter.Current.Value;
                 addon.Dispose();
-                addon = null;
             }
             _addonDic.Clear();
             _addonDic = null;
 
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
-            UnRegister();
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
@@ -215,20 +211,6 @@ namespace Aquila.Fight.Actor
         /// Tag改变
         /// </summary>
         protected virtual void OnTagChange( Int64 tag, Int64 changedTag, bool isADD )
-        {
-        }
-
-        /// <summary>
-        /// 注册GF消息，在OnShow的时候调用,todo_可能是无用函数，日后考虑删除
-        /// </summary>
-        //protected virtual void Register()
-        //{
-        //}
-
-        /// <summary>
-        /// 注销GF消息，在回收的时候调用,#todo_可能是无用函数，日后考虑删除
-        /// </summary>
-        protected virtual void UnRegister()
         {
         }
 
