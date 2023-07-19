@@ -125,14 +125,14 @@ namespace Aquila.Module
         /// <summary>
         /// 管理器部分的模块开启处理
         /// </summary>
-        private void MgrStart()
+        private void MgrOpen()
         {
         }
 
         /// <summary>
         /// 管理器部分的模块关闭处理
         /// </summary>
-        private void MgrEnd()
+        private void MgrClose()
         {
             ReleaseAll();
         }
@@ -145,7 +145,7 @@ namespace Aquila.Module
         private Dictionary<int, ActorInstance> _proxy_actor_dic;
 
         /// <summary>
-        /// 注册的ID集合
+        /// 注册的Actor ID集合
         /// </summary>
         private HashSet<int> _registered_id_set = null;
     }

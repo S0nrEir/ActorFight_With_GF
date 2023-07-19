@@ -6,10 +6,7 @@ using Aquila.UI;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using GameFramework.Resource;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 using UnityGameFramework.Runtime;
 
@@ -32,7 +29,7 @@ namespace Aquila.Procedure
             param._mainActorID = _actorID1;
             param._enemyActorID = new int[] { _actorID2, _actorID3, _actorID4 };
             param._abilityID = new int[] { 1000, 1001, 1002, 1003 };
-            GameEntry.UI.Open(FormIdEnum.AbilityForm,param);
+            GameEntry.UI.OpenForm( FormIdEnum.AbilityForm, param );
             Log.Info( "<color=white>all set load finish</color>" );
         }
 

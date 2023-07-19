@@ -51,22 +51,13 @@ namespace Aquila.Module
             actor.SetCoordAndPosition( 0, 0 );
         }
 
-        public override void Start( object param )
+        public override void Open( object param )
         {
-            base.Start( param );
-            //TestLoadActor();
+            base.Open( param );
         }
-        public override void End()
+        public override void Close()
         {
-            base.End();
-        }
-
-        public override void OnClose()
-        {
-            //if ( _actor_cache_dic != null )
-            //    _actor_cache_dic?.Clear();
-
-            //_actor_cache_dic = null;
+            base.Close();
         }
 
         public override void EnsureInit()
