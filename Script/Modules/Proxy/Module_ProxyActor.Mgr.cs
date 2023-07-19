@@ -13,25 +13,29 @@ namespace Aquila.Module
         /// <summary>
         /// 将actor注册到代理中，成功返回true
         /// </summary>
-        public (bool succ,ActorInstance instance) Register( Actor_Base actor, Addon_Base[] addons )
+        public (bool succ, ActorInstance instance) Register( Actor_Base actor, Addon_Base[] addons )
         {
             if ( actor is null )
             {
                 Log.Warning( "<color=yellow>actor is null.</color>" );
-                return (false,null);
+                return (false, null);
             }
 
             if ( Contains( actor.ActorID ) )
             {
                 Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
-                return (false,null);;
+                return (false, null); ;
             }
 
-            var actor_case = ReferencePool.Acquire<ActorInstance>();
-            actor_case.Setup( actor, addons );
-            _proxy_actor_dic.Add( actor.ActorID, actor_case );
+            var actorCase = ReferencePool.Acquire<ActorInstance>();
+            actorCase.Setup( actor, addons );
+            _proxyActorDic.Add( actor.ActorID, actorCase );
 
-            return (true,actor_case);
+            //将addon加入组件系统
+            foreach ( var addon in addons )
+                AddToAddonSystem( addon );
+
+            return (true, actorCase);
         }
 
         /// <summary>
@@ -45,13 +49,19 @@ namespace Aquila.Module
                 return false;
             }
 
-            _proxy_actor_dic.TryGetValue( id, out var actor_case );
-            if (actor_case != null)
+            if ( !_proxyActorDic.TryGetValue( id, out var actorCase ) )
             {
-                actor_case.Clear();
-                return _proxy_actor_dic.Remove( id ) && _registered_id_set.Remove( id );
+                Log.Warning( $"Module_ProxyActor.Mgr.UnRegister()--->faild to get actor instance,id:{id}" );
+                return false;
             }
-            return false;
+
+            //从组件系统中移除
+            var addons = actorCase.AllAddons();
+            foreach ( var addon in addons )
+                RemoveFromAddonSystem( addon );
+
+            actorCase.Clear();
+            return _proxyActorDic.Remove( id ) && _registered_id_set.Remove( id );
         }
 
         //---------------- private 
@@ -61,7 +71,7 @@ namespace Aquila.Module
         ///  /// <summary>
         private ActorInstance Get( int id )
         {
-            if ( !_proxy_actor_dic.TryGetValue( id, out var actor_instance ) )
+            if ( !_proxyActorDic.TryGetValue( id, out var actor_instance ) )
                 Log.Warning( $"faild to get actor id={id}" );
 
             return actor_instance;
@@ -73,7 +83,7 @@ namespace Aquila.Module
         private (bool has, ActorInstance instance) TryGet( int id )
         {
             (bool, ActorInstance) result = (false, null);
-            if ( !_proxy_actor_dic.TryGetValue( id, out result.Item2 ) )
+            if ( !_proxyActorDic.TryGetValue( id, out result.Item2 ) )
                 return result;
             else
                 result.Item1 = true;
@@ -94,20 +104,20 @@ namespace Aquila.Module
         /// </summary>
         private bool ReleaseAll()
         {
-            if ( _proxy_actor_dic is null || _proxy_actor_dic.Count == 0 )
+            if ( _proxyActorDic is null || _proxyActorDic.Count == 0 )
             {
                 Log.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
                 return false;
             }
 
-            var iter = _proxy_actor_dic.GetEnumerator();
+            var iter = _proxyActorDic.GetEnumerator();
             ActorInstance actor_case = null;
             while ( iter.MoveNext() )
             {
                 actor_case = iter.Current.Value;
                 actor_case.Clear();
             }
-            _proxy_actor_dic.Clear();
+            _proxyActorDic.Clear();
             _registered_id_set.Clear();
 
             return true;
@@ -118,7 +128,7 @@ namespace Aquila.Module
         /// </summary>
         private void MgrEnsureInit()
         {
-            _proxy_actor_dic = new Dictionary<int, ActorInstance>();
+            _proxyActorDic = new Dictionary<int, ActorInstance>();
             _registered_id_set = new HashSet<int>();
         }
 
@@ -142,7 +152,7 @@ namespace Aquila.Module
         /// <summary>
         /// actor索引集合，保存了战斗中所有的ActorProxy
         /// </summary>
-        private Dictionary<int, ActorInstance> _proxy_actor_dic;
+        private Dictionary<int, ActorInstance> _proxyActorDic;
 
         /// <summary>
         /// 注册的Actor ID集合
