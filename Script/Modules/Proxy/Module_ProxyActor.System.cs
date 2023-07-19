@@ -63,7 +63,6 @@ namespace Aquila.Module
 
                 curr = _readyToAdd.Dequeue();
             }
-            _readyToAdd.Clear();
         }
 
         /// <summary>
@@ -82,7 +81,6 @@ namespace Aquila.Module
 
                 curr = _readyToAdd.Dequeue();
             }
-            _readyToRemove.Clear();
         }
 
         private void OnSystemOpen()
@@ -163,8 +161,10 @@ namespace Aquila.Module
                     _next.Add( addon );
                 }
 
-                _curr.Clear();
+                _temp = _curr;
+                _temp.Clear();
                 _curr = _next;
+                _next = _temp;
 
                 _toRemove.Clear();
             }
@@ -173,6 +173,7 @@ namespace Aquila.Module
             {
                 _curr = new List<Addon_Base>( 64 );
                 _next = new List<Addon_Base>();
+                //_temp = new List<Addon_Base>();
                 _toRemove = new HashSet<Addon_Base>();
             }
 
@@ -190,6 +191,7 @@ namespace Aquila.Module
             /// </summary>
             private List<Addon_Base> _curr = null;
             private List<Addon_Base> _next = null;
+            private List<Addon_Base> _temp = null;
 
             //#todo考虑是否不用hashset保存，是否有更好的剔除思路
             /// <summary>
