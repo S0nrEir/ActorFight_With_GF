@@ -47,7 +47,7 @@ namespace Aquila.Module
                 _addonList = new List<Addon_Base>();
             }
 
-            public ActorInstance() 
+            public ActorInstance()
             {
             }
 
@@ -74,6 +74,11 @@ namespace Aquila.Module
             public Addon_Base[] AllAddons()
             {
                 return _addonList.ToArray();
+            }
+
+            public IReadOnlyCollection<Addon_Base> AllAddonsAsReadOnly()
+            {
+                return _addonList.AsReadOnly();
             }
 
             //-----------------fields-----------------

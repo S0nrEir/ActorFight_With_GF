@@ -29,7 +29,7 @@ namespace Aquila.Module
             {
                 var ins = res.instance;
                 ins.AddAddon( addon );
-                AddToAddonSystem( addon );
+                //AddToAddonSystem( addon );
                 return (true, ins);
             }
         }
@@ -108,7 +108,8 @@ namespace Aquila.Module
                 addon.Dispose();
             }
 
-            actorCase.Clear();
+            //actorCase.Clear();
+            ReferencePool.Release( actorCase );
             return _proxyActorDic.Remove( id ) && _registered_id_set.Remove( id );
         }
 
@@ -152,6 +153,7 @@ namespace Aquila.Module
         /// </summary>
         private bool ReleaseAll()
         {
+            return true;
             if ( _proxyActorDic is null || _proxyActorDic.Count == 0 )
             {
                 Log.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
@@ -163,7 +165,8 @@ namespace Aquila.Module
             while ( iter.MoveNext() )
             {
                 actor_case = iter.Current.Value;
-                actor_case.Clear();
+                //actor_case.Clear();
+                ReferencePool.Release( actor_case );
             }
             _proxyActorDic.Clear();
             _registered_id_set.Clear();

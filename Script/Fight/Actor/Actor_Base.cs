@@ -157,6 +157,9 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             _eventAddon.Ready();
+            foreach ( var addon in GetAllAddon() )
+                GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
+
             base.OnShow( userData );
         }
 
@@ -164,6 +167,9 @@ namespace Aquila.Fight.Actor
         {
             _tagContainer.Reset();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
+            foreach ( var addon in GetAllAddon() )
+                GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
+
             base.OnHide( isShutdown, userData );
         }
 
@@ -187,12 +193,12 @@ namespace Aquila.Fight.Actor
             //_addonDic.Clear();
             //_addonDic = null;
 
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
             gameObject.tag = String.Empty;
             _tagContainer = null;
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnRecycle();
         }
 

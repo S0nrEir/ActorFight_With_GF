@@ -68,6 +68,7 @@ namespace Aquila.Module
         {
             base.EnsureInit();
             MgrEnsureInit();
+            SystemEnsureInit();
         }
 
         public void OnUpdate( float elapsed, float realElapsed )

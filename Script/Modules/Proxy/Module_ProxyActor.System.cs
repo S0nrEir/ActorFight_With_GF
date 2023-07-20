@@ -15,7 +15,7 @@ namespace Aquila.Module
         /// <summary>
         /// 添加组件到轮询系统中
         /// </summary>
-        private void AddToAddonSystem( Addon_Base addon )
+        public void AddToAddonSystem( Addon_Base addon )
         {
             if ( _existAddon.Contains( addon.GetHashCode() ) )
             {
@@ -30,13 +30,24 @@ namespace Aquila.Module
         /// <summary>
         /// 从轮询系统中移除组件
         /// </summary>
-        private void RemoveFromAddonSystem( Addon_Base addon )
+        public void RemoveFromAddonSystem( Addon_Base addon )
         {
             if ( !_existAddon.Contains( addon.GetHashCode() ) )
                 return;
 
             //待移除列表
             _readyToRemove.Enqueue( addon );
+        }
+
+        public void SystemEnsureInit()
+        {
+            _readyToAdd = new Queue<Addon_Base>();
+            _readyToRemove = new Queue<Addon_Base>();
+            _existAddon = new HashSet<int>();
+            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max - 1];
+            var len = _containerList.Length;
+            for ( var i = 0; i < len; i++ )
+                _containerList[i] = ReferencePool.Acquire<AddonContainer>();
         }
 
         private void SystemUpdate( float elapsed, float realElapsed )
@@ -78,7 +89,7 @@ namespace Aquila.Module
                 _existAddon.Remove( curr.GetHashCode() );
             }
         }
-
+        
         private void SystemOpen()
         {
             //_containerList = new List<AddonContainer>( ( int ) AddonTypeEnum.Max - 1 );
@@ -86,17 +97,19 @@ namespace Aquila.Module
             //for ( var i = 0; i < cnt; i++ )
             //    _containerList[i] = ReferencePool.Acquire<AddonContainer>();
 
-            _readyToAdd    = new Queue<Addon_Base>();
-            _readyToRemove = new Queue<Addon_Base>();
-            _existAddon    = new HashSet<int>();
-            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max - 1];
-            var len = _containerList.Length;
-            for ( var i = 0; i < len; i++ )
-                _containerList[i] = ReferencePool.Acquire<AddonContainer>();
+            //_readyToAdd    = new Queue<Addon_Base>();
+            //_readyToRemove = new Queue<Addon_Base>();
+            //_existAddon    = new HashSet<int>();
+            //_containerList = new AddonContainer[( int ) AddonTypeEnum.Max - 1];
+            //var len = _containerList.Length;
+            //for ( var i = 0; i < len; i++ )
+            //    _containerList[i] = ReferencePool.Acquire<AddonContainer>();
         }
 
         private void OnSystemClose()
         {
+            return;
+
             foreach ( var pool in _containerList )
                 ReferencePool.Release( pool );
 
@@ -108,6 +121,9 @@ namespace Aquila.Module
 
             _readyToRemove.Clear();
             _readyToRemove = null;
+
+            _existAddon.Clear();
+            _existAddon = null;
         }
 
         //------------------- fields -------------------
