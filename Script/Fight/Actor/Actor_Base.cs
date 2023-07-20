@@ -48,16 +48,6 @@ namespace Aquila.Fight.Actor
         {
             targetAddon = _instance.GetAddon<T>();
             return targetAddon != null;
-            //targetAddon = null;
-            //if ( _addonDic is null || _addonDic.Count == 0 )
-            //    return false;
-
-            //if ( _addonDic.TryGetValue( typeof( T ).GetHashCode(), out var addon ) )
-            //{
-            //    targetAddon = addon as T;
-            //    return targetAddon != null;
-            //}
-            //return false;
         }
         #endregion
 
@@ -185,17 +175,6 @@ namespace Aquila.Fight.Actor
             _eventAddon.UnRegisterAll();
             _eventAddon = null;
 
-            //dispose all addon
-            //var iter = _addonDic.GetEnumerator();
-            //Addon_Base addon = null;
-            //while ( iter.MoveNext() )
-            //{
-            //    addon = iter.Current.Value;
-            //    addon.Dispose();
-            //}
-            //_addonDic.Clear();
-            //_addonDic = null;
-
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
@@ -239,13 +218,6 @@ namespace Aquila.Fight.Actor
             var addons = _instance.AllAddons();
             foreach ( var addon in addons )
                 addon.Reset();
-
-            //if ( _addonDic != null )
-            //{
-            //    var iter = _addonDic.GetEnumerator();
-            //    while ( iter.MoveNext() )
-            //        iter.Current.Value?.Reset();
-            //}
         }
 
 
@@ -258,20 +230,6 @@ namespace Aquila.Fight.Actor
             addonToAdd.OnAdd();
             GameEntry.Module.GetModule<Module_ProxyActor>().AddAddon( this, addonToAdd );
             return addonToAdd;
-
-            //if ( TryGetAddon<T>( out var addonToAdd ) )
-            //{
-            //    Log.Debug( $"addon <color=white>{typeof( T ).ToString()}</color> has exist on this actor:{Name}" );
-            //    return addonToAdd;
-            //}
-            //else
-            //{
-            //    addonToAdd = new T();
-            //    _addonDic.Add( typeof( T ).GetHashCode(), addonToAdd );
-
-            //    addonToAdd.OnAdd();
-            //    return addonToAdd;
-            //}
         }
 
         /// <summary>
@@ -280,18 +238,6 @@ namespace Aquila.Fight.Actor
         protected Addon_Base[] GetAllAddon()
         {
             return _instance.AllAddons();
-            //if ( _addonDic is null || _addonDic.Count == 0 )
-            //{
-            //    Log.Warning( "GetAllAddon--->_addonDic is null || _addonDic.Count == 0" );
-            //    return new Addon_Base[0];
-            //}
-
-            //Addon_Base[] addons = new Addon_Base[_addonDic.Count];
-            //var idx = 0;
-            //foreach ( var kv in _addonDic )
-            //    addons[idx++] = kv.Value;
-
-            //return addons;
         }
 
         /// <summary>
@@ -368,11 +314,6 @@ namespace Aquila.Fight.Actor
         /// 数据组件
         /// </summary>
         protected Addon_Data _dataAddon = null;
-
-        /// <summary>
-        /// actor身上的组件保存，key为 type的hashCode
-        /// </summary>
-        //private Dictionary<int, Addon_Base> _addonDic = new Dictionary<int, Addon_Base>();
 
         /// <summary>
         /// actor实例
