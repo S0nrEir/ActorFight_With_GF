@@ -167,6 +167,9 @@ namespace Aquila.Fight.Actor
         {
             _tagContainer.Reset();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
+
+            //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
+            //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
 
