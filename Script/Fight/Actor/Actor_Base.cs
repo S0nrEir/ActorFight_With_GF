@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.Actor
 {
@@ -162,7 +163,6 @@ namespace Aquila.Fight.Actor
         {
             _tagContainer.Reset();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
         }
 
@@ -201,7 +201,10 @@ namespace Aquila.Fight.Actor
             AddAddon();
             var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this, GetAllAddon() );
             if ( res.succ )
+            {
                 InitAddons( res.instance );
+                _instance = res.instance;
+            }
 
             _allAddonInitDone = true;
             _tagContainer = new TagContainer( OnTagChange );
@@ -346,6 +349,11 @@ namespace Aquila.Fight.Actor
         /// actor身上的组件保存，key为 type的hashCode
         /// </summary>
         private Dictionary<int, Addon_Base> _addonDic = new Dictionary<int, Addon_Base>();
+
+        /// <summary>
+        /// actor实例
+        /// </summary>
+        private ActorInstance _instance = null;
 
         /// <summary>
         /// tag管理器
