@@ -2,6 +2,8 @@ using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
+using System.Collections.Generic;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -14,13 +16,40 @@ namespace Aquila.Module
         public class ActorInstance : IReference
         {
             //-----------------pub-----------------
+            /// <summary>
+            /// 为actor实例添加一个addon
+            /// </summary>
+            public bool AddAddon( Addon_Base addon )
+            {
+                foreach ( var temp in _addonList )
+                {
+                    if ( temp.AddonType == addon.AddonType )
+                    {
+                        Log.Warning( $"<color=yellow>Module_ProxyActor.AddAddon()--->actor {Actor.ActorID} has same addon,type:{addon.AddonType}</color>" );
+                        return false;
+                    }
+                }
+                _addonList.Add( addon );
+                return true;
+            }
+
             public void Setup( Actor_Base actor, Addon_Base[] addons )
             {
                 _actor = actor;
-                _addon_arr = addons;
+                //_addon_arr = addons;
+                _addonList = new List<Addon_Base>( addons.Length * 2 );
+                _addonList.AddRange( addons );
             }
-            
-            public ActorInstance() { }
+
+            public void Setup( Actor_Base actor )
+            {
+                _actor = actor;
+                _addonList = new List<Addon_Base>();
+            }
+
+            public ActorInstance() 
+            {
+            }
 
             /// <summary>
             /// 返回该实例持有的actor
@@ -36,7 +65,7 @@ namespace Aquila.Module
             public T GetAddon<T>() where T : Addon_Base
             {
                 //#todo优化：别用遍历查找的方式检查然后获取addon
-                return Tools.Actor.FilterAddon<T>(_addon_arr);
+                return Tools.Actor.FilterAddon<T>( _addonList );
             }
 
             /// <summary>
@@ -44,7 +73,7 @@ namespace Aquila.Module
             /// </summary>
             public Addon_Base[] AllAddons()
             {
-                return _addon_arr;
+                return _addonList.ToArray();
             }
 
             //-----------------fields-----------------
@@ -57,12 +86,13 @@ namespace Aquila.Module
             /// <summary>
             /// actor持有的addon集合
             /// </summary>
-            private Addon_Base[] _addon_arr = null;
+            private List<Addon_Base> _addonList = null;
 
             public void Clear()
             {
                 _actor = null;
-                _addon_arr = null;
+                _addonList.Clear();
+                _addonList = null;
             }
         }
     }

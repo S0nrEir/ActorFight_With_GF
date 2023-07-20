@@ -89,8 +89,6 @@ namespace Aquila.Extension
             _uiComp.CloseAllLoadingUIForms();
         }
 
-        
-
         //--------------------------- priv ---------------------------
 
         private void Start()
