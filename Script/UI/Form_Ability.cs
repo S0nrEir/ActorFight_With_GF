@@ -1,5 +1,6 @@
 using Aquila.Event;
 using Aquila.Module;
+using Aquila.Procedure;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -38,6 +39,15 @@ namespace Aquila.UI
         }
 
         /// <summary>
+        /// 点击退出按钮
+        /// </summary>
+        private void OnClickExit()
+        {
+            if ( GameEntry.Procedure.CurrentProcedure is Procedure_Test_Fight prcd )
+                prcd.Exit();
+        }
+
+        /// <summary>
         /// click事件
         /// </summary>
         private void OnIconItemClicked( int abilityID )
@@ -46,7 +56,7 @@ namespace Aquila.UI
             //_abilityIdArr[2]:1002
             //_abilityIdArr[3]:1003
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, abilityID, _abilityIdArr[3] );
+            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID );
         }
 
         /// <summary>
@@ -129,6 +139,8 @@ namespace Aquila.UI
             _abilityIdArr = param._abilityID;
             _actorProxy = GameEntry.Module.GetModule<Module_ProxyActor>();
             InitItem();
+            _exitBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
+            _exitBtn.onClick.AddListener( OnClickExit );
             ReferencePool.Release( param );
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
@@ -146,8 +158,9 @@ namespace Aquila.UI
             _actorID = -1;
             _actorProxy = null;
             ClearItemCacheDic();
+            _exitBtn.onClick.RemoveAllListeners();
             GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
-            GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
+            GameEntry.Event.Unsubscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
             base.OnClose( isShutdown, userData );
         }
 
@@ -184,6 +197,11 @@ namespace Aquila.UI
         /// item缓存
         /// </summary>
         private Dictionary<int, AbilityIconItem> _iconItemDic = null;
+
+        /// <summary>
+        /// 退出当前状态按钮
+        /// </summary>
+        private Button _exitBtn = null;
 
         /// <summary>
         /// 图标item

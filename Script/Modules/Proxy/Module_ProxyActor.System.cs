@@ -52,16 +52,14 @@ namespace Aquila.Module
         /// </summary>
         private void ProcessAdd()
         {
-            var curr = _readyToAdd.Dequeue();
             var intType = 0;
-            while ( curr != null )
+            Addon_Base curr = null;
+            while ( _readyToAdd.TryDequeue(out curr) )
             {
                 intType = ( int ) curr.AddonType;
                 //add
-                _containerList[intType].Add( curr );
+                _containerList[intType - 1].Add( curr );
                 _existAddon.Add( curr.GetHashCode() );
-
-                curr = _readyToAdd.Dequeue();
             }
         }
 
@@ -70,20 +68,18 @@ namespace Aquila.Module
         /// </summary>
         private void ProcessRemove()
         {
-            var curr = _readyToRemove.Dequeue();
             var intType = 0;
-            while ( curr != null )
+            Addon_Base curr = null;
+            while ( _readyToRemove.TryDequeue(out curr) )
             {
                 intType = ( int ) curr.AddonType;
                 //add
                 _containerList[intType].Remove( curr );
                 _existAddon.Remove( curr.GetHashCode() );
-
-                curr = _readyToAdd.Dequeue();
             }
         }
 
-        private void OnSystemOpen()
+        private void SystemOpen()
         {
             //_containerList = new List<AddonContainer>( ( int ) AddonTypeEnum.Max - 1 );
             //var cnt = _containerList.Count;
@@ -186,9 +182,9 @@ namespace Aquila.Module
 
             public AddonContainer()
             {
-                ////_curr = new List<Addon_Base>( 64 );
-                ////_next = new List<Addon_Base>();
-                ////_temp = new List<Addon_Base>();
+                _curr = new List<Addon_Base>( 64 );
+                _next = new List<Addon_Base>( 64 );
+                _temp = new List<Addon_Base>();
 
                 //_tempStack_1 = new Stack<Addon_Base>();
                 //_tempStack_2 = new Stack<Addon_Base>();

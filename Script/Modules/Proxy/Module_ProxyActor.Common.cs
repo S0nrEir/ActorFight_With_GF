@@ -54,7 +54,7 @@ namespace Aquila.Module
         {
             base.Open( param );
             MgrOpen();
-            OnSystemOpen();
+            SystemOpen();
         }
 
         public override void Close()

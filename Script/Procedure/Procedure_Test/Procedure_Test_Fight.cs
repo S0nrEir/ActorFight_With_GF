@@ -18,6 +18,14 @@ namespace Aquila.Procedure
     public class Procedure_Test_Fight : ProcedureBase
     {
         /// <summary>
+        /// 退出状态，这里会回到preload
+        /// </summary>
+        public void Exit()
+        {
+            ChangeState<Procedure_Prelaod>( _owner );
+        }
+
+        /// <summary>
         /// 该流程加载是否完成
         /// </summary>
         private void OnLoadFinish()
@@ -28,7 +36,7 @@ namespace Aquila.Procedure
             var param = ReferencePool.Acquire<Form_AbilityParam>();
             param._mainActorID = _actorID1;
             param._enemyActorID = new int[] { _actorID2, _actorID3, _actorID4 };
-            param._abilityID = new int[] { 1000, 1001, 1002, 1003 };
+            param._abilityID = GameEntry.LuBan.Tables.RoleMeta.Get( 1 ).AbilityBaseID;
             GameEntry.UI.OpenForm( FormIdEnum.AbilityForm, param );
             Log.Info( "<color=white>all set load finish</color>" );
         }
@@ -139,7 +147,17 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
+            _owner = procedureOwner;
+            GameEntry.Module.GetModule<Module_ProxyActor>().Open(null);
             FightOnEnter();
+        }
+
+        protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
+        {
+            GameEntry.UI.CloseAll();
+            GameEntry.Module.GetModule<Module_ProxyActor>().Close();
+            _owner = null;
+            base.OnLeave( procedureOwner, isShutdown );
         }
 
         private void FightOnEnter()
@@ -191,6 +209,11 @@ namespace Aquila.Procedure
         /// 当前的加载状态
         /// </summary>
         private int _loadFlagCurrState = 0b_0000;
+
+        /// <summary>
+        /// 流程持有者
+        /// </summary>
+        private IFsm<IProcedureManager> _owner = null;
 
         /// <summary>
         /// 测试技能ID
