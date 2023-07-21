@@ -309,7 +309,10 @@ namespace Aquila.Fight.Impact
         private void AddMapIndex( int targetID, int effectIndex )
         {
             if ( !_targetImpactDataMapDic.TryGetValue( targetID, out var list ) )
+            {
                 list = new LinkedList<int>();
+                _targetImpactDataMapDic.Add( targetID, list );
+            }
 
             list.AddLast( effectIndex );
         }
