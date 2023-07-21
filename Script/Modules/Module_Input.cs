@@ -31,9 +31,9 @@ namespace Aquila.Module
             //GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( _actorID1, _actorID2, _testAbilityMetaID );
         }
         
-        public override void Start(object param)
+        public override void Open(object param)
         {
-            base.Start(param);
+            base.Open( param);
             GameEntry.Resource.LoadAsset( @"Assets/Samples/InputSystem/1_3_0/SimpleDemo/SimpleControls.inputactions", new LoadAssetCallbacks
                 (
                     //succ callback
@@ -60,7 +60,7 @@ namespace Aquila.Module
         }
 
         //impl
-        public void OnUpdate( float deltaTime )
+        public void OnUpdate( float elapsed,float realElapsed )
         {
         }
         

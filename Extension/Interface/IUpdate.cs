@@ -1,7 +1,7 @@
-﻿namespace Aquila
+namespace Aquila
 {
     public interface IUpdate
     {
-        void OnUpdate(float deltaTime);
+        void OnUpdate(float elapased,float realElapsed);
     }
 }

@@ -13,7 +13,7 @@ namespace Aquila.Fight.Addon
             /// <summary>
             /// 基础属性-数值组件
             /// </summary>
-            NUMRIC_BASEATTR,
+            NUMRIC_BASEATTR = 1,
 
             /// <summary>
             /// 数据
@@ -98,7 +98,7 @@ namespace Aquila.Fight.Addon
             /// <summary>
             /// 基础类型
             /// </summary>
-            InValid = 999,
+            Max,
         }
 
         /// <summary>
