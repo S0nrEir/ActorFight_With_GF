@@ -208,17 +208,17 @@ namespace Aquila.Fight.Impact
         /// </summary>
         private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int key )
         {
-            impactData._castorActorID = castorActorID;
-            impactData._targetActorID = targetActorID;
-            impactData._duration = effect.Meta.Duration;
-            impactData._effectIndex = key;
-            impactData._effectOnAwake = effect.Meta.EffectOnAwake;
-            impactData._period = effect.Meta.Period;
-            impactData._policy = effect.Meta.Policy;
-            impactData._elapsed = 0f;
-            impactData._interval = 0f;
-            impactData._stackCount = effect.StackCount;
-            impactData._stackLimit = effect.StackLimit;
+            impactData._castorActorID             = castorActorID;
+            impactData._targetActorID             = targetActorID;
+            impactData._duration                  = effect.Meta.Duration;
+            impactData._effectIndex               = key;
+            impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
+            impactData._period                    = effect.Meta.Period;
+            impactData._policy                    = effect.Meta.Policy;
+            impactData._elapsed                   = 0f;
+            impactData._interval                  = 0f;
+            impactData._stackCount                = effect.StackCount;
+            impactData._stackLimit                = effect.StackLimit;
             impactData._resetDurationWhenOverride = effect.ResetWhenOverride;
         }
 
@@ -344,15 +344,15 @@ namespace Aquila.Fight.Impact
 
         private void EnsureInit()
         {
-            _effectDic = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
+            _effectDic              = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
             _targetImpactDataMapDic = new Dictionary<int, LinkedList<int>>( _defaultCacheCapcity );
-            _impactEntityArr = new int[_defaultEntityCount];
+            _impactEntityArr        = new int[_defaultEntityCount];
             _recycleImpactEntityArr = new int[_defaultEntityCount];
             _impactEntityCount = 0;
             _recycleImpactEntityCount = 0;
-            _pool = new ImpactDataPool( _defaultEntityCount );
-            _curr = new List<int>( _defaultEntityCount / 2 );
-            _next = new List<int>( _defaultEntityCount / 2 );
+            _pool    = new ImpactDataPool( _defaultEntityCount );
+            _curr    = new List<int>( _defaultEntityCount / 2 );
+            _next    = new List<int>( _defaultEntityCount / 2 );
             _invalid = new List<int>( _defaultEntityCount / 2 );
         }
 
@@ -369,9 +369,9 @@ namespace Aquila.Fight.Impact
         /// </summary>
         private Dictionary<int, LinkedList<int>> _targetImpactDataMapDic = null;
 
-        private List<int> _curr = null;
-        private List<int> _next = null;
-        private List<int> _invalid = null;
+        private List<int> _curr       = null;
+        private List<int> _next       = null;
+        private List<int> _invalid    = null;
         private List<int> _tempBuffer = null;
 
         /// <summary>

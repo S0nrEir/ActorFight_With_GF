@@ -10,7 +10,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 物理伤害，立即生效，目标敌方单体，伤害生命值，参与属性和装备计算。
     /// </summary>
-    public class EffectSpec_PhyDamage : EffectSpec_Base
+    public class EffectSpec_Instant_PhyDamage : EffectSpec_Base
     {
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
@@ -27,11 +27,11 @@ namespace Aquila.Fight
             result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)Meta.ExtensionParam.FloatParam_1 );
         }
 
-        public EffectSpec_PhyDamage()
+        public EffectSpec_Instant_PhyDamage()
         {
 
         }
-        public EffectSpec_PhyDamage( Table_Effect meta ) : base( meta )
+        public EffectSpec_Instant_PhyDamage( Table_Effect meta ) : base( meta )
         {
         }
     }

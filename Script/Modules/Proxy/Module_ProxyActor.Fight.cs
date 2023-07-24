@@ -285,5 +285,15 @@ namespace Aquila.Module
             }
             return true;
         }
+
+        // ------------------------------- priv -------------------------------
+
+        /// <summary>
+        /// 战斗部分模块初始化
+        /// </summary>
+        private void FightEnsureInit()
+        {
+            Tools.Ability.InitEffectSpecGenerator();
+        }
     }
 }
