@@ -112,7 +112,9 @@ namespace Aquila.Module
             var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
 
             effect.OnEffectAwake( castor, target );
-            GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", target.Actor.CachedTransform.position );
+            if ( result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", target.Actor.CachedTransform.position );
+
             GameEntry.Event.Fire( castor, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
         }
@@ -282,6 +284,16 @@ namespace Aquila.Module
                     return false;
             }
             return true;
+        }
+
+        // ------------------------------- priv -------------------------------
+
+        /// <summary>
+        /// 战斗部分模块初始化
+        /// </summary>
+        private void FightEnsureInit()
+        {
+            Tools.Ability.InitEffectSpecGenerator();
         }
     }
 }

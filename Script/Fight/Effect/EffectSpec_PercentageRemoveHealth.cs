@@ -9,7 +9,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 基于生命值上限百分比移除生命值
     /// </summary>
-    public class EffectSpec_RemoveHealth : EffectSpec_Base, ICustomizableEffect
+    public class EffectSpec_Instant_PercentageRemoveHealth : EffectSpec_Base, ICustomizableEffect
     {
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {

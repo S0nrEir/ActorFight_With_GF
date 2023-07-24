@@ -34,7 +34,7 @@ namespace Aquila.Fight
         /// <summary>
         /// cd effect
         /// </summary>
-        public EffectSpec_CoolDown CoolDown => _cdEffect;
+        public EffectSpec_Period_CoolDown CoolDown => _cdEffect;
 
         /// <summary>
         /// 移除tag
@@ -66,9 +66,9 @@ namespace Aquila.Fight
             if ( Meta is null || Meta.effects is null )
                 return;
 
-            _costEffect = ReferencePool.Acquire<EffectSpec_Cost>();
+            _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
             _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
-            _cdEffect = ReferencePool.Acquire<EffectSpec_CoolDown>();
+            _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
             _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
         }
 
@@ -217,12 +217,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 技能CD
         /// </summary>
-        private EffectSpec_CoolDown _cdEffect = null;
+        private EffectSpec_Period_CoolDown _cdEffect = null;
 
         /// <summary>
         /// 技能消耗
         /// </summary>
-        private EffectSpec_Cost _costEffect = null;
+        private EffectSpec_Instant_Cost _costEffect = null;
 
         /// <summary>
         /// 持有的actor代理实例，技能的持有者

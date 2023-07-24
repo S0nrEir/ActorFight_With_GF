@@ -68,6 +68,7 @@ namespace Aquila.Module
         {
             base.EnsureInit();
             MgrEnsureInit();
+            FightEnsureInit();
             SystemEnsureInit();
         }
 

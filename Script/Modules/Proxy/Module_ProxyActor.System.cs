@@ -155,7 +155,6 @@ namespace Aquila.Module
             public void Add( Addon_Base addon )
             {
                 _curr.Add( addon );
-                //_currStack.Push( addon );
             }
 
             public void Remove( Addon_Base addon )
@@ -165,20 +164,6 @@ namespace Aquila.Module
 
             public void Update( float elapsed, float realElapsed )
             {
-                //_nextStack.Clear();
-                //var currAddon = _currStack.Pop();
-                //while ( currAddon != null )
-                //{
-                //    if ( _toRemove.Contains( currAddon ) )
-                //        continue;
-                //}
-                //_nextStack.Push( currAddon );
-                //currAddon.OnUpdate( elapsed, realElapsed );
-
-                //_currStack.Clear();
-                //_currStack = _currStack == _tempStack_1 ? _tempStack_2 : _tempStack_1;
-                //_nextStack = _nextStack == _tempStack_1 ? _tempStack_2 : _tempStack_1;
-
                 foreach ( var addon in _curr )
                 {
                     if ( _toRemove.Contains( addon ) )
@@ -200,12 +185,6 @@ namespace Aquila.Module
             {
                 _curr = new List<Addon_Base>( 64 );
                 _next = new List<Addon_Base>( 64 );
-                _temp = new List<Addon_Base>();
-
-                //_tempStack_1 = new Stack<Addon_Base>();
-                //_tempStack_2 = new Stack<Addon_Base>();
-                //_currStack = _tempStack_1;
-                //_nextStack = _tempStack_2;
 
                 _toRemove = new HashSet<Addon_Base>();
             }
@@ -218,13 +197,6 @@ namespace Aquila.Module
                 _next = null;
                 _temp = null;
 
-                //_currStack = null;
-                //_nextStack = null;
-                //_tempStack_1.Clear();
-                //_tempStack_2.Clear();
-                //_tempStack_1 = null;
-                //_tempStack_2 = null;
-
                 _toRemove.Clear();
                 _toRemove = null;
             }
@@ -235,11 +207,6 @@ namespace Aquila.Module
             private List<Addon_Base> _curr = null;
             private List<Addon_Base> _next = null;
             private List<Addon_Base> _temp = null;
-
-            //private Stack<Addon_Base> _currStack = null;
-            //private Stack<Addon_Base> _nextStack = null;
-            //private Stack<Addon_Base> _tempStack_1 = null;
-            //private Stack<Addon_Base> _tempStack_2 = null;
 
             //#todo考虑是否不用hashset保存，是否有更好的剔除思路
             /// <summary>
