@@ -13,7 +13,7 @@ namespace Aquila.Fight.Addon
         public void Exec( ActorBehaviourTypeEnum type, object param )
         {
             var intType = ( int ) type;
-            if ( _behaviourDic.ContainsKey( intType ) )
+            if ( !_behaviourDic.ContainsKey( intType ) )
             {
                 Log.Warning( $"behaviour【{type}】 doesnt exsit" );
                 return;
@@ -52,7 +52,6 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
-            _behaviourDic.Clear();
         }
 
         public override void Dispose()

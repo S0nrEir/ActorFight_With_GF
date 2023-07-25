@@ -102,14 +102,12 @@ namespace Aquila.Fight.FSM
         public override void OnEnter( object param)
         {
             base.OnEnter(param);
-            //_fsm.GetActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.TEST, ( object ) "test param" );
             if ( !IsAbilityDataValid( param ) )
             {
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
                 return;
             }
             //技能消耗
-            //_fsm.GetActorInstance().GetAddon<Addon_Ability>()?.Deduct( _abilityMeta.id );
             _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
             //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始
             _time = 0f;

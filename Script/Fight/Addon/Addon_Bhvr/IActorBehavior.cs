@@ -60,15 +60,4 @@ namespace Aquila.Fight
         /// </summary>
         void SwitchTo ( ActorStateTypeEnum stateType, object enterParam, object existParam );
     }
-
-    /// <summary>
-    /// 使用技能
-    /// </summary>
-    public interface IDoAbilityBehavior
-    {
-        /// <summary>
-        /// 使用技能
-        /// </summary>
-        void UseAbility (object param);
-    }
 }

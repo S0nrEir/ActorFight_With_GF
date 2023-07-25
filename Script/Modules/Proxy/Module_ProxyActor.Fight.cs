@@ -214,7 +214,8 @@ namespace Aquila.Module
             }
 
             result._targetIDArr = targetIDArr;
-            ( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            //( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            castorInstance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
         }
 
         /// <summary>
@@ -259,9 +260,9 @@ namespace Aquila.Module
                 // return result;
             }
             //魔法消耗检查不能放在技能组件里，
-            ( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            //( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            castorInstance.instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
             GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-            // ReferencePool.Release( result );
         }
 
         /// <summary>
