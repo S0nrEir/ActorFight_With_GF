@@ -36,6 +36,11 @@ namespace Aquila.Fight.Addon
             EVENT,
 
             /// <summary>
+            /// 行为
+            /// </summary>
+            BEHAVIOUR,
+
+            /// <summary>
             /// 动画
             /// </summary>
             ANIM,
@@ -100,36 +105,5 @@ namespace Aquila.Fight.Addon
             /// </summary>
             Max,
         }
-
-        /// <summary>
-        /// addon错误码
-        /// </summary>
-        // public class AddonValidErrorCodeEnum
-        // {
-        //     public const ushort NONE            = 0b0000_0000_0000_0000;//正常
-        //     public const ushort ZERO_DATA_COUNT = 0b0000_0000_0000_0001;//1数据组件数据为空
-        //     public const ushort NONE_EVENT      = 0b0000_0000_0000_0010;//事件为空
-        //
-        //     ///// <summary>
-        //     ///// 没有该状态
-        //     ///// </summary>
-        //     //public const ushort HAVE_NO_STATE = 0b0000_0000_0000_0100;
-        //
-        //     private static Dictionary<uint, string> _err_code_map = new Dictionary<uint, string>
-        //     {
-        //         { ZERO_DATA_COUNT,"数据组组件为空!" },
-        //     };
-        //
-        //     /// <summary>
-        //     /// 错误码的string形式
-        //     /// </summary>
-        //     public static string ErrCode2String ( uint errCode )
-        //     {
-        //         if (!_err_code_map.TryGetValue( errCode, out var errMsg ))
-        //             return $"cant find errCode {errCode} msg";
-        //
-        //         return errMsg;
-        //     }
-        // }
     }
 }

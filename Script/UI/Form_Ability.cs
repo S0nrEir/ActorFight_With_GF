@@ -116,6 +116,7 @@ namespace Aquila.UI
             {
                 var cd = _actorProxy.GetCoolDown( _actorID, id );
                 var percent = cd.remain / cd.duration;
+                //::删除无用代码
                 if ( id == _abilityIdArr[3] )
                     ;
                 _iconItemDic[id].CD( percent, percent.ToString() );
@@ -221,6 +222,7 @@ namespace Aquila.UI
             {
                 Tools.SetActive( _cd.gameObject, percent > 0 );
                 Tools.SetActive( _text.gameObject, percent > 0 );
+                //修改if逻辑
                 if ( percent > 0 )
                 {
                     _cd.fillAmount = percent;

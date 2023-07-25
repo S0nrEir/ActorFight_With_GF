@@ -4,6 +4,14 @@ using System.Collections.Generic;
 //接口类型，实现相应行为的actor实现此接口,用于规范Actor的行为
 namespace Aquila.Fight
 {
+    public interface IActorBehaviour
+    {
+        /// <summary>
+        /// 执行行为
+        /// </summary>
+        public void Exec( object param );
+    }
+
     /// <summary>
     /// trigger触发
     /// </summary>
