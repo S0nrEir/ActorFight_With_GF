@@ -50,12 +50,6 @@ namespace Aquila.Fight.Actor
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
-            ////更新状态机
-            //_fsmAddon?.OnUpdate( elapseSeconds, realElapseSeconds );
-            ////更新技能数据（CD之类的）
-            //_abilityAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
-            ////信息板位置更新
-            //_hpAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
         }
 
         public override void Reset()
