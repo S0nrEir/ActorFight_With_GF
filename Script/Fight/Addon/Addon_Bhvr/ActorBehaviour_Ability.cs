@@ -37,26 +37,6 @@ namespace Aquila.Fight
         }
 
         public override ActorBehaviourTypeEnum BehaviourType => ActorBehaviourTypeEnum.ABILITY;
-
-        /// <summary>
-        /// 施法者ActorID
-        /// </summary>
-        private int _castorID = -1;
-
-        /// <summary>
-        /// 使用状态结果
-        /// </summary>
-        private AbilityResult_Use _result = null;
-
-        /// <summary>
-        /// 技能数据
-        /// </summary>
-        private Table_AbilityBase _abilityMeta = null;
-
-        /// <summary>
-        /// 技能timeline配置
-        /// </summary>
-        private Table_AbilityTimeline _timelineMeta = null;
     }
 
     /// <summary>
