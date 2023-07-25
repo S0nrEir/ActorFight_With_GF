@@ -52,6 +52,7 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
+            _behaviourDic.Clear();
         }
 
         public override void Dispose()
