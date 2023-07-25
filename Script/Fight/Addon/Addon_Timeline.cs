@@ -1,7 +1,5 @@
-using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
-using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Aquila.Fight.Addon
@@ -21,7 +19,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public void Play( string assetPath )
         {
-            GameEntry.Timeline.Play( assetPath ,_director);
+            GameEntry.Timeline.Play( assetPath, _director );
         }
 
         //----------------------- override ----------------------- 

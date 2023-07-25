@@ -71,7 +71,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 生效一个impact
+        /// 实现一个Effect的效果
         /// </summary>
         public void ImplEffect( int castorID, int targetID, EffectSpec_Base effect )
         {
@@ -259,10 +259,21 @@ namespace Aquila.Module
                     Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
                 // return result;
             }
-            //魔法消耗检查不能放在技能组件里，
-            //( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
             castorInstance.instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
             GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
+
+            //is died
+            var target = Get( targetID );
+            if ( IsActorDied( target.GetAddon<Addon_BaseAttrNumric>() ) )
+                target.GetAddon<Addon_Behaviour>().Exec( ActorBehaviourTypeEnum.DIE, null );
+        }
+
+        /// <summary>
+        /// 给定的actor是否死亡（没血）乐
+        /// </summary>
+        private static bool IsActorDied( Addon_BaseAttrNumric addon )
+        {
+            return addon.GetCurrHPCorrection() <= 0;
         }
 
         /// <summary>
