@@ -12,6 +12,14 @@ namespace Aquila.Toolkit
         public static class Actor
         {
             /// <summary>
+            /// 返回通用的死亡timeline资源路径
+            /// </summary>
+            public static string CommonDieTimelineAssetPath()
+            {
+                return @"Assets/Res/Timeline/Common/Common_Die_1000.playable";
+            }
+
+            /// <summary>
             /// 尝试从一组addon中获取指定类型的addon，拿不到返回null
             /// </summary>
             public static T FilterAddon<T>(Addon_Base[] addons) where T : Addon_Base

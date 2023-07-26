@@ -19,6 +19,7 @@ namespace Aquila.Fight
                 return;
             }
             //找到所有可以取消的addon
+            _instance.Actor.Notify( ( int ) AddonEventTypeEnum.CANCEL, null );
             addon.SwitchTo( ActorStateTypeEnum.DIE_STATE, null, null );
         }
 

@@ -68,6 +68,7 @@ namespace Aquila.Module
 
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
+            DieIfEmptyHP( target );
         }
 
         /// <summary>
@@ -156,6 +157,7 @@ namespace Aquila.Module
 
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
+            DieIfEmptyHP( targetInstance.instance );
         }
 
         /// <summary>
@@ -264,16 +266,20 @@ namespace Aquila.Module
 
             //is died
             var target = Get( targetID );
-            if ( IsActorDied( target.GetAddon<Addon_BaseAttrNumric>() ) )
-                target.GetAddon<Addon_Behaviour>().Exec( ActorBehaviourTypeEnum.DIE, null );
+            DieIfEmptyHP( target );
         }
 
         /// <summary>
-        /// 给定的actor是否死亡（没血）乐
+        /// 检查是否没血，是就进入死亡状态
         /// </summary>
-        private static bool IsActorDied( Addon_BaseAttrNumric addon )
+        private void DieIfEmptyHP( ActorInstance instance )
         {
-            return addon.GetCurrHPCorrection() <= 0;
+            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if ( hpAddon is null || hpAddon.GetCurrHPCorrection() > 0)
+                return;
+
+            instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
+            GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
         }
 
         /// <summary>
