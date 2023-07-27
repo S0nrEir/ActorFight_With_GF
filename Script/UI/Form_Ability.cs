@@ -42,14 +42,6 @@ namespace Aquila.UI
         /// </summary>
         private void OnClickTestBtn()
         {
-            //GameEntry.Entity.HideEntity( _actorID );
-            //GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( _actorID );
-            //foreach ( var id in _enemyActorIdArr )
-            //    GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( id );
-
-
-            //if ( GameEntry.Procedure.CurrentProcedure is Procedure_Test_Fight prcd )
-            //    prcd.Exit();
         }
 
         /// <summary>
