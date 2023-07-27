@@ -36,6 +36,7 @@ namespace Aquila.Fight
         {
             var parentExtension = parent.Meta.ExtensionParam;
             float fac = 0f;
+            //#todo修改switch/case逻辑，不用switch/case
             switch ( parent.StackCount )
             {
                 case 1:
