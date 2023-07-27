@@ -57,7 +57,10 @@ namespace Aquila.Extension
         public bool LoadDataTable()
         {
             if ( _loadFlag )
-                throw new GameFrameworkException( "data table has been loaded!" );
+            {
+                Log.Warning( $"<color=yellow>data table has been loaded!</color>" );
+                return false;
+            }
 
             if ( string.IsNullOrEmpty( _bytesPath ) )
                 throw new GameFrameworkException( "bytesPath is null or empty!" );

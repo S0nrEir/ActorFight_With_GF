@@ -52,12 +52,7 @@ namespace Aquila.Module
         /// </summary>
         public void ImplEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect )
         {
-            var result = ReferencePool.Acquire<AbilityResult_Hit>();
-            result._dealedDamage = 0;
-            result._stateDescription = 0;
-            result._castorActorID = castor.Actor.ActorID;
-            result._targetActorID = target.Actor.ActorID;
-
+            var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
             if ( castor is null || target is null )
             {
                 Log.Warning( $"<color=yellow>Module_ProxyActor.Fight=====>ImplImpact()--->castor is null || target is null</color>" );
@@ -73,19 +68,14 @@ namespace Aquila.Module
 
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
+            DieIfEmptyHP( target );
         }
 
         /// <summary>
-        /// 生效一个impact
+        /// 实现一个Effect的效果
         /// </summary>
         public void ImplEffect( int castorID, int targetID, EffectSpec_Base effect )
         {
-            //var result = ReferencePool.Acquire<AbilityResult_Hit>();
-            //result._dealedDamage = 0;
-            //result._stateDescription = 0;
-            //result._castorActorID = castorID;
-            //result._targetActorID = targetID;
-
             var castor = TryGet( castorID );
             if ( !castor.has )
             {
@@ -99,7 +89,6 @@ namespace Aquila.Module
                 Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
                 return;
             }
-            //ImplEffect( castor.instance, target.instance, effect );
             ImplEffect( Get( castorID ), Get( targetID ), effect );
         }
 
@@ -121,16 +110,12 @@ namespace Aquila.Module
                 Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
                 return;
             }
-
-            var result = ReferencePool.Acquire<AbilityResult_Hit>();
-            result._dealedDamage = 0;
-            result._stateDescription = 0;
-            result._castorActorID = castor.Actor.ActorID;
-            result._targetActorID = target.Actor.ActorID;
+            var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
 
             effect.OnEffectAwake( castor, target );
+            if ( result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", target.Actor.CachedTransform.position );
 
-            GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", target.Actor.CachedTransform.position );
             GameEntry.Event.Fire( castor, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
         }
@@ -140,11 +125,7 @@ namespace Aquila.Module
         /// </summary>
         public void AffectAbility( int castorID, int targetID, int abilityID )
         {
-            var result = ReferencePool.Acquire<AbilityResult_Hit>();
-            result._dealedDamage = 0;
-            result._stateDescription = 0;
-            result._castorActorID = castorID;
-            result._targetActorID = targetID;
+            var result = AbilityResult_Hit.Gen( castorID, targetID );
 
             var castorInstance = TryGet( castorID );
             if ( !castorInstance.has )
@@ -176,6 +157,7 @@ namespace Aquila.Module
 
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
+            DieIfEmptyHP( targetInstance.instance );
         }
 
         /// <summary>
@@ -234,7 +216,8 @@ namespace Aquila.Module
             }
 
             result._targetIDArr = targetIDArr;
-            ( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            //( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            castorInstance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
         }
 
         /// <summary>
@@ -278,10 +261,25 @@ namespace Aquila.Module
                     Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
                 // return result;
             }
-            //魔法消耗检查不能放在技能组件里，
-            ( castorInstance.instance.Actor as IDoAbilityBehavior )?.UseAbility( result );
+            castorInstance.instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
             GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-            // ReferencePool.Release( result );
+
+            //is died
+            var target = Get( targetID );
+            DieIfEmptyHP( target );
+        }
+
+        /// <summary>
+        /// 检查是否没血，是就进入死亡状态
+        /// </summary>
+        private void DieIfEmptyHP( ActorInstance instance )
+        {
+            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if ( hpAddon is null || hpAddon.GetCurrHPCorrection() > 0)
+                return;
+
+            instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
+            GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
         }
 
         /// <summary>
@@ -289,8 +287,7 @@ namespace Aquila.Module
         /// </summary>
         public void TryRefreshActorHPUI( ActorInstance instance )
         {
-            var addon = instance.GetAddon<Addon_HP>();
-            addon.Refresh();
+            instance.GetAddon<Addon_HP>()?.Refresh();
         }
 
         //----------------------- priv -----------------------
@@ -305,6 +302,16 @@ namespace Aquila.Module
                     return false;
             }
             return true;
+        }
+
+        // ------------------------------- priv -------------------------------
+
+        /// <summary>
+        /// 战斗部分模块初始化
+        /// </summary>
+        private void FightEnsureInit()
+        {
+            Tools.Ability.InitEffectSpecGenerator();
         }
     }
 }

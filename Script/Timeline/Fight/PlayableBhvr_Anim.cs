@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityGameFramework.Runtime;
@@ -9,28 +6,33 @@ namespace Aquila.Timeline
 {
     public class PlayableBhvr_Anim : PlayableBehaviour
     {
-        public override void OnGraphStart(Playable playable)
+        public override void OnGraphStart( Playable playable )
         {
-            base.OnGraphStart(playable);
+            base.OnGraphStart( playable );
             if ( string.IsNullOrEmpty( _animName ) )
                 Log.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->string.IsNullOrEmpty( _animName ) </color>" );
 
-            if(_director == null)
+            if ( _director == null )
                 Log.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->_director == null </color>" );
 
             //_director.Play();
             //#todo暂时先用animator模拟，没时间整playable
-            _animator.Play( Animator.StringToHash( _animName ) );
+            //_animator.Play( Animator.StringToHash( _animName ) );
+
+            foreach ( var state in _stateName )
+                _animator.SetBool( state, false );
+
+            _animator.SetBool( _animName, true );
         }
 
-        public override void ProcessFrame(Playable playable, FrameData info, object playerData)
+        public override void ProcessFrame( Playable playable, FrameData info, object playerData )
         {
-            base.ProcessFrame(playable, info, playerData);
+            base.ProcessFrame( playable, info, playerData );
         }
 
-        public override void OnBehaviourPlay(Playable playable, FrameData info)
+        public override void OnBehaviourPlay( Playable playable, FrameData info )
         {
-            base.OnBehaviourPlay(playable, info);
+            base.OnBehaviourPlay( playable, info );
         }
 
         public override void OnGraphStop( Playable playable )
@@ -41,9 +43,9 @@ namespace Aquila.Timeline
             _animName = string.Empty;
         }
 
-        public override void OnBehaviourPause(Playable playable, FrameData info)
+        public override void OnBehaviourPause( Playable playable, FrameData info )
         {
-            base.OnBehaviourPause(playable, info);
+            base.OnBehaviourPause( playable, info );
         }
 
         /// <summary>
@@ -60,5 +62,16 @@ namespace Aquila.Timeline
         /// 动画名称
         /// </summary>
         public string _animName = string.Empty;
+
+        /// <summary>
+        /// 临时的动画状态名，#todo后面改了
+        /// </summary>
+        private static string[] _stateName = new string[]
+        {
+            "Idle",
+            "Ability",
+            "Walk",
+            "Die"
+        };
     }
 }

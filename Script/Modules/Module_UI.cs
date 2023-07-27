@@ -32,20 +32,11 @@ namespace Aquila.Module
 
         #endregion
 
-        public override void OnClose()
-        {
-        }
-
         public override void EnsureInit()
         {
             base.EnsureInit();
             if ( _cached_UI_Component == null )
                 _cached_UI_Component = GameEntry.BaseUI;
-        }
-
-        public override void End()
-        {
-            base.End();
         }
 
         /// <summary>

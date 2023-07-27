@@ -5,7 +5,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 冷却类effect
     /// </summary>
-    public class EffectSpec_CoolDown : EffectSpec_Base
+    public class EffectSpec_Period_CoolDown : EffectSpec_Base
     {
         public override void Init( Table_Effect meta )
         {
@@ -14,7 +14,7 @@ namespace Aquila.Fight
             _remain = 0f;
         }
 
-        public EffectSpec_CoolDown()
+        public EffectSpec_Period_CoolDown()
         {
             
         }

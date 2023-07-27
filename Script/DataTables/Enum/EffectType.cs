@@ -16,7 +16,7 @@ namespace Cfg.Enum
         /// <summary>
         /// 冷却类effect
         /// </summary>
-        Instant_CoolDown = 1,
+        Period_CoolDown = 1,
         /// <summary>
         /// 消耗类Effect
         /// </summary>

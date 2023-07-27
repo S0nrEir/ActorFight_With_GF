@@ -7,7 +7,11 @@ namespace Aquila.Fight.Actor
 {
     public partial class Actor_Hero : Actor_Base
     {
+        /// <summary>
+        /// 当前状态
+        /// </summary>
         public ActorStateTypeEnum CurrState => _fsmAddon.CurrState;
+
         public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
         
         protected override void OnInitActor(object userData)
@@ -22,18 +26,17 @@ namespace Aquila.Fight.Actor
             _baseAttrAddon      = AddAddon<Addon_BaseAttrNumric>();
             _abilityAddon       = AddAddon<Addon_Ability>();
             _fsmAddon           = AddAddon<Addon_HeroFSM>();
-            //_anim_addon       = AddAddon<Addon_Anim>();
-            // _move_addon      = AddAddon<Addon_Move>();
-            // _info_addon      = AddAddon<Addon_InfoBoard>();
-            //_nav_addon        = AddAddon<Addon_Nav>();
-            _fxAddon            = AddAddon<Addon_FX>();
             _hpAddon            = AddAddon<Addon_HP>();
             _timelineAddon      = AddAddon<Addon_Timeline>();
+            _behaviourAddon     = AddAddon<Addon_Behaviour>();
         }
         
         protected override void InitAddons( Module_ProxyActor.ActorInstance instance)
         {
             base.InitAddons(instance);
+
+            _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.ABILITY );
+            _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.DIE);
         }
 
         protected override void OnRecycle()
@@ -47,12 +50,6 @@ namespace Aquila.Fight.Actor
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
-            //更新状态机
-            _fsmAddon?.OnUpdate( elapseSeconds, realElapseSeconds );
-            //更新技能数据（CD之类的）
-            _abilityAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
-            //信息板位置更新
-            _hpAddon?.OnUpdate(elapseSeconds,realElapseSeconds);
         }
 
         public override void Reset()
@@ -81,29 +78,9 @@ namespace Aquila.Fight.Actor
         private Addon_FSM _fsmAddon { get; set; } = null;
 
         /// <summary>
-        /// 动画组件
-        /// </summary>
-        //private Addon_Anim _anim_addon { get; set; } = null;
-
-        /// <summary>
         /// 移动组件
         /// </summary>
         private Addon_Move _moveAddon { get; set; } = null;
-
-        /// <summary>
-        /// 信息板组件
-        /// </summary>
-        // private Addon_InfoBoard _info_addon { get; set; } = null;
-        
-        /// <summary>
-        /// 导航组件
-        /// </summary>
-        private Addon_Nav _navAddon { get; set; } = null;
-
-        /// <summary>
-        /// 特效组件
-        /// </summary>
-        private Addon_FX _fxAddon { get; set; } = null;
 
         /// <summary>
         /// 基础属性数值组件
@@ -124,6 +101,11 @@ namespace Aquila.Fight.Actor
         /// timeline组件
         /// </summary>
         private Addon_Timeline _timelineAddon = null;
+
+        /// <summary>
+        /// 行为组件
+        /// </summary>
+        private Addon_Behaviour _behaviourAddon = null;
     }
 
     public class HeroActorEntityData : EntityData

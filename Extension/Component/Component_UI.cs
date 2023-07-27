@@ -19,15 +19,15 @@ namespace Aquila.Extension
         /// <summary>
         /// 打开
         /// </summary>
-        public void Open( FormIdEnum id ,object userData = null)
+        public void OpenForm( FormIdEnum id ,object userData = null)
         {
-            Open( ( int ) id ,userData);
+            OpenForm( ( int ) id ,userData);
         }
 
         /// <summary>
         /// 打开
         /// </summary>
-        public void Open(int formID,object userData = null)
+        public void OpenForm( int formID,object userData = null)
         {
             IDataTable<DRUIForm> table = GameEntry.DataTable.GetDataTable<DRUIForm>();
             var row = table.GetDataRow( formID );
@@ -52,15 +52,15 @@ namespace Aquila.Extension
             _uiComp.OpenUIForm( row.AssetName, row.UIGroupName, row.PauseCoveredUIForm, param );
         }
 
-        public void Close( FormIdEnum id )
+        public void CloseForm( FormIdEnum id )
         {
-            Close( ( int ) id );
+            CloseForm( ( int ) id );
         }
 
         /// <summary>
         /// 关闭
         /// </summary>
-        public void Close(int formID)
+        public void CloseForm( int formID)
         {
             IDataTable<DRUIForm> table = GameEntry.DataTable.GetDataTable<DRUIForm>();
             var row = table.GetDataRow( formID );
@@ -88,8 +88,6 @@ namespace Aquila.Extension
             _uiComp.CloseAllLoadedUIForms();
             _uiComp.CloseAllLoadingUIForms();
         }
-
-        
 
         //--------------------------- priv ---------------------------
 

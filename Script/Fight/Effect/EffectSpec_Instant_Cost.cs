@@ -8,7 +8,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 消耗类effect
     /// </summary>
-    public class EffectSpec_Cost : EffectSpec_Base
+    public class EffectSpec_Instant_Cost : EffectSpec_Base
     {
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
@@ -37,7 +37,7 @@ namespace Aquila.Fight
             _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
         }
 
-        public EffectSpec_Cost()
+        public EffectSpec_Instant_Cost()
         {
 
         }

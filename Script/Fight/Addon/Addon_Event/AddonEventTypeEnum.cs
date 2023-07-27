@@ -13,5 +13,10 @@ namespace Aquila.Fight.Addon
         /// 使用技能
         /// </summary>
         USE_ABILITY,
+
+        /// <summary>
+        /// 取消行为
+        /// </summary>
+        CANCEL,
     }
 }

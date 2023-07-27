@@ -11,7 +11,7 @@ namespace Aquila.Fight
     /// <summary>
     /// 周期性固定伤害
     /// </summary>
-    public class EffectSpec_PeriodFixedDamage : EffectSpec_Base
+    public class EffectSpec_Period_FixedDamage : EffectSpec_Base
     {
         public override void Init( Table_Effect meta )
         {

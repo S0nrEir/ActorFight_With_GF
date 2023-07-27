@@ -5,8 +5,7 @@ namespace Aquila.Fight.Actor
     //hero actor的各个实现
     public partial class Actor_Hero : 
         ISwitchStateBehavior,
-        IDieBehavior,
-        IDoAbilityBehavior
+        IDieBehavior
     {
         /// <summary>
         /// 死亡
@@ -22,14 +21,6 @@ namespace Aquila.Fight.Actor
         public void SwitchTo( ActorStateTypeEnum stateType, object enterParam, object existParam )
         {
             _fsmAddon.SwitchTo( stateType, enterParam, existParam );
-        }
-
-        /// <summary>
-        /// 使用技能
-        /// </summary>
-        public void UseAbility(object param)
-        {   
-            SwitchTo(ActorStateTypeEnum.ABILITY_STATE, param ,null);
         }
     }
 }

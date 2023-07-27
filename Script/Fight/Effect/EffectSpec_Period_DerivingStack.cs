@@ -47,13 +47,9 @@ namespace Aquila.Fight
                 {
                     //叠层
                     if ( newEffect is ICustomizableEffect )
-                    {
                         ( newEffect as ICustomizableEffect ).SetModifier( this );
-                    }
+
                     GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( castor, target, newEffect );
-                    //newEffect.Apply( castor, target, result );
-                    //newEffect.OnEffectEnd( castor, target );
-                    //ReferencePool.Release( newEffect );
                     GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
