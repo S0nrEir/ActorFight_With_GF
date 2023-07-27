@@ -1,6 +1,5 @@
 using Aquila.Event;
 using Aquila.Module;
-using Aquila.Procedure;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -41,9 +40,9 @@ namespace Aquila.UI
         /// <summary>
         /// 点击退出按钮
         /// </summary>
-        private void OnClickExit()
+        private void OnClickTestBtn()
         {
-            GameEntry.Entity.HideEntity( _actorID );
+            //GameEntry.Entity.HideEntity( _actorID );
             //GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( _actorID );
             //foreach ( var id in _enemyActorIdArr )
             //    GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( id );
@@ -146,8 +145,8 @@ namespace Aquila.UI
             _abilityIdArr = param._abilityID;
             _actorProxy = GameEntry.Module.GetModule<Module_ProxyActor>();
             InitItem();
-            _exitBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
-            _exitBtn.onClick.AddListener( OnClickExit );
+            _testBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
+            _testBtn.onClick.AddListener( OnClickTestBtn );
             ReferencePool.Release( param );
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
@@ -165,7 +164,7 @@ namespace Aquila.UI
             _actorID = -1;
             _actorProxy = null;
             ClearItemCacheDic();
-            _exitBtn.onClick.RemoveAllListeners();
+            _testBtn.onClick.RemoveAllListeners();
             GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Unsubscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
             base.OnClose( isShutdown, userData );
@@ -206,9 +205,9 @@ namespace Aquila.UI
         private Dictionary<int, AbilityIconItem> _iconItemDic = null;
 
         /// <summary>
-        /// 退出当前状态按钮
+        /// 测试按钮
         /// </summary>
-        private Button _exitBtn = null;
+        private Button _testBtn = null;
 
         /// <summary>
         /// 图标item
@@ -235,14 +234,14 @@ namespace Aquila.UI
             /// </summary>
             public void Setup( GameObject go, int abilityID, Action<int> _clickCallBack )
             {
-                _root                           = go;
-                _abilityID                      = abilityID;
-                _cd                             = Tools.GetComponent<Image>( go.transform, "cd" );
-                _text                           = Tools.GetComponent<Text>( go.transform, "Text" );
-                _abilityIdText                  = Tools.GetComponent<Text>( go.transform, "AbilityIdText" );
-                _image                          = Tools.GetComponent<Image>( go, "Image" );
+                _root = go;
+                _abilityID = abilityID;
+                _cd = Tools.GetComponent<Image>( go.transform, "cd" );
+                _text = Tools.GetComponent<Text>( go.transform, "Text" );
+                _abilityIdText = Tools.GetComponent<Text>( go.transform, "AbilityIdText" );
+                _image = Tools.GetComponent<Image>( go, "Image" );
                 //_button                       = Tools.GetComponent<Button>( go, "Button" );
-                _button                         = Tools.GetComponent<Button>( _image.gameObject );
+                _button = Tools.GetComponent<Button>( _image.gameObject );
                 clickCallBack = _clickCallBack;
                 _button.onClick.AddListener( OnClicked );
 

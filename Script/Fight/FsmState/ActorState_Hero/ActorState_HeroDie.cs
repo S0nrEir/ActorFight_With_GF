@@ -1,8 +1,4 @@
-using Aquila.Fight.Addon;
 using Aquila.Toolkit;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Aquila.Fight.FSM

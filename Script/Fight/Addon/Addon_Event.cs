@@ -24,7 +24,8 @@ namespace Aquila.Fight.Addon
 
             if ( !_eventDic.TryGetValue( eventType, out var callList ) )
             {
-                Log.Error( $"<color=red>Addon_Event.Notify()--->!_eventDic.TryGetValue( eventType, out var callList ),eventType:{eventType},enum:{( ( AddonEventTypeEnum ) eventType ).ToString()}</color>" );
+                //可能没有注册的addon，取消报错log
+                //Log.Error( $"<color=red>Addon_Event.Notify()--->!_eventDic.TryGetValue( eventType, out var callList ),eventType:{eventType},enum:{( ( AddonEventTypeEnum ) eventType ).ToString()}</color>" );
                 return;
             }
 

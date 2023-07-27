@@ -12,11 +12,19 @@ namespace Aquila.Toolkit
         public static class Actor
         {
             /// <summary>
+            /// 返回通用的待机timeline资源路径
+            /// </summary>
+            public static string CommonIdleTimelineAssetPath()
+            {
+                return @"Assets/Res/Timeline/Common/Common_Idle_1000.playable";
+            }
+
+            /// <summary>
             /// 返回通用的死亡timeline资源路径
             /// </summary>
             public static string CommonDieTimelineAssetPath()
             {
-                return @"Assets/Res/Timeline/Common/Common_Die_1000.playable";
+                return @"Assets/Res/Timeline/Common/Common_Die_1001.playable";
             }
 
             /// <summary>
