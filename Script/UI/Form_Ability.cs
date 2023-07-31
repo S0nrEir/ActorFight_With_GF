@@ -42,14 +42,6 @@ namespace Aquila.UI
         /// </summary>
         private void OnClickTestBtn()
         {
-            //GameEntry.Entity.HideEntity( _actorID );
-            //GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( _actorID );
-            //foreach ( var id in _enemyActorIdArr )
-            //    GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( id );
-
-
-            //if ( GameEntry.Procedure.CurrentProcedure is Procedure_Test_Fight prcd )
-            //    prcd.Exit();
         }
 
         /// <summary>
@@ -115,9 +107,6 @@ namespace Aquila.UI
             {
                 var cd = _actorProxy.GetCoolDown( _actorID, id );
                 var percent = cd.remain / cd.duration;
-                //::删除无用代码
-                if ( id == _abilityIdArr[3] )
-                    ;
                 _iconItemDic[id].CD( percent, percent.ToString() );
             }
         }
