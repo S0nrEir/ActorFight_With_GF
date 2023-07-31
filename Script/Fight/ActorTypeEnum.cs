@@ -44,6 +44,11 @@ namespace Aquila.Fight.Actor
         Projectile,
 
         /// <summary>
+        /// 法球
+        /// </summary>
+        Orb,
+
+        /// <summary>
         /// 触发类actor
         /// </summary>
         Trigger,

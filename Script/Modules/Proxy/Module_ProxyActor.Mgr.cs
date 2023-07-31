@@ -2,6 +2,8 @@ using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -10,6 +12,19 @@ namespace Aquila.Module
     public partial class Module_ProxyActor
     {
         //----------------pub----------------
+
+        /// <summary>
+        /// 为一个actor添加关联actor
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Transform AddRelevance( int actorID ,int relevanceActorID)
+        {
+            var instance = Get( actorID );
+            if ( instance is null || !instance.AddRevelence(relevanceActorID))
+                return null;
+
+            return instance.Actor.CachedTransform;
+        }
 
         /// <summary>
         /// 为一个actor实例添加一个addon

@@ -4,6 +4,7 @@ using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
@@ -16,6 +17,22 @@ namespace Aquila.Fight.Actor
     public abstract partial class Actor_Base : EntityLogic
     {
         #region public methods
+
+        /// <summary>
+        /// 添加和此actor关联的actor
+        /// </summary>
+        public bool AddRelevance( int actorID )
+        {
+            return _relevanceActorSet.Add( actorID );
+        }
+
+        /// <summary>
+        /// 关联的actorID列表
+        /// </summary>
+        public HashSet<int> RelevanceActors
+        {
+            get => _relevanceActorSet;
+        }
 
         /// <summary>
         /// 移除tag
@@ -156,6 +173,7 @@ namespace Aquila.Fight.Actor
         protected override void OnHide( bool isShutdown, object userData )
         {
             _tagContainer.Reset();
+            _relevanceActorSet.Clear();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
@@ -324,6 +342,11 @@ namespace Aquila.Fight.Actor
         /// tag管理器
         /// </summary>
         protected TagContainer _tagContainer = null;
+
+        /// <summary>
+        /// 关联actor集合
+        /// </summary>
+        private HashSet<int> _relevanceActorSet = null;
 
         #endregion
     }

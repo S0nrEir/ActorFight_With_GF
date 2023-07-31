@@ -47,6 +47,7 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_ProxyActor
     {
+        #region ability相关
         /// <summary>
         /// 实现一个Effect的效果
         /// </summary>
@@ -268,18 +269,31 @@ namespace Aquila.Module
             var target = Get( targetID );
             DieIfEmptyHP( target );
         }
+        #endregion
 
         /// <summary>
         /// 检查是否没血，是就进入死亡状态
         /// </summary>
         private void DieIfEmptyHP( ActorInstance instance )
         {
-            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
-            if ( hpAddon is null || hpAddon.GetCurrHPCorrection() > 0)
-                return;
-
             instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
             GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
+
+            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if ( hpAddon != null && hpAddon.GetCurrHPCorrection() > 0 )
+                hpAddon.SetCurrHP( 0 );
+
+
+
+        }
+
+        /// <summary>
+        /// 检查一个actor是否没血，是就让其死亡并且隐藏
+        /// </summary>
+        private void DieIfEmptyHPAndHide(ActorInstance instance)
+        {
+            DieIfEmptyHP( instance );
+            
         }
 
         /// <summary>

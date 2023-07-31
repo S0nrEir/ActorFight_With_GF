@@ -1,5 +1,7 @@
+using Aquila.Config;
 using Aquila.Extension;
 using Aquila.Fight.Actor;
+using System;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
 using UnityGameFramework.Runtime;
@@ -12,6 +14,51 @@ namespace Aquila.Module
     public class Module_Actor_Fac : GameFrameworkModuleBase
     {
         //--------------------public--------------------
+        /// <summary>
+        /// 异步显示一个actor
+        /// </summary>
+        public async Task<Entity> ShowActorAsync
+            (
+                Type actorType,
+                int roleMetaID,
+                int actorID,
+                string assetPath,
+                object userData
+            )
+        {
+            if ( actorType == typeof( Actor_Base ).GetType() )
+            {
+                Log.Warning( $"<color=yellow>not correct actor type,actor type:{typeof( Actor_Base ).Name}</color>" );
+                return null;
+            }
+            var result = await AwaitableExtensions.ShowEntityAsync
+                (
+                    GameEntry.Entity,
+                    actorID,
+                    actorType,
+                    assetPath,
+                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
+                    Config.GameConfig.Entity.PRIORITY_ACTOR,
+                    userData
+                );
+            switch ( result.Logic )
+            {
+                //英雄类actor
+                case Actor_Hero:
+                    //#todo_根据actor类型决定传入函数的tag值，不要写死
+                    OnShowHeroActorSucc( result.Logic as Actor_Hero, roleMetaID, GameConfig.Tags.ACTOR );
+                    break;
+
+                //法球类actor
+                case Actor_Orb:
+                    OnShowTracingProjectileActorSucc( result.Logic as Actor_Orb, userData );
+                    break;
+            }
+
+            return result;
+        }
+
+
 
         /// <summary>
         /// 异步显示一个actor，注意，调用该接口前使用await关键字进行等待
@@ -36,15 +83,37 @@ namespace Aquila.Module
                     Config.GameConfig.Entity.PRIORITY_ACTOR,
                     userData
                 );
-            //#todo_根据actor类型决定传入函数的tag值，不要写死
-            OnShowActorSucc( result.Logic as Actor_Base, roleMetaID, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
+            OnShowHeroActorSucc( result.Logic as Actor_Base, roleMetaID, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
             return result;
+        }
+
+        /// <summary>
+        /// 追踪投射物类actor回调
+        /// </summary>
+        private void OnShowTracingProjectileActorSucc( Actor_Orb actor,object userData)
+        {
+            var orbData = userData as Actor_Orb_EntityData;
+            if ( orbData is null )
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
+                return;
+            }
+
+            //查找目标actor
+            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
+            if ( targetTransform == null)
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
+                return;
+            }
+
+            actor.SetTargetAndReady( targetTransform );
         }
 
         /// <summary>
         /// actor生成回调
         /// </summary>
-        private void OnShowActorSucc( Actor_Base actor, int roleMetaID, string tag )
+        private void OnShowHeroActorSucc( Actor_Base actor, int roleMetaID, string tag )
         {
             //actor.Setup( role_meta_id, tag );
 
