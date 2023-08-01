@@ -51,7 +51,7 @@ namespace Aquila.Module
 
                 //法球类actor
                 case Actor_Orb:
-                    OnShowTracingProjectileActorSucc( result.Logic as Actor_Orb, userData );
+                    OnShowOrbActorSucc( result.Logic as Actor_Orb, userData );
                     break;
             }
 
@@ -88,9 +88,9 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 追踪投射物类actor回调
+        /// 法球类actor回调
         /// </summary>
-        private void OnShowTracingProjectileActorSucc( Actor_Orb actor,object userData)
+        private void OnShowOrbActorSucc( Actor_Orb actor,object userData)
         {
             var orbData = userData as Actor_Orb_EntityData;
             if ( orbData is null )
@@ -107,11 +107,11 @@ namespace Aquila.Module
                 return;
             }
 
-            actor.SetTargetAndReady( targetTransform );
+            actor.SetTargetTransformAndReady( targetTransform );
         }
 
         /// <summary>
-        /// actor生成回调
+        /// HeroActor生成回调
         /// </summary>
         private void OnShowHeroActorSucc( Actor_Base actor, int roleMetaID, string tag )
         {

@@ -31,6 +31,14 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// 刷帧
+        /// </summary>
+        public virtual void Update( float elapsed, float realElapsed )
+        {
+            
+        }
+
+        /// <summary>
         /// 行为类型
         /// </summary>
         public virtual ActorBehaviourTypeEnum BehaviourType => ActorBehaviourTypeEnum.INVALID;

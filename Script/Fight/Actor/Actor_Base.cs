@@ -61,7 +61,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 尝试获取一个addon
         /// </summary>
-        private bool TryGetAddon<T>( out T targetAddon ) where T : Addon_Base
+        protected bool TryGetAddon<T>( out T targetAddon ) where T : Addon_Base
         {
             targetAddon = _instance.GetAddon<T>();
             return targetAddon != null;

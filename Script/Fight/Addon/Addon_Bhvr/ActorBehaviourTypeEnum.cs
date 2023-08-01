@@ -20,6 +20,16 @@ namespace Aquila.Fight
         ABILITY,
 
         /// <summary>
+        /// 追踪行为，在生成后会控制actor自动朝目标transform行进
+        /// </summary>
+        TRACING_TRANSFORM,
+
+        /// <summary>
+        /// 向目标点行进行为
+        /// </summary>
+        TARGETING_POSITION,
+
+        /// <summary>
         /// 无效
         /// </summary>
         INVALID,

@@ -12,6 +12,14 @@ namespace Aquila.Toolkit
         public static class Actor
         {
             /// <summary>
+            /// 获取法球类型actor的默认技能ID，取不到返回-1
+            /// </summary>
+            public static int DefaultOrbOnHitAbilityID( int[] abilityIdArr )
+            {
+                return abilityIdArr != null && abilityIdArr.Length > 0 ? abilityIdArr[0] : -1;
+            }
+
+            /// <summary>
             /// 返回通用的待机timeline资源路径
             /// </summary>
             public static string CommonIdleTimelineAssetPath()

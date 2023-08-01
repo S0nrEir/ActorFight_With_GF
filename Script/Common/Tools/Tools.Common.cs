@@ -11,6 +11,13 @@ namespace Aquila.Toolkit
     /// </summary>
     public partial class Tools
     {
+        /// <summary>
+        /// 获取两点间的距离平方根
+        /// </summary>
+        public static float DistanceSQR( Vector3 me, Vector3 target )
+        {
+            return ( target - me ).sqrMagnitude;
+        }
 
         /// <summary>
         /// 从一个timeline track中获取对应类型的clip的asset，如果track有多个clip，则只返回第一个，拿不到返回空

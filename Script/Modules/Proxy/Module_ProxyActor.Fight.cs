@@ -1,5 +1,6 @@
 using Aquila.Event;
 using Aquila.Fight;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
@@ -69,7 +70,8 @@ namespace Aquila.Module
 
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
-            DieIfEmptyHP( target );
+            //DieIfEmptyHP( target );
+            DieIfEmptyHPAndHide( target );
         }
 
         /// <summary>
@@ -158,7 +160,8 @@ namespace Aquila.Module
 
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance.instance );
-            DieIfEmptyHP( targetInstance.instance );
+            //DieIfEmptyHP( targetInstance.instance );
+            DieIfEmptyHPAndHide( targetInstance.instance );
         }
 
         /// <summary>
@@ -267,7 +270,8 @@ namespace Aquila.Module
 
             //is died
             var target = Get( targetID );
-            DieIfEmptyHP( target );
+            //DieIfEmptyHP( target );
+            DieIfEmptyHPAndHide( target );
         }
         #endregion
 
@@ -279,21 +283,29 @@ namespace Aquila.Module
             instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
             GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
 
-            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
-            if ( hpAddon != null && hpAddon.GetCurrHPCorrection() > 0 )
-                hpAddon.SetCurrHP( 0 );
+            var attrAddon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if ( attrAddon != null && attrAddon.GetCurrHPCorrection() > 0 )
+                attrAddon.SetCurrHP( 0 );
 
-
-
+            instance.GetAddon<Addon_HP>()?.Refresh();
         }
 
         /// <summary>
         /// 检查一个actor是否没血，是就让其死亡并且隐藏
         /// </summary>
-        private void DieIfEmptyHPAndHide(ActorInstance instance)
+        private void DieIfEmptyHPAndHide( ActorInstance instance )
         {
             DieIfEmptyHP( instance );
-            
+            var actor = instance.Actor;
+            var relevanceActorsID = actor.RelevanceActors;
+            foreach ( var actorID in relevanceActorsID )
+            {
+                var relevanceActor = Get( actorID );
+                if ( relevanceActor.Actor is Actor_Orb )
+                    ( relevanceActor.Actor as Actor_Orb ).SetTargetPositionAndReady( actor.CachedTransform );
+            }
+
+            GameEntry.Entity.HideEntity( actor.ActorID );
         }
 
         /// <summary>

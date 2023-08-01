@@ -12,6 +12,12 @@ namespace  Aquila.Extension
     public class Component_GlobalVar : GameFrameworkComponent
     {
         //--------------fields--------------
+
+        /// <summary>
+        /// 表示无效的位置
+        /// </summary>
+        public readonly Vector3 InvalidPosition = new Vector3( 999f, 999f, 999f );
+
         /// <summary>
         /// 无效的GUID
         /// </summary>
