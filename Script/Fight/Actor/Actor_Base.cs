@@ -283,7 +283,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 移除addon
         /// </summary>
-        protected virtual void RemoveAddon( Addon_Base addon )
+        protected void RemoveAddon( Addon_Base addon )
         {
             addon.OnRemove();
             GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon);
