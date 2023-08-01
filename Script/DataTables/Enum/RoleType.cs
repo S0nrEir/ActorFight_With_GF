@@ -21,5 +21,9 @@ namespace Cfg.Enum
         /// 随从，AI单位
         /// </summary>
         Minion = 2,
+        /// <summary>
+        /// 法球
+        /// </summary>
+        Orb = 3,
     }
 }
