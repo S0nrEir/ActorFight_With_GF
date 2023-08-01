@@ -192,7 +192,7 @@ namespace Aquila.Fight.Actor
             //addon
             _eventAddon.UnRegisterAll();
             _eventAddon = null;
-
+            _relevanceActorSet = null;
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
@@ -217,6 +217,7 @@ namespace Aquila.Fight.Actor
             AddAddon();
             InitAddons( res.instance );
 
+            _relevanceActorSet = new HashSet<int>();
             _allAddonInitDone = true;
             _tagContainer = new TagContainer( OnTagChange );
         }
@@ -277,6 +278,15 @@ namespace Aquila.Fight.Actor
         protected virtual void AddAddon()
         {
             _eventAddon = AddAddon<Addon_Event>();
+        }
+
+        /// <summary>
+        /// 移除addon
+        /// </summary>
+        protected virtual void RemoveAddon( Addon_Base addon )
+        {
+            addon.OnRemove();
+            GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon);
         }
 
         /// <summary>

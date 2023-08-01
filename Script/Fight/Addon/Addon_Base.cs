@@ -68,7 +68,7 @@ namespace Aquila.Fight.Addon
         public abstract void OnAdd ();
 
         /// <summary>
-        /// 组件移除
+        /// 组件被移除
         /// </summary>
         public virtual void OnRemove ()
         {
