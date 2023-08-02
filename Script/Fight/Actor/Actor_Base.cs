@@ -3,6 +3,7 @@ using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -306,7 +307,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// actor类型
         /// </summary>
-        public abstract ActorTypeEnum ActorType { get; }
+        public abstract RoleType ActorType { get; }
 
         /// <summary>
         /// ActorID(ObjID)

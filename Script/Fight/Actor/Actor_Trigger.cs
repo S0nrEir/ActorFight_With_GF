@@ -1,6 +1,7 @@
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -92,7 +93,7 @@ namespace Aquila.Fight.Actor
             _triggerAddon.SetSize( new Vector3( wh.x, 1f, wh.z ) );
         }
 
-        public override ActorTypeEnum ActorType => ActorTypeEnum.Trigger;
+        public override RoleType ActorType => RoleType.Hero;
 
         protected override void OnShow( object userData )
         {

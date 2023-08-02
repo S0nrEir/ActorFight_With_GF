@@ -1,6 +1,7 @@
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -91,7 +92,7 @@ namespace Aquila.Fight.Actor
             }
         }
 
-        public override ActorTypeEnum ActorType => ActorTypeEnum.Orb;
+        public override RoleType ActorType => RoleType.Hero;
 
         //-------------------- field --------------------
         /// <summary>
