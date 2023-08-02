@@ -207,7 +207,7 @@ namespace Aquila.Module
         /// <summary>
         /// 单对单释放技能，需要先尝试使用，然后让技能击中
         /// </summary>
-        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID )
+        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID ,Vector3 position )
         {
             AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
             result._succ = false;
@@ -234,11 +234,22 @@ namespace Aquila.Module
             }
             else
             {
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
+                if ( position != GameEntry.GlobalVar.InvalidPosition )
+                {
+                    result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                   ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, true );
+                    result._targetPosition = position;
+                }
+                else
+                {
+                    //没有target也没有position
+                    //todo:也有可能是无目标技能
+                    result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                   ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
+                    GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
+                    ReferencePool.Release( result );
+                    return;
+                }
             }
 
             result._abilityID = abilityMetaID;

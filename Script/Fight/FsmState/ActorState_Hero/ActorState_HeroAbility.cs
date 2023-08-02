@@ -54,10 +54,7 @@ namespace Aquila.Fight.FSM
             result._stateDescription = state;
             result._succ = result.StateFlagIsClean();
             if ( result._succ )
-            {
                 result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityUseResultTypeEnum.SUCC, true );
-                result._succ = true;
-            }
 
             _castorID = result._castorID;
             // _targetIDArr = result._targetIDArr;
@@ -73,12 +70,12 @@ namespace Aquila.Fight.FSM
             _time += deltaTime;
             if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
             {
-                var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
-                if ( abilityAddon is null )
-                {
-                    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
-                    return;
-                }
+                //var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
+                //if ( abilityAddon is null )
+                //{
+                //    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
+                //    return;
+                //}
 
                 if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
                 {
