@@ -25,5 +25,9 @@ namespace Cfg.Enum
         /// 法球
         /// </summary>
         Orb = 3,
+        /// <summary>
+        /// 子弹
+        /// </summary>
+        Bullet = 4,
     }
 }

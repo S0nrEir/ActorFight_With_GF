@@ -1,6 +1,7 @@
 using Aquila.Config;
 using Aquila.Extension;
 using Aquila.Fight.Actor;
+using Aquila.Toolkit;
 using System;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
@@ -54,7 +55,6 @@ namespace Aquila.Module
                     OnShowOrbActorSucc( result.Logic as Actor_Orb, userData );
                     break;
             }
-
             return result;
         }
 
@@ -92,22 +92,30 @@ namespace Aquila.Module
         /// </summary>
         private void OnShowOrbActorSucc( Actor_Orb actor,object userData)
         {
-            //var orbData = userData as Actor_Orb_EntityData;
-            //if ( orbData is null )
-            //{
-            //    Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
-            //    return;
-            //}
+            actor.SetWorldPosition( GameEntry.GlobalVar.InvalidPosition );
+            Tools.SetActive( actor.gameObject, false );
+            var orbData = userData as Actor_Orb_EntityData;
+            if ( orbData is null )
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
+                return;
+            }
 
-            ////查找目标actor
-            //var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
-            //if ( targetTransform == null)
-            //{
-            //    Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
-            //    return;
-            //}
+            //查找目标actor
+            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
+            if ( targetTransform == null )
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
+                return;
+            }
 
-            //actor.SetTargetTransformAndReady( targetTransform );
+            //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
+            var position = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition( orbData._callerID );
+            //处理一下转向问题
+            actor.CachedTransform.LookAt( targetTransform.position );
+            actor.SetWorldPosition( position );
+            actor.SetTargetTransformAndReady( targetTransform );
+            Tools.SetActive( actor.gameObject, true );
         }
 
         /// <summary>

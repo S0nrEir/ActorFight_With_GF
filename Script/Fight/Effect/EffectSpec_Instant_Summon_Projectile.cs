@@ -20,7 +20,7 @@ namespace Aquila.Fight
                 return;
             }
 
-            //#todo生成actor的接口改一下，现在拿到元数据了还要在里面根据id再拿一次，太蠢了
+            //todo:生成actor的接口改一下，现在拿到元数据了还要在里面根据id再拿一次，太蠢了
             var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get( Meta.ExtensionParam.IntParam_1 );
             if ( roleMeta is null )
             {
@@ -30,16 +30,21 @@ namespace Aquila.Fight
 
             var roleType = roleMeta.RoleType;
             var roleMetaID = Meta.ExtensionParam.IntParam_1;
-            EntityData entityData = null;
+            EntityData entityData;
 
             //按照位置生成召唤物
             if ( Tools.GetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION ) )
             {
+                entityData = new Actor_Bullet_EntityData( roleMetaID );
             }
             //按照目标生成召唤物
             else
             {
-                entityData = new Actor_Orb_EntityData( roleMetaID ) { _targetActorID = result._targetActorID, };
+                entityData = new Actor_Orb_EntityData( roleMetaID )
+                {
+                    _targetActorID = result._targetActorID,
+                    _callerID = castor.Actor.ActorID
+                };
             }
 
             await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync

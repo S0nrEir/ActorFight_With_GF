@@ -13,7 +13,6 @@ namespace Aquila.Fight.Actor
     public class Actor_Orb : Actor_Base
     {
         //----------------------- pub -----------------------
-
         /// <summary>
         /// 设置目标点并准备就绪
         /// </summary>
@@ -113,6 +112,11 @@ namespace Aquila.Fight.Actor
         public Actor_Orb_EntityData( int entity_id ) : base( entity_id, typeof( Actor_Orb ).GetHashCode() )
         {
         }
+
+        /// <summary>
+        /// 召唤者ID
+        /// </summary>
+        public int _callerID = -1;
 
         /// <summary>
         /// 目标actorID
