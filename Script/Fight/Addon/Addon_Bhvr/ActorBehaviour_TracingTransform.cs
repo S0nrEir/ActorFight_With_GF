@@ -59,6 +59,16 @@ namespace Aquila.Fight
                 //打中了以后就处理掉自己
                 GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
             }
+
+            //move
+            var dir = _targetTransform.position - _cachedActorTransform.position;
+            _cachedActorTransform.position = _cachedActorTransform.position + dir.normalized * _defaultSpeed * elapsed;
+            _cachedActorTransform.rotation = Quaternion.Slerp
+                (
+                    _cachedActorTransform.rotation,
+                    Quaternion.LookRotation(dir),
+                    .8f
+                );
         }
 
         private float Distance()
@@ -69,12 +79,12 @@ namespace Aquila.Fight
         public ActorBehaviour_TracingTransform( ActorInstance instance ) : base( instance )
         {
             _cachedActorTransform = instance.Actor.CachedTransform;
-            _targetTransform = null;
-            _arriveFlag = false;
-            _readyFlag = false;
-            _radius = 0f;
-            _targetActorID = -1;
-            _onHitabilityID = -1;
+            _targetTransform      = null;
+            _arriveFlag           = false;
+            _readyFlag            = false;
+            _radius               = 0f;
+            _targetActorID        = -1;
+            _onHitabilityID       = -1;
         }
 
         /// <summary>
@@ -111,6 +121,11 @@ namespace Aquila.Fight
         /// 要使用的技能ID
         /// </summary>
         public int _onHitabilityID = -1;
+
+        /// <summary>
+        /// 默认速度
+        /// </summary>
+        public float _defaultSpeed = 0.05f;
     }
 
 

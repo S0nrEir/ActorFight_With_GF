@@ -2,6 +2,7 @@ using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
@@ -15,7 +16,7 @@ namespace Aquila.Fight
         {
             if ( _radius <= 0f )
             {
-
+                Log.Warning( $"<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
                 return;
             }
 
@@ -42,6 +43,9 @@ namespace Aquila.Fight
             }
 
             //move
+            var currPosition = _cachedActorTransform.position;
+            var dir = ( _targetPosition - currPosition ).normalized;
+            _cachedActorTransform.position = dir * elapsed * _defaultSpeed + currPosition;
         }
 
         public ActorBehaviour_TargetingPosition( ActorInstance instance ) : base( instance )
@@ -77,6 +81,11 @@ namespace Aquila.Fight
         /// 范围
         /// </summary>
         public float _radius = 0f;
+
+        /// <summary>
+        /// 默认速度
+        /// </summary>
+        public float _defaultSpeed = 0.05f;
     }
 
 }
