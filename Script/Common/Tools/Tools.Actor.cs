@@ -1,6 +1,8 @@
 using Cfg.Enum;
 using Aquila.Fight.Addon;
 using System.Collections.Generic;
+using System;
+using Aquila.Fight.Actor;
 
 namespace Aquila.Toolkit
 {
@@ -12,11 +14,36 @@ namespace Aquila.Toolkit
         public static class Actor
         {
             /// <summary>
+            /// 枚举的roleType转system.type类型，找不到匹配类型会返回Actor_Base类型
+            /// </summary>
+            public static Type RoleTypeEnum2SystemType( RoleType type)
+            {
+                switch ( type )
+                {
+                    case RoleType.Hero:
+                        return typeof( Actor_Hero ).GetType();
+
+                    case RoleType.Orb:
+                        return typeof( Actor_Orb ).GetType();
+                }
+
+                return typeof( Actor_Base ).GetType();
+            }
+
+            /// <summary>
             /// 获取法球类型actor的默认技能ID，取不到返回-1
             /// </summary>
             public static int DefaultOrbOnHitAbilityID( int[] abilityIdArr )
             {
                 return abilityIdArr != null && abilityIdArr.Length > 0 ? abilityIdArr[0] : -1;
+            }
+
+            /// <summary>   
+            /// 获取默认的法球资产路径
+            /// </summary>
+            public static string DefaultOrbAssetPath()
+            {
+                return $"Assets/Res/Prefab/Character/TestOrb_001.prefab";
             }
 
             /// <summary>

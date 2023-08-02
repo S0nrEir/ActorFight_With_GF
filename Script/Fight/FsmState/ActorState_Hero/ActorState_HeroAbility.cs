@@ -20,14 +20,14 @@ namespace Aquila.Fight.FSM
         private bool IsAbilityDataValid( object param )
         {
             int state = 0;
-            if ( param is null || param is not AbilityResult_Use) 
+            if ( param is null || param is not AbilityResult_Use )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
                 return false;
             }
             var result = param as AbilityResult_Use;
-            _abilityMeta = GameEntry.LuBan.Tables.Ability.Get(result._abilityID);
+            _abilityMeta = GameEntry.LuBan.Tables.Ability.Get( result._abilityID );
             if ( _abilityMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->_abilityMeta is null</color>" );
@@ -44,11 +44,11 @@ namespace Aquila.Fight.FSM
             var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
             if ( abilityAddon is null )
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
-            
+
 
             var canUseFlag = abilityAddon.CanUseAbility( _abilityMeta.id );
-            if( canUseFlag != 0)
-                state = Tools.SetBitValue( state, (ushort)canUseFlag , true );
+            if ( canUseFlag != 0 )
+                state = Tools.SetBitValue( state, ( ushort ) canUseFlag, true );
 
             //到最后设置succ
             result._stateDescription = state;
@@ -68,7 +68,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 尝试使用技能，到触发时间使用技能
         /// </summary>
-        private void TryUseAbility(float deltaTime)
+        private void TryUseAbility( float deltaTime )
         {
             _time += deltaTime;
             if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
@@ -79,13 +79,18 @@ namespace Aquila.Fight.FSM
                     Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
                     return;
                 }
-                
-                //activeAbility
-                //continue:这里走公用接口，将效果施加到actor上
-                foreach (var targetID in _result._targetIDArr)
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id );
-                
-                GameEntry.Event.Fire(_fsm.ActorInstance(),EventArg_OnUseAblity.Create(_result));
+
+                if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
+                {
+                    //以位置作为依据的，不需要目标actorID
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, -1, _abilityMeta.id, _result._targetPosition );
+                }
+                else
+                {
+                    foreach ( var targetID in _result._targetIDArr )
+                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id, _result._targetPosition );
+                }
+                GameEntry.Event.Fire( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
                 _abilityFinishFlag = true;
             }
         }
@@ -99,9 +104,9 @@ namespace Aquila.Fight.FSM
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
         }
 
-        public override void OnEnter( object param)
+        public override void OnEnter( object param )
         {
-            base.OnEnter(param);
+            base.OnEnter( param );
             if ( !IsAbilityDataValid( param ) )
             {
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
@@ -118,25 +123,25 @@ namespace Aquila.Fight.FSM
         public override void OnUpdate( float deltaTime )
         {
             base.OnUpdate( deltaTime );
-            TryUseAbility(deltaTime);
+            TryUseAbility( deltaTime );
             FinishAbility();
         }
-        public override void OnLeave( object param)
+        public override void OnLeave( object param )
         {
-            base.OnLeave(param);
+            base.OnLeave( param );
             //#todo施法结束回调
             _timelineMeta = null;
             _abilityMeta = null;
             _castorID = -1;
-            
-            if(_result != null)
-                ReferencePool.Release(_result);
-            
+
+            if ( _result != null )
+                ReferencePool.Release( _result );
+
             _result = null;
         }
         public ActorState_HeroAbility( int state_id ) : base( state_id )
         {
-            
+
         }
 
         /// <summary>
@@ -153,7 +158,7 @@ namespace Aquila.Fight.FSM
         /// 使用状态结果
         /// </summary>
         private AbilityResult_Use _result = null;
-        
+
         /// <summary>
         /// 技能数据
         /// </summary>

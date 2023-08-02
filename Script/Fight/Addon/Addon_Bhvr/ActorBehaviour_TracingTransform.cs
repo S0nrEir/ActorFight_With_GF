@@ -55,7 +55,7 @@ namespace Aquila.Fight
                 _instance.Actor.Notify( ( int ) AddonEventTypeEnum.TRACING_ARRIVE, null );
                 //在这里直接使用技能，走module接口，需要自己的id，对反的id，技能id
                 if ( _onHitabilityID >= 0 )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
                 //打中了以后就处理掉自己
                 GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
             }

@@ -14,12 +14,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 无目标
         /// </summary>
-        NO_TARGET = 1,
+        NO_TARGET,
 
         /// <summary>
         /// 无施法者
         /// </summary>
-        NO_CASTOR = 2,
+        NO_CASTOR,
 
         /// <summary>
         /// 技能消耗不够
@@ -45,6 +45,11 @@ namespace Aquila.Fight
         /// 没有timeline配置参数
         /// </summary>
         NONE_TIMELINE_META,
+
+        /// <summary>
+        /// 是否按位置释放
+        /// </summary>
+        IS_TARGET_AS_POSITION,
     }
 
 

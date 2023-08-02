@@ -26,9 +26,9 @@ namespace Cfg.Enum
         /// </summary>
         Instant_PhyDamage = 3,
         /// <summary>
-        /// 召唤物
+        /// 召唤物_投射物
         /// </summary>
-        Instant_Summon = 4,
+        Instant_Summon_Projectile = 4,
         /// <summary>
         /// 周期性固定数值伤害
         /// </summary>

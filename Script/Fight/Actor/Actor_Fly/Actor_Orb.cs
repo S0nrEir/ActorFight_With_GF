@@ -69,6 +69,7 @@ namespace Aquila.Fight.Actor
         {
             base.AddAddon();
             _behaviourAddon = AddAddon<Addon_Behaviour>();
+            AddAddon<Addon_Ability>();
         }
 
         protected override void InitAddons( Module_ProxyActor.ActorInstance instance )
@@ -84,7 +85,7 @@ namespace Aquila.Fight.Actor
             {
                 var param = ( userData as Actor_Orb_EntityData );
                 _targetActorID = param._targetActorID;
-                Setup( param._roleMetaID );
+                Setup( param.Id );
             }
             else
             {
@@ -92,9 +93,10 @@ namespace Aquila.Fight.Actor
             }
         }
 
-        public override RoleType ActorType => RoleType.Hero;
+        public override RoleType ActorType => RoleType.Orb;
 
         //-------------------- field --------------------
+
         /// <summary>
         /// 行为组件
         /// </summary>
@@ -116,10 +118,5 @@ namespace Aquila.Fight.Actor
         /// 目标actorID
         /// </summary>
         public int _targetActorID = -1;
-
-        /// <summary>
-        /// actor表ID
-        /// </summary>
-        public int _roleMetaID = -1;
     }
 }

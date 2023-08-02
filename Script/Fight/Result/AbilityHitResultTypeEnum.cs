@@ -31,5 +31,10 @@ namespace Aquila.Fight
         /// 造成了治疗
         /// </summary>
         HEALING,
+
+        /// <summary>
+        /// 包含位置
+        /// </summary>
+        CONTAINS_POSITION,
     }
 }

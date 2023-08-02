@@ -4,6 +4,7 @@ using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -124,9 +125,9 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 生效技能
+        /// 生效技能，直接让一个effect命中，而无需使用
         /// </summary>
-        public void AffectAbility( int castorID, int targetID, int abilityID )
+        public void AffectAbility( int castorID, int targetID, int abilityID ,Vector3 targetPosition)
         {
             var result = AbilityResult_Hit.Gen( castorID, targetID );
 
@@ -137,11 +138,26 @@ namespace Aquila.Module
                 return;
             }
 
-            var targetInstance = TryGet( targetID );
-            if ( !targetInstance.has )
+            ActorInstance targetInstance = null;
+            if ( targetID != -1 )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
-                return;
+                var temp = TryGet( targetID );
+                if ( !temp.has )
+                {
+                    Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                    return;
+                }
+                targetInstance = temp.instance;
+            }
+
+            if ( targetPosition != GameEntry.GlobalVar.InvalidPosition )
+            {
+                result._targetPosition = targetPosition;
+                result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION, true );
+            }
+            else
+            {
+                result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION, false );
             }
 
             var addon = castorInstance.instance.GetAddon<Addon_Ability>();
@@ -151,17 +167,17 @@ namespace Aquila.Module
                 return;
             }
 
-            addon.UseAbility( abilityID, targetInstance.instance, result );
-            if ( result._dealedDamage != 0 )
-                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
+            addon.UseAbility( abilityID, targetInstance, result );
+            if ( targetInstance != null && result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.Actor.CachedTransform.position );
 
             GameEntry.Event.Fire( castorInstance, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
 
             TryRefreshActorHPUI( castorInstance.instance );
-            TryRefreshActorHPUI( targetInstance.instance );
+            TryRefreshActorHPUI( targetInstance );
             //DieIfEmptyHP( targetInstance.instance );
-            DieIfEmptyHPAndHide( targetInstance.instance );
+            DieIfEmptyHPAndHide( targetInstance );
         }
 
         /// <summary>
@@ -189,43 +205,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 单对多释放技能
-        /// </summary>
-        public void Ability2MultiTarget( int castorID, int[] targetIDArr, int abilityMetaID )
-        {
-            AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
-            result._abilityID = abilityMetaID;
-            result._succ = false;
-            var castorInstance = Get( castorID );
-            if ( castorInstance == null )
-            {
-                result._succ = false;
-                result._stateDescription = 0;
-                result._castorID = -1;
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
-            }
-            result._castorID = castorID;
-
-            if ( targetIDArr is null || targetIDArr.Length == 0 || !TargetIDValid( targetIDArr ) )
-            {
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
-            }
-
-            result._targetIDArr = targetIDArr;
-            //( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
-            castorInstance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
-        }
-
-        /// <summary>
-        /// 单对单释放技能
+        /// 单对单释放技能，需要先尝试使用，然后让技能击中
         /// </summary>
         public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID )
         {
@@ -234,7 +214,9 @@ namespace Aquila.Module
             result._stateDescription = 0;
             result._castorID = -1;
             if ( Get( castorID ) != null )
+            {
                 result._castorID = castorID;
+            }
             else
             {
                 result._stateDescription = 0;
@@ -247,7 +229,9 @@ namespace Aquila.Module
             }
 
             if ( Get( targetID ) != null )
+            {
                 result._targetIDArr = new int[] { targetID };
+            }
             else
             {
                 result._stateDescription = Tools.SetBitValue( result._stateDescription,
@@ -338,6 +322,17 @@ namespace Aquila.Module
         private void FightEnsureInit()
         {
             Tools.Ability.InitEffectSpecGenerator();
+        }
+    }
+
+    /// <summary>
+    /// 技能数据
+    /// </summary>
+    public class AbilityData : IReference
+    {
+
+        public void Clear()
+        {
         }
     }
 }

@@ -92,22 +92,22 @@ namespace Aquila.Module
         /// </summary>
         private void OnShowOrbActorSucc( Actor_Orb actor,object userData)
         {
-            var orbData = userData as Actor_Orb_EntityData;
-            if ( orbData is null )
-            {
-                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
-                return;
-            }
+            //var orbData = userData as Actor_Orb_EntityData;
+            //if ( orbData is null )
+            //{
+            //    Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
+            //    return;
+            //}
 
-            //查找目标actor
-            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
-            if ( targetTransform == null)
-            {
-                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
-                return;
-            }
+            ////查找目标actor
+            //var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
+            //if ( targetTransform == null)
+            //{
+            //    Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
+            //    return;
+            //}
 
-            actor.SetTargetTransformAndReady( targetTransform );
+            //actor.SetTargetTransformAndReady( targetTransform );
         }
 
         /// <summary>
