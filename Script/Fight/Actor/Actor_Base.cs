@@ -197,7 +197,6 @@ namespace Aquila.Fight.Actor
             HostID = Component_GlobalVar.InvalidGUID;
             ExtensionRecycle();
             SetRoleMetaID( -1 );
-            gameObject.tag = String.Empty;
             _tagContainer = null;
             GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnRecycle();
