@@ -165,8 +165,6 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             _eventAddon.Ready();
-            foreach ( var addon in GetAllAddon() )
-                GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
 
             base.OnShow( userData );
         }
@@ -179,8 +177,8 @@ namespace Aquila.Fight.Actor
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            foreach ( var addon in GetAllAddon() )
-                GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
+            //foreach ( var addon in GetAllAddon() )
+            //    GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
 
             base.OnHide( isShutdown, userData );
         }
@@ -220,6 +218,9 @@ namespace Aquila.Fight.Actor
             _relevanceActorSet = new HashSet<int>();
             _allAddonInitDone = true;
             _tagContainer = new TagContainer( OnTagChange );
+
+            foreach ( var addon in GetAllAddon() )
+                GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
         }
 
         /// <summary>
@@ -247,6 +248,7 @@ namespace Aquila.Fight.Actor
         {
             var addonToAdd = new T();
             addonToAdd.OnAdd();
+            //将actor和addon关联
             GameEntry.Module.GetModule<Module_ProxyActor>().AddAddon( this, addonToAdd );
             return addonToAdd;
         }

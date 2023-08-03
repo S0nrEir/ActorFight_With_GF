@@ -27,7 +27,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 为一个actor实例添加一个addon
+        /// 将actor和addon关联，为一个actor实例添加一个addon
         /// </summary>
         public (bool succ, ActorInstance instance) AddAddon( Actor_Base actor, Addon_Base addon )
         {

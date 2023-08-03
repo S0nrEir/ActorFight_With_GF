@@ -1,5 +1,6 @@
 using Aquila.Module;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
@@ -64,9 +65,10 @@ namespace Aquila.Fight.Addon
         public override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
+
             var iter = _behaviourDic.GetEnumerator();
             while ( iter.MoveNext() )
-                iter.Current.Value.Update( elapseSeconds , realElapseSeconds );
+                iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
         }
 
         public override void OnAdd()

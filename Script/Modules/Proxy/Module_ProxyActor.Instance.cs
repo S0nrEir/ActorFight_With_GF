@@ -22,7 +22,7 @@ namespace Aquila.Module
             /// 给一个actor添加关联actor
             /// </summary>
             [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public bool AddRevelence(int actorID)
+            public bool AddRevelence( int actorID )
             {
                 return _actor.AddRelevance( actorID );
             }
@@ -106,9 +106,13 @@ namespace Aquila.Module
 
             public void Clear()
             {
-                _actor = null;
+                var cnt = _addonList.Count;
+                for ( var i = 0; i < cnt; i++ )
+                    _addonList[i] = null;
+
                 _addonList.Clear();
                 _addonList = null;
+                _actor = null;
             }
         }
     }
