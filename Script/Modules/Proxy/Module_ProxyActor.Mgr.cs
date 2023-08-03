@@ -16,11 +16,11 @@ namespace Aquila.Module
         /// <summary>
         /// 为一个actor添加关联actor
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Transform AddRelevance( int actorID ,int relevanceActorID)
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public Transform AddRelevance( int actorID, int relevanceActorID )
         {
             var instance = Get( actorID );
-            if ( instance is null || !instance.AddRevelence(relevanceActorID))
+            if ( instance is null || !instance.AddRevelence( relevanceActorID ) )
                 return null;
 
             return instance.Actor.CachedTransform;
@@ -29,7 +29,7 @@ namespace Aquila.Module
         /// <summary>
         /// 为一个actor实例添加一个addon
         /// </summary>
-        public (bool succ, ActorInstance instance) AddAddon(Actor_Base actor,Addon_Base addon)
+        public (bool succ, ActorInstance instance) AddAddon( Actor_Base actor, Addon_Base addon )
         {
             if ( actor is null )
             {
@@ -66,6 +66,8 @@ namespace Aquila.Module
             var actorCase = ReferencePool.Acquire<ActorInstance>();
             actorCase.Setup( actor );
             _proxyActorDic.Add( actor.ActorID, actorCase );
+            //todo:整理两个register接口为一个
+            _registered_id_set.Add( actor.ActorID );
             return (true, actorCase);
         }
 
@@ -90,7 +92,7 @@ namespace Aquila.Module
             //actorCase.Setup( actor, addons );
             actorCase.Setup( actor );
             _proxyActorDic.Add( actor.ActorID, actorCase );
-
+            _registered_id_set.Add( actor.ActorID );
             //将addon加入组件系统
             //foreach ( var addon in addons )
             //    AddToAddonSystem( addon );
