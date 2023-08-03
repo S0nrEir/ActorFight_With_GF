@@ -9,7 +9,6 @@ namespace Aquila.Numric
     /// </summary>
     public class Numric_ActorBaseAttr : Numric
     {
-        
         public override float CorrectionValue
         {
             get
@@ -77,7 +76,7 @@ namespace Aquila.Numric
 
         public override void Clear()
         {
-            //#todo-现在走的都是引用池，初始化没有固定函数只能写在这里，要不要抽取出来？
+            //todo:现在走的都是引用池，初始化没有固定函数只能写在这里，要不要抽取出来？
 
             //reset
             _equip_correction.Clear();
@@ -107,11 +106,9 @@ namespace Aquila.Numric
             return changedVal;
         }
 
-        private void EnsureInit( )
+        public override void EnsureInit( )
         {
-            // if ( correction is null )
-            //     correction = new GameFrameworkLinkedList<Numric_Modifier>();
-            
+            base.EnsureInit();
             _equip_correction ??= new GameFrameworkLinkedList<Numric_Modifier>();
             _class_correction ??= new GameFrameworkLinkedList<Numric_Modifier>();
             _buff_correction  ??= new GameFrameworkLinkedList<Numric_Modifier>();
@@ -119,10 +116,6 @@ namespace Aquila.Numric
 
         public Numric_ActorBaseAttr() : base()
         {
-            EnsureInit();
-            // EnsureInit( _equip_correction );
-            // EnsureInit( _class_correction );
-            // EnsureInit( _buff_correction );
         }
 
         //#todo改成LinkedRange

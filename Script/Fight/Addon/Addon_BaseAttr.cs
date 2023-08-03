@@ -216,9 +216,18 @@ namespace Aquila.Fight.Addon
                 var len = _numricArr.Length;
                 for ( var i = 0; i < len; i++ )
                 {
-                    //_numric_arr[i].Clear();
-                    ReferencePool.Release( _numricArr[i] );
-                    _numricArr[i] = null;
+                    if ( i == 2 )
+                        ;
+                    try
+                    {
+                        //_numric_arr[i].Clear();
+                        ReferencePool.Release( _numricArr[i] );
+                        _numricArr[i] = null;
+                    }
+                    catch
+                    {
+                        ;
+                    }
                 }
                 _numricArr = null;
             }
@@ -233,19 +242,24 @@ namespace Aquila.Fight.Addon
         public override void OnAdd()
         {
             if ( _numricArr is null )
-                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max ];
+                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max];
 
             var len = _numricArr.Length;
             for ( var i = 0; i < len; i++ )
             {
                 if ( _numricArr[i] is null )
+                {
                     _numricArr[i] = ReferencePool.Acquire<Numric_ActorBaseAttr>();
+                    _numricArr[i].EnsureInit();
+                }
                 else
                     Log.Warning( "Numric arr not not null on add!" );
             }
 
             _currHP = ReferencePool.Acquire<Numric.Numric>();
+            _currHP.EnsureInit();
             _currMP = ReferencePool.Acquire<Numric.Numric>();
+            _currMP.EnsureInit();
         }
 
         //----------------------------fields----------------------------
