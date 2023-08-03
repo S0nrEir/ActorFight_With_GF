@@ -44,7 +44,7 @@ namespace Aquila.Module
             _readyToAdd = new Queue<Addon_Base>();
             _readyToRemove = new Queue<Addon_Base>();
             _existAddon = new HashSet<int>();
-            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max - 1];
+            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max];
             var len = _containerList.Length;
             for ( var i = 0; i < len; i++ )
                 _containerList[i] = ReferencePool.Acquire<AddonContainer>();
