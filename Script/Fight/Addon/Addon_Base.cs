@@ -9,6 +9,7 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public abstract partial class Addon_Base
     {
+        //toRemove
         /// <summary>
         /// 让该addon持有该actor的所有其他addon
         /// </summary>

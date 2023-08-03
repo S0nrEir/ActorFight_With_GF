@@ -60,14 +60,11 @@ namespace Aquila.Fight.Addon
             Refresh();
             _offset = GameEntry.LuBan.Tables.SceneConfig.HPBarPosOffset;
             _cachedPos = _actorTransform.position;
-            //var eventAddon = _actorInstance.GetAddon<Addon_Event>();
-            //eventAddon.Register( ( int ) AddonEventTypeEnum.TEST, ( int ) AddonType, ( addonType, param ) => Log.Debug( param + "---------------Addon_HP" ) );
         }
 
         public override void Dispose()
         {
-            // GameEntry.ObjectPool.GetObjectPool<Object_HPBar>(nameof(Object_HPBar)).Unspawn(_hp_obj);
-            GameEntry.InfoBoard.UnSpawn<Object_HPBar>( typeof( Object_HPBar ).Name, _hpObj );
+            GameEntry.InfoBoard.UnSpawn<Object_HPBar>( typeof( Object_HPBar ).Name, _hpObj.Target );
             _hpObj = null;
             _actorTransform = null;
             base.Dispose();
