@@ -46,7 +46,11 @@ namespace Aquila.Fight
                     _callerID = castor.Actor.ActorID
                 };
             }
-
+            if ( roleType != Cfg.Enum.RoleType.Orb || roleType != Cfg.Enum.RoleType.Bullet )
+            {
+                Log.Warning( $"EffectSpec_Instance_Summon_Projectile.Apply()--->roleType != Cfg.Enum.RoleType.Orb || roleType != Cfg.Enum.RoleType.Bullet,roleType:{roleType}" );
+                return;
+            }
             await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync
                 (
                     Tools.Actor.RoleTypeEnum2SystemType( roleType ),

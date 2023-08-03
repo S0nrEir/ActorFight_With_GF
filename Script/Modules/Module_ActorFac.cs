@@ -27,11 +27,11 @@ namespace Aquila.Module
                 object userData
             )
         {
-            if ( actorType == typeof( Actor_Base ).GetType() )
-            {
-                Log.Warning( $"<color=yellow>not correct actor type,actor type:{typeof( Actor_Base ).Name}</color>" );
-                return null;
-            }
+            //if ( actorType == typeof( Actor_Base ).GetType() )
+            //{
+            //    Log.Warning( $"<color=yellow>not correct actor type,actor type:{typeof( Actor_Base ).Name}</color>" );
+            //    return null;
+            //}
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
                     GameEntry.Entity,
