@@ -127,7 +127,7 @@ namespace Aquila.Module
         /// <summary>
         /// 生效技能，直接让一个effect命中，而无需使用
         /// </summary>
-        public void AffectAbility( int castorID, int targetID, int abilityID ,Vector3 targetPosition)
+        public void AffectAbility( int castorID, int targetID, int abilityID, Vector3 targetPosition )
         {
             var result = AbilityResult_Hit.Gen( castorID, targetID );
 
@@ -207,7 +207,7 @@ namespace Aquila.Module
         /// <summary>
         /// 单对单释放技能，需要先尝试使用，然后让技能击中
         /// </summary>
-        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID ,Vector3 position )
+        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID, Vector3 position )
         {
             AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
             result._succ = false;
@@ -228,9 +228,11 @@ namespace Aquila.Module
                 return;
             }
 
+            result._targetPosition = position;
             if ( Get( targetID ) != null )
             {
-                result._targetIDArr = new int[] { targetID };
+                result._targetIDArr = new int[] { targetID }; result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, false );
             }
             else
             {
@@ -238,7 +240,6 @@ namespace Aquila.Module
                 {
                     result._stateDescription = Tools.SetBitValue( result._stateDescription,
                    ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, true );
-                    result._targetPosition = position;
                 }
                 else
                 {
@@ -271,18 +272,20 @@ namespace Aquila.Module
         #endregion
 
         /// <summary>
-        /// 检查是否没血，是就进入死亡状态
+        /// 检查是否没血，是就进入死亡状态并且返回true，否则返回false
         /// </summary>
-        private void DieIfEmptyHP( ActorInstance instance )
+        private bool DieIfEmptyHP( ActorInstance instance )
         {
-            instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
-            GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
-
             var attrAddon = instance.GetAddon<Addon_BaseAttrNumric>();
-            if ( attrAddon != null && attrAddon.GetCurrHPCorrection() > 0 )
-                attrAddon.SetCurrHP( 0 );
+            if ( attrAddon != null && attrAddon.GetCurrHPCorrection() <= 0 )
+            {
+                instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
+                GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
+                return true;
+            }
 
             instance.GetAddon<Addon_HP>()?.Refresh();
+            return false;
         }
 
         /// <summary>
@@ -290,7 +293,9 @@ namespace Aquila.Module
         /// </summary>
         private void DieIfEmptyHPAndHide( ActorInstance instance )
         {
-            DieIfEmptyHP( instance );
+            if ( !DieIfEmptyHP( instance ) )
+                return;
+
             var actor = instance.Actor;
             var relevanceActorsID = actor.RelevanceActors;
             foreach ( var actorID in relevanceActorsID )
