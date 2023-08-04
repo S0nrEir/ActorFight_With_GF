@@ -216,18 +216,9 @@ namespace Aquila.Fight.Addon
                 var len = _numricArr.Length;
                 for ( var i = 0; i < len; i++ )
                 {
-                    if ( i == 2 )
-                        ;
-                    try
-                    {
-                        //_numric_arr[i].Clear();
-                        ReferencePool.Release( _numricArr[i] );
-                        _numricArr[i] = null;
-                    }
-                    catch
-                    {
-                        ;
-                    }
+                    //_numric_arr[i].Clear();
+                    ReferencePool.Release( _numricArr[i] );
+                    _numricArr[i] = null;
                 }
                 _numricArr = null;
             }
