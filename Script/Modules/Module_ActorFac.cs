@@ -15,6 +15,7 @@ namespace Aquila.Module
     public class Module_Actor_Fac : GameFrameworkModuleBase
     {
         //--------------------public--------------------
+        //todo:重构showActorAsync接口
         /// <summary>
         /// 异步显示一个actor
         /// </summary>
@@ -38,17 +39,25 @@ namespace Aquila.Module
                     Config.GameConfig.Entity.PRIORITY_ACTOR,
                     userData
                 );
-            switch ( result.Logic )
+
+            var actor = result.Logic as Actor_Base;
+            if ( actor is null )
+            {
+                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->actor is null </color>" );
+                return null;
+            }
+
+            switch ( actor.ActorType )
             {
                 //英雄类actor
-                case Actor_Hero:
+                case Cfg.Enum.RoleType.Hero:
                     //#todo_根据actor类型决定传入函数的tag值，不要写死
-                    OnShowHeroActorSucc( result.Logic as Actor_Hero, roleMetaID, GameConfig.Tags.ACTOR );
+                    OnShowHeroActorSucc( actor as Actor_Hero, roleMetaID, GameConfig.Tags.ACTOR );
                     break;
 
                 //法球类actor
-                case Actor_Orb:
-                    OnShowOrbActorSucc( result.Logic as Actor_Orb, userData );
+                case Cfg.Enum.RoleType.Orb:
+                    OnShowOrbActorSucc( actor as Actor_Orb, userData );
                     break;
             }
             return result;

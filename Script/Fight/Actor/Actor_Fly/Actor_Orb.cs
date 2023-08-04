@@ -84,7 +84,7 @@ namespace Aquila.Fight.Actor
             {
                 var param = ( userData as Actor_Orb_EntityData );
                 _targetActorID = param._targetActorID;
-                Setup( param.Id );
+                Setup( param._roleMetaID );
             }
             else
             {
@@ -112,6 +112,11 @@ namespace Aquila.Fight.Actor
         public Actor_Orb_EntityData( int entity_id ) : base( entity_id, typeof( Actor_Orb ).GetHashCode() )
         {
         }
+
+        /// <summary>
+        /// 角色数据元表
+        /// </summary>
+        public int _roleMetaID = -1;
 
         /// <summary>
         /// 召唤者ID

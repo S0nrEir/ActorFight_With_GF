@@ -31,19 +31,23 @@ namespace Aquila.Fight
             var roleType = roleMeta.RoleType;
             var roleMetaID = Meta.ExtensionParam.IntParam_1;
             EntityData entityData;
-
+            var entityID = ActorIDPool.Gen();
             //按照位置生成召唤物
             if ( Tools.GetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION ) )
             {
-                entityData = new Actor_Bullet_EntityData( roleMetaID );
+                entityData = new Actor_Bullet_EntityData( entityID )
+                {
+                    
+                };
             }
             //按照目标生成召唤物
             else
             {
-                entityData = new Actor_Orb_EntityData( roleMetaID )
+                entityData = new Actor_Orb_EntityData( entityID )
                 {
                     _targetActorID = result._targetActorID,
-                    _callerID = castor.Actor.ActorID
+                    _callerID = castor.Actor.ActorID,
+                    _roleMetaID = roleMetaID,
                 };
             }
             if ( roleType != Cfg.Enum.RoleType.Orb && roleType != Cfg.Enum.RoleType.Bullet )
@@ -55,7 +59,7 @@ namespace Aquila.Fight
                 (
                     Tools.Actor.RoleTypeEnum2SystemType( roleType ),
                     roleMetaID,
-                    ActorIDPool.Gen(),
+                    entityID,
                     Tools.Actor.DefaultOrbAssetPath(),
                     entityData
                 );
