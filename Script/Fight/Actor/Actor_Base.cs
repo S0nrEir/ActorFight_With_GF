@@ -216,8 +216,8 @@ namespace Aquila.Fight.Actor
             InitAddons( res.instance );
 
             _relevanceActorSet = new HashSet<int>();
-            _allAddonInitDone = true;
-            _tagContainer = new TagContainer( OnTagChange );
+            _allAddonInitDone  = true;
+            _tagContainer      = new TagContainer( OnTagChange );
 
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
