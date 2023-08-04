@@ -21,10 +21,10 @@ namespace Aquila.Toolkit
                 switch ( type )
                 {
                     case RoleType.Hero:
-                        return typeof( Actor_Hero ).GetType();
+                        return typeof( Actor_Hero );
 
                     case RoleType.Orb:
-                        return typeof( Actor_Orb ).GetType();
+                        return typeof( Actor_Orb );
                 }
 
                 return typeof( Actor_Base ).GetType();
