@@ -77,9 +77,9 @@ namespace Aquila.Fight.Actor
             _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM );
         }
 
-        protected override void OnInit( object userData )
+        protected override void OnInitActor( object userData )
         {
-            base.OnInit( userData );
+            base.OnInitActor( userData );
             if ( userData is Actor_Orb_EntityData )
             {
                 var param = ( userData as Actor_Orb_EntityData );
