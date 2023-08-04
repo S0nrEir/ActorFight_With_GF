@@ -46,10 +46,10 @@ namespace Aquila.Fight
         {
             base.Update( elapsed, realElapsed );
 
-            if ( _arriveFlag )
+            if ( _arriveFlag || !_readyFlag)
                 return;
 
-            if ( _readyFlag && Distance() <= _radius )
+            if ( Distance() <= _radius )
             {
                 _arriveFlag = true;
                 _instance.Actor.Notify( ( int ) AddonEventTypeEnum.TRACING_ARRIVE, null );
@@ -58,6 +58,7 @@ namespace Aquila.Fight
                     GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
                 //打中了以后就处理掉自己
                 GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
+                return;
             }
 
             //move
