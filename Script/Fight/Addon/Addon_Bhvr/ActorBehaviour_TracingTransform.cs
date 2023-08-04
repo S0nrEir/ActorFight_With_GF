@@ -126,7 +126,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 默认速度
         /// </summary>
-        public float _defaultSpeed = 0.05f;
+        public float _defaultSpeed = 1f;
     }
 
 
