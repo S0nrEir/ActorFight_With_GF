@@ -35,7 +35,7 @@ namespace Aquila.Module
         public Vector3 GetPosition( int actorID )
         {
             var instance = Get( actorID );
-            return instance is null ? instance.Actor.CachedTransform.position : GameEntry.GlobalVar.InvalidPosition;
+            return instance is null ? GameEntry.GlobalVar.InvalidPosition : instance.Actor.CachedTransform.position;
         }
 
         /// <summary>
