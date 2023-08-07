@@ -11,7 +11,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取一个behaviour，拿不到返回null
         /// </summary>
-        public ActorBehaviour_Base GetBehaviour(ActorBehaviourTypeEnum type)
+        public ActorBehaviour_Base GetBehaviour( ActorBehaviourTypeEnum type )
         {
             if ( _behaviourDic.TryGetValue( ( int ) type, out var bhvr ) )
                 return bhvr;
@@ -40,7 +40,9 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool RemoveBehaviour( ActorBehaviourTypeEnum type )
         {
-            return _behaviourDic.Remove( ( int ) type );
+            Debug.Log( "remove---------------------------" );
+            lock ( _behaviourDic )
+                return _behaviourDic.Remove( ( int ) type );
         }
 
         /// <summary>
@@ -56,7 +58,9 @@ namespace Aquila.Fight.Addon
             }
 
             var bhvr = Gen( type, _actorInstance );
-            _behaviourDic.Add( intType, bhvr);
+            lock(_behaviourDic )
+                _behaviourDic.Add( intType, bhvr );
+
             return bhvr;
         }
 
@@ -65,10 +69,25 @@ namespace Aquila.Fight.Addon
         public override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             base.OnUpdate( elapseSeconds, realElapseSeconds );
-
             var iter = _behaviourDic.GetEnumerator();
             while ( iter.MoveNext() )
                 iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
+            //try
+            //{
+            //    var iter = _behaviourDic.GetEnumerator();
+            //    while ( iter.MoveNext() )
+            //        iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
+            //}
+            //catch( System.Exception err )
+            //{
+            //    Debug.LogError( err.Message );
+            //    Debug.Break();
+            //    Debug.DebugBreak();
+            //}
+        }
+
+        public override void Cancel()
+        {
         }
 
         public override void OnAdd()

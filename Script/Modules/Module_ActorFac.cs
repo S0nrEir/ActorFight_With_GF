@@ -129,7 +129,6 @@ namespace Aquila.Module
         private void OnShowHeroActorSucc( Actor_Base actor, int roleMetaID, string tag )
         {
             //actor.Setup( role_meta_id, tag );
-
             actor.SetCoordAndPosition( 0, 0 );
         }
 
