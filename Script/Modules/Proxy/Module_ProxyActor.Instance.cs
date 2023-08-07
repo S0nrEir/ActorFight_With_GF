@@ -3,6 +3,7 @@ using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -16,6 +17,16 @@ namespace Aquila.Module
         public class ActorInstance : IReference
         {
             //-----------------pub-----------------
+
+            /// <summary>
+            /// 给一个actor添加关联actor
+            /// </summary>
+            [MethodImpl( MethodImplOptions.AggressiveInlining )]
+            public bool AddRevelence( int actorID )
+            {
+                return _actor.AddRelevance( actorID );
+            }
+
             /// <summary>
             /// 为actor实例添加一个addon
             /// </summary>
@@ -95,9 +106,13 @@ namespace Aquila.Module
 
             public void Clear()
             {
-                _actor = null;
+                var cnt = _addonList.Count;
+                for ( var i = 0; i < cnt; i++ )
+                    _addonList[i] = null;
+
                 _addonList.Clear();
                 _addonList = null;
+                _actor = null;
             }
         }
     }

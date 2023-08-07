@@ -52,6 +52,8 @@ namespace Aquila.Fight.Addon
             }
 
             list.Add( (addonType, call) );
+            //根据addon排个序，避免addon的执行顺序先后出错的问题
+            //list.Sort();
             return this;
         }
 

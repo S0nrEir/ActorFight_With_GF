@@ -1,6 +1,8 @@
 using Aquila.Extension;
 using Aquila.Fight.Addon;
 using Cfg.Enum;
+using System;
+using UnityEngine;
 
 namespace Aquila.Module
 {
@@ -10,6 +12,31 @@ namespace Aquila.Module
     public partial class Module_ProxyActor : GameFrameworkModuleBase, IUpdate
     {
         //-----------------------pub-----------------------
+
+        /// <summary>
+        /// 返回一个actor的武器挂点的transforom，拿不到返回null
+        /// </summary>
+        public Transform GetWeaponHangPoint( int actorID )
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 返回一个武器挂点的世界坐标
+        /// </summary>
+        public Vector3 GetWeaponHangPoint()
+        {
+            return GameEntry.GlobalVar.InvalidPosition;
+        }
+
+        /// <summary>
+        /// 获取一个actor的位置，拿不到返回invlaidPosition
+        /// </summary>
+        public Vector3 GetPosition( int actorID )
+        {
+            var instance = Get( actorID );
+            return instance is null ? GameEntry.GlobalVar.InvalidPosition : instance.Actor.CachedTransform.position;
+        }
 
         /// <summary>
         /// 获取一个技能的冷却

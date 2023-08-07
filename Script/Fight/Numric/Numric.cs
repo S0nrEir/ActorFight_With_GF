@@ -71,6 +71,13 @@ namespace Aquila.Numric
         {
             _changeFlag = true;
             _value = base_val;
+        }
+
+        /// <summary>
+        /// 确保初始化
+        /// </summary>
+        public virtual void EnsureInit()
+        {
             if ( _correction is null )
                 _correction = new GameFrameworkLinkedList<Numric_Modifier>();
         }

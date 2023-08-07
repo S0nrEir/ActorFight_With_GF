@@ -1,5 +1,6 @@
 using Aquila.Fight.FSM;
 using System.Collections.Generic;
+using UnityEngine;
 
 //接口类型，实现相应行为的actor实现此接口,用于规范Actor的行为
 namespace Aquila.Fight
@@ -59,5 +60,10 @@ namespace Aquila.Fight
         /// 切换状态
         /// </summary>
         void SwitchTo ( ActorStateTypeEnum stateType, object enterParam, object existParam );
+    }
+
+    public interface IProjectileBehaviour
+    {
+        void GetReady( Transform transform );
     }
 }

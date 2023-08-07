@@ -34,7 +34,7 @@ namespace Aquila.Editor
 
             using ( ZipOutputStream stream = new ZipOutputStream( File.Create( _create_path ) ) )
             {
-                var size = 0l;
+                var size = 0L;
                 stream.SetLevel( _default_compress_level );
                 //��ѹ����ǰĿ¼�������ļ���Ȼ��ѹ���ļ���
 
@@ -77,7 +77,7 @@ namespace Aquila.Editor
         /// </summary>
         private static long ZipDict( string dict, ZipOutputStream stream )
         {
-            var size = 0l;
+            var size = 0L;
             //����ÿһ������Ŀ¼�ͼ�����������ǣ�ֱ��ѹ��
             var files_in_dict = Directory.GetFiles( dict );
             foreach ( var file in files_in_dict )

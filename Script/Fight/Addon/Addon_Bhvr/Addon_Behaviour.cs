@@ -1,5 +1,6 @@
 using Aquila.Module;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
@@ -8,7 +9,19 @@ namespace Aquila.Fight.Addon
     public class Addon_Behaviour : Addon_Base
     {
         /// <summary>
-        /// 执行行为
+        /// 获取一个behaviour，拿不到返回null
+        /// </summary>
+        public ActorBehaviour_Base GetBehaviour( ActorBehaviourTypeEnum type )
+        {
+            if ( _behaviourDic.TryGetValue( ( int ) type, out var bhvr ) )
+                return bhvr;
+
+            Log.Warning( $"Addon_Behaviour.GetBehaviour()--->_behaviourDic.TryGetValue( ( int ) type, out var bhvr ) , type{type.ToString()}" );
+            return null;
+        }
+
+        /// <summary>
+        /// 主动执行行为
         /// </summary>
         public void Exec( ActorBehaviourTypeEnum type, object param )
         {
@@ -23,21 +36,59 @@ namespace Aquila.Fight.Addon
         }
 
         /// <summary>
+        /// 移除行为
+        /// </summary>
+        public bool RemoveBehaviour( ActorBehaviourTypeEnum type )
+        {
+            Debug.Log( "remove---------------------------" );
+            lock ( _behaviourDic )
+                return _behaviourDic.Remove( ( int ) type );
+        }
+
+        /// <summary>
         /// 添加行为
         /// </summary
-        public void AddBehaviour( ActorBehaviourTypeEnum type )
+        public ActorBehaviour_Base AddBehaviour( ActorBehaviourTypeEnum type )
         {
             var intType = ( int ) type;
             if ( _behaviourDic.ContainsKey( intType ) )
             {
                 Log.Warning( $"AddonBehaviour:same behaviour,type:{type}" );
-                return;
+                return null;
             }
 
-            _behaviourDic.Add( intType, Gen( type, _actorInstance ) );
+            var bhvr = Gen( type, _actorInstance );
+            lock(_behaviourDic )
+                _behaviourDic.Add( intType, bhvr );
+
+            return bhvr;
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.BEHAVIOUR;
+
+        public override void OnUpdate( float elapseSeconds, float realElapseSeconds )
+        {
+            base.OnUpdate( elapseSeconds, realElapseSeconds );
+            var iter = _behaviourDic.GetEnumerator();
+            while ( iter.MoveNext() )
+                iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
+            //try
+            //{
+            //    var iter = _behaviourDic.GetEnumerator();
+            //    while ( iter.MoveNext() )
+            //        iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
+            //}
+            //catch( System.Exception err )
+            //{
+            //    Debug.LogError( err.Message );
+            //    Debug.Break();
+            //    Debug.DebugBreak();
+            //}
+        }
+
+        public override void Cancel()
+        {
+        }
 
         public override void OnAdd()
         {
@@ -83,6 +134,12 @@ namespace Aquila.Fight.Addon
 
                 case ActorBehaviourTypeEnum.DIE:
                     return new ActorBehaviour_Die( ins );
+
+                case ActorBehaviourTypeEnum.TRACING_TRANSFORM:
+                    return new ActorBehaviour_TracingTransform( ins );
+
+                case ActorBehaviourTypeEnum.TARGETING_POSITION:
+                    return new ActorBehaviour_TargetingPosition( ins );
             }
             return null;
         }
