@@ -20,15 +20,6 @@ namespace Aquila.Fight
                 return;
             }
 
-            //todo:生成actor的接口改一下，现在拿到元数据了还要在里面根据id再拿一次，太蠢了
-            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get( Meta.ExtensionParam.IntParam_1 );
-            if ( roleMeta is null )
-            {
-                Log.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->role meta is null, role meta id:{Meta.ExtensionParam.IntParam_1}</color>" );
-                return;
-            }
-
-            var roleType = roleMeta.RoleType;
             var roleMetaID = Meta.ExtensionParam.IntParam_1;
             EntityData entityData;
             var entityID = ActorIDPool.Gen();
@@ -51,11 +42,11 @@ namespace Aquila.Fight
                 };
             }
 
-            if ( roleType != Cfg.Enum.RoleType.Orb && roleType != Cfg.Enum.RoleType.Bullet )
-            {
-                Log.Warning( $"EffectSpec_Instance_Summon_Projectile.Apply()--->roleType != Cfg.Enum.RoleType.Orb || roleType != Cfg.Enum.RoleType.Bullet,roleType:{roleType}" );
-                return;
-            }
+            //if ( roleType != Cfg.Enum.RoleType.Orb && roleType != Cfg.Enum.RoleType.Bullet )
+            //{
+            //    Log.Warning( $"EffectSpec_Instance_Summon_Projectile.Apply()--->roleType != Cfg.Enum.RoleType.Orb || roleType != Cfg.Enum.RoleType.Bullet,roleType:{roleType}" );
+            //    return;
+            //}
             await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync( entityID, roleMetaID, entityData, entityID.ToString() );
         }
 
