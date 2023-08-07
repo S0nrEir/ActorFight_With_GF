@@ -177,6 +177,8 @@ namespace Aquila.Module
             TryRefreshActorHPUI( castorInstance.instance );
             TryRefreshActorHPUI( targetInstance );
             //DieIfEmptyHP( targetInstance.instance );
+            //todo:临时办法，在这里尝试移除目标actor的关联actor，即自己
+            targetInstance.Actor.RemoveRelevane( castorID );
             DieIfEmptyHPAndHide( targetInstance );
         }
 

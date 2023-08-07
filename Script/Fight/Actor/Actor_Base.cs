@@ -28,6 +28,14 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
+        /// 移除和此actor关联的actor
+        /// </summary>
+        public bool RemoveRelevane( int actorID )
+        {
+            return _relevanceActorSet.Remove( actorID );
+        }
+
+        /// <summary>
         /// 关联的actorID列表
         /// </summary>
         public HashSet<int> RelevanceActors
@@ -163,47 +171,7 @@ namespace Aquila.Fight.Actor
 
         //--------------------override--------------------
         protected override void OnShow( object userData )
-        {
-            _eventAddon.Ready();
-
-            base.OnShow( userData );
-        }
-
-        protected override void OnHide( bool isShutdown, object userData )
-        {
-            _tagContainer.Reset();
-            _relevanceActorSet.Clear();
-            SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
-
-            //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
-            //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            //foreach ( var addon in GetAllAddon() )
-            //    GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
-
-            base.OnHide( isShutdown, userData );
-        }
-
-        /// <summary>
-        /// dispose自己所有的addon
-        /// </summary>
-        protected override void OnRecycle()
-        {
-            //addon
-            _eventAddon.UnRegisterAll();
-            _eventAddon = null;
-            _relevanceActorSet = null;
-            HostID = Component_GlobalVar.InvalidGUID;
-            ExtensionRecycle();
-            SetRoleMetaID( -1 );
-            _tagContainer = null;
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
-            base.OnRecycle();
-        }
-
-        protected override void OnInit( object userData )
-        {
-            base.OnInit( userData );
-            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
+        {var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
             if ( !res.succ )
             {
                 Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
@@ -221,6 +189,55 @@ namespace Aquila.Fight.Actor
 
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
+
+            _eventAddon.Ready();
+
+            base.OnShow( userData );
+        }
+
+        protected override void OnHide( bool isShutdown, object userData )
+        {
+            _tagContainer.Reset();
+            _relevanceActorSet.Clear();
+            SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
+
+            _eventAddon.UnRegisterAll();
+            _eventAddon = null;
+            _relevanceActorSet = null;
+            HostID = Component_GlobalVar.InvalidGUID;
+            ExtensionRecycle();
+            SetRoleMetaID( -1 );
+            _tagContainer = null;
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+
+            //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
+            //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
+            //foreach ( var addon in GetAllAddon() )
+            //    GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
+
+            base.OnHide( isShutdown, userData );
+        }
+
+        /// <summary>
+        /// dispose自己所有的addon
+        /// </summary>
+        protected override void OnRecycle()
+        {
+            //addon
+            //_eventAddon.UnRegisterAll();
+            //_eventAddon = null;
+            //_relevanceActorSet = null;
+            //HostID = Component_GlobalVar.InvalidGUID;
+            //ExtensionRecycle();
+            //SetRoleMetaID( -1 );
+            //_tagContainer = null;
+            //GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            base.OnRecycle();
+        }
+
+        protected override void OnInit( object userData )
+        {
+            base.OnInit( userData );
         }
 
         /// <summary>
