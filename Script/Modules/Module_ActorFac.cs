@@ -77,7 +77,7 @@ namespace Aquila.Module
         /// <summary>
         /// hero类型actor生成
         /// </summary>
-        private void OnShowHeroSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta roleMeta)
+        private void OnShowHeroSucc( int entityID, int roleMetaID, object userData, object actor, Table_RoleMeta roleMeta )
         {
             var temp = actor as Actor_Base;
             temp.SetCoordAndPosition( 0, 0 );
@@ -86,7 +86,7 @@ namespace Aquila.Module
         /// <summary>
         /// orb类actor生成
         /// </summary>
-        private void OnShowOrbSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta meta)
+        private void OnShowOrbSucc( int entityID, int roleMetaID, object userData, object actor, Table_RoleMeta meta )
         {
             var temp = actor as Actor_Orb;
             temp.SetWorldPosition( GameEntry.GlobalVar.InvalidPosition );
@@ -109,8 +109,8 @@ namespace Aquila.Module
             //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
             var position = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition( orbData._callerID );
             //处理一下转向问题
-            temp.CachedTransform.LookAt( targetTransform.position );
             temp.SetWorldPosition( position );
+            temp.transform.LookAt( targetTransform, UnityEngine.Vector3.up );
             temp.SetTargetTransformAndReady( targetTransform );
             Tools.SetActive( temp.gameObject, true );
         }
