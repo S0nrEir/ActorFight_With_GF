@@ -50,19 +50,13 @@ namespace Aquila.Fight
                     _roleMetaID = roleMetaID,
                 };
             }
+
             if ( roleType != Cfg.Enum.RoleType.Orb && roleType != Cfg.Enum.RoleType.Bullet )
             {
                 Log.Warning( $"EffectSpec_Instance_Summon_Projectile.Apply()--->roleType != Cfg.Enum.RoleType.Orb || roleType != Cfg.Enum.RoleType.Bullet,roleType:{roleType}" );
                 return;
             }
-            await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync
-                (
-                    Tools.Actor.RoleTypeEnum2SystemType( roleType ),
-                    roleMetaID,
-                    entityID,
-                    Tools.Actor.DefaultOrbAssetPath(),
-                    entityData
-                );
+            await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync( entityID, roleMetaID, entityData, entityID.ToString() );
         }
 
     }

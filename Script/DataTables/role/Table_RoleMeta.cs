@@ -32,6 +32,7 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         Class = _buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AbilityBaseID = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AbilityBaseID[i] = _e;}}
         RoleType = (Enum.RoleType)_buf.ReadInt();
+        AssetPath = _buf.ReadString();
         PostInit();
     }
 
@@ -97,6 +98,10 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
     /// </summary>
     public int[] AbilityBaseID { get; private set; }
     public Enum.RoleType RoleType { get; private set; }
+    /// <summary>
+    /// 资产路径
+    /// </summary>
+    public string AssetPath { get; private set; }
 
     public const int __ID__ = -525201020;
     public override int GetTypeId() => __ID__;
@@ -128,6 +133,7 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         + "Class:" + Class + ","
         + "AbilityBaseID:" + Bright.Common.StringUtil.CollectionToString(AbilityBaseID) + ","
         + "RoleType:" + RoleType + ","
+        + "AssetPath:" + AssetPath + ","
         + "}";
     }
     

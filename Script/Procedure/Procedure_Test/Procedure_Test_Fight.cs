@@ -58,60 +58,24 @@ namespace Aquila.Procedure
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             //actor1
             _actorID1 = ActorIDPool.Gen();
-            var entity_1 = await actor_fac.ShowActorAsync<Actor_Hero>
-                (
-                    1,
-                    _actorID1,
-                    @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
-                    grid_x: 0,
-                    grid_z: 0,
-                    new HeroActorEntityData( _actorID1 ) { _roleMetaID = 1 }
-                );
+            var entity_1 = await actor_fac.ShowActorAsync( _actorID1, 1, new HeroActorEntityData( _actorID1 ) { _roleMetaID = 1 }, _actorID1.ToString() );
 
             //actor2
             _actorID2 = ActorIDPool.Gen();
-            var entity_2 = await actor_fac.ShowActorAsync<Actor_Hero>
-                (
-                    2,
-                    _actorID2,
-                    @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
-                    grid_x: 1,
-                    grid_z: 1,
-                    new HeroActorEntityData( _actorID2 ) { _roleMetaID = 2 }
-                );
+            var entity_2 = await actor_fac.ShowActorAsync( _actorID2, 2, new HeroActorEntityData( _actorID2 ) { _roleMetaID = 2 }, _actorID2.ToString() );
 
             //actor3
             _actorID3 = ActorIDPool.Gen();
-            var entity_3 = await actor_fac.ShowActorAsync<Actor_Hero>
-            (
-                2,
-                _actorID3,
-                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
-                grid_x: 1,
-                grid_z: 1,
-                new HeroActorEntityData( _actorID3 ) { _roleMetaID = 2 }
-            );
+            var entity_3 = await actor_fac.ShowActorAsync( _actorID3, 2, new HeroActorEntityData( _actorID3 ) { _roleMetaID = 2 }, _actorID3.ToString() );
 
             //actor4
             _actorID4 = ActorIDPool.Gen();
-            var entity_4 = await actor_fac.ShowActorAsync<Actor_Hero>
-            (
-                2,
-                _actorID4,
-                @"Assets/Res/Prefab/Character/TestCharacter_002.prefab",
-                grid_x: 1,
-                grid_z: 1,
-                new HeroActorEntityData( _actorID4 ) { _roleMetaID = 2 }
-            );
-
-            // if ( !( entity_1.Logic is Actor_Hero ) || !( entity_2.Logic is Actor_Hero ) )
-            //     return;
+            var entity_4 = await actor_fac.ShowActorAsync( _actorID4, 2, new HeroActorEntityData( _actorID4 ) { _roleMetaID = 2 }, _actorID4.ToString() );
 
             SetActorTransform( entity_1.Logic as Actor_Hero, new Vector3( 0, 0.8f, -3.29f ), Vector3.zero );
             SetActorTransform( entity_2.Logic as Actor_Hero, new Vector3( -2.87f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
             SetActorTransform( entity_3.Logic as Actor_Hero, new Vector3( -0.34f, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
             SetActorTransform( entity_4.Logic as Actor_Hero, new Vector3( 2, 0.5f, 1.6f ), new Vector3( 0, 180f, 0 ) );
-
 
             _loadFlagCurrState = Tools.OrBitValue( _loadFlagCurrState, _loadFlagActor1 );
             _loadFlagCurrState = Tools.OrBitValue( _loadFlagCurrState, _loadFlagActor2 );
