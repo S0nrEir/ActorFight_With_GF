@@ -26,6 +26,7 @@ namespace Aquila.Fight.Addon
         public virtual void Init( Module_ProxyActor.ActorInstance instance)
         {
             _actorInstance = instance;
+            Actor = instance.Actor;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -81,7 +82,13 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public virtual void Dispose ()
         {
+            Actor = null;
             _actorInstance = null;
+        }
+
+        public virtual void Cancel()
+        {
+            
         }
     }
 
