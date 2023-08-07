@@ -122,7 +122,9 @@ namespace Aquila.Module
             foreach ( var addon in addons )
             {
                 RemoveFromAddonSystem( addon );
-                addon.Dispose();
+                //attention：这里dispose被移到了addonSystem里，在移除的时候调用一次Dispose
+                //以addon_behaviour举例，这样做的原因是，在当前帧轮询到行为组件拿到它的组件迭代器，开始遍历操作期间，调用了下面的Dispose，导致清掉了行为组件的集合，导致报出iteration may changed error.
+                //addon.Dispose();
             }
 
             //actorCase.Clear();

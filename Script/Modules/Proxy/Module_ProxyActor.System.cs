@@ -66,7 +66,7 @@ namespace Aquila.Module
             Addon_Base curr = null;
             while ( _readyToAdd.TryDequeue( out curr ) )
             {
-                _containerList[(int)curr.AddonType].Add( curr );
+                _containerList[( int ) curr.AddonType].Add( curr );
                 _existAddon.Add( curr.GetHashCode() );
             }
         }
@@ -79,7 +79,7 @@ namespace Aquila.Module
             Addon_Base curr = null;
             while ( _readyToRemove.TryDequeue( out curr ) )
             {
-                _containerList[(int)curr.AddonType].Remove( curr );
+                _containerList[( int ) curr.AddonType].Remove( curr );
                 _existAddon.Remove( curr.GetHashCode() );
             }
         }
@@ -162,12 +162,12 @@ namespace Aquila.Module
             {
                 foreach ( var addon in _curr )
                 {
-                    if ( _toRemove.Contains( addon ))
+                    if ( _toRemove.Contains( addon ) )
                     {
                         //_toRemove.Remove( addon );
+                        addon.Dispose();
                         continue;
                     }
-
                     addon.OnUpdate( elapsed, realElapsed );
                     _next.Add( addon );
                 }
