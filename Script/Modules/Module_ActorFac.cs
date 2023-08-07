@@ -1,8 +1,9 @@
-using Aquila.Config;
 using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.Toolkit;
+using Cfg.Role;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UGFExtensions.Await;
 using UnityGameFramework.Runtime;
@@ -15,121 +16,44 @@ namespace Aquila.Module
     public class Module_Actor_Fac : GameFrameworkModuleBase
     {
         //--------------------public--------------------
-        //todo:重构showActorAsync接口
         /// <summary>
-        /// 异步显示一个actor
+        /// 异步创建一个actor，失败返回null task
         /// </summary>
-        public async Task<Entity> ShowActorAsync
-            (
-                Type actorType,
-                int roleMetaID,
-                int actorID,
-                string assetPath,
-                object userData
-            )
+        public async Task<Entity> ShowActorAsync( int entityID, int roleMetaID, object userData, string objectName )
         {
-            var result = await AwaitableExtensions.ShowEntityAsync
-                (
-                //todo:投射物的actor group
-                    GameEntry.Entity,
-                    actorID,
-                    actorType,
-                    assetPath,
-                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
-                    Config.GameConfig.Entity.PRIORITY_ACTOR,
-                    userData
-                );
-
-            var actor = result.Logic as Actor_Base;
-            if ( actor is null )
+            var meta = GameEntry.LuBan.Tables.RoleMeta.Get( roleMetaID );
+            if ( meta is null )
             {
-                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->actor is null </color>" );
+                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->role meta is null, meta id:{roleMetaID}</color>" );
                 return null;
             }
 
-            switch ( actor.ActorType )
-            {
-                //英雄类actor
-                case Cfg.Enum.RoleType.Hero:
-                    //#todo_根据actor类型决定传入函数的tag值，不要写死
-                    OnShowHeroActorSucc( actor as Actor_Hero, roleMetaID, GameConfig.Tags.ACTOR );
-                    break;
-
-                //法球类actor
-                case Cfg.Enum.RoleType.Orb:
-                    OnShowOrbActorSucc( actor as Actor_Orb, userData );
-                    break;
-            }
-            return result;
-        }
-
-
-
-        /// <summary>
-        /// 异步显示一个actor，注意，调用该接口前使用await关键字进行等待
-        /// </summary>
-        public async Task<Entity> ShowActorAsync<T>
-            (
-                int roleMetaID,
-                int actorID,
-                string assetPath,
-                int grid_x,
-                int grid_z,
-                object userData
-            ) where T : Actor_Base
-        {
+            var actorType = Tools.Actor.RoleTypeEnum2SystemType( meta.RoleType );
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
+                    //todo:投射物的actor group
                     GameEntry.Entity,
-                    actorID,
-                    typeof( T ),
-                    assetPath,
+                    entityID,
+                    actorType,
+                    @meta.AssetPath,
+                    //todo:加上组和优先级
                     Config.GameConfig.Entity.GROUP_HERO_ACTOR,
                     Config.GameConfig.Entity.PRIORITY_ACTOR,
                     userData
                 );
-            OnShowHeroActorSucc( result.Logic as Actor_Base, roleMetaID, Config.GameConfig.Entity.GROUP_HERO_ACTOR );
+
+            if ( !_actorGenCallBackDic.TryGetValue( actorType, out var onShowSucc ) )
+            {
+                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{actorType.ToString()}" );
+                return null;
+            }
+
+            onShowSucc( entityID, roleMetaID, userData, result.Logic, meta );
+            var baseActor = result.Logic as Actor_Base;
+            SetName( objectName, baseActor );
+            SetTag( "Actor", baseActor );
+
             return result;
-        }
-
-        /// <summary>
-        /// 法球类actor回调
-        /// </summary>
-        private void OnShowOrbActorSucc( Actor_Orb actor,object userData)
-        {
-            actor.SetWorldPosition( GameEntry.GlobalVar.InvalidPosition );
-            Tools.SetActive( actor.gameObject, false );
-            var orbData = userData as Actor_Orb_EntityData;
-            if ( orbData is null )
-            {
-                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
-                return;
-            }
-
-            //查找目标actor
-            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, actor.ActorID );
-            if ( targetTransform == null )
-            {
-                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
-                return;
-            }
-
-            //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
-            var position = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition( orbData._callerID );
-            //处理一下转向问题
-            actor.CachedTransform.LookAt( targetTransform.position );
-            actor.SetWorldPosition( position );
-            actor.SetTargetTransformAndReady( targetTransform );
-            Tools.SetActive( actor.gameObject, true );
-        }
-
-        /// <summary>
-        /// HeroActor生成回调
-        /// </summary>
-        private void OnShowHeroActorSucc( Actor_Base actor, int roleMetaID, string tag )
-        {
-            //actor.Setup( role_meta_id, tag );
-            actor.SetCoordAndPosition( 0, 0 );
         }
 
         public override void Open( object param )
@@ -143,8 +67,82 @@ namespace Aquila.Module
 
         public override void EnsureInit()
         {
-            //if ( _actor_cache_dic is null )
-            //    _actor_cache_dic = new Dictionary<int, TActorBase>();
+            _actorGenCallBackDic = new Dictionary<Type, Action<int, int, object, object, Table_RoleMeta>>()
+            {
+                { typeof(Actor_Hero),OnShowHeroSucc},
+                { typeof(Actor_Orb),OnShowOrbSucc},
+            };
         }
+
+        /// <summary>
+        /// hero类型actor生成
+        /// </summary>
+        private void OnShowHeroSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta roleMeta)
+        {
+            var temp = actor as Actor_Base;
+            temp.SetCoordAndPosition( 0, 0 );
+        }
+
+        /// <summary>
+        /// orb类actor生成
+        /// </summary>
+        private void OnShowOrbSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta meta)
+        {
+            var temp = actor as Actor_Orb;
+            temp.SetWorldPosition( GameEntry.GlobalVar.InvalidPosition );
+            Tools.SetActive( temp.gameObject, false );
+            var orbData = userData as Actor_Orb_EntityData;
+            if ( orbData is null )
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
+                return;
+            }
+
+            //查找目标actor
+            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, temp.ActorID );
+            if ( targetTransform == null )
+            {
+                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
+                return;
+            }
+
+            //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
+            var position = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition( orbData._callerID );
+            //处理一下转向问题
+            temp.CachedTransform.LookAt( targetTransform.position );
+            temp.SetWorldPosition( position );
+            temp.SetTargetTransformAndReady( targetTransform );
+            Tools.SetActive( temp.gameObject, true );
+        }
+
+        /// <summary>
+        /// 设置actor gameobject name
+        /// </summary>
+        private void SetName( string name, Actor_Base actor )
+        {
+            actor.name = $"{name}";
+        }
+
+        /// <summary>
+        /// 设置actor gameobject tag
+        /// </summary>
+        private void SetTag( string tag, Actor_Base actor )
+        {
+            actor.tag = tag;
+        }
+
+        /// <summary>
+        /// 设置acto gameobject layer
+        /// </summary>
+        private void SetLayer( string layer, Actor_Base actor )
+        {
+            Tools.SetLayer( layer, actor.gameObject, true );
+        }
+
+        /// <summary>
+        /// 保存actor的生成回调函数合集
+        /// </summary>
+        private Dictionary<System.Type, Action<int, int, object, object, Table_RoleMeta>> _actorGenCallBackDic = null;
+
     }
 }

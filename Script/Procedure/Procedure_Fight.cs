@@ -43,15 +43,16 @@ namespace Aquila.Procedure
             param._sceneScriptMeta = _data._sceneScriptMeta;
 
             var entityID = ActorIDPool.Gen();
-            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<Actor_Hero>
-                (
-                    1,
-                    entityID,
-                    @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
-                    0,
-                    0,
-                    new HeroActorEntityData( entityID ) { _roleMetaID = 1 }
-                );
+            await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync( entityID, 1, new HeroActorEntityData( entityID ) { _roleMetaID = 1 }, entityID.ToString());
+            //var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync<Actor_Hero>
+            //    (
+            //        1,
+            //        entityID,
+            //        @"Assets/Res/Prefab/Character/TestCharacter_001.prefab",
+            //        0,
+            //        0,
+            //        new HeroActorEntityData( entityID ) { _roleMetaID = 1 }
+            //    );
 
             //_actor_fac_module.Start( param );
         }
