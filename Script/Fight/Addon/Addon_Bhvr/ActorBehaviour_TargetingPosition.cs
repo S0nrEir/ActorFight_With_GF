@@ -40,6 +40,7 @@ namespace Aquila.Fight
                 //    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_instance.Actor.ActorID,targetid)
 
                 GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
+                return;
             }
 
             //move
