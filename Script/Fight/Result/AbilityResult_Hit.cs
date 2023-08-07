@@ -1,4 +1,5 @@
 using GameFramework;
+using UnityEngine;
 
 namespace Aquila.Event
 {
@@ -9,28 +10,37 @@ namespace Aquila.Event
     {
         public void Clear()
         {
-
+            _stateDescription = 0;
+            _dealedDamage     = 0;
+            _targetActorID    = -1;
+            _castorActorID    = -1;
+            _targetPosition   = GameEntry.GlobalVar.InvalidPosition;
         }
 
         /// <summary>
         /// 状态描述
         /// </summary>
-        public int _stateDescription = 0;
+        public int _stateDescription;
 
         /// <summary>
         /// 造成的伤害
         /// </summary>
-        public int _dealedDamage = 0;
+        public int _dealedDamage;
 
         /// <summary>
         /// 目标ActorID
         /// </summary>
-        public int _targetActorID = -1;
+        public int _targetActorID;
 
         /// <summary>
         /// 施法者ActorID
         /// </summary>
-        public int _castorActorID = -1;
+        public int _castorActorID;
+
+        /// <summary>
+        /// 目标位置
+        /// </summary>
+        public Vector3 _targetPosition;
 
         /// <summary>
         /// 获取一个AbilityResult_Hit实例

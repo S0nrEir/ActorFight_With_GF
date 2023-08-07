@@ -44,7 +44,7 @@ namespace Aquila.Module
             _readyToAdd = new Queue<Addon_Base>();
             _readyToRemove = new Queue<Addon_Base>();
             _existAddon = new HashSet<int>();
-            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max - 1];
+            _containerList = new AddonContainer[( int ) AddonTypeEnum.Max];
             var len = _containerList.Length;
             for ( var i = 0; i < len; i++ )
                 _containerList[i] = ReferencePool.Acquire<AddonContainer>();
@@ -54,8 +54,8 @@ namespace Aquila.Module
         {
             ProcessAdd();
             ProcessRemove();
-            foreach ( var pool in _containerList )
-                pool.Update( elapsed, realElapsed );
+            for ( var i = 0; i < _containerList.Length; i++ )
+                _containerList[i].Update( elapsed, realElapsed );
         }
 
         /// <summary>
@@ -63,13 +63,10 @@ namespace Aquila.Module
         /// </summary>
         private void ProcessAdd()
         {
-            var intType = 0;
             Addon_Base curr = null;
-            while ( _readyToAdd.TryDequeue(out curr) )
+            while ( _readyToAdd.TryDequeue( out curr ) )
             {
-                intType = ( int ) curr.AddonType;
-                //add
-                _containerList[intType - 1].Add( curr );
+                _containerList[( int ) curr.AddonType].Add( curr );
                 _existAddon.Add( curr.GetHashCode() );
             }
         }
@@ -79,17 +76,14 @@ namespace Aquila.Module
         /// </summary>
         private void ProcessRemove()
         {
-            var intType = 0;
             Addon_Base curr = null;
-            while ( _readyToRemove.TryDequeue(out curr) )
+            while ( _readyToRemove.TryDequeue( out curr ) )
             {
-                intType = ( int ) curr.AddonType;
-                //add
-                _containerList[intType].Remove( curr );
+                _containerList[( int ) curr.AddonType].Remove( curr );
                 _existAddon.Remove( curr.GetHashCode() );
             }
         }
-        
+
         private void SystemOpen()
         {
             //_containerList = new List<AddonContainer>( ( int ) AddonTypeEnum.Max - 1 );
@@ -110,7 +104,9 @@ namespace Aquila.Module
         {
             return;
 
+#pragma warning disable CS0162 // 检测到无法访问的代码
             foreach ( var pool in _containerList )
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 ReferencePool.Release( pool );
 
             //_containerList.Clear();
@@ -167,8 +163,11 @@ namespace Aquila.Module
                 foreach ( var addon in _curr )
                 {
                     if ( _toRemove.Contains( addon ) )
+                    {
+                        //_toRemove.Remove( addon );
+                        addon.Dispose();
                         continue;
-
+                    }
                     addon.OnUpdate( elapsed, realElapsed );
                     _next.Add( addon );
                 }
@@ -177,8 +176,6 @@ namespace Aquila.Module
                 _temp.Clear();
                 _curr = _next;
                 _next = _temp;
-
-                _toRemove.Clear();
             }
 
             public AddonContainer()
@@ -208,7 +205,7 @@ namespace Aquila.Module
             private List<Addon_Base> _next = null;
             private List<Addon_Base> _temp = null;
 
-            //#todo考虑是否不用hashset保存，是否有更好的剔除思路
+            //todo:考虑是否不用hashset保存，是否有更好的剔除思路
             /// <summary>
             /// 要移除的组件
             /// </summary>

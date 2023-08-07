@@ -1,8 +1,10 @@
 using Aquila.Event;
 using Aquila.Fight;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -47,6 +49,7 @@ namespace Aquila.Module
     /// </summary>
     public partial class Module_ProxyActor
     {
+        #region ability相关
         /// <summary>
         /// 实现一个Effect的效果
         /// </summary>
@@ -68,7 +71,8 @@ namespace Aquila.Module
 
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
-            DieIfEmptyHP( target );
+            //DieIfEmptyHP( target );
+            DieIfEmptyHPAndHide( target );
         }
 
         /// <summary>
@@ -121,9 +125,9 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 生效技能
+        /// 生效技能，直接让一个effect命中，而无需使用
         /// </summary>
-        public void AffectAbility( int castorID, int targetID, int abilityID )
+        public void AffectAbility( int castorID, int targetID, int abilityID, Vector3 targetPosition )
         {
             var result = AbilityResult_Hit.Gen( castorID, targetID );
 
@@ -134,11 +138,26 @@ namespace Aquila.Module
                 return;
             }
 
-            var targetInstance = TryGet( targetID );
-            if ( !targetInstance.has )
+            ActorInstance targetInstance = null;
+            if ( targetID != -1 )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
-                return;
+                var temp = TryGet( targetID );
+                if ( !temp.has )
+                {
+                    Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                    return;
+                }
+                targetInstance = temp.instance;
+            }
+
+            if ( targetPosition != GameEntry.GlobalVar.InvalidPosition )
+            {
+                result._targetPosition = targetPosition;
+                result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION, true );
+            }
+            else
+            {
+                result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION, false );
             }
 
             var addon = castorInstance.instance.GetAddon<Addon_Ability>();
@@ -148,16 +167,19 @@ namespace Aquila.Module
                 return;
             }
 
-            addon.UseAbility( abilityID, targetInstance.instance, result );
-            if ( result._dealedDamage != 0 )
-                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.instance.Actor.CachedTransform.position );
+            addon.UseAbility( abilityID, targetInstance, result );
+            if ( targetInstance != null && result._dealedDamage != 0 )
+                GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.Actor.CachedTransform.position );
 
             GameEntry.Event.Fire( castorInstance, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
 
             TryRefreshActorHPUI( castorInstance.instance );
-            TryRefreshActorHPUI( targetInstance.instance );
-            DieIfEmptyHP( targetInstance.instance );
+            TryRefreshActorHPUI( targetInstance );
+            //DieIfEmptyHP( targetInstance.instance );
+            //todo:临时办法，在这里尝试移除目标actor的关联actor，即自己
+            targetInstance.Actor.RemoveRelevane( castorID );
+            DieIfEmptyHPAndHide( targetInstance );
         }
 
         /// <summary>
@@ -185,52 +207,18 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 单对多释放技能
+        /// 单对单释放技能，需要先尝试使用，然后让技能击中
         /// </summary>
-        public void Ability2MultiTarget( int castorID, int[] targetIDArr, int abilityMetaID )
-        {
-            AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
-            result._abilityID = abilityMetaID;
-            result._succ = false;
-            var castorInstance = Get( castorID );
-            if ( castorInstance == null )
-            {
-                result._succ = false;
-                result._stateDescription = 0;
-                result._castorID = -1;
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityUseResultTypeEnum.NO_CASTOR, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
-            }
-            result._castorID = castorID;
-
-            if ( targetIDArr is null || targetIDArr.Length == 0 || !TargetIDValid( targetIDArr ) )
-            {
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
-            }
-
-            result._targetIDArr = targetIDArr;
-            //( castorInstance.Actor as IDoAbilityBehavior )?.UseAbility( result );
-            castorInstance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.ABILITY, result );
-        }
-
-        /// <summary>
-        /// 单对单释放技能
-        /// </summary>
-        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID )
+        public void Ability2SingleTarget( int castorID, int targetID, int abilityMetaID, Vector3 position )
         {
             AbilityResult_Use result = ReferencePool.Acquire<AbilityResult_Use>();
             result._succ = false;
             result._stateDescription = 0;
             result._castorID = -1;
             if ( Get( castorID ) != null )
+            {
                 result._castorID = castorID;
+            }
             else
             {
                 result._stateDescription = 0;
@@ -242,15 +230,29 @@ namespace Aquila.Module
                 return;
             }
 
+            result._targetPosition = position;
             if ( Get( targetID ) != null )
-                result._targetIDArr = new int[] { targetID };
+            {
+                result._targetIDArr = new int[] { targetID }; result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                    ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, false );
+            }
             else
             {
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
-                GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                ReferencePool.Release( result );
-                return;
+                if ( position != GameEntry.GlobalVar.InvalidPosition )
+                {
+                    result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                   ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, true );
+                }
+                else
+                {
+                    //没有target也没有position
+                    //todo:也有可能是无目标技能
+                    result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                   ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
+                    GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
+                    ReferencePool.Release( result );
+                    return;
+                }
             }
 
             result._abilityID = abilityMetaID;
@@ -266,20 +268,46 @@ namespace Aquila.Module
 
             //is died
             var target = Get( targetID );
-            DieIfEmptyHP( target );
+            //DieIfEmptyHP( target );
+            DieIfEmptyHPAndHide( target );
+        }
+        #endregion
+
+        /// <summary>
+        /// 检查是否没血，是就进入死亡状态并且返回true，否则返回false
+        /// </summary>
+        private bool DieIfEmptyHP( ActorInstance instance )
+        {
+            var attrAddon = instance.GetAddon<Addon_BaseAttrNumric>();
+            if ( attrAddon != null && attrAddon.GetCurrHPCorrection() <= 0 )
+            {
+                instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
+                GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
+                return true;
+            }
+
+            instance.GetAddon<Addon_HP>()?.Refresh();
+            return false;
         }
 
         /// <summary>
-        /// 检查是否没血，是就进入死亡状态
+        /// 检查一个actor是否没血，是就让其死亡并且隐藏
         /// </summary>
-        private void DieIfEmptyHP( ActorInstance instance )
+        private void DieIfEmptyHPAndHide( ActorInstance instance )
         {
-            var hpAddon = instance.GetAddon<Addon_BaseAttrNumric>();
-            if ( hpAddon is null || hpAddon.GetCurrHPCorrection() > 0)
+            if ( !DieIfEmptyHP( instance ) )
                 return;
 
-            instance.GetAddon<Addon_Behaviour>()?.Exec( ActorBehaviourTypeEnum.DIE, null );
-            GameEntry.Event.Fire( this, EventArg_OnActorDie.Create( instance.Actor.ActorID ) );
+            var actor = instance.Actor;
+            var relevanceActorsID = actor.RelevanceActors;
+            foreach ( var actorID in relevanceActorsID )
+            {
+                var relevanceActor = Get( actorID );
+                if ( relevanceActor.Actor is Actor_Orb )
+                    ( relevanceActor.Actor as Actor_Orb ).SetTargetPositionAndReady( actor.CachedTransform );
+            }
+
+            GameEntry.Entity.HideEntity( actor.ActorID );
         }
 
         /// <summary>
@@ -312,6 +340,17 @@ namespace Aquila.Module
         private void FightEnsureInit()
         {
             Tools.Ability.InitEffectSpecGenerator();
+        }
+    }
+
+    /// <summary>
+    /// 技能数据
+    /// </summary>
+    public class AbilityData : IReference
+    {
+
+        public void Clear()
+        {
         }
     }
 }

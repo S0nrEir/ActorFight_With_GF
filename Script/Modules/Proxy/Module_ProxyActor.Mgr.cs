@@ -2,6 +2,8 @@ using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -12,9 +14,22 @@ namespace Aquila.Module
         //----------------pub----------------
 
         /// <summary>
-        /// 为一个actor实例添加一个addon
+        /// 为一个actor添加关联actor
         /// </summary>
-        public (bool succ, ActorInstance instance) AddAddon(Actor_Base actor,Addon_Base addon)
+        [MethodImpl( MethodImplOptions.AggressiveInlining )]
+        public Transform AddRelevance( int actorID, int relevanceActorID )
+        {
+            var instance = Get( actorID );
+            if ( instance is null || !instance.AddRevelence( relevanceActorID ) )
+                return null;
+
+            return instance.Actor.CachedTransform;
+        }
+
+        /// <summary>
+        /// 将actor和addon关联，为一个actor实例添加一个addon
+        /// </summary>
+        public (bool succ, ActorInstance instance) AddAddon( Actor_Base actor, Addon_Base addon )
         {
             if ( actor is null )
             {
@@ -51,6 +66,8 @@ namespace Aquila.Module
             var actorCase = ReferencePool.Acquire<ActorInstance>();
             actorCase.Setup( actor );
             _proxyActorDic.Add( actor.ActorID, actorCase );
+            //todo:整理两个register接口为一个
+            _registered_id_set.Add( actor.ActorID );
             return (true, actorCase);
         }
 
@@ -75,7 +92,7 @@ namespace Aquila.Module
             //actorCase.Setup( actor, addons );
             actorCase.Setup( actor );
             _proxyActorDic.Add( actor.ActorID, actorCase );
-
+            _registered_id_set.Add( actor.ActorID );
             //将addon加入组件系统
             //foreach ( var addon in addons )
             //    AddToAddonSystem( addon );
@@ -105,7 +122,9 @@ namespace Aquila.Module
             foreach ( var addon in addons )
             {
                 RemoveFromAddonSystem( addon );
-                addon.Dispose();
+                //attention：这里dispose被移到了addonSystem里，在移除的时候调用一次Dispose
+                //以addon_behaviour举例，这样做的原因是，在当前帧轮询到行为组件拿到它的组件迭代器，开始遍历操作期间，调用了下面的Dispose，导致清掉了行为组件的集合，导致报出iteration may changed error.
+                //addon.Dispose();
             }
 
             //actorCase.Clear();
@@ -154,7 +173,9 @@ namespace Aquila.Module
         private bool ReleaseAll()
         {
             return true;
+#pragma warning disable CS0162 // 检测到无法访问的代码
             if ( _proxyActorDic is null || _proxyActorDic.Count == 0 )
+#pragma warning restore CS0162 // 检测到无法访问的代码
             {
                 Log.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
                 return false;

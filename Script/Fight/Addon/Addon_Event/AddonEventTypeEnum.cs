@@ -12,11 +12,21 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        USE_ABILITY,
+        USE_ABILITY = 0,
 
         /// <summary>
         /// 取消行为
         /// </summary>
-        CANCEL,
+        //CANCEL_BHVR,
+
+        /// <summary>
+        /// 抵达追踪目标
+        /// </summary>
+        TRACING_ARRIVE,
+
+        /// <summary>
+        /// 抵达目标点
+        /// </summary>
+        POSITION_ARRIVE,
     }
 }

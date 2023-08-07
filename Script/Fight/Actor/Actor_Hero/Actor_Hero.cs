@@ -1,6 +1,7 @@
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
+using Cfg.Enum;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
@@ -12,31 +13,31 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public ActorStateTypeEnum CurrState => _fsmAddon.CurrState;
 
-        public override ActorTypeEnum ActorType => ActorTypeEnum.HERO;
-        
-        protected override void OnInitActor(object userData)
+        public override RoleType ActorType => RoleType.Hero;
+
+        protected override void OnInitActor( object userData )
         {
-            if( userData is HeroActorEntityData)
-                Setup(( userData as HeroActorEntityData )._roleMetaID );
+            if ( userData is HeroActorEntityData )
+                Setup( ( userData as HeroActorEntityData )._roleMetaID );
         }
-        
+
         protected override void AddAddon()
         {
             base.AddAddon();
-            _baseAttrAddon      = AddAddon<Addon_BaseAttrNumric>();
-            _abilityAddon       = AddAddon<Addon_Ability>();
-            _fsmAddon           = AddAddon<Addon_HeroFSM>();
-            _hpAddon            = AddAddon<Addon_HP>();
-            _timelineAddon      = AddAddon<Addon_Timeline>();
-            _behaviourAddon     = AddAddon<Addon_Behaviour>();
+            _baseAttrAddon = AddAddon<Addon_BaseAttrNumric>();
+            _abilityAddon = AddAddon<Addon_Ability>();
+            _fsmAddon = AddAddon<Addon_HeroFSM>();
+            _hpAddon = AddAddon<Addon_HP>();
+            _timelineAddon = AddAddon<Addon_Timeline>();
+            _behaviourAddon = AddAddon<Addon_Behaviour>();
         }
-        
-        protected override void InitAddons( Module_ProxyActor.ActorInstance instance)
+
+        protected override void InitAddons( Module_ProxyActor.ActorInstance instance )
         {
-            base.InitAddons(instance);
+            base.InitAddons( instance );
 
             _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.ABILITY );
-            _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.DIE);
+            _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.DIE );
         }
 
         protected override void OnRecycle()

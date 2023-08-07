@@ -26,7 +26,6 @@ namespace Aquila.Fight.Actor
             if ( param == null || param.Length == 0 )
                 return;
 
-            //DoDamage( param[0] as ITakeDamageBehavior );
             Hide();
         }
 
@@ -35,7 +34,6 @@ namespace Aquila.Fight.Actor
             if ( param == null || param.Length == 0 )
                 return;
 
-            //DoDamage( param[0] as ITakeDamageBehavior );
             Hide();
         }
 
@@ -70,16 +68,7 @@ namespace Aquila.Fight.Actor
         {
             base.Reset();
             _moveAddon.Reset();
-
         }
-
-        /// <summary>
-        /// 是否击中正确目标，是返回true,传入gameObject
-        /// </summary>
-        //public virtual bool HitCorrectTarget (object obj)
-        //{
-        //    return true;
-        //}
 
         #endregion
 

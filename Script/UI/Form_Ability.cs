@@ -49,11 +49,13 @@ namespace Aquila.UI
         /// </summary>
         private void OnIconItemClicked( int abilityID )
         {
-            //#todo这里其实要检查技能类型和目标的，还没写完，就随便先写一个
+            //todo:这里其实要检查技能类型和目标的，还没写完，就随便先写一个
+            //对单个目标的技能测试
             //_abilityIdArr[2]:1002
             //_abilityIdArr[3]:1003
+            //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID );
+            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
 
         /// <summary>
