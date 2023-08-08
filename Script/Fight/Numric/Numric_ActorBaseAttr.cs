@@ -18,7 +18,6 @@ namespace Aquila.Numric
 
                 _total = 0f;
 
-                //#todo-基于父类做脏标记处理的方法不太好，这样子类的脏标记逻辑要依赖于父类，找时间优化一下
                 _total += base.CorrectionValue;
                 _total += Enumrate( _total, _equip_correction );
                 _total += Enumrate( _total, _class_correction );
@@ -31,7 +30,13 @@ namespace Aquila.Numric
         /// </summary>
         public bool AddEquipModifier( Numric_Modifier modifier )
         {
-            return _equip_correction.AddLast( modifier ) != null;
+            if ( _equip_correction.AddLast( modifier ) != null )
+            {
+                _changeFlag = true;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -39,7 +44,12 @@ namespace Aquila.Numric
         /// </summary>
         public bool RemoveEquipModifier( Numric_Modifier modifier )
         {
-            return _equip_correction.Remove( modifier );
+            if ( _equip_correction.Remove( modifier ) )
+            {
+                _changeFlag = true;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -47,7 +57,12 @@ namespace Aquila.Numric
         /// </summary>
         public bool AddClassModifier( Numric_Modifier modifier )
         {
-            return _class_correction.AddLast( modifier ) != null;
+            if ( _class_correction.AddLast( modifier ) != null )
+            {
+                _changeFlag = true;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -55,7 +70,13 @@ namespace Aquila.Numric
         /// </summary>
         public bool RemoveClassModifier( Numric_Modifier modifier )
         {
-            return _class_correction.Remove( modifier );
+            if ( _class_correction.Remove( modifier ) )
+            {
+                _changeFlag = true;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -63,7 +84,13 @@ namespace Aquila.Numric
         /// </summary>
         public bool AddBuffModifier( Numric_Modifier modifier )
         {
-            return _buff_correction.AddLast( modifier ) != null;
+            if ( _buff_correction.AddLast( modifier ) != null )
+            {
+                _changeFlag = true;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -71,7 +98,13 @@ namespace Aquila.Numric
         /// </summary>
         public bool RemoveBuffModifier( Numric_Modifier modifier )
         {
-            return _buff_correction.Remove( modifier );
+            if ( _buff_correction.Remove( modifier ) )
+            {
+                _changeFlag = true;
+                return true;
+            }
+
+            return false;
         }
 
         public override void Clear()
@@ -118,7 +151,7 @@ namespace Aquila.Numric
         {
         }
 
-        //#todo改成LinkedRange
+        //todo:改成LinkedRange
         /// <summary>
         /// 装备加成修正
         /// </summary>
