@@ -28,23 +28,28 @@ namespace Aquila.Module
                 return null;
             }
 
-            var actorType = Tools.Actor.RoleTypeEnum2SystemType( meta.RoleType );
+            //var actorType = Tools.Actor.RoleTypeEnum2SystemType( meta.RoleType );
+            var entityInfo = Tools.Actor.GetActorEntityInfo( meta.RoleType );
+            if ( !entityInfo.genSucc )
+            {
+                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->!entityInfo.genSucc,role type:{meta.RoleType}</color>" );
+                return null;
+            }
+
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
-                    //todo:投射物的actor group
                     GameEntry.Entity,
                     entityID,
-                    actorType,
+                    entityInfo.actorType,
                     @meta.AssetPath,
-                    //todo:加上组和优先级
-                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
-                    Config.GameConfig.Entity.PRIORITY_ACTOR,
+                    entityInfo.group,
+                    entityInfo.priority,
                     userData
                 );
 
-            if ( !_actorGenCallBackDic.TryGetValue( actorType, out var onShowSucc ) )
+            if ( !_actorGenCallBackDic.TryGetValue( entityInfo.actorType, out var onShowSucc ) )
             {
-                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{actorType.ToString()}" );
+                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{entityInfo.actorType.ToString()}" );
                 return null;
             }
 

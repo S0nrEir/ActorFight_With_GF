@@ -37,7 +37,7 @@ namespace Aquila.Fight.Addon
                     fxID,
                     typeof( ActorFX ),
                     assetPath,
-                    GameConfig.Entity.GROUP_ACTOR_FX,
+                    GameConfig.Entity.GROUP_FX,
                     GameConfig.Entity.PRIORITY_ACTOR,
                     effectEntityData
                 );
