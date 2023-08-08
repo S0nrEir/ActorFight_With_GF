@@ -21,7 +21,7 @@ namespace Aquila.Fight
 
             if ( addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE && addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE )
             {
-                Log.Warning( $" addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE || addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE" );
+                Log.Info( $"<color=white> addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE || addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE</color>" );
                 return;
             }
 

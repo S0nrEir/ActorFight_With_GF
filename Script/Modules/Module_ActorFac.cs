@@ -28,23 +28,28 @@ namespace Aquila.Module
                 return null;
             }
 
-            var actorType = Tools.Actor.RoleTypeEnum2SystemType( meta.RoleType );
+            //var actorType = Tools.Actor.RoleTypeEnum2SystemType( meta.RoleType );
+            var entityInfo = Tools.Actor.GetActorEntityInfo( meta.RoleType );
+            if ( !entityInfo.genSucc )
+            {
+                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->!entityInfo.genSucc,role type:{meta.RoleType}</color>" );
+                return null;
+            }
+
             var result = await AwaitableExtensions.ShowEntityAsync
                 (
-                    //todo:投射物的actor group
                     GameEntry.Entity,
                     entityID,
-                    actorType,
+                    entityInfo.actorType,
                     @meta.AssetPath,
-                    //todo:加上组和优先级
-                    Config.GameConfig.Entity.GROUP_HERO_ACTOR,
-                    Config.GameConfig.Entity.PRIORITY_ACTOR,
+                    entityInfo.group,
+                    entityInfo.priority,
                     userData
                 );
 
-            if ( !_actorGenCallBackDic.TryGetValue( actorType, out var onShowSucc ) )
+            if ( !_actorGenCallBackDic.TryGetValue( entityInfo.actorType, out var onShowSucc ) )
             {
-                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{actorType.ToString()}" );
+                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{entityInfo.actorType.ToString()}" );
                 return null;
             }
 
@@ -77,7 +82,7 @@ namespace Aquila.Module
         /// <summary>
         /// hero类型actor生成
         /// </summary>
-        private void OnShowHeroSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta roleMeta)
+        private void OnShowHeroSucc( int entityID, int roleMetaID, object userData, object actor, Table_RoleMeta roleMeta )
         {
             var temp = actor as Actor_Base;
             temp.SetCoordAndPosition( 0, 0 );
@@ -86,7 +91,7 @@ namespace Aquila.Module
         /// <summary>
         /// orb类actor生成
         /// </summary>
-        private void OnShowOrbSucc( int entityID, int roleMetaID, object userData, object actor , Table_RoleMeta meta)
+        private void OnShowOrbSucc( int entityID, int roleMetaID, object userData, object actor, Table_RoleMeta meta )
         {
             var temp = actor as Actor_Orb;
             temp.SetWorldPosition( GameEntry.GlobalVar.InvalidPosition );
@@ -99,7 +104,9 @@ namespace Aquila.Module
             }
 
             //查找目标actor
-            var targetTransform = GameEntry.Module.GetModule<Module_ProxyActor>().AddRelevance( orbData._targetActorID, temp.ActorID );
+            var module = GameEntry.Module.GetModule<Module_ProxyActor>();
+            //添加关联
+            var targetTransform = module.AddRelevance( orbData._targetActorID, temp.ActorID );
             if ( targetTransform == null )
             {
                 Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
@@ -107,10 +114,10 @@ namespace Aquila.Module
             }
 
             //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
-            var position = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition( orbData._callerID );
+            var position = module.GetPosition( orbData._callerID );
             //处理一下转向问题
-            temp.CachedTransform.LookAt( targetTransform.position );
             temp.SetWorldPosition( position );
+            temp.transform.LookAt( targetTransform, UnityEngine.Vector3.up );
             temp.SetTargetTransformAndReady( targetTransform );
             Tools.SetActive( temp.gameObject, true );
         }

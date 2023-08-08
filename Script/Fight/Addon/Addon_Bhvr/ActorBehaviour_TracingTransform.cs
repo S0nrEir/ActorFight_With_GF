@@ -53,10 +53,13 @@ namespace Aquila.Fight
             {
                 _arriveFlag = true;
                 _instance.Actor.Notify( ( int ) AddonEventTypeEnum.TRACING_ARRIVE, null );
+                var module = GameEntry.Module.GetModule<Module_ProxyActor>();
                 //在这里直接使用技能，走module接口，需要自己的id，对反的id，技能id
+                //打中以后就移除关联并且处理掉自己
+                module.RemoveRelevance( _targetActorID, _instance.Actor.ActorID );
                 if ( _onHitabilityID >= 0 )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
-                //打中了以后就处理掉自己
+                    module.AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
+
                 GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
                 return;
             }

@@ -163,16 +163,14 @@ namespace Aquila.Fight.Actor
         /// </summary>
         private void SetTag( string tag )
         {
-            if ( gameObject.tag.Equals( tag ) )
-                return;
-
             gameObject.tag = tag;
         }
 
         //--------------------override--------------------
         protected override void OnShow( object userData )
-        {var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
-            if ( !res.succ )
+        {
+            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
+            if ( !res.regSucc )
             {
                 Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
                 return;
@@ -183,38 +181,27 @@ namespace Aquila.Fight.Actor
             AddAddon();
             InitAddons( res.instance );
 
-            _relevanceActorSet = new HashSet<int>();
-            _allAddonInitDone  = true;
-            _tagContainer      = new TagContainer( OnTagChange );
-
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
 
             _eventAddon.Ready();
-
             base.OnShow( userData );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            _tagContainer.Reset();
-            _relevanceActorSet.Clear();
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
 
+            _tagContainer.Reset();
+            _relevanceActorSet.Clear();
             _eventAddon.UnRegisterAll();
-            _eventAddon = null;
-            _relevanceActorSet = null;
-            HostID = Component_GlobalVar.InvalidGUID;
+
             ExtensionRecycle();
             SetRoleMetaID( -1 );
-            _tagContainer = null;
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            //foreach ( var addon in GetAllAddon() )
-            //    GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
-
+            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnHide( isShutdown, userData );
         }
 
@@ -223,21 +210,17 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            //addon
-            //_eventAddon.UnRegisterAll();
-            //_eventAddon = null;
-            //_relevanceActorSet = null;
-            //HostID = Component_GlobalVar.InvalidGUID;
-            //ExtensionRecycle();
-            //SetRoleMetaID( -1 );
-            //_tagContainer = null;
-            //GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
             base.OnRecycle();
         }
 
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
+            if ( _relevanceActorSet is null )
+                _relevanceActorSet = new HashSet<int>();
+
+            if ( _tagContainer is null )
+                _tagContainer = new TagContainer( OnTagChange );
         }
 
         /// <summary>
@@ -305,7 +288,7 @@ namespace Aquila.Fight.Actor
         protected void RemoveAddon( Addon_Base addon )
         {
             addon.OnRemove();
-            GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon);
+            GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
         }
 
         /// <summary>
@@ -338,21 +321,6 @@ namespace Aquila.Fight.Actor
         public int RoleMetaID { get; private set; } = -1;
 
         /// <summary>
-        /// 组件初始化标记
-        /// </summary>
-        public bool AddonInitFlag => _allAddonInitDone;
-
-        /// <summary>
-        /// 宿主ID
-        /// </summary>
-        public ulong HostID { get; private set; } = Component_GlobalVar.InvalidGUID;
-
-        /// <summary>
-        /// 组件初始化标记
-        /// </summary>
-        private bool _allAddonInitDone = false;
-
-        /// <summary>
         /// 事件组件
         /// </summary>
         protected Addon_Event _eventAddon = null;
@@ -375,71 +343,8 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 关联actor集合
         /// </summary>
-        private HashSet<int> _relevanceActorSet = null;
+        private HashSet<int> _relevanceActorSet;
 
         #endregion
     }
-
-
-    //#region ActorInspector
-    ///// <summary>
-    ///// 用于记录actord信息的面板,抽时间写成inspector
-    ///// </summary>
-    //internal class ActorInspector : MonoBehaviour
-    //{
-    //    public void Setup( TActorBase actor, int dataID )
-    //    {
-    //        if ( actor is null )
-    //            return;
-
-    //        Actor_Obj_ID = actor.ActorID.ToString();
-    //        Entity_Group = actor.Entity.EntityGroup.Name;
-    //        Index = actor.Index;
-    //        Host_GUID = actor.HostID;
-    //        Force_Type = actor.ForceType;
-    //        Data_ID = dataID;
-    //        Model_Path = actor.Entity.EntityAssetName;
-    //        _tactor = actor;
-    //        if ( _tactor.TryGetAddon<DataAddon>( out _dataAddon ) )
-    //        {
-    //            var meta = _dataAddon.GetObjectDataValue<Tab_RoleBaseAttr>(DataAddonFieldTypeEnum.OBJ_META_ROLEBASE);
-    //            if ( meta != null )
-    //                Configure_Speed = meta.MoveSpeed;
-    //        }
-    //    }
-
-    //    private void Update()
-    //    {
-    //        curr_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_CURR_HP ).ToString();
-    //        max_HP_Field = _dataAddon.GetIntDataValue( DataAddonFieldTypeEnum.INT_MAX_HP ).ToString();
-    //    }
-
-    //    /// <summary>
-    //    /// 设置状态
-    //    /// </summary>
-    //    public void SetState( string state ) => CURR_STATE = state;
-
-    //    /// <summary>
-    //    /// 设置dataID
-    //    /// </summary>
-    //    public void SetDataID( int dataID ) => Data_ID = dataID;
-    //    public void SetIndex( int idx ) => Index = idx;
-    //    public float Attr_Speed = -1;
-    //    public float Configure_Speed = -1;
-    //    public string Actor_Obj_ID = string.Empty;
-    //    public string Entity_Group = string.Empty;
-    //    public int Index = -1;
-    //    public ulong Host_GUID = GlobeVar.INVALID_GUID;
-    //    public int Force_Type = -1;
-    //    public int Data_ID = -1;
-    //    public string Model_Path = string.Empty;
-    //    public string CURR_STATE = string.Empty;
-
-    //    public string curr_HP_Field = string.Empty;
-    //    public string max_HP_Field = string.Empty;
-
-    //    private TActorBase _tactor = null;
-    //    private DataAddon _dataAddon = null;
-    //}
-    //#endregion
 }
