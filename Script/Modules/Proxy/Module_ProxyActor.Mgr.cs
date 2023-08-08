@@ -71,57 +71,6 @@ namespace Aquila.Module
             return (true, actorCase);
         }
 
-        //public (bool succ, ActorInstance instance) Register( Actor_Base actor )
-        //{
-        //    if ( actor is null )
-        //    {
-        //        Log.Warning( "<color=yellow>actor is null.</color>" );
-        //        return (false, null);
-        //    }
-
-        //    if ( Contains( actor.ActorID ) )
-        //    {
-        //        Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
-        //        return (false, null); ;
-        //    }
-
-        //    var actorCase = ReferencePool.Acquire<ActorInstance>();
-        //    actorCase.Setup( actor );
-        //    _proxyActorDic.Add( actor.ActorID, actorCase );
-        //    //todo:整理两个register接口为一个
-        //    _registered_id_set.Add( actor.ActorID );
-        //    return (true, actorCase);
-        //}
-
-        ///// <summary>
-        ///// 将actor注册到代理中，成功返回true
-        ///// </summary>
-        //public (bool succ, ActorInstance instance) Register( Actor_Base actor, Addon_Base[] addons )
-        //{
-        //    if ( actor is null )
-        //    {
-        //        Log.Warning( "<color=yellow>actor is null.</color>" );
-        //        return (false, null);
-        //    }
-
-        //    if ( Contains( actor.ActorID ) )
-        //    {
-        //        Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
-        //        return (false, null); ;
-        //    }
-
-        //    var actorCase = ReferencePool.Acquire<ActorInstance>();
-        //    //actorCase.Setup( actor, addons );
-        //    actorCase.Setup( actor );
-        //    _proxyActorDic.Add( actor.ActorID, actorCase );
-        //    _registered_id_set.Add( actor.ActorID );
-        //    //将addon加入组件系统
-        //    //foreach ( var addon in addons )
-        //    //    AddToAddonSystem( addon );
-
-        //    return (true, actorCase);
-        //}
-
         /// <summary>
         /// 注销单个实例
         /// </summary>
