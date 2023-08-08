@@ -210,9 +210,6 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            _eventAddon        = null;
-            _relevanceActorSet = null;
-            _tagContainer      = null;
             base.OnRecycle();
         }
 
