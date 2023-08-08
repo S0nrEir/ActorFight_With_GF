@@ -14,6 +14,18 @@ namespace Aquila.Module
         //----------------pub----------------
 
         /// <summary>
+        /// 移除一个actor的关联actor
+        /// </summary>
+        public bool RemoveRelevance( int actorID, int toRemoveActorID )
+        {
+            var instance = Get( actorID );
+            if ( instance is null || !instance.RemoveRevelence( toRemoveActorID ) )
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// 为一个actor添加关联actor
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
