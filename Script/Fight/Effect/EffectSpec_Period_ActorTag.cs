@@ -16,11 +16,6 @@ namespace Aquila.Fight
             target.Actor.AddTag( (ushort) (ActorTagType) Meta.ExtensionParam.IntParam_1 );
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
-        {
-            base.Apply( castor, target, result );
-        }
-
         public override void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             base.OnEffectEnd( castor, target );

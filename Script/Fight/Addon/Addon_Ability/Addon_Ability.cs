@@ -154,18 +154,7 @@ namespace Aquila.Fight.Addon
             _initFlag = false;
             base.Dispose();
         }
-
-
-        public override void Reset()
-        {
-            base.Reset();
-        }
-
-        public override void OnRemove()
-        {
-            base.OnRemove();
-        }
-
+        
         // /// <summary>
         // /// 技能元数据
         // /// </summary>

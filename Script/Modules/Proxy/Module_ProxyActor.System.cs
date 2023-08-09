@@ -2,6 +2,7 @@ using Aquila.Extension;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.Addon_Base;
 
@@ -52,8 +53,8 @@ namespace Aquila.Module
 
         private void SystemUpdate( float elapsed, float realElapsed )
         {
-            ProcessAdd();
             ProcessRemove();
+            ProcessAdd();
             for ( var i = 0; i < _containerList.Length; i++ )
                 _containerList[i].Update( elapsed, realElapsed );
         }
@@ -106,7 +107,6 @@ namespace Aquila.Module
 
 #pragma warning disable CS0162 // 检测到无法访问的代码
             foreach ( var pool in _containerList )
-#pragma warning restore CS0162 // 检测到无法访问的代码
                 ReferencePool.Release( pool );
 
             //_containerList.Clear();
@@ -120,6 +120,7 @@ namespace Aquila.Module
 
             _existAddon.Clear();
             _existAddon = null;
+#pragma warning restore CS0162 // 检测到无法访问的代码
         }
 
         //------------------- fields -------------------
@@ -164,10 +165,11 @@ namespace Aquila.Module
                 {
                     if ( _toRemove.Contains( addon ) )
                     {
-                        //_toRemove.Remove( addon );
+                        //attention:这里的调用是发生在下一帧的
                         addon.Dispose();
                         continue;
                     }
+                    
                     addon.OnUpdate( elapsed, realElapsed );
                     _next.Add( addon );
                 }
