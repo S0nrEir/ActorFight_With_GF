@@ -124,25 +124,26 @@ namespace Aquila.Module
         }
 
         //------------------- fields -------------------
+        
         /// <summary>
         /// 组件容器列表
         /// </summary>
-        private AddonContainer[] _containerList = null;
+        private AddonContainer[] _containerList;
 
         /// <summary>
         /// 待添加
         /// </summary>
-        private Queue<Addon_Base> _readyToAdd = null;
+        private Queue<Addon_Base> _readyToAdd;
 
         /// <summary>
         /// 待移除
         /// </summary>
-        private Queue<Addon_Base> _readyToRemove = null;
+        private Queue<Addon_Base> _readyToRemove;
 
         /// <summary>
         /// 保存已添加的addon hashcode
         /// </summary>
-        private HashSet<int> _existAddon = null;
+        private HashSet<int> _existAddon;
 
         /// <summary>
         /// Addon池，保存不同类型的addon
@@ -161,23 +162,23 @@ namespace Aquila.Module
 
             public void Update( float elapsed, float realElapsed )
             {
-                foreach ( var addon in _curr )
+                //attention:这里的调用是发生在下一帧的
+                //question:考虑给addon加上释放标记？
+                var cnt = _curr.Count;
+                for (var i = 0; i < cnt; i++)
                 {
-                    if ( _toRemove.Contains( addon ) )
+                    if (_toRemove.Contains(_curr[i]))
                     {
-                        //attention:这里的调用是发生在下一帧的
-                        addon.Dispose();
+                        _curr[i].Dispose();
+                        _toRemove.Remove(_curr[i]);
                         continue;
                     }
                     
-                    addon.OnUpdate( elapsed, realElapsed );
-                    _next.Add( addon );
+                    _curr[i].OnUpdate(elapsed,realElapsed);
+                    _next.Add(_curr[i]);
                 }
 
-                _temp = _curr;
-                _temp.Clear();
-                _curr = _next;
-                _next = _temp;
+                SwapCurrAndNext();
             }
 
             public AddonContainer()
@@ -198,6 +199,17 @@ namespace Aquila.Module
 
                 _toRemove.Clear();
                 _toRemove = null;
+            }
+
+            /// <summary>
+            /// 交换curr和next
+            /// </summary>
+            private void SwapCurrAndNext()
+            {
+                _temp = _curr;
+                _temp.Clear();
+                _curr = _next;
+                _next = _temp;
             }
 
             /// <summary>
