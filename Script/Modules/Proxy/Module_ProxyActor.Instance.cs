@@ -31,7 +31,7 @@ namespace Aquila.Module
             /// 给一个actor添加关联actor
             /// </summary>
             [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public bool AddRevelence( int actorID )
+            public bool AddRelevance( int actorID )
             {
                 return _actor.AddRelevance( actorID );
             }

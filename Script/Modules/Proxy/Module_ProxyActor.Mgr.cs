@@ -15,6 +15,14 @@ namespace Aquila.Module
         //----------------pub----------------
 
         /// <summary>
+        /// 获取actor的根Transform组件
+        /// </summary>
+        public Transform GetActorTransform(int actorID)
+        {
+            return Get(actorID).Actor.CachedTransform;
+        }
+
+        /// <summary>
         /// 移除一个actor的关联actor
         /// </summary>
         public bool RemoveRelevance( int actorID, int toRemoveActorID )
@@ -30,13 +38,10 @@ namespace Aquila.Module
         /// 为一个actor添加关联actor
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public Transform AddRelevance( int actorID, int relevanceActorID )
+        public bool AddRelevance(int actorID, int relevanceActorID)
         {
-            var instance = Get( actorID );
-            if ( instance is null || !instance.AddRevelence( relevanceActorID ) )
-                return null;
-
-            return instance.Actor.CachedTransform;
+            var instance = Get(actorID);
+            return instance != null && instance.AddRelevance(relevanceActorID);
         }
 
         /// <summary>
