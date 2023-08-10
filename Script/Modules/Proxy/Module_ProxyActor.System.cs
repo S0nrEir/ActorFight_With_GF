@@ -219,7 +219,7 @@ namespace Aquila.Module
             private List<Addon_Base> _next = null;
             private List<Addon_Base> _temp = null;
 
-            //todo:考虑是否不用hashset保存，是否有更好的剔除思路
+            //todo:考虑是否不用hashset保存，是否有更好的剔除思路，如果不用的话，考虑使用addon的释放标记
             /// <summary>
             /// 要移除的组件
             /// </summary>
