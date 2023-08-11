@@ -153,23 +153,6 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
-        /// 是否已经有相同effect
-        /// </summary>
-        private bool HasSame( int targetID, Type type )
-        {
-            var effectArr = GetAttachedEffect( targetID );
-            if ( effectArr is null || effectArr.Length == 0 )
-                return false;
-
-            foreach ( var effect in effectArr )
-            {
-                if ( effect.GetType() == type )
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// 轮询处理impact数据
         /// </summary>
         private void ImpactDataSystem()
