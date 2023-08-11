@@ -2,6 +2,7 @@ using Aquila.Module;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Cfg.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -13,6 +14,35 @@ namespace Aquila.Fight.Impact
     public partial class Component_Impact : GameFrameworkComponent
     {
         //----------------------- pub -----------------------
+
+        /// <summary>
+        /// 在下一帧移除actor特定类型的effect
+        /// </summary>
+        public void PrepareRemoveEffect(EffectSpec_Base effect)
+        {
+            var entity = effect._impactEntityIndex;
+            ref var impact = ref _pool.Get(entity);
+            impact._elapsed = 9999f;
+            impact._policy = DurationPolicy.Instant;
+        }
+
+        /// <summary>
+        /// 在下一帧移除actor特定类型的effect
+        /// </summary>
+        public void PrepareRemoveEffectByType<T>(int actorID) where T : EffectSpec_Base
+        {
+            var effect = GetAttachedEffect<T>(actorID);
+            if (effect is null)
+            {
+                Log.Warning($"Component_Impact.PrepareRemoveEffectByType()--->effect is null,actorID:{actorID},type:{true.GetType()}");
+                return;
+            }
+
+            var entity = effect._impactEntityIndex;
+            ref var impact = ref _pool.Get(entity);
+            impact._elapsed = 9999f;
+            impact._policy = DurationPolicy.Instant;
+        }
 
         /// <summary>
         /// 获取附加在某actor上的某类型effect，拿不到返回空
@@ -210,8 +240,7 @@ namespace Aquila.Fight.Impact
             //回收实体对应的数据
             _pool.Recycle(entity);
         }
-
-
+        
         /// <summary>
         /// 初始化一个impact数据
         /// </summary>
@@ -344,8 +373,7 @@ namespace Aquila.Fight.Impact
         {
             ImpactDataSystem();
         }
-
-
+        
         private void Start()
         {
             EnsureInit();
