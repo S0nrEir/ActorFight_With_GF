@@ -37,8 +37,8 @@ namespace Aquila.Fight
                 entityData = new Actor_Orb_EntityData( entityID )
                 {
                     _targetActorID = result._targetActorID,
-                    _callerID = castor.Actor.ActorID,
-                    _roleMetaID = roleMetaID,
+                    _callerID      = castor.Actor.ActorID,
+                    _roleMetaID    = roleMetaID,
                 };
             }
             

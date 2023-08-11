@@ -15,20 +15,14 @@ namespace Aquila.Fight.Actor
 
         public override RoleType ActorType => RoleType.Hero;
 
-        protected override void OnInitActor( object userData )
-        {
-            if ( userData is HeroActorEntityData )
-                Setup( ( userData as HeroActorEntityData )._roleMetaID );
-        }
-
         protected override void AddAddon()
         {
             base.AddAddon();
-            _baseAttrAddon = AddAddon<Addon_BaseAttrNumric>();
-            _abilityAddon = AddAddon<Addon_Ability>();
-            _fsmAddon = AddAddon<Addon_HeroFSM>();
-            _hpAddon = AddAddon<Addon_HP>();
-            _timelineAddon = AddAddon<Addon_Timeline>();
+            _baseAttrAddon  = AddAddon<Addon_BaseAttrNumric>();
+            _abilityAddon   = AddAddon<Addon_Ability>();
+            _fsmAddon       = AddAddon<Addon_HeroFSM>();
+            _hpAddon        = AddAddon<Addon_HP>();
+            _timelineAddon  = AddAddon<Addon_Timeline>();
             _behaviourAddon = AddAddon<Addon_Behaviour>();
         }
 
@@ -109,15 +103,10 @@ namespace Aquila.Fight.Actor
         private Addon_Behaviour _behaviourAddon = null;
     }
 
-    public class HeroActorEntityData : EntityData
+    public class HeroActorEntityData : Actor_Base_EntityData
     {
         public HeroActorEntityData( int entityID ) : base( entityID, typeof( Actor_Hero ).GetHashCode() )
         {
         }
-
-        /// <summary>
-        /// 角色role meta表id
-        /// </summary>
-        public int _roleMetaID = -1;
     }
 }

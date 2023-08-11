@@ -80,16 +80,11 @@ namespace Aquila.Fight.Actor
         protected override void OnInitActor( object userData )
         {
             base.OnInitActor( userData );
-            if ( userData is Actor_Orb_EntityData )
-            {
-                var param = ( userData as Actor_Orb_EntityData );
-                _targetActorID = param._targetActorID;
-                Setup( param._roleMetaID );
-            }
+            
+            if ( userData is Actor_Orb_EntityData data )
+                _targetActorID = data._targetActorID;
             else
-            {
                 Log.Warning( "<color=yellow>Actor_Orb.OnInitActor()---></color>" );
-            }
         }
 
         public override RoleType ActorType => RoleType.Orb;
@@ -107,16 +102,11 @@ namespace Aquila.Fight.Actor
         private int _targetActorID = -1;
     }
 
-    public class Actor_Orb_EntityData : EntityData
+    public class Actor_Orb_EntityData : Actor_Base_EntityData
     {
         public Actor_Orb_EntityData( int entity_id ) : base( entity_id, typeof( Actor_Orb ).GetHashCode() )
         {
         }
-
-        /// <summary>
-        /// 角色数据元表
-        /// </summary>
-        public int _roleMetaID = -1;
 
         /// <summary>
         /// 召唤者ID
