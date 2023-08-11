@@ -93,7 +93,7 @@ namespace Aquila.Fight.Impact
                 newEffect._impactEntityIndex = entity;
                 _curr.Add( entity );
                 AddEffect( key, newEffect );
-                AddMapIndex( targetActorID, impactData._effectIndex );
+                AddMapIndex( targetActorID, impactData._effectHash );
 
                 if ( impactData._effectOnAwake )
                     GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
@@ -164,10 +164,10 @@ namespace Aquila.Fight.Impact
                 //生效
                 if ( impactData._interval >= impactData._period )
                 {
-                    tempEffect = GetEffect( impactData._effectIndex );
+                    tempEffect = GetEffect( impactData._effectHash );
                     if ( tempEffect is null )
                     {
-                        Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectIndex}</color>" );
+                        Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectHash}</color>" );
                         continue;
                     }
                     tempEffect.StackCount = impactData._stackCount;
@@ -183,17 +183,8 @@ namespace Aquila.Fight.Impact
 
             //清掉无效或者已经过期的imapct
             foreach ( var entity in _invalid )
-            {
-                var impactData = _pool.Get( entity );
-                tempEffect = GetEffect( impactData._effectIndex );
-                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( impactData._castorActorID, impactData._targetActorID, tempEffect, true );
-                //tempEffect.OnEffectEnd();
-                //ReferencePool.Release( tempEffect );
-                RemoveEffect( impactData._effectIndex );
-                RemoveMapIndex( impactData._targetActorID, impactData._effectIndex );
-                RecycleImpactEntity( entity );
-                _pool.Recycle( entity );
-            }//end foreach
+                RemoveImpactAndEffect(entity);
+            
             _invalid.Clear();
             _curr.Clear();
 
@@ -204,6 +195,24 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
+        /// 移除impact和effect数据
+        /// </summary>
+        private void RemoveImpactAndEffect(int entity)
+        {
+            var impactData = _pool.Get(entity);
+            var effect = GetEffect(impactData._effectHash);
+            GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect(impactData._castorActorID,impactData._targetActorID,effect,true);
+
+            RemoveEffect(impactData._effectHash);
+            RemoveMapIndex(impactData._targetActorID, impactData._effectHash);
+            //回收impact实体
+            RecycleImpactEntity(entity);
+            //回收实体对应的数据
+            _pool.Recycle(entity);
+        }
+
+
+        /// <summary>
         /// 初始化一个impact数据
         /// </summary>
         private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int key )
@@ -211,7 +220,7 @@ namespace Aquila.Fight.Impact
             impactData._castorActorID             = castorActorID;
             impactData._targetActorID             = targetActorID;
             impactData._duration                  = effect.Meta.Duration;
-            impactData._effectIndex               = key;
+            impactData._effectHash               = key;
             impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
             impactData._period                    = effect.Meta.Period;
             impactData._policy                    = effect.Meta.Policy;

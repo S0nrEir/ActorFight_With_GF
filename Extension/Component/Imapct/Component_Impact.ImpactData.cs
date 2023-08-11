@@ -21,9 +21,9 @@ namespace Aquila.Fight.Impact
             public int _targetActorID;
 
             /// <summary>
-            /// effect实例hashCode的索引
+            /// 该impact持有的effect实例的hash索引
             /// </summary>
-            public int _effectIndex;
+            public int _effectHash;
 
             /// <summary>
             /// 生效周期(多长时间生效一次)
