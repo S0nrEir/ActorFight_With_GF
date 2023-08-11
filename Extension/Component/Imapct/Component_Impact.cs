@@ -1,6 +1,7 @@
 using Aquila.Module;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Cfg.Enum;
 using UnityEngine;
@@ -37,11 +38,8 @@ namespace Aquila.Fight.Impact
                 Log.Warning($"Component_Impact.PrepareRemoveEffectByType()--->effect is null,actorID:{actorID},type:{true.GetType()}");
                 return;
             }
-
-            var entity = effect._impactEntityIndex;
-            ref var impact = ref _pool.Get(entity);
-            impact._elapsed = 9999f;
-            impact._policy = DurationPolicy.Instant;
+            
+            PrepareRemoveEffect(effect);
         }
 
         /// <summary>
@@ -62,18 +60,17 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
-        /// 获取附加在某actor上的effect实例集合，拿不到返回一个空集合
+        /// 获取附加在某actor上的effect实例集合，拿不到返回空
         /// </summary>
         public EffectSpec_Base[] GetAttachedEffect( int actorID )
         {
             var indexList = GetMapIndex( actorID );
             if ( indexList is null || indexList.Count == 0 )
             {
-                //Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
-                //#todo这里不要用数组
-                return new EffectSpec_Base[0];
+                Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
+                return null;
             }
-
+            
             var result = new EffectSpec_Base[indexList.Count];
             var i = 0;
             foreach ( var index in indexList )
