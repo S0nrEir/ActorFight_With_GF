@@ -123,12 +123,12 @@ namespace Aquila.Fight.Impact
                 AddMapIndex( targetActorID, impactData._effectHash );
 
                 if ( impactData._effectOnAwake )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
 
                 //唤起一次性的effect
                 if ( newEffect.Meta.AwakeEffects.Length != 0 )
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
                 }
             }
         }
@@ -181,7 +181,7 @@ namespace Aquila.Fight.Impact
                         continue;
                     }
                     tempEffect.StackCount = impactData._stackCount;
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
 
                     impactData._interval = 0f;
                 }

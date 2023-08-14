@@ -154,11 +154,6 @@ namespace Aquila.Fight.Addon
             _initFlag = false;
             base.Dispose();
         }
-        
-        // /// <summary>
-        // /// 技能元数据
-        // /// </summary>
-        // private TB_AbilityBase _meta = null;
 
         /// <summary>
         /// 持有的技能
