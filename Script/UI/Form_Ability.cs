@@ -340,7 +340,6 @@ namespace Aquila.UI
                     Tools.SetActive(_slider.gameObject,false);
                     Tools.SetActive(_remainText.gameObject,false);
                     Tools.SetActive(_root,false);
-                    //todo:on ui windup finish event
                     Reset();   
                 }
                 else
