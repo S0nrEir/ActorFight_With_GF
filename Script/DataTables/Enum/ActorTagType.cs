@@ -37,5 +37,9 @@ namespace Cfg.Enum
         /// 流血10000
         /// </summary>
         Blood = 4,
+        /// <summary>
+        /// 读条中100000
+        /// </summary>
+        WindUp = 5,
     }
 }
