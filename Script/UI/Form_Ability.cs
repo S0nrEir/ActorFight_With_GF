@@ -391,9 +391,7 @@ namespace Aquila.UI
             private void Reset()
             {
                 ReadyFlag   = false;
-                _addStep    = 0f;
                 _totalTime  = 0f;
-                _remainTime = 0f;
                 _passedTime = 0f;
             }
 
@@ -408,11 +406,6 @@ namespace Aquila.UI
             private Slider _slider = null;
             
             /// <summary>
-            /// 每帧增量步长
-            /// </summary>
-            private float _addStep = 0f;
-            
-            /// <summary>
             /// 总时长
             /// </summary>
             private float _totalTime = 0f;
@@ -421,11 +414,6 @@ namespace Aquila.UI
             /// 剩余时间文本
             /// </summary>
             private Text _remainText = null;
-            
-            /// <summary>
-            /// 剩余时间
-            /// </summary>
-            private float _remainTime = 0f;
 
             /// <summary>
             /// 经过时间
