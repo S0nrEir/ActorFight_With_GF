@@ -36,14 +36,7 @@ namespace Aquila.Module
     //GAS中的做法是，提供一个接口来给actor应用效果，比如effect.ApplyTo(actor);
     //但这样其实是把每个effect和actor关联到了一起，持续性的buff如果要用buffCompoent来做的话，需要保存对应的索引然后轮询才可以
     //在GAS中，GE还有一个GESpec用来处理他的逻辑，它可以在运行时创建
-
-
-    //一个冷却的例子：
-    //var cdSpec   = this.Owner.MakeOutgoingSpec(this.Ability.Cooldown);
-    //this.Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
-    //技能数据(this)的持有者(asc)获取对应类型的effectSpec实例
-    //然后将该实例应用于owner
-
+    
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
@@ -51,9 +44,9 @@ namespace Aquila.Module
     {
         #region ability相关
         /// <summary>
-        /// 实现一个Effect的效果
+        /// 应用一个Effect的效果
         /// </summary>
-        public void ImplEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect )
+        public void ApplyEffect( ActorInstance castor, ActorInstance target, EffectSpec_Base effect )
         {
             var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
             if ( castor is null || target is null )
@@ -93,7 +86,7 @@ namespace Aquila.Module
                 Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>AffectImpact()--->!targetInstance.has</color>" );
                 return;
             }
-            ImplEffect( Get( castorID ), Get( targetID ), effect );
+            ApplyEffect( Get( castorID ), Get( targetID ), effect );
         }
 
         /// <summary>
@@ -144,7 +137,7 @@ namespace Aquila.Module
                 var temp = TryGet( targetID );
                 if ( !temp.has )
                 {
-                    Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                    Log.Warning( "<color=yellow>Module_ProxyActor.Fight===>ApplyEffect2Actor()--->!targetInstance.has</color>" );
                     return;
                 }
                 targetInstance = temp.instance;
@@ -300,8 +293,7 @@ namespace Aquila.Module
             foreach ( var actorID in relevanceActorsID )
             {
                 var relevanceActor = Get( actorID );
-                if ( relevanceActor.Actor is Actor_Orb )
-                    ( relevanceActor.Actor as Actor_Orb ).SetTargetPositionAndReady( actor.CachedTransform );
+                ( relevanceActor.Actor as Actor_Orb )?.SetTargetPositionAndReady( actor.CachedTransform );
             }
 
             GameEntry.Entity.HideEntity( actor.ActorID );

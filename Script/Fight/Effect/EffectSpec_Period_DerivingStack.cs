@@ -49,7 +49,7 @@ namespace Aquila.Fight
                     if ( newEffect is ICustomizableEffect )
                         ( newEffect as ICustomizableEffect ).SetModifier( this );
 
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ImplEffect( castor, target, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
                     GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
