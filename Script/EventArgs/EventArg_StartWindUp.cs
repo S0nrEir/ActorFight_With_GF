@@ -16,14 +16,22 @@ namespace  Aquila.Event
 
         public override int Id => EventID;
 
-        public float totalTime = 0f;
+        /// <summary>
+        /// 读条时长
+        /// </summary>
+        public float _totalTime = 0f;
+
+        /// <summary>
+        /// 施加的目标ActorID
+        /// </summary>
+        public int _targetActorID = 0;
         
-        public static EventArg_StartWindUp Create(float totalTime)
+        public static EventArg_StartWindUp Create(float totalTime,int targetActorID)
         {
-            var arg = ReferencePool.Acquire<EventArg_StartWindUp>();
-            arg.totalTime = totalTime;
+            var arg            = ReferencePool.Acquire<EventArg_StartWindUp>();
+            arg._totalTime     = totalTime;
+            arg._targetActorID = targetActorID;
             return arg;
         }
     }
-   
 }

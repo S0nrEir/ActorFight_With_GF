@@ -16,19 +16,26 @@ namespace Aquila.UI
     /// </summary>
     public class Form_Ability : UIFormLogic
     {
+        //---------------- event ----------------
         /// <summary>
         /// 开始读条
         /// </summary>
-        public void OnStartWindUp(object sender, GameEventArgs arg)
+        private void OnStartWindUp(object sender, GameEventArgs arg)
         {
-            if (arg is EventArg_StartWindUp)
-                _windUpItem.GetReady((arg as EventArg_StartWindUp).totalTime);
+            if (!(arg is EventArg_StartWindUp))
+                return;
+
+            var param = arg as EventArg_StartWindUp;
+            // if(param._targetActorID != mainActorID)
+            //     return;
+            
+            _windUpItem.GetReady(param._totalTime);
         }
 
         /// <summary>
         /// 技能命中
         /// </summary>
-        public void OnAbilityHit( object sender, GameEventArgs arg )
+        private void OnAbilityHit( object sender, GameEventArgs arg )
         {
             
         }
@@ -51,13 +58,6 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 点击退出按钮
-        /// </summary>
-        private void OnClickTestBtn()
-        {
-        }
-
-        /// <summary>
         /// click事件
         /// </summary>
         private void OnIconItemClicked( int abilityID )
@@ -70,7 +70,7 @@ namespace Aquila.UI
             //_enemyActorIdArr[0]:1001
             _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
-
+        
         /// <summary>
         /// 初始化缓存item
         /// </summary>
@@ -161,12 +161,15 @@ namespace Aquila.UI
             InitAbilityIconItem();
             InitWindUpItem(_windUpRootObj);
             _testBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
-            _testBtn.onClick.AddListener(OnClickTestBtn);
+            _testBtn.onClick.AddListener(() =>
+            {
+                
+            });
             ReferencePool.Release( param );
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
-            GameEntry.Event.Subscribe(EventArg_StartWindUp.EventID,OnStartWindUp);
+            GameEntry.Event.Subscribe( EventArg_StartWindUp.EventID, OnStartWindUp);
         }
 
         protected override void OnRecycle()
