@@ -4,7 +4,7 @@ using Cfg.Enum;
 
 namespace Aquila.Fight
 {
-    public class EffectSpec_Period_WinUp : EffectSpec_Base
+    public class EffectSpec_Period_WindUp : EffectSpec_Base
     {
         public override void OnEffectAwake(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
@@ -15,7 +15,8 @@ namespace Aquila.Fight
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //直接删除tag
+            //检查角色身上的所有tag，如果自己是最后一个才移除tag
+            
             target.Actor.RemoveTag((int)ActorTagType.WindUp);
         }
     }
