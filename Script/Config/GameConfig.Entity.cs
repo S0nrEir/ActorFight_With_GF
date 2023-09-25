@@ -14,37 +14,27 @@ namespace Aquila.Config
             /// <summary>
             /// 英雄类actor组
             /// </summary>
-            public const string GROUP_HERO_ACTOR = "HeroActor";
-
-            /// <summary>
-            /// 特效类actor组
-            /// </summary>
-            public const string GROUP_ACTOR_FX = "ActorFX";
+            public const string GROUP_HERO_ACTOR = "Hero";
 
             /// <summary>
             /// 投射物
             /// </summary>
-            public const string GROUP_PROJECTILE = "ProjectileActor";
+            public const string GROUP_PROJECTILE = "Projectile";
 
             /// <summary>
-            /// Trigger类actor组
+            /// 特效entity组
             /// </summary>
-            public const string GROUP_TRIGGER = "TriggerActor";
+            public const string GROUP_FX = "FX";
 
             /// <summary>
-            /// 其他
-            /// </summary>
-            public const string GROUP_OTHER = "Other";
-
-            /// <summary>
-            /// actor
+            /// actor 优先级
             /// </summary>
             public const int PRIORITY_ACTOR = 1;
 
             /// <summary>
-            /// 特效
+            /// 特效 优先级
             /// </summary>
-            public const int PRIORITY_FX = 2;
+            public const int PRIORITY_FX = 3;
 
 
         }

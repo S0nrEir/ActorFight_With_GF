@@ -155,22 +155,6 @@ namespace Aquila.Fight.Addon
             base.Dispose();
         }
 
-
-        public override void Reset()
-        {
-            base.Reset();
-        }
-
-        public override void OnRemove()
-        {
-            base.OnRemove();
-        }
-
-        // /// <summary>
-        // /// 技能元数据
-        // /// </summary>
-        // private TB_AbilityBase _meta = null;
-
         /// <summary>
         /// 持有的技能
         /// </summary>

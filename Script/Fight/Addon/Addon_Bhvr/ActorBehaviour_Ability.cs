@@ -12,7 +12,8 @@ namespace Aquila.Fight
     {
         public override void Exec( object param )
         {
-            var addon = _instance.GetAddon<Addon_FSM>();
+            // var addon = _instance.GetAddon<Addon_FSM>();
+            var addon = _instance.GetAddon<Addon_HeroFSM>();
             if ( addon is null )
             {
                 Log.Warning( $"fsm addon is null" );
@@ -21,7 +22,7 @@ namespace Aquila.Fight
 
             if ( addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE && addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE )
             {
-                Log.Warning( $" addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE || addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE" );
+                Log.Info( $"<color=white> addon.CurrState != FSM.ActorStateTypeEnum.IDLE_STATE || addon.CurrState != FSM.ActorStateTypeEnum.MOVE_STATE</color>" );
                 return;
             }
 

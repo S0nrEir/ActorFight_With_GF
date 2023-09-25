@@ -1,8 +1,8 @@
-using Cfg.Enum;
-using Aquila.Fight.Addon;
-using System.Collections.Generic;
-using System;
 using Aquila.Fight.Actor;
+using Aquila.Fight.Addon;
+using Cfg.Enum;
+using System;
+using System.Collections.Generic;
 
 namespace Aquila.Toolkit
 {
@@ -14,9 +14,36 @@ namespace Aquila.Toolkit
         public static class Actor
         {
             /// <summary>
+            /// 获取actor对应的entity数据，拿不到返回false
+            /// </summary>
+            public static (bool genSucc, Type actorType, string group, int priority) GetActorEntityInfo( RoleType roleType )
+            {
+                var result = (genSucc: true, actorType: typeof( Actor_Base ), group: string.Empty, priority: -1);
+                switch ( roleType )
+                {
+                    case RoleType.Hero:
+                        result.actorType = typeof( Actor_Hero );
+                        result.group = Config.GameConfig.Entity.GROUP_HERO_ACTOR;
+                        result.priority = Config.GameConfig.Entity.PRIORITY_ACTOR;
+                        break;
+
+                    case RoleType.Orb:
+                        result.actorType = typeof( Actor_Orb );
+                        result.group = Config.GameConfig.Entity.GROUP_PROJECTILE;
+                        result.priority = Config.GameConfig.Entity.PRIORITY_ACTOR;
+                        break;
+
+                    default:
+                        result.genSucc = false;
+                        break;
+                }
+                return result;
+            }
+
+            /// <summary>
             /// 枚举的roleType转system.type类型，找不到匹配类型会返回Actor_Base类型
             /// </summary>
-            public static Type RoleTypeEnum2SystemType( RoleType type)
+            public static Type RoleTypeEnum2SystemType( RoleType type )
             {
                 switch ( type )
                 {
@@ -65,7 +92,7 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 尝试从一组addon中获取指定类型的addon，拿不到返回null
             /// </summary>
-            public static T FilterAddon<T>(Addon_Base[] addons) where T : Addon_Base
+            public static T FilterAddon<T>( Addon_Base[] addons ) where T : Addon_Base
             {
                 if ( addons is null || addons.Length == 0 )
                     return null;

@@ -7,7 +7,7 @@ namespace Aquila.Toolkit
         public static class UI
         {
             /// <summary>
-            /// »ñÈ¡¶ÔÓ¦µÄUI²ÎÊı£¬ÄÃ²»µ½·µ»Ø¿Õ
+            /// è·å–å¯¹åº”çš„UIå‚æ•°ï¼Œæ‹¿ä¸åˆ°è¿”å›ç©º
             /// </summary>
             public static T GetFormParam<T>( object userData ) where T : class
             {

@@ -37,7 +37,7 @@ namespace Aquila.Module
             var instance = Get( actorID );
             return instance is null ? GameEntry.GlobalVar.InvalidPosition : instance.Actor.CachedTransform.position;
         }
-
+        
         /// <summary>
         /// 获取一个技能的冷却
         /// </summary>

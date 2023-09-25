@@ -2,6 +2,7 @@ using Aquila.Extension;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.Addon_Base;
 
@@ -52,8 +53,8 @@ namespace Aquila.Module
 
         private void SystemUpdate( float elapsed, float realElapsed )
         {
-            ProcessAdd();
             ProcessRemove();
+            ProcessAdd();
             for ( var i = 0; i < _containerList.Length; i++ )
                 _containerList[i].Update( elapsed, realElapsed );
         }
@@ -106,7 +107,6 @@ namespace Aquila.Module
 
 #pragma warning disable CS0162 // 检测到无法访问的代码
             foreach ( var pool in _containerList )
-#pragma warning restore CS0162 // 检测到无法访问的代码
                 ReferencePool.Release( pool );
 
             //_containerList.Clear();
@@ -120,28 +120,30 @@ namespace Aquila.Module
 
             _existAddon.Clear();
             _existAddon = null;
+#pragma warning restore CS0162 // 检测到无法访问的代码
         }
 
         //------------------- fields -------------------
+        
         /// <summary>
         /// 组件容器列表
         /// </summary>
-        private AddonContainer[] _containerList = null;
+        private AddonContainer[] _containerList;
 
         /// <summary>
         /// 待添加
         /// </summary>
-        private Queue<Addon_Base> _readyToAdd = null;
+        private Queue<Addon_Base> _readyToAdd;
 
         /// <summary>
         /// 待移除
         /// </summary>
-        private Queue<Addon_Base> _readyToRemove = null;
+        private Queue<Addon_Base> _readyToRemove;
 
         /// <summary>
         /// 保存已添加的addon hashcode
         /// </summary>
-        private HashSet<int> _existAddon = null;
+        private HashSet<int> _existAddon;
 
         /// <summary>
         /// Addon池，保存不同类型的addon
@@ -160,22 +162,23 @@ namespace Aquila.Module
 
             public void Update( float elapsed, float realElapsed )
             {
-                foreach ( var addon in _curr )
+                //attention:这里的调用是发生在下一帧的
+                //question:考虑给addon加上释放标记？
+                var cnt = _curr.Count;
+                for (var i = 0; i < cnt; i++)
                 {
-                    if ( _toRemove.Contains( addon ) )
+                    if (_toRemove.Contains(_curr[i]))
                     {
-                        //_toRemove.Remove( addon );
-                        addon.Dispose();
+                        _curr[i].Dispose();
+                        _toRemove.Remove(_curr[i]);
                         continue;
                     }
-                    addon.OnUpdate( elapsed, realElapsed );
-                    _next.Add( addon );
+                    
+                    _curr[i].OnUpdate(elapsed,realElapsed);
+                    _next.Add(_curr[i]);
                 }
 
-                _temp = _curr;
-                _temp.Clear();
-                _curr = _next;
-                _next = _temp;
+                SwapCurrAndNext();
             }
 
             public AddonContainer()
@@ -199,13 +202,24 @@ namespace Aquila.Module
             }
 
             /// <summary>
+            /// 交换curr和next
+            /// </summary>
+            private void SwapCurrAndNext()
+            {
+                _temp = _curr;
+                _temp.Clear();
+                _curr = _next;
+                _next = _temp;
+            }
+
+            /// <summary>
             /// addon列表
             /// </summary>
             private List<Addon_Base> _curr = null;
             private List<Addon_Base> _next = null;
             private List<Addon_Base> _temp = null;
 
-            //todo:考虑是否不用hashset保存，是否有更好的剔除思路
+            //todo:考虑是否不用hashset保存，是否有更好的剔除思路，如果不用的话，考虑使用addon的释放标记
             /// <summary>
             /// 要移除的组件
             /// </summary>

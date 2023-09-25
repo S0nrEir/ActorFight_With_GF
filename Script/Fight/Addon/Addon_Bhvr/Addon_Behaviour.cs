@@ -1,5 +1,7 @@
+using System;
 using Aquila.Module;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
@@ -68,26 +70,19 @@ namespace Aquila.Fight.Addon
 
         public override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
-            base.OnUpdate( elapseSeconds, realElapseSeconds );
-            var iter = _behaviourDic.GetEnumerator();
-            while ( iter.MoveNext() )
-                iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
-            //try
-            //{
-            //    var iter = _behaviourDic.GetEnumerator();
-            //    while ( iter.MoveNext() )
-            //        iter.Current.Value.Update( elapseSeconds, realElapseSeconds );
-            //}
-            //catch( System.Exception err )
-            //{
-            //    Debug.LogError( err.Message );
-            //    Debug.Break();
-            //    Debug.DebugBreak();
-            //}
-        }
-
-        public override void Cancel()
-        {
+            foreach (var kv in _behaviourDic)
+                kv.Value.Update(elapseSeconds,realElapseSeconds);
+            
+            // try
+            // {
+            //     foreach (var kv in _behaviourDic)
+            //         kv.Value.Update(elapseSeconds,realElapseSeconds);
+            // }
+            // catch (InvalidOperationException e)
+            // {
+            //     Debug.Log("*********** releaseFlag:"+ReleasFlag);
+            //     Debug.Break();
+            // }
         }
 
         public override void OnAdd()
@@ -107,9 +102,8 @@ namespace Aquila.Fight.Addon
 
         public override void Dispose()
         {
-            var iter = _behaviourDic.GetEnumerator();
-            while ( iter.MoveNext() )
-                iter.Current.Value.Dispose();
+            foreach (var kv in _behaviourDic)
+                kv.Value.Dispose();
 
             _behaviourDic.Clear();
             _behaviourDic = null;

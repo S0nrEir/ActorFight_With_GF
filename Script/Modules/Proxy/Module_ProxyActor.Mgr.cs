@@ -3,6 +3,7 @@ using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -14,16 +15,33 @@ namespace Aquila.Module
         //----------------pub----------------
 
         /// <summary>
+        /// 获取actor的根Transform组件
+        /// </summary>
+        public Transform GetActorTransform(int actorID)
+        {
+            return Get(actorID).Actor.CachedTransform;
+        }
+
+        /// <summary>
+        /// 移除一个actor的关联actor
+        /// </summary>
+        public bool RemoveRelevance( int actorID, int toRemoveActorID )
+        {
+            var instance = Get( actorID );
+            if ( instance is null || !instance.RemoveRevelence( toRemoveActorID ) )
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// 为一个actor添加关联actor
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public Transform AddRelevance( int actorID, int relevanceActorID )
+        public bool AddRelevance(int actorID, int relevanceActorID)
         {
-            var instance = Get( actorID );
-            if ( instance is null || !instance.AddRevelence( relevanceActorID ) )
-                return null;
-
-            return instance.Actor.CachedTransform;
+            var instance = Get(actorID);
+            return instance != null && instance.AddRelevance(relevanceActorID);
         }
 
         /// <summary>
@@ -39,63 +57,34 @@ namespace Aquila.Module
 
             var res = TryGet( actor.ActorID );
             if ( !res.has )
-                return Register( actor, new Addon_Base[] { addon } );
-            else
-            {
-                var ins = res.instance;
-                ins.AddAddon( addon );
-                //AddToAddonSystem( addon );
-                return (true, ins);
-            }
-        }
-
-        public (bool succ, ActorInstance instance) Register( Actor_Base actor )
-        {
-            if ( actor is null )
-            {
-                Log.Warning( "<color=yellow>actor is null.</color>" );
                 return (false, null);
-            }
 
-            if ( Contains( actor.ActorID ) )
-            {
-                Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
-                return (false, null); ;
-            }
-
-            var actorCase = ReferencePool.Acquire<ActorInstance>();
-            actorCase.Setup( actor );
-            _proxyActorDic.Add( actor.ActorID, actorCase );
-            //todo:整理两个register接口为一个
-            _registered_id_set.Add( actor.ActorID );
-            return (true, actorCase);
+            var ins = res.instance;
+            ins.AddAddon( addon );
+            return (true, ins);
         }
 
         /// <summary>
-        /// 将actor注册到代理中，成功返回true
+        /// 将一个actor添加到instance管理模块中
         /// </summary>
-        public (bool succ, ActorInstance instance) Register( Actor_Base actor, Addon_Base[] addons )
+        public (bool regSucc, ActorInstance instance) Register( Actor_Base actor )
         {
             if ( actor is null )
             {
-                Log.Warning( "<color=yellow>actor is null.</color>" );
+                Log.Warning( "<color=yellow>Module_ProxyActor.Register()--->actor is null.</color>" );
                 return (false, null);
             }
 
             if ( Contains( actor.ActorID ) )
             {
-                Log.Warning( $"<color=yellow>proxy has contains actor,id={actor.ActorID}.</color>" );
+                Log.Warning( $"<color=yellow>Module_ProxyActor.Register()--->proxy has contains actor,id={actor.ActorID}.</color>" );
                 return (false, null); ;
             }
 
             var actorCase = ReferencePool.Acquire<ActorInstance>();
-            //actorCase.Setup( actor, addons );
             actorCase.Setup( actor );
             _proxyActorDic.Add( actor.ActorID, actorCase );
             _registered_id_set.Add( actor.ActorID );
-            //将addon加入组件系统
-            //foreach ( var addon in addons )
-            //    AddToAddonSystem( addon );
 
             return (true, actorCase);
         }
@@ -121,13 +110,17 @@ namespace Aquila.Module
             var addons = actorCase.AllAddons();
             foreach ( var addon in addons )
             {
+                //当前的问题是，当前这帧先调用了dispose清掉了组件数据，然后才走到了MonoBehaviour的Update，这可能是由引擎层决定的调用顺序，导致组件系统访问了已经被清理的组件，在下一帧的时候组件系统才会清掉要移除的组件
+                //解决办法是要么在这帧update调用前就把组件系统的对应组件清掉，要么保证脏标记在这帧update调用前被设置
+                //当前选择了第一种办法，直接在组件系统里调用了addon.dispose，参见Module_ProxyActor.System.cs的issue
+                
+                //也有可能是当前这帧组件系统在跑update，然后调用了dispose，导致修改了正在update访问中的组件数据
+                //设置releaseFlag为true的时候当前帧已经开始了，换句话说已经开始update了
+                // addon.ReleasFlag = true;
                 RemoveFromAddonSystem( addon );
-                //attention：这里dispose被移到了addonSystem里，在移除的时候调用一次Dispose
-                //以addon_behaviour举例，这样做的原因是，在当前帧轮询到行为组件拿到它的组件迭代器，开始遍历操作期间，调用了下面的Dispose，导致清掉了行为组件的集合，导致报出iteration may changed error.
-                //addon.Dispose();
+                // addon.Dispose();
             }
 
-            //actorCase.Clear();
             ReferencePool.Release( actorCase );
             return _proxyActorDic.Remove( id ) && _registered_id_set.Remove( id );
         }
