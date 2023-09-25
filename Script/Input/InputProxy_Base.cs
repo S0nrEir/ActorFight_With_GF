@@ -12,6 +12,13 @@ namespace Aquila.Input
         }
 
         /// <summary>
+        /// 释放当前代理持有的相关资源
+        /// </summary>
+        public void Dispose()
+        {
+        }
+
+        /// <summary>
         /// 输入类型
         /// </summary>
         public abstract InputDeviceTypeEnum InputType { get; }
@@ -20,7 +27,5 @@ namespace Aquila.Input
         /// 刷帧处理输入
         /// </summary>
         public abstract void Update(float elpased);
-
     }
-   
 }

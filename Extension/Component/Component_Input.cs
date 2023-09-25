@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Input;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -14,6 +11,8 @@ namespace  Aquila.Extension
     {
         
         //----------------override----------------
+        
+        
         protected override void Awake()
         {
             base.Awake();
