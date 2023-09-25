@@ -9,6 +9,24 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Impact
 {
+    //            impact pool
+    //----------------------------------
+    //| entity_1 | entity_2 | entity_3 |
+    //----------------------------------
+    //| impact_1 | impact_2 | impact_3 |
+    //----------------------------------
+    
+    //                             get by entity id
+    //          entity pool <-------------------------------imapct pool
+    //       /      |       \
+    //      /       |         \
+    //----------------------------------
+    //| entity_1 | entity_2 | entity_3 |
+    //----------------------------------
+    //        \       |     /
+    //         \      |    /
+    //          _curr/invalid
+    
     /// <summary>
     /// 角色的主动和被动效果组件
     /// </summary>
