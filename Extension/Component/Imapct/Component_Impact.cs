@@ -180,7 +180,11 @@ namespace Aquila.Fight.Impact
                         Log.Warning( $"<color=yellow>Component_Impact.Update()--->effectSpec is null ,index:{impactData._effectHash}</color>" );
                         continue;
                     }
-                    tempEffect.StackCount = impactData._stackCount;
+                    
+                    //设置叠层
+                    if(tempEffect.StackCount != impactData._stackCount)
+                        tempEffect.StackCount = impactData._stackCount;
+                    
                     GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
 
                     impactData._interval = 0f;
