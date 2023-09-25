@@ -46,6 +46,24 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
+        /// 筛选指定target上的特定类型的effect，有返回true
+        /// </summary>
+        public bool FilterSpecEffect(int targetID,Func<EffectSpec_Base,bool> filterFunc)
+        {
+            var effects = GetAttachedEffect(targetID);
+            if (effects is null || effects.Length == 0)
+                return false;
+
+            foreach (var effect in effects)
+            {
+                if (filterFunc(effect))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 在下一帧移除actor特定类型的effect
         /// </summary>
         public void PrepareRemoveEffectByType<T>(int actorID) where T : EffectSpec_Base
@@ -89,6 +107,7 @@ namespace Aquila.Fight.Impact
                 return null;
             }
             
+            //todo:优化，不要每次都返回一个新的数组，考虑使用一个缓存的集合
             var result = new EffectSpec_Base[indexList.Count];
             var i = 0;
             foreach ( var index in indexList )
