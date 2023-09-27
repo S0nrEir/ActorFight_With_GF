@@ -158,20 +158,20 @@ namespace Aquila.Fight.Impact
             {
                 //new entity
                 var entity = NewImpactEntity();
-                var key = newEffect.GetHashCode();
-                if ( _effectDic.ContainsKey( key ) )
+                var effectHashCode = newEffect.GetHashCode();
+                if ( _effectDic.ContainsKey( effectHashCode ) )
                 {
-                    Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{key}</color>" );
+                    Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{effectHashCode}</color>" );
                     //ReferencePool.Release( newEffect );
                     GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect, false );
                     return;
                 }
 
                 ref var impactData = ref _pool.Add( entity );
-                InitImpactData( ref impactData, newEffect, castorActorID, targetActorID, key );
+                InitImpactData( ref impactData, newEffect, castorActorID, targetActorID, effectHashCode );
                 newEffect._impactEntityIndex = entity;
                 _curr.Add( entity );
-                AddEffect( key, newEffect );
+                AddEffect( effectHashCode, newEffect );
                 AddMapIndex( targetActorID, impactData._effectHash );
 
                 if ( impactData._effectOnAwake )
@@ -280,12 +280,12 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 初始化一个impact数据
         /// </summary>
-        private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int key )
+        private void InitImpactData( ref ImpactData impactData, EffectSpec_Base effect, int castorActorID, int targetActorID, int effectHashCode )
         {
             impactData._castorActorID             = castorActorID;
             impactData._targetActorID             = targetActorID;
             impactData._duration                  = effect.Meta.Duration;
-            impactData._effectHash               = key;
+            impactData._effectHash                = effectHashCode;
             impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
             impactData._period                    = effect.Meta.Period;
             impactData._policy                    = effect.Meta.Policy;
