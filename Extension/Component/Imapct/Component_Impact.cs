@@ -51,7 +51,7 @@ namespace Aquila.Fight.Impact
         public bool FilterSpecEffect(int targetID,Func<EffectSpec_Base,bool> filterFunc)
         {
             var effects = GetAttachedEffect(targetID);
-            if (effects is null || effects.Length == 0)
+            if (effects is null || effects.Count == 0)
                 return false;
 
             foreach (var effect in effects)
@@ -84,7 +84,7 @@ namespace Aquila.Fight.Impact
         public EffectSpec_Base GetAttachedEffect<T>( int actorID ) where T : EffectSpec_Base
         {
             var effectArr = GetAttachedEffect( actorID );
-            if ( effectArr is null || effectArr.Length == 0 )
+            if ( effectArr is null || effectArr.Count == 0 )
                 return null;
 
             foreach ( var effect in effectArr )
@@ -98,7 +98,24 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 获取附加在某actor上的effect实例集合，拿不到返回空
         /// </summary>
-        public EffectSpec_Base[] GetAttachedEffect( int actorID )
+        // public EffectSpec_Base[] GetAttachedEffect( int actorID )
+        // {
+        //     var indexList = GetMapIndex( actorID );
+        //     if ( indexList is null || indexList.Count == 0 )
+        //     {
+        //         Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
+        //         return null;
+        //     }
+        //     
+        //     //todo:优化，不要每次都返回一个新的数组，考虑使用一个缓存的集合
+        //     _cachedEffectResultList.Clear();
+        //     foreach ( var index in indexList )
+        //         _cachedEffectResultList.Add(GetEffect( index ));
+        //
+        //     return _cachedEffectResultList.ToArray();
+        // }
+        
+        public IReadOnlyCollection<EffectSpec_Base> GetAttachedEffect( int actorID )
         {
             var indexList = GetMapIndex( actorID );
             if ( indexList is null || indexList.Count == 0 )
@@ -108,12 +125,11 @@ namespace Aquila.Fight.Impact
             }
             
             //todo:优化，不要每次都返回一个新的数组，考虑使用一个缓存的集合
-            var result = new EffectSpec_Base[indexList.Count];
-            var i = 0;
+            _cachedEffectResultList.Clear();
             foreach ( var index in indexList )
-                result[i++] = GetEffect( index );
-
-            return result;
+                _cachedEffectResultList.Add(GetEffect( index ));
+        
+            return _cachedEffectResultList.AsReadOnly();
         }
 
         /// <summary>
@@ -178,7 +194,7 @@ namespace Aquila.Fight.Impact
         private EffectSpec_Base GetEffectByID( int targetID, Type type )
         {
             var effectArr = GetAttachedEffect( targetID );
-            if ( effectArr is null || effectArr.Length == 0 )
+            if ( effectArr is null || effectArr.Count == 0 )
                 return null;
 
             foreach ( var effect in effectArr )
@@ -399,7 +415,7 @@ namespace Aquila.Fight.Impact
         {
             EnsureInit();
         }
-
+        
         private void EnsureInit()
         {
             _effectDic              = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
@@ -412,6 +428,7 @@ namespace Aquila.Fight.Impact
             _curr    = new List<int>( _defaultEntityCount / 2 );
             _next    = new List<int>( _defaultEntityCount / 2 );
             _invalid = new List<int>( _defaultEntityCount / 2 );
+            _cachedEffectResultList = new List<EffectSpec_Base>();
         }
 
         //----------------------- fields -----------------------
@@ -461,5 +478,10 @@ namespace Aquila.Fight.Impact
         /// impact实体回收池
         /// </summary>
         private int[] _recycleImpactEntityArr = null;
+
+        /// <summary>
+        /// 缓存的effect查询结果集合缓存
+        /// </summary>
+        private List<EffectSpec_Base> _cachedEffectResultList = null;
     }
 }
