@@ -84,8 +84,7 @@ namespace Aquila.UI
             for ( int i = 0; i < len; i++ )
             {
                 var id = _abilityIdArr[i];
-                generated = GameObject.Instantiate( _tempGameObejct );
-                generated.transform.SetParent( _grid.transform );
+                generated = GameObject.Instantiate( _tempGameObejct, _grid.transform, true);
                 generated.transform.localScale = Vector3.one;
                 generated.transform.eulerAngles = Vector3.zero;
                 Tools.SetActive( generated, true );
