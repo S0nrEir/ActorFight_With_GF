@@ -131,7 +131,7 @@ namespace Aquila.UI
             {
                 var cd = _actorProxy.GetCoolDown( _actorID, id );
                 var percent = cd.remain / cd.duration;
-                _iconItemDic[id].CD( percent, percent.ToString() );
+                _iconItemDic[id].CD( percent, percent.ToString("{0:f1}") );
             }
             _windUpItem?.Update(elapseSeconds);
         }
