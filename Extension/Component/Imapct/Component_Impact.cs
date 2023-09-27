@@ -124,7 +124,6 @@ namespace Aquila.Fight.Impact
                 return null;
             }
             
-            //todo:优化，不要每次都返回一个新的数组，考虑使用一个缓存的集合
             _cachedEffectResultList.Clear();
             foreach ( var index in indexList )
                 _cachedEffectResultList.Add(GetEffect( index ));
@@ -359,16 +358,16 @@ namespace Aquila.Fight.Impact
         /// 获取一个effect实例
         /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        private EffectSpec_Base GetEffect( int key )
+        private EffectSpec_Base GetEffect( int effectHashCode )
         {
-            if ( _effectDic.TryGetValue( key, out var effectSpec ) )
+            if ( _effectDic.TryGetValue( effectHashCode, out var effectSpec ) )
                 return effectSpec;
 
             return null;
         }
 
         /// <summary>
-        /// 获取映射索引
+        /// 获取actor持有的所有impact索引
         /// </summary>
         private LinkedList<int> GetMapIndex( int targetID )
         {
@@ -435,7 +434,7 @@ namespace Aquila.Fight.Impact
         private ImpactDataPool _pool = null;
 
         /// <summary>
-        /// 存储的effect实例集合,k=impactIndex
+        /// 存储的effect实例集合,k=effect hashCode
         /// </summary>
         private Dictionary<int, EffectSpec_Base> _effectDic = null;
 
