@@ -4,13 +4,16 @@ using Cfg.Enum;
 
 namespace Aquila.Fight
 {
+    /// <summary>
+    /// 吟唱effect
+    /// </summary>
     public class EffectSpec_Period_WindUp : EffectSpec_Base
     {
         public override void OnEffectAwake(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             //直接上tag
             target.Actor.AddTag((int)ActorTagType.WindUp);
-            GameEntry.Event.Fire(this,EventArg_StartWindUp.Create(Meta.ExtensionParam.FloatParam_1,target.Actor.ActorID));
+            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.ExtensionParam.FloatParam_1,target.Actor.ActorID));
         }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)

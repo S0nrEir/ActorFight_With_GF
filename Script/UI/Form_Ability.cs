@@ -20,16 +20,16 @@ namespace Aquila.UI
         /// <summary>
         /// 开始读条
         /// </summary>
-        private void OnStartWindUp(object sender, GameEventArgs arg)
+        private void OnWindUp(object sender, GameEventArgs arg)
         {
-            if (!(arg is EventArg_StartWindUp))
+            if (!(arg is EventArg_WindUp))
                 return;
 
-            var param = arg as EventArg_StartWindUp;
-            // if(param._targetActorID != mainActorID)
-            //     return;
-            
-            _windUpItem.GetReady(param._totalTime);
+            var param = arg as EventArg_WindUp;
+            if(param._isStart)
+                _windUpItem.GetReady(param._totalTime);
+            else
+                _windUpItem.Stop();
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Aquila.UI
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
-            GameEntry.Event.Subscribe( EventArg_StartWindUp.EventID, OnStartWindUp);
+            GameEntry.Event.Subscribe( EventArg_WindUp.EventID, OnWindUp);
         }
 
         protected override void OnRecycle()
@@ -187,7 +187,7 @@ namespace Aquila.UI
             _testBtn.onClick.RemoveAllListeners();
             GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Unsubscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
-            GameEntry.Event.Unsubscribe( EventArg_StartWindUp.EventID, OnStartWindUp );
+            GameEntry.Event.Unsubscribe( EventArg_WindUp.EventID, OnWindUp );
             base.OnClose( isShutdown, userData );
         }
 
@@ -338,18 +338,22 @@ namespace Aquila.UI
                 
                 //finish
                 if (_slider.value >= 1f)
-                {
-                    Tools.SetActive(_slider.gameObject,false);
-                    Tools.SetActive(_remainText.gameObject,false);
-                    Tools.SetActive(_root,false);
-                    Reset();   
-                }
+                    Stop();
                 else
-                {
                     _remainText.text = remainTime.ToString();
-                }
             }
-            
+
+            /// <summary>
+            /// 停止读条
+            /// </summary>
+            public void Stop()
+            {
+                Tools.SetActive(_slider.gameObject,false);
+                Tools.SetActive(_remainText.gameObject,false);
+                Tools.SetActive(_root,false);
+                Reset();
+            }
+
             /// <summary>
             /// 刷帧跑进度
             /// </summary>
