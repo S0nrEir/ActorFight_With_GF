@@ -1,6 +1,8 @@
 using Aquila.Event;
 using Aquila.Module;
 using Cfg.Enum;
+using UnityEditor;
+using Tools = Aquila.Toolkit.Tools;
 
 namespace Aquila.Fight
 {
@@ -11,9 +13,9 @@ namespace Aquila.Fight
     {
         public override void OnEffectAwake(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //直接上tag
+            //吟唱生效时，添加吟唱tag
             target.Actor.AddTag((int)ActorTagType.WindUp);
-            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.ExtensionParam.FloatParam_1,target.Actor.ActorID));
+            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.Duration,target.Actor.ActorID));
         }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
