@@ -166,7 +166,6 @@ namespace Aquila.UI
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            _abilityIdArr = new int[0];
         }
 
         protected override void OnOpen( object userData )
