@@ -100,7 +100,14 @@ namespace Aquila.UI
         /// </summary>
         private void InitWindUpItem(GameObject rootGo)
         {
+            if (rootGo == null)
+            {
+                Log.Warning("<color=yellow>Form_Ability.InitWindUpItem--->rootGo is null</color>");
+                return;
+            }
+
             _windUpItem = new WindUpItem(rootGo);
+            _windUpItem.Active();
         }
 
         /// <summary>
@@ -123,18 +130,34 @@ namespace Aquila.UI
             _iconItemDic.Clear();
             _iconItemDic = null;
         }
+        
+        /// <summary>
+        /// 刷新吟唱item
+        /// </summary>
+        private void RefreshWindUpItem(float elpased)
+        {
+            _windUpItem.Update(elpased);
+        }
 
-        protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
+        /// <summary>
+        /// 刷新技能图标CD
+        /// </summary>
+        private void RefreshAbilityIconCD()
         {
             foreach ( var id in _abilityIdArr )
             {
                 var cd = _actorProxy.GetCoolDown( _actorID, id );
                 var percent = cd.remain / cd.duration;
-                _iconItemDic[id].CD( percent, percent.ToString("{0:f1}") );
+                _iconItemDic[id].CD( percent, percent.ToString("n1") );
             }
-            _windUpItem.Update(elapseSeconds);
         }
-
+        
+        protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
+        {
+            RefreshAbilityIconCD();
+            RefreshWindUpItem(elapseSeconds);
+        }
+        
         protected override void OnReveal()
         {
             base.OnReveal();
@@ -166,9 +189,9 @@ namespace Aquila.UI
             });
             ReferencePool.Release( param );
 
-            GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
+            GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID , OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
-            GameEntry.Event.Subscribe( EventArg_WindUp.EventID, OnWindUp);
+            GameEntry.Event.Subscribe( EventArg_WindUp.EventID      , OnWindUp);
         }
 
         protected override void OnRecycle()
@@ -325,6 +348,14 @@ namespace Aquila.UI
         private class WindUpItem
         {
             /// <summary>
+            /// 激活
+            /// </summary>
+            public void Active()
+            {
+                Tools.SetActive(_root,true);
+            }
+
+            /// <summary>
             /// 刷帧跑读条
             /// </summary>
             public void Update(float deltaTime)
@@ -333,14 +364,14 @@ namespace Aquila.UI
                     return;
 
                 _passedTime += deltaTime;
-                _slider.value = _totalTime / _passedTime;
+                _slider.value = _passedTime / _totalTime;
                 var remainTime = _totalTime - _passedTime;
                 
                 //finish
                 if (_slider.value >= 1f)
                     Stop();
                 else
-                    _remainText.text = remainTime.ToString();
+                    _remainText.text = remainTime.ToString("n1");
             }
 
             /// <summary>
@@ -374,7 +405,7 @@ namespace Aquila.UI
             {
                 _root       = root;
                 _slider     = Tools.GetComponent<Slider>(_root, "Slider");
-                _remainText = Tools.GetComponent<Text>(_root  , "remain");
+                _remainText = Tools.GetComponent<Text>(_root  , "Remain");
                 Reset();
             }
             
@@ -396,6 +427,7 @@ namespace Aquila.UI
                 ReadyFlag   = false;
                 _totalTime  = 0f;
                 _passedTime = 0f;
+                _slider.value = 0f;
             }
 
             /// <summary>
