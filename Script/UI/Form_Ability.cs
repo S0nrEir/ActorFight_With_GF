@@ -132,7 +132,7 @@ namespace Aquila.UI
                 var percent = cd.remain / cd.duration;
                 _iconItemDic[id].CD( percent, percent.ToString("{0:f1}") );
             }
-            _windUpItem?.Update(elapseSeconds);
+            _windUpItem.Update(elapseSeconds);
         }
 
         protected override void OnReveal()
@@ -325,7 +325,7 @@ namespace Aquila.UI
         private class WindUpItem
         {
             /// <summary>
-            /// 刷帧跑进度
+            /// 刷帧跑读条
             /// </summary>
             public void Update(float deltaTime)
             {
