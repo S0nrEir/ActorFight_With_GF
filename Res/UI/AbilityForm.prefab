@@ -243,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tempGameObejct: {fileID: 6702093255351973906}
   _grid: {fileID: 5314157243142567129}
+  _windUpRootObj: {fileID: 4516641821985532697}
 --- !u!223 &8865545527483507144
 Canvas:
   m_ObjectHideFlags: 0
@@ -692,7 +693,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1877539807619432293}
   m_Layer: 5
-  m_Name: WindUp
+  m_Name: WindUpRootObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
