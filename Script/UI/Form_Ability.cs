@@ -287,14 +287,14 @@ namespace Aquila.UI
             /// </summary>
             public void Setup( GameObject go, int abilityID, Action<int> _clickCallBack )
             {
-                _root = go;
-                _abilityID = abilityID;
-                _cd = Tools.GetComponent<Image>( go.transform, "cd" );
-                _text = Tools.GetComponent<Text>( go.transform, "Text" );
-                _abilityIdText = Tools.GetComponent<Text>( go.transform, "AbilityIdText" );
-                _image = Tools.GetComponent<Image>( go, "Image" );
+                _root          = go;
+                _abilityID     = abilityID;
+                _cd            = Tools.GetComponent<Image>( go.transform, "cd" );
+                _text          = Tools.GetComponent<Text>( go.transform , "Text" );
+                _abilityIdText = Tools.GetComponent<Text>( go.transform , "AbilityIdText" );
+                _image         = Tools.GetComponent<Image>( go          , "Image" );
                 //_button                       = Tools.GetComponent<Button>( go, "Button" );
-                _button = Tools.GetComponent<Button>( _image.gameObject );
+                _button       = Tools.GetComponent<Button>( _image.gameObject );
                 clickCallBack = _clickCallBack;
                 _button.onClick.AddListener( OnClicked );
 
@@ -309,13 +309,13 @@ namespace Aquila.UI
             {
                 clickCallBack = null;
                 _button.onClick.RemoveAllListeners();
-                _root = null;
-                _abilityID = -1;
-                _cd = null;
-                _text = null;
+                _root          = null;
+                _abilityID     = -1;
+                _cd            = null;
+                _text          = null;
                 _abilityIdText = null;
-                _button = null;
-                _image = null;
+                _button        = null;
+                _image         = null;
             }
 
             private void OnClicked()
@@ -459,27 +459,28 @@ namespace Aquila.UI
             /// </summary>
             private GameObject _root = null;
         }
-    }
-
-    /// <summary>
-    /// 界面参数
-    /// </summary>
-    public class Form_AbilityParam : IReference
-    {
-        public int _mainActorID = -1;
-
-        public int[] _enemyActorID = null;
+        
 
         /// <summary>
-        /// {1000,1001,1002}
+        /// 界面参数
         /// </summary>
-        public int[] _abilityID = null;
-
-        public void Clear()
+        public class Form_AbilityParam : IReference
         {
-            _mainActorID = -1;
-            _enemyActorID = null;
-            _abilityID = null;
+            public int _mainActorID = -1;
+
+            public int[] _enemyActorID = null;
+
+            /// <summary>
+            /// {1000,1001,1002}
+            /// </summary>
+            public int[] _abilityID = null;
+
+            public void Clear()
+            {
+                _mainActorID = -1;
+                _enemyActorID = null;
+                _abilityID = null;
+            }
         }
     }
 }
