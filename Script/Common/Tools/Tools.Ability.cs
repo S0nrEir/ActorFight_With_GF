@@ -66,6 +66,7 @@ namespace Aquila.Toolkit
                     Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
                     return null;
                 }
+                effect.Init(meta);
                 return effect;
                 #region nouse
 
