@@ -64,6 +64,29 @@ namespace Aquila.Fight.Impact
         }
 
         /// <summary>
+        /// 获取指定actor上的指定effect，有返回true
+        /// </summary>
+        public bool FilterSpecEffect(int actorID,EffectSpec_Base effect)
+        {
+            var effects = GetAttachedEffect(actorID);
+            if (effects is null || effects.Count == 0)
+                return false;
+
+            foreach (var tempEffects in effects)
+            {
+                if (tempEffects == effect)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public object GetSpecEffect(int actorID,)
+        {
+            
+        }
+
+        /// <summary>
         /// 在下一帧移除actor特定类型的effect
         /// </summary>
         public void PrepareRemoveEffectByType<T>(int actorID) where T : EffectSpec_Base
@@ -94,27 +117,10 @@ namespace Aquila.Fight.Impact
             }
             return null;
         }
-
-        /// <summary>
-        /// 获取附加在某actor上的effect实例集合，拿不到返回空
-        /// </summary>
-        // public EffectSpec_Base[] GetAttachedEffect( int actorID )
-        // {
-        //     var indexList = GetMapIndex( actorID );
-        //     if ( indexList is null || indexList.Count == 0 )
-        //     {
-        //         Log.Info( $"<color=white>Component_Impact.GetAttachedEffect--->idList is null || idList.Count == 0,id{actorID}</color>" );
-        //         return null;
-        //     }
-        //     
-        //     //todo:优化，不要每次都返回一个新的数组，考虑使用一个缓存的集合
-        //     _cachedEffectResultList.Clear();
-        //     foreach ( var index in indexList )
-        //         _cachedEffectResultList.Add(GetEffect( index ));
-        //
-        //     return _cachedEffectResultList.ToArray();
-        // }
         
+        /// <summary>
+        /// 获取附加在一个actor上的所有effect
+        /// </summary>
         public IReadOnlyCollection<EffectSpec_Base> GetAttachedEffect( int actorID )
         {
             var indexList = GetMapIndex( actorID );
