@@ -11,6 +11,12 @@ public class StartUp : MonoBehaviour
             throw new GameFrameworkException( "GameEntry is null!" );
 
         Tools.SetActive( _entryObject, true );
+        DontDestroyOnLoad(_entryObject);
+
+        if (_eventSystem == null)
+            throw new GameFrameworkException("Event system object is null");
+        
+        Tools.SetActive(_eventSystem,true);
         DontDestroyOnLoad( _eventSystem );
     }
 
