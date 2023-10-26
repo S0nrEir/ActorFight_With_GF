@@ -110,8 +110,8 @@ namespace Aquila.Fight.FSM
                 return;
             }
             //技能消耗
+            //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始在做
             _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
-            //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始
             _time = 0f;
             _abilityFinishFlag = false;
             GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );

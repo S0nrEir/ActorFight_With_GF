@@ -49,5 +49,9 @@ namespace Cfg.Enum
         /// 为Ability添加tag
         /// </summary>
         Period_AbilityTag = 9,
+        /// <summary>
+        /// 吟唱
+        /// </summary>
+        Period_WindUp = 10,
     }
 }

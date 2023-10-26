@@ -151,7 +151,9 @@ namespace Aquila.Numric
         {
         }
 
-        //todo:改成LinkedRange
+        //question:改成LinkedRange?
+        //不合适，暂时用linkedList，有问题再说
+        
         /// <summary>
         /// 装备加成修正
         /// </summary>
@@ -166,7 +168,6 @@ namespace Aquila.Numric
         /// buff加成修正，buff修正有变更时
         /// </summary>
         private GameFrameworkLinkedList<Numric_Modifier> _buff_correction;
-
         /// <summary>
         /// 修正计算的最终值
         /// </summary>

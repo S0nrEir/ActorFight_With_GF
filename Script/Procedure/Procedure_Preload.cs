@@ -205,6 +205,7 @@ namespace Aquila.Procedure
                 }
             }
 
+            iter.Dispose();
             if ( _datatableLoadedSet.Count == 0 )
                 _preloadFlag |= _datatableLoadFinish;
         }

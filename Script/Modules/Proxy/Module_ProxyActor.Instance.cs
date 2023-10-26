@@ -31,7 +31,7 @@ namespace Aquila.Module
             /// 给一个actor添加关联actor
             /// </summary>
             [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public bool AddRevelence( int actorID )
+            public bool AddRelevance( int actorID )
             {
                 return _actor.AddRelevance( actorID );
             }
@@ -41,30 +41,21 @@ namespace Aquila.Module
             /// </summary>
             public bool AddAddon( Addon_Base addon )
             {
-                foreach ( var temp in _addonList )
+                var code = addon.GetType().GetHashCode();
+                if (_addons.ContainsKey(code.GetHashCode()))
                 {
-                    if ( temp.AddonType == addon.AddonType )
-                    {
-                        Log.Warning( $"<color=yellow>Module_ProxyActor.AddAddon()--->actor {Actor.ActorID} has same addon,type:{addon.AddonType}</color>" );
-                        return false;
-                    }
+                    Log.Warning( $"<color=yellow>Module_ProxyActor.AddAddon()--->actor {Actor.ActorID} has same addon,type:{addon.AddonType}</color>" );
+                    return false;
                 }
-                _addonList.Add( addon );
-                return true;
-            }
 
-            public void Setup( Actor_Base actor, Addon_Base[] addons )
-            {
-                _actor = actor;
-                //_addon_arr = addons;
-                _addonList = new List<Addon_Base>( addons.Length * 2 );
-                _addonList.AddRange( addons );
+                _addons.Add(code,addon);
+                return true;
             }
 
             public void Setup( Actor_Base actor )
             {
                 _actor = actor;
-                _addonList = new List<Addon_Base>();
+                _addons = new Dictionary<int, Addon_Base>();
             }
 
             public ActorInstance()
@@ -74,18 +65,19 @@ namespace Aquila.Module
             /// <summary>
             /// 返回该实例持有的actor
             /// </summary>
-            public Actor_Base Actor
-            {
-                get => _actor;
-            }
+            public Actor_Base Actor => _actor;
 
             /// <summary>
             /// 获取actor持有的指定类型的addon，没有返回空
             /// </summary>
             public T GetAddon<T>() where T : Addon_Base
             {
-                //#todo优化：别用遍历查找的方式检查然后获取addon
-                return Tools.Actor.FilterAddon<T>( _addonList );
+                var code = typeof(T).GetHashCode();
+                if (!_addons.TryGetValue(code, out var addon))
+                    return null;
+
+                return addon as T;
+                // return Tools.Actor.FilterAddon<T>( _addonList );                
             }
 
             /// <summary>
@@ -93,12 +85,14 @@ namespace Aquila.Module
             /// </summary>
             public Addon_Base[] AllAddons()
             {
-                return _addonList.ToArray();
-            }
-
-            public IReadOnlyCollection<Addon_Base> AllAddonsAsReadOnly()
-            {
-                return _addonList.AsReadOnly();
+                Addon_Base[] arr = new Addon_Base[_addons.Count ];
+                var i = 0;
+                var iter = _addons.GetEnumerator();
+                while (iter.MoveNext())
+                    arr[i++] = iter.Current.Value;
+                
+                iter.Dispose();
+                return arr;
             }
 
             //-----------------fields-----------------
@@ -111,17 +105,19 @@ namespace Aquila.Module
             /// <summary>
             /// actor持有的addon集合
             /// </summary>
-            private List<Addon_Base> _addonList = null;
+            private Dictionary<int, Addon_Base> _addons = null;
 
             public void Clear()
             {
-                var cnt = _addonList.Count;
-                for ( var i = 0; i < cnt; i++ )
-                    _addonList[i] = null;
-
-                _addonList.Clear();
-                _addonList = null;
-                _actor = null;
+                //attention:现在actor的组件释放，放在了addonSystem的下一帧中进行，这里只释放instance持有的其他资源
+                //换言之，其他资源在本帧释放，addon在下一帧处理
+                
+                // foreach (var kv in _addons)
+                //     kv.Value.Dispose();
+                
+                _addons.Clear();
+                _addons = null;
+                _actor  = null;
             }
         }
     }

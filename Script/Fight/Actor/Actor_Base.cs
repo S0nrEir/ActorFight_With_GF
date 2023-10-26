@@ -147,7 +147,7 @@ namespace Aquila.Fight.Actor
         public virtual void Setup( int roleMetaID )
         {
             SetRoleMetaID( roleMetaID );
-            Reset();
+            // Reset();
         }
 
         /// <summary>
@@ -294,8 +294,10 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// Actor自定义数据的初始化
         /// </summary>
-        protected virtual void OnInitActor( object user_data )
+        protected virtual void OnInitActor( object userData )
         {
+            if(userData is Actor_Base_EntityData data)
+                Setup(data._roleMetaID);
         }
 
         protected Actor_Base()
@@ -346,5 +348,17 @@ namespace Aquila.Fight.Actor
         private HashSet<int> _relevanceActorSet;
 
         #endregion
+    }
+
+    public class Actor_Base_EntityData : EntityData
+    {
+        public Actor_Base_EntityData(int entityId, int typeId) : base(entityId, typeId)
+        {
+        }
+
+        /// <summary>
+        /// 角色meta表ID
+        /// </summary>
+        public int _roleMetaID = -1;
     }
 }

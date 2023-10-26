@@ -102,12 +102,10 @@ namespace Aquila.Module
                 Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
                 return;
             }
-
-            //查找目标actor
+            
             var module = GameEntry.Module.GetModule<Module_ProxyActor>();
             //添加关联
-            var targetTransform = module.AddRelevance( orbData._targetActorID, temp.ActorID );
-            if ( targetTransform == null )
+            if ( !module.AddRelevance( orbData._targetActorID, temp.ActorID ) )
             {
                 Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->add actor relevance faild" );
                 return;
@@ -116,6 +114,13 @@ namespace Aquila.Module
             //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
             var position = module.GetPosition( orbData._callerID );
             //处理一下转向问题
+            var targetTransform = module.GetActorTransform(orbData._targetActorID);
+            if (targetTransform == null)
+            {
+                Log.Warning($"<color=yellow>Module_ActorFac.OnShowOrbSucc()--->targetTransform == null,target transform id:{orbData._targetActorID}</color>");
+                return;
+            }
+            
             temp.SetWorldPosition( position );
             temp.transform.LookAt( targetTransform, UnityEngine.Vector3.up );
             temp.SetTargetTransformAndReady( targetTransform );

@@ -1,5 +1,7 @@
 using Aquila.Fight.Actor;
 using Aquila.Module;
+using GameFramework.ObjectPool;
+using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -9,16 +11,18 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public abstract partial class Addon_Base
     {
-        
+        /// <summary>
+        /// 组件类型
+        /// </summary>
         public abstract AddonTypeEnum AddonType { get; }
-        
+
         /// <summary>
         /// addon的初始化，addon的数据初始化在这里做
         /// </summary>
         public virtual void Init( Module_ProxyActor.ActorInstance instance)
         {
             _actorInstance = instance;
-            Actor = instance.Actor;
+            Actor          = instance.Actor;
         }
 
         public virtual void OnUpdate ( float elapseSeconds, float realElapseSeconds )
@@ -31,7 +35,6 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public virtual void Reset ()
         {
-            
         }
 
         /// <summary>
@@ -66,21 +69,15 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public virtual void OnRemove ()
         {
-            
         }
-
+        
         /// <summary>
         /// 清理资源，所属actor回收时调用
         /// </summary>
         public virtual void Dispose ()
         {
-            Actor = null;
+            Actor          = null;
             _actorInstance = null;
-        }
-
-        public virtual void Cancel()
-        {
-            
         }
     }
 
