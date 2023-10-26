@@ -22,7 +22,10 @@ namespace Aquila.Fight
         {
             //检查角色身上的所有tag，如果自己是最后一个才移除tag
             if (!GameEntry.Impact.FilterSpecEffect(target.Actor.ActorID, FindOtherWindUpEffect))
+            {
                 target.Actor.RemoveTag((int)ActorTagType.WindUp);
+                GameEntry.Event.Fire(this,EventArg_WindUp.CreateStopEventArg());
+            }
         }
 
         /// <summary>
