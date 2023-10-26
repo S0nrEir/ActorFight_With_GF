@@ -81,11 +81,6 @@ namespace Aquila.Fight.Impact
             return false;
         }
 
-        public object GetSpecEffect(int actorID,)
-        {
-            
-        }
-
         /// <summary>
         /// 在下一帧移除actor特定类型的effect
         /// </summary>
@@ -165,7 +160,7 @@ namespace Aquila.Fight.Impact
                 //new entity
                 var entity = NewImpactEntity();
                 var effectHashCode = newEffect.GetHashCode();
-                if ( _effectDic.ContainsKey( effectHashCode ) )
+                if ( _allEffectDic.ContainsKey( effectHashCode ) )
                 {
                     Log.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{effectHashCode}</color>" );
                     //ReferencePool.Release( newEffect );
@@ -186,7 +181,12 @@ namespace Aquila.Fight.Impact
                 //唤起一次性的effect
                 if ( newEffect.Meta.AwakeEffects.Length != 0 )
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect
+                        ( 
+                            impactData._castorActorID, 
+                            impactData._targetActorID, 
+                            newEffect 
+                        );
                 }
             }
         }
@@ -340,7 +340,7 @@ namespace Aquila.Fight.Impact
                 Array.Resize( ref _recycleImpactEntityArr, _recycleImpactEntityArr.Length << 1 );
 
             _recycleImpactEntityArr[_recycleImpactEntityCount++] = entity;
-        }
+        } 
 
         /// <summary>
         /// 移除出effect存储集合
@@ -348,7 +348,7 @@ namespace Aquila.Fight.Impact
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private bool RemoveEffect( int key )
         {
-            return _effectDic.Remove( key );
+            return _allEffectDic.Remove( key );
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Aquila.Fight.Impact
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private void AddEffect( int key, EffectSpec_Base effect )
         {
-            _effectDic.Add( key, effect );
+            _allEffectDic.Add( key, effect );
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace Aquila.Fight.Impact
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         private EffectSpec_Base GetEffect( int effectHashCode )
         {
-            if ( _effectDic.TryGetValue( effectHashCode, out var effectSpec ) )
+            if ( _allEffectDic.TryGetValue( effectHashCode, out var effectSpec ) )
                 return effectSpec;
 
             return null;
@@ -423,7 +423,7 @@ namespace Aquila.Fight.Impact
         
         private void EnsureInit()
         {
-            _effectDic              = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
+            _allEffectDic           = new Dictionary<int, EffectSpec_Base>( _defaultCacheCapcity );
             _targetImpactDataMapDic = new Dictionary<int, LinkedList<int>>( _defaultCacheCapcity );
             _impactEntityArr        = new int[_defaultEntityCount];
             _recycleImpactEntityArr = new int[_defaultEntityCount];
@@ -442,7 +442,7 @@ namespace Aquila.Fight.Impact
         /// <summary>
         /// 存储的effect实例集合,k=effect hashCode
         /// </summary>
-        private Dictionary<int, EffectSpec_Base> _effectDic = null;
+        private Dictionary<int, EffectSpec_Base> _allEffectDic = null;
 
         /// <summary>
         /// impact数据和附加对象的映射集合,k=targetID,v=effectIndex
