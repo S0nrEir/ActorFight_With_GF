@@ -40,6 +40,14 @@ namespace Aquila.Editor.DataTableTools
             }
         }
 
+        /// <summary>
+        /// 扩展：使用UTF8编码生成表格处理器
+        /// </summary>
+        public static DataTableProcessor CreateDataTableProcessorWithUTF8(string tableName)
+        {
+            return new DataTableProcessor( Utility.Path.GetRegularPath( Path.Combine( DataTablePath, tableName + ".txt" ) ), Encoding.UTF8, 1, 2, null, 3, 4, 1 );
+        }
+
         public static DataTableProcessor CreateDataTableProcessor( string dataTableName )
         {
             return new DataTableProcessor( Utility.Path.GetRegularPath( Path.Combine( DataTablePath, dataTableName + ".txt" ) ), Encoding.GetEncoding( "GB2312" ), 1, 2, null, 3, 4, 1 );
