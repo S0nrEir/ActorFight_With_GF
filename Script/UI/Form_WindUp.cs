@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Aquial.UI;
 using Aquila.Event;
 using Aquila.Toolkit;
-using GameFramework.Event;
+using GameFramework;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
@@ -14,30 +13,48 @@ namespace Aquila.UI
     /// </summary>
     public class Form_WindUp : UIFormLogic
     {
-        public static void ShowWindUpForm()
-        {
-            
-            
-        }
-        
-        //----------------priv
-        
-        //---------------- event ----------------
         /// <summary>
-        /// 开始读条
+        /// 显示windup
         /// </summary>
-        private void OnWindUp(object sender, GameEventArgs arg)
+        public static void ActiveWindUpForm(bool active,float totalTime)
         {
-            if (!(arg is EventArg_WindUp))
-                return;
-
-            var param = arg as EventArg_WindUp;
-            if(param._isStart)
-                _windUpItem.GetReady(param._totalTime);
+            if (active)
+            {
+                //有的话重新刷一下windup的时长
+                if (GameEntry.BaseUI.HasUIForm((int)FormIdEnum.WindUpForm))
+                {
+                    var uiForm = GameEntry.BaseUI.GetUIForm((int)FormIdEnum.WindUpForm);
+                    if (uiForm is null || uiForm.Logic is null)
+                    {
+                        Log.Warning($"<color=yellow>Form_Windup.ActiveWindUpForm()--->uiForm is null || uiForm.Logic is null</color>");
+                        return;
+                    }
+                    
+                    (uiForm.Logic as Form_WindUp).ReActive(totalTime);
+                }
+                //没有的话直接打开
+                else
+                {
+                    var formParam = ReferencePool.Acquire<Form_WindUp.Form_WindUpParam>();
+                    formParam._totalTime = totalTime;
+                    GameEntry.UI.OpenForm(FormIdEnum.WindUpForm,formParam);
+                }
+            }
             else
-                _windUpItem.Stop();
+            {
+                GameEntry.UI.CloseForm(FormIdEnum.WindUpForm);
+            }
         }
         
+        //----------------pub
+
+        public void ReActive(float totalTime)
+        {
+            _windUpItem.Stop();
+            _windUpItem.GetReady(totalTime);
+        }
+
+        //----------------priv
         /// <summary>
         /// 初始化读条的item
         /// </summary>
@@ -53,19 +70,16 @@ namespace Aquila.UI
             _windUpItem.Active();
         }
         
-        /// <summary>
-        /// 刷新吟唱item
-        /// </summary>
-        private void RefreshWindUpItem(float elpased)
-        {
-            _windUpItem.Update(elpased);
-        }
-        
         //----------------override
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            RefreshWindUpItem(elapseSeconds);
+            _windUpItem.Update(elapseSeconds);
+        }
+
+        protected override void OnReveal()
+        {
+            base.OnReveal();
         }
 
         protected override void OnOpen(object userData)
@@ -78,7 +92,6 @@ namespace Aquila.UI
             }
 
             InitWindUpItem(_rootGO);
-            GameEntry.Event.Subscribe( EventArg_WindUp.EventID      , OnWindUp);
         }
 
         protected override void OnClose(bool isShutdown, object userData)
@@ -86,7 +99,6 @@ namespace Aquila.UI
             base.OnClose(isShutdown, userData);
             _windUpItem.Clear();
             _windUpItem = null;
-            GameEntry.Event.Unsubscribe( EventArg_WindUp.EventID, OnWindUp );
         }
 
         protected override void OnInit(object userData)
@@ -222,6 +234,17 @@ namespace Aquila.UI
             /// </summary>
             private GameObject _root = null;
         }
+
+        /// <summary>
+        /// 界面参数
+        /// </summary>
+        public class Form_WindUpParam : IReference
+        {
+            public float _totalTime = 0f;
+
+            public void Clear() => _totalTime = 0f;
+        }
     }
+    
    
 }

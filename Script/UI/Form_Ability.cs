@@ -24,6 +24,19 @@ namespace Aquila.UI
             
         }
 
+        //---------------- event ----------------
+        /// <summary>
+        /// 开始读条
+        /// </summary>
+        private void OnWindUp(object sender, GameEventArgs arg)
+        {
+            if (!(arg is EventArg_WindUp))
+                return;
+
+            var param = arg as EventArg_WindUp;
+            Form_WindUp.ActiveWindUpForm(param._isStart,param._totalTime);
+        }
+        
         /// <summary>
         /// 使用技能
         /// </summary
@@ -150,6 +163,7 @@ namespace Aquila.UI
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID , OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
+            GameEntry.Event.Subscribe( EventArg_WindUp.EventID      , OnWindUp);
         }
 
         protected override void OnRecycle()
@@ -166,6 +180,7 @@ namespace Aquila.UI
             _testBtn.onClick.RemoveAllListeners();
             GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Unsubscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
+            GameEntry.Event.Unsubscribe( EventArg_WindUp.EventID, OnWindUp );
             base.OnClose( isShutdown, userData );
         }
 
