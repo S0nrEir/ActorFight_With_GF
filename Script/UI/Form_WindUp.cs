@@ -91,7 +91,14 @@ namespace Aquila.UI
                 return;
             }
 
-            InitWindUpItem(_rootGO);
+            var param = Tools.UI.GetFormParam<Form_WindUpParam>(userData);
+            if (param is null)
+                return;
+            
+            if(_windUpItem == null)
+                InitWindUpItem(_rootGO);
+            
+            _windUpItem.GetReady(param._totalTime);
         }
 
         protected override void OnClose(bool isShutdown, object userData)
