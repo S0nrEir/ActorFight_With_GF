@@ -109,8 +109,8 @@ namespace Aquila.Numric
 
         public override void Clear()
         {
-            //todo:现在走的都是引用池，初始化没有固定函数只能写在这里，要不要抽取出来？
-
+            //现在走的都是引用池，初始化没有固定函数只能写在这里，要不要抽取出来？
+            //不需要了，本来也没有需要手动初始化的东西
             //reset
             _equip_correction.Clear();
             _class_correction.Clear();
