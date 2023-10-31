@@ -13,5 +13,9 @@ namespace Aquial.UI
 		/// ���ܽ���
 		/// <summary>
 		AbilityForm,
+		/// <summary>
+		/// WindUp����
+		/// <summary>
+		WindUpForm,
 	}
 }
