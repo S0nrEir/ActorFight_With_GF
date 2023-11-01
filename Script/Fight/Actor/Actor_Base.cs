@@ -60,6 +60,14 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
+        /// 获取actor身上的一个tag
+        /// </summary>
+        public bool GetTag(ushort tagToGet)
+        {
+            return _tagContainer.Contains(tagToGet);
+        }
+
+        /// <summary>
         /// 触发addon事件
         /// </summary>
         public void Notify( int eventType, object param )
