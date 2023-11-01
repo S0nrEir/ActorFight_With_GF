@@ -177,17 +177,17 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
-            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
-            if ( !res.regSucc )
+            var regSucc = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
+            if ( !regSucc.regSucc )
             {
                 Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
                 return;
             }
 
-            _instance = res.instance;
+            _instance = regSucc.instance;
             OnInitActor( userData );
             AddAddon();
-            InitAddons( res.instance );
+            InitAddons( regSucc.instance );
 
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
@@ -209,7 +209,10 @@ namespace Aquila.Fight.Actor
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            var unRegSucc = GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            if (!unRegSucc)
+                Log.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
+                
             base.OnHide( isShutdown, userData );
         }
 
