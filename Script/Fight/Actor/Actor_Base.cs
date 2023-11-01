@@ -62,7 +62,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 获取actor身上的一个tag
         /// </summary>
-        public bool GetTag(ushort tagToGet)
+        public bool ContainsTag(ushort tagToGet)
         {
             return _tagContainer.Contains(tagToGet);
         }
