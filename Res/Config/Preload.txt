@@ -1,0 +1,7 @@
+#	界面配置表		
+#	Id	Comment	PreloadAssetName
+#	INT	STRING	STRING
+#	ID	备注	要预加载的资源路径
+	0		Assets/Res/UI/TestForm.prefab
+	1		Assets/Res/UI/AbilityForm.prefab
+	2		Assets/Res/UI/WindUpForm.prefab

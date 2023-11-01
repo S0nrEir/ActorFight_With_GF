@@ -5,6 +5,7 @@ using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System.Collections.Generic;
+using Aquila.UI;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
@@ -34,7 +35,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 如果所有所有预加载项都加载完毕，就进入下一个流程
+        /// 如果所有与加载完成，就进入下一个流程
         /// </summary>
         private void GoToNextProcedureIfFinished()
         {
@@ -156,7 +157,8 @@ namespace Aquila.Procedure
         /// </summary>
         public static readonly string[] Configs = new string[]
             {
-                "UIForm"
+                "UIForm",
+                "Preload"
             };
     }
 
