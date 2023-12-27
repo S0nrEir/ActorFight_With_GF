@@ -23,28 +23,6 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 移除一个actor的关联actor
-        /// </summary>
-        public bool RemoveRelevance( int actorID, int toRemoveActorID )
-        {
-            var instance = Get( actorID );
-            if ( instance is null || !instance.RemoveRevelence( toRemoveActorID ) )
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// 为一个actor添加关联actor
-        /// </summary>
-        [MethodImpl( MethodImplOptions.AggressiveInlining )]
-        public bool AddRelevance(int actorID, int relevanceActorID)
-        {
-            var instance = Get(actorID);
-            return instance != null && instance.AddRelevance(relevanceActorID);
-        }
-
-        /// <summary>
         /// 将actor和addon关联，为一个actor实例添加一个addon
         /// </summary>
         public (bool succ, ActorInstance instance) AddAddon( Actor_Base actor, Addon_Base addon )

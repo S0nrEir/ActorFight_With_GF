@@ -20,30 +20,6 @@ namespace Aquila.Fight.Actor
         #region public methods
 
         /// <summary>
-        /// 添加和此actor关联的actor
-        /// </summary>
-        public bool AddRelevance( int actorID )
-        {
-            return _relevanceActorSet.Add( actorID );
-        }
-
-        /// <summary>
-        /// 移除和此actor关联的actor
-        /// </summary>
-        public bool RemoveRelevane( int actorID )
-        {
-            return _relevanceActorSet.Remove( actorID );
-        }
-
-        /// <summary>
-        /// 关联的actorID列表
-        /// </summary>
-        public HashSet<int> RelevanceActors
-        {
-            get => _relevanceActorSet;
-        }
-
-        /// <summary>
         /// 移除tag
         /// </summary>
         public void RemoveTag( ushort tagToRemove )
@@ -201,7 +177,6 @@ namespace Aquila.Fight.Actor
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
 
             _tagContainer.Reset();
-            _relevanceActorSet.Clear();
             _eventAddon.UnRegisterAll();
 
             ExtensionRecycle();
@@ -221,16 +196,14 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
+            Log.Info("111111111111111111111111111");
+            // _tagContainer = null;
             base.OnRecycle();
-            _relevanceActorSet.Clear();
-            _tagContainer = null;
         }
 
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            if ( _relevanceActorSet is null )
-                _relevanceActorSet = new HashSet<int>();
 
             if ( _tagContainer is null )
                 _tagContainer = new TagContainer( OnTagChange );
@@ -354,11 +327,6 @@ namespace Aquila.Fight.Actor
         /// tag管理器
         /// </summary>
         protected TagContainer _tagContainer = null;
-
-        /// <summary>
-        /// 关联actor集合
-        /// </summary>
-        private HashSet<int> _relevanceActorSet;
 
         #endregion
     }

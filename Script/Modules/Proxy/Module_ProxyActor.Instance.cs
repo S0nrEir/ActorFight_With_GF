@@ -20,24 +20,6 @@ namespace Aquila.Module
             //-----------------pub-----------------
 
             /// <summary>
-            /// 移除一个actor关联
-            /// </summary>
-            [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public bool RemoveRevelence( int actorID )
-            {
-                return _actor.RemoveRelevane( actorID );
-            }
-
-            /// <summary>
-            /// 给一个actor添加关联actor
-            /// </summary>
-            [MethodImpl( MethodImplOptions.AggressiveInlining )]
-            public bool AddRelevance( int actorID )
-            {
-                return _actor.AddRelevance( actorID );
-            }
-
-            /// <summary>
             /// 为actor实例添加一个addon
             /// </summary>
             public bool AddAddon( Addon_Base addon )
