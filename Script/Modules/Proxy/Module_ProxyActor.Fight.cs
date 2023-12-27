@@ -263,6 +263,8 @@ namespace Aquila.Module
                 ( relevanceActor.Actor as Actor_Orb )?.SetTargetPositionAndReady( actor.CachedTransform );
             }
 
+            //todo:这里的流程是，actor死亡后隐藏，但不是直接调用entity组件的hide，这会导致entity直接被回收放回池里
+            //actor的死亡仍然是业务逻辑的一部分，这里只是暂时用GameEntry.Entity.HideEntity来替代隐藏actor
             GameEntry.Entity.HideEntity( actor.ActorID );
         }
 
