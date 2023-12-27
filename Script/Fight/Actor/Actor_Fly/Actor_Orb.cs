@@ -87,6 +87,12 @@ namespace Aquila.Fight.Actor
                 Log.Warning( "<color=yellow>Actor_Orb.OnInitActor()---></color>" );
         }
 
+        protected override void OnRecycle()
+        {
+            _behaviourAddon = null;
+            base.OnRecycle();
+        }
+
         public override RoleType ActorType => RoleType.Orb;
 
         //-------------------- field --------------------

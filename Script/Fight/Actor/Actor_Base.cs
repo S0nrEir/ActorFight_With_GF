@@ -222,6 +222,8 @@ namespace Aquila.Fight.Actor
         protected override void OnRecycle()
         {
             base.OnRecycle();
+            _relevanceActorSet.Clear();
+            _tagContainer = null;
         }
 
         protected override void OnInit( object userData )
