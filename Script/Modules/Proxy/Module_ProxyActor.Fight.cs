@@ -207,7 +207,7 @@ namespace Aquila.Module
                     result._stateDescription = Tools.SetBitValue( result._stateDescription,
                    ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
                     GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                    ReferencePool.Release( result );
+                    //ReferencePool.Release( result );
                     return;
                 }
             }
