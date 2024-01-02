@@ -1,61 +1,52 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 
-namespace  Aquila.Editor
+
+public class AbilityEditorWindow : EditorWindow
 {
-    
-    /// <summary>
-    /// 技能编辑器界面
-    /// </summary>
-    public class AbilityEditorWindow : EditorWindow
+    private void InitWindow()
     {
-        //---------------------周期回调
-        public void CreateGUI()
-        {
-            _root = rootVisualElement;
-            InitObjects();
-        }
+        _thisWindow = GetWindow<AbilityEditorWindow>();
+        _thisWindow.minSize = new Vector2(860, 700);
+        _thisWindow.maxSize = new Vector2(860, 700);
+    }
+    
+    private void InitObjects()
+    {
+        var tempGroup = rootVisualElement.Q<GroupBox>("buttonArean");
+        _saveButton = tempGroup.Q<Button>("saveButton");
+        _exportButton = tempGroup.Q<Button>("exportButton");
 
-        private void InitObjects()
-        {
-            _exportButton = _root.Q<Button>("export_button");
-            _saveButton = _root.Q<Button>("save_button");
-            _thisWindow = GetWindow<EditorWindow>();
-        }
+    }
 
-        //---------------------fields
+    private void InitRoot()
+    {
+        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(@"Assets/Script/Editor/AbilityEditor/AbilityEditorWindow_UXML.uxml");
+        var uxml = visualTree.Instantiate();
+        rootVisualElement.Add(uxml);
+    }
+    
+    public void CreateGUI()
+    {
+        InitWindow();
+        InitRoot();
+        InitObjects();
+    }
 
-        /// <summary>
-        /// 窗体节点
-        /// </summary>
-        private VisualElement _root = null;
-        
-        /// <summary>
-        /// 导出
-        /// </summary>
-        private Button _exportButton = null;
-        
-        /// <summary>
-        /// 保存
-        /// </summary>
-        private Button _saveButton = null;
+    private Button _saveButton = null;
+    private Button _exportButton = null;
+    private GroupBox _graphViewArea = null;
+    private GroupBox _abilityInfoArea = null;
+    private GroupBox _buttonArea = null;
+    private EditorWindow _thisWindow = null;
 
-        /// <summary>
-        /// 窗体对象
-        /// </summary>
-        private EditorWindow _thisWindow = null;
-        
-        /// <summary>
-        /// 打开技能编辑器窗口
-        /// </summary>
-        [MenuItem("Aquila/Ability/Ability Editor")]
-        public static void OpenAbilityEditorWindow()
-        {
-            AbilityEditorWindow window = GetWindow<AbilityEditorWindow>();
-        }
+    [MenuItem("Aquila/Ability/AbilityEditor")]
+    public static void ShowExample()
+    {
+        AbilityEditorWindow wnd = GetWindow<AbilityEditorWindow>();
+        wnd.titleContent = new GUIContent("AbilityEditorWindow");
+        //wnd.Show();
     }
 }
