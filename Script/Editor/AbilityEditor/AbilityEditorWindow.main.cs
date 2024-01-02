@@ -1,46 +1,59 @@
+using System;
+using System.Drawing;
+using System.Numerics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using Vector2 = UnityEngine.Vector2;
 
 
 public class AbilityEditorWindow : EditorWindow
 {
-    private void InitWindow()
+    private void OnEnable()
     {
         _thisWindow = GetWindow<AbilityEditorWindow>();
-        _thisWindow.minSize = new Vector2(860, 700);
-        _thisWindow.maxSize = new Vector2(860, 700);
+        _thisWindow.minSize = _windowMinSize;
+    }
+
+    private void OnGUI()
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
+        {
+            //graph view area
+            var rect = EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
+            EditorGUILayout.LabelField("Impact Nodes");
+            DrawGraphViewArea();
+            EditorGUILayout.EndVertical();
+            
+            //ability&buttons
+            EditorGUILayout.BeginVertical(GUILayout.Width(_windowMinSize.x * 0.3f));
+            {
+                DrawAbilityBaseArea();
+            }
+            EditorGUILayout.EndVertical();
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawGraphViewArea()
+    {
+        EditorGUILayout.LabelField("test information");
+        EditorGUILayout.LabelField("test information");
+        EditorGUILayout.LabelField("test information");
+        EditorGUILayout.LabelField("test information");
+    }
+
+    private void DrawAbilityBaseArea()
+    {
+        EditorGUILayout.TextField(new GUIContent("AbilityBaseID:"),"");
+        EditorGUILayout.TextField(new GUIContent("AbilityBaseID:"),"");
+        EditorGUILayout.TextField(new GUIContent("AbilityBaseID:"),"");
+        EditorGUILayout.TextField(new GUIContent("AbilityBaseID:"),"");
     }
     
-    private void InitObjects()
-    {
-        var tempGroup = rootVisualElement.Q<GroupBox>("buttonArean");
-        _saveButton = tempGroup.Q<Button>("saveButton");
-        _exportButton = tempGroup.Q<Button>("exportButton");
-
-    }
-
-    private void InitRoot()
-    {
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(@"Assets/Script/Editor/AbilityEditor/AbilityEditorWindow_UXML.uxml");
-        var uxml = visualTree.Instantiate();
-        rootVisualElement.Add(uxml);
-    }
-    
-    public void CreateGUI()
-    {
-        InitWindow();
-        InitRoot();
-        InitObjects();
-    }
-
-    private Button _saveButton = null;
-    private Button _exportButton = null;
-    private GroupBox _graphViewArea = null;
-    private GroupBox _abilityInfoArea = null;
-    private GroupBox _buttonArea = null;
     private EditorWindow _thisWindow = null;
+    private static Vector2 _windowMinSize = new Vector2(860, 700);
 
     [MenuItem("Aquila/Ability/AbilityEditor")]
     public static void ShowExample()

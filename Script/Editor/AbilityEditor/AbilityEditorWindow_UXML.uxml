@@ -1,6 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:GroupBox name="graphViewArea" style="position: absolute; height: 664px; width: 665px;" />
-    <ui:GroupBox name="abilityInfoArea" style="position: relative; height: 586px; width: 159px; left: 678px;" />
+    <ui:GroupBox name="abilityBaseInfoArea" style="position: relative; height: 586px; width: 159px; left: 678px;">
+        <ui:TextField picking-mode="Ignore" label="AbilityID" text="111111" name="abilityIDText" max-length="999" usage-hints="None" style="justify-content: flex-start; align-items: auto; flex-direction: row; flex-wrap: nowrap; overflow: hidden; translate: 0 0; transform-origin: center; -unity-slice-left: 0; -unity-paragraph-spacing: 0; -unity-text-align: upper-left; font-size: 12px; white-space: nowrap; padding-left: 0; padding-right: 0; margin-left: 3px; min-width: auto; max-width: none; width: ; left: auto; flex-basis: auto; flex-grow: 0; flex-shrink: 0; height: auto;" />
+    </ui:GroupBox>
     <ui:GroupBox name="buttonArean" style="position: relative; height: 48px; width: 159px; left: 687px; top: 35px; align-items: stretch; flex-direction: row;">
         <ui:Button text="save" display-tooltip-when-elided="true" name="saveButton" style="width: 74px;" />
         <ui:Button text="export" display-tooltip-when-elided="true" name="exportButton" style="width: 74px;" />
