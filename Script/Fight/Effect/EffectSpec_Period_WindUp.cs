@@ -14,7 +14,12 @@ namespace Aquila.Fight
         public override void OnEffectAwake(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             //吟唱生效时，添加吟唱tag
-            target.Actor.AddTag((int)ActorTagType.WindUp);
+            //找目标身上是否有windup tag，有就不添加
+            var tagToAdd = (ushort)ActorTagType.WindUp;
+            if(target.Actor.ContainsTag(tagToAdd))
+                return;
+            
+            target.Actor.AddTag(tagToAdd);
             GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.Duration,target.Actor.ActorID));
         }
 

@@ -139,6 +139,8 @@ namespace Aquila.Fight.Impact
         {
             var existEffect = GetEffectByID( targetActorID, newEffect.GetType() );
             //已经有了，叠加层数
+            //#todo:effect现在分为多种类型：叠层；互相独立；覆盖
+            //表格配置类型，然后在这里做具体处理
             if ( existEffect != null )
             {
                 //拿相应的impactData

@@ -36,6 +36,12 @@ namespace Aquila.Fight.Actor
 
         protected override void OnRecycle()
         {
+            _baseAttrAddon  = null;
+            _abilityAddon   = null;
+            _fsmAddon       = null;
+            _hpAddon        = null;
+            _timelineAddon  = null;
+            _behaviourAddon = null;
             base.OnRecycle();
         }
 

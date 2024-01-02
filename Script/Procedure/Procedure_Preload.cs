@@ -5,6 +5,7 @@ using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System.Collections.Generic;
+using Aquila.UI;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
@@ -21,7 +22,7 @@ namespace Aquila.Procedure
         public void LoadHPBarFinish()
         {
             _handler.HPBarLoadFinish();
-            OnPreLoadFinished();
+            GoToNextProcedureIfFinished();
         }
 
         /// <summary>
@@ -30,13 +31,13 @@ namespace Aquila.Procedure
         public void LoadDmgNumberFinish()
         {
             _handler.DmgNumberLoadFinish();
-            OnPreLoadFinished();
+            GoToNextProcedureIfFinished();
         }
 
         /// <summary>
-        /// 当任意模块资源预加载完成
+        /// 如果所有与加载完成，就进入下一个流程
         /// </summary>
-        private void OnPreLoadFinished()
+        private void GoToNextProcedureIfFinished()
         {
             if ( !_handler.PreLoadFinish() )
                 return;
@@ -96,7 +97,7 @@ namespace Aquila.Procedure
         {
             GameEntry.LuBan.LoadDataTable();
             _handler.LoadDataTableFinish();
-            OnPreLoadFinished();
+            GoToNextProcedureIfFinished();
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Aquila.Procedure
                 return;
 
             _handler.OnDataTableLoadSucc( arg.DataTableAssetName );
-            OnPreLoadFinished();
+            GoToNextProcedureIfFinished();
         }
 
         /// <summary>
@@ -156,7 +157,8 @@ namespace Aquila.Procedure
         /// </summary>
         public static readonly string[] Configs = new string[]
             {
-                "UIForm"
+                "UIForm",
+                "Preload"
             };
     }
 

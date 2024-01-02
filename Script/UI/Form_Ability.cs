@@ -16,6 +16,14 @@ namespace Aquila.UI
     /// </summary>
     public class Form_Ability : UIFormLogic
     {
+        /// <summary>
+        /// 技能命中
+        /// </summary>
+        private void OnAbilityHit( object sender, GameEventArgs arg )
+        {
+            
+        }
+
         //---------------- event ----------------
         /// <summary>
         /// 开始读条
@@ -26,20 +34,9 @@ namespace Aquila.UI
                 return;
 
             var param = arg as EventArg_WindUp;
-            if(param._isStart)
-                _windUpItem.GetReady(param._totalTime);
-            else
-                _windUpItem.Stop();
+            Form_WindUp.ActiveWindUpForm(param._isStart,param._totalTime);
         }
-
-        /// <summary>
-        /// 技能命中
-        /// </summary>
-        private void OnAbilityHit( object sender, GameEventArgs arg )
-        {
-            
-        }
-
+        
         /// <summary>
         /// 使用技能
         /// </summary
@@ -95,20 +92,6 @@ namespace Aquila.UI
             }
         }
 
-        /// <summary>
-        /// 初始化读条的item
-        /// </summary>
-        private void InitWindUpItem(GameObject rootGo)
-        {
-            if (rootGo == null)
-            {
-                Log.Warning("<color=yellow>Form_Ability.InitWindUpItem--->rootGo is null</color>");
-                return;
-            }
-
-            _windUpItem = new WindUpItem(rootGo);
-            _windUpItem.Active();
-        }
 
         /// <summary>
         /// 清掉item缓存
@@ -130,14 +113,6 @@ namespace Aquila.UI
             _iconItemDic.Clear();
             _iconItemDic = null;
         }
-        
-        /// <summary>
-        /// 刷新吟唱item
-        /// </summary>
-        private void RefreshWindUpItem(float elpased)
-        {
-            _windUpItem.Update(elpased);
-        }
 
         /// <summary>
         /// 刷新技能图标CD
@@ -155,7 +130,6 @@ namespace Aquila.UI
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
             RefreshAbilityIconCD();
-            RefreshWindUpItem(elapseSeconds);
         }
         
         protected override void OnReveal()
@@ -180,7 +154,6 @@ namespace Aquila.UI
             _abilityIdArr    = param._abilityID;
             _actorProxy = GameEntry.Module.GetModule<Module_ProxyActor>();
             InitAbilityIconItem();
-            InitWindUpItem(_windUpRootObj);
             _testBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
             _testBtn.onClick.AddListener(() =>
             {
@@ -204,8 +177,6 @@ namespace Aquila.UI
             _actorID = -1;
             _actorProxy = null;
             ClearItemCacheDic();
-            _windUpItem.Clear();
-            _windUpItem = null;
             _testBtn.onClick.RemoveAllListeners();
             GameEntry.Event.Unsubscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Unsubscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
@@ -251,16 +222,6 @@ namespace Aquila.UI
         /// 测试按钮
         /// </summary>
         private Button _testBtn = null;
-
-        /// <summary>
-        /// 蓄力条
-        /// </summary>
-        private WindUpItem _windUpItem = null;
-
-        /// <summary>
-        /// windup根节点对象
-        /// </summary>
-        [SerializeField] private GameObject _windUpRootObj = null;
         
         /// <summary>
         /// 图标item
@@ -337,125 +298,6 @@ namespace Aquila.UI
 
             /// <summary>
             /// 根节点
-            /// </summary>
-            private GameObject _root = null;
-        }
-
-        /// <summary>
-        /// 读条进度
-        /// </summary>
-        private class WindUpItem
-        {
-            /// <summary>
-            /// 激活
-            /// </summary>
-            public void Active()
-            {
-                Tools.SetActive(_root,true);
-            }
-
-            /// <summary>
-            /// 刷帧跑读条
-            /// </summary>
-            public void Update(float deltaTime)
-            {
-                if(!ReadyFlag)
-                    return;
-
-                _passedTime += deltaTime;
-                _slider.value = _passedTime / _totalTime;
-                var remainTime = _totalTime - _passedTime;
-                
-                //finish
-                if (_slider.value >= 1f)
-                    Stop();
-                else
-                    _remainText.text = remainTime.ToString("n1");
-            }
-
-            /// <summary>
-            /// 停止读条
-            /// </summary>
-            public void Stop()
-            {
-                Tools.SetActive(_slider.gameObject,false);
-                Tools.SetActive(_remainText.gameObject,false);
-                Tools.SetActive(_root,false);
-                Reset();
-            }
-
-            /// <summary>
-            /// 刷帧跑进度
-            /// </summary>
-            public void GetReady(float totalTime)
-            {
-                _totalTime    = totalTime;
-                _passedTime   = 0f;
-                _slider.value = 0f;
-                _remainText.text = "0";
-                Tools.SetActive(_root,true);
-                Tools.SetActive(_slider.gameObject,true);
-                Tools.SetActive(_remainText.gameObject,true);
-                
-                ReadyFlag = true;
-            }
-            
-            public WindUpItem(GameObject root)
-            {
-                _root       = root;
-                _slider     = Tools.GetComponent<Slider>(_root, "Slider");
-                _remainText = Tools.GetComponent<Text>(_root  , "Remain");
-                Reset();
-            }
-            
-            /// <summary>
-            /// 清掉数据
-            /// </summary>
-            public void Clear()
-            {
-                _root       = null;
-                _slider     = null;
-                _remainText = null;
-            }
-
-            /// <summary>
-            /// 设置数据到初始状态
-            /// </summary>
-            private void Reset()
-            {
-                ReadyFlag   = false;
-                _totalTime  = 0f;
-                _passedTime = 0f;
-                _slider.value = 0f;
-            }
-
-            /// <summary>
-            /// 准备标记
-            /// </summary>
-            public bool ReadyFlag { get; private set; } = false;
-
-            /// <summary>
-            /// 读条
-            /// </summary>
-            private Slider _slider = null;
-            
-            /// <summary>
-            /// 总时长
-            /// </summary>
-            private float _totalTime = 0f;
-            
-            /// <summary>
-            /// 剩余时间文本
-            /// </summary>
-            private Text _remainText = null;
-
-            /// <summary>
-            /// 经过时间
-            /// </summary>
-            private float _passedTime = 0f;
-            
-            /// <summary>
-            /// 跟对象
             /// </summary>
             private GameObject _root = null;
         }

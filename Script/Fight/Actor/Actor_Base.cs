@@ -20,30 +20,6 @@ namespace Aquila.Fight.Actor
         #region public methods
 
         /// <summary>
-        /// 添加和此actor关联的actor
-        /// </summary>
-        public bool AddRelevance( int actorID )
-        {
-            return _relevanceActorSet.Add( actorID );
-        }
-
-        /// <summary>
-        /// 移除和此actor关联的actor
-        /// </summary>
-        public bool RemoveRelevane( int actorID )
-        {
-            return _relevanceActorSet.Remove( actorID );
-        }
-
-        /// <summary>
-        /// 关联的actorID列表
-        /// </summary>
-        public HashSet<int> RelevanceActors
-        {
-            get => _relevanceActorSet;
-        }
-
-        /// <summary>
         /// 移除tag
         /// </summary>
         public void RemoveTag( ushort tagToRemove )
@@ -57,6 +33,14 @@ namespace Aquila.Fight.Actor
         public void AddTag( ushort tagToAdd )
         {
             _tagContainer.Add( tagToAdd );
+        }
+
+        /// <summary>
+        /// 获取actor身上的一个tag
+        /// </summary>
+        public bool ContainsTag(ushort tagToGet)
+        {
+            return _tagContainer.Contains(tagToGet);
         }
 
         /// <summary>
@@ -169,17 +153,17 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
-            var res = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
-            if ( !res.regSucc )
+            var regSucc = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
+            if ( !regSucc.regSucc )
             {
                 Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
                 return;
             }
 
-            _instance = res.instance;
+            _instance = regSucc.instance;
             OnInitActor( userData );
             AddAddon();
-            InitAddons( res.instance );
+            InitAddons( regSucc.instance );
 
             foreach ( var addon in GetAllAddon() )
                 GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
@@ -193,7 +177,6 @@ namespace Aquila.Fight.Actor
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
 
             _tagContainer.Reset();
-            _relevanceActorSet.Clear();
             _eventAddon.UnRegisterAll();
 
             ExtensionRecycle();
@@ -201,7 +184,10 @@ namespace Aquila.Fight.Actor
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            var unRegSucc = GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            if (!unRegSucc)
+                Log.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
+                
             base.OnHide( isShutdown, userData );
         }
 
@@ -210,14 +196,14 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
+            Log.Info("111111111111111111111111111");
+            // _tagContainer = null;
             base.OnRecycle();
         }
 
         protected override void OnInit( object userData )
         {
             base.OnInit( userData );
-            if ( _relevanceActorSet is null )
-                _relevanceActorSet = new HashSet<int>();
 
             if ( _tagContainer is null )
                 _tagContainer = new TagContainer( OnTagChange );
@@ -341,11 +327,6 @@ namespace Aquila.Fight.Actor
         /// tag管理器
         /// </summary>
         protected TagContainer _tagContainer = null;
-
-        /// <summary>
-        /// 关联actor集合
-        /// </summary>
-        private HashSet<int> _relevanceActorSet;
 
         #endregion
     }

@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2023-10-31 19:40:55.343
+// 生成时间：2023-10-31 19:40:55.359
 //------------------------------------------------------------
 
 using GameFramework;
@@ -22,12 +22,12 @@ namespace Aquila.UI
 	/// <summary>
 	/// 界面配置表。
 	/// </summary>
-	public class DRUIForm : DataRowBase
+	public class DRPreload : DataRowBase
 	{
 		private int m_Id = 0;
 
 		/// <summary>
-		/// 获取界面编号。
+		/// 获取ID。
 		/// </summary>
 		public override int Id
 {
@@ -37,7 +37,7 @@ namespace Aquila.UI
 			
 }		
 }        /// <summary>
-        /// 获取策划备注。
+        /// 获取备注。
         /// </summary>
         public string Comment
         {
@@ -46,63 +46,9 @@ namespace Aquila.UI
         }
 
         /// <summary>
-        /// 获取资源名称。
+        /// 获取要预加载的资源路径。
         /// </summary>
-        public string AssetName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取界面组名称。
-        /// </summary>
-        public string UIGroupName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取是否允许多个界面实例。
-        /// </summary>
-        public bool AllowMultiInstance
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取是否暂停被其覆盖的界面。
-        /// </summary>
-        public bool PauseCoveredUIForm
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取打开音效。
-        /// </summary>
-        public int OpenSound
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取关闭音效。
-        /// </summary>
-        public int CloseSound
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取隐藏移动摇杆。
-        /// </summary>
-        public bool HideJoystick
+        public string PreloadAssetName
         {
             get;
             private set;
@@ -119,13 +65,7 @@ namespace Aquila.UI
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             Comment = columnStrings[index++];
-            AssetName = columnStrings[index++];
-            UIGroupName = columnStrings[index++];
-            AllowMultiInstance = bool.Parse(columnStrings[index++]);
-            PauseCoveredUIForm = bool.Parse(columnStrings[index++]);
-            OpenSound = int.Parse(columnStrings[index++]);
-            CloseSound = int.Parse(columnStrings[index++]);
-            HideJoystick = bool.Parse(columnStrings[index++]);
+            PreloadAssetName = columnStrings[index++];
 
             GeneratePropertyArray();
             return true;
@@ -139,13 +79,7 @@ namespace Aquila.UI
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     Comment = binaryReader.ReadString();
-                    AssetName = binaryReader.ReadString();
-                    UIGroupName = binaryReader.ReadString();
-                    AllowMultiInstance = binaryReader.ReadBoolean();
-                    PauseCoveredUIForm = binaryReader.ReadBoolean();
-                    OpenSound = binaryReader.Read7BitEncodedInt32();
-                    CloseSound = binaryReader.Read7BitEncodedInt32();
-                    HideJoystick = binaryReader.ReadBoolean();
+                    PreloadAssetName = binaryReader.ReadString();
                 }
             }
 
