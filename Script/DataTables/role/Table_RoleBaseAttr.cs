@@ -26,6 +26,7 @@ public sealed partial class Table_RoleBaseAttr :  Bright.Config.BeanBase
         test_vector = _buf.ReadUnityVector3();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_arr = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); test_arr[i] = _e;}}
         test_string = _buf.ReadString();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);test_bean_ability_trigger = new Bean.AbilityTriggers[n];for(var i = 0 ; i < n ; i++) { Bean.AbilityTriggers _e;_e = Bean.AbilityTriggers.DeserializeAbilityTriggers(_buf); test_bean_ability_trigger[i] = _e;}}
         PostInit();
     }
 
@@ -70,17 +71,23 @@ public sealed partial class Table_RoleBaseAttr :  Bright.Config.BeanBase
     /// 测试字符串
     /// </summary>
     public string test_string { get; private set; }
+    /// <summary>
+    /// 测试bean配置,用|分割数组的每一项，用,分割bean的每一项
+    /// </summary>
+    public Bean.AbilityTriggers[] test_bean_ability_trigger { get; private set; }
 
     public const int __ID__ = -488462239;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        foreach(var _e in test_bean_ability_trigger) { _e?.Resolve(_tables); }
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        foreach(var _e in test_bean_ability_trigger) { _e?.TranslateText(translator); }
     }
 
     public override string ToString()
@@ -95,6 +102,7 @@ public sealed partial class Table_RoleBaseAttr :  Bright.Config.BeanBase
         + "test_vector:" + test_vector + ","
         + "test_arr:" + Bright.Common.StringUtil.CollectionToString(test_arr) + ","
         + "test_string:" + test_string + ","
+        + "test_bean_ability_trigger:" + Bright.Common.StringUtil.CollectionToString(test_bean_ability_trigger) + ","
         + "}";
     }
     
