@@ -23,6 +23,21 @@ namespace Aquila.Fight
             _targetPosition = transform.position;
             _readyFlag = true;
         }
+        
+        /// <summary>
+        /// 就绪
+        /// </summary>
+        public void GetReady(Vector3 position)
+        {
+            if ( _radius <= 0f )
+            {
+                Log.Warning( $"<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
+                return;
+            }
+
+            _targetPosition = position;
+            _readyFlag = true;
+        }
 
         public override void Update( float elapsed, float realElapsed )
         {

@@ -1,7 +1,9 @@
+using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
+using GameFramework.Event;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -13,6 +15,21 @@ namespace Aquila.Fight.Actor
     public class Actor_Orb : Actor_Base
     {
         //----------------------- pub -----------------------
+        
+
+        /// <summary>
+        /// 设置目标位置并且准备继续
+        /// </summary>
+        public void SetTargetPositionAndReady(Vector3 position)
+        {
+            //替换追踪组件为目标点组件
+            _behaviourAddon.RemoveBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM );
+            var bhvr = _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.TARGETING_POSITION ) as ActorBehaviour_TargetingPosition;
+            bhvr._onHitAbilityID = DefaultOnHitAbilityID();
+            bhvr._radius = 1f;
+            bhvr.GetReady( position );
+        }
+        
         /// <summary>
         /// 设置目标点并准备就绪
         /// </summary>
@@ -57,6 +74,23 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
+        /// 当actor死亡
+        /// </summary>
+        private void OnActorDie(object sender, GameEventArgs e)
+        {
+            var arg = e as EventArg_OnActorDie;
+            if (arg is null)
+                return;
+            
+            var bhvr = _behaviourAddon.GetBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM ) as ActorBehaviour_TracingTransform;
+            if (arg._actorID != bhvr._targetActorID)
+                return;
+
+            var lastPosition = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition(arg._actorID);
+            SetTargetPositionAndReady(lastPosition);
+        }
+
+        /// <summary>
         /// 获取法球的默认命中技能ID
         /// </summary>
         private int DefaultOnHitAbilityID()
@@ -85,6 +119,20 @@ namespace Aquila.Fight.Actor
                 _targetActorID = data._targetActorID;
             else
                 Log.Warning( "<color=yellow>Actor_Orb.OnInitActor()---></color>" );
+            
+            GameEntry.Event.Subscribe(EventArg_OnActorDie.EventID,OnActorDie);
+        }
+
+        protected override void OnHide(bool isShutdown, object userData)
+        {
+            GameEntry.Event.Unsubscribe(EventArg_OnActorDie.EventID,OnActorDie);
+            base.OnHide(isShutdown, userData);
+        }
+
+        protected override void OnRecycle()
+        {
+            _behaviourAddon = null;
+            base.OnRecycle();
         }
 
         public override RoleType ActorType => RoleType.Orb;
@@ -100,6 +148,11 @@ namespace Aquila.Fight.Actor
         /// 目标actorID
         /// </summary>
         private int _targetActorID = -1;
+        
+        /// <summary>
+        /// 当前的目标位置
+        /// </summary>
+        private Vector3 _currTargetPosition = Vector3.zero;
     }
 
     public class Actor_Orb_EntityData : Actor_Base_EntityData

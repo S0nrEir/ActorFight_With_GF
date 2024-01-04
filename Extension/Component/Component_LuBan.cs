@@ -96,7 +96,8 @@ namespace Aquila.Extension
         protected override void Awake()
         {
             base.Awake();
-            _bytesPath = $"{Application.dataPath}/Res/DataTables/";
+            _bytesPath = Utility.Path.GetRegularPath($"{Application.dataPath}/Res/DataTables/");
+            //_bytesPath = $"{Application.dataPath}/Res/DataTables/";
         }
 
         /// <summary>

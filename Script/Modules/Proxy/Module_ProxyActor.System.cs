@@ -42,19 +42,19 @@ namespace Aquila.Module
 
         public void SystemEnsureInit()
         {
-            _readyToAdd = new Queue<Addon_Base>();
+            _readyToAdd    = new Queue<Addon_Base>();
             _readyToRemove = new Queue<Addon_Base>();
-            _existAddon = new HashSet<int>();
+            _existAddon    = new HashSet<int>();
             _containerList = new AddonContainer[( int ) AddonTypeEnum.Max];
-            var len = _containerList.Length;
+            var len    = _containerList.Length;
             for ( var i = 0; i < len; i++ )
                 _containerList[i] = ReferencePool.Acquire<AddonContainer>();
         }
 
         private void SystemUpdate( float elapsed, float realElapsed )
         {
-            ProcessRemove();
-            ProcessAdd();
+            ProcessRemoveAddon();
+            ProcessAddAddon();
             for ( var i = 0; i < _containerList.Length; i++ )
                 _containerList[i].Update( elapsed, realElapsed );
         }
@@ -62,7 +62,7 @@ namespace Aquila.Module
         /// <summary>
         /// 处理要添加的addon
         /// </summary>
-        private void ProcessAdd()
+        private void ProcessAddAddon()
         {
             Addon_Base curr = null;
             while ( _readyToAdd.TryDequeue( out curr ) )
@@ -75,7 +75,7 @@ namespace Aquila.Module
         /// <summary>
         /// 处理要移除的
         /// </summary>
-        private void ProcessRemove()
+        private void ProcessRemoveAddon()
         {
             Addon_Base curr = null;
             while ( _readyToRemove.TryDequeue( out curr ) )

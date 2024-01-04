@@ -207,7 +207,7 @@ namespace Aquila.Module
                     result._stateDescription = Tools.SetBitValue( result._stateDescription,
                    ( int ) AbilityUseResultTypeEnum.NO_TARGET, true );
                     GameEntry.Event.Fire( this, EventArg_OnUseAblity.Create( result ) );
-                    ReferencePool.Release( result );
+                    //ReferencePool.Release( result );
                     return;
                 }
             }
@@ -256,13 +256,8 @@ namespace Aquila.Module
                 return;
 
             var actor = instance.Actor;
-            var relevanceActorsID = actor.RelevanceActors;
-            foreach ( var actorID in relevanceActorsID )
-            {
-                var relevanceActor = Get( actorID );
-                ( relevanceActor.Actor as Actor_Orb )?.SetTargetPositionAndReady( actor.CachedTransform );
-            }
-
+            //todo:这里的流程是，actor死亡后隐藏，但不是直接调用entity组件的hide，这会导致entity直接被回收放回池里
+            //actor的死亡仍然是业务逻辑的一部分，这里只是暂时用GameEntry.Entity.HideEntity来替代隐藏actor
             GameEntry.Entity.HideEntity( actor.ActorID );
         }
 

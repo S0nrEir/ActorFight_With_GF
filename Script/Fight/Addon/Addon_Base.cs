@@ -12,11 +12,6 @@ namespace Aquila.Fight.Addon
     public abstract partial class Addon_Base
     {
         /// <summary>
-        /// 组件类型
-        /// </summary>
-        public abstract AddonTypeEnum AddonType { get; }
-
-        /// <summary>
         /// addon的初始化，addon的数据初始化在这里做
         /// </summary>
         public virtual void Init( Module_ProxyActor.ActorInstance instance)
@@ -79,6 +74,12 @@ namespace Aquila.Fight.Addon
             Actor          = null;
             _actorInstance = null;
         }
+        
+        /// <summary>
+        /// 组件类型
+        /// </summary>
+        public abstract AddonTypeEnum AddonType { get; }
+
     }
 
 }
