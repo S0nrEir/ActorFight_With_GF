@@ -151,7 +151,8 @@ namespace Aquila.Fight.FSM
         /// </summary>
         // private int[] _targetIDArr = null;
 
-        /// <summary>
+        /// <summary>；
+        /// 
         /// 使用状态结果
         /// </summary>
         private AbilityResult_Use _result = null;
