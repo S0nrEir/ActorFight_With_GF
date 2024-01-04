@@ -120,12 +120,13 @@ namespace Aquila.Editor
                 ICSharpCode.SharpZipLib.Core.StreamUtils.Copy( fs, stream, new byte[4096] );
             }
             stream.CloseEntry();
-
-            if ( size == 0 )
-            {
-                Debug.Log( "<color=red>file size is 0</color>" );
-                return 0;
-            }
+            
+            //有的文件没有内容，所以是0字节
+            // if ( size == 0 )
+            // {
+            //     Debug.Log( $"<color=red>file size is 0,file:{file}</color>" );
+            //     return 0;
+            // }
 
             return size;
         }
