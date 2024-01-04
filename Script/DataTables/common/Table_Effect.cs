@@ -20,7 +20,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         Tag = (Enum.ActorTagType)_buf.ReadInt();
         Type = (Enum.EffectType)_buf.ReadInt();
-        ExtensionParam = Struct.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
+        ExtensionParam = Bean.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
         EffectOnAwake = _buf.ReadBool();
         Policy = (Enum.DurationPolicy)_buf.ReadInt();
@@ -53,7 +53,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// <summary>
     /// 额外参数float_1,float_2,float_3,float_4,int_1,int_2,int_3,int_4
     /// </summary>
-    public Struct.EffectExtensionParam ExtensionParam { get; private set; }
+    public Bean.EffectExtensionParam ExtensionParam { get; private set; }
     /// <summary>
     /// 数值修改器类型
     /// </summary>

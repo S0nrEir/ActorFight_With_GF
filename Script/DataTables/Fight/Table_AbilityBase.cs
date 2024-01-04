@@ -57,7 +57,7 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
     /// </summary>
     public int[] effects { get; private set; }
     /// <summary>
-    /// TimelineID
+    /// 技能表现timeline
     /// </summary>
     public int Timeline { get; private set; }
 
