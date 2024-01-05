@@ -146,11 +146,6 @@ namespace Aquila.Fight.Actor
         private Addon_Behaviour _behaviourAddon = null;
 
         /// <summary>
-        /// 状态组件
-        /// </summary>
-        private Addon_FSM _fsmAddon = null;
-
-        /// <summary>
         /// 目标actorID
         /// </summary>
         private int _targetActorID = -1;
