@@ -32,7 +32,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility( int abilityID, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
@@ -43,7 +43,7 @@ namespace Aquila.Fight.Addon
                 return false;
             }
 
-            return spec.UseAbility( target, result );
+            return spec.UseAbility(triggerIndex, target, result );
         }
 
         public override void OnUpdate( float deltaTime, float realElapsed )

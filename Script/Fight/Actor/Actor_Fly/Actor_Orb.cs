@@ -1,5 +1,6 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
+using Aquila.Fight.FSM;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
@@ -15,8 +16,6 @@ namespace Aquila.Fight.Actor
     public class Actor_Orb : Actor_Base
     {
         //----------------------- pub -----------------------
-        
-
         /// <summary>
         /// 设置目标位置并且准备继续
         /// </summary>
@@ -102,7 +101,9 @@ namespace Aquila.Fight.Actor
         {
             base.AddAddon();
             _behaviourAddon = AddAddon<Addon_Behaviour>();
+            //法球的触发是通过fsm调用技能组件实现的所以要加上这两个组件
             AddAddon<Addon_Ability>();
+            AddAddon<Addon_FSM_Orb>();
         }
 
         protected override void InitAddons( Module_ProxyActor.ActorInstance instance )
@@ -143,6 +144,11 @@ namespace Aquila.Fight.Actor
         /// 行为组件
         /// </summary>
         private Addon_Behaviour _behaviourAddon = null;
+
+        /// <summary>
+        /// 状态组件
+        /// </summary>
+        private Addon_FSM _fsmAddon = null;
 
         /// <summary>
         /// 目标actorID

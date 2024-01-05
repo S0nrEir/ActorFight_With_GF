@@ -146,11 +146,6 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private int _castorID = -1;
 
-        /// <summary>
-        /// 目标Actor的ID集合
-        /// </summary>
-        // private int[] _targetIDArr = null;
-
         /// <summary>；
         /// 
         /// 使用状态结果

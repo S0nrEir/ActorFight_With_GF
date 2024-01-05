@@ -87,7 +87,7 @@ namespace Aquila.Module
         /// <summary>
         /// 生效技能，直接让一个effect命中，而无需使用
         /// </summary>
-        public void AffectAbility( int castorID, int targetID, int abilityID, Vector3 targetPosition )
+        public void AffectAbility(int triggerIndex, int castorID, int targetID, int abilityID, Vector3 targetPosition )
         {
             var result = AbilityResult_Hit.Gen( castorID, targetID );
 
@@ -127,7 +127,7 @@ namespace Aquila.Module
                 return;
             }
 
-            addon.UseAbility( abilityID, targetInstance, result );
+            addon.UseAbility(triggerIndex, abilityID, targetInstance, result );
             if ( targetInstance != null && result._dealedDamage != 0 )
                 GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.Actor.CachedTransform.position );
 
