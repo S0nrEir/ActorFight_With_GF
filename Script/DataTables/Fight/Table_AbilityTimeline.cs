@@ -20,7 +20,6 @@ public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         AssetPath = _buf.ReadString();
         Duration = _buf.ReadFloat();
-        TriggerTime = _buf.ReadFloat();
         PostInit();
     }
 
@@ -41,10 +40,6 @@ public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase
     /// 总时长，单位秒
     /// </summary>
     public float Duration { get; private set; }
-    /// <summary>
-    /// 触发时间
-    /// </summary>
-    public float TriggerTime { get; private set; }
 
     public const int __ID__ = -1709568676;
     public override int GetTypeId() => __ID__;
@@ -64,7 +59,6 @@ public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase
         + "id:" + id + ","
         + "AssetPath:" + AssetPath + ","
         + "Duration:" + Duration + ","
-        + "TriggerTime:" + TriggerTime + ","
         + "}";
     }
     

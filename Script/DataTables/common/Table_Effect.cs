@@ -18,7 +18,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     public Table_Effect(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        Tag = (Enum.ActorTagType)_buf.ReadInt();
         Type = (Enum.EffectType)_buf.ReadInt();
         ExtensionParam = Bean.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
@@ -42,10 +41,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// id
     /// </summary>
     public int id { get; private set; }
-    /// <summary>
-    /// 给角色添加的tag
-    /// </summary>
-    public Enum.ActorTagType Tag { get; private set; }
     /// <summary>
     /// Effect的类型
     /// </summary>
@@ -109,7 +104,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "Tag:" + Tag + ","
         + "Type:" + Type + ","
         + "ExtensionParam:" + ExtensionParam + ","
         + "ModifierType:" + ModifierType + ","
