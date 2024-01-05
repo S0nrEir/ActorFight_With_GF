@@ -20,7 +20,7 @@ namespace Aquila.Fight.Actor
             base.AddAddon();
             _baseAttrAddon  = AddAddon<Addon_BaseAttrNumric>();
             _abilityAddon   = AddAddon<Addon_Ability>();
-            _fsmAddon       = AddAddon<Addon_HeroFSM>();
+            _fsmAddon       = AddAddon<Addon_FSM_Hero>();
             _hpAddon        = AddAddon<Addon_HP>();
             _timelineAddon  = AddAddon<Addon_Timeline>();
             _behaviourAddon = AddAddon<Addon_Behaviour>();
