@@ -6,6 +6,8 @@ Unity GameFrameWork前端框架 [GameFramework](https://github.com/EllanJiang/Ga
 D佬的GF扩展[GameFrameworkExtension](https://github.com/FingerCaster/UGFExtensions)<br />
 LuBan[LuBan](https://github.com/focus-creative-games/luban)
 
+---
+
 效果类TODO:
 
 - [ ] 每损失10%生命，提供自身5%暴击率，持续x秒
