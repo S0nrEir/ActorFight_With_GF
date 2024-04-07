@@ -13,3 +13,4 @@ LuBan[LuBan](https://github.com/focus-creative-games/luban)
 - [ ] 每损失10%生命，提供自身5%暴击率，持续x秒
 - [ ] 嘲讽，强制攻击自身，持续x秒
 - [ ] 每收到一次攻击提供自身1%攻击加成，持续x秒
+- [ ] 修改属性类型系统，修改为：角色持有基础的成长数据（原Actor_Base_Attr）及一次为依据计算出的属性(Actor_Attr)，角色属性的初始化应当以Actor_Attr为主
