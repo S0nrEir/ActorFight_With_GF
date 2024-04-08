@@ -25,7 +25,7 @@ namespace Aquila.Fight.Addon
 
             var cur = attrAddon.GetCurrHPCorrection();
             // var max = attrAddon.GetCorrectionFinalValue(Actor_Attr.Max_HP, 0f);
-            var max = attrAddon.GetCorrectionFinalValue( Actor_Base_Attr.HP, 0f );
+            var max = attrAddon.GetCorrectionFinalValue( /*Actor_Base_Attr.HP*/ actor_attribute.Max_HP , 0f );
             _hpObj.SetValue( ( int ) cur, ( int ) max.value );
         }
 

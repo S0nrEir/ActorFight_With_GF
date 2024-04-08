@@ -34,7 +34,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的基础值
         /// </summary>
-        public (bool getSucc, float value) GetBaseValue( Actor_Attr type )
+        public (bool getSucc, float value) GetBaseValue( actor_attribute type )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -46,7 +46,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置某项属性的基础值，返回修改后的值和成功标记
         /// </summary>
-        public (bool setSucc, float valueAfterSet) SetBaseValue( Actor_Base_Attr type, float valueToSet )
+        public (bool setSucc, float valueAfterSet) SetBaseValue( actor_attribute type, float valueToSet )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -61,8 +61,8 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (bool setSucc, float valueAfterSet) SetCurrHP(float valueToSet)
         {
-            _currHP.SetBaseVal(valueToSet);
-            return (true, _currHP.CorrectionValue);
+            _numricArr[(int)actor_attribute.Curr_HP].SetBaseVal(valueToSet);
+            return (true, _numricArr[(int)actor_attribute.Curr_HP].CorrectionValue);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (bool setSucc, float valueAfterSet) SetCurrMP(float valueToSet)
         {
-            _currMP.SetBaseVal(valueToSet);
-            return (true, _currMP.CorrectionValue);
+            _numricArr[(int)actor_attribute.Curr_MP].SetBaseVal(valueToSet);
+            return (true, _numricArr[(int)actor_attribute.Curr_MP].CorrectionValue);
         }
 
         ///// <summary>
@@ -88,7 +88,8 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public float GetCurrHPCorrection()
         {
-            return _currHP.CorrectionValue;
+            // return _currHP.CorrectionValue;
+            return _numricArr[(int)actor_attribute.Curr_HP].CorrectionValue;
         }
 
         /// <summary>
@@ -96,13 +97,14 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public float GetCurrMPCorrection()
         {
-            return _currMP.CorrectionValue;
+            // return _currMP.CorrectionValue;
+            return _numricArr[(int)actor_attribute.Max_MP].CorrectionValue;
         }
 
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool getSucc, float value) GetCorrectionFinalValue( Actor_Base_Attr type ,float default_value = 0f)
+        public (bool getSucc, float value) GetCorrectionFinalValue( actor_attribute type ,float default_value = 0f)
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -114,7 +116,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个装备类型的数值修饰器
         /// </summary>
-        public bool SetEquipModifier( Actor_Base_Attr type, Numric_Modifier modifier )
+        public bool SetEquipModifier( actor_attribute type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -126,7 +128,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个buff类型的数值修饰器
         /// </summary>
-        public bool SetBuffModifier( Actor_Base_Attr type, Numric_Modifier modifier )
+        public bool SetBuffModifier( actor_attribute type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
@@ -138,18 +140,17 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 设置一个职业修正的数值修饰器
         /// </summary>
-        public bool SetClassModifier( Actor_Base_Attr type, Numric_Modifier modifier )
+        public bool SetClassModifier( actor_attribute type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
             if ( OverLen( intType ) )
-                return false;
+                return false;                   
 
             return _numricArr[intType].AddClassModifier( modifier );
         }
         
 
         //----------------------priv----------------------
-
         /// <summary>
         /// 设置基础属性
         /// </summary>
@@ -157,23 +158,29 @@ namespace Aquila.Fight.Addon
         {
             //现在是写死的，很蛋疼
             var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
+            
             //max hp & curr hp
-            var res = SetBaseValue( Actor_Base_Attr.HP, meta.HP );
+            var res = SetBaseValue( actor_attribute.Curr_HP, meta.base_attr_value.max_hp );
+            SetBaseValue(actor_attribute.Max_HP, meta.hp_factor * meta.base_attr_value.max_hp);
             SetCurrHP(res.valueAfterSet);
             //max mp & curr mp
-            res = SetBaseValue( Actor_Base_Attr.MP, meta.MP );
+            res = SetBaseValue( actor_attribute.Curr_MP, meta.base_attr_value.max_mp );
+            SetBaseValue(actor_attribute.Max_MP, meta.mp_factor * meta.base_attr_value.max_mp);
             SetCurrMP(res.valueAfterSet);
-            
-            //str
-            SetBaseValue( Actor_Base_Attr.STR, meta.STR );
+            //str，系数*值
+            SetBaseValue( actor_attribute.STR, meta.str_factor * meta.base_attr_value.str );
             //def
-            SetBaseValue( Actor_Base_Attr.DEF, meta.DEF );
+            SetBaseValue( actor_attribute.DEF, meta.def_factor * meta.base_attr_value.def );
             //agi
-            SetBaseValue( Actor_Base_Attr.AGI, meta.AGI );
+            SetBaseValue( actor_attribute.AGI, meta.agi_factor * meta.base_attr_value.agi );
+            //spd
+            SetBaseValue( actor_attribute.SPD, meta.spd_factor * meta.base_attr_value.spd );
             //mvt
-            SetBaseValue( Actor_Base_Attr.MVT, meta.MVT );
+            SetBaseValue( actor_attribute.MVT, meta.mvt_factor * meta.base_attr_value.mvt );
             //spw
-            SetBaseValue( Actor_Base_Attr.SPW, meta.SPW );
+            SetBaseValue( actor_attribute.SPW, meta.spw_factor * meta.base_attr_value.spw );
+            //atk
+            SetBaseValue( actor_attribute.ATK, meta.atk_factor * meta.base_attr_value.atk );
         }
 
         /// <summary>
@@ -222,10 +229,10 @@ namespace Aquila.Fight.Addon
                 }
                 _numricArr = null;
             }
-            ReferencePool.Release(_currHP);
-            ReferencePool.Release(_currMP);
-            _currHP = null;
-            _currMP = null;
+            // ReferencePool.Release(_currHP);
+            // ReferencePool.Release(_currMP);
+            // _currHP = null;
+            // _currMP = null;
         }
 
         public override AddonTypeEnum AddonType => AddonTypeEnum.NUMRIC_BASEATTR;
@@ -233,7 +240,7 @@ namespace Aquila.Fight.Addon
         public override void OnAdd()
         {
             if ( _numricArr is null )
-                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.Actor_Base_Attr.Max];
+                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.actor_attribute.Max];
 
             var len = _numricArr.Length;
             for ( var i = 0; i < len; i++ )
@@ -244,13 +251,15 @@ namespace Aquila.Fight.Addon
                     _numricArr[i].EnsureInit();
                 }
                 else
+                {
                     Log.Warning( "Numric arr not not null on add!" );
+                }
             }
 
-            _currHP = ReferencePool.Acquire<Numric.Numric>();
-            _currHP.EnsureInit();
-            _currMP = ReferencePool.Acquire<Numric.Numric>();
-            _currMP.EnsureInit();
+            // _currHP = ReferencePool.Acquire<Numric.Numric>();
+            // _currHP.EnsureInit();
+            // _currMP = ReferencePool.Acquire<Numric.Numric>();
+            // _currMP.EnsureInit();
         }
 
         //----------------------------fields----------------------------
@@ -262,11 +271,11 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 血量
         /// </summary>
-        private Numric.Numric _currHP = null;
+        // private Numric.Numric _currHP = null;
         
         /// <summary>
         /// 魔法
         /// </summary>
-        private Numric.Numric _currMP = null;
+        // private Numric.Numric _currMP = null;
     }
 }
