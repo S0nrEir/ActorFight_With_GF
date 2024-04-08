@@ -20,15 +20,16 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         id = _buf.ReadInt();
         name = _buf.ReadString();
         desc = _buf.ReadString();
-        HP = _buf.ReadInt();
-        MP = _buf.ReadInt();
-        ATK = _buf.ReadFloat();
-        DEF = _buf.ReadFloat();
-        SPD = _buf.ReadFloat();
-        MVT = _buf.ReadFloat();
-        STR = _buf.ReadFloat();
-        AGI = _buf.ReadFloat();
-        SPW = _buf.ReadFloat();
+        base_attr_value = Bean.actor_base_attribute_value.Deserializeactor_base_attribute_value(_buf);
+        hp_factor = _buf.ReadFloat();
+        mp_factor = _buf.ReadFloat();
+        atk_factor = _buf.ReadFloat();
+        def_factor = _buf.ReadFloat();
+        spd_factor = _buf.ReadFloat();
+        mvt_factor = _buf.ReadFloat();
+        str_factor = _buf.ReadFloat();
+        agi_factor = _buf.ReadFloat();
+        spw_factor = _buf.ReadFloat();
         Class = _buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AbilityBaseID = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AbilityBaseID[i] = _e;}}
         RoleType = (Enum.RoleType)_buf.ReadInt();
@@ -54,41 +55,45 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
     /// </summary>
     public string desc { get; private set; }
     /// <summary>
-    /// 血量
+    /// 属性数值
     /// </summary>
-    public int HP { get; private set; }
+    public Bean.actor_base_attribute_value base_attr_value { get; private set; }
     /// <summary>
-    /// 魔法
+    /// 血量系数
     /// </summary>
-    public int MP { get; private set; }
+    public float hp_factor { get; private set; }
+    /// <summary>
+    /// 魔法系数
+    /// </summary>
+    public float mp_factor { get; private set; }
     /// <summary>
     /// 基础攻击力系数
     /// </summary>
-    public float ATK { get; private set; }
+    public float atk_factor { get; private set; }
     /// <summary>
     /// 基础防御力
     /// </summary>
-    public float DEF { get; private set; }
+    public float def_factor { get; private set; }
     /// <summary>
     /// 基础速度
     /// </summary>
-    public float SPD { get; private set; }
+    public float spd_factor { get; private set; }
     /// <summary>
     /// 基础移动力
     /// </summary>
-    public float MVT { get; private set; }
+    public float mvt_factor { get; private set; }
     /// <summary>
     /// 力量
     /// </summary>
-    public float STR { get; private set; }
+    public float str_factor { get; private set; }
     /// <summary>
     /// 敏捷
     /// </summary>
-    public float AGI { get; private set; }
+    public float agi_factor { get; private set; }
     /// <summary>
     /// 法伤
     /// </summary>
-    public float SPW { get; private set; }
+    public float spw_factor { get; private set; }
     /// <summary>
     /// 职业，索引Role_Class枚举
     /// </summary>
@@ -108,11 +113,13 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        base_attr_value?.Resolve(_tables);
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        base_attr_value?.TranslateText(translator);
     }
 
     public override string ToString()
@@ -121,15 +128,16 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         + "id:" + id + ","
         + "name:" + name + ","
         + "desc:" + desc + ","
-        + "HP:" + HP + ","
-        + "MP:" + MP + ","
-        + "ATK:" + ATK + ","
-        + "DEF:" + DEF + ","
-        + "SPD:" + SPD + ","
-        + "MVT:" + MVT + ","
-        + "STR:" + STR + ","
-        + "AGI:" + AGI + ","
-        + "SPW:" + SPW + ","
+        + "base_attr_value:" + base_attr_value + ","
+        + "hp_factor:" + hp_factor + ","
+        + "mp_factor:" + mp_factor + ","
+        + "atk_factor:" + atk_factor + ","
+        + "def_factor:" + def_factor + ","
+        + "spd_factor:" + spd_factor + ","
+        + "mvt_factor:" + mvt_factor + ","
+        + "str_factor:" + str_factor + ","
+        + "agi_factor:" + agi_factor + ","
+        + "spw_factor:" + spw_factor + ","
         + "Class:" + Class + ","
         + "AbilityBaseID:" + Bright.Common.StringUtil.CollectionToString(AbilityBaseID) + ","
         + "RoleType:" + RoleType + ","

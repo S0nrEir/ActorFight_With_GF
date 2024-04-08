@@ -26,7 +26,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         Period = _buf.ReadFloat();
         Duration = _buf.ReadFloat();
         Target = _buf.ReadInt();
-        EffectType = (Enum.Actor_Attr)_buf.ReadInt();
+        EffectType = (Enum.actor_attribute)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
         PostInit();
@@ -76,7 +76,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// <summary>
     /// 影响的数值类型
     /// </summary>
-    public Enum.Actor_Attr EffectType { get; private set; }
+    public Enum.actor_attribute EffectType { get; private set; }
     /// <summary>
     /// 派生effect
     /// </summary>
