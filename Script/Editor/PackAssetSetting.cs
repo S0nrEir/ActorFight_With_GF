@@ -8,7 +8,10 @@ namespace Aquila.Editor
 {
     public class PackAssetSetting
     {
-        private static string[] _include_dic = new string[]
+        /// <summary>
+        /// 要处理的目录
+        /// </summary>
+        private static string[] _includeDic = new string[]
         {
             ".vs",
             "DataTable",
@@ -17,41 +20,50 @@ namespace Aquila.Editor
             "Packages",
             "ProjectSettings",
             "UserSettings",
+            "UIElementsSchema"
         };
         
+        /// <summary>
+        /// 要创建的压缩文件名
+        /// </summary>
         private static string _fileName = @"/AssetSetting.zip";
         
+        /// <summary>
+        /// 压缩文件meta文件
+        /// </summary>
         private static string _metaFileName = @"/AssetSetting.zip.meta";
         
-        private static string _create_path = Application.dataPath + _fileName;
+        /// <summary>
+        /// 要创建压缩文件的路径
+        /// </summary>
+        private static string _createPath = Application.dataPath + _fileName;
         
         private const int _default_compress_level = 5;
         
+        /// <summary>
+        /// 压缩目录并输出，这是因为根目录没有上传至git，所以压缩一下然后放到子目录内，以便让git提交
+        /// </summary>
         [MenuItem( "Aquila/PackAssetSetting" )]
         public static void PackAssetSetting_()
         {
-            PrevOp();
+            DeleteLast();
 
-            using ( ZipOutputStream stream = new ZipOutputStream( File.Create( _create_path ) ) )
-            {
+            using ( ZipOutputStream stream = new ZipOutputStream( File.Create( _createPath ) ) )
+            { 
                 var size = 0L;
                 stream.SetLevel( _default_compress_level );
-                //��ѹ����ǰĿ¼�������ļ���Ȼ��ѹ���ļ���
-
                 FileInfo file_info = null;
                 var files = Directory.GetFiles( Application.dataPath + @"/.." );
                 foreach ( var file in files )
                 {
                     file_info = new FileInfo( file );
-                    //������ʱ�ļ�
                     if ( file_info.Name == "ActorFight_With_GF.zip" )
                         continue;
-
-                    //������ļ�����Ŀ¼
+                    
                     size += ZipFile( stream, file_info.Name );
                 }
 
-                foreach ( var dic in _include_dic )
+                foreach ( var dic in _includeDic )
                     size += ZipDict( dic, stream );
 
                 stream.Flush();
@@ -59,26 +71,23 @@ namespace Aquila.Editor
             Debug.Log( "<color=white>zip finished.</color>" );
         }
         
-        private static void PrevOp()
+        /// <summary>
+        /// 删除上次的压缩文件
+        /// </summary>
+        private static void DeleteLast()
         {
-            //��ɾ��ԭ�ļ�
             var original_file = Application.dataPath + @"/" + _fileName;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
-
-            //ɾ��meta�ļ�
+            
             original_file = Application.dataPath + @"/" + _metaFileName;
             if ( File.Exists( original_file ) )
                 File.Delete( original_file );
         }
-
-        /// <summary>
-        /// ѹ��Ŀ¼
-        /// </summary>
+        
         private static long ZipDict( string dict, ZipOutputStream stream )
         {
             var size = 0L;
-            //����ÿһ������Ŀ¼�ͼ�����������ǣ�ֱ��ѹ��
             var files_in_dict = Directory.GetFiles( dict );
             foreach ( var file in files_in_dict )
                 size += ZipFile( stream, file );
@@ -112,12 +121,13 @@ namespace Aquila.Editor
                 ICSharpCode.SharpZipLib.Core.StreamUtils.Copy( fs, stream, new byte[4096] );
             }
             stream.CloseEntry();
-
-            if ( size == 0 )
-            {
-                Debug.Log( "<color=red>file size is 0</color>" );
-                return 0;
-            }
+            
+            //有的文件没有内容，所以是0字节
+            // if ( size == 0 )
+            // {
+            //     Debug.Log( $"<color=red>file size is 0,file:{file}</color>" );
+            //     return 0;
+            // }
 
             return size;
         }
