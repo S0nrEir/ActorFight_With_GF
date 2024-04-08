@@ -42,10 +42,6 @@ namespace Aquila.UI
         /// </summary
         private void OnUseAbility( object sender, GameEventArgs arg )
         {
-            // var param = arg as EventArg_OnUseAblity;
-            // if ( param is null )
-            //     return;
-
             if (!(arg is EventArg_OnUseAblity))
                 return;
             
