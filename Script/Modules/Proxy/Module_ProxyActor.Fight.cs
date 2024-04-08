@@ -127,7 +127,7 @@ namespace Aquila.Module
                 return;
             }
 
-            addon.UseAbility(triggerIndex, abilityID, targetInstance, result );
+            addon.UseAbility(abilityID, triggerIndex, targetInstance, result );
             if ( targetInstance != null && result._dealedDamage != 0 )
                 GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.Actor.CachedTransform.position );
 
