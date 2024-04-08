@@ -196,7 +196,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            Log.Info("111111111111111111111111111");
+            // Log.Info("111111111111111111111111111");
             // _tagContainer = null;
             base.OnRecycle();
         }
