@@ -9,6 +9,9 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
+    /// <summary>
+    /// 法球技能状态，描述法球命中后的行为
+    /// </summary>
     public class ActorState_Orb_Ability : ActorState_Base
     {
         public ActorState_Orb_Ability(int state_id) : base(state_id)
