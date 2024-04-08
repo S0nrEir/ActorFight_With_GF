@@ -88,7 +88,7 @@ namespace Aquila.Fight.FSM
                     foreach ( var targetID in _result._targetIDArr )
                         GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_currTriggerIndex, _castorID, targetID, _abilityMeta.id, _result._targetPosition );
                 }
-                GameEntry.Event.Fire( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
+                GameEntry.Event.FireNow(_fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
                 _currTriggerIndex++;
                 if (_currTriggerIndex >= _abilityMeta.Triggers.Length)
                     _abilityFinishFlag = true;
@@ -135,6 +135,7 @@ namespace Aquila.Fight.FSM
             _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
             _time = 0f;
             _abilityFinishFlag = false;
+            _currTriggerIndex = 0;
             GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );
         }
 
