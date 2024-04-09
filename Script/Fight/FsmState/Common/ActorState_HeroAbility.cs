@@ -45,7 +45,6 @@ namespace Aquila.Fight.FSM
             if ( abilityAddon is null )
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
 
-
             var canUseFlag = abilityAddon.CanUseAbility( _abilityMeta.id );
             if ( canUseFlag != 0 )
                 state = Tools.SetBitValue( state, ( ushort ) canUseFlag, true );
@@ -68,28 +67,47 @@ namespace Aquila.Fight.FSM
         private void TryUseAbility( float deltaTime )
         {
             _time += deltaTime;
-            if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
-            {
-                //var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
-                //if ( abilityAddon is null )
-                //{
-                //    Log.Warning( "<color=yellow>HeroStateAddon.OnUpdate--->abilityAddon is null </color>" );
-                //    return;
-                //}
+            if (_abilityFinishFlag)
+                return;
 
-                if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
+            if (_time >= _timelineMeta.Duration)
+                return;
+
+            if (_currTriggerIndex >= _abilityMeta.Triggers.Length)
+                return;
+
+            var nextTrigger = _abilityMeta.Triggers[_currTriggerIndex];
+            if (_time >= nextTrigger.TriggerTime)
+            {
+                if (Tools.GetBitValue(_result._stateDescription, (int)AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION))
                 {
-                    //以位置作为依据的，不需要目标actorID
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, -1, _abilityMeta.id, _result._targetPosition );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_currTriggerIndex, _castorID, -1, _abilityMeta.id, _result._targetPosition );
                 }
                 else
                 {
                     foreach ( var targetID in _result._targetIDArr )
-                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id, _result._targetPosition );
+                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_currTriggerIndex, _castorID, targetID, _abilityMeta.id, _result._targetPosition );
                 }
-                GameEntry.Event.Fire( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
-                _abilityFinishFlag = true;
+                GameEntry.Event.FireNow(_fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
+                _currTriggerIndex++;
+                if (_currTriggerIndex >= _abilityMeta.Triggers.Length)
+                    _abilityFinishFlag = true;
             }
+            // if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
+            // {
+            //     if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
+            //     {
+            //         //以位置作为依据的，不需要目标actorID
+            //         GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, -1, _abilityMeta.id, _result._targetPosition );
+            //     }
+            //     else
+            //     {
+            //         foreach ( var targetID in _result._targetIDArr )
+            //             GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id, _result._targetPosition );
+            //     }
+            //     GameEntry.Event.Fire( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
+            //     _abilityFinishFlag = true;
+            // }
         }
 
         /// <summary>
@@ -97,8 +115,11 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private void FinishAbility()
         {
-            if ( _time >= _timelineMeta.Duration )
-                _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
+            if(_abilityFinishFlag)
+                _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE,null,null);
+            
+            // if ( _time >= _timelineMeta.Duration )
+            //     _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
         }
 
         public override void OnEnter( object param )
@@ -114,6 +135,7 @@ namespace Aquila.Fight.FSM
             _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
             _time = 0f;
             _abilityFinishFlag = false;
+            _currTriggerIndex = 0;
             GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );
         }
 
@@ -127,10 +149,11 @@ namespace Aquila.Fight.FSM
         {
             base.OnLeave( param );
             //#todo施法结束回调
-            _timelineMeta = null;
-            _abilityMeta = null;
-            _castorID = -1;
-
+            _timelineMeta     = null;
+            _abilityMeta      = null;
+            _castorID         = -1;
+            _currTriggerIndex = -1;
+            
             if ( _result != null )
                 ReferencePool.Release( _result );
 
@@ -146,12 +169,8 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private int _castorID = -1;
 
-        /// <summary>
-        /// 目标Actor的ID集合
-        /// </summary>
-        // private int[] _targetIDArr = null;
-
-        /// <summary>
+        /// <summary>；
+        /// 
         /// 使用状态结果
         /// </summary>
         private AbilityResult_Use _result = null;
@@ -175,5 +194,10 @@ namespace Aquila.Fight.FSM
         /// 进入该状态时间
         /// </summary>
         private float _time = 0f;
+
+        /// <summary>
+        /// 当前走到的触发器节点索引
+        /// </summary>
+        private int _currTriggerIndex = -1;
     }
 }

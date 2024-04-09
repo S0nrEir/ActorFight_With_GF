@@ -8,6 +8,7 @@ using Cfg.Enum;
 using Cfg.Fight;
 using GameFramework;
 using System;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -59,12 +60,18 @@ namespace Aquila.Fight
         {
             return _tagContainer.Contains( bitTag );
         }
-
+        
+        /// <summary>
+        /// 设置该技能的meta信息
+        /// </summary>
         public virtual void Setup( Table_AbilityBase meta )
         {
             Meta = meta;
-            if ( Meta is null || Meta.effects is null )
+            if ( Meta is null)
                 return;
+
+            if (meta.Triggers is null || meta.Triggers.Length == 0)
+                Log.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
 
             _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
             _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
@@ -75,14 +82,21 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能
         /// </summary>
-        public virtual bool UseAbility( Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             if ( !OnPreAbility( result ) )
                 return false;
 
             Table_Effect effectMeta = null;
             EffectSpec_Base tempEffect = null;
-            foreach ( var effectID in Meta.effects )
+            if (triggerIndex >= Meta.Triggers.Length)
+            {
+                Log.Warning($"<color=yellow>AbilitySpec.UseAbility--->triggerIndex >= Meta.Triggers.Length,index:{triggerIndex},abilityID:{Meta.id}</color>");
+            }
+            
+            var trigger = Meta.Triggers[triggerIndex];
+            foreach (var effectID in trigger.CarrayedEffects)
+            // foreach ( var effectID in Meta.effects )
             {
                 effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
                 if ( effectMeta is null )

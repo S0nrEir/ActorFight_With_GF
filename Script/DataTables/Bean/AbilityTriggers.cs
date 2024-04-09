@@ -10,38 +10,36 @@ using System.Collections.Generic;
 
 
 
-namespace Cfg.Fight
+namespace Cfg.Bean
 {
 
-public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase 
+/// <summary>
+/// 技能节点和对应携带的effects
+/// </summary>
+public sealed partial class AbilityTriggers :  Bright.Config.BeanBase 
 {
-    public Table_AbilityTimeline(ByteBuf _buf) 
+    public AbilityTriggers(ByteBuf _buf) 
     {
-        id = _buf.ReadInt();
-        AssetPath = _buf.ReadString();
-        Duration = _buf.ReadFloat();
+        TriggerTime = _buf.ReadFloat();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);CarrayedEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); CarrayedEffects[i] = _e;}}
         PostInit();
     }
 
-    public static Table_AbilityTimeline DeserializeTable_AbilityTimeline(ByteBuf _buf)
+    public static AbilityTriggers DeserializeAbilityTriggers(ByteBuf _buf)
     {
-        return new Fight.Table_AbilityTimeline(_buf);
+        return new Bean.AbilityTriggers(_buf);
     }
 
     /// <summary>
-    /// id
+    /// 触发时间
     /// </summary>
-    public int id { get; private set; }
+    public float TriggerTime { get; private set; }
     /// <summary>
-    /// Timeline资产路径
+    /// 节点携带的effect
     /// </summary>
-    public string AssetPath { get; private set; }
-    /// <summary>
-    /// 总时长，单位秒
-    /// </summary>
-    public float Duration { get; private set; }
+    public int[] CarrayedEffects { get; private set; }
 
-    public const int __ID__ = -1709568676;
+    public const int __ID__ = 395783879;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
@@ -56,9 +54,8 @@ public sealed partial class Table_AbilityTimeline :  Bright.Config.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "id:" + id + ","
-        + "AssetPath:" + AssetPath + ","
-        + "Duration:" + Duration + ","
+        + "TriggerTime:" + TriggerTime + ","
+        + "CarrayedEffects:" + Bright.Common.StringUtil.CollectionToString(CarrayedEffects) + ","
         + "}";
     }
     

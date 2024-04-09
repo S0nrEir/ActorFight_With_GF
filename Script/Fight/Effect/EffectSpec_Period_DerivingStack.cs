@@ -3,7 +3,7 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Common;
 using Cfg.Enum;
-using Cfg.Struct;
+using Cfg.Bean;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight

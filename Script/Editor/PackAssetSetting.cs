@@ -20,6 +20,7 @@ namespace Aquila.Editor
             "Packages",
             "ProjectSettings",
             "UserSettings",
+            "UIElementsSchema"
         };
         
         /// <summary>

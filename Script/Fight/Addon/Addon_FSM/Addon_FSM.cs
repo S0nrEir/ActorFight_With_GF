@@ -88,14 +88,14 @@ namespace Aquila.Fight.Addon
         public override void Reset()
         {
             base.Reset();
-            if ( StateList is null )
-            {
-                Debug.LogError( "StateList is null" );
-                return;
-            }
+            // if ( StateList is null )
+            // {
+            //     Debug.LogError( "StateList is null" );
+            //     return;
+            // }
 
             //切换到自身第一个状态
-            SwitchTo( StateList[0]._stateID, null, null );
+            //SwitchTo( StateList[0]._stateID, null, null );
         }
 
         /// <summary>

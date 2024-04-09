@@ -55,7 +55,7 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
-        public (bool succ, float value) GetCorrectionAttr( int actorID, Actor_Base_Attr type )
+        public (bool succ, float value) GetCorrectionAttr( int actorID, /*Actor_Base_Attr*/ actor_attribute type )
         {
             var res = TryGet( actorID );
             if ( !res.has )
@@ -67,7 +67,7 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor的对应基础属性
         /// </summary>
-        public (bool succ, float value) GetActorBaseAttr( int actorID, Actor_Attr type )
+        public (bool succ, float value) GetActorBaseAttr( int actorID, /*Actor_Attr*/ actor_attribute type )
         {
             var res = TryGet( actorID );
             if ( !res.has )

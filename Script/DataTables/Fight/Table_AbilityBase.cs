@@ -22,8 +22,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         desc = _buf.ReadString();
         CostEffectID = _buf.ReadInt();
         CoolDownEffectID = _buf.ReadInt();
-        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);effects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); effects[i] = _e;}}
         Timeline = _buf.ReadInt();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);Triggers = new Bean.AbilityTriggers[n];for(var i = 0 ; i < n ; i++) { Bean.AbilityTriggers _e;_e = Bean.AbilityTriggers.DeserializeAbilityTriggers(_buf); Triggers[i] = _e;}}
         PostInit();
     }
 
@@ -53,24 +53,26 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
     /// </summary>
     public int CoolDownEffectID { get; private set; }
     /// <summary>
-    /// 携带的effect集合
-    /// </summary>
-    public int[] effects { get; private set; }
-    /// <summary>
-    /// TimelineID
+    /// 技能表现timeline
     /// </summary>
     public int Timeline { get; private set; }
+    /// <summary>
+    /// 触发器节点集合
+    /// </summary>
+    public Bean.AbilityTriggers[] Triggers { get; private set; }
 
     public const int __ID__ = 766903660;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
     {
+        foreach(var _e in Triggers) { _e?.Resolve(_tables); }
         PostResolve();
     }
 
     public  void TranslateText(System.Func<string, string, string> translator)
     {
+        foreach(var _e in Triggers) { _e?.TranslateText(translator); }
     }
 
     public override string ToString()
@@ -81,8 +83,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         + "desc:" + desc + ","
         + "CostEffectID:" + CostEffectID + ","
         + "CoolDownEffectID:" + CoolDownEffectID + ","
-        + "effects:" + Bright.Common.StringUtil.CollectionToString(effects) + ","
         + "Timeline:" + Timeline + ","
+        + "Triggers:" + Bright.Common.StringUtil.CollectionToString(Triggers) + ","
         + "}";
     }
     

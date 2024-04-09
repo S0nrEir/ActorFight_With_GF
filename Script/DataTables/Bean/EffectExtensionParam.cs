@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 
 
-namespace Cfg.Struct
+namespace Cfg.Bean
 {
 
 /// <summary>
@@ -33,7 +33,7 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
 
     public static EffectExtensionParam DeserializeEffectExtensionParam(ByteBuf _buf)
     {
-        return new Struct.EffectExtensionParam(_buf);
+        return new Bean.EffectExtensionParam(_buf);
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public sealed partial class EffectExtensionParam :  Bright.Config.BeanBase
     /// </summary>
     public int IntParam_4 { get; private set; }
 
-    public const int __ID__ = -1637178376;
+    public const int __ID__ = -302277891;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)

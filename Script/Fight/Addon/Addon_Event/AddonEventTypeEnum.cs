@@ -13,7 +13,12 @@ namespace Aquila.Fight.Addon
         /// 使用技能
         /// </summary>
         USE_ABILITY = 0,
-
+        
+        /// <summary>
+        /// actor显示
+        /// </summary>
+        ON_ACTOR_SHOW,
+        
         /// <summary>
         /// 取消行为
         /// </summary>
