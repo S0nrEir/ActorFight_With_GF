@@ -28,7 +28,6 @@ namespace Aquila.Fight.FSM
         private void OnActorShow(int addonType, object param)
         {
             //hero的state暂时先转换到第一个state
-            Debug.Log("11111111111");
             SwitchTo( StateList[0]._stateID, null, null );
         }
 
