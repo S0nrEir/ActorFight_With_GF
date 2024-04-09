@@ -44,11 +44,18 @@ namespace Aquila.Fight.Actor
         }
 
         /// <summary>
-        /// 触发addon事件
+        /// 通知event
         /// </summary>
         public void Notify( int eventType, object param )
         {
             _eventAddon.Notify( eventType, param );
+        }
+        /// <summary>
+        /// 通知event
+        /// </summary>
+        public void Notify(AddonEventTypeEnum eventType, object param)
+        {
+            _eventAddon.Notify((int)eventType, param);
         }
 
         /// <summary>
@@ -170,6 +177,7 @@ namespace Aquila.Fight.Actor
 
             _eventAddon.Ready();
             base.OnShow( userData );
+            Notify((int)AddonEventTypeEnum.ON_ACTOR_SHOW, null);
         }
 
         protected override void OnHide( bool isShutdown, object userData )
@@ -196,7 +204,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            Log.Info("111111111111111111111111111");
+            // Log.Info("111111111111111111111111111");
             // _tagContainer = null;
             base.OnRecycle();
         }

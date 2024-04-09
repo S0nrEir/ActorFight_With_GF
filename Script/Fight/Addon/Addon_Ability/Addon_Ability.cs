@@ -25,14 +25,14 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (float remain, float duration) CoolDown( int abilityID )
         {
-            var spec = GetAbilitySpec( abilityID );
-            return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
+            _cahchedAbility = GetAbilitySpec( abilityID );
+            return (_cahchedAbility.CoolDown._remain, _cahchedAbility.CoolDown._totalDuration);
         }
-
+        
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility( int abilityID, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
@@ -43,7 +43,7 @@ namespace Aquila.Fight.Addon
                 return false;
             }
 
-            return spec.UseAbility( target, result );
+            return spec.UseAbility(triggerIndex, target, result );
         }
 
         public override void OnUpdate( float deltaTime, float realElapsed )
@@ -154,7 +154,12 @@ namespace Aquila.Fight.Addon
             _initFlag = false;
             base.Dispose();
         }
-
+        
+        /// <summary>
+        /// 临时缓存变量
+        /// </summary>
+        private AbilitySpecBase _cahchedAbility = null;
+        
         /// <summary>
         /// 持有的技能
         /// </summary>

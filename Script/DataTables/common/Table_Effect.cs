@@ -18,16 +18,15 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     public Table_Effect(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        Tag = (Enum.ActorTagType)_buf.ReadInt();
         Type = (Enum.EffectType)_buf.ReadInt();
-        ExtensionParam = Struct.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
+        ExtensionParam = Bean.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
         EffectOnAwake = _buf.ReadBool();
         Policy = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
         Duration = _buf.ReadFloat();
         Target = _buf.ReadInt();
-        EffectType = (Enum.Actor_Attr)_buf.ReadInt();
+        EffectType = (Enum.actor_attribute)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
         PostInit();
@@ -43,17 +42,13 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// 给角色添加的tag
-    /// </summary>
-    public Enum.ActorTagType Tag { get; private set; }
-    /// <summary>
     /// Effect的类型
     /// </summary>
     public Enum.EffectType Type { get; private set; }
     /// <summary>
     /// 额外参数float_1,float_2,float_3,float_4,int_1,int_2,int_3,int_4
     /// </summary>
-    public Struct.EffectExtensionParam ExtensionParam { get; private set; }
+    public Bean.EffectExtensionParam ExtensionParam { get; private set; }
     /// <summary>
     /// 数值修改器类型
     /// </summary>
@@ -81,7 +76,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// <summary>
     /// 影响的数值类型
     /// </summary>
-    public Enum.Actor_Attr EffectType { get; private set; }
+    public Enum.actor_attribute EffectType { get; private set; }
     /// <summary>
     /// 派生effect
     /// </summary>
@@ -109,7 +104,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "Tag:" + Tag + ","
         + "Type:" + Type + ","
         + "ExtensionParam:" + ExtensionParam + ","
         + "ModifierType:" + ModifierType + ","

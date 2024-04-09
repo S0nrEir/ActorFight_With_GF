@@ -1,5 +1,7 @@
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
 
 namespace Aquila.Editor
@@ -10,10 +12,48 @@ namespace Aquila.Editor
         {
             _thisWindow = GetWindow<AbilityEditorWindow>();
             _thisWindow.minSize = _windowMinSize;
+            _abilityView = new AbilityView();
+            rootVisualElement.Add(_abilityView);
+            _abilityView.StretchToParentSize();
+
+            _toolBar = new Toolbar();
+            var button = new Button();
+            button.text = "Add Node";
+            button.clicked += OnClickToolBarAdd;
+            _toolBar.Add(button);
+            
+            button = new Button();
+            button.text = "Remove Node";
+            button.clicked += OnClickToolBarRemove;
+            _toolBar.Add(button);
+            rootVisualElement.Add(_toolBar);
+        }
+
+        /// <summary>
+        /// 添加节点
+        /// </summary>
+        private void OnClickToolBarAdd()
+        {
+            _abilityView.CreateNormalNode("TestNode");
+        }
+
+        /// <summary>
+        /// 移除节点
+        /// </summary>
+        private void OnClickToolBarRemove()
+        {
+            var selection = _abilityView.selection;
+            if (selection is null || selection.Count == 0)
+                return;
+
+            var first = selection[0];
+            
         }
 
         private void OnGUI()
         {
+            EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50)});
+            EditorGUILayout.EndVertical();
             EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
             {
                 //graph view area
@@ -38,10 +78,10 @@ namespace Aquila.Editor
 
         private void DrawGraphViewArea()
         {
-            EditorGUILayout.LabelField("test information");
-            EditorGUILayout.LabelField("test information");
-            EditorGUILayout.LabelField("test information");
-            EditorGUILayout.LabelField("test information");
+            // EditorGUILayout.LabelField("test information");
+            // EditorGUILayout.LabelField("test information");
+            // EditorGUILayout.LabelField("test information");
+            // EditorGUILayout.LabelField("test information");
         }
 
         private void DrawButtons()
@@ -50,7 +90,7 @@ namespace Aquila.Editor
             EditorGUILayout.BeginHorizontal("box");
             if (GUILayout.Button("save"))
             {
-                    
+                
             }
 
             if (GUILayout.Button("export"))
@@ -72,6 +112,7 @@ namespace Aquila.Editor
                 _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);
                 _abilityTargetType = EditorGUILayout.IntField("target type:"        , _abilityTargetType);
                 _timelineID        = EditorGUILayout.IntField("timeline ID:"        , _timelineID);
+                _interpret         = EditorGUILayout.TextField("interpret:"         , _interpret);
             }
             EditorGUILayout.EndVertical();
         }
@@ -85,10 +126,18 @@ namespace Aquila.Editor
         private string _effectsIDArray = string.Empty;
         private int _abilityTargetType = -1;
         private int _timelineID        = -1;
+        private string _interpret      = string.Empty;
         
         private EditorWindow _thisWindow = null;
-        private static Vector2 _windowMinSize = new Vector2(860, 700);
+        private static Vector2 _windowMinSize = new Vector2(1200, 700);
 
+        /// <summary>
+        /// 节点检视面板
+        /// </summary>
+        private AbilityView _abilityView = null;
+
+        private Toolbar _toolBar = null;
+        
         [MenuItem("Aquila/Ability/AbilityEditor")]
         public static void ShowExample()
         {

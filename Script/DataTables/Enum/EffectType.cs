@@ -53,5 +53,9 @@ namespace Cfg.Enum
         /// 吟唱
         /// </summary>
         Period_WindUp = 10,
+        /// <summary>
+        /// 受击修改属性effect
+        /// </summary>
+        OnHitted_Trigger_ModifyAttr = 11,
     }
 }
