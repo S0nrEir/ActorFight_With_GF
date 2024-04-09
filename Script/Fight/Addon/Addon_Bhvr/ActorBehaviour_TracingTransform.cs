@@ -58,19 +58,20 @@ namespace Aquila.Fight
                 //在这里直接使用技能，走module接口，需要自己的id，对反的id，技能id
                 if (_onHitabilityID >= 0)
                 {
-                    var fsm = _instance.GetAddon<Addon_FSM_Orb>();
-                    if (fsm != null) 
-                    {
-                        //现在改成进入状态，然后由状态处理
-                        var param = ReferencePool.Acquire<OrbAbilityStateParam>();
-                        param.AbilityID = _onHitabilityID;
-                        param.CastorActorID = _instance.Actor.ActorID;
-                        param.TargetActorID = _targetActorID;
-                        param.Position = _targetTransform.position;
-                        fsm.SwitchTo((int)ActorStateTypeEnum.ABILITY_STATE,param,null);
-                    }
-                    // var module = GameEntry.Module.GetModule<Module_ProxyActor>();
-                    // module.AffectAbility( _instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
+                    // var fsm = _instance.GetAddon<Addon_FSM_Orb>();
+                    // if (fsm != null) 
+                    // {
+                    //     //现在改成进入状态，然后由状态处理
+                    //     var param = ReferencePool.Acquire<OrbAbilityStateParam>();
+                    //     param.AbilityID = _onHitabilityID;
+                    //     param.CastorActorID = _instance.Actor.ActorID;
+                    //     param.TargetActorID = _targetActorID;
+                    //     param.Position = _targetTransform.position;
+                    //     fsm.SwitchTo((int)ActorStateTypeEnum.ABILITY_STATE,param,null);
+                    // }
+                    var module = GameEntry.Module.GetModule<Module_ProxyActor>();
+                    //#todo:投射物默认启用第一个trigger，有需要再改
+                    module.AffectAbility( 0,_instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
                 }
                 // GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
                 return;

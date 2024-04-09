@@ -103,7 +103,7 @@ namespace Aquila.Fight.Actor
             _behaviourAddon = AddAddon<Addon_Behaviour>();
             //法球的触发是通过fsm调用技能组件实现的所以要加上这两个组件
             AddAddon<Addon_Ability>();
-            AddAddon<Addon_FSM_Orb>();
+            //AddAddon<Addon_FSM_Orb>();
         }
 
         protected override void InitAddons( Module_ProxyActor.ActorInstance instance )
