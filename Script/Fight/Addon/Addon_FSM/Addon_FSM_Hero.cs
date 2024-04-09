@@ -1,6 +1,7 @@
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
@@ -18,6 +19,24 @@ namespace Aquila.Fight.FSM
             new ActorState_HeroDie    ((int)ActorStateTypeEnum.DIE_STATE),
         };
 
+        // public override void OnAdd()
+        // {
+        //     base.OnAdd();
+        //     _actorInstance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ACTOR_SHOW, (int)AddonType, OnActorShow);
+        // }
+
+        private void OnActorShow(int addonType, object param)
+        {
+            //hero的state暂时先转换到第一个state
+            Debug.Log("11111111111");
+            SwitchTo( StateList[0]._stateID, null, null );
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            _actorInstance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ACTOR_SHOW, (int)AddonType, OnActorShow);
+        }
     }
     
 }
