@@ -84,6 +84,13 @@ namespace Aquila.Numric
         /// </summary>
         public bool AddBuffModifier( Numric_Modifier modifier )
         {
+            //替换
+            if (_buff_correction.Find(modifier) != null)
+            {   
+                _changeFlag = true;
+                return true;
+            }
+
             if ( _buff_correction.AddLast( modifier ) != null )
             {
                 _changeFlag = true;
