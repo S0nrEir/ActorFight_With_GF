@@ -22,8 +22,8 @@ namespace Aquila.Fight
             }
             if ( !_initFlag )
             {
-                var res = addon.GetCorrectionFinalValue( /*Actor_Base_Attr.HP*/actor_attribute.Max_HP, 0f );
-                _maxHP = res.value;
+                var res = addon.GetCorrectionValue( /*Actor_Base_Attr.HP*/actor_attribute.Max_HP, 0f );
+                _maxHP = res;
             }
 
             var removeVal = _modifier.Calc( _maxHP );

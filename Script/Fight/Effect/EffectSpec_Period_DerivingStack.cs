@@ -32,7 +32,7 @@ namespace Aquila.Fight
                     Log.Warning( $"<color=yellow>EffectSpec_Period_Deriging.Apply()--->meta is null,id:{effectID}</color>" );
                     continue;
                 }
-                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( tempMeta );
+                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( tempMeta ,castor,target);
                 if ( newEffect is null )
                 {
                     Log.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{tempMeta.ToString()}</color>" );
@@ -55,9 +55,10 @@ namespace Aquila.Fight
             }
         }
 
-        public override void Init( Table_Effect meta )
+        public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null )
         {
-            base.Init( meta );
+            base.Init( meta ,castor,target);
             StackLimit = meta.ExtensionParam.IntParam_1;
             ResetWhenOverride = meta.ExtensionParam.IntParam_2 == 1;
         }
