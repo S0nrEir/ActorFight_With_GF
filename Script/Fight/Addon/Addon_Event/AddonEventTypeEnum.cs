@@ -33,5 +33,10 @@ namespace Aquila.Fight.Addon
         /// 抵达目标点
         /// </summary>
         POSITION_ARRIVE,
+        
+        /// <summary>
+        /// actor属性改变（发生在改变后）
+        /// </summary>
+        ON_ATTR_CHANGE,
     }
 }
