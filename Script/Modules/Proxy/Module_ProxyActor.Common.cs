@@ -55,13 +55,14 @@ namespace Aquila.Module
         /// <summary>
         /// 获取指定actor对应的修正属性
         /// </summary>
-        public (bool succ, float value) GetCorrectionAttr( int actorID, /*Actor_Base_Attr*/ actor_attribute type )
+        public (bool succ, float value) GetCorrectionAttr(int actorID, /*Actor_Base_Attr*/ actor_attribute type)
         {
-            var res = TryGet( actorID );
-            if ( !res.has )
+            var res = TryGet(actorID);
+            if (!res.has)
                 return (false, 0f);
 
-            return res.instance.GetAddon<Addon_BaseAttrNumric>().GetCorrectionFinalValue( type );
+            var correctionVal = res.instance.GetAddon<Addon_BaseAttrNumric>().GetCorrectionValue(type, 0);
+            return (correctionVal != 0, correctionVal);
         }
 
         /// <summary>

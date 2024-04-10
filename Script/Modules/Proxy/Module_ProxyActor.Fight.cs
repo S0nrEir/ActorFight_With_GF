@@ -2,7 +2,9 @@ using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Numric;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -16,13 +18,64 @@ namespace Aquila.Module
     //state/behaviour:一整套技能流程
     //abilityAddon:直接使用单个技能
     
+    
     /// <summary>
     /// Module_Proxy_Actor的部分类，用于处理actor proxy instance的战斗逻辑
     /// </summary>
     public partial class Module_ProxyActor
     {
         #region ability相关
+        
+        /// <summary> 添加一个actor的effect类型的属性修改器 </summary>
+        public bool AddModifierToActor_Effect
+        (
+            Module_ProxyActor.ActorInstance actorInstance,
+            Numric_Modifier modifier,
+            actor_attribute attrType
+        )
+        {
+            var addon = actorInstance.GetAddon<Addon_BaseAttrNumric>();
+            if (addon is null)
+                return false;
+            
+            //#todo:actor死亡判断
+            //actorInstance.Actor.OnModifyAttr():
+            var actor = actorInstance.Actor;
+            //notify
+            var param = ReferencePool.Acquire<EffectSpec_OnHitted_Trigger_ModifyAttrParam>();
+            param._changedAttr = attrType;
+            param._dirtyCorrectionValue = addon.GetCorrectionValue(attrType, 0f);
+            if(actor != null)
+                actor.Notify(AddonEventTypeEnum.ON_ATTR_CHANGE,param);
+            ReferencePool.Release(param);
+            
+            Log.Info($"<color=white>attr before change,type:{attrType},value:{addon.GetCorrectionValue(attrType,0f)}</color>");
+            return addon.SetEffectModifier(attrType, modifier);
+        }
 
+        /// <summary> 移除一个actor上的effect属性修饰器 </summary>
+        public bool RemoveModifierFromActor_Effect
+        (
+            Module_ProxyActor.ActorInstance actorInstance,
+            Numric_Modifier modifier,
+            actor_attribute attrType
+        )
+        {
+            //#todo:加上修改属性回调
+            if (actorInstance is null)
+            {
+                Log.Warning("<color=yellow>Tools.Fight.RemoveModifierFromActor_Effect ---> actorInstance is null</color>");
+                return false;
+            }
+
+            var actor = actorInstance.Actor;
+            var addon = actorInstance.GetAddon<Addon_BaseAttrNumric>();
+            if (addon is null)
+                return false;
+
+            return addon.RemoveEffectModifier(attrType, modifier);
+        }
+        
         /// <summary>
         /// 应用一个effect的效果
         /// </summary>
@@ -90,7 +143,6 @@ namespace Aquila.Module
         public void AffectAbility(int triggerIndex, int castorID, int targetID, int abilityID, Vector3 targetPosition )
         {
             var result = AbilityResult_Hit.Gen( castorID, targetID );
-
             var castorInstance = TryGet( castorID );
             if ( !castorInstance.has )
             {
@@ -130,7 +182,7 @@ namespace Aquila.Module
             addon.UseAbility(abilityID, triggerIndex, targetInstance, result );
             if ( targetInstance != null && result._dealedDamage != 0 )
                 GameEntry.InfoBoard.ShowDamageNumber( $"{( result._dealedDamage ).ToString()}", targetInstance.Actor.CachedTransform.position );
-
+            
             GameEntry.Event.Fire( castorInstance, EventArg_OnHitAbility.Create( result ) );
             ReferencePool.Release( result );
 
@@ -162,7 +214,7 @@ namespace Aquila.Module
 
             ReferencePool.Release( effect );
         }
-
+        
         /// <summary>
         /// 单对单释放技能，需要先尝试使用，然后让技能击中
         /// </summary>
@@ -231,6 +283,14 @@ namespace Aquila.Module
         #endregion
 
         /// <summary>
+        /// actor受到攻击
+        /// </summary>
+        private void OnHit()
+        {
+            
+        }
+
+        /// <summary>
         /// 检查是否没血，是就进入死亡状态并且返回true，否则返回false
         /// </summary>
         private bool DieIfEmptyHP( ActorInstance instance )
@@ -256,7 +316,7 @@ namespace Aquila.Module
                 return;
 
             var actor = instance.Actor;
-            //todo:这里的流程是，actor死亡后隐藏，但不是直接调用entity组件的hide，这会导致entity直接被回收放回池里
+            //#todo:这里的流程是，actor死亡后隐藏，但不是直接调用entity组件的hide，这会导致entity直接被回收放回池里
             //actor的死亡仍然是业务逻辑的一部分，这里只是暂时用GameEntry.Entity.HideEntity来替代隐藏actor
             GameEntry.Entity.HideEntity( actor.ActorID );
         }
