@@ -4,6 +4,7 @@ using Cfg.Enum;
 using GameFramework;
 using System;
 using System.Collections.Generic;
+using Aquila.Module;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Toolkit
@@ -15,6 +16,24 @@ namespace Aquila.Toolkit
         /// </summary>
         public static class Ability
         {
+            /// <summary>
+            /// 是否可以通过百分比计算应用修改属性的effect
+            /// </summary>
+            /// <returns></returns>
+            public static bool CanApplyModifyAttrByEffect_ByPercentage(float baseValue,float conditionValue, float primitive)
+            {
+                primitive /= baseValue;
+                return primitive >= conditionValue;
+            }
+
+            /// <summary>
+            /// 是否可以按固定值计算应用修改属性的effect
+            /// </summary>
+            public static bool CanApplyModifyAttrEffect_ByFixed(float conditionValue,float valueToCheck)
+            {
+                return valueToCheck >= conditionValue;
+            }
+            
             /// <summary>
             /// 初始化effect生成器
             /// </summary>
@@ -50,7 +69,7 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 根据配表类型获取对应的effect逻辑实例，拿不到返回null
             /// </summary>
-            public static EffectSpec_Base CreateEffectSpecByReferencePool( Table_Effect meta )
+            public static EffectSpec_Base CreateEffectSpecByReferencePool( Table_Effect meta,Module_ProxyActor.ActorInstance castor,Module_ProxyActor.ActorInstance target)
             {
                 var type = ( int ) meta.Type;
 
@@ -66,7 +85,8 @@ namespace Aquila.Toolkit
                     Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
                     return null;
                 }
-                effect.Init(meta);
+
+                effect.Init(meta, castor, target);
                 return effect;
                 #region nouse
 
@@ -127,9 +147,10 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 创建对应的effect逻辑实例，创建失败返回null
             /// </summary>
-            public static T CreateEffectSpecByReferencePool<T>(Table_Effect meta) where T : EffectSpec_Base
+            public static T CreateEffectSpecByReferencePool<T>(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+                Module_ProxyActor.ActorInstance target = null) where T : EffectSpec_Base
             {
-                return CreateEffectSpecByReferencePool(meta) as T;
+                return CreateEffectSpecByReferencePool(meta,castor,target) as T;
             }
 
             /// <summary>
