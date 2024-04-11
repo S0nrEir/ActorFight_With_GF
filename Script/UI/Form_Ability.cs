@@ -105,6 +105,8 @@ namespace Aquila.UI
             tempItem = ReferencePool.Acquire<AbilityIconItem>();
             //测试嗜血，敌人给自己上，玩家攻击
             tempItem.Setup(generated,1006, OnHostileTestIconItemClicked);
+            _hostileAbilityIconItem = tempItem;
+            tempItem = null;
         }
 
 
