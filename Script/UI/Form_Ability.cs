@@ -137,12 +137,18 @@ namespace Aquila.UI
         /// </summary>
         private void RefreshAbilityIconCD()
         {
+            (float remain, float duration) cd = (0f,0f);
+            var percent = 0f;
             foreach ( var id in _abilityIdArr )
             {
-                var cd = _actorProxy.GetCoolDown( _actorID, id );
-                var percent = cd.remain / cd.duration;
+                cd = _actorProxy.GetCoolDown( _actorID, id );
+                percent = cd.remain / cd.duration;
                 _iconItemDic[id].CD( percent, percent.ToString("n1") );
             }
+            
+            cd = _actorProxy.GetCoolDown( _enemyActorIdArr[0], 1006 );
+            percent = cd.remain / cd.duration;
+            _hostileAbilityIconItem.CD(percent, percent.ToString("n1"));
         }
         
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )

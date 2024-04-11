@@ -39,7 +39,7 @@ namespace Aquila.Module
         }
         
         /// <summary>
-        /// 获取一个技能的冷却
+        /// 获取actor某个技能的冷却
         /// </summary>
         public (float remain, float duration) GetCoolDown( int actorID, int abilityID )
         {
