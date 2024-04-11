@@ -250,7 +250,7 @@ namespace Aquila.Fight.Addon
         public override void Init(Module_ProxyActor.ActorInstance instance)
         {
             base.Init(instance);
-            instance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ATTR_CHANGE,(int)AddonType ,OnAttrChange);
+            instance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ATTR_CHANGE,(int)EventAddonPrioerityTypeEnum.ADDON_NUMRIC_BASEATTR ,OnAttrChange);
             
         }
 

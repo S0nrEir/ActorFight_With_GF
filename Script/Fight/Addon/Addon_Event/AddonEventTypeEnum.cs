@@ -38,5 +38,10 @@ namespace Aquila.Fight.Addon
         /// actor属性改变（发生在改变后）
         /// </summary>
         ON_ATTR_CHANGE,
+        
+        /// <summary>
+        /// 当actor受击
+        /// </summary>
+        ON_ACTOR_HITTED,
     }
 }

@@ -138,7 +138,7 @@ namespace Aquila.Fight.Addon
                 return;
 
             _initFlag = true;
-            instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) AddonType, OnUseAbility );
+            instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) EventAddonPrioerityTypeEnum.ADDON_ABILITY, OnUseAbility );
         }
 
         public override void Dispose()

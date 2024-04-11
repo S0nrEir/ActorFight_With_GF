@@ -52,11 +52,17 @@ namespace  Aquila.Fight
         {
             base.Init(meta,castor,target);
             _cumulation = 0f;
+            var instance = meta.Target == 0 ? castor : target;
+            var addon = instance.GetAddon<Addon_Event>();
+            addon.Register((int)AddonEventTypeEnum.ON_ACTOR_HITTED, (int)EventAddonPrioerityTypeEnum.EFFECT_SPEC, OnHitted);
         }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             base.OnEffectEnd(castor, target);
+            var instance = Meta.Target == 0 ? castor : target;
+            var addon = instance.GetAddon<Addon_Event>();
+            addon.UnRegister((int)AddonEventTypeEnum.ON_ACTOR_HITTED,OnHitted);
             //移除时移除修饰器
             Aquila.GameEntry.Module.GetModule<Module_ProxyActor>().RemoveModifierFromActor_Effect
                 (
@@ -87,7 +93,25 @@ namespace  Aquila.Fight
             base.Clear();
             _cumulation = 0f;
         }
+        
+        /// <summary>
+        /// 当actor受击触发
+        /// </summary>
+        private void OnHitted(int eventType, object param)
+        {
+            Log.Info("<color=white>on actor hitted!</color>");
+            var hitParam = param as OnActorHittedParam;
+            if (hitParam is null)
+                return;
 
+            var canApplyParam = ReferencePool.Acquire<HittedTriggerEffectParam>();
+            canApplyParam._effectedValue += hitParam._result._dealedDamage;
+            canApplyParam._castor = hitParam._castor;
+            canApplyParam._target = hitParam._target;
+            if(CanApplyEffect(canApplyParam))
+                GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect(hitParam._castor,hitParam._target,this);
+        }
+        
         /// <summary>
         /// 累计值
         /// </summary>
@@ -113,5 +137,23 @@ namespace  Aquila.Fight
         
         /// <summary>改变的属性 </summary>
         public actor_attribute _changedAttr = actor_attribute.Invalid;
+    }
+    
+    public class OnActorHittedParam : IReference
+    {
+        public OnActorHittedParam()
+        {
+        }
+        
+        public void Clear()
+        {
+            _castor = null;
+            _castor = null;
+            _result = null;
+        }
+        
+        public Module_ProxyActor.ActorInstance _castor;
+        public Module_ProxyActor.ActorInstance _target;
+        public AbilityResult_Hit _result;
     }
 }
