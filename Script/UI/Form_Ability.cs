@@ -98,6 +98,7 @@ namespace Aquila.UI
             
             //hostile；
             Tools.SetActive(_tempGameObejct,false);
+            Tools.SetActive(_hostileTestButton,true);
             generated = GameObject.Instantiate(_hostileTestButton, transform, true);
             generated.transform.localScale = Vector3.one;
             generated.transform.eulerAngles = Vector3.zero;
@@ -107,6 +108,7 @@ namespace Aquila.UI
             tempItem.Setup(generated,1006, OnHostileTestIconItemClicked);
             _hostileAbilityIconItem = tempItem;
             tempItem = null;
+            Tools.SetActive(_hostileTestButton, false);
         }
 
 
