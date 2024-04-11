@@ -39,11 +39,11 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public Addon_Event Register( int eventType, int addonType, Action<int, object> call )
         {
-            if ( eventType == ( int ) AddonTypeEnum.EVENT )
-            {
-                Log.Error( "<color=red>could not add event addon to event addon.</color>" );
-                return this;
-            }
+            // if ( eventType == ( int ) AddonTypeEnum.EVENT )
+            // {
+            //     Log.Error( "<color=red>could not add event addon to event addon.</color>" );
+            //     return this;
+            // }
 
             if ( !_eventDic.TryGetValue( eventType, out var list ) )
             {
