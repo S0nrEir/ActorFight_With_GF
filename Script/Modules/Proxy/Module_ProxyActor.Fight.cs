@@ -47,6 +47,7 @@ namespace Aquila.Module
             param._dirtyCorrectionValue = addon.GetCorrectionValue(attrType, 0f);
             if(actor != null)
                 actor.Notify(AddonEventTypeEnum.ON_ATTR_CHANGE,param);
+            
             ReferencePool.Release(param);
             
             Log.Info($"<color=white>attr before change,type:{attrType},value:{addon.GetCorrectionValue(attrType,0f)}</color>");
@@ -100,12 +101,9 @@ namespace Aquila.Module
             }
             effect.Apply( castor, target, result );
             GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
-            if ( result._dealedDamage != 0 )
-                GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.Actor.CachedTransform.position );
-
+            OnHit(castor,target,result);
             ReferencePool.Release( result );
             TryRefreshActorHPUI( target );
-            //DieIfEmptyHP( target );
             DieIfEmptyHPAndHide( target );
         }
 
@@ -285,9 +283,18 @@ namespace Aquila.Module
         /// <summary>
         /// actor受到攻击
         /// </summary>
-        private void OnHit()
+        private void OnHit(ActorInstance castor, ActorInstance target, AbilityResult_Hit result)
         {
+            if(result._dealedDamage != 0)
+                GameEntry.InfoBoard.ShowDamageNumber( result._dealedDamage.ToString(), target.Actor.CachedTransform.position );
             
+            //#todo:先使用通知的方式，不行就改成拿所有IHitted_Trigger_Effect类型的effect一次检查
+            var param = ReferencePool.Acquire<OnActorHittedParam>();
+            param._castor = castor;
+            param._target = target;
+            param._result = result;
+            target.Actor.Notify(AddonEventTypeEnum.ON_ACTOR_HITTED,param);
+            ReferencePool.Release(param);
         }
 
         /// <summary>

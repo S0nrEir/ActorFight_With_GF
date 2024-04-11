@@ -20,6 +20,10 @@ namespace Aquila.Fight
     /// </summary>
     public class HittedTriggerEffectParam : IReference
     {
+        public HittedTriggerEffectParam()
+        {
+        }
+
         public HittedTriggerEffectParam
             (
                 Module_ProxyActor.ActorInstance castor, 
