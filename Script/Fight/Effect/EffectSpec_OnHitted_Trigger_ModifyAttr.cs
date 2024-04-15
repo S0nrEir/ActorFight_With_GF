@@ -5,6 +5,7 @@ using Aquila.Toolkit;
 using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace  Aquila.Fight
@@ -25,12 +26,21 @@ namespace  Aquila.Fight
                 {
                     var actionInstnace = Meta.Target == 0 ? param._castor : param._target;
                     var addon = actionInstnace.GetAddon<Addon_BaseAttrNumric>();
-                    var baseVal = addon.GetCorrectionValue((actor_attribute)Meta.ExtensionParam.IntParam_3, 0f);
+                    //拿要检查的属性
+                    var attrType = Meta.ExtensionParam.IntParam_3; 
+                    if (attrType >= (int)actor_attribute.Max ||
+                        attrType < 0)
+                    {
+                        Log.Error("<color=red>attrType >= (int)actor_attribute.Max || attrType < 0</color>");
+                        return false;
+                    }
+
+                    var baseVal = addon.GetCorrectionValue((actor_attribute)attrType, 0f);
                     canApply = Tools.Ability.CanApplyModifyAttrByEffect_ByPercentage
                         (
                             baseVal,
-                            _cumulation,
-                            Meta.ExtensionParam.FloatParam_1
+                            Meta.ExtensionParam.FloatParam_1,
+                            _cumulation
                         );
                 }
                 break;
@@ -70,6 +80,7 @@ namespace  Aquila.Fight
                     _modifier,
                     (actor_attribute)Meta.ExtensionParam.IntParam_2 
                 );
+            Log.Info("<color=white>EffectSpec_OnHitted_Trigger_ModifyAttr.OnEffectEnd ---> release</color>");
         }
 
         /// <summary>
@@ -86,6 +97,8 @@ namespace  Aquila.Fight
                     (actor_attribute)Meta.ExtensionParam.IntParam_2
                 ))
                 Log.Warning("<color=yellow>faild to modify actor attribute</color>");
+            
+            Log.Info("EffectSpec_OnHitted_Trigger_ModifyAttr");
         }
 
         public override void Clear()
@@ -95,7 +108,7 @@ namespace  Aquila.Fight
         }
         
         /// <summary>
-        /// 当actor受击触发
+        /// 当actor受击触发                                                                                                                                                                                                                                   
         /// </summary>
         private void OnHitted(int eventType, object param)
         {
@@ -106,8 +119,8 @@ namespace  Aquila.Fight
 
             var canApplyParam = ReferencePool.Acquire<HittedTriggerEffectParam>();
             canApplyParam._effectedValue += hitParam._result._dealedDamage;
-            canApplyParam._castor = hitParam._castor;
-            canApplyParam._target = hitParam._target;
+            canApplyParam._castor         = hitParam._castor;
+            canApplyParam._target         = hitParam._target;
             if(CanApplyEffect(canApplyParam))
                 GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect(hitParam._castor,hitParam._target,this);
         }

@@ -19,6 +19,9 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 是否可以通过百分比计算应用修改属性的effect
             /// </summary>
+            /// <param name="baseValue">要用于百分比检查的基础值</param>
+            /// <param name="conditionValue">条件值</param>
+            /// <param name="primitive">当前积累的值</param>
             /// <returns></returns>
             public static bool CanApplyModifyAttrByEffect_ByPercentage(float baseValue,float conditionValue, float primitive)
             {
