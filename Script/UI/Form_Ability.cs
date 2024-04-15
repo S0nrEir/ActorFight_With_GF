@@ -5,6 +5,7 @@ using GameFramework;
 using GameFramework.Event;
 using System;
 using System.Collections.Generic;
+using Cfg.Fight;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
@@ -56,7 +57,8 @@ namespace Aquila.UI
         private void OnHostileTestIconItemClicked(int abilityID)
         {
             var selfID = _enemyActorIdArr[0];
-            _actorProxy.Ability2SingleTarget( selfID, selfID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
+            _actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
 
         /// <summary>
@@ -70,7 +72,11 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            var castorID = _actorID;
+            //一些特殊技能的测试
+            var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
+            
+            _actorProxy.Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
         
         /// <summary>
