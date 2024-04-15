@@ -37,21 +37,22 @@ namespace Aquila.Module
             var addon = actorInstance.GetAddon<Addon_BaseAttrNumric>();
             if (addon is null)
                 return false;
-            
+
+            var dirtyVal = addon.GetCorrectionValue(attrType, 0f); 
             //#todo:actor死亡判断
             //actorInstance.Actor.OnModifyAttr():
             var actor = actorInstance.Actor;
             //notify
             var param = ReferencePool.Acquire<EffectSpec_OnHitted_Trigger_ModifyAttrParam>();
             param._changedAttr = attrType;
-            param._dirtyCorrectionValue = addon.GetCorrectionValue(attrType, 0f);
+            param._dirtyCorrectionValue = dirtyVal;
+            var modifySucc = addon.SetEffectModifier(attrType, modifier);
             if(actor != null)
                 actor.Notify(AddonEventTypeEnum.ON_ATTR_CHANGE,param);
             
             ReferencePool.Release(param);
-            
-            Log.Info($"<color=white>attr before change,type:{attrType},value:{addon.GetCorrectionValue(attrType,0f)}</color>");
-            return addon.SetEffectModifier(attrType, modifier);
+            Log.Info($"<color=white>attr before change,type:{attrType},value:{dirtyVal}</color>");
+            return modifySucc;
         }
 
         /// <summary> 移除一个actor上的effect属性修饰器 </summary>

@@ -108,7 +108,7 @@ namespace  Aquila.Fight
         }
         
         /// <summary>
-        /// 当actor受击触发                                                                                                                                                                                                                                   
+        /// 当actor受击触发       
         /// </summary>
         private void OnHitted(int eventType, object param)
         {
@@ -144,7 +144,7 @@ namespace  Aquila.Fight
         }
 
         /// <summary>
-        /// 发生变更之前的值
+        /// 发生变更之前的脏值
         /// </summary>
         public float _dirtyCorrectionValue = 0f;
         
