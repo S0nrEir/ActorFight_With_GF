@@ -38,7 +38,7 @@ namespace Aquila.Module
             if (addon is null)
                 return false;
 
-            var dirtyVal = addon.GetCorrectionValue(attrType, 0f); 
+            var dirtyVal = addon.GetCorrectionValue(attrType, 0f);
             //#todo:actor死亡判断
             //actorInstance.Actor.OnModifyAttr():
             var actor = actorInstance.Actor;
@@ -51,7 +51,6 @@ namespace Aquila.Module
                 actor.Notify(AddonEventTypeEnum.ON_ATTR_CHANGE,param);
             
             ReferencePool.Release(param);
-            Log.Info($"<color=white>attr before change,type:{attrType},value:{dirtyVal}</color>");
             return modifySucc;
         }
 

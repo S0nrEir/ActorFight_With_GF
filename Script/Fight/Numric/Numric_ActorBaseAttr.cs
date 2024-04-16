@@ -1,3 +1,4 @@
+using Aquila.Toolkit;
 using GameFramework;
 
 namespace Aquila.Numric
@@ -9,6 +10,8 @@ namespace Aquila.Numric
     /// </summary>
     public class Numric_ActorBaseAttr : Numric
     {
+        public bool TestChangeFlag => _changeFlag;
+        
         public override float CorrectionValue
         {
             get
@@ -22,6 +25,7 @@ namespace Aquila.Numric
                 _total += Enumrate( _total, _equip_correction );
                 _total += Enumrate( _total, _class_correction );
                 _total += Enumrate( _total, _buff_correction );
+                _changeFlag = false;
                 return _total;
             }
         }
@@ -84,9 +88,8 @@ namespace Aquila.Numric
         /// </summary>
         public bool AddBuffModifier( Numric_Modifier modifier )
         {
-            //替换
-            if (_buff_correction.Find(modifier) != null)
-            {   
+            if (Tools.ReplaceLinkedListNode(_buff_correction, modifier))
+            {
                 _changeFlag = true;
                 return true;
             }

@@ -98,7 +98,6 @@ namespace  Aquila.Fight
                 ))
                 Log.Warning("<color=yellow>faild to modify actor attribute</color>");
             
-            Log.Info("EffectSpec_OnHitted_Trigger_ModifyAttr");
         }
 
         public override void Clear()
@@ -112,7 +111,7 @@ namespace  Aquila.Fight
         /// </summary>
         private void OnHitted(int eventType, object param)
         {
-            Log.Info("<color=white>on actor hitted!</color>");
+            //Log.Info("<color=white>on actor hitted!</color>");
             var hitParam = param as OnActorHittedParam;
             if (hitParam is null)
                 return;

@@ -121,7 +121,8 @@ namespace Aquila.Fight.Addon
             var intType = ( int ) type;
             // if ( OverLen( intType ) )
             //     return defaultValue;
-
+            // var val = _numricArr[intType].CorrectionValue;
+            // return val;
             return _numricArr[intType].CorrectionValue;
         }
 
@@ -143,7 +144,6 @@ namespace Aquila.Fight.Addon
             var intType = ( int ) type;
             // if ( OverLen( intType ) )
             //     return false;
-
             return _numricArr[intType].AddBuffModifier( modifier );
         }
 
@@ -221,11 +221,11 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private void OnAttrChange(int type,object param)
         {
-            var eventInfo = param as EffectSpec_OnHitted_Trigger_ModifyAttrParam;
-            if (eventInfo is null)
-                return;
-            
-            Log.Info($"dirty value:{eventInfo._dirtyCorrectionValue},new:{GetCorrectionValue(eventInfo._changedAttr,0f)}");
+            // var eventInfo = param as EffectSpec_OnHitted_Trigger_ModifyAttrParam;
+            // if (eventInfo is null)
+            //     return;
+            //
+            ///Log.Info($"dirty value:{eventInfo._dirtyCorrectionValue},new:{GetCorrectionValue(eventInfo._changedAttr,0f)}");
         }
 
         //----------------------------override----------------------------
