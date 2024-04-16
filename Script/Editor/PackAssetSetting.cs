@@ -13,7 +13,7 @@ namespace Aquila.Editor
         /// </summary>
         private static string[] _includeDic = new string[]
         {
-            ".vs",
+            //".vs",
             "DataTable",
             "Note",
             "obj",
@@ -101,35 +101,44 @@ namespace Aquila.Editor
         
         private static long ZipFile( ZipOutputStream stream, string file )
         {
-            if ( !File.Exists( file ) )
+            try
             {
-                Debug.Log( "<color=red>file doesnt exists--->{file}</color>" );
+                if ( !File.Exists( file ) )
+                {
+                    Debug.Log( "<color=red>file doesnt exists--->{file}</color>" );
+                    return 0;
+                }
+                //512000000 bytes
+                FileInfo fileInfo = new FileInfo( file );
+                byte[] buffer = new byte[file.Length];
+                var size = 0L;
+                //size = fs.Read( buffer, 0, buffer.Length );
+                size = fileInfo.Length;
+                ZipEntry entry = new ZipEntry( file );
+                entry.DateTime = DateTime.Now;
+                entry.Size = size;
+                stream.PutNextEntry( entry );
+                using ( FileStream fs = File.OpenRead( file ) )
+                {
+                    ICSharpCode.SharpZipLib.Core.StreamUtils.Copy( fs, stream, new byte[4096] );
+                }
+                stream.CloseEntry();
+
+                //有的文件没有内容，所以是0字节
+                // if ( size == 0 )
+                // {
+                //     Debug.Log( $"<color=red>file size is 0,file:{file}</color>" );
+                //     return 0;
+                // }
+
+                return size;
+            }
+            catch(Exception err)
+            {
+                Debug.LogError( $"ZipFile Exception:{err.Message} , file:{file}" );
                 return 0;
             }
-            //512000000 bytes
-            FileInfo fileInfo = new FileInfo( file );
-            byte[] buffer = new byte[file.Length];
-            var size = 0L;
-            //size = fs.Read( buffer, 0, buffer.Length );
-            size = fileInfo.Length;
-            ZipEntry entry = new ZipEntry( file );
-            entry.DateTime = DateTime.Now;
-            entry.Size = size;
-            stream.PutNextEntry( entry );
-            using ( FileStream fs = File.OpenRead( file ) )
-            {
-                ICSharpCode.SharpZipLib.Core.StreamUtils.Copy( fs, stream, new byte[4096] );
-            }
-            stream.CloseEntry();
             
-            //有的文件没有内容，所以是0字节
-            // if ( size == 0 )
-            // {
-            //     Debug.Log( $"<color=red>file size is 0,file:{file}</color>" );
-            //     return 0;
-            // }
-
-            return size;
         }
     }
 }
