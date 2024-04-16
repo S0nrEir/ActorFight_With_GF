@@ -12,6 +12,29 @@ namespace Aquila.Toolkit
     public partial class Tools
     {
         /// <summary>
+        /// 替换LinkedList中的指定node
+        /// </summary>
+        public static bool ReplaceLinkedListNode<T>(GameFrameworkLinkedList<T> linkedList,T node)
+        {
+            var replaceSucc = false;
+            var tempNode = linkedList.Find(node);
+            if (tempNode is null)
+                return false;
+            
+            if (tempNode.Previous != null)
+            {
+                replaceSucc = linkedList.AddAfter(tempNode.Previous,node) != null;
+                linkedList.Remove(tempNode);
+            }
+            else
+            {
+                replaceSucc = linkedList.AddFirst(node) != null;
+            }
+            
+            return replaceSucc;
+        }
+
+        /// <summary>
         /// 获取两点间的距离平方根
         /// </summary>
         public static float DistanceSQR( Vector3 me, Vector3 target )

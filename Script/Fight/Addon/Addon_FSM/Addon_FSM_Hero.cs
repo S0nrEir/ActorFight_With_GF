@@ -34,7 +34,7 @@ namespace Aquila.Fight.FSM
         public override void Reset()
         {
             base.Reset();
-            _actorInstance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ACTOR_SHOW, (int)AddonType, OnActorShow);
+            _actorInstance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ACTOR_SHOW, (int)EventAddonPrioerityTypeEnum.ADDON_STATE_MATCHINE, OnActorShow);
         }
     }
     

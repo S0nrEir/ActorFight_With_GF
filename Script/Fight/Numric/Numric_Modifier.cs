@@ -11,6 +11,9 @@ namespace Aquila.Numric
     /// </summary>
     public struct Numric_Modifier
     {
+        /// <summary>
+        /// 获取系数
+        /// </summary>
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public float ValueFac()
         {
@@ -62,14 +65,7 @@ namespace Aquila.Numric
             //_modified = true;
             return _valueAfterModifying;
         }
-
-        //public void Clear()
-        //{
-        //    _valueAfterModifying = 0;
-        //    _type = NumricModifierType.None;
-        //    _modified = false;
-        //}
-
+        
         /// <summary>
         /// 修改标记
         /// </summary>

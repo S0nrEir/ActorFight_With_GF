@@ -5,6 +5,7 @@ using GameFramework;
 using GameFramework.Event;
 using System;
 using System.Collections.Generic;
+using Cfg.Fight;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
@@ -51,6 +52,16 @@ namespace Aquila.UI
         }
 
         /// <summary>
+        /// 测试button按下
+        /// </summary>
+        private void OnHostileTestIconItemClicked(int abilityID)
+        {
+            var selfID = _enemyActorIdArr[0];
+            var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
+            _actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
+        }
+
+        /// <summary>
         /// click事件
         /// </summary>
         private void OnIconItemClicked( int abilityID )
@@ -61,7 +72,11 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            _actorProxy.Ability2SingleTarget( _actorID, _enemyActorIdArr[0], abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            var castorID = _actorID;
+            //一些特殊技能的测试
+            var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
+            
+            _actorProxy.Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
         
         /// <summary>
@@ -86,6 +101,20 @@ namespace Aquila.UI
                 tempItem.Setup( generated, id, OnIconItemClicked );
                 _iconItemDic.Add( id, tempItem );
             }
+            
+            //hostile；
+            Tools.SetActive(_tempGameObejct,false);
+            Tools.SetActive(_hostileTestButton,true);
+            generated = GameObject.Instantiate(_hostileTestButton, transform, true);
+            generated.transform.localScale = Vector3.one;
+            generated.transform.eulerAngles = Vector3.zero;
+            Tools.SetActive( generated, true );
+            tempItem = ReferencePool.Acquire<AbilityIconItem>();
+            //测试嗜血，敌人给自己上，玩家攻击
+            tempItem.Setup(generated,1006, OnHostileTestIconItemClicked);
+            _hostileAbilityIconItem = tempItem;
+            tempItem = null;
+            Tools.SetActive(_hostileTestButton, false);
         }
 
 
@@ -108,6 +137,9 @@ namespace Aquila.UI
             iter.Dispose();
             _iconItemDic.Clear();
             _iconItemDic = null;
+            
+            ReferencePool.Release(_hostileAbilityIconItem);
+            _hostileAbilityIconItem = null;
         }
 
         /// <summary>
@@ -115,12 +147,18 @@ namespace Aquila.UI
         /// </summary>
         private void RefreshAbilityIconCD()
         {
+            (float remain, float duration) cd = (0f,0f);
+            var percent = 0f;
             foreach ( var id in _abilityIdArr )
             {
-                var cd = _actorProxy.GetCoolDown( _actorID, id );
-                var percent = cd.remain / cd.duration;
+                cd = _actorProxy.GetCoolDown( _actorID, id );
+                percent = cd.remain / cd.duration;
                 _iconItemDic[id].CD( percent, percent.ToString("n1") );
             }
+            
+            cd = _actorProxy.GetCoolDown( _enemyActorIdArr[0], 1006 );
+            percent = cd.remain / cd.duration;
+            _hostileAbilityIconItem.CD(percent, percent.ToString("n1"));
         }
         
         protected override void OnUpdate( float elapseSeconds, float realElapseSeconds )
@@ -180,6 +218,16 @@ namespace Aquila.UI
             base.OnClose( isShutdown, userData );
         }
 
+        /// <summary>
+        /// 用于敌人的测试abilityIconItem
+        /// </summary>
+        private AbilityIconItem _hostileAbilityIconItem = null;
+        
+        /// <summary>
+        /// 用于敌人的测试button
+        /// </summary>
+        [SerializeField] private GameObject _hostileTestButton = null;
+        
         /// <summary>
         /// 模板item
         /// </summary>

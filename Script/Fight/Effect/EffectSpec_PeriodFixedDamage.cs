@@ -13,9 +13,10 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Period_FixedDamage : EffectSpec_Base
     {
-        public override void Init( Table_Effect meta )
+        public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null )
         {
-            base.Init( meta );
+            base.Init( meta ,castor,target );
             _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
         }
 
