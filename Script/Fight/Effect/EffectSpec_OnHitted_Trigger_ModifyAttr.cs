@@ -80,7 +80,7 @@ namespace  Aquila.Fight
                     _modifier,
                     (actor_attribute)Meta.ExtensionParam.IntParam_2 
                 );
-            Log.Info("<color=white>EffectSpec_OnHitted_Trigger_ModifyAttr.OnEffectEnd ---> release</color>");
+            // Log.Info("<color=white>EffectSpec_OnHitted_Trigger_ModifyAttr.OnEffectEnd ---> release</color>");
         }
 
         /// <summary>
