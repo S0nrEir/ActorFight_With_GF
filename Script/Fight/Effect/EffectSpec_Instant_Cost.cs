@@ -28,10 +28,11 @@ namespace Aquila.Fight
         {
             return _modifier.Calc(valToModify);
         }
-
-        public override void Init( Table_Effect meta )
+        
+        public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init( meta );
+            base.Init( meta ,castor,target);
             //todo_modifier每次初始化都要走子类的重写，这块能不能改一下
             //_modifier = new Numric.Numric_Modifier( meta.ModifierType,meta.ExtensionParam.FloatParam_1 );
             _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );

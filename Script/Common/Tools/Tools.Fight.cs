@@ -1,5 +1,9 @@
 using Aquila.Fight;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Module;
+using Aquila.Numric;
+using Cfg.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -7,14 +11,10 @@ namespace Aquila.Toolkit
 {
     public partial class Tools
     {
-        /// <summary>
-        /// 战斗相关工具类
-        /// </summary>
+        /// <summary> 战斗相关工具类 </summary>
         public static class Fight
         {
-            /// <summary>
-            /// 获取技能使用失败的多语言key
-            /// </summary>
+            /// <summary>获取技能使用失败的多语言key</summary>
             public static string UsingAbilityFaildDescription_l10n( int stateDescription )
             {
                 if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )

@@ -41,7 +41,8 @@ namespace Aquila.Fight
             set => _stackCount = value;
         }
 
-        public virtual void Init( Table_Effect meta )
+        public virtual void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null)
         {
             Meta = meta;
             _modifier = default;
@@ -64,7 +65,7 @@ namespace Aquila.Fight
                     Log.Warning( $"<color=yellow>EffectSpec_Period_Deriging.Apply()--->meta is null,id:{effectID}</color>" );
                     continue;
                 }
-                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( meta );
+                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( meta ,castor,target);
                 if ( newEffect is null )
                 {
                     Log.Warning( $"EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{meta.ToString()}" );

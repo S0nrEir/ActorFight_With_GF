@@ -104,13 +104,26 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 获取某项属性的最终修正值
         /// </summary>
-        public (bool getSucc, float value) GetCorrectionFinalValue( actor_attribute type ,float default_value = 0f)
+        // public (bool getSucc, float value) GetCorrectionValue( actor_attribute type ,float default_value = 0f)
+        // {
+        //     var intType = ( int ) type;
+        //     if ( OverLen( intType ) )
+        //         return (false, default_value);
+        //
+        //     return (true, _numricArr[intType].CorrectionValue);
+        // }
+        
+        /// <summary>
+        /// 获取某项属性的最终修正值
+        /// </summary>
+        public float GetCorrectionValue(actor_attribute type, float defaultValue)
         {
             var intType = ( int ) type;
-            if ( OverLen( intType ) )
-                return (false, default_value);
-
-            return (true, _numricArr[intType].CorrectionValue);
+            // if ( OverLen( intType ) )
+            //     return defaultValue;
+            // var val = _numricArr[intType].CorrectionValue;
+            // return val;
+            return _numricArr[intType].CorrectionValue;
         }
 
         /// <summary>
@@ -125,16 +138,23 @@ namespace Aquila.Fight.Addon
             return _numricArr[intType].AddEquipModifier( modifier );
         }
 
-        /// <summary>
-        /// 设置一个buff类型的数值修饰器
-        /// </summary>
-        public bool SetBuffModifier( actor_attribute type, Numric_Modifier modifier )
+        /// <summary> 设置一个buff类型的数值修饰器 </summary>
+        public bool SetEffectModifier( actor_attribute type, Numric_Modifier modifier )
         {
             var intType = ( int ) type;
-            if ( OverLen( intType ) )
+            // if ( OverLen( intType ) )
+            //     return false;
+            return _numricArr[intType].AddBuffModifier( modifier );
+        }
+
+        /// <summary> 移除属性修饰器 </summary>
+        public bool RemoveEffectModifier(actor_attribute type, Numric_Modifier modifier)
+        {
+            var intType = (int)type;
+            if (OverLen(intType))
                 return false;
 
-            return _numricArr[intType].AddBuffModifier( modifier );
+            return _numricArr[intType].RemoveBuffModifier(modifier);
         }
 
         /// <summary>
@@ -195,7 +215,19 @@ namespace Aquila.Fight.Addon
             }
             return false;
         }
-        
+
+        /// <summary>
+        /// 属性改变
+        /// </summary>
+        private void OnAttrChange(int type,object param)
+        {
+            // var eventInfo = param as EffectSpec_OnHitted_Trigger_ModifyAttrParam;
+            // if (eventInfo is null)
+            //     return;
+            //
+            ///Log.Info($"dirty value:{eventInfo._dirtyCorrectionValue},new:{GetCorrectionValue(eventInfo._changedAttr,0f)}");
+        }
+
         //----------------------------override----------------------------
         public override string ToString()
         {
@@ -213,6 +245,13 @@ namespace Aquila.Fight.Addon
                 return;
             }
             SetBaseAttr( meta );
+        }
+
+        public override void Init(Module_ProxyActor.ActorInstance instance)
+        {
+            base.Init(instance);
+            instance.GetAddon<Addon_Event>().Register((int)AddonEventTypeEnum.ON_ATTR_CHANGE,(int)EventAddonPrioerityTypeEnum.ADDON_NUMRIC_BASEATTR ,OnAttrChange);
+            
         }
 
         public override void Dispose()
