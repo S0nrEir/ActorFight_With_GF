@@ -604,6 +604,19 @@ Shader "Aquila/Universal Render Pipeline/Lit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
             ENDHLSL
         }
+        Pass
+        {
+            //Name "Outlined"
+            //Tags { "LightMode"="UniversalForward" }
+            HLSLPROGRAM
+            
+            #pragma only_renderers gles gles3 glcore d3d11
+            #pragma vertext Vert
+            #pragma fragment Frag
+            #include "Assets/Res/Shader/Aquila_Outline.shader"
+            
+            ENDHLSL
+        }
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"

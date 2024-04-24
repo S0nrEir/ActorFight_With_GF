@@ -8,12 +8,12 @@ Shader "Aquila/Outlined_"
     Properties 
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _OutlineColor ("Outline Color", Color) = (1,0,0,1)
+        _OutlineColor ("Outline Color", Color) = (1,1,1)
         _OutlineSize ("Outline Size", Range(0.0, 1.0)) = 0.05
     }
-    SubShader 
+    SubShader
     {
-        Tags 
+        Tags
         {
             "RenderType"="Opaque"
             "RenderPipeline"="UniversalRenderPipeline" 
@@ -57,64 +57,63 @@ Shader "Aquila/Outlined_"
             }
             half4 Frag(Varyings input) : SV_Target
             {
-                // return half4(1.0, 1.0, 1.0, 1.0);
                 half4 finalColor = _OutlineColor;
                 return finalColor;
             }
             ENDHLSL
         }
         
-        Pass 
-        {
-//            ZTest LEqual
-//            ZWrite On
-//            ColorMask RGB
-            
-            HLSLPROGRAM
-            #define LIGHTMAP_OFF 0
-            #define LIGHTMAP_ON 1
-            #define DIRLIGHTMAP_COMBINED 2
-            #define DYNAMICLIGHTMAP_ON 3
-            
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
-
-            #pragma target 2.0
-            #pragma vertex Vert
-            #pragma fragment Frag
-            
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-            // CBUFFER_START(UnityPerMaterial)
-            //     TEXTURE2D(_MainTex);
-            //     SAMPLER(sampler_MainTex);
-            // CBUFFER_END
-            
-            struct Attributes
-            {
-                float3 positionOS   : POSITION;
-            };
-            struct Varyings
-            {
-                float4 positionCS   : SV_POSITION;
-            };
-            
-            Varyings Vert(Attributes input)
-            {
-                Varyings output;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                return output;
-            }
-            
-            half4 Frag(Varyings input) : SV_Target
-            {
-                //return half4(1.0, 1.0, 1.0, 1.0);
-                half4 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.positionCS.xy);
-                return albedo;
-            }
-            ENDHLSL
-        }
+//        Pass 
+//        {
+////            ZTest LEqual
+////            ZWrite On
+////            ColorMask RGB
+//            
+//            HLSLPROGRAM
+//            // #define LIGHTMAP_OFF 0
+//            // #define LIGHTMAP_ON 1
+//            // #define DIRLIGHTMAP_COMBINED 2
+//            // #define DYNAMICLIGHTMAP_ON 3
+//            
+//            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+//            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+//            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+//
+//            #pragma target 2.0
+//            #pragma vertex Vert
+//            #pragma fragment Frag
+//            
+//            TEXTURE2D(_MainTex);
+//            SAMPLER(sampler_MainTex);
+//            // CBUFFER_START(UnityPerMaterial)
+//            //     TEXTURE2D(_MainTex);
+//            //     SAMPLER(sampler_MainTex);
+//            // CBUFFER_END
+//            
+//            struct Attributes
+//            {
+//                float3 positionOS   : POSITION;
+//            };
+//            struct Varyings
+//            {
+//                float4 positionCS   : SV_POSITION;
+//            };
+//            
+//            Varyings Vert(Attributes input)
+//            {
+//                Varyings output;
+//                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+//                return output;
+//            }
+//            
+//            half4 Frag(Varyings input) : SV_Target
+//            {
+//                //return half4(1.0, 1.0, 1.0, 1.0);
+//                half4 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.positionCS.xy);
+//                return albedo;
+//            }
+//            ENDHLSL
+//        }
     }
 //    FallBack "Diffuse"
 }
