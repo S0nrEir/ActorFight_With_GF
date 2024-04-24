@@ -23,7 +23,7 @@ Shader "Aquila/Outlined_"
         {
             Tags { "LightMode"="UniversalForward" }
             
-//            ZWrite Off
+            ZWrite Off
 //            ColorMask RGB
 //            Blend SrcAlpha OneMinusSrcAlpha
             
@@ -34,8 +34,8 @@ Shader "Aquila/Outlined_"
             #pragma vertex Vert
             #pragma fragment Frag
 
-            // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            // #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 
             struct Attributes 
@@ -57,6 +57,7 @@ Shader "Aquila/Outlined_"
             }
             half4 Frag(Varyings input) : SV_Target
             {
+                // return half4(1.0, 1.0, 1.0, 1.0);
                 half4 finalColor = _OutlineColor;
                 return finalColor;
             }
@@ -70,10 +71,6 @@ Shader "Aquila/Outlined_"
 //            ColorMask RGB
             
             HLSLPROGRAM
-            
-            #pragma target 2.0
-            #pragma vertex Vert
-            #pragma fragment Frag
             #define LIGHTMAP_OFF 0
             #define LIGHTMAP_ON 1
             #define DIRLIGHTMAP_COMBINED 2
@@ -83,8 +80,16 @@ Shader "Aquila/Outlined_"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
 
+            #pragma target 2.0
+            #pragma vertex Vert
+            #pragma fragment Frag
+            
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
+            // CBUFFER_START(UnityPerMaterial)
+            //     TEXTURE2D(_MainTex);
+            //     SAMPLER(sampler_MainTex);
+            // CBUFFER_END
             
             struct Attributes
             {
@@ -104,6 +109,7 @@ Shader "Aquila/Outlined_"
             
             half4 Frag(Varyings input) : SV_Target
             {
+                //return half4(1.0, 1.0, 1.0, 1.0);
                 half4 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.positionCS.xy);
                 return albedo;
             }
