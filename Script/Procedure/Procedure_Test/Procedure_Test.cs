@@ -25,6 +25,7 @@ namespace Aquila.Procedure
             // LoadScript();
             //InputTest();
             //TimeWheelTest();
+            TestAsync();
         }
     }
 
