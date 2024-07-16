@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,9 +13,9 @@ namespace Aquila.Editor
         {
             _thisWindow = GetWindow<AbilityEditorWindow>();
             _thisWindow.minSize = _windowMinSize;
-            _abilityView = new AbilityView();
             rootVisualElement.Add(_abilityView);
             _abilityView.StretchToParentSize();
+            _abilityView = new AbilityView(this);
 
             _toolBar = new Toolbar();
             var button = new Button();
@@ -34,7 +35,7 @@ namespace Aquila.Editor
         /// </summary>
         private void OnClickToolBarAdd()
         {
-            _abilityView.CreateNormalNode("TestNode");
+            _abilityView.CreateOneInOneOut("TestNode",Port.Capacity.Single);
         }
 
         /// <summary>
@@ -116,7 +117,15 @@ namespace Aquila.Editor
             }
             EditorGUILayout.EndVertical();
         }
-        
+
+        /// <summary>
+        /// 刷新节点信息面板
+        /// </summary>
+        public void RefreshNodePanel()
+        {
+            
+        }
+
         //--------------------FIELDS
         private int _abilityBaseID     = -1;
         private string _abilityName    = string.Empty;

@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,11 +13,12 @@ namespace Aquila.Editor
     public class AbilityView : GraphView
     {
         /// <summary>
-        /// 创建一个新节点
+        /// 创建一个一进一出的节点
         /// </summary>
-        public bool CreateNormalNode(string title,Port.Capacity capacity = Port.Capacity.Single)
+        public bool CreateOneInOneOut(string title,Port.Capacity capacity = Port.Capacity.Single)
         {
-            var node = AANode.Gen(title, capacity);
+            var node = AbilityEditorNode.Gen(title, capacity,capacity);
+            node.AddManipulator(new NodeClickManipulator(OnNodeClick));
             _nodeList.AddLast(node);
             AddElement(node);
             return true;
@@ -37,82 +40,76 @@ namespace Aquila.Editor
             return graphElements.Count();
         }
 
-        public AbilityView()
+        /// <summary>
+        /// 端口连接筛选
+        /// </summary>
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            // return ports.ToList();
+            var compatiblePorts = new List<Port>();
+            foreach (var port in ports)
+            {
+                //要连接的起始端口不能自己连自己
+                if(startPort.node == port.node)
+                    continue;
+                
+                //端口方向不能一样
+                if(startPort.direction == port.direction)
+                    continue;
+                
+                if (startPort.portType == typeof(Port))
+                    continue;
+                
+                compatiblePorts.Add(port);
+            }
+
+            return compatiblePorts;
+        }
+
+        public AbilityView(EditorWindow window)
         {
             SetupZoom(ContentZoomer.DefaultMinScale,ContentZoomer.DefaultMaxScale);
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            _nodeList = new LinkedList<AANode>();
+            _nodeList = new LinkedList<AbilityEditorNode>();
             
-            var startNode = AA_StartNode.GenStartNode();
+            var startNode = AbilityEditorNode_StartNode.GenStartNode();
             _nodeList.AddFirst(startNode);
             AddElement(startNode);
+
+            _window = window as AbilityEditorWindow;
+            if(_window is null)
+                Debug.LogError("AbilityEditorWindow.GraphView.cs: window is null");
         }
 
-        private LinkedList<AANode> _nodeList = null;
-    }
-
-    /// <summary>
-    /// 技能节点
-    /// </summary>
-    public class AANode : Node
-    {
-        public Guid _guid;
+        /// <summary>
+        /// on node click
+        /// </summary>
+        private void OnNodeClick(Node node,MouseDownEvent evt)
+        {
+            Debug.Log("node clicked");
+            SelectedNode = node;
+            
+        }
         
         /// <summary>
-        /// 获取单个节点
+        /// 当前view的node集合
         /// </summary>
-        public static AANode Gen(string title,Port.Capacity capacity)
-        {
-            //两个端口，一个输入一个输出
-            var node = new AANode();
-            // node.name = nodeName;
-            node.title = title;
-            
-            var port = node.InstantiatePort(Orientation.Vertical, Direction.Output, capacity, null);
-            node.outputContainer.Add(port);
-            
-            port = node.InstantiatePort(Orientation.Vertical, Direction.Input, capacity, null);
-            node.inputContainer.Add(port);
-            
-            node.SetPosition(new Rect(100,100,100,100));
-            node.RefreshExpandedState();
-            node.RefreshPorts();
-            
-            node._guid = Guid.NewGuid();
-            return node;
-        }
-    }
-
-    /// <summary>
-    /// 起始节点
-    /// </summary>
-    public class AA_StartNode : AANode
-    {
-        /// <summary>
-        /// 生成一个开始节点
-        /// </summary>
-        public static AA_StartNode GenStartNode()
-        {
-            var node = new AA_StartNode();
-            node.title = "start";
-            var port = node.InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,null);
-            node.outputContainer.Add(port);
-            node.SetPosition(new Rect(100,100,100,100));
-            node.RefreshExpandedState();
-            node.RefreshPorts();
-            node.name = "Start";
-            node._guid = Guid.NewGuid();
-            return node;
-        }
-    }
-
-    /// <summary>
-    /// 结束节点
-    /// </summary>
-    public class AA_EndNode : AANode
-    {
+        private LinkedList<AbilityEditorNode> _nodeList = null;
         
+        /// <summary>
+        /// 当前node选中的node
+        /// </summary>
+        public Node SelectedNode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 所属窗体
+        /// </summary>
+        private AbilityEditorWindow _window = null;
     }
 }
