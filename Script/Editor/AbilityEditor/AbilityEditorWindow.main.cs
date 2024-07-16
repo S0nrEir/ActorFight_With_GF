@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -9,13 +11,52 @@ namespace Aquila.Editor
 {
     public class AbilityEditorWindow : EditorWindow
     {
+        //-----------mono-----------
+        
+        private void OnGUI()
+        {
+            Debug.Log("OnGUI calling...");
+            EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50)});
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
+            {
+                //graph view area
+                EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
+                EditorGUILayout.LabelField("Impact Nodes");
+                //draw graph view area
+                DrawGraphViewArea();
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.Space(1);
+                
+                //draw ability & buttons area
+                EditorGUILayout.BeginVertical();
+                {
+                    EditorGUILayout.LabelField("Ability Base Info");
+                    DrawAbilityBaseArea();
+                    EditorGUILayout.Space(2);
+                    DrawButtons();
+                }
+                EditorGUILayout.EndVertical();
+                EditorGUILayout.Space(10);
+
+                //draw node area
+                EditorGUILayout.BeginVertical();
+                {
+                    EditorGUILayout.LabelField("Node Info");
+                    DrawNodeInfoArea();
+                }
+                EditorGUILayout.EndVertical();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
         private void OnEnable()
         {
             _thisWindow = GetWindow<AbilityEditorWindow>();
+            _abilityView = new AbilityView(this);
             _thisWindow.minSize = _windowMinSize;
             rootVisualElement.Add(_abilityView);
             _abilityView.StretchToParentSize();
-            _abilityView = new AbilityView(this);
 
             _toolBar = new Toolbar();
             var button = new Button();
@@ -28,8 +69,16 @@ namespace Aquila.Editor
             button.clicked += OnClickToolBarRemove;
             _toolBar.Add(button);
             rootVisualElement.Add(_toolBar);
+            _currentPorts = new List<AbilityViewPort>();
         }
 
+        private void OnDisable()
+        {
+            _currentPorts.Clear();
+            _currentPorts = null;
+        }
+
+        //-----------event-----------
         /// <summary>
         /// 添加节点
         /// </summary>
@@ -48,33 +97,22 @@ namespace Aquila.Editor
                 return;
 
             var first = selection[0];
+            var node = first as AbilityEditorNode;
+            if (node is null)
+                return;
             
+            _abilityView.RemoveElement(node);
         }
 
-        private void OnGUI()
+        //-----------draw-----------
+        private void DrawNodeInfoArea()
         {
-            EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50)});
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
+            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .85f));
+            foreach (var port in _currentPorts)
             {
-                //graph view area
-                EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
-                EditorGUILayout.LabelField("Impact Nodes");
-                DrawGraphViewArea();
-                EditorGUILayout.EndVertical();
-                EditorGUILayout.Space(1);
                 
-                //ability&buttons area
-                EditorGUILayout.BeginVertical();
-                {
-                    EditorGUILayout.LabelField("Ability Base Info");
-                    DrawAbilityBaseArea();
-                    EditorGUILayout.Space(2);
-                    DrawButtons();
-                }
-                EditorGUILayout.EndVertical();
             }
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
         }
 
         private void DrawGraphViewArea()
@@ -118,15 +156,23 @@ namespace Aquila.Editor
             EditorGUILayout.EndVertical();
         }
 
+        //-----------public-----------
         /// <summary>
         /// 刷新节点信息面板
         /// </summary>
-        public void RefreshNodePanel()
+        public void RefreshNodePanel(AbilityEditorNode node)
         {
+            if (node is null)
+            {
+                //Debug.Log("AbilityEditorWindow.Main.cs: node is null");
+                return;
+            }
             
+            _currentPorts.Clear();
+            _currentPorts.AddRange(node.GetAllPorts());
         }
-
-        //--------------------FIELDS
+        
+        //-----------FIELDS-----------
         private int _abilityBaseID     = -1;
         private string _abilityName    = string.Empty;
         private string _abilityDesc    = string.Empty;
@@ -146,7 +192,12 @@ namespace Aquila.Editor
         private AbilityView _abilityView = null;
 
         private Toolbar _toolBar = null;
-        
+
+        /// <summary>
+        /// 当前选中节点的端口
+        /// </summary>
+        private List<AbilityViewPort> _currentPorts = null;
+
         [MenuItem("Aquila/Ability/AbilityEditor")]
         public static void ShowExample()
         {

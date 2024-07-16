@@ -1,10 +1,8 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,6 +10,8 @@ namespace Aquila.Editor
 {
     public class AbilityView : GraphView
     {
+        //-----------pub-----------
+        
         /// <summary>
         /// 创建一个一进一出的节点
         /// </summary>
@@ -39,7 +39,8 @@ namespace Aquila.Editor
         {
             return graphElements.Count();
         }
-
+        
+        //-----------override-----------
         /// <summary>
         /// 端口连接筛选
         /// </summary>
@@ -66,6 +67,7 @@ namespace Aquila.Editor
             return compatiblePorts;
         }
 
+        //-----------constructor-----------
         public AbilityView(EditorWindow window)
         {
             SetupZoom(ContentZoomer.DefaultMinScale,ContentZoomer.DefaultMaxScale);
@@ -82,17 +84,20 @@ namespace Aquila.Editor
             if(_window is null)
                 Debug.LogError("AbilityEditorWindow.GraphView.cs: window is null");
         }
-
+        
+        //-----------event-----------
         /// <summary>
         /// on node click
         /// </summary>
         private void OnNodeClick(Node node,MouseDownEvent evt)
         {
             Debug.Log("node clicked");
-            SelectedNode = node;
-            
+            SelectedNode = node as AbilityEditorNode;
+            if(_window != null)
+                _window.RefreshNodePanel(SelectedNode);
         }
         
+        //-----------fields-----------
         /// <summary>
         /// 当前view的node集合
         /// </summary>
@@ -101,7 +106,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 当前node选中的node
         /// </summary>
-        public Node SelectedNode
+        public AbilityEditorNode SelectedNode
         {
             get;
             private set;

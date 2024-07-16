@@ -11,6 +11,23 @@ namespace Aquila.Editor
     /// </summary>
     public class AbilityEditorNode : Node
     {
+        //-----------pub-----------
+        
+        /// <summary>
+        /// 获取该节点下的所有port
+        /// </summary>
+        public IReadOnlyCollection<AbilityViewPort> GetAllPorts()
+        {
+            var ports = new List<AbilityViewPort>();
+            foreach (var port in inputContainer.Children())
+                ports.Add(port as AbilityViewPort);
+
+            foreach (var VARIABLE in outputContainer.Children())
+                ports.Add(VARIABLE as AbilityViewPort);
+            
+            return ports.AsReadOnly();
+        }
+
         /// <summary>
         /// 获取单个节点
         /// </summary>
@@ -37,6 +54,7 @@ namespace Aquila.Editor
             return node;
         }
         
+        //-----------fields-----------
         public Guid _guid;
     }
     
@@ -45,6 +63,8 @@ namespace Aquila.Editor
     /// </summary>
     public class AbilityEditorNode_StartNode : AbilityEditorNode
     {
+        //-----------pub-----------
+        
         /// <summary>
         /// 生成一个开始节点
         /// </summary>
