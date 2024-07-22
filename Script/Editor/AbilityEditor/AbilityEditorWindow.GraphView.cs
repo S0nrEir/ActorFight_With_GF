@@ -15,13 +15,13 @@ namespace Aquila.Editor
         /// <summary>
         /// 创建一个一进一出的节点
         /// </summary>
-        public bool CreateOneInOneOut(string title,Port.Capacity capacity = Port.Capacity.Single)
+        public AbilityEditorEffectGroupNode CreateOneInOneOut(string title,Port.Capacity capacity = Port.Capacity.Single)
         {
-            var node = AbilityEditorNode.Gen(title, capacity,capacity);
+            var node = AbilityEditorEffectGroupNode.Gen(title, capacity,capacity);
             node.AddManipulator(new NodeClickManipulator(OnNodeClick));
             _nodeList.AddLast(node);
             AddElement(node);
-            return true;
+            return node;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Aquila.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            _nodeList = new LinkedList<AbilityEditorNode>();
+            _nodeList = new LinkedList<AbilityEditorEffectGroupNode>();
             
             var startNode = AbilityEditorNode_StartNode.GenStartNode();
             _nodeList.AddFirst(startNode);
@@ -92,7 +92,7 @@ namespace Aquila.Editor
         private void OnNodeClick(Node node,MouseDownEvent evt)
         {
             Debug.Log("node clicked");
-            SelectedNode = node as AbilityEditorNode;
+            SelectedNode = node as AbilityEditorEffectGroupNode;
             if(_window != null)
                 _window.RefreshNodePanel(SelectedNode);
         }
@@ -101,12 +101,12 @@ namespace Aquila.Editor
         /// <summary>
         /// 当前view的node集合
         /// </summary>
-        private LinkedList<AbilityEditorNode> _nodeList = null;
+        private LinkedList<AbilityEditorEffectGroupNode> _nodeList = null;
         
         /// <summary>
         /// 当前node选中的node
         /// </summary>
-        public AbilityEditorNode SelectedNode
+        public AbilityEditorEffectGroupNode SelectedNode
         {
             get;
             private set;

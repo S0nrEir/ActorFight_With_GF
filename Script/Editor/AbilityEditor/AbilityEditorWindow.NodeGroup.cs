@@ -3,38 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Aquila.Editor
 {
     /// <summary>
-    /// 技能节点
+    /// effect节点
     /// </summary>
-    public class AbilityEditorNode : Node
+    public class AbilityEditorEffectGroupNode : Node
     {
         //-----------pub-----------
+        
+        
+        
+        /// <summary>
+        /// 设置节点的基本信息()
+        /// </summary>
+        public void SetBaseInfo(float triggerTime)
+        {
+            TriggerTime = triggerTime;
+            contentContainer.Add(new Label($"TriggerTime:{TriggerTime}"));
+        }
         
         /// <summary>
         /// 获取该节点下的所有port
         /// </summary>
         public IReadOnlyCollection<AbilityViewPort> GetAllPorts()
         {
-            var ports = new List<AbilityViewPort>();
-            foreach (var port in inputContainer.Children())
-                ports.Add(port as AbilityViewPort);
+            if (_allPorts is null || _allPorts.Count == 0)
+            {
+                foreach (var port in inputContainer.Children())
+                    _allPorts.Add(port as AbilityViewPort);
 
-            foreach (var VARIABLE in outputContainer.Children())
-                ports.Add(VARIABLE as AbilityViewPort);
+                foreach (var port in outputContainer.Children())
+                    _allPorts.Add(port as AbilityViewPort);
+            }
             
-            return ports.AsReadOnly();
+            return _allPorts.AsReadOnly();
         }
 
         /// <summary>
         /// 获取单个节点
         /// </summary>
-        public static AbilityEditorNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity)
+        public static AbilityEditorEffectGroupNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity)
         {
             //两个端口，一个输入一个输出
-            var node = new AbilityEditorNode();
+            var node = new AbilityEditorEffectGroupNode();
             node.title = title;
             
             // var port = node.InstantiatePort(Orientation.Vertical, Direction.Output, outputCapacity, null);
@@ -47,21 +61,39 @@ namespace Aquila.Editor
             node.inputContainer.Add(port);
             
             node.SetPosition(new Rect(100,100,100,100));
-            node.RefreshExpandedState();
             node.RefreshPorts();
-            
-            node._guid = Guid.NewGuid();
+            node.SetBaseInfo(-1f );
+            node.RefreshExpandedState();
             return node;
+        }
+
+        /// <summary>
+        /// 当前节点下的所有端口
+        /// </summary>
+        private List<AbilityViewPort> _allPorts = null;
+
+        //-----------constructor-----------
+        public AbilityEditorEffectGroupNode()
+        {
+            _allPorts = new List<AbilityViewPort>();
         }
         
         //-----------fields-----------
-        public Guid _guid;
+
+        /// <summary>
+        /// 触发时间
+        /// </summary>
+        public float TriggerTime
+        {
+            get;
+            private set;
+        }
     }
     
     /// <summary>
     /// 起始节点
     /// </summary>
-    public class AbilityEditorNode_StartNode : AbilityEditorNode
+    public class AbilityEditorNode_StartNode : AbilityEditorEffectGroupNode
     {
         //-----------pub-----------
         
@@ -78,7 +110,6 @@ namespace Aquila.Editor
             node.RefreshExpandedState();
             node.RefreshPorts();
             node.name = "Start";
-            node._guid = Guid.NewGuid();
             return node;
         }
     }

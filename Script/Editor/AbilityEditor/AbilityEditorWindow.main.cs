@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -38,14 +36,6 @@ namespace Aquila.Editor
                 }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.Space(10);
-
-                //draw node area
-                EditorGUILayout.BeginVertical();
-                {
-                    EditorGUILayout.LabelField("Node Info");
-                    DrawNodeInfoArea();
-                }
-                EditorGUILayout.EndVertical();
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -67,15 +57,27 @@ namespace Aquila.Editor
             button = new Button();
             button.text = "Remove Node";
             button.clicked += OnClickToolBarRemove;
+
+            button = new Button();
+            button.text = "Save";
+            button.clicked += OnClickToolBarSave; 
+            
             _toolBar.Add(button);
             rootVisualElement.Add(_toolBar);
-            _currentPorts = new List<AbilityViewPort>();
+            
+            if (_effectWindow is null)
+                _effectWindow = GetEffectWindow();
+            
+            _effectWindow.Show();
         }
 
         private void OnDisable()
         {
-            _currentPorts.Clear();
-            _currentPorts = null;
+            _toolBar.Clear();
+            _toolBar = null;
+            
+            _effectWindow?.Close();
+            _effectWindow = null;
         }
 
         //-----------event-----------
@@ -84,7 +86,8 @@ namespace Aquila.Editor
         /// </summary>
         private void OnClickToolBarAdd()
         {
-            _abilityView.CreateOneInOneOut("TestNode",Port.Capacity.Single);
+            var nodeGroup = _abilityView.CreateOneInOneOut("TestNode",Port.Capacity.Single);
+            EffectDataMgr.AddNodeGroup(nodeGroup);
         }
 
         /// <summary>
@@ -97,22 +100,17 @@ namespace Aquila.Editor
                 return;
 
             var first = selection[0];
-            var node = first as AbilityEditorNode;
+            var node = first as AbilityEditorEffectGroupNode;
             if (node is null)
                 return;
             
             _abilityView.RemoveElement(node);
+            EffectDataMgr.RemoveNodeGroup(node);
         }
 
-        //-----------draw-----------
-        private void DrawNodeInfoArea()
+        private void OnClickToolBarSave()
         {
-            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .85f));
-            foreach (var port in _currentPorts)
-            {
-                
-            }
-            EditorGUILayout.EndVertical();
+            
         }
 
         private void DrawGraphViewArea()
@@ -155,23 +153,23 @@ namespace Aquila.Editor
             }
             EditorGUILayout.EndVertical();
         }
-
+        
         //-----------public-----------
+        
         /// <summary>
         /// 刷新节点信息面板
         /// </summary>
-        public void RefreshNodePanel(AbilityEditorNode node)
+        public void RefreshNodePanel(AbilityEditorEffectGroupNode node)
         {
-            if (node is null)
-            {
-                //Debug.Log("AbilityEditorWindow.Main.cs: node is null");
-                return;
-            }
-            
-            _currentPorts.Clear();
-            _currentPorts.AddRange(node.GetAllPorts());
+            _effectWindow.RefreshByEffectNode(node);
         }
         
+        //-----------private-----------
+        private AbilityEffectGroupEditorWidnow GetEffectWindow()
+        {
+            return GetWindow<AbilityEffectGroupEditorWidnow>();
+        }
+
         //-----------FIELDS-----------
         private int _abilityBaseID     = -1;
         private string _abilityName    = string.Empty;
@@ -187,16 +185,16 @@ namespace Aquila.Editor
         private static Vector2 _windowMinSize = new Vector2(1200, 700);
 
         /// <summary>
+        /// effect窗体的引用
+        /// </summary>
+        private AbilityEffectGroupEditorWidnow _effectWindow = null;
+
+        /// <summary>
         /// 节点检视面板
         /// </summary>
         private AbilityView _abilityView = null;
 
         private Toolbar _toolBar = null;
-
-        /// <summary>
-        /// 当前选中节点的端口
-        /// </summary>
-        private List<AbilityViewPort> _currentPorts = null;
 
         [MenuItem("Aquila/Ability/AbilityEditor")]
         public static void ShowExample()
