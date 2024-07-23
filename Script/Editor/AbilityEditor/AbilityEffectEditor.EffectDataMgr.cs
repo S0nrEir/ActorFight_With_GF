@@ -29,7 +29,19 @@ namespace Aquila.Editor
         //     }
         //     return false;
         // }
-        
+
+        public static void Clear()
+        {
+            var itor = _abilityNodeToEffects.GetEnumerator();
+            while (itor.MoveNext())
+            {
+                itor.Current.Value.Clear();
+            }
+            itor.Dispose();
+            _abilityNodeToEffects.Clear();
+            _abilityNodeToEffects = null;
+        }
+
         /// <summary>
         /// 获取一个nodeGroup下的所有effect
         /// </summary>
@@ -68,6 +80,9 @@ namespace Aquila.Editor
         public static bool AddNodeGroup(AbilityEditorEffectGroupNode group)
         {
             var hashCode = group.GetHashCode();
+            if (_abilityNodeToEffects is null)
+                _abilityNodeToEffects = new Dictionary<int, List<AbilityEffect>>();
+            
             if (_abilityNodeToEffects.ContainsKey(hashCode.GetHashCode()))
             {
                 Debug.LogError($"EffectDataMgr.cs: AddNodeGroup: nodeHash:{hashCode} already exists.");
@@ -81,7 +96,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 为一个nodeGroup移除一个effect
         /// </summary>
-        public static bool RemoveEffects(AbilityEditorEffectGroupNode group, AbilityEffect effect)
+        public static bool RemoveEffect(AbilityEditorEffectGroupNode group, AbilityEffect effect)
         {
             var hashCode = group.GetHashCode();
             if (!_abilityNodeToEffects.TryGetValue(hashCode.GetHashCode(), out var effects))
@@ -103,7 +118,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 为一个nodeGroup添加effect
         /// </summary>
-        public static bool AddEffects(AbilityEditorEffectGroupNode group,AbilityEffect effect)
+        public static bool AddEffect(AbilityEditorEffectGroupNode group,AbilityEffect effect)
         {
             var hashCode = group.GetHashCode();
             if (!_abilityNodeToEffects.TryGetValue(hashCode.GetHashCode(), out var effects))

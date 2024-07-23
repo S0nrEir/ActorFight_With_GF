@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -26,10 +28,9 @@ namespace Aquila.Editor
             }
 
             selectedNode = node;
-            if(_effects is null)
-                _effects = new List<AbilityEffect>();
-
-            _effects = EffectDataMgr.GetEffects(node);
+            _effects = EffectDataMgr.GetEffects(node).AsReadOnly();
+            _foldOuts = new bool[_effects.Count];
+            Repaint();
             // selectedPorts.AddRange(node.GetAllPorts());
         }
         
@@ -45,8 +46,9 @@ namespace Aquila.Editor
                 Debug.LogError($"AbilityEffectWindow.Main.cs: selectedNode is null.");
                 return;
             }
-            
-            
+
+            EffectDataMgr.AddEffect(selectedNode, new AbilityEffect(new Guid().ToString()));
+            RefreshByEffectNode(selectedNode);
         }
 
         //-----------mono-----------
@@ -55,7 +57,8 @@ namespace Aquila.Editor
         {
             if (selectedNode is null /*|| selectedPorts.Count == 0*/)
                 return;
-            
+
+            EditorGUILayout.Space(20);
             //trigger time
             EditorGUILayout.BeginVertical();
             {
@@ -69,33 +72,72 @@ namespace Aquila.Editor
             //effect data:
             EditorGUILayout.BeginVertical();
             {
-                var index = 0;
-                foreach (var effect in _effects)
+                if (_isRepaint)
+                    _isRepaint = !_isRepaint;
+                
+                _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+                var cnt = _effects.Count;
+                AbilityEffect effect = null;
+                
+                GUIStyle HeaderLabelStyle = new GUIStyle(GUI.skin.label);
+                HeaderLabelStyle.fontStyle = FontStyle.Bold;
+                HeaderLabelStyle.fontSize = 15;
+                HeaderLabelStyle.normal.textColor = Color.green;
+                
+                for (int i = 0; i < cnt; i++)
                 {
-                    EditorGUILayout.LabelField($"Effect-{index}");
-                    EditorGUILayout.IntField($"ID", effect.ID);
-                    EditorGUILayout.TextField($"Desc", effect.Desc);
-                    EditorGUILayout.EnumPopup($"Type", effect.Type);
-                    EditorGUILayout.FloatField($"ExtensionFloatParam_1", effect.ExtensionFloatParam_1);
-                    EditorGUILayout.FloatField($"ExtensionFloatParam_2", effect.ExtensionFloatParam_2);
-                    EditorGUILayout.FloatField($"ExtensionFloatParam_3", effect.ExtensionFloatParam_3);
-                    EditorGUILayout.FloatField($"ExtensionFloatParam_4", effect.ExtensionFloatParam_4);
-                    EditorGUILayout.TextField($"ExtensionStringParm_1", effect.ExtensionStringParm_1);
-                    EditorGUILayout.TextField($"ExtensionStringParm_2", effect.ExtensionStringParm_2);
-                    EditorGUILayout.TextField($"ExtensionStringParm_3", effect.ExtensionStringParm_3);
-                    EditorGUILayout.TextField($"ExtensionStringParm_4", effect.ExtensionStringParm_4);
-                    EditorGUILayout.Toggle($"EffectOnAwake", effect.EffectOnAwake);
-                    EditorGUILayout.EnumPopup($"DurationPolicy", effect.DurationPolicy);
-                    EditorGUILayout.FloatField($"Period", effect.Period);
-                    EditorGUILayout.FloatField($"Duration", effect.Duration);
-                    EditorGUILayout.IntField($"Target", effect.Target);
-                    EditorGUILayout.EnumPopup($"EffectType", effect.EffectType);
-                    EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.DeriveEffects));
-                    EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.AwakeEffects));
-                    EditorGUILayout.Space(10);
-                }
+                    effect = _effects[i];
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField($"Effect-{i}",HeaderLabelStyle);
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.Button("Remove", GUILayout.Width(100)))
+                        {
+                            _isRepaint = true;
+                            Debug.Log("clicked remove button.");
+                            EffectDataMgr.RemoveEffect(selectedNode, effect);
+                            // RefreshByEffectNode(selectedNode);
+                            // // break;
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    _foldOuts[i] = EditorGUILayout.Foldout(_foldOuts[i],"foldOut");
+                    if (_foldOuts[i])
+                    {
+                        EditorGUILayout.IntField($"ID", effect.ID);
+                        EditorGUILayout.TextField($"Desc", effect.Desc);
+                        EditorGUILayout.EnumPopup($"Type", effect.Type);
+                        EditorGUILayout.FloatField($"ExtensionFloatParam_1", effect.ExtensionFloatParam_1);
+                        EditorGUILayout.FloatField($"ExtensionFloatParam_2", effect.ExtensionFloatParam_2);
+                        EditorGUILayout.FloatField($"ExtensionFloatParam_3", effect.ExtensionFloatParam_3);
+                        EditorGUILayout.FloatField($"ExtensionFloatParam_4", effect.ExtensionFloatParam_4);
+                        EditorGUILayout.TextField($"ExtensionStringParm_1", effect.ExtensionStringParm_1);
+                        EditorGUILayout.TextField($"ExtensionStringParm_2", effect.ExtensionStringParm_2);
+                        EditorGUILayout.TextField($"ExtensionStringParm_3", effect.ExtensionStringParm_3);
+                        EditorGUILayout.TextField($"ExtensionStringParm_4", effect.ExtensionStringParm_4);
+                        EditorGUILayout.Toggle($"EffectOnAwake", effect.EffectOnAwake);
+                        EditorGUILayout.EnumPopup($"DurationPolicy", effect.DurationPolicy);
+                        EditorGUILayout.FloatField($"Period", effect.Period);
+                        EditorGUILayout.FloatField($"Duration", effect.Duration);
+                        EditorGUILayout.IntField($"Target", effect.Target);
+                        EditorGUILayout.EnumPopup($"EffectType", effect.EffectType);
+                        EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.DeriveEffects));
+                        EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.AwakeEffects));
+                        EditorGUILayout.Space(10);
+                    }
+                }//end for
+                
+                EditorGUILayout.EndScrollView();
             }
             EditorGUILayout.EndVertical();
+
+            if (_isRepaint)
+            {
+                RefreshByEffectNode(selectedNode);
+                // _effects = EffectDataMgr.GetEffects(selectedNode).AsReadOnly();
+                // _foldOuts = new bool[_effects.Count];
+            }
         }
 
         /// <summary>
@@ -123,6 +165,8 @@ namespace Aquila.Editor
             addEffectButton.text = "Add Effect";
             addEffectButton.clicked += OnClickToolBarAdd;
             _toolBar.Add(addEffectButton);
+            
+            rootVisualElement.Add(_toolBar);
         }
 
         private void OnDisable()
@@ -149,7 +193,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 选中节点携带的effect
         /// </summary>
-        private List<AbilityEffect> _effects = null;
+        private ReadOnlyCollection<AbilityEffect> _effects = null;
 
         /// <summary>
         /// 触发时间
@@ -160,5 +204,9 @@ namespace Aquila.Editor
         /// toolBar
         /// </summary>
         private Toolbar _toolBar = null;
+
+        private Vector2 _scrollPosition;
+        private bool[] _foldOuts = null;
+        private bool _isRepaint = false;
     }
 }

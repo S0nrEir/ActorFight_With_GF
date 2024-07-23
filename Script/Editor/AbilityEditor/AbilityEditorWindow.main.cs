@@ -17,7 +17,7 @@ namespace Aquila.Editor
             EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50)});
             EditorGUILayout.EndVertical();
             EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
-            {
+            { 
                 //graph view area
                 EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
                 EditorGUILayout.LabelField("Impact Nodes");
@@ -78,6 +78,8 @@ namespace Aquila.Editor
             
             _effectWindow?.Close();
             _effectWindow = null;
+            
+            EffectDataMgr.Clear();
         }
 
         //-----------event-----------

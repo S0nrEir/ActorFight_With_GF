@@ -12,11 +12,11 @@ namespace Aquila.Editor
     {
         public AbilityEffect(string guid)
         {
-            GUID = guid;
-            ID = -1;
-            Desc = string.Empty;
-            Tag = ActorTagType.None;
-            Type = Cfg.Enum.EffectType.Period_CoolDown;
+            GUID                  = guid;
+            ID                    = -1;
+            Desc                  = string.Empty;
+            Tag                   = ActorTagType.None;
+            Type                  = Cfg.Enum.EffectType.Period_CoolDown;
             ExtensionFloatParam_1 = -1f;
             ExtensionFloatParam_2 = -1f;
             ExtensionFloatParam_3 = -1f;
@@ -25,15 +25,15 @@ namespace Aquila.Editor
             ExtensionStringParm_2 = string.Empty;
             ExtensionStringParm_3 = string.Empty;
             ExtensionStringParm_4 = string.Empty;
-            ModifierType = NumricModifierType.None;
-            EffectOnAwake = false;
-            DurationPolicy = DurationPolicy.Infinite;
-            Period = -1f;
-            Duration = -1f;
-            Target = 0;
-            EffectType = actor_attribute.Invalid;
-            DeriveEffects = null;
-            AwakeEffects = null;
+            ModifierType          = NumricModifierType.None;
+            EffectOnAwake         = false;
+            DurationPolicy        = DurationPolicy.Infinite;
+            Period                = -1f;
+            Duration              = -1f;
+            Target                = 0;
+            EffectType            = actor_attribute.Invalid;
+            DeriveEffects         = null;
+            AwakeEffects          = null;
         }
 
         public string GUID;
