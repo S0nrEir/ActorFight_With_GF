@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Aquila.Editor
@@ -9,6 +10,21 @@ namespace Aquila.Editor
     /// </summary>
     public static class EffectDataMgr
     {
+        /// <summary>
+        /// 设置一个group携带的effects，会替换原来的
+        /// </summary>
+        public static void SetEffects(AbilityEditorEffectGroupNode node,List<AbilityEffect> newEffects)
+        {
+            var hashCode = node.GetHashCode();
+            if (!_abilityNodeToEffects.ContainsKey(hashCode))
+            {
+                Debug.LogError($"EffectDataMgr.cs: SetEffect: nodeHash:{hashCode} already exists.");
+                return;
+            }
+
+            _abilityNodeToEffects[hashCode] = newEffects;
+        }
+
         // public static bool SetEffect(AbilityEditorEffectGroupNode group, AbilityEffect effect)
         // {
         //     var hashCode = group.GetHashCode();

@@ -13,9 +13,11 @@ namespace Aquila.Editor
     public class AbilityEditorEffectGroupNode : Node
     {
         //-----------pub-----------
-        
-        
-        
+        public void Repaint()
+        {
+            MarkDirtyRepaint();
+        }
+
         /// <summary>
         /// 设置节点的基本信息()
         /// </summary>
@@ -112,5 +114,10 @@ namespace Aquila.Editor
             node.name = "Start";
             return node;
         }
+    }
+
+    public class AbilityEditorNode_EndNode : AbilityEditorEffectGroupNode
+    {
+        
     }
 }

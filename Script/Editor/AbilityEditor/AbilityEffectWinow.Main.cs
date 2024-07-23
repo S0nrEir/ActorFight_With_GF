@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using Cfg.Enum;
+using Codice.Client.BaseCommands.TubeClient;
 using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEditor.UIElements;
@@ -28,7 +32,8 @@ namespace Aquila.Editor
             }
 
             selectedNode = node;
-            _effects = EffectDataMgr.GetEffects(node).AsReadOnly();
+            _triggerTime = selectedNode.TriggerTime;
+            _effects = EffectDataMgr.GetEffects(node);
             _foldOuts = new bool[_effects.Count];
             Repaint();
             // selectedPorts.AddRange(node.GetAllPorts());
@@ -37,7 +42,7 @@ namespace Aquila.Editor
         //-----------priv-----------
 
         /// <summary>
-        /// 按下toolBar的add button
+        /// 添加effect
         /// </summary>
         private void OnClickToolBarAdd()
         {
@@ -51,6 +56,83 @@ namespace Aquila.Editor
             RefreshByEffectNode(selectedNode);
         }
 
+        /// <summary>
+        /// 保存nodeGroup
+        /// </summary>
+        private void OnClickSave()
+        {
+            if (_effects is null || _effects.Count == 0)
+            {
+                Debug.LogError($"AbilityEffectWindow.Main.cs: effects count is 0.");
+                return;
+            }
+
+            (bool effectIsValid,string errMsg) result = (true,string.Empty);
+            var index = 0;
+            foreach (var effect in _effects)
+            {
+                result = IsEffectValid(effect,index++);
+                if (!result.effectIsValid)
+                {
+                    Debug.LogError(result.errMsg);
+                    break;
+                }
+            }
+
+            if (_triggerTime < 0)
+            {
+                Debug.LogError($"trigger time < 0,trigger time:{_triggerTime}");
+                return;
+            }
+            
+            EffectDataMgr.SetEffects(selectedNode,_effects);
+            
+            //更新对应node
+            selectedNode.Repaint();
+            Debug.Log($"<color=green>save effects success.</color>");
+        }
+        
+        /// <summary>
+        /// 检查effects是否有效
+        /// </summary>
+        private (bool effectIsValid,string errMsg) IsEffectValid(AbilityEffect effect,int index)
+        {
+            var effectIsValid = true;
+            var errMsg = string.Empty;
+            StringBuilder builder = new StringBuilder();
+            if (effect.ID <= 0)
+            {
+                effectIsValid = false;
+                builder.Append($"effect-{index + 1} id <= 0\n");
+            }
+
+            if (string.IsNullOrEmpty(effect.Desc))
+            {
+                effectIsValid = false;
+                builder.Append($"effect-{index + 1} desc is null\n");
+            }
+
+            // if (effect.Tag == ActorTagType.None)
+            // {
+            //     effectIsValid = false;
+            //     builder.Append($"effect-{index} tag is none\n");
+            // }
+
+            if (effect.ModifierType == NumricModifierType.None)
+            {
+                effectIsValid = false;
+                builder.Append($"effect-{index + 1} modifier type is none\n");
+            }
+
+            if (effect.EffectType == actor_attribute.Invalid)
+            {
+                effectIsValid = false;
+                builder.Append($"effect-{index + 1} effect type is none\n");
+            }
+
+            return (effectIsValid,builder.ToString());
+        }
+
         //-----------mono-----------
 
         private void OnGUI()
@@ -62,7 +144,7 @@ namespace Aquila.Editor
             //trigger time
             EditorGUILayout.BeginVertical();
             {
-                _triggerTime = EditorGUILayout.FloatField("Trigger Time:", selectedNode.TriggerTime);
+                _triggerTime = EditorGUILayout.FloatField("Trigger Time:", _triggerTime);
             }
             EditorGUILayout.EndVertical();
 
@@ -83,13 +165,15 @@ namespace Aquila.Editor
                 HeaderLabelStyle.fontStyle = FontStyle.Bold;
                 HeaderLabelStyle.fontSize = 15;
                 HeaderLabelStyle.normal.textColor = Color.green;
-                
+
+                var tempArrayString = string.Empty;
+                string[] tempArray = null;
                 for (int i = 0; i < cnt; i++)
                 {
                     effect = _effects[i];
                     EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.LabelField($"Effect-{i}",HeaderLabelStyle);
+                        EditorGUILayout.LabelField($"Effect-{i+1}",HeaderLabelStyle);
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("Remove", GUILayout.Width(100)))
                         {
@@ -105,25 +189,45 @@ namespace Aquila.Editor
                     _foldOuts[i] = EditorGUILayout.Foldout(_foldOuts[i],"foldOut");
                     if (_foldOuts[i])
                     {
-                        EditorGUILayout.IntField($"ID", effect.ID);
-                        EditorGUILayout.TextField($"Desc", effect.Desc);
-                        EditorGUILayout.EnumPopup($"Type", effect.Type);
-                        EditorGUILayout.FloatField($"ExtensionFloatParam_1", effect.ExtensionFloatParam_1);
-                        EditorGUILayout.FloatField($"ExtensionFloatParam_2", effect.ExtensionFloatParam_2);
-                        EditorGUILayout.FloatField($"ExtensionFloatParam_3", effect.ExtensionFloatParam_3);
-                        EditorGUILayout.FloatField($"ExtensionFloatParam_4", effect.ExtensionFloatParam_4);
-                        EditorGUILayout.TextField($"ExtensionStringParm_1", effect.ExtensionStringParm_1);
-                        EditorGUILayout.TextField($"ExtensionStringParm_2", effect.ExtensionStringParm_2);
-                        EditorGUILayout.TextField($"ExtensionStringParm_3", effect.ExtensionStringParm_3);
-                        EditorGUILayout.TextField($"ExtensionStringParm_4", effect.ExtensionStringParm_4);
-                        EditorGUILayout.Toggle($"EffectOnAwake", effect.EffectOnAwake);
-                        EditorGUILayout.EnumPopup($"DurationPolicy", effect.DurationPolicy);
-                        EditorGUILayout.FloatField($"Period", effect.Period);
-                        EditorGUILayout.FloatField($"Duration", effect.Duration);
-                        EditorGUILayout.IntField($"Target", effect.Target);
-                        EditorGUILayout.EnumPopup($"EffectType", effect.EffectType);
-                        EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.DeriveEffects));
-                        EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.AwakeEffects));
+                        effect.ID = EditorGUILayout.IntField($"ID", effect.ID);
+                        effect.Desc = EditorGUILayout.TextField($"Desc", effect.Desc);
+                        effect.Type = (EffectType)EditorGUILayout.EnumPopup($"Type", effect.Type);
+                        effect.ExtensionFloatParam_1 = EditorGUILayout.FloatField($"ExtensionFloatParam_1", effect.ExtensionFloatParam_1);
+                        effect.ExtensionFloatParam_2 = EditorGUILayout.FloatField($"ExtensionFloatParam_2", effect.ExtensionFloatParam_2);
+                        effect.ExtensionFloatParam_3 = EditorGUILayout.FloatField($"ExtensionFloatParam_3", effect.ExtensionFloatParam_3);
+                        effect.ExtensionFloatParam_4 = EditorGUILayout.FloatField($"ExtensionFloatParam_4", effect.ExtensionFloatParam_4);
+                        effect.ExtensionStringParm_1 = EditorGUILayout.TextField($"ExtensionStringParm_1", effect.ExtensionStringParm_1);
+                        effect.ExtensionStringParm_2 = EditorGUILayout.TextField($"ExtensionStringParm_2", effect.ExtensionStringParm_2);
+                        effect.ExtensionStringParm_3 = EditorGUILayout.TextField($"ExtensionStringParm_3", effect.ExtensionStringParm_3);
+                        effect.ExtensionStringParm_4 = EditorGUILayout.TextField($"ExtensionStringParm_4", effect.ExtensionStringParm_4);
+                        effect.EffectOnAwake = EditorGUILayout.Toggle($"EffectOnAwake", effect.EffectOnAwake);
+                        effect.ModifierType = (NumricModifierType)EditorGUILayout.EnumPopup("ModifierType", effect.ModifierType);
+                        effect.DurationPolicy = (DurationPolicy)EditorGUILayout.EnumPopup($"DurationPolicy", effect.DurationPolicy);
+                        effect.Period = EditorGUILayout.FloatField($"Period", effect.Period);
+                        effect.Duration = EditorGUILayout.FloatField($"Duration", effect.Duration);
+                        effect.Target = EditorGUILayout.IntField($"Target", effect.Target);
+                        effect.EffectType = (actor_attribute)EditorGUILayout.EnumPopup($"EffectType", effect.EffectType);
+
+                        try
+                        {
+                            tempArrayString = EditorGUILayout.TextField($"DeriveEffects", effect.DeriveEffects is null ? string.Empty : ArrayToString(effect.DeriveEffects));
+                            effect.DeriveEffects = tempArrayString.Split(',').Select(int.Parse).ToArray();
+                        }
+                        catch
+                        {
+                            effect.DeriveEffects = null;
+                        }
+
+                        try
+                        {
+                            tempArrayString = EditorGUILayout.TextField($"AwakeEffects", effect.AwakeEffects is null ? string.Empty : ArrayToString(effect.AwakeEffects));
+                            effect.AwakeEffects = tempArrayString.Split(',').Select(int.Parse).ToArray();
+                        }
+                        catch
+                        {
+                            effect.AwakeEffects = null;
+                        }
+                        
                         EditorGUILayout.Space(10);
                     }
                 }//end for
@@ -161,10 +265,15 @@ namespace Aquila.Editor
             // selectedPorts = new List<AbilityViewPort>();
 
             _toolBar = new Toolbar();
-            var addEffectButton = new Button();
-            addEffectButton.text = "Add Effect";
-            addEffectButton.clicked += OnClickToolBarAdd;
-            _toolBar.Add(addEffectButton);
+            var button = new Button();
+            button.text = "Add Effect";
+            button.clicked += OnClickToolBarAdd;
+            _toolBar.Add(button);
+
+            button = new Button();
+            button.text = "Save";
+            button.clicked += OnClickSave;
+            _toolBar.Add(button);
             
             rootVisualElement.Add(_toolBar);
         }
@@ -193,7 +302,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 选中节点携带的effect
         /// </summary>
-        private ReadOnlyCollection<AbilityEffect> _effects = null;
+        private List<AbilityEffect> _effects = null;
 
         /// <summary>
         /// 触发时间
