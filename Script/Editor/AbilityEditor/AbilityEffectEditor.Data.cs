@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Cfg.Enum;
 using UnityEngine;
 
@@ -10,6 +11,43 @@ namespace Aquila.Editor
     /// </summary>
     public class AbilityEffect
     {
+        public (bool effectIsValid,string errMsg) IsValid()
+        {
+            var effectIsValid = true;
+            StringBuilder builder = new StringBuilder();
+            if (ID <= 0)
+            {
+                effectIsValid = false;
+                builder.Append($"id <= 0\n");
+            }
+
+            if (string.IsNullOrEmpty(Desc))
+            {
+                effectIsValid = false;
+                builder.Append($" desc is null\n");
+            }
+
+            // if (effect.Tag == ActorTagType.None)
+            // {
+            //     effectIsValid = false;
+            //     builder.Append($"effect-{index} tag is none\n");
+            // }
+
+            if (ModifierType == NumricModifierType.None)
+            {
+                effectIsValid = false;
+                builder.Append($" modifier type is none\n");
+            }
+
+            if (EffectType == actor_attribute.Invalid)
+            {
+                effectIsValid = false;
+                builder.Append($" effect type is none\n");
+            }
+
+            return (effectIsValid,builder.ToString());
+        }
+
         public AbilityEffect(string guid)
         {
             GUID                  = guid;

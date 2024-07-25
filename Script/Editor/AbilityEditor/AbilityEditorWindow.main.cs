@@ -1,3 +1,9 @@
+using System.IO;
+using System.Security.AccessControl;
+using Bright.Serialization;
+using Cfg;
+using Cfg.Enum;
+using GameFramework;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -50,25 +56,28 @@ namespace Aquila.Editor
 
             _toolBar = new Toolbar();
             var button = new Button();
-            button.text = "Add Node";
+            button.text = "AddNode";
             button.clicked += OnClickToolBarAdd;
             _toolBar.Add(button);
             
             button = new Button();
-            button.text = "Remove Node";
+            button.text = "RemoveNode";
             button.clicked += OnClickToolBarRemove;
-
-            button = new Button();
-            button.text = "Save";
-            button.clicked += OnClickToolBarSave; 
-            
             _toolBar.Add(button);
+
+            // button = new Button();
+            // button.text = "Save";
+            // button.clicked += OnClickToolBarSave; 
+            // _toolBar.Add(button);
+            
             rootVisualElement.Add(_toolBar);
             
             if (_effectWindow is null)
                 _effectWindow = GetEffectWindow();
             
             _effectWindow.Show();
+            LoadTableData();
+            _idPool = 0;
         }
 
         private void OnDisable()
@@ -80,6 +89,8 @@ namespace Aquila.Editor
             _effectWindow = null;
             
             EffectDataMgr.Clear();
+            ClearTableData();
+            _idPool = 0;
         }
 
         //-----------event-----------
@@ -88,7 +99,7 @@ namespace Aquila.Editor
         /// </summary>
         private void OnClickToolBarAdd()
         {
-            var nodeGroup = _abilityView.CreateOneInOneOut("TestNode",Port.Capacity.Single);
+            var nodeGroup = _abilityView.CreateOneInOneOut("TestNode",_idPool++,Port.Capacity.Single);
             EffectDataMgr.AddNodeGroup(nodeGroup);
         }
 
@@ -108,11 +119,12 @@ namespace Aquila.Editor
             
             _abilityView.RemoveElement(node);
             EffectDataMgr.RemoveNodeGroup(node);
+            
         }
 
         private void OnClickToolBarSave()
         {
-            
+            var saveSucc = _abilityView.Save();
         }
 
         private void DrawGraphViewArea()
@@ -127,18 +139,90 @@ namespace Aquila.Editor
         {
             EditorGUILayout.LabelField("functions");
             EditorGUILayout.BeginHorizontal("box");
-            if (GUILayout.Button("save"))
-            {
-                
-            }
 
-            if (GUILayout.Button("export"))
+            if (GUILayout.Button("Export"))
             {
+                AbilityEditorEffectGroupNode tempNode = null;
+                foreach (var node in _abilityView.nodes)
+                {
+                    tempNode = node as AbilityEditorEffectGroupNode;
+                    (bool valid, string errMsg) effectValid = (false, string.Empty);
+                    if (tempNode is null)
+                    {
+                        Debug.LogError($"<color=red>faild to cast node to AbilityEditorEffectGroupNode");
+                        return;
+                    }
+
+                    var effects = EffectDataMgr.GetEffects(tempNode);
+                    if (effects is null || effects.Count == 0)
+                    {
+                        Debug.LogError($"faild to get effects from node:{tempNode.name},node id:{tempNode.ID}");
+                        return;
+                    }
                     
-            }
+                    foreach (var effect in effects)
+                    {
+                        effectValid = effect.IsValid();
+                        if (!effectValid.valid)
+                        {
+                            Debug.LogError($"<color=red>effect id:{effect.ID} is invalid,err msg:{effectValid.errMsg}</color>");
+                            return;
+                        }
+                    }//end foreach
+                }//end foreach
+
+                if (_abilityBaseID < 0)
+                {
+                    Debug.LogError($"<color=ffefdb>ability base id < 0</color>");
+                    return;
+                }
+
+                if (_abilityTableData.Get(_abilityBaseID) != null)
+                {
+                    Debug.LogError($"<color=ffefdb>ability base id exist</color>");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(_abilityName))
+                {
+                    Debug.LogError($"<color=ffefdb>ability name is null</color>");
+                    return;
+                }
+                
+                if (string.IsNullOrEmpty(_abilityDesc))
+                {
+                    Debug.LogError($"<color=ffefdb>ability desc is null</color>");
+                    return;
+                }
+
+                if (_costEffectID < 0)
+                {
+                    Debug.LogError($"<color=ffefdb>cost effect id <0</color>");
+                    return;
+                }
+
+                if (_coolDownEffectID < 0)
+                {
+                    Debug.LogError($"<color=ffefdb>cool down effect id <0</color>");
+                    return;
+                }
+
+                // if (_abilityTargetType == AbilityTargetType.Neutral)
+                // {
+                // }
+
+                if (_timelineID < 0)
+                {
+                    Debug.LogError($"<color=ffefdb>time line id < 0</color>");
+                    return;
+                }
+                
+                
+
+            }//end gui if
             EditorGUILayout.EndHorizontal();
         }
-
+        
         private void DrawAbilityBaseArea()
         {
             EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .85f));
@@ -148,8 +232,8 @@ namespace Aquila.Editor
                 _abilityDesc       = EditorGUILayout.TextField("description:"       , _abilityDesc);
                 _costEffectID      = EditorGUILayout.IntField("cost effect ID:"     , _costEffectID);
                 _coolDownEffectID  = EditorGUILayout.IntField("cool down effect ID:", _coolDownEffectID);
-                _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);
-                _abilityTargetType = EditorGUILayout.IntField("target type:"        , _abilityTargetType);
+                // _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);
+                // _abilityTargetType = (AbilityTargetType)EditorGUILayout.EnumPopup("target type:"        , _abilityTargetType);
                 _timelineID        = EditorGUILayout.IntField("timeline ID:"        , _timelineID);
                 _interpret         = EditorGUILayout.TextField("interpret:"         , _interpret);
             }
@@ -167,6 +251,37 @@ namespace Aquila.Editor
         }
         
         //-----------private-----------
+
+        private void ClearTableData()
+        {
+            _abilityTableData.DataList.Clear();
+            _abilityTableData.DataMap.Clear();
+            _abilityTableData = null;
+            
+            _abilityTimelineTableData.DataList.Clear();
+            _abilityTimelineTableData.DataMap.Clear();
+            _abilityTimelineTableData = null;
+            
+            _effectTableData.DataList.Clear();
+            _effectTableData.DataMap.Clear();
+            _effectTableData = null;
+        }
+
+        /// <summary>
+        /// 加载表数据
+        /// </summary>
+        private void LoadTableData()
+        {
+            var loader = new System.Func<string, ByteBuf>( ( file ) =>
+            {
+                return new ByteBuf( File.ReadAllBytes( $"{Utility.Path.GetRegularPath($"{Application.dataPath}/Res/DataTables/")}{file}.bytes" ) );
+            } );
+            
+            _abilityTableData = new Cfg.Fight.Ability(loader("fight_ability"));
+            _abilityTimelineTableData = new Cfg.Fight.AbilityTimeline(loader("fight_abilitytimeline"));
+            _effectTableData = new Cfg.Common.Effect(loader("common_effect"));
+        }
+
         private AbilityEffectGroupEditorWidnow GetEffectWindow()
         {
             return GetWindow<AbilityEffectGroupEditorWidnow>();
@@ -178,8 +293,8 @@ namespace Aquila.Editor
         private string _abilityDesc    = string.Empty;
         private int _costEffectID      = -1;
         private int _coolDownEffectID  = -1;
-        private string _effectsIDArray = string.Empty;
-        private int _abilityTargetType = -1;
+        // private string _effectsIDArray = string.Empty;
+        private AbilityTargetType _abilityTargetType = AbilityTargetType.Neutral;
         private int _timelineID        = -1;
         private string _interpret      = string.Empty;
         
@@ -198,6 +313,15 @@ namespace Aquila.Editor
 
         private Toolbar _toolBar = null;
 
+        private Cfg.Fight.Ability _abilityTableData = null;
+        private Cfg.Fight.AbilityTimeline _abilityTimelineTableData = null;
+        private Cfg.Common.Effect _effectTableData = null;
+        
+        /// <summary>
+        /// ID池
+        /// </summary>
+        private int _idPool = 0;
+        
         [MenuItem("Aquila/Ability/AbilityEditor")]
         public static void ShowExample()
         {

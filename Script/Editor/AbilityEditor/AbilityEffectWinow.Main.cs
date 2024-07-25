@@ -71,10 +71,10 @@ namespace Aquila.Editor
             var index = 0;
             foreach (var effect in _effects)
             {
-                result = IsEffectValid(effect,index++);
+                result = effect.IsValid();
                 if (!result.effectIsValid)
                 {
-                    Debug.LogError(result.errMsg);
+                    Debug.LogError($"effect_{index} is invalid,errMsg:{result.errMsg}");
                     break;
                 }
             }
@@ -90,47 +90,6 @@ namespace Aquila.Editor
             //更新对应node
             selectedNode.Repaint();
             Debug.Log($"<color=green>save effects success.</color>");
-        }
-        
-        /// <summary>
-        /// 检查effects是否有效
-        /// </summary>
-        private (bool effectIsValid,string errMsg) IsEffectValid(AbilityEffect effect,int index)
-        {
-            var effectIsValid = true;
-            var errMsg = string.Empty;
-            StringBuilder builder = new StringBuilder();
-            if (effect.ID <= 0)
-            {
-                effectIsValid = false;
-                builder.Append($"effect-{index + 1} id <= 0\n");
-            }
-
-            if (string.IsNullOrEmpty(effect.Desc))
-            {
-                effectIsValid = false;
-                builder.Append($"effect-{index + 1} desc is null\n");
-            }
-
-            // if (effect.Tag == ActorTagType.None)
-            // {
-            //     effectIsValid = false;
-            //     builder.Append($"effect-{index} tag is none\n");
-            // }
-
-            if (effect.ModifierType == NumricModifierType.None)
-            {
-                effectIsValid = false;
-                builder.Append($"effect-{index + 1} modifier type is none\n");
-            }
-
-            if (effect.EffectType == actor_attribute.Invalid)
-            {
-                effectIsValid = false;
-                builder.Append($"effect-{index + 1} effect type is none\n");
-            }
-
-            return (effectIsValid,builder.ToString());
         }
 
         //-----------mono-----------
@@ -235,7 +194,9 @@ namespace Aquila.Editor
                 EditorGUILayout.EndScrollView();
             }
             EditorGUILayout.EndVertical();
-
+            
+            EffectDataMgr.SetEffects(selectedNode,_effects);
+            
             if (_isRepaint)
             {
                 RefreshByEffectNode(selectedNode);

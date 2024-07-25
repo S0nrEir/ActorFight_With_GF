@@ -21,10 +21,10 @@ namespace Aquila.Editor
         /// <summary>
         /// 设置节点的基本信息()
         /// </summary>
-        public void SetBaseInfo(float triggerTime)
+        public void SetBaseInfo(float triggerTime,int groupID)
         {
             TriggerTime = triggerTime;
-            contentContainer.Add(new Label($"TriggerTime:{TriggerTime}"));
+            ID = groupID;
         }
         
         /// <summary>
@@ -47,7 +47,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 获取单个节点
         /// </summary>
-        public static AbilityEditorEffectGroupNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity)
+        public static AbilityEditorEffectGroupNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity,int id)
         {
             //两个端口，一个输入一个输出
             var node = new AbilityEditorEffectGroupNode();
@@ -64,7 +64,7 @@ namespace Aquila.Editor
             
             node.SetPosition(new Rect(100,100,100,100));
             node.RefreshPorts();
-            node.SetBaseInfo(-1f );
+            node.SetBaseInfo(-1f ,id);
             node.RefreshExpandedState();
             return node;
         }
@@ -79,13 +79,35 @@ namespace Aquila.Editor
         {
             _allPorts = new List<AbilityViewPort>();
         }
-        
+
+        public virtual void OnCreate()
+        {
+            var button = new Button();
+            button.text = "AddPort";
+            button.clicked += OnAddPortClick;
+            contentContainer.Add(button);
+            
+            contentContainer.Add(new Label($"TriggerTime:{TriggerTime}"));
+            contentContainer.Add(new Label($"ID:{ID}"));
+        }
+
+        private void OnAddPortClick()
+        {
+            Debug.Log($"add port clicked!");
+        }
+
         //-----------fields-----------
 
         /// <summary>
         /// 触发时间
         /// </summary>
         public float TriggerTime
+        {
+            get;
+            private set;
+        }
+
+        public int ID
         {
             get;
             private set;
