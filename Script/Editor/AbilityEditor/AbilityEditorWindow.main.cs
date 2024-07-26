@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
+using System.Text;
 using Bright.Serialization;
-using Cfg;
 using Cfg.Enum;
 using GameFramework;
 using UnityEditor;
@@ -10,6 +11,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
+using MiniExcelLibs;
 
 namespace Aquila.Editor
 {
@@ -143,6 +145,7 @@ namespace Aquila.Editor
             if (GUILayout.Button("Export"))
             {
                 AbilityEditorEffectGroupNode tempNode = null;
+                var abilityGroupNodes = new List<AbilityEditorEffectGroupNode>();
                 foreach (var node in _abilityView.nodes)
                 {
                     tempNode = node as AbilityEditorEffectGroupNode;
@@ -152,7 +155,7 @@ namespace Aquila.Editor
                         Debug.LogError($"<color=red>faild to cast node to AbilityEditorEffectGroupNode");
                         return;
                     }
-
+                    
                     var effects = EffectDataMgr.GetEffects(tempNode);
                     if (effects is null || effects.Count == 0)
                     {
@@ -169,6 +172,7 @@ namespace Aquila.Editor
                             return;
                         }
                     }//end foreach
+                    abilityGroupNodes.Add(tempNode);
                 }//end foreach
 
                 if (_abilityBaseID < 0)
@@ -217,12 +221,166 @@ namespace Aquila.Editor
                     return;
                 }
                 
-                
+                //调试标记用：
+                _interpret += $"$#GBE";
+                EditorUtility.DisplayProgressBar($"Write to Excel","Writing...",0.3f);
+                var writeSucc = WriteToExcel(abilityGroupNodes);
+                if (!writeSucc)
+                {
+                    EditorUtility.ClearProgressBar();
+                    return;
+                }
 
+                EditorUtility.DisplayProgressBar($"Re generating...","generating...",0.6f);
+                AssetDatabase.Refresh();
+                EditorUtility.ClearProgressBar();
+                
             }//end gui if
             EditorGUILayout.EndHorizontal();
         }
-        
+
+        /// <summary>
+        /// 将数据写入到Excel
+        /// </summary>
+        private bool WriteToExcel(List<AbilityEditorEffectGroupNode> nodes)
+        {
+            var path = string.Empty;
+            nodes.Sort(new NodeGroupComparer());
+            
+            //write to AbilityBaseConfig
+            try
+            {
+                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","AbilityBase.xlsx");
+                MiniExcel.SaveAs 
+                    (
+                        path,
+                        new []
+                        {
+                            new
+                            {
+                                Column1  = string.Empty,
+                                Column2  = _abilityBaseID.ToString(),
+                                Column3  = _abilityName,
+                                Column4  = _abilityDesc,
+                                Column5  = _costEffectID.ToString(),
+                                Column6  = _coolDownEffectID.ToString(),
+                                Column7  = string.Empty,//Effects
+                                Column8  = string.Empty,//TargetType
+                                Column9  = _timelineID.ToString(),
+                                Column10 = AbilityEffectsToString(nodes),
+                                Column11 = _interpret,
+                            },
+                        }
+                    );//end SaveAs()
+            }
+            catch (Exception e)
+            {
+                throw new GameFrameworkException($"faild to write to AbilityBaseConfig,err{e.Message}");
+            }
+
+            //write to EffectConfig
+            try
+            {
+                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","Effect.xlsx");
+                foreach (var node in nodes)
+                {
+                    var effects = EffectDataMgr.GetEffects(node);
+                    foreach (var effect in effects)
+                    {
+                        MiniExcel.SaveAs
+                        (
+                            path,
+                            new
+                            {
+                                Column1 = string.Empty,
+                                Column2 = effect.ID.ToString(),
+                                Column3 = effect.Desc,
+                                Column4 = effect.Tag.ToString(),
+                                Column5 = effect.Type.ToString(),
+                                Column6 = effect.ExtensionFloatParam_1.ToString(),
+                                Column7 = effect.ExtensionFloatParam_2.ToString(),
+                                Column8 = effect.ExtensionFloatParam_3.ToString(),
+                                Column9 = effect.ExtensionFloatParam_4.ToString(),
+                                Column10 = effect.ExtensionStringParm_1,
+                                Column11 = effect.ExtensionStringParm_2,
+                                Column12 = effect.ExtensionStringParm_3,
+                                Column13 = effect.ExtensionStringParm_4,
+                                Column14 = effect.ModifierType.ToString(),
+                                Column15 = effect.EffectOnAwake.ToString().ToUpper(),
+                                Column16 = effect.DurationPolicy.ToString(),
+                                Column17 = effect.Duration.ToString(),
+                                Column18 = effect.Target.ToString(),
+                                Column19 = effect.EffectType.ToString(),
+                                Column20 = effect.DeriveEffects != null && effect.DeriveEffects.Length != 0 ? string.Join(",",effect.DeriveEffects) : string.Empty,
+                                Column21 = effect.AwakeEffects != null && effect.AwakeEffects.Length != 0 ? string.Join(",",effect.AwakeEffects) : string.Empty,
+                            }
+                        );//end SaveAs()
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new GameFrameworkException($"faild to write to EffectConfig,err{e.Message}");
+            }
+
+            //write to AbilityTimelineConfig
+            try
+            {
+                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","AbilityTimeline.xlsx");
+                MiniExcel.SaveAs
+                    (
+                        path,
+                        new
+                        {
+                            Column1 = string.Empty,
+                            Column2 = _timelineID.ToString(),
+                            Column3 = string.Empty ,//TriggerTime
+                            Column4 = string.Empty,//Effects
+                        }
+                    );
+            }
+            catch (Exception e)
+            {
+                throw new GameFrameworkException($"faild to write to AbilityTimelineConfig,err{e.Message}");
+            }
+            
+            //
+            // var abilityEffectConfig = MiniExcel.Query(Path.Combine(basePath,"Effect.xlsx"));
+            // if (abilityEffectConfig is null)
+            // {
+            //     Debug.LogError($"<color=ffefdb>ability effect config is null,path, file name:Effect.xlsx</color>");
+            //     return;
+            // }
+            return true;
+        }
+
+        /// <summary>
+        /// 将AbilityEffects转换为要写入配置的格式
+        /// </summary>
+        private string AbilityEffectsToString(List<AbilityEditorEffectGroupNode> nodes)
+        {
+            StringBuilder builder = new StringBuilder();
+            var nodesCount = nodes.Count;
+            var effects = new List<AbilityEffect>();
+            for (var i = 0; i < nodesCount; i++)
+            {
+                builder.Append($"{nodes[i].TriggerTime},");
+                effects = EffectDataMgr.GetEffects(nodes[i]);
+                var effectCount = effects.Count;
+                for (int j = 0; j < effectCount; j++)
+                {
+                    builder.Append($"{effects[i].ID};");
+                    if (j + 1 < effectCount)
+                        builder.Append($";");
+                }
+
+                if (i + 1 < nodesCount)
+                    builder.Append("|");
+            }
+            
+            return builder.ToString();
+        }
+
         private void DrawAbilityBaseArea()
         {
             EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .85f));
@@ -232,7 +390,7 @@ namespace Aquila.Editor
                 _abilityDesc       = EditorGUILayout.TextField("description:"       , _abilityDesc);
                 _costEffectID      = EditorGUILayout.IntField("cost effect ID:"     , _costEffectID);
                 _coolDownEffectID  = EditorGUILayout.IntField("cool down effect ID:", _coolDownEffectID);
-                // _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);
+                // _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);mm
                 // _abilityTargetType = (AbilityTargetType)EditorGUILayout.EnumPopup("target type:"        , _abilityTargetType);
                 _timelineID        = EditorGUILayout.IntField("timeline ID:"        , _timelineID);
                 _interpret         = EditorGUILayout.TextField("interpret:"         , _interpret);
@@ -321,7 +479,29 @@ namespace Aquila.Editor
         /// ID池
         /// </summary>
         private int _idPool = 0;
-        
+
+        /// <summary>
+        /// 写入的列前缀
+        /// </summary>
+        private const string ColumnPrefix = "Column";
+
+        /// <summary>
+        /// NodeGroup排序器，按照TriggerTime排序
+        /// </summary>
+        private class NodeGroupComparer : IComparer<AbilityEditorEffectGroupNode>
+        {
+            public int Compare(AbilityEditorEffectGroupNode x, AbilityEditorEffectGroupNode y)
+            {
+                if (x.TriggerTime < y.TriggerTime)
+                    return -1;
+
+                if (x.TriggerTime > y.TriggerTime)
+                    return 1;
+
+                return 0;
+            }
+        }
+
         [MenuItem("Aquila/Ability/AbilityEditor")]
         public static void ShowExample()
         {
