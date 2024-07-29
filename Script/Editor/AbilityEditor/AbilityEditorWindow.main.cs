@@ -313,6 +313,7 @@ namespace Aquila.Editor
             {
                 _abilityBaseID    = 1007;
                 _abilityDesc      = "测试Editor";
+                _abilityName      = "测试Editor"; 
                 _costEffectID     = 1000;
                 _coolDownEffectID = 1001;
                 _timelineID       = 1003;
@@ -330,7 +331,7 @@ namespace Aquila.Editor
 
                 var guid = new Guid().ToString();
                 AbilityEffect effect = new AbilityEffect(guid);
-                effect.ID = 1007;
+                effect.ID = 1012;
                 // effect.Name = "测试Editor";
                 effect.Desc = "测试Editor";
                 effect.Type = EffectType.Instant_PhyDamage;
