@@ -137,7 +137,7 @@ namespace Aquila.Editor
             SetupZoom(ContentZoomer.DefaultMinScale,ContentZoomer.DefaultMaxScale);
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
-            this.AddManipulator(new RectangleSelector());
+            // this.AddManipulator(new RectangleSelector());
             //_nodeList = new LinkedList<AbilityEditorEffectGroupNode>();
             
             // var startNode = AbilityEditorNode_StartNode.GenStartNode();

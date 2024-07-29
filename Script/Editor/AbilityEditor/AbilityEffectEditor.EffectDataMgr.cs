@@ -48,6 +48,9 @@ namespace Aquila.Editor
 
         public static void Clear()
         {
+            if (_abilityNodeToEffects is null)
+                return;
+            
             var itor = _abilityNodeToEffects.GetEnumerator();
             while (itor.MoveNext())
             {

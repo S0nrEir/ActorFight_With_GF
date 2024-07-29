@@ -37,15 +37,47 @@ namespace Aquila.Editor
                 //draw ability & buttons area
                 EditorGUILayout.BeginVertical();
                 {
-                    EditorGUILayout.LabelField("Ability Base Info");
+                    EditorGUILayout.LabelField("Ability Base Info",EditorStyles.boldLabel);
                     DrawAbilityBaseArea();
                     EditorGUILayout.Space(2);
+                    DrawTimelineInfo();
+                    EditorGUILayout.Space(2);
                     DrawButtons();
+                    EditorGUILayout.IntField(99);
                 }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.Space(10);
             }
             EditorGUILayout.EndHorizontal();
+            
+            // Debug.Log("OnGUI calling...");
+            // EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50), GUILayout.Width(200)});
+            // EditorGUILayout.EndVertical();
+            // EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
+            // {
+            //     //graph view area
+            //     EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
+            //     EditorGUILayout.LabelField("Impact Nodes");
+            //     //draw graph view area
+            //     DrawGraphViewArea();
+            //     EditorGUILayout.EndVertical();
+            //     EditorGUILayout.Space(1);
+            //
+            //     //draw ability & buttons area
+            //     EditorGUILayout.BeginVertical();
+            //     {
+            //         EditorGUILayout.LabelField("Ability Base Info",EditorStyles.boldLabel);
+            //         DrawAbilityBaseArea();
+            //         EditorGUILayout.Space(2);
+            //         DrawTimelineInfo();
+            //         EditorGUILayout.Space(2);
+            //         DrawButtons();
+            //         EditorGUILayout.IntField(99);
+            //     }
+            //     EditorGUILayout.EndVertical();
+            //     EditorGUILayout.Space(10);
+            // }
+            // EditorGUILayout.EndHorizontal();
         }
 
         private void OnEnable()
@@ -53,8 +85,12 @@ namespace Aquila.Editor
             _thisWindow = GetWindow<AbilityEditorWindow>();
             _abilityView = new AbilityView(this);
             _thisWindow.minSize = _windowMinSize;
-            rootVisualElement.Add(_abilityView);
+            // _abilityView.style.width = _thisWindow.maxSize.x * 0.7f;
+            // _abilityView.style.flexGrow = 0;
+            // _abilityView.style.width = this.position.width * 0.7f;
             _abilityView.StretchToParentSize();
+            _abilityView.style.marginRight = _windowMinSize.x * 0.3f;
+            rootVisualElement.Add(_abilityView);
 
             _toolBar = new Toolbar();
             var button = new Button();
@@ -139,9 +175,7 @@ namespace Aquila.Editor
 
         private void DrawButtons()
         {
-            EditorGUILayout.LabelField("functions");
             EditorGUILayout.BeginHorizontal("box");
-
             if (GUILayout.Button("Export"))
             {
                 AbilityEditorEffectGroupNode tempNode = null;
@@ -220,7 +254,25 @@ namespace Aquila.Editor
                     Debug.LogError($"<color=ffefdb>time line id < 0</color>");
                     return;
                 }
-                
+
+                // if (string.IsNullOrEmpty(_timelineDesc))
+                // {
+                //     Debug.LogError("<color=ffefdb>Timeline description is null</color>");
+                //     return;
+                // }
+
+                if (string.IsNullOrEmpty(_timelineAssetPath))
+                {
+                    Debug.LogError("<color=ffefdb>Timeline asset path is null</color>");
+                    return;
+                }
+
+                if (_timelineDuration < 0f)
+                {
+                    Debug.LogError("<color=ffefdb>Timeline duration < 0</color>");
+                    return;
+                }
+
                 //调试标记用：
                 _interpret += $"$#GBE";
                 EditorUtility.DisplayProgressBar($"Write to Excel","Writing...",0.3f);
@@ -235,7 +287,7 @@ namespace Aquila.Editor
                 AssetDatabase.Refresh();
                 EditorUtility.ClearProgressBar();
                 
-            }//end gui if
+            }//end export button
             EditorGUILayout.EndHorizontal();
         }
 
@@ -334,8 +386,9 @@ namespace Aquila.Editor
                         {
                             Column1 = string.Empty,
                             Column2 = _timelineID.ToString(),
-                            Column3 = string.Empty ,//TriggerTime
-                            Column4 = string.Empty,//Effects
+                            Column3 = _timelineDesc ,
+                            Column4 = _timelineDuration.ToString(),
+                            Column5 = 0f.ToString(),
                         }
                     );
             }
@@ -343,14 +396,6 @@ namespace Aquila.Editor
             {
                 throw new GameFrameworkException($"faild to write to AbilityTimelineConfig,err{e.Message}");
             }
-            
-            //
-            // var abilityEffectConfig = MiniExcel.Query(Path.Combine(basePath,"Effect.xlsx"));
-            // if (abilityEffectConfig is null)
-            // {
-            //     Debug.LogError($"<color=ffefdb>ability effect config is null,path, file name:Effect.xlsx</color>");
-            //     return;
-            // }
             return true;
         }
 
@@ -381,9 +426,23 @@ namespace Aquila.Editor
             return builder.ToString();
         }
 
+        private void DrawTimelineInfo()
+        {
+            EditorGUILayout.TextField("Timeline Info", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
+            {
+                _timelineID        = EditorGUILayout.IntField("Timeline ID:"          , _timelineID);
+                _timelineDesc      = EditorGUILayout.TextField("Timeline Description:", _timelineDesc);
+                _timelineAssetPath = EditorGUILayout.TextField("Timeline Asset Path:" , _timelineAssetPath);
+                _timelineDuration  = EditorGUILayout.FloatField("Timeline Duration:"  , _timelineDuration);
+                
+            }
+            EditorGUILayout.EndVertical();
+        }
+
         private void DrawAbilityBaseArea()
         {
-            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .85f));
+            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .75f));
             {
                 _abilityBaseID     = EditorGUILayout.IntField("base ID:"            , _abilityBaseID);
                 _abilityName       = EditorGUILayout.TextField("name:"              , _abilityName);
@@ -392,7 +451,6 @@ namespace Aquila.Editor
                 _coolDownEffectID  = EditorGUILayout.IntField("cool down effect ID:", _coolDownEffectID);
                 // _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);mm
                 // _abilityTargetType = (AbilityTargetType)EditorGUILayout.EnumPopup("target type:"        , _abilityTargetType);
-                _timelineID        = EditorGUILayout.IntField("timeline ID:"        , _timelineID);
                 _interpret         = EditorGUILayout.TextField("interpret:"         , _interpret);
             }
             EditorGUILayout.EndVertical();
@@ -455,6 +513,9 @@ namespace Aquila.Editor
         private AbilityTargetType _abilityTargetType = AbilityTargetType.Neutral;
         private int _timelineID        = -1;
         private string _interpret      = string.Empty;
+        private string _timelineDesc = string.Empty;
+        private string _timelineAssetPath = string.Empty;
+        private float _timelineDuration = 0f;
         
         private EditorWindow _thisWindow = null;
         private static Vector2 _windowMinSize = new Vector2(1200, 700);
