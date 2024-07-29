@@ -27,6 +27,12 @@ namespace Aquila.Editor
                 builder.Append($" desc is null\n");
             }
 
+            // if (string.IsNullOrEmpty(Name))
+            // {
+            //     effectIsValid = false;
+            //     builder.Append(" name is null\n");
+            // }
+
             // if (effect.Tag == ActorTagType.None)
             // {
             //     effectIsValid = false;
@@ -53,6 +59,7 @@ namespace Aquila.Editor
             GUID                  = guid;
             ID                    = -1;
             Desc                  = string.Empty;
+            // Name                  = string.Empty;
             Tag                   = ActorTagType.None;
             Type                  = Cfg.Enum.EffectType.Period_CoolDown;
             ExtensionFloatParam_1 = -1f;
@@ -80,6 +87,11 @@ namespace Aquila.Editor
         /// id
         /// </summary>
         public int ID;
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        // public string Name;
         
         /// <summary>
         /// 描述

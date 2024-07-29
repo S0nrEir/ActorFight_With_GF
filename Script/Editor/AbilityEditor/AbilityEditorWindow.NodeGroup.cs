@@ -11,6 +11,15 @@ namespace Aquila.Editor
     public class AbilityEditorEffectGroupNode : Node
     {
         //-----------pub-----------
+
+        /// <summary>
+        /// 写入测试数据
+        /// </summary>
+        public void WriteTestData()
+        {
+            TriggerTime = 2.0f;
+        }
+        
         public void Repaint()
         {
             MarkDirtyRepaint();

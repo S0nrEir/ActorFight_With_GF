@@ -149,6 +149,7 @@ namespace Aquila.Editor
                     if (_foldOuts[i])
                     {
                         effect.ID = EditorGUILayout.IntField($"ID", effect.ID);
+                        effect.Name = EditorGUILayout.TextField("Name", effect.Name);
                         effect.Desc = EditorGUILayout.TextField($"Desc", effect.Desc);
                         effect.Type = (EffectType)EditorGUILayout.EnumPopup($"Type", effect.Type);
                         effect.ExtensionFloatParam_1 = EditorGUILayout.FloatField($"ExtensionFloatParam_1", effect.ExtensionFloatParam_1);

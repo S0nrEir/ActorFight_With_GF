@@ -46,6 +46,23 @@ namespace Aquila.Editor
         //     return false;
         // }
 
+        /// <summary>
+        /// 清掉所有的节点信息
+        /// </summary>
+        public static void ClearAllNodesData()
+        {
+            if (_abilityNodeToEffects is null)
+                return;
+            
+            var itor = _abilityNodeToEffects.GetEnumerator();
+            while (itor.MoveNext())
+            {
+                itor.Current.Value.Clear();
+            }
+            itor.Dispose();
+            _abilityNodeToEffects.Clear();
+        }
+
         public static void Clear()
         {
             if (_abilityNodeToEffects is null)

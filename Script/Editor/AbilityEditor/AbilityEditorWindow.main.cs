@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Aquila.Fight;
 using Bright.Serialization;
 using Cfg.Enum;
 using GameFramework;
@@ -43,7 +44,6 @@ namespace Aquila.Editor
                     DrawTimelineInfo();
                     EditorGUILayout.Space(2);
                     DrawButtons();
-                    EditorGUILayout.IntField(99);
                 }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.Space(10);
@@ -205,6 +205,13 @@ namespace Aquila.Editor
                             Debug.LogError($"<color=red>effect id:{effect.ID} is invalid,err msg:{effectValid.errMsg}</color>");
                             return;
                         }
+
+                        if (_effectTableData.DataMap.ContainsKey(effect.ID))
+                        {
+                            Debug.LogError($"<color=ffefdb>effect id exist</color>");
+                            return;
+                        }
+
                     }//end foreach
                     abilityGroupNodes.Add(tempNode);
                 }//end foreach
@@ -214,13 +221,25 @@ namespace Aquila.Editor
                     Debug.LogError($"<color=ffefdb>ability base id < 0</color>");
                     return;
                 }
+                
+                // if (_abilityTableData.Get(_abilityBaseID) != null)
+                // {
+                //     Debug.LogError($"<color=ffefdb>ability base id exist</color>");
+                //     return;
+                // }
 
-                if (_abilityTableData.Get(_abilityBaseID) != null)
+                if (_abilityTableData.DataMap.ContainsKey(_abilityBaseID))
                 {
                     Debug.LogError($"<color=ffefdb>ability base id exist</color>");
                     return;
                 }
 
+                if(_abilityTimelineTableData.DataMap.ContainsKey(_timelineID))
+                {
+                    Debug.LogError($"<color=ffefdb>timeline id exist</color>");
+                    return;
+                }
+                
                 if (string.IsNullOrEmpty(_abilityName))
                 {
                     Debug.LogError($"<color=ffefdb>ability name is null</color>");
@@ -288,6 +307,51 @@ namespace Aquila.Editor
                 EditorUtility.ClearProgressBar();
                 
             }//end export button
+
+            //写入测试数据
+            if (GUILayout.Button("WriteTestData"))
+            {
+                _abilityBaseID    = 1007;
+                _abilityDesc      = "测试Editor";
+                _costEffectID     = 1000;
+                _coolDownEffectID = 1001;
+                _timelineID       = 1003;
+                _interpret        = "测试Editor";
+
+                _timelineID        = 1003;
+                _timelineDesc      = "测试Editor";
+                _timelineAssetPath = "Assets/Res/Timeline/Common/Common_Ability_1002.playable";
+                _timelineDuration  = 2.5f;
+                
+                EffectDataMgr.ClearAllNodesData();
+                var nodeGroup = _abilityView.CreateOneInOneOut("TestNode",_idPool++,Port.Capacity.Single);
+                nodeGroup.WriteTestData();
+                EffectDataMgr.AddNodeGroup(nodeGroup);
+
+                var guid = new Guid().ToString();
+                AbilityEffect effect = new AbilityEffect(guid);
+                effect.ID = 1007;
+                // effect.Name = "测试Editor";
+                effect.Desc = "测试Editor";
+                effect.Type = EffectType.Instant_PhyDamage;
+                effect.ExtensionFloatParam_1 = -10;
+                effect.ExtensionFloatParam_2 = -1;
+                effect.ExtensionFloatParam_3 = -1;
+                effect.ExtensionFloatParam_4 = -1;
+                effect.ExtensionStringParm_1 = "-1";
+                effect.ExtensionStringParm_2 = "-1";
+                effect.ExtensionStringParm_3 = "-1";
+                effect.ExtensionStringParm_4 = "-1";
+                effect.ModifierType = NumricModifierType.Sum;
+                effect.EffectOnAwake = true;
+                effect.DurationPolicy = DurationPolicy.Instant;
+                effect.Period = 0;
+                effect.Duration = -1;
+                effect.Target = 1;
+                effect.EffectType = actor_attribute.Curr_HP;
+                EffectDataMgr.AddEffect(nodeGroup, effect);
+            }
+
             EditorGUILayout.EndHorizontal();
         }
 
@@ -346,6 +410,7 @@ namespace Aquila.Editor
                             {
                                 Column1 = string.Empty,
                                 Column2 = effect.ID.ToString(),
+                                // Column3 = effect.Name,
                                 Column3 = effect.Desc,
                                 Column4 = effect.Tag.ToString(),
                                 Column5 = effect.Type.ToString(),
@@ -442,7 +507,7 @@ namespace Aquila.Editor
 
         private void DrawAbilityBaseArea()
         {
-            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .75f));
+            EditorGUILayout.BeginVertical("box",GUILayout.Height(_windowMinSize.y * .2f));
             {
                 _abilityBaseID     = EditorGUILayout.IntField("base ID:"            , _abilityBaseID);
                 _abilityName       = EditorGUILayout.TextField("name:"              , _abilityName);
