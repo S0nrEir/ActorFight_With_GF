@@ -126,7 +126,6 @@ namespace Aquila.Editor
                 HeaderLabelStyle.normal.textColor = Color.green;
 
                 var tempArrayString = string.Empty;
-                string[] tempArray = null;
                 for (int i = 0; i < cnt; i++)
                 {
                     effect = _effects[i];

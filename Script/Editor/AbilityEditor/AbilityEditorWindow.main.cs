@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Aquila.Fight;
 using Bright.Serialization;
@@ -12,13 +13,14 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vector2 = UnityEngine.Vector2;
-using MiniExcelLibs;
+// using MiniExcelLibs;
+using OfficeOpenXml;
 
 namespace Aquila.Editor
 {
     public class AbilityEditorWindow : EditorWindow
     {
-        //-----------mono-----------
+        //-----------mono----------- 
         
         private void OnGUI()
         {
@@ -292,8 +294,12 @@ namespace Aquila.Editor
                     return;
                 }
 
-                //调试标记用：
-                _interpret += $"$#GBE";
+                if (string.IsNullOrEmpty(_interpret))
+                {
+                    Debug.LogError("<color=ffefdb>Interpret duration < 0</color>");
+                    return;
+                }
+
                 EditorUtility.DisplayProgressBar($"Write to Excel","Writing...",0.3f);
                 var writeSucc = WriteToExcel(abilityGroupNodes);
                 if (!writeSucc)
@@ -305,6 +311,7 @@ namespace Aquila.Editor
                 EditorUtility.DisplayProgressBar($"Re generating...","generating...",0.6f);
                 AssetDatabase.Refresh();
                 EditorUtility.ClearProgressBar();
+                Debug.Log($"<color=green>generate config data complete.</color>");
                 
             }//end export button
 
@@ -363,104 +370,128 @@ namespace Aquila.Editor
         {
             var path = string.Empty;
             nodes.Sort(new NodeGroupComparer());
-            
+            var nextEmptyRow = 0;
+            var column = 0;
             //write to AbilityBaseConfig
             try
             {
-                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","AbilityBase.xlsx");
-                MiniExcel.SaveAs 
-                    (
-                        path,
-                        new []
-                        {
-                            new
-                            {
-                                Column1  = string.Empty,
-                                Column2  = _abilityBaseID.ToString(),
-                                Column3  = _abilityName,
-                                Column4  = _abilityDesc,
-                                Column5  = _costEffectID.ToString(),
-                                Column6  = _coolDownEffectID.ToString(),
-                                Column7  = string.Empty,//Effects
-                                Column8  = string.Empty,//TargetType
-                                Column9  = _timelineID.ToString(),
-                                Column10 = AbilityEffectsToString(nodes),
-                                Column11 = _interpret,
-                            },
-                        }
-                    );//end SaveAs()
-            }
-            catch (Exception e)
-            {
-                throw new GameFrameworkException($"faild to write to AbilityBaseConfig,err{e.Message}");
-            }
-
-            //write to EffectConfig
-            try
-            {
-                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","Effect.xlsx");
-                foreach (var node in nodes)
+                path = Path.Combine(Application.dataPath, "..", @"DataTable/designer_configs/Datas","AbilityBase.xlsx");
+                if (!File.Exists(path))
                 {
-                    var effects = EffectDataMgr.GetEffects(node);
-                    foreach (var effect in effects)
-                    {
-                        MiniExcel.SaveAs
-                        (
-                            path,
-                            new
-                            {
-                                Column1 = string.Empty,
-                                Column2 = effect.ID.ToString(),
-                                // Column3 = effect.Name,
-                                Column3 = effect.Desc,
-                                Column4 = effect.Tag.ToString(),
-                                Column5 = effect.Type.ToString(),
-                                Column6 = effect.ExtensionFloatParam_1.ToString(),
-                                Column7 = effect.ExtensionFloatParam_2.ToString(),
-                                Column8 = effect.ExtensionFloatParam_3.ToString(),
-                                Column9 = effect.ExtensionFloatParam_4.ToString(),
-                                Column10 = effect.ExtensionStringParm_1,
-                                Column11 = effect.ExtensionStringParm_2,
-                                Column12 = effect.ExtensionStringParm_3,
-                                Column13 = effect.ExtensionStringParm_4,
-                                Column14 = effect.ModifierType.ToString(),
-                                Column15 = effect.EffectOnAwake.ToString().ToUpper(),
-                                Column16 = effect.DurationPolicy.ToString(),
-                                Column17 = effect.Duration.ToString(),
-                                Column18 = effect.Target.ToString(),
-                                Column19 = effect.EffectType.ToString(),
-                                Column20 = effect.DeriveEffects != null && effect.DeriveEffects.Length != 0 ? string.Join(",",effect.DeriveEffects) : string.Empty,
-                                Column21 = effect.AwakeEffects != null && effect.AwakeEffects.Length != 0 ? string.Join(",",effect.AwakeEffects) : string.Empty,
-                            }
-                        );//end SaveAs()
-                    }
+                    Debug.LogError($"File not exist,path:{path}");
+                    return false;
+                }
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (ExcelPackage package = new ExcelPackage(new FileInfo(path)))
+                {
+                    ExcelWorksheet sheet = package.Workbook.Worksheets[0];
+                    nextEmptyRow = sheet.Dimension.Rows + 1;
+                    var cells = sheet.Cells;
+                    column = 1;
+                    cells[nextEmptyRow,column++].Value = string.Empty;//注释
+                    cells[nextEmptyRow,column++].Value = _abilityBaseID.ToString();//注释
+                    cells[nextEmptyRow,column++].Value = _abilityName;
+                    cells[nextEmptyRow,column++].Value = _abilityDesc + "#GBAE";
+                    cells[nextEmptyRow,column++].Value = _costEffectID.ToString();
+                    cells[nextEmptyRow,column++].Value = _coolDownEffectID.ToString();
+                    cells[nextEmptyRow,column++].Value = string.Empty;//Effects
+                    cells[nextEmptyRow,column++].Value = string.Empty;//TargetType
+                    cells[nextEmptyRow,column++].Value = _timelineID.ToString();
+                    cells[nextEmptyRow,column++].Value = AbilityEffectsToString(nodes);
+                    cells[nextEmptyRow,column].Value = _interpret;
+                    package.Save();
                 }
             }
             catch (Exception e)
             {
-                throw new GameFrameworkException($"faild to write to EffectConfig,err{e.Message}");
+                Debug.LogError($"<color=ffefdb>faild to write to AbilityBaseConfig,err:{e.Message}</color>");
+                return false;
+            }
+            //write to EffectConfig
+            try
+            {
+                path = Path.Combine(Application.dataPath, "..", @"DataTable/designer_configs/Datas","Effect.xlsx");
+                if (!File.Exists(path))
+                {
+                    Debug.LogError($"File not exist,path:{path}");
+                    return false;
+                }
+
+                using (var pkg = new ExcelPackage(new FileInfo(path)))
+                {
+                    foreach (var node in nodes)
+                    {
+                        var effects = EffectDataMgr.GetEffects(node);
+                        foreach (var effect in effects)
+                        {
+                            ExcelWorksheet sheet = pkg.Workbook.Worksheets[0];
+                            nextEmptyRow = sheet.Dimension.Rows + 1;
+                            var cells = sheet.Cells;
+                            column = 1;
+                            cells[nextEmptyRow,column++].Value = string.Empty;
+                            cells[nextEmptyRow,column++].Value = effect.ID.ToString();
+                            cells[nextEmptyRow,column++].Value = effect.Desc + "$GBAE";
+                            cells[nextEmptyRow,column++].Value = effect.Tag.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.Type.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_1.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_2.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_3.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_4.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionStringParm_1;
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionStringParm_2;
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionStringParm_3;
+                            cells[nextEmptyRow, column++].Value = effect.ExtensionStringParm_4;
+                            cells[nextEmptyRow, column++].Value = effect.ModifierType.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.EffectOnAwake.ToString().ToUpper();
+                            cells[nextEmptyRow, column++].Value = effect.DurationPolicy.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.Period.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.Duration.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.Target.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.EffectType.ToString();
+                            cells[nextEmptyRow, column++].Value = effect.DeriveEffects != null && effect.DeriveEffects.Length != 0 ? string.Join(",",effect.DeriveEffects) : string.Empty;
+                            cells[nextEmptyRow, column++].Value = effect.AwakeEffects != null && effect.AwakeEffects.Length != 0 ? string.Join(",",effect.AwakeEffects) : string.Empty;
+                        }
+                    }
+                    pkg.Save();
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"<color=ffefdb>faild to write to EffectConfig,err:{e.Message}</color>");
+                return false;
             }
 
             //write to AbilityTimelineConfig
             try
             {
-                path = Path.Combine(Application.dataPath, "..,", @"/DataTable/designer_configs/Datas","AbilityTimeline.xlsx");
-                MiniExcel.SaveAs
-                    (
-                        path,
-                        new
-                        {
-                            Column1 = string.Empty,
-                            Column2 = _timelineID.ToString(),
-                            Column3 = _timelineDesc ,
-                            Column4 = _timelineDuration.ToString(),
-                            Column5 = 0f.ToString(),
-                        }
-                    );
+                path = Path.Combine(Application.dataPath, "..", @"DataTable/designer_configs/Datas","AbilityTimeline.xlsx");
+                if (!File.Exists(path))
+                {
+                    Debug.LogError($"File not exist,path:{path}");
+                    return false;
+                }
+
+                using (var pkg = new ExcelPackage(new FileInfo(path)))
+                {
+                    var sheet = pkg.Workbook.Worksheets[0];
+                    nextEmptyRow = sheet.Dimension.Rows + 1;
+                    var cells = sheet.Cells;
+                    column = 1;
+                    cells[nextEmptyRow, column++].Value = string.Empty;
+                    cells[nextEmptyRow, column++].Value = _timelineID.ToString();
+                    cells[nextEmptyRow, column++].Value = _timelineDesc + "#GBAE";
+                    cells[nextEmptyRow, column++].Value = _timelineDuration.ToString();
+                    cells[nextEmptyRow, column].Value   = 0f.ToString();
+                    cells[nextEmptyRow, column].Value   = string.Empty;
+                    pkg.Save();
+                }
             }
             catch (Exception e)
             {
-                throw new GameFrameworkException($"faild to write to AbilityTimelineConfig,err{e.Message}");
+                Debug.LogError($"<color=ffefdb>faild to write to AbilityTimelineConfig,err:{e.Message}</color>");
+                return false;
             }
             return true;
         }
@@ -570,21 +601,21 @@ namespace Aquila.Editor
         }
 
         //-----------FIELDS-----------
-        private int _abilityBaseID     = -1;
-        private string _abilityName    = string.Empty;
-        private string _abilityDesc    = string.Empty;
-        private int _costEffectID      = -1;
-        private int _coolDownEffectID  = -1;
+        private int _abilityBaseID                   = -1;
+        private string _abilityName                  = string.Empty;
+        private string _abilityDesc                  = string.Empty;
+        private int _costEffectID                    = -1;
+        private int _coolDownEffectID                = -1;
         // private string _effectsIDArray = string.Empty;
-        private AbilityTargetType _abilityTargetType = AbilityTargetType.Neutral;
-        private int _timelineID        = -1;
-        private string _interpret      = string.Empty;
-        private string _timelineDesc = string.Empty;
-        private string _timelineAssetPath = string.Empty;
-        private float _timelineDuration = 0f;
+        // private AbilityTargetType _abilityTargetType = AbilityTargetType.Neutral;
+        private int _timelineID                      = -1;
+        private string _interpret                    = string.Empty;
+        private string _timelineDesc                 = string.Empty;
+        private string _timelineAssetPath            = string.Empty;
+        private float _timelineDuration              = 0f;
         
-        private EditorWindow _thisWindow = null;
-        private static Vector2 _windowMinSize = new Vector2(1200, 700);
+        private EditorWindow _thisWindow             = null;
+        private static Vector2 _windowMinSize        = new Vector2(1200          , 700);
 
         /// <summary>
         /// effect窗体的引用
@@ -634,6 +665,12 @@ namespace Aquila.Editor
         {
             AbilityEditorWindow wnd = GetWindow<AbilityEditorWindow>();
             wnd.titleContent = new GUIContent("AbilityEditorWindow");
+        }
+        
+        [MenuItem("Aquila/ClearProgressBar")]
+        public static void ClearProgressBar()
+        {
+            EditorUtility.ClearProgressBar();
         }
     }   
 }

@@ -54,7 +54,7 @@ namespace Aquila.Editor
         /// <summary>
         /// 获取单个节点
         /// </summary>
-        public static AbilityEditorEffectGroupNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity,int id)
+        public static AbilityEditorEffectGroupNode Gen(string title,Port.Capacity inputCapacity,Port.Capacity outputCapacity)
         {
             //两个端口，一个输入一个输出
             var node = new AbilityEditorEffectGroupNode();
@@ -68,11 +68,6 @@ namespace Aquila.Editor
             //port = node.InstantiatePort(Orientation.Vertical, Direction.Input, inputCapacity, null);
             port = AbilityViewPort.Create<AbilityViewEdge>(Orientation.Horizontal,Direction.Input, inputCapacity,typeof(Port));
             node.inputContainer.Add(port);
-            
-            node.SetPosition(new Rect(100,100,100,100));
-            node.RefreshPorts();
-            node.SetBaseInfo(-1f ,id);
-            node.RefreshExpandedState();
             return node;
         }
 
@@ -93,9 +88,14 @@ namespace Aquila.Editor
             button.text = "AddPort";
             button.clicked += OnAddPortClick;
             contentContainer.Add(button);
+
+            _triggerTimeLabel = new Label($"TriggerTime:{TriggerTime}");
+            // contentContainer.Add(_triggerTimeLabel);
+            contentContainer.Add(_triggerTimeLabel);
             
-            contentContainer.Add(new Label($"TriggerTime:{TriggerTime}"));
-            contentContainer.Add(new Label($"ID:{ID}"));
+            _idLabel = new Label($"ID:{ID}");
+            // contentContainer.Add(new Label($"ID:{ID}"));
+            contentContainer.Add(_idLabel);
         }
 
         private void OnAddPortClick()
@@ -104,21 +104,41 @@ namespace Aquila.Editor
         }
 
         //-----------fields-----------
-
         /// <summary>
         /// 触发时间
         /// </summary>
         public float TriggerTime
         {
-            get;
-            private set;
+            get
+            {
+                return _triggerTime;
+            }
+            set
+            {
+                _triggerTime = value;
+                _triggerTimeLabel.text = $"TriggerTime:{_triggerTime}";
+            }
         }
 
+        private float _triggerTime = 0f;
+        
         public int ID
         {
-            get;
-            private set;
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+                _idLabel.text = $"ID:{_id}";
+            }
         }
+
+        private int _id;
+        
+        private Label _triggerTimeLabel = null;
+        private Label _idLabel = null;
     }
     
     /// <summary>

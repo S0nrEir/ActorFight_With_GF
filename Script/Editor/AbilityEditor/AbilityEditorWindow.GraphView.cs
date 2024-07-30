@@ -15,8 +15,6 @@ namespace Aquila.Editor
         public bool Save()
         {
             AbilityEditorEffectGroupNode node;
-            AbilityViewPort port;
-            AbilityEditorEffectGroupNode startNode = null;
             foreach (var tempNode in nodes)
             {
                 node = tempNode as AbilityEditorEffectGroupNode;
@@ -80,9 +78,13 @@ namespace Aquila.Editor
         /// </summary>
         public AbilityEditorEffectGroupNode CreateOneInOneOut(string title,int groupID,Port.Capacity capacity = Port.Capacity.Single)
         {
-            var node = AbilityEditorEffectGroupNode.Gen(title,capacity,capacity,groupID);
+            var node = AbilityEditorEffectGroupNode.Gen(title,capacity,capacity);
             node.AddManipulator(new NodeClickManipulator(OnNodeClick));
             node.OnCreate();
+            node.SetPosition(new Rect(100,100,100,100));
+            node.SetBaseInfo(-1f ,groupID);
+            node.RefreshPorts();
+            node.RefreshExpandedState();
             //_nodeList.AddLast(node);
             AddElement(node);
             return node;
