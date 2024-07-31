@@ -210,14 +210,14 @@ namespace Aquila.Editor
 
                         if (_effectTableData.DataMap.ContainsKey(effect.ID))
                         {
-                            Debug.LogError($"<color=ffefdb>effect id exist</color>");
+                            Debug.LogError($"<color=ffefdb>effect id exist,id:{effect.ID}</color>");
                             return;
                         }
 
                     }//end foreach
                     abilityGroupNodes.Add(tempNode);
                 }//end foreach
-
+                
                 if (_abilityBaseID < 0)
                 {
                     Debug.LogError($"<color=ffefdb>ability base id < 0</color>");
@@ -232,13 +232,13 @@ namespace Aquila.Editor
 
                 if (_abilityTableData.DataMap.ContainsKey(_abilityBaseID))
                 {
-                    Debug.LogError($"<color=ffefdb>ability base id exist</color>");
+                    Debug.LogError($"<color=ffefdb>ability base id exist,id:{_abilityBaseID}</color>");
                     return;
                 }
 
                 if(_abilityTimelineTableData.DataMap.ContainsKey(_timelineID))
                 {
-                    Debug.LogError($"<color=ffefdb>timeline id exist</color>");
+                    Debug.LogError($"<color=ffefdb>timeline id exist,id:{_timelineID}</color>");
                     return;
                 }
                 
