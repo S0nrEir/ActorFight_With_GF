@@ -51,35 +51,6 @@ namespace Aquila.Editor
                 EditorGUILayout.Space(10);
             }
             EditorGUILayout.EndHorizontal();
-            
-            // Debug.Log("OnGUI calling...");
-            // EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50), GUILayout.Width(200)});
-            // EditorGUILayout.EndVertical();
-            // EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
-            // {
-            //     //graph view area
-            //     EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Width(_windowMinSize.x * 0.7f)});
-            //     EditorGUILayout.LabelField("Impact Nodes");
-            //     //draw graph view area
-            //     DrawGraphViewArea();
-            //     EditorGUILayout.EndVertical();
-            //     EditorGUILayout.Space(1);
-            //
-            //     //draw ability & buttons area
-            //     EditorGUILayout.BeginVertical();
-            //     {
-            //         EditorGUILayout.LabelField("Ability Base Info",EditorStyles.boldLabel);
-            //         DrawAbilityBaseArea();
-            //         EditorGUILayout.Space(2);
-            //         DrawTimelineInfo();
-            //         EditorGUILayout.Space(2);
-            //         DrawButtons();
-            //         EditorGUILayout.IntField(99);
-            //     }
-            //     EditorGUILayout.EndVertical();
-            //     EditorGUILayout.Space(10);
-            // }
-            // EditorGUILayout.EndHorizontal();
         }
 
         private void OnEnable()
@@ -87,9 +58,6 @@ namespace Aquila.Editor
             _thisWindow = GetWindow<AbilityEditorWindow>();
             _abilityView = new AbilityView(this);
             _thisWindow.minSize = _windowMinSize;
-            // _abilityView.style.width = _thisWindow.maxSize.x * 0.7f;
-            // _abilityView.style.flexGrow = 0;
-            // _abilityView.style.width = this.position.width * 0.7f;
             _abilityView.StretchToParentSize();
             _abilityView.style.marginRight = _windowMinSize.x * 0.3f;
             rootVisualElement.Add(_abilityView);
@@ -104,11 +72,6 @@ namespace Aquila.Editor
             button.text = "RemoveNode";
             button.clicked += OnClickToolBarRemove;
             _toolBar.Add(button);
-
-            // button = new Button();
-            // button.text = "Save";
-            // button.clicked += OnClickToolBarSave; 
-            // _toolBar.Add(button);
             
             rootVisualElement.Add(_toolBar);
             
@@ -229,7 +192,6 @@ namespace Aquila.Editor
                 //     Debug.LogError($"<color=ffefdb>ability base id exist</color>");
                 //     return;
                 // }
-
                 if (_abilityTableData.DataMap.ContainsKey(_abilityBaseID))
                 {
                     Debug.LogError($"<color=ffefdb>ability base id exist,id:{_abilityBaseID}</color>");
@@ -373,6 +335,7 @@ namespace Aquila.Editor
             var nextEmptyRow = 0;
             var column = 0;
             //write to AbilityBaseConfig
+            ExcelWorksheet sheet = null;
             try
             {
                 path = Path.Combine(Application.dataPath, "..", @"DataTable/designer_configs/Datas","AbilityBase.xlsx");
@@ -385,7 +348,7 @@ namespace Aquila.Editor
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (ExcelPackage package = new ExcelPackage(new FileInfo(path)))
                 {
-                    ExcelWorksheet sheet = package.Workbook.Worksheets[0];
+                    sheet = package.Workbook.Worksheets[0];
                     nextEmptyRow = sheet.Dimension.Rows + 1;
                     var cells = sheet.Cells;
                     column = 1;
@@ -420,12 +383,13 @@ namespace Aquila.Editor
 
                 using (var pkg = new ExcelPackage(new FileInfo(path)))
                 {
+                    var effects = new List<AbilityEffect>();
                     foreach (var node in nodes)
                     {
-                        var effects = EffectDataMgr.GetEffects(node);
+                        effects = EffectDataMgr.GetEffects(node);
                         foreach (var effect in effects)
                         {
-                            ExcelWorksheet sheet = pkg.Workbook.Worksheets[0];
+                            sheet = pkg.Workbook.Worksheets[0];
                             nextEmptyRow = sheet.Dimension.Rows + 1;
                             var cells = sheet.Cells;
                             column = 1;
@@ -475,7 +439,7 @@ namespace Aquila.Editor
 
                 using (var pkg = new ExcelPackage(new FileInfo(path)))
                 {
-                    var sheet = pkg.Workbook.Worksheets[0];
+                    sheet = pkg.Workbook.Worksheets[0];
                     nextEmptyRow = sheet.Dimension.Rows + 1;
                     var cells = sheet.Cells;
                     column = 1;
@@ -546,8 +510,6 @@ namespace Aquila.Editor
                 _abilityDesc       = EditorGUILayout.TextField("description:"       , _abilityDesc);
                 _costEffectID      = EditorGUILayout.IntField("cost effect ID:"     , _costEffectID);
                 _coolDownEffectID  = EditorGUILayout.IntField("cool down effect ID:", _coolDownEffectID);
-                // _effectsIDArray    = EditorGUILayout.TextField("effects ID array:"  , _effectsIDArray);mm
-                // _abilityTargetType = (AbilityTargetType)EditorGUILayout.EnumPopup("target type:"        , _abilityTargetType);
                 _interpret         = EditorGUILayout.TextField("interpret:"         , _interpret);
             }
             EditorGUILayout.EndVertical();
@@ -606,8 +568,6 @@ namespace Aquila.Editor
         private string _abilityDesc                  = string.Empty;
         private int _costEffectID                    = -1;
         private int _coolDownEffectID                = -1;
-        // private string _effectsIDArray = string.Empty;
-        // private AbilityTargetType _abilityTargetType = AbilityTargetType.Neutral;
         private int _timelineID                      = -1;
         private string _interpret                    = string.Empty;
         private string _timelineDesc                 = string.Empty;
@@ -617,7 +577,7 @@ namespace Aquila.Editor
         private EditorWindow _thisWindow             = null;
         private static Vector2 _windowMinSize        = new Vector2(1200          , 700);
 
-        /// <summary>
+        /// <summary>x
         /// effect窗体的引用
         /// </summary>
         private AbilityEffectGroupEditorWidnow _effectWindow = null;
@@ -639,24 +599,13 @@ namespace Aquila.Editor
         private int _idPool = 0;
 
         /// <summary>
-        /// 写入的列前缀
-        /// </summary>
-        private const string ColumnPrefix = "Column";
-
-        /// <summary>
         /// NodeGroup排序器，按照TriggerTime排序
         /// </summary>
         private class NodeGroupComparer : IComparer<AbilityEditorEffectGroupNode>
         {
             public int Compare(AbilityEditorEffectGroupNode x, AbilityEditorEffectGroupNode y)
             {
-                if (x.TriggerTime < y.TriggerTime)
-                    return -1;
-
-                if (x.TriggerTime > y.TriggerTime)
-                    return 1;
-
-                return 0;
+                return x.TriggerTime == y.TriggerTime ? 0 : x.TriggerTime < y.TriggerTime ? -1 : 1;
             }
         }
 

@@ -44,7 +44,7 @@ namespace Aquila.Editor
         //         }
         //     }
         //     return false;
-        // }
+        // }2q13W222222222S
 
         /// <summary>
         /// 清掉所有的节点信息
@@ -176,7 +176,7 @@ namespace Aquila.Editor
         static EffectDataMgr()
         {
             _abilityNodeToEffects = new Dictionary<int, List<AbilityEffect>>();
-        }
+        } 
 
         public static Dictionary<int, List<AbilityEffect>> _abilityNodeToEffects = null;
     }
