@@ -9,21 +9,25 @@
 namespace Cfg.Enum
 {
     /// <summary>
-    /// Actor持有的所有Tag类型
+    /// Actor技能类子tag
     /// </summary>
-    public enum ActorTagType
+    public enum ActorTagSubType_Status
     {
         /// <summary>
-        /// 技能类和施法状态类Tag（比如施法中，流血，燃烧，无敌）
+        /// 无
         /// </summary>
-        Ability = 0,
+        None = -1,
         /// <summary>
-        /// Actor本身的状态
+        /// 战斗中
         /// </summary>
-        Status = 1,
+        Fighting = 0,
         /// <summary>
-        /// 最大值
+        /// 已死亡
         /// </summary>
-        Max = 2,
+        Dead = 1,
+        /// <summary>
+        /// 传送中
+        /// </summary>
+        Teleporting = 2,
     }
 }

@@ -13,14 +13,26 @@ namespace Aquila.Fight
         {
             base.OnEffectAwake( castor, target );
             //添加tag
-            target.Actor.AddTag( (ushort) (ActorTagType) Meta.ExtensionParam.IntParam_1 );
+            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
+            var tagToAdd = Meta.ExtensionParam.IntParam_2;
+            target.Actor.AddTag( mainType,(ushort)tagToAdd ,
+                (currTag, tagToRemove, isAdd) =>
+                {
+                    
+                });
         }
 
         public override void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             base.OnEffectEnd( castor, target );
             //移除tag
-            target.Actor.RemoveTag( ( ushort ) ( ActorTagType ) Meta.ExtensionParam.IntParam_1 );
+            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
+            var tagToRemove = Meta.ExtensionParam.IntParam_2;
+            target.Actor.RemoveTag( mainType,tagToRemove ,
+                (currTag, tagToRemove, isAdd) =>
+                {
+                    
+                });
         }
     }
 

@@ -432,7 +432,7 @@ namespace Aquila.Editor
                             cells[nextEmptyRow,column++].Value = string.Empty;
                             cells[nextEmptyRow,column++].Value = effect.ID.ToString();
                             cells[nextEmptyRow,column++].Value = effect.Desc + "$GBAE";
-                            cells[nextEmptyRow,column++].Value = effect.Tag.ToString();
+                            // cells[nextEmptyRow,column++].Value = effect.Tag.ToString();
                             cells[nextEmptyRow, column++].Value = effect.Type.ToString();
                             cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_1.ToString();
                             cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_2.ToString();
