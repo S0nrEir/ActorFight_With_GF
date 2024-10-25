@@ -6,13 +6,14 @@ using Aquila.Toolkit;
 using Cfg.Enum;
 using System;
 using System.Collections.Generic;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.Actor
-{
     /// <summary>
+{
     /// Actor基类
     /// </summary>
     public abstract partial class Actor_Base : EntityLogic
@@ -22,25 +23,37 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void RemoveTag( ushort tagToRemove )
+        public void RemoveTag( ActorTagType mainType, int tagToRemove ,Action<UInt32, int, bool> callBack = null)
         {
-            _tagContainer.Remove( tagToRemove );
+            var intType = (int)mainType;
+            if (intType >= (int)ActorTagType.Max || intType < 0)
+                throw new GameFrameworkException($"Actor_Base.RemoveTag()--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
+            
+            _tagContainer[intType].Remove(tagToRemove,callBack);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void AddTag( ushort tagToAdd )
+        public void AddTag( ActorTagType mainType, ushort tagToAdd ,Action<UInt32, int, bool> callBack = null)
         {
-            _tagContainer.Add( tagToAdd );
+            var intType = (int)mainType;
+            if (intType >= (int)ActorTagType.Max || intType < 0)
+                throw new GameFrameworkException($"Actor_Base.AddTag()--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
+            
+            _tagContainer[intType].Add( tagToAdd ,callBack);
         }
 
         /// <summary>
         /// 获取actor身上的一个tag
         /// </summary>
-        public bool ContainsTag(ushort tagToGet)
+        public bool HasTag(ActorTagType mainType,ushort tagToQuery)
         {
-            return _tagContainer.Contains(tagToGet);
+            var intType = (int)mainType;
+            if (intType >= (int)ActorTagType.Max || intType < 0)
+                throw new GameFrameworkException($"Actor_Base.HasTag--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
+            
+            return _tagContainer[intType].HasFlag(tagToQuery);
         }
 
         /// <summary>
@@ -184,7 +197,13 @@ namespace Aquila.Fight.Actor
         {
             SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
 
-            _tagContainer.Reset();
+            if (_tagContainer != null)
+            {
+                foreach (var container in _tagContainer)
+                    container.Reset();
+            }
+
+            
             _eventAddon.UnRegisterAll();
 
             ExtensionRecycle();
@@ -213,8 +232,10 @@ namespace Aquila.Fight.Actor
         {
             base.OnInit( userData );
 
-            if ( _tagContainer is null )
-                _tagContainer = new TagContainer( OnTagChange );
+            // if ( _tagContainer is null )
+            //     _tagContainer = new TagContainer( OnTagChange );
+            
+            _tagContainer = new TagContainer[(int)ActorTagType.Max];
         }
 
         /// <summary>
@@ -334,7 +355,8 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// tag管理器
         /// </summary>
-        protected TagContainer _tagContainer = null;
+        // protected TagContainer _tagContainer = null;
+        protected TagContainer[] _tagContainer = null;
 
         #endregion
     }
