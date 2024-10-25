@@ -39,11 +39,12 @@ namespace Aquila.Editor
             //     builder.Append($"effect-{index} tag is none\n");
             // }
 
-            if (ModifierType == NumricModifierType.None)
-            {
-                effectIsValid = false;
-                builder.Append($" modifier type is none\n");
-            }
+            //运行数值修改器为none
+            // if (ModifierType == NumricModifierType.None)
+            // {
+            //     effectIsValid = false;
+            //     builder.Append($" modifier type is none\n");
+            // }
 
             if (EffectType == actor_attribute.Invalid)
             {
