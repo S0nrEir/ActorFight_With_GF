@@ -225,6 +225,26 @@ namespace Aquila.Toolkit
             return true;
         }
 
+        /// <summary>
+        /// 返回32位uint数据中是否包含指定位数
+        /// </summary>
+        public static bool GetBitValue_U32( UInt32 value, int index )
+        {
+            if ( index > 63 )
+                throw new GameFrameworkException( "index > 63!" );
+
+            var val = 1 << index;
+            return ( value & val ) == val;
+        }
+
+        /// <summary>
+        /// 设定32位uint数据中某一位的值
+        /// </summary>
+        public static UInt32 SetBitValue_U32( UInt32 value, int index, bool bitValue )
+        {
+            UInt32 val =(UInt32) 1 << index;
+            return  bitValue ? ( value | val ) : ( value & ~val ) ;
+        }
 
         /// <summary>
         /// 返回64位int数据中是否包含指定位数
@@ -243,9 +263,6 @@ namespace Aquila.Toolkit
         /// </summary>
         public static Int64 SetBitValue_i64( Int64 value, int index, bool bit_value )
         {
-            //if ( index > 63 )
-            //    throw new GameFrameworkException( "index > 63!" );
-
             var val = 1 << index;
             return ( bit_value ? ( value | val ) : ( value & ~val ) );
         }

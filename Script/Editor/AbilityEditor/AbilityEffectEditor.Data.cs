@@ -39,11 +39,12 @@ namespace Aquila.Editor
             //     builder.Append($"effect-{index} tag is none\n");
             // }
 
-            if (ModifierType == NumricModifierType.None)
-            {
-                effectIsValid = false;
-                builder.Append($" modifier type is none\n");
-            }
+            //运行数值修改器为none
+            // if (ModifierType == NumricModifierType.None)
+            // {
+            //     effectIsValid = false;
+            //     builder.Append($" modifier type is none\n");
+            // }
 
             if (EffectType == actor_attribute.Invalid)
             {
@@ -60,7 +61,7 @@ namespace Aquila.Editor
             ID                    = -1;
             Desc                  = string.Empty;
             // Name                  = string.Empty;
-            Tag                   = ActorTagType.None;
+            // Tag                   = ActorTagType.None;
             Type                  = Cfg.Enum.EffectType.Period_CoolDown;
             ExtensionFloatParam_1 = -1f;
             ExtensionFloatParam_2 = -1f;
@@ -101,7 +102,7 @@ namespace Aquila.Editor
         /// <summary>
         /// effect tag，暂时没用
         /// </summary>
-        public ActorTagType Tag;
+        // public ActorTagType Tag;
 
         /// <summary>
         /// effect的类型
