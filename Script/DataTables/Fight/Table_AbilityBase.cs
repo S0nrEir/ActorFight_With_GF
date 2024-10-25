@@ -57,7 +57,7 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
     /// </summary>
     public int Timeline { get; private set; }
     /// <summary>
-    /// 触发器节点集合
+    /// 触发器节点集合（数组的每一项元素是AbilityTriggers，每一项用【|】分割，AbilityTriggers的每一项用【,】分割）
     /// </summary>
     public Bean.AbilityTriggers[] Triggers { get; private set; }
 
