@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Codice.Client.Common.TreeGrouper;
 using UnityEngine;
 
 namespace Aquila.Editor
@@ -99,7 +100,7 @@ namespace Aquila.Editor
         public static bool RemoveNodeGroup(AbilityEditorEffectGroupNode group)
         {
             var hashCode = group.GetHashCode();
-            if (!_abilityNodeToEffects.ContainsKey(hashCode.GetHashCode()))
+            if (!_abilityNodeToEffects.ContainsKey(hashCode))
             {
                 Debug.LogError($"EffectDataMgr.cs: RemoveNodeGroup: nodeHash:{hashCode} not found.");
                 return false;
@@ -109,7 +110,24 @@ namespace Aquila.Editor
             _abilityNodeToEffects.Remove(hashCode);
             return true;
         }
-        
+
+        // public static bool SetNodeGroup(AbilityEditorEffectGroupNode group)
+        // {
+        //     var hashCode = group.GetHashCode();
+        //     if (_abilityNodeToEffects is null)
+        //         _abilityNodeToEffects = new Dictionary<int, List<AbilityEffect>>();
+        //
+        //     if (!_abilityNodeToEffects.ContainsKey(hashCode))
+        //     {
+        //         Debug.LogError($"EffectDataMgr.cs: SetNodeGroup: nodeHash:{hashCode} not exists.");
+        //         return false;
+        //     }
+        //     
+        //     
+        //     _abilityNodeToEffects[hashCode] = group;
+        //     return true;
+        // }
+
         /// <summary>
         /// 添加一个nodeGroup
         /// </summary>
@@ -119,7 +137,7 @@ namespace Aquila.Editor
             if (_abilityNodeToEffects is null)
                 _abilityNodeToEffects = new Dictionary<int, List<AbilityEffect>>();
             
-            if (_abilityNodeToEffects.ContainsKey(hashCode.GetHashCode()))
+            if (_abilityNodeToEffects.ContainsKey(hashCode))
             {
                 Debug.LogError($"EffectDataMgr.cs: AddNodeGroup: nodeHash:{hashCode} already exists.");
                 return false;

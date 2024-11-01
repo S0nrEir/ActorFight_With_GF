@@ -258,7 +258,7 @@ namespace Aquila.Editor
 
                 if (string.IsNullOrEmpty(_interpret))
                 {
-                    Debug.LogError("<color=ffefdb>Interpret duration < 0</color>");
+                    Debug.LogError("<color=ffefdb>Interpret is null</color>");
                     return;
                 }
 
@@ -396,7 +396,9 @@ namespace Aquila.Editor
                             cells[nextEmptyRow,column++].Value = string.Empty;
                             cells[nextEmptyRow,column++].Value = effect.ID.ToString();
                             cells[nextEmptyRow,column++].Value = effect.Desc + "$GBAE";
-                            cells[nextEmptyRow,column++].Value = effect.Tag.ToString();
+                            //跳过注释行
+                            column++;
+                            // cells[nextEmptyRow,column++].Value = effect.Tag.ToString();
                             cells[nextEmptyRow, column++].Value = effect.Type.ToString();
                             cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_1.ToString();
                             cells[nextEmptyRow, column++].Value = effect.ExtensionFloatParam_2.ToString();
@@ -442,12 +444,14 @@ namespace Aquila.Editor
                     sheet = pkg.Workbook.Worksheets[0];
                     nextEmptyRow = sheet.Dimension.Rows + 1;
                     var cells = sheet.Cells;
-                    column = 1;
-                    cells[nextEmptyRow, column++].Value = string.Empty;
+                    column = 2;
+                    // cells[nextEmptyRow, column++].Value = string.Empty;
                     cells[nextEmptyRow, column++].Value = _timelineID.ToString();
                     cells[nextEmptyRow, column++].Value = _timelineDesc + "#GBAE";
+                    cells[nextEmptyRow, column++].Value = _timelineAssetPath;
                     cells[nextEmptyRow, column++].Value = _timelineDuration.ToString();
-                    cells[nextEmptyRow, column].Value   = 0f.ToString();
+                    // cells[nextEmptyRow, column].Value   = 0f.ToString();
+                    //注释行为空
                     cells[nextEmptyRow, column].Value   = string.Empty;
                     pkg.Save();
                 }

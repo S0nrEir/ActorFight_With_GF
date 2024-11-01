@@ -40,17 +40,17 @@ namespace Aquila.Fight
         /// <summary>
         /// 移除tag
         /// </summary>
-        public void RemoveTag( ushort bitToRemove )
+        public void RemoveTag( ushort bitToRemove ,Action<UInt32, int , bool> callBack = null)
         {
-            _tagContainer.Remove( bitToRemove );
+            _tagContainer.Remove( bitToRemove ,callBack);
         }
 
         /// <summary>
         /// 添加tag
         /// </summary>
-        public void AddTag( ushort bitToAdd )
+        public void AddTag( ushort bitToAdd,Action<UInt32, int , bool> callBack = null)
         {
-            _tagContainer.Add( bitToAdd );
+            _tagContainer.Add( bitToAdd,callBack);
         }
 
         /// <summary>
@@ -58,7 +58,8 @@ namespace Aquila.Fight
         /// </summary>
         public bool ContainsTag( ushort bitTag )
         {
-            return _tagContainer.Contains( bitTag );
+            // return _tagContainer.Contains( bitTag );
+            return _tagContainer.HasFlag(bitTag);
         }
         
         /// <summary>
@@ -171,7 +172,8 @@ namespace Aquila.Fight
             //处理CD和Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
-            _tagContainer = null;
+            // _tagContainer = null;
+            _tagContainer.Reset();
             _cdEffect     = null;
             _costEffect   = null;
             _owner        = null;
@@ -226,8 +228,9 @@ namespace Aquila.Fight
         /// <summary>
         /// 该技能持有的tag
         /// </summary>
-        private TagContainer _tagContainer = null;
-
+        // private TagContainer _tagContainer = null;
+        private TagContainer _tagContainer;
+        
         /// <summary>
         /// 技能CD
         /// </summary>
@@ -245,7 +248,8 @@ namespace Aquila.Fight
 
         public AbilitySpecBase()
         {
-            _tagContainer = new TagContainer( OnTagChange );
+            // _tagContainer = new TagContainer( OnTagChange );
+            _tagContainer = new TagContainer();
         }
 
         /// <summary>

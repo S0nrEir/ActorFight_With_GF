@@ -85,8 +85,14 @@ namespace Aquila.Editor
                 return;
             }
             
-            EffectDataMgr.SetEffects(selectedNode,_effects);
-            
+            if (selectedNode is null)
+            {
+                Debug.LogError($"AbilityEffectWindow.Main--->OnClickSave--->selectedNode is null");
+                return;
+            }
+
+            EffectDataMgr.SetEffects(selectedNode , _effects);
+            selectedNode.TriggerTime = _triggerTime;
             //更新对应node
             selectedNode.Repaint();
             Debug.Log($"<color=green>save effects success.</color>");

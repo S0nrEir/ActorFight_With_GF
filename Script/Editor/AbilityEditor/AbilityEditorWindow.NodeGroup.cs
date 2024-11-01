@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace Aquila.Editor
 {
     /// <summary>
-    /// effect节点
+    /// 一组effect节点
     /// </summary>
     public class AbilityEditorEffectGroupNode : Node
     {
