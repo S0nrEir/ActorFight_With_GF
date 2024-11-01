@@ -98,6 +98,12 @@ namespace Aquila
             private set;
         }
 
+        public static Component_Async Async
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// 初始化自定义组件
         /// </summary>
@@ -113,6 +119,7 @@ namespace Aquila
             Timeline    = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
             Impact      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
             UI          = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
+            Async       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Async>();
         }
     }
 }
