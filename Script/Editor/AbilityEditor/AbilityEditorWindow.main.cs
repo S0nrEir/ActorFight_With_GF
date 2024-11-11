@@ -24,7 +24,6 @@ namespace Aquila.Editor
         
         private void OnGUI()
         {
-            Debug.Log("OnGUI calling...");
             EditorGUILayout.BeginVertical("box",new GUILayoutOption[]{GUILayout.Height(50)});
             EditorGUILayout.EndVertical();
             EditorGUILayout.BeginHorizontal(GUILayout.Width(_windowMinSize.x),GUILayout.Height(_windowMinSize.y));
@@ -46,6 +45,8 @@ namespace Aquila.Editor
                     DrawTimelineInfo();
                     EditorGUILayout.Space(2);
                     DrawButtons();
+                    EditorGUILayout.Space(2);
+                    DrawOther();
                 }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.Space(10);
@@ -128,6 +129,14 @@ namespace Aquila.Editor
         private void OnClickToolBarSave()
         {
             var saveSucc = _abilityView.Save();
+        }
+
+        /// <summary>
+        /// 绘制其他选项
+        /// </summary>
+        private void DrawOther()
+        {
+            _regenerateAfterWriting = EditorGUILayout.Toggle("Re generate after writing",_regenerateAfterWriting);
         }
 
         private void DrawGraphViewArea()
@@ -270,9 +279,17 @@ namespace Aquila.Editor
                     return;
                 }
 
-                EditorUtility.DisplayProgressBar($"Re generating...","generating...",0.6f);
+                EditorUtility.DisplayProgressBar($"Writing to excel...","writing...",0.6f);
                 AssetDatabase.Refresh();
                 EditorUtility.ClearProgressBar();
+
+                if (_regenerateAfterWriting)
+                {
+                    EditorUtility.DisplayProgressBar($"re generating","generating...",.5f);
+                    GenTable.GenTable_();
+                    EditorUtility.ClearProgressBar();
+                }
+
                 Debug.Log($"<color=green>generate config data complete.</color>");
                 
             }//end export button
@@ -580,6 +597,11 @@ namespace Aquila.Editor
         
         private EditorWindow _thisWindow             = null;
         private static Vector2 _windowMinSize        = new Vector2(1200          , 700);
+
+        /// <summary>
+        /// 写入配置后重新生成配置
+        /// </summary>
+        private bool _regenerateAfterWriting = false;
 
         /// <summary>x
         /// effect窗体的引用
