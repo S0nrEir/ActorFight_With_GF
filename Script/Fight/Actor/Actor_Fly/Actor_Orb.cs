@@ -85,7 +85,7 @@ namespace Aquila.Fight.Actor
             if (arg._actorID != bhvr._targetActorID)
                 return;
 
-            var lastPosition = GameEntry.Module.GetModule<Module_ProxyActor>().GetPosition(arg._actorID);
+            var lastPosition = GameEntry.Module.GetModule<Module_ActorMgr>().GetPosition(arg._actorID);
             SetTargetPositionAndReady(lastPosition);
         }
 

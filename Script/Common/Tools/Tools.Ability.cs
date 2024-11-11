@@ -13,6 +13,7 @@ namespace Aquila.Toolkit
     {
         /// <summary>
         /// 技能工具类
+        /// <para>#todo此处暂时存放了一些技能数据，工具类不该存放这些技能数据，之后要处理一下</para>
         /// </summary>
         public static class Ability
         {

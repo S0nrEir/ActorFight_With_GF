@@ -22,6 +22,11 @@ namespace Aquila.Fight
                 {
                     Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
                 });
+            target.Actor.AddTag(mainType,(ushort)tagToAdd, (currTag, tagToRemove, isAdd) =>
+            {
+                Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                Log.Info($"<color=green>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+            });
         }
 
         public override void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
