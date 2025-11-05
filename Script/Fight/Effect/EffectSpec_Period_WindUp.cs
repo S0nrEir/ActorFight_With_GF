@@ -24,6 +24,11 @@ namespace Aquila.Fight
             GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.Duration,target.Actor.ActorID));
         }
 
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        {
+            OnEffectAwake( castor, target );
+        }
+
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             //检查角色身上的所有tag，如果自己是最后一个才移除tag

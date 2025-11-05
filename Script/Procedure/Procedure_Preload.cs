@@ -44,6 +44,8 @@ namespace Aquila.Procedure
 
             System.GC.Collect();
 
+            //#todo初始化技能数据先暂时放到这里。
+            Tools.Ability.InitEffectSpecGenerator();
             //测试进入战斗流程
             NextProcedure();
         }
