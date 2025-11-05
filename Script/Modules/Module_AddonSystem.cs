@@ -2,7 +2,6 @@ using Aquila.Extension;
 using Aquila.Fight.Addon;
 using GameFramework;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.Addon_Base;
 
@@ -42,9 +41,9 @@ namespace Aquila.Module
 
         public override void EnsureInit()
         {
-            _readyToAdd = new Queue<Addon_Base>();
+            _readyToAdd    = new Queue<Addon_Base>();
             _readyToRemove = new Queue<Addon_Base>();
-            _existAddon = new HashSet<int>();
+            _existAddon    = new HashSet<int>();
             _containerList = new AddonContainer[( int ) AddonTypeEnum.Max];
             var len = _containerList.Length;
             for ( var i = 0; i < len; i++ )
@@ -92,7 +91,7 @@ namespace Aquila.Module
         {
             return;
 
-#pragma warning disable CS0162 // 检测到无法访问的代码
+#pragma warning disable CS0162
             foreach ( var pool in _containerList )
                 ReferencePool.Release( pool );
 
@@ -107,7 +106,7 @@ namespace Aquila.Module
 
             _existAddon.Clear();
             _existAddon = null;
-#pragma warning restore CS0162 // 检测到无法访问的代码
+#pragma warning restore CS0162
         }
 
         //------------------- fields -------------------

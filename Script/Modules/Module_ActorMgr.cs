@@ -100,7 +100,7 @@ namespace Aquila.Module
         }
 
         /// <summary>
-        /// 注销单个实例
+        /// 注销单个Actor实例
         /// </summary>
         public bool UnRegister( int id )
         {
