@@ -181,20 +181,24 @@ namespace Editor.AbilityEditor
                 if ( !evt.ctrlKey )
                 {
                     evt.StopPropagation();
+                    //evt.PreventDefault();
 
-                    // 获取当前的横向滚动偏移
-                    float scrollOffset = scrollView.horizontalScroller.value;
+                    // 获取当前的横向滚动偏移（使用 scrollOffset 而不是 scroller.value）
+                    float currentScrollX = scrollView.scrollOffset.x;
 
                     // 滚轮增量转换为滚动距离（增大系数使滚动更流畅）
                     float scrollDelta = evt.delta.y * 20f;
 
-                    // 计算新的滚动位置并限制在有效范围内
-                    float newScrollValue = scrollOffset + scrollDelta;
-                    float minValue = scrollView.horizontalScroller.lowValue;
-                    float maxValue = scrollView.horizontalScroller.highValue;
+                    // 计算新的滚动位置
+                    float newScrollX = currentScrollX + scrollDelta;
 
                     // 限制滚动范围，确保不会超出内容边界
-                    scrollView.horizontalScroller.value = Mathf.Clamp( newScrollValue, minValue, maxValue );
+                    float minValue = scrollView.horizontalScroller.lowValue;
+                    float maxValue = scrollView.horizontalScroller.highValue;
+                    newScrollX = Mathf.Clamp( newScrollX, minValue, maxValue );
+
+                    // 使用 scrollOffset 设置新的滚动位置（与拖动滚动条的方式一致）
+                    scrollView.scrollOffset = new Vector2( newScrollX, scrollView.scrollOffset.y );
                 }
             } );
         }
@@ -290,6 +294,12 @@ namespace Editor.AbilityEditor
             // 隐藏竖向滚动条（ScrollView 只需要横向滚动）
             scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
 
+            // 显示横向滚动条，并确保它始终可见
+            scrollView.horizontalScrollerVisibility = ScrollerVisibility.AlwaysVisible;
+
+            // 设置滚动条样式，确保它可见且可操作
+            scrollView.horizontalScroller.style.height = 16; // 设置滚动条高度
+
             // 注册缩放控制（Ctrl + 滚轮）
             //RegisterTimelineZoomControl( scrollView );
 
@@ -316,14 +326,16 @@ namespace Editor.AbilityEditor
             {
                 style =
                 {
-                    flexDirection = FlexDirection.Row,
+                    // 不使用 flexDirection，让绝对定位的子元素正常渲染
                     height = scaleHeight,
                     marginBottom = 5,
                     marginLeft = 50,
                     width = totalWidth, // 明确设置宽度，确保刻度在整个时间轴范围内可见
                     minWidth = totalWidth, // 确保最小宽度
                     position = Position.Relative,
-                    overflow = Overflow.Visible // 确保绝对定位的子元素可见
+                    overflow = Overflow.Visible, // 确保绝对定位的子元素可见
+                    // 添加背景色用于调试（可选）
+                    // backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.3f)
                 }
             };
 

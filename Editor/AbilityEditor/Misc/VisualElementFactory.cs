@@ -60,6 +60,7 @@ namespace Aquila.AbilityEditor
                 {
                     position = Position.Absolute,
                     left = leftPosition,
+                    top = 0, // 明确设置 top 位置
                     width = 1,
                     height = isMajor ? 20 : 10,
                     backgroundColor = isMajor ? Color.white : new Color( 0.7f, 0.7f, 0.7f )
