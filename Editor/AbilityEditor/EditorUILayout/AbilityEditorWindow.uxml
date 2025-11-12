@@ -38,7 +38,9 @@
                     <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: middle-left; flex-direction: column;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 533px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0.31);" />
+            <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 510px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96);">
+                <ui:Label text="Tracks" display-tooltip-when-elided="true" style="height: 35px; -unity-text-align: middle-center; font-size: 19px; -unity-font-style: bold;" />
+            </ui:VisualElement>
             <ui:VisualElement name="TimelineTrackPanel" style="width: 601px; flex-direction: column;" />
         </ui:VisualElement>
     </ui:VisualElement>
