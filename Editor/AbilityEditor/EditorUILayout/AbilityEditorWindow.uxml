@@ -1,0 +1,45 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="border-left-color: rgb(0, 255, 115); border-right-color: rgb(0, 255, 115); border-top-color: rgb(0, 255, 115); border-bottom-color: rgb(0, 255, 115); justify-content: space-between; flex-direction: column; align-items: stretch;">
+        <ui:VisualElement name="HeaderMenu" style="height: 23px; flex-direction: row; align-items: stretch; width: 919px;">
+            <ui:Button text="NewTrack" display-tooltip-when-elided="true" name="AddNewTrackBtn" style="white-space: nowrap; -unity-text-align: upper-left;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="AbilityEditPanel" style="flex-direction: row;">
+            <ui:VisualElement name="AbilityBaseInfoPanel" style="height: 543px; width: 202px; opacity: 1; -unity-font-style: normal; border-top-width: 5px; border-right-width: 1px; border-bottom-width: 5px; border-left-width: -198px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(255, 255, 255, 0.37); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); justify-content: flex-start; align-items: stretch; flex-direction: column;">
+                <ui:Label text="Ability Base Info" display-tooltip-when-elided="true" name="AbilityBaseInfoText" style="width: 141px; height: 23px; font-size: 18px; -unity-text-align: middle-left;" />
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="AbilityID" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="AbilityIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="AbilityDesc" name="AbilityDescTxt" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="AbilityDescTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="CostEffectID" name="CostEffectIDTXT" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="CostIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="CoolDownID" name="CoolDownIDTXT" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="CoolDownIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="TargetType" name="TargetTypeTXT" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:DropdownField name="TargetTypeDropdown" style="flex-grow: 1; width: 88px;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="TimelineID" name="TimelineIDTXT" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="TimelineIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="Duration" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="DurationTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: middle-left; flex-direction: column;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 533px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0.31);" />
+            <ui:VisualElement name="TimelineTrackPanel" style="width: 601px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
