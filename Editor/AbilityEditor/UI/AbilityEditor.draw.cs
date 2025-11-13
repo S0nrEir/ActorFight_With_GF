@@ -75,6 +75,28 @@ namespace Editor.AbilityEditor
                 _timelineTrackPanel.style.flexGrow = 1;
                 _timelineTrackPanel.style.flexShrink = 1;
             }
+
+            // 获取并缓存 ScrollView 和 TimelineContainer
+            _timelineScrollView = _root.Q<ScrollView>( "TimelineScrollView" );
+            _timelineContainer = _root.Q<VisualElement>( "TimelineContainer" );
+
+            if ( _timelineScrollView != null )
+            {
+                // 设置滚动条样式
+                _timelineScrollView.horizontalScroller.style.height = 16;
+
+                // 注册滚动控制事件
+                RegisterHorizontalScrollControl( _timelineScrollView );
+            }
+            else
+            {
+                Debug.LogError( "InitializeUIElements: TimelineScrollView not found in UXML!" );
+            }
+
+            if ( _timelineContainer == null )
+            {
+                Debug.LogError( "InitializeUIElements: TimelineContainer not found in UXML!" );
+            }
         }
 
         /// <summary>
@@ -257,9 +279,9 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void DrawTimelineTracks()
         {
-            if ( _timelineTrackPanel == null )
+            if ( _timelineScrollView == null || _timelineContainer == null )
             {
-                Debug.LogError( "DrawTimelineTracks: _timelineTrackPanel is null!" );
+                Debug.LogError( "DrawTimelineTracks: _timelineScrollView or _timelineContainer is null!" );
                 return;
             }
 
@@ -269,7 +291,9 @@ namespace Editor.AbilityEditor
                 return;
             }
 
-            _timelineTrackPanel.Clear();
+            // 清空 TimelineContainer 的内容
+            _timelineContainer.Clear();
+
             const float scaleInterval = 0.1f;
             float pixelsPerSecond = 100f * _currentZoom;
             _pixelsPerSecond = pixelsPerSecond; // 更新像素每秒比例
@@ -279,48 +303,9 @@ namespace Editor.AbilityEditor
             const float trackHeight = 40f;
             const float scaleHeight = 30f;
 
-            // 创建横向滚动视图，支持横向拖动和滚轮滚动
-            var scrollView = new ScrollView( ScrollViewMode.Horizontal )
-            {
-                style =
-                {
-                    flexGrow = 1,
-                    flexShrink = 1,
-                    // 禁用竖向滚动，只保留横向滚动
-                    overflow = Overflow.Hidden
-                }
-            };
-
-            // 隐藏竖向滚动条（ScrollView 只需要横向滚动）
-            scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-
-            // 显示横向滚动条，并确保它始终可见
-            scrollView.horizontalScrollerVisibility = ScrollerVisibility.AlwaysVisible;
-
-            // 设置滚动条样式，确保它可见且可操作
-            scrollView.horizontalScroller.style.height = 16; // 设置滚动条高度
-
-            // 注册缩放控制（Ctrl + 滚轮）
-            //RegisterTimelineZoomControl( scrollView );
-
-            // 注册普通滚轮事件（不按 Ctrl 时横向滚动）
-            RegisterHorizontalScrollControl( scrollView );
-
-            // 注册鼠标拖动滚动（按住鼠标中键或 Shift + 左键拖动）
-            //RegisterDragScrollControl( scrollView );
-
-            var timelineContainer = new VisualElement
-            {
-                name = "TimelineContainer",
-                style =
-                {
-                    flexDirection = FlexDirection.Column,
-                    width = totalWidth + 50,
-                    minWidth = totalWidth + 50, // 确保最小宽度
-                    position = Position.Relative, // 重要：需要相对定位来放置拖动线
-                    overflow = Overflow.Visible // 确保所有子元素可见
-                }
-            };
+            // 更新 TimelineContainer 的宽度样式
+            _timelineContainer.style.width = totalWidth + 50;
+            _timelineContainer.style.minWidth = totalWidth + 50;
 
             var scaleContainer = new VisualElement
             {
@@ -355,7 +340,7 @@ namespace Editor.AbilityEditor
                 }
             }
 
-            timelineContainer.Add( scaleContainer );
+            _timelineContainer.Add( scaleContainer );
             foreach ( var track in _timelineTracks )
             {
                 if ( !track.IsEnabled )
@@ -390,14 +375,11 @@ namespace Editor.AbilityEditor
 
                 trackRow.Add( trackNameLabel );
                 trackRow.Add( trackTimeline );
-                timelineContainer.Add( trackRow );
+                _timelineContainer.Add( trackRow );
             }
 
-            scrollView.Add( timelineContainer );
-            _timelineTrackPanel.Add( scrollView );
-
             // 注册拖动线事件并更新其高度
-            RegisterScrubberEvents( timelineContainer );
+            RegisterScrubberEvents( _timelineContainer );
             UpdateScrubberHeight();
 
             Debug.Log( $"Generated timeline tracks: Duration={duration}s, Tracks={_timelineTracks.Count}, TotalWidth={totalWidth}px, Zoom={_currentZoom:F2}" );

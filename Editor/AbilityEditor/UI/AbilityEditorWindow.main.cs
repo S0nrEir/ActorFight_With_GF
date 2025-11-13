@@ -333,7 +333,8 @@ namespace Editor.AbilityEditor
 
         // Timeline Scrubber Line properties
         private VisualElement _timelineScrubber; // 时间轴拖动线（延伸到 TimelineTrackPanel 容器内）
-        private VisualElement _timelineContainer; // 时间轴容器引用（用于坐标转换）
+        private ScrollView _timelineScrollView; // 时间轴滚动视图（从 UXML 中获取）
+        private VisualElement _timelineContainer; // 时间轴容器（从 UXML 中获取）
         private bool _isDraggingScrubber = false;
         private float _scrubberTime = 0f; // 当前时间轴位置（秒）
         private float _pixelsPerSecond = 100f; // 像素每秒比例
