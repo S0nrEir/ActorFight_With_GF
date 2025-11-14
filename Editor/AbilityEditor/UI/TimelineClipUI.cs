@@ -31,13 +31,6 @@ namespace Aquila.AbilityEditor
         private float _timelineEndTime;
         private float _zoom;
 
-        // 配置参数
-        private const float MIN_CLIP_WIDTH = 20f; // 最小clip宽度（像素）
-        private const float MIN_CLIP_DURATION = 0.1f; // 最小clip时长（秒）
-        private const float HANDLE_WIDTH = 8f; // 拖动手柄宽度
-        private const float CLIP_HEIGHT = 30f; // Clip高度
-        private const float TIME_SNAP_INTERVAL = 0.1f; // 时间对齐间隔（秒）
-
         // 事件回调
         public event Action<TimelineClipUI> OnClipSelected;
         public event Action<TimelineClipUI> OnClipModified;
@@ -108,7 +101,7 @@ namespace Aquila.AbilityEditor
                 style =
                 {
                     position = Position.Absolute,
-                    height = CLIP_HEIGHT,
+                    height = Misc.CLIP_HEIGHT,
                     backgroundColor = _clipData.ClipColor,
                     borderTopLeftRadius = 4,
                     borderTopRightRadius = 4,
@@ -135,8 +128,8 @@ namespace Aquila.AbilityEditor
                     fontSize = 10,
                     color = Color.white,
                     unityTextAlign = TextAnchor.MiddleLeft,
-                    paddingLeft = HANDLE_WIDTH + 2,
-                    paddingRight = HANDLE_WIDTH + 2,
+                    paddingLeft = Misc.HANDLE_WIDTH + 2,
+                    paddingRight = Misc.HANDLE_WIDTH + 2,
                     unityFontStyleAndWeight = FontStyle.Bold,
                     overflow = Overflow.Hidden,
                     textOverflow = TextOverflow.Ellipsis,
@@ -158,7 +151,7 @@ namespace Aquila.AbilityEditor
                     left = 0,
                     top = 0,
                     bottom = 0,
-                    width = HANDLE_WIDTH,
+                    width = Misc.HANDLE_WIDTH,
                     backgroundColor = new Color(1f, 1f, 1f, 0.2f),
                     cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
                     borderTopLeftRadius = 4,
@@ -175,7 +168,7 @@ namespace Aquila.AbilityEditor
                     right = 0,
                     top = 0,
                     bottom = 0,
-                    width = HANDLE_WIDTH,
+                    width = Misc.HANDLE_WIDTH,
                     backgroundColor = new Color(1f, 1f, 1f, 0.2f),
                     cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
                     borderTopRightRadius = 4,
@@ -311,7 +304,7 @@ namespace Aquila.AbilityEditor
             {
                 // 检查是否点击在手柄区域，如果是则不处理（让手柄的事件处理）
                 float localX = evt.localMousePosition.x;
-                if (localX <= HANDLE_WIDTH || localX >= _clipElement.resolvedStyle.width - HANDLE_WIDTH)
+                if (localX <= Misc.HANDLE_WIDTH || localX >= _clipElement.resolvedStyle.width - Misc.HANDLE_WIDTH)
                     return;
 
                 _currentDragMode = DragMode.Move;
@@ -319,8 +312,6 @@ namespace Aquila.AbilityEditor
                 _dragStartTime = _clipData.StartTime;
                 evt.StopPropagation();
                 _clipElement.CaptureMouse();
-
-                // 触发选中事件
                 OnClipSelected?.Invoke(this);
             }
         }
@@ -381,7 +372,7 @@ namespace Aquila.AbilityEditor
         /// </summary>
         private float SnapTimeToInterval(float time)
         {
-            return Mathf.Round(time / TIME_SNAP_INTERVAL) * TIME_SNAP_INTERVAL;
+            return Mathf.Round(time / Misc.TIME_SNAP_INTERVAL) * Misc.TIME_SNAP_INTERVAL;
         }
 
         private void HandleMove(float timeDelta)
@@ -407,7 +398,7 @@ namespace Aquila.AbilityEditor
             newStartTime = SnapTimeToInterval(newStartTime);
 
             // 约束：不能超过timeline开始时间，不能超过结束时间减去最小时长
-            newStartTime = Mathf.Clamp(newStartTime, _timelineStartTime, _dragStartEndTime - MIN_CLIP_DURATION);
+            newStartTime = Mathf.Clamp(newStartTime, _timelineStartTime, _dragStartEndTime - Misc.MIN_CLIP_DURATION);
 
             _clipData.StartTime = newStartTime;
             UpdateVisualTransform();
@@ -421,7 +412,7 @@ namespace Aquila.AbilityEditor
             newEndTime = SnapTimeToInterval(newEndTime);
 
             // 约束：不能小于开始时间加最小时长，不能超过timeline结束时间
-            newEndTime = Mathf.Clamp(newEndTime, _dragStartTime + MIN_CLIP_DURATION, _timelineEndTime);
+            newEndTime = Mathf.Clamp(newEndTime, _dragStartTime + Misc.MIN_CLIP_DURATION, _timelineEndTime);
 
             _clipData.EndTime = newEndTime;
             UpdateVisualTransform();
@@ -441,7 +432,7 @@ namespace Aquila.AbilityEditor
 
             float startX = _clipData.StartTime * _pixelsPerSecond * _zoom;
             float width = _clipData.Duration * _pixelsPerSecond * _zoom;
-            width = Mathf.Max(width, MIN_CLIP_WIDTH);
+            width = Mathf.Max(width, Misc.MIN_CLIP_WIDTH);
 
             _clipElement.style.left = startX;
             _clipElement.style.width = width;
