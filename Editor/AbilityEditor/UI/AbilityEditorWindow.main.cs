@@ -43,6 +43,7 @@ namespace Editor.AbilityEditor
             RegisterDragAndDropCallbacks();
             RegisterTrackPanelContextMenu();
             _timelineTracks = new List<TimelineTrack>();
+            InitializeClipManager();
 
             #region nouse
             // var dragHintLabel = new Label("拖入 AbilityData 资源到此窗口")
@@ -81,18 +82,12 @@ namespace Editor.AbilityEditor
         {
             _root.RegisterCallback<DragEnterEvent>( _ =>
             {
-                if ( HasAbilityDataInDrag() )
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                else
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
+                DragAndDrop.visualMode = HasAbilityDataInDrag() ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
             } );
 
             _root.RegisterCallback<DragUpdatedEvent>( _ =>
             {
-                if ( HasAbilityDataInDrag() )
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                else
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
+                DragAndDrop.visualMode = HasAbilityDataInDrag() ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
             } );
 
             _root.RegisterCallback<DragPerformEvent>( _ =>

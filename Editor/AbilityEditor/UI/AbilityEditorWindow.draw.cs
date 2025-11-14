@@ -376,7 +376,13 @@ namespace Editor.AbilityEditor
                 trackRow.Add( trackNameLabel );
                 trackRow.Add( trackTimeline );
                 _timelineContainer.Add( trackRow );
+
+                // 注册轨道到clip管理器
+                RegisterTrackToClipManager( track, trackTimeline );
             }
+
+            // 更新clip管理器的timeline参数
+            UpdateClipManagerTimelineParams();
 
             // 注册拖动线事件并更新其高度
             RegisterScrubberEvents( _timelineContainer );

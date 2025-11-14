@@ -96,6 +96,7 @@ namespace Aquila.AbilityEditor
             {
                 style =
                 {
+                    position          = Position.Relative, // 支持clips使用绝对定位
                     flexGrow          = 1,
                     backgroundColor   = trackColor,
                     width             = width,
