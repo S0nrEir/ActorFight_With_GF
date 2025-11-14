@@ -45,18 +45,16 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 注册轨道和其timeline UI元素
         /// </summary>
-        public void RegisterTrack(TimelineTrack track, VisualElement timelineElement)
+        public void RegisterTrack(TimelineTrack trackData, VisualElement timelineElement)
         {
-            if (track == null || timelineElement == null)
+            if ( trackData == null || timelineElement == null)
                 return;
 
-            if (!_trackClipUIs.ContainsKey(track))
-                _trackClipUIs[track] = new List<TimelineClipUI>();
+            if (!_trackClipUIs.ContainsKey( trackData ) )
+                _trackClipUIs[trackData] = new List<TimelineClipUI>();
 
-            _trackTimelineElements[track] = timelineElement;
-
-            // 为timeline元素添加右键菜单
-            RegisterTrackContextMenu(track, timelineElement);
+            _trackTimelineElements[trackData] = timelineElement;
+            RegisterTrackContextMenu( trackData, timelineElement);
         }
 
         /// <summary>
@@ -67,13 +65,11 @@ namespace Aquila.AbilityEditor
             if (track == null)
                 return;
 
-            // 清理该轨道的所有clip UI
             if (_trackClipUIs.TryGetValue(track, out var clipUIs))
             {
                 foreach (var clipUI in clipUIs)
-                {
                     clipUI.Destroy();
-                }
+
                 clipUIs.Clear();
             }
 
@@ -89,9 +85,7 @@ namespace Aquila.AbilityEditor
             foreach (var kvp in _trackClipUIs)
             {
                 foreach (var clipUI in kvp.Value)
-                {
                     clipUI.Destroy();
-                }
             }
 
             _trackClipUIs.Clear();
@@ -127,10 +121,7 @@ namespace Aquila.AbilityEditor
             if (track == null || clipUI == null)
                 return false;
 
-            // 移除数据
             track.RemoveClip(clipUI.ClipData);
-
-            // 移除UI
             if (_trackClipUIs.TryGetValue(track, out var clipUIs))
             {
                 clipUIs.Remove(clipUI);
@@ -157,16 +148,13 @@ namespace Aquila.AbilityEditor
 
             // 清理现有UI
             foreach (var clipUI in clipUIs)
-            {
                 clipUI.Destroy();
-            }
+
             clipUIs.Clear();
 
             // 重新创建所有clip UI
             foreach (var clipData in track.Clips)
-            {
                 CreateClipUI(track, clipData);
-            }
         }
 
         /// <summary>

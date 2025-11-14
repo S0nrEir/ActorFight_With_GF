@@ -1,11 +1,9 @@
 using Aquila.AbilityEditor;
-using Cfg.Enum;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static PlasticPipe.Server.MonitorStats;
 
 namespace Editor.AbilityEditor
 {
@@ -17,7 +15,6 @@ namespace Editor.AbilityEditor
             AbilityEditorWindow wnd = GetWindow<AbilityEditorWindow>();
             wnd.titleContent = new GUIContent( "AbilityEditorWindow" );
             wnd.minSize = new Vector2( 1300, 300 );
-            wnd.maxSize = new Vector2( 1300, 300 );
             wnd.Show();
         }
 
@@ -131,8 +128,6 @@ namespace Editor.AbilityEditor
             } ) );
         }
 
-
-
         // 提取事件处理方法，便于注销
         private void OnTimelineMouseDown(MouseDownEvent evt)
         {
@@ -238,16 +233,18 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void AddNewTrack()
         {
-            var newTrack = new TimelineTrack( $"Track_{_timelineTracks.Count + 1}", Color.gray, true );
+            var newTrack = new TimelineTrack
+                ( 
+                    $"Track_{_timelineTracks.Count + 1}", 
+                    Misc.GetTrackColor( _timelineTracks.Count ), 
+                    true 
+                );
             _timelineTracks.Add( newTrack );
             DrawTrackElement( newTrack );
-
-            Debug.Log($"AddNewTrack: Added '{newTrack.Name}'");
 
             // 如果时间轴已生成，重新生成以更新显示
             if (_timelineTrackPanel != null && _timelineTrackPanel.childCount > 0)
             {
-                // 检查 duration 是否有效
                 if (_durationTextField != null &&
                     float.TryParse(_durationTextField.value, out float duration) &&
                     duration > 0)
@@ -344,7 +341,7 @@ namespace Editor.AbilityEditor
         private TextField _timelineIDTextField;
         private DropdownField _targetTypeDropdown;
         private TextField _durationTextField;
-        [SerializeField] private VisualTreeAsset _abilityTreeAsset;
+        private VisualTreeAsset _abilityTreeAsset;
 
         //ability datad
         private AbilityData _currentAbilityData;

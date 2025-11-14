@@ -100,7 +100,7 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
-        /// 创建并绘制单个轨道的可视化元素
+        /// 创建并绘制单个轨道的VisualElement
         /// </summary>
         private void DrawTrackElement( TimelineTrack track )
         {
@@ -112,7 +112,6 @@ namespace Editor.AbilityEditor
             {
                 if ( evt.button == 0 )
                     HighlightTrackSelection( trackElement );
-
             } );
             _trackPanel.Add( trackElement );
         }
@@ -377,7 +376,6 @@ namespace Editor.AbilityEditor
                 trackRow.Add( trackTimeline );
                 _timelineContainer.Add( trackRow );
 
-                // 注册轨道到clip管理器
                 RegisterTrackToClipManager( track, trackTimeline );
             }
 

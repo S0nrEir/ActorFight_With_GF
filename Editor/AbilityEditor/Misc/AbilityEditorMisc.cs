@@ -9,8 +9,6 @@ namespace Aquila.AbilityEditor
         // UI布局文件路径
         public static readonly string UXML_FILE_PATH = "Assets/Editor/AbilityEditor/EditorUILayout/AbilityEditorWindow.uxml";
 
-        #region Timeline Clip 常量
-
         /// <summary>
         /// 最小clip宽度（像素）
         /// </summary>
@@ -36,6 +34,27 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public const float TIME_SNAP_INTERVAL = 0.1f;
 
-        #endregion
+        /// <summary>
+        /// 预定义的轨道颜色数组（用于区分不同轨道）
+        /// </summary>
+        private static readonly Color[] TrackColors = new Color[]
+        {
+            new Color(0.4f, 0.6f, 0.8f),
+            new Color(0.6f, 0.8f, 0.4f),
+            new Color(0.8f, 0.6f, 0.4f),
+            new Color(0.8f, 0.4f, 0.6f),
+            new Color(0.6f, 0.4f, 0.8f),
+        };
+
+        /// <summary>
+        /// 根据轨道索引获取颜色（循环使用颜色数组）
+        /// </summary>
+        public static Color GetTrackColor(int trackIndex)
+        {
+            if (trackIndex < 0)
+                trackIndex = 0;
+
+            return TrackColors[trackIndex % TrackColors.Length];
+        }
     }
 }
