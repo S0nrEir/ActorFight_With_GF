@@ -28,12 +28,12 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 注册轨道到clip管理器
         /// </summary>
-        private void RegisterTrackToClipManager(TimelineTrack track, UnityEngine.UIElements.VisualElement timelineElement)
+        private void RegisterTrackItemToClipManager(TimelineTrackItem track, UnityEngine.UIElements.VisualElement timelineElement)
         {
             if (_clipManager == null)
                 InitializeClipManager();
 
-            _clipManager.RegisterTrack(track, timelineElement);
+            _clipManager.RegisterTrackItem(track, timelineElement);
         }
 
         /// <summary>
@@ -121,33 +121,33 @@ namespace Editor.AbilityEditor
         public static void AddTestClips()
         {
             var window = GetWindow<AbilityEditorWindow>();
-            if (window == null || window._clipManager == null || window._timelineTracks == null)
+            if (window == null || window._clipManager == null || window._timelineTrackItems == null)
             {
                 Debug.LogWarning("AbilityEditorWindow is not initialized or has no tracks");
                 return;
             }
 
             // 确保至少有一个轨道
-            if (window._timelineTracks.Count == 0)
+            if (window._timelineTrackItems.Count == 0)
             {
                 Debug.LogWarning("No tracks available. Please create a track first.");
                 return;
             }
 
-            var firstTrack = window._timelineTracks[0];
+            var firstTrackItem = window._timelineTrackItems[0];
 
             // 添加测试clips
             var skillClip = new SkillClipData("Test Skill", 0.5f, 1.5f, 1001);
-            window._clipManager.AddClip(firstTrack, skillClip);
+            window._clipManager.AddClip(firstTrackItem, skillClip);
 
             var buffClip = new BuffClipData("Test Buff", 2f, 4f, 2001);
-            window._clipManager.AddClip(firstTrack, buffClip);
+            window._clipManager.AddClip(firstTrackItem, buffClip);
 
             var audioClip = new AudioClipData("Test Audio", 1f, 2f, "audio/test");
-            window._clipManager.AddClip(firstTrack, audioClip);
+            window._clipManager.AddClip(firstTrackItem, audioClip);
 
             var vfxClip = new VFXClipData("Test VFX", 2.5f, 3.5f, "vfx/test");
-            window._clipManager.AddClip(firstTrack, vfxClip);
+            window._clipManager.AddClip(firstTrackItem, vfxClip);
 
             Debug.Log("Test clips added successfully!");
         }

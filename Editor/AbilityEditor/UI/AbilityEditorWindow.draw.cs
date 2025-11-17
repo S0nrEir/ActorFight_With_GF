@@ -34,7 +34,7 @@ namespace Editor.AbilityEditor
 
                 var genTimelineTrackButton = abilityBaseInfoPanel.Q<Button>( "GenTimelineTrackBtn" );
                 if ( genTimelineTrackButton != null )
-                    genTimelineTrackButton.clicked += DrawTimelineTracks;
+                    genTimelineTrackButton.clicked += DrawTimelineTrackItems;
             }
             var headerMenu = _root.Q<VisualElement>( "HeaderMenu" );
             if ( headerMenu != null )
@@ -102,7 +102,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 创建并绘制单个轨道的VisualElement
         /// </summary>
-        private void DrawTrackElement( TimelineTrack track )
+        private void DrawTrackItemElement( TimelineTrackItem track )
         {
             var trackElement = VisualElementFactory.GenTrack( track.TrackColor );
             var trackLabel = VisualElementFactory.GenTrackNameLabel( track.Name );
@@ -124,7 +124,7 @@ namespace Editor.AbilityEditor
             if ( _selectedTrackElement == null)
                 return;
 
-            var trackData = _selectedTrackElement.userData as TimelineTrack;
+            var trackData = _selectedTrackElement.userData as TimelineTrackItem;
             if ( trackData == null )
                 return;
 
@@ -138,7 +138,7 @@ namespace Editor.AbilityEditor
             _selectedTrackElement.style.borderBottomColor = Color.clear;
             trackElement.style.backgroundColor = trackData.TrackColor;
             _selectedTrackElement = null;
-            _selectedTrack = null;
+            _selectedTrackItem = null;
             Debug.Log( $"Unselected track: {trackData.Name}" );
         }
 
@@ -148,9 +148,9 @@ namespace Editor.AbilityEditor
         private void HighlightTrackSelection( VisualElement trackElement )
         {
             ClearTrackSelection( _selectedTrackElement );
-            var track = trackElement.userData as TimelineTrack;
+            var track = trackElement.userData as TimelineTrackItem;
             _selectedTrackElement = trackElement;
-            _selectedTrack = track;
+            _selectedTrackItem = track;
 
             _selectedTrackElement.style.borderLeftWidth   = 1;
             _selectedTrackElement.style.borderRightWidth  = 1;
@@ -164,7 +164,7 @@ namespace Editor.AbilityEditor
             Color highlightColor = track.TrackColor * 1.3f;
             highlightColor.a = 1f;
             _selectedTrackElement.style.backgroundColor = highlightColor;
-            Debug.Log( $"Selected track: {_selectedTrack.Name}" );
+            Debug.Log( $"Selected track: {_selectedTrackItem.Name}" );
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Editor.AbilityEditor
                     if ( Mathf.Abs( newZoom - _currentZoom ) > 0.01f )
                     {
                         _currentZoom = newZoom;
-                        DrawTimelineTracks();
+                        DrawTimelineTrackItems();
                         Debug.Log( $"Zoom changed: {_currentZoom:F2}x ({_currentZoom * 100:F0}%)" );
                     }
                 }
@@ -276,17 +276,17 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 绘制时间轴轨道
         /// </summary>
-        private void DrawTimelineTracks()
+        private void DrawTimelineTrackItems()
         {
             if ( _timelineScrollView == null || _timelineContainer == null )
             {
-                Debug.LogError( "DrawTimelineTracks: _timelineScrollView or _timelineContainer is null!" );
+                Debug.LogError( "DrawTimelineTrackItems: _timelineScrollView or _timelineContainer is null!" );
                 return;
             }
 
             if ( !float.TryParse( _durationTextField.value, out float duration ) || duration <= 0 )
             {
-                ShowNotification( new GUIContent( "DrawTimelineTracks: Invalid duration value" ) );
+                ShowNotification( new GUIContent( "DrawTimelineTrackItems: Invalid duration value" ) );
                 return;
             }
 
@@ -340,7 +340,7 @@ namespace Editor.AbilityEditor
             }
 
             _timelineContainer.Add( scaleContainer );
-            foreach ( var track in _timelineTracks )
+            foreach ( var track in _timelineTrackItems )
             {
                 if ( !track.IsEnabled )
                     continue;
@@ -376,7 +376,7 @@ namespace Editor.AbilityEditor
                 trackRow.Add( trackTimeline );
                 _timelineContainer.Add( trackRow );
 
-                RegisterTrackToClipManager( track, trackTimeline );
+                RegisterTrackItemToClipManager( track, trackTimeline );
             }
 
             // 更新clip管理器的timeline参数
@@ -386,7 +386,7 @@ namespace Editor.AbilityEditor
             RegisterScrubberEvents( _timelineContainer );
             UpdateScrubberHeight();
 
-            Debug.Log( $"Generated timeline tracks: Duration={duration}s, Tracks={_timelineTracks.Count}, TotalWidth={totalWidth}px, Zoom={_currentZoom:F2}" );
+            Debug.Log( $"Generated timeline track items: Duration={duration}s, Tracks={_timelineTrackItems.Count}, TotalWidth={totalWidth}px, Zoom={_currentZoom:F2}" );
         }
 
         /// <summary>

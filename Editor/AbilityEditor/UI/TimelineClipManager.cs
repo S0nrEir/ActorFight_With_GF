@@ -13,10 +13,10 @@ namespace Aquila.AbilityEditor
     public class TimelineClipManager
     {
         // 轨道与其对应的clip UI映射
-        private Dictionary<TimelineTrack, List<TimelineClipUI>> _trackClipUIs;
+        private Dictionary<TimelineTrackItem, List<TimelineClipUI>> _trackClipUIs;
 
         // 轨道与其timeline UI元素的映射
-        private Dictionary<TimelineTrack, VisualElement> _trackTimelineElements;
+        private Dictionary<TimelineTrackItem, VisualElement> _trackTimelineElements;
 
         // 当前选中的clip
         private TimelineClipUI _selectedClip;
@@ -36,8 +36,8 @@ namespace Aquila.AbilityEditor
 
         public TimelineClipManager()
         {
-            _trackClipUIs = new Dictionary<TimelineTrack, List<TimelineClipUI>>();
-            _trackTimelineElements = new Dictionary<TimelineTrack, VisualElement>();
+            _trackClipUIs = new Dictionary<TimelineTrackItem, List<TimelineClipUI>>();
+            _trackTimelineElements = new Dictionary<TimelineTrackItem, VisualElement>();
         }
 
         #region Track Management
@@ -45,7 +45,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 注册轨道和其timeline UI元素
         /// </summary>
-        public void RegisterTrack(TimelineTrack trackData, VisualElement timelineElement)
+        public void RegisterTrackItem(TimelineTrackItem trackData, VisualElement timelineElement)
         {
             if ( trackData == null || timelineElement == null)
                 return;
@@ -54,13 +54,13 @@ namespace Aquila.AbilityEditor
                 _trackClipUIs[trackData] = new List<TimelineClipUI>();
 
             _trackTimelineElements[trackData] = timelineElement;
-            RegisterTrackContextMenu( trackData, timelineElement);
+            RegisterTrackItemContextMenu( trackData, timelineElement);
         }
 
         /// <summary>
         /// 注销轨道
         /// </summary>
-        public void UnregisterTrack(TimelineTrack track)
+        public void UnregisterTrackItem(TimelineTrackItem track)
         {
             if (track == null)
                 return;
@@ -100,7 +100,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 添加clip到指定轨道
         /// </summary>
-        public TimelineClipUI AddClip(TimelineTrack track, TimelineClipData clipData)
+        public TimelineClipUI AddClip(TimelineTrackItem track, TimelineClipData clipData)
         {
             if (track == null || clipData == null)
                 return null;
@@ -116,7 +116,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 移除clip
         /// </summary>
-        public bool RemoveClip(TimelineTrack track, TimelineClipUI clipUI)
+        public bool RemoveClip(TimelineTrackItem track, TimelineClipUI clipUI)
         {
             if (track == null || clipUI == null)
                 return false;
@@ -138,7 +138,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 刷新指定轨道的所有clips UI
         /// </summary>
-        public void RefreshTrackClips(TimelineTrack track)
+        public void RefreshTrackItemClips(TimelineTrackItem track)
         {
             if (track == null)
                 return;
@@ -164,7 +164,7 @@ namespace Aquila.AbilityEditor
         {
             foreach (var track in _trackClipUIs.Keys.ToList())
             {
-                RefreshTrackClips(track);
+                RefreshTrackItemClips(track);
             }
         }
 
@@ -192,7 +192,7 @@ namespace Aquila.AbilityEditor
 
         #region Private Methods
 
-        private TimelineClipUI CreateClipUI(TimelineTrack track, TimelineClipData clipData)
+        private TimelineClipUI CreateClipUI(TimelineTrackItem track, TimelineClipData clipData)
         {
             if (!_trackTimelineElements.TryGetValue(track, out var timelineElement))
             {
@@ -245,7 +245,7 @@ namespace Aquila.AbilityEditor
         private void HandleClipDeleted(TimelineClipUI clipUI)
         {
             // 找到clip所属的轨道
-            TimelineTrack ownerTrack = null;
+            TimelineTrackItem ownerTrack = null;
             foreach (var kvp in _trackClipUIs)
             {
                 if (kvp.Value.Contains(clipUI))
@@ -262,7 +262,7 @@ namespace Aquila.AbilityEditor
             }
         }
 
-        private void RegisterTrackContextMenu(TimelineTrack track, VisualElement timelineElement)
+        private void RegisterTrackItemContextMenu(TimelineTrackItem track, VisualElement timelineElement)
         {
             timelineElement.AddManipulator(new ContextualMenuManipulator(evt =>
             {
@@ -278,25 +278,25 @@ namespace Aquila.AbilityEditor
             }));
         }
 
-        private void AddSkillClip(TimelineTrack track, float startTime)
+        private void AddSkillClip(TimelineTrackItem track, float startTime)
         {
             var clipData = new SkillClipData($"Skill", startTime, startTime + 0.5f, 1);
             AddClip(track, clipData);
         }
 
-        private void AddBuffClip(TimelineTrack track, float startTime)
+        private void AddBuffClip(TimelineTrackItem track, float startTime)
         {
             var clipData = new BuffClipData($"Buff", startTime, startTime + 1f, 1);
             AddClip(track, clipData);
         }
 
-        private void AddAudioClip(TimelineTrack track, float startTime)
+        private void AddAudioClip(TimelineTrackItem track, float startTime)
         {
             var clipData = new AudioClipData($"Audio", startTime, startTime + 1f, "audio/default");
             AddClip(track, clipData);
         }
 
-        private void AddVFXClip(TimelineTrack track, float startTime)
+        private void AddVFXClip(TimelineTrackItem track, float startTime)
         {
             var clipData = new VFXClipData($"VFX", startTime, startTime + 1f, "vfx/default");
             AddClip(track, clipData);
@@ -309,7 +309,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 获取指定轨道的所有clip UI
         /// </summary>
-        public List<TimelineClipUI> GetTrackClips(TimelineTrack track)
+        public List<TimelineClipUI> GetTrackItemClips(TimelineTrackItem track)
         {
             if (track == null || !_trackClipUIs.TryGetValue(track, out var clipUIs))
                 return new List<TimelineClipUI>();

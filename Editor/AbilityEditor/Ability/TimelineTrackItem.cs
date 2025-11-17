@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Aquila.AbilityEditor
 {
-    public class TimelineTrack
+    public class TimelineTrackItem
     {
         private List<TimelineClipData> _clips;
 
-        public TimelineTrack()
+        public TimelineTrackItem()
         {
             Name = string.Empty;
             IsEnabled = true;
@@ -18,7 +18,7 @@ namespace Aquila.AbilityEditor
             _clips = new List<TimelineClipData>();
         }
 
-        public TimelineTrack( string name, Color color, bool isEnabled = true)
+        public TimelineTrackItem( string name, Color color, bool isEnabled = true)
         {
             Name = name;
             IsEnabled = isEnabled;
@@ -50,18 +50,18 @@ namespace Aquila.AbilityEditor
         {
             if (clip == null)
             {
-                Debug.LogWarning("TimelineTrack.AddClip: clip is null");
+                Debug.LogWarning("TimelineTrackItem.AddClip: clip is null");
                 return false;
             }
 
             if (_clips.Contains(clip))
             {
-                Debug.LogWarning($"TimelineTrack.AddClip: clip '{clip.ClipName}' already exists in track '{Name}'");
+                Debug.LogWarning($"TimelineTrackItem.AddClip: clip '{clip.ClipName}' already exists in track '{Name}'");
                 return false;
             }
 
             _clips.Add(clip);
-            Debug.Log($"TimelineTrack.AddClip: Added clip '{clip.ClipName}' to track '{Name}'");
+            Debug.Log($"TimelineTrackItem.AddClip: Added clip '{clip.ClipName}' to track '{Name}'");
             return true;
         }
 
@@ -75,7 +75,7 @@ namespace Aquila.AbilityEditor
 
             bool removed = _clips.Remove(clip);
             if (removed)
-                Debug.Log($"TimelineTrack.RemoveClip: Removed clip '{clip.ClipName}' from track '{Name}'");
+                Debug.Log($"TimelineTrackItem.RemoveClip: Removed clip '{clip.ClipName}' from track '{Name}'");
 
             return removed;
         }
@@ -95,7 +95,7 @@ namespace Aquila.AbilityEditor
         public void ClearClips()
         {
             _clips.Clear();
-            Debug.Log($"TimelineTrack.ClearClips: Cleared all clips from track '{Name}'");
+            Debug.Log($"TimelineTrackItem.ClearClips: Cleared all clips from track '{Name}'");
         }
 
         /// <summary>

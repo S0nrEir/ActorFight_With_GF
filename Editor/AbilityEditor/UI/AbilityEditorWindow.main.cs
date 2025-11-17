@@ -39,7 +39,7 @@ namespace Editor.AbilityEditor
             InitializeUIElements();
             RegisterDragAndDropCallbacks();
             RegisterTrackPanelContextMenu();
-            _timelineTracks = new List<TimelineTrack>();
+            _timelineTrackItems = new List<TimelineTrackItem>();
             InitializeClipManager();
 
             #region nouse
@@ -203,9 +203,9 @@ namespace Editor.AbilityEditor
                 return;
             }
 
-            var trackToDelete = trackElementToDelete.userData as TimelineTrack;
-            if ( trackToDelete != null && _timelineTracks != null && _timelineTracks.Contains( trackToDelete ) )
-                _timelineTracks.Remove( trackToDelete );
+            var trackToDelete = trackElementToDelete.userData as TimelineTrackItem;
+            if ( trackToDelete != null && _timelineTrackItems != null && _timelineTrackItems.Contains( trackToDelete ) )
+                _timelineTrackItems.Remove( trackToDelete );
 
             if ( _trackPanel != null )
                 _trackPanel.Remove( trackElementToDelete );
@@ -213,7 +213,7 @@ namespace Editor.AbilityEditor
             if ( trackElementToDelete == _selectedTrackElement )
             {
                 _selectedTrackElement = null;
-                _selectedTrack = null;
+                _selectedTrackItem = null;
             }
 
             Debug.Log( $"DeleteTrackAtPosition: deleted track '{trackToDelete?.Name ?? "<unknown>"}'" );
@@ -223,8 +223,8 @@ namespace Editor.AbilityEditor
                 float.TryParse( _durationTextField.value, out float duration ) &&
                 duration > 0 )
             {
-                Debug.Log( "DeleteTrackAtPosition: Regenerating timeline tracks..." );
-                DrawTimelineTracks();
+                Debug.Log( "DeleteTrackAtPosition: Regenerating timeline track items..." );
+                DrawTimelineTrackItems();
             }
         }
 
@@ -233,14 +233,14 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void AddNewTrack()
         {
-            var newTrack = new TimelineTrack
-                ( 
-                    $"Track_{_timelineTracks.Count + 1}", 
-                    Misc.GetTrackColor( _timelineTracks.Count ), 
-                    true 
+            var newTrackItem = new TimelineTrackItem
+                (
+                    $"Track_{_timelineTrackItems.Count + 1}",
+                    Misc.GetTrackColor( _timelineTrackItems.Count ),
+                    true
                 );
-            _timelineTracks.Add( newTrack );
-            DrawTrackElement( newTrack );
+            _timelineTrackItems.Add( newTrackItem );
+            DrawTrackItemElement( newTrackItem );
 
             // 如果时间轴已生成，重新生成以更新显示
             if (_timelineTrackPanel != null && _timelineTrackPanel.childCount > 0)
@@ -249,8 +249,8 @@ namespace Editor.AbilityEditor
                     float.TryParse(_durationTextField.value, out float duration) &&
                     duration > 0)
                 {
-                    Debug.Log("AddNewTrack: Regenerating timeline tracks...");
-                    DrawTimelineTracks();
+                    Debug.Log("AddNewTrack: Regenerating timeline track items...");
+                    DrawTimelineTrackItems();
                 }
             }
         }
@@ -349,9 +349,9 @@ namespace Editor.AbilityEditor
         //ui elements
         private VisualElement _root;
         private VisualElement _trackPanel;
-        private List<TimelineTrack> _timelineTracks;
+        private List<TimelineTrackItem> _timelineTrackItems;
         private VisualElement _selectedTrackElement;
-        private TimelineTrack _selectedTrack;
+        private TimelineTrackItem _selectedTrackItem;
         private VisualElement _timelineTrackPanel;
     }
 }
