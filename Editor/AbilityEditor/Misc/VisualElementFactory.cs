@@ -15,8 +15,8 @@ namespace Aquila.AbilityEditor
                 style =
                 {
                     flexDirection     = FlexDirection.Row,
-                    height            = 30,
-                    marginBottom      = 5,
+                    height            = 40,
+                    marginBottom      = 2,
                     backgroundColor   = color,
                     paddingLeft       = 5,
                     paddingRight      = 5,
