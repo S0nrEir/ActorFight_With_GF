@@ -286,7 +286,7 @@ namespace Aquila.AbilityEditor
 
         private void AddBuffClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new BuffClipData($"Buff", startTime, startTime + 1f, 1);
+            var clipData = new EffectClipData( $"Buff", startTime, startTime + 1f, 1);
             AddClip(track, clipData);
         }
 

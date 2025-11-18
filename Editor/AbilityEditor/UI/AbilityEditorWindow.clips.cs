@@ -140,7 +140,7 @@ namespace Editor.AbilityEditor
             var skillClip = new SkillClipData("Test Skill", 0.5f, 1.5f, 1001);
             window._clipManager.AddClip(firstTrackItem, skillClip);
 
-            var buffClip = new BuffClipData("Test Buff", 2f, 4f, 2001);
+            var buffClip = new EffectClipData( "Test Buff", 2f, 4f, 2001);
             window._clipManager.AddClip(firstTrackItem, buffClip);
 
             var audioClip = new AudioClipData("Test Audio", 1f, 2f, "audio/test");

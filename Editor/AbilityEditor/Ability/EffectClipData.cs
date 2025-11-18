@@ -8,7 +8,7 @@ namespace Aquila.AbilityEditor
     /// 用于在timeline中表示效果/Buff的应用
     /// </summary>
     [Serializable]
-    public class BuffClipData : TimelineClipData
+    public class EffectClipData : TimelineClipData
     {
         /// <summary>
         /// Effect ID（关联到配置表中的效果）
@@ -30,7 +30,7 @@ namespace Aquila.AbilityEditor
 
         public override TimelineClipType ClipType => TimelineClipType.Buff;
 
-        public BuffClipData() : base()
+        public EffectClipData() : base()
         {
             _effectId = 0;
             _stackCount = 1;
@@ -38,7 +38,7 @@ namespace Aquila.AbilityEditor
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
         }
 
-        public BuffClipData(string clipName, float startTime, float endTime, int effectId)
+        public EffectClipData( string clipName, float startTime, float endTime, int effectId)
             : base(clipName, startTime, endTime, new Color(0.8f, 0.4f, 0.8f))
         {
             _effectId = effectId;
@@ -72,7 +72,7 @@ namespace Aquila.AbilityEditor
 
         public override TimelineClipData Clone()
         {
-            var clone = new BuffClipData();
+            var clone = new EffectClipData();
             CopyBaseTo(clone);
             clone._effectId = _effectId;
             clone._stackCount = _stackCount;
