@@ -15,6 +15,10 @@ namespace Aquila.AbilityEditor.Config
         [Tooltip("Effect ID")]
         public int id;
 
+        [Tooltip("描述/注释")]
+        [TextArea(2, 4)]
+        public string Description;
+
         [Tooltip("Effect的类型")]
         public EffectType Type;
 
@@ -58,7 +62,7 @@ namespace Aquila.AbilityEditor.Config
         /// </summary>
         public string GetDisplayInfo()
         {
-            return $"Effect [{id}]: {Type}, Duration={Duration}s, Target={Target}";
+            return $"Effect [{id}]: {Description} - {Type}, Duration={Duration}s, Target={Target}";
         }
     }
 

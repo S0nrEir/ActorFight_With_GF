@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d2e4e0c85fa3574486698cb394fb6d2, type: 3}
+  m_Script: {fileID: 11500000, guid: 597848049fa94ea42972e5c426b1d247, type: 3}
   m_Name: 1005
   m_EditorClassIdentifier: 
   id: 1005
+  Description: "\u57FA\u4E8E\u751F\u547D\u503C\u4E0A\u9650\u7684%d\u767E\u5206\u6BD4\u751F\u547D\u503C\u79FB\u9664"
   Type: 8
   ExtensionParam:
     float_1: -1

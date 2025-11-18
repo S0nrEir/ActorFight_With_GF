@@ -136,6 +136,7 @@ namespace Aquila.AbilityEditor.Tools
 
                     // 复制数据
                     effectData.id = effectJson.id;
+                    effectData.Description = effectJson.Description ?? "";
                     effectData.Type = (Cfg.Enum.EffectType)effectJson.Type;
                     effectData.ModifierType = (Cfg.Enum.NumricModifierType)effectJson.ModifierType;
                     effectData.EffectOnAwake = effectJson.EffectOnAwake;
@@ -201,6 +202,7 @@ namespace Aquila.AbilityEditor.Tools
         private class EffectDataJson
         {
             public int id;
+            public string Description;
             public int Type;
             public ExtensionParamJson ExtensionParam;
             public int ModifierType;
