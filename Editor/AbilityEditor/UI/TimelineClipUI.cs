@@ -93,6 +93,9 @@ namespace Aquila.AbilityEditor
             _timelineStartTime = timelineStartTime;
             _timelineEndTime = timelineEndTime;
 
+            // 判断是否为即时clip
+            bool isInstant = _clipData.IsInstantClip;
+
             // 创建clip容器
             _clipElement = new VisualElement
             {
@@ -103,10 +106,10 @@ namespace Aquila.AbilityEditor
                     position = Position.Absolute,
                     height = Misc.CLIP_HEIGHT,
                     backgroundColor = _clipData.ClipColor,
-                    borderTopLeftRadius = 4,
-                    borderTopRightRadius = 4,
-                    borderBottomLeftRadius = 4,
-                    borderBottomRightRadius = 4,
+                    borderTopLeftRadius = isInstant ? 2 : 4,
+                    borderTopRightRadius = isInstant ? 2 : 4,
+                    borderBottomLeftRadius = isInstant ? 2 : 4,
+                    borderBottomRightRadius = isInstant ? 2 : 4,
                     borderLeftWidth = 1,
                     borderRightWidth = 1,
                     borderTopWidth = 1,
@@ -127,9 +130,9 @@ namespace Aquila.AbilityEditor
                 {
                     fontSize = 10,
                     color = Color.white,
-                    unityTextAlign = TextAnchor.MiddleLeft,
-                    paddingLeft = Misc.HANDLE_WIDTH + 2,
-                    paddingRight = Misc.HANDLE_WIDTH + 2,
+                    unityTextAlign = isInstant ? TextAnchor.MiddleCenter : TextAnchor.MiddleLeft,
+                    paddingLeft = isInstant ? 2 : (Misc.HANDLE_WIDTH + 2),
+                    paddingRight = isInstant ? 2 : (Misc.HANDLE_WIDTH + 2),
                     unityFontStyleAndWeight = FontStyle.Bold,
                     overflow = Overflow.Hidden,
                     textOverflow = TextOverflow.Ellipsis,
@@ -142,101 +145,141 @@ namespace Aquila.AbilityEditor
                 }
             };
 
-            _leftHandle = new VisualElement
+            // 只为非即时clip创建左右手柄
+            if (!isInstant)
             {
-                name = "LeftHandle",
-                style =
+                _leftHandle = new VisualElement
                 {
-                    position = Position.Absolute,
-                    left = 0,
-                    top = 0,
-                    bottom = 0,
-                    width = Misc.HANDLE_WIDTH,
-                    backgroundColor = new Color(1f, 1f, 1f, 0.2f),
-                    cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
-                    borderTopLeftRadius = 4,
-                    borderBottomLeftRadius = 4
-                }
-            };
+                    name = "LeftHandle",
+                    style =
+                    {
+                        position = Position.Absolute,
+                        left = 0,
+                        top = 0,
+                        bottom = 0,
+                        width = Misc.HANDLE_WIDTH,
+                        backgroundColor = new Color(1f, 1f, 1f, 0.2f),
+                        cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
+                        borderTopLeftRadius = 4,
+                        borderBottomLeftRadius = 4
+                    }
+                };
 
-            _rightHandle = new VisualElement
-            {
-                name = "RightHandle",
-                style =
+                _rightHandle = new VisualElement
                 {
-                    position = Position.Absolute,
-                    right = 0,
-                    top = 0,
-                    bottom = 0,
-                    width = Misc.HANDLE_WIDTH,
-                    backgroundColor = new Color(1f, 1f, 1f, 0.2f),
-                    cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
-                    borderTopRightRadius = 4,
-                    borderBottomRightRadius = 4
-                }
-            };
+                    name = "RightHandle",
+                    style =
+                    {
+                        position = Position.Absolute,
+                        right = 0,
+                        top = 0,
+                        bottom = 0,
+                        width = Misc.HANDLE_WIDTH,
+                        backgroundColor = new Color(1f, 1f, 1f, 0.2f),
+                        cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
+                        borderTopRightRadius = 4,
+                        borderBottomRightRadius = 4
+                    }
+                };
+            }
 
-            // 创建开始时间标签（显示在clip左侧外部）
-            _startTimeLabel = new Label()
+            // 创建时间标签
+            if (isInstant)
             {
-                pickingMode = PickingMode.Ignore,
-                style =
+                // 即时clip只显示一个触发时间标签（显示在clip下方）
+                _startTimeLabel = new Label()
                 {
-                    position = Position.Absolute,
-                    fontSize = 9,
-                    color = Color.white,
-                    unityTextAlign = TextAnchor.MiddleRight,
-                    backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.8f),
-                    paddingLeft = 3,
-                    paddingRight = 3,
-                    paddingTop = 1,
-                    paddingBottom = 1,
-                    borderTopLeftRadius = 2,
-                    borderTopRightRadius = 2,
-                    borderBottomLeftRadius = 2,
-                    borderBottomRightRadius = 2,
-                    right = Length.Percent(100), // 显示在clip左侧外部
-                    marginRight = 2,
-                    top = 0,
-                    bottom = 0,
-                    alignSelf = Align.Center,
-                    height = 16
-                }
-            };
+                    pickingMode = PickingMode.Ignore,
+                    style =
+                    {
+                        position = Position.Absolute,
+                        fontSize = 9,
+                        color = Color.white,
+                        unityTextAlign = TextAnchor.MiddleCenter,
+                        backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.8f),
+                        paddingLeft = 3,
+                        paddingRight = 3,
+                        paddingTop = 1,
+                        paddingBottom = 1,
+                        borderTopLeftRadius = 2,
+                        borderTopRightRadius = 2,
+                        borderBottomLeftRadius = 2,
+                        borderBottomRightRadius = 2,
+                        top = Length.Percent(100), // 显示在clip下方
+                        marginTop = 2,
+                        left = Length.Percent(50),
+                        translate = new Translate(Length.Percent(-50), 0),
+                        height = 16
+                    }
+                };
+            }
+            else
+            {
+                // 持续时间clip显示开始和结束时间标签
+                _startTimeLabel = new Label()
+                {
+                    pickingMode = PickingMode.Ignore,
+                    style =
+                    {
+                        position = Position.Absolute,
+                        fontSize = 9,
+                        color = Color.white,
+                        unityTextAlign = TextAnchor.MiddleRight,
+                        backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.8f),
+                        paddingLeft = 3,
+                        paddingRight = 3,
+                        paddingTop = 1,
+                        paddingBottom = 1,
+                        borderTopLeftRadius = 2,
+                        borderTopRightRadius = 2,
+                        borderBottomLeftRadius = 2,
+                        borderBottomRightRadius = 2,
+                        right = Length.Percent(100), // 显示在clip左侧外部
+                        marginRight = 2,
+                        top = 0,
+                        bottom = 0,
+                        alignSelf = Align.Center,
+                        height = 16
+                    }
+                };
 
-            // 创建结束时间标签（显示在clip右侧外部）
-            _endTimeLabel = new Label()
-            {
-                pickingMode = PickingMode.Ignore,
-                style =
+                _endTimeLabel = new Label()
                 {
-                    position = Position.Absolute,
-                    fontSize = 9,
-                    color = Color.white,
-                    unityTextAlign = TextAnchor.MiddleLeft,
-                    backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.8f),
-                    paddingLeft = 3,
-                    paddingRight = 3,
-                    paddingTop = 1,
-                    paddingBottom = 1,
-                    borderTopLeftRadius = 2,
-                    borderTopRightRadius = 2,
-                    borderBottomLeftRadius = 2,
-                    borderBottomRightRadius = 2,
-                    left = Length.Percent(100), // 显示在clip右侧外部
-                    marginLeft = 2,
-                    top = 0,
-                    bottom = 0,
-                    alignSelf = Align.Center,
-                    height = 16
-                }
-            };
+                    pickingMode = PickingMode.Ignore,
+                    style =
+                    {
+                        position = Position.Absolute,
+                        fontSize = 9,
+                        color = Color.white,
+                        unityTextAlign = TextAnchor.MiddleLeft,
+                        backgroundColor = new Color(0.1f, 0.1f, 0.1f, 0.8f),
+                        paddingLeft = 3,
+                        paddingRight = 3,
+                        paddingTop = 1,
+                        paddingBottom = 1,
+                        borderTopLeftRadius = 2,
+                        borderTopRightRadius = 2,
+                        borderBottomLeftRadius = 2,
+                        borderBottomRightRadius = 2,
+                        left = Length.Percent(100), // 显示在clip右侧外部
+                        marginLeft = 2,
+                        top = 0,
+                        bottom = 0,
+                        alignSelf = Align.Center,
+                        height = 16
+                    }
+                };
+            }
 
             _clipElement.Add(_clipLabel);
-            _clipElement.Add(_leftHandle);
-            _clipElement.Add(_rightHandle);
-            _clipElement.Add(_startTimeLabel);
-            _clipElement.Add(_endTimeLabel);
+            if (_leftHandle != null)
+                _clipElement.Add(_leftHandle);
+            if (_rightHandle != null)
+                _clipElement.Add(_rightHandle);
+            if (_startTimeLabel != null)
+                _clipElement.Add(_startTimeLabel);
+            if (_endTimeLabel != null)
+                _clipElement.Add(_endTimeLabel);
 
             RegisterEvents();
             UpdateVisualTransform();
@@ -250,9 +293,11 @@ namespace Aquila.AbilityEditor
 
         private void RegisterEvents()
         {
-            // 只在手柄上注册 MouseDown 事件
-            _leftHandle.RegisterCallback<MouseDownEvent>(OnLeftHandleMouseDown);
-            _rightHandle.RegisterCallback<MouseDownEvent>(OnRightHandleMouseDown);
+            // 只在手柄上注册 MouseDown 事件（仅当手柄存在时）
+            if (_leftHandle != null)
+                _leftHandle.RegisterCallback<MouseDownEvent>(OnLeftHandleMouseDown);
+            if (_rightHandle != null)
+                _rightHandle.RegisterCallback<MouseDownEvent>(OnRightHandleMouseDown);
 
             // 在 clipElement 上注册所有移动和释放事件
             // 这样即使鼠标离开手柄区域，事件仍然能被处理
@@ -302,10 +347,13 @@ namespace Aquila.AbilityEditor
         {
             if (evt.button == 0)
             {
-                // 检查是否点击在手柄区域，如果是则不处理（让手柄的事件处理）
-                float localX = evt.localMousePosition.x;
-                if (localX <= Misc.HANDLE_WIDTH || localX >= _clipElement.resolvedStyle.width - Misc.HANDLE_WIDTH)
-                    return;
+                // 如果不是即时clip，检查是否点击在手柄区域，如果是则不处理（让手柄的事件处理）
+                if (!_clipData.IsInstantClip && _leftHandle != null && _rightHandle != null)
+                {
+                    float localX = evt.localMousePosition.x;
+                    if (localX <= Misc.HANDLE_WIDTH || localX >= _clipElement.resolvedStyle.width - Misc.HANDLE_WIDTH)
+                        return;
+                }
 
                 _currentDragMode = DragMode.Move;
                 _dragStartMouseX = evt.mousePosition.x;
@@ -431,8 +479,18 @@ namespace Aquila.AbilityEditor
                 return;
 
             float startX = _clipData.StartTime * _pixelsPerSecond * _zoom;
-            float width = _clipData.Duration * _pixelsPerSecond * _zoom;
-            width = Mathf.Max(width, Misc.MIN_CLIP_WIDTH);
+            float width;
+
+            // 即时clip使用固定宽度，持续时间clip根据时长计算宽度
+            if (_clipData.IsInstantClip)
+            {
+                width = 24f; // 即时clip固定宽度24像素
+            }
+            else
+            {
+                width = _clipData.Duration * _pixelsPerSecond * _zoom;
+                width = Mathf.Max(width, Misc.MIN_CLIP_WIDTH);
+            }
 
             _clipElement.style.left = startX;
             _clipElement.style.width = width;
@@ -450,11 +508,21 @@ namespace Aquila.AbilityEditor
                 _clipLabel.text = _clipData.ClipName;
 
             // 更新时间标签
-            if (_startTimeLabel != null)
-                _startTimeLabel.text = $"{_clipData.StartTime:F2}s";
+            if (_clipData.IsInstantClip)
+            {
+                // 即时clip只显示触发时间
+                if (_startTimeLabel != null)
+                    _startTimeLabel.text = $"{_clipData.StartTime:F2}s";
+            }
+            else
+            {
+                // 持续时间clip显示开始和结束时间
+                if (_startTimeLabel != null)
+                    _startTimeLabel.text = $"{_clipData.StartTime:F2}s";
 
-            if (_endTimeLabel != null)
-                _endTimeLabel.text = $"{_clipData.EndTime:F2}s";
+                if (_endTimeLabel != null)
+                    _endTimeLabel.text = $"{_clipData.EndTime:F2}s";
+            }
         }
 
         /// <summary>

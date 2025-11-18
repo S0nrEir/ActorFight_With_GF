@@ -51,6 +51,11 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public abstract TimelineClipType ClipType { get; }
 
+        /// <summary>
+        /// 是否为即时clip（时间点触发，而非持续时间）
+        /// </summary>
+        public virtual bool IsInstantClip => false;
+
         public TimelineClipData()
         {
             _clipId = Guid.NewGuid().ToString();
@@ -181,7 +186,8 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
-            if (_endTime <= _startTime)
+            // 即时clip允许EndTime等于StartTime
+            if (!IsInstantClip && _endTime <= _startTime)
             {
                 errorMessage = "End time must be greater than start time";
                 return false;

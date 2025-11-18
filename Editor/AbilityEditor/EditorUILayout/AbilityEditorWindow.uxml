@@ -4,7 +4,7 @@
             <ui:Button text="NewTrack" display-tooltip-when-elided="true" name="AddNewTrackBtn" style="white-space: nowrap; -unity-text-align: upper-left;" />
         </ui:VisualElement>
         <ui:VisualElement name="AbilityEditPanel" style="flex-direction: row;">
-            <ui:VisualElement name="AbilityBaseInfoPanel" style="height: 543px; width: 202px; opacity: 1; -unity-font-style: normal; border-top-width: 5px; border-right-width: 1px; border-bottom-width: 5px; border-left-width: -198px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(255, 255, 255, 0.37); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); justify-content: flex-start; align-items: stretch; flex-direction: column;">
+            <ui:VisualElement name="AbilityBaseInfoPanel" style="height: 543px; width: 202px; opacity: 1; -unity-font-style: normal; border-top-width: 5px; border-right-width: 0; border-bottom-width: 5px; border-left-width: -198px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(255, 255, 255, 0.37); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); justify-content: flex-start; align-items: stretch; flex-direction: column;">
                 <ui:Label text="Ability Base Info" display-tooltip-when-elided="true" name="AbilityBaseInfoText" style="width: 141px; height: 23px; font-size: 18px; -unity-text-align: middle-left;" />
                 <ui:VisualElement style="flex-direction: row; align-items: center;">
                     <ui:Label text="AbilityID" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
@@ -38,7 +38,7 @@
                     <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: middle-left; flex-direction: column;" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 510px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96);">
+            <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 510px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 0; border-right-width: 1px; border-bottom-width: 0; border-left-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96);">
                 <ui:Label text="Tracks" display-tooltip-when-elided="true" style="height: 35px; -unity-text-align: middle-center; font-size: 19px; -unity-font-style: bold;" />
             </ui:VisualElement>
             <ui:VisualElement name="TimelineTrackPanel" style="width: 601px; flex-direction: column; flex-grow: 1; flex-shrink: 1; overflow: hidden;">

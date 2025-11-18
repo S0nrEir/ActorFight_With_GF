@@ -30,16 +30,36 @@ namespace Aquila.AbilityEditor
 
         public override TimelineClipType ClipType => TimelineClipType.Buff;
 
+        /// <summary>
+        /// EffectClip是即时触发的，不需要持续时间
+        /// </summary>
+        public override bool IsInstantClip => true;
+
+        /// <summary>
+        /// Effect触发时间（即时clip只有触发时间，没有持续时间）
+        /// </summary>
+        public float TriggerTime
+        {
+            get => StartTime;
+            set
+            {
+                StartTime = value;
+                EndTime = value; // EndTime始终等于StartTime
+            }
+        }
+
         public EffectClipData() : base()
         {
             _effectId = 0;
             _stackCount = 1;
             _canStack = false;
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
+            // 确保EndTime等于StartTime
+            EndTime = StartTime;
         }
 
-        public EffectClipData( string clipName, float startTime, float endTime, int effectId)
-            : base(clipName, startTime, endTime, new Color(0.8f, 0.4f, 0.8f))
+        public EffectClipData( string clipName, float triggerTime, int effectId)
+            : base(clipName, triggerTime, triggerTime, new Color(0.8f, 0.4f, 0.8f))
         {
             _effectId = effectId;
             _stackCount = 1;
@@ -104,7 +124,7 @@ namespace Aquila.AbilityEditor
         public override string GetDisplayInfo()
         {
             string stackInfo = _canStack ? $" (x{_stackCount})" : "";
-            return $"Buff {_effectId}: {ClipName}{stackInfo} [{StartTime:F2}s - {EndTime:F2}s]";
+            return $"Effect {_effectId}: {ClipName}{stackInfo} [Trigger at {TriggerTime:F2}s]";
         }
 
         #endregion

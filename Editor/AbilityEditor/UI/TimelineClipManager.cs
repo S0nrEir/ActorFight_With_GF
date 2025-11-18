@@ -272,7 +272,7 @@ namespace Aquila.AbilityEditor
                 clickTime = Mathf.Clamp(clickTime, _timelineStartTime, _timelineEndTime);
 
                 evt.menu.AppendAction("Add Skill Clip", action => AddSkillClip(track, clickTime));
-                evt.menu.AppendAction("Add Buff Clip", action => AddBuffClip(track, clickTime));
+                evt.menu.AppendAction("Add Effect Clip", action => AddBuffClip(track, clickTime));
                 evt.menu.AppendAction("Add Audio Clip", action => AddAudioClip(track, clickTime));
                 evt.menu.AppendAction("Add VFX Clip", action => AddVFXClip(track, clickTime));
             }));
@@ -286,7 +286,7 @@ namespace Aquila.AbilityEditor
 
         private void AddBuffClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new EffectClipData( $"Buff", startTime, startTime + 1f, 1);
+            var clipData = new EffectClipData( $"Buff", startTime, 1);
             AddClip(track, clipData);
         }
 
