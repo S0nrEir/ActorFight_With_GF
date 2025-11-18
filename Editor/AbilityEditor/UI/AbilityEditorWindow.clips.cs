@@ -111,47 +111,5 @@ namespace Editor.AbilityEditor
         }
 
         #endregion
-
-        #region Public API for Testing
-
-        /// <summary>
-        /// 添加测试clip（用于测试功能）
-        /// </summary>
-        [MenuItem("Aquila/AbilityEditor/Add Test Clips")]
-        public static void AddTestClips()
-        {
-            var window = GetWindow<AbilityEditorWindow>();
-            if (window == null || window._clipManager == null || window._timelineTrackItems == null)
-            {
-                Debug.LogWarning("AbilityEditorWindow is not initialized or has no tracks");
-                return;
-            }
-
-            // 确保至少有一个轨道
-            if (window._timelineTrackItems.Count == 0)
-            {
-                Debug.LogWarning("No tracks available. Please create a track first.");
-                return;
-            }
-
-            var firstTrackItem = window._timelineTrackItems[0];
-
-            // 添加测试clips
-            var skillClip = new SkillClipData("Test Skill", 0.5f, 1.5f, 1001);
-            window._clipManager.AddClip(firstTrackItem, skillClip);
-
-            var buffClip = new EffectClipData( "Test Buff", 2f, 2001);
-            window._clipManager.AddClip(firstTrackItem, buffClip);
-
-            var audioClip = new AudioClipData("Test Audio", 1f, 2f, "audio/test");
-            window._clipManager.AddClip(firstTrackItem, audioClip);
-
-            var vfxClip = new VFXClipData("Test VFX", 2.5f, 3.5f, "vfx/test");
-            window._clipManager.AddClip(firstTrackItem, vfxClip);
-
-            Debug.Log("Test clips added successfully!");
-        }
-
-        #endregion
     }
 }
