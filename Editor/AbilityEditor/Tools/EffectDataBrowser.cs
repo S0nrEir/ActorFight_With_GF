@@ -1,0 +1,128 @@
+using UnityEditor;
+using UnityEngine;
+using Aquila.AbilityEditor.Config;
+
+namespace Aquila.AbilityEditor.Tools
+{
+    /// <summary>
+    /// Effect数据浏览器 - 直接在Inspector中显示
+    /// </summary>
+    public class EffectDataBrowser
+    {
+        private static EffectData _tempEffectData;
+
+        [MenuItem("Aquila/AbilityEditor/Effect Data Browser")]
+        public static void ShowInInspector()
+        {
+            // 如果已经有选中的EffectData，就用选中的
+            if (Selection.activeObject is EffectData selectedEffect)
+            {
+                _tempEffectData = selectedEffect;
+                EditorGUIUtility.PingObject(_tempEffectData);
+            }
+            // 否则创建一个新的临时对象
+            else
+            {
+                if (_tempEffectData == null)
+                {
+                    _tempEffectData = ScriptableObject.CreateInstance<EffectData>();
+                    _tempEffectData.name = "New Effect Data";
+                }
+                Selection.activeObject = _tempEffectData;
+            }
+        }
+    }
+
+    /// <summary>
+    /// EffectData的自定义Inspector
+    /// </summary>
+    [CustomEditor(typeof(EffectData))]
+    public class EffectDataEditor : UnityEditor.Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            EffectData effectData = (EffectData)target;
+            DrawDefaultInspector();
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            EditorGUILayout.Space(5);
+            GUI.backgroundColor = new Color(0.5f, 0.8f, 0.5f);
+            if (GUILayout.Button("Create New EffectData Asset", GUILayout.Height(30)))
+                CreateNewAsset(effectData);
+
+            GUI.backgroundColor = Color.white;
+        }
+
+        private void CreateNewAsset(EffectData sourceData)
+        {
+            string folderPath = "Assets/Editor/AbilityEditor/Config/Effects";
+
+            if (!AssetDatabase.IsValidFolder(folderPath))
+            {
+                EditorUtility.DisplayDialog("Error", $"Folder not found: {folderPath}", "OK");
+                return;
+            }
+
+            string fileName = $"{sourceData.id}.asset";
+            string fullPath = $"{folderPath}/{fileName}";
+
+            if (AssetDatabase.LoadAssetAtPath<EffectData>(fullPath) != null)
+            {
+                EditorUtility.DisplayDialog("File Exists",
+                    $"EffectData with ID {sourceData.id} already exists at:\n{fullPath}\n\nPlease use a different ID.",
+                    "OK");
+                return;
+            }
+
+            EffectData newData = ScriptableObject.CreateInstance<EffectData>();
+
+            newData.id = sourceData.id;
+            newData.Description = sourceData.Description;
+            newData.Type = sourceData.Type;
+
+            if (sourceData.ExtensionParam != null)
+            {
+                newData.ExtensionParam = new EffectExtensionParam
+                {
+                    float_1 = sourceData.ExtensionParam.float_1,
+                    float_2 = sourceData.ExtensionParam.float_2,
+                    float_3 = sourceData.ExtensionParam.float_3,
+                    float_4 = sourceData.ExtensionParam.float_4,
+                    int_1 = sourceData.ExtensionParam.int_1,
+                    int_2 = sourceData.ExtensionParam.int_2,
+                    int_3 = sourceData.ExtensionParam.int_3,
+                    int_4 = sourceData.ExtensionParam.int_4
+                };
+            }
+
+            newData.ModifierType = sourceData.ModifierType;
+            newData.EffectOnAwake = sourceData.EffectOnAwake;
+            newData.Policy = sourceData.Policy;
+            newData.Period = sourceData.Period;
+            newData.Duration = sourceData.Duration;
+            newData.Target = sourceData.Target;
+            newData.EffectType = sourceData.EffectType;
+
+            if (sourceData.DeriveEffects != null)
+            {
+                newData.DeriveEffects = (int[])sourceData.DeriveEffects.Clone();
+            }
+
+            if (sourceData.AwakeEffects != null)
+            {
+                newData.AwakeEffects = (int[])sourceData.AwakeEffects.Clone();
+            }
+
+            AssetDatabase.CreateAsset(newData, fullPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Selection.activeObject = newData;
+            EditorGUIUtility.PingObject(newData);
+
+            Debug.Log($"Created new EffectData at: {fullPath}");
+            EditorUtility.DisplayDialog("Success", $"Created new EffectData:\n{fullPath}", "OK");
+        }
+    }
+}
