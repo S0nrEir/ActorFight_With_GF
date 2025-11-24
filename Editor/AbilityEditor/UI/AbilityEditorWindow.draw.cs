@@ -306,22 +306,8 @@ namespace Editor.AbilityEditor
             _timelineContainer.style.width = totalWidth + 50;
             _timelineContainer.style.minWidth = totalWidth + 50;
 
-            var scaleContainer = new VisualElement
-            {
-                style =
-                {
-                    // 不使用 flexDirection，让绝对定位的子元素正常渲染
-                    height = scaleHeight,
-                    marginBottom = 5,
-                    marginLeft = 50,
-                    width = totalWidth, // 明确设置宽度，确保刻度在整个时间轴范围内可见
-                    minWidth = totalWidth, // 确保最小宽度
-                    position = Position.Relative,
-                    overflow = Overflow.Visible, // 确保绝对定位的子元素可见
-                    // 添加背景色用于调试（可选）
-                    // backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.3f)
-                }
-            };
+            // 使用VisualElementFactory创建刻度容器
+            var scaleContainer = VisualElementFactory.GenScaleContainer(totalWidth, scaleHeight);
 
             for ( int i = 0; i <= totalScales; i++ )
             {
@@ -345,29 +331,11 @@ namespace Editor.AbilityEditor
                 if ( !track.IsEnabled )
                     continue;
 
-                var trackRow = new VisualElement
-                {
-                    style =
-                    {
-                        flexDirection = FlexDirection.Row,
-                        height = trackHeight,
-                        marginBottom = 2,
-                        width = totalWidth + 50, // 确保轨道行宽度与容器一致
-                        minWidth = totalWidth + 50
-                    }
-                };
+                // 使用VisualElementFactory创建轨道行
+                var trackRow = VisualElementFactory.GenTrackRow(totalWidth, trackHeight);
 
-                var trackNameLabel = new Label( track.Name )
-                {
-                    style =
-                    {
-                        width = 50,
-                        unityTextAlign = TextAnchor.MiddleLeft,
-                        fontSize = 11,
-                        color = Color.white,
-                        paddingLeft = 5
-                    }
-                };
+                // 使用VisualElementFactory创建轨道名称标签
+                var trackNameLabel = VisualElementFactory.GenTrackNameLabelForTimeline(track.Name);
 
                 var trackTimeline = VisualElementFactory.GenTrackTimeline( track.TrackColor, totalWidth, trackHeight );
                 trackTimeline.userData = track;
@@ -407,47 +375,11 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void CreateTimelineScrubber()
         {
-            // 创建拖动线（延伸到 TimelineTrackPanel 容器内）
-            _timelineScrubber = new VisualElement
-            {
-                name = "TimelineScrubber",
-                pickingMode = PickingMode.Ignore, // 不拦截鼠标事件，让事件穿透到下层
-                style =
-                {
-                    position = Position.Absolute,
-                    width = 2,
-                    backgroundColor = new Color(1f, 0.5f, 0f, 1f), // 实心橙色
-                    left = 50,
-                    top = 0,
-                    bottom = 0, // 使用 bottom 替代固定 height，自动填满容器高度
-                    display = DisplayStyle.None,
-                }
-            };
+            // 使用VisualElementFactory创建拖动线
+            _timelineScrubber = VisualElementFactory.GenTimelineScrubber();
 
-            // 添加时间显示标签
-            var timeLabel = new Label("0.0s")
-            {
-                name = "ScrubberTimeLabel",
-                pickingMode = PickingMode.Ignore, // 标签也不拦截事件
-                style =
-                {
-                    position = Position.Absolute,
-                    fontSize = 10,
-                    color = Color.white,
-                    backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.9f),
-                    paddingLeft = 4,
-                    paddingRight = 4,
-                    paddingTop = 2,
-                    paddingBottom = 2,
-                    borderTopLeftRadius = 2,
-                    borderTopRightRadius = 2,
-                    borderBottomLeftRadius = 2,
-                    borderBottomRightRadius = 2,
-                    left = -20,
-                    top = -22,
-                    display = DisplayStyle.None
-                }
-            };
+            // 使用VisualElementFactory创建时间显示标签
+            var timeLabel = VisualElementFactory.GenScrubberTimeLabel();
 
             _timelineScrubber.Add(timeLabel);
         }

@@ -10,6 +10,16 @@ namespace Aquila.AbilityEditor
         public static readonly string UXML_FILE_PATH = "Assets/Editor/AbilityEditor/EditorUILayout/AbilityEditorWindow.uxml";
 
         /// <summary>
+        /// 默认的clip ui的固定宽度
+        /// </summary>
+        public const float DEFAULT_INSTANT_CLIP_UI_WIDTH = 24f;
+        
+        /// <summary>
+        /// effect clip ui的固定宽度
+        /// </summary>
+        public const float EFFECT_CLIP_UI_WIDTH = 50f;
+        
+        /// <summary>
         /// 最小clip宽度（像素）
         /// </summary>
         public const float MIN_CLIP_WIDTH = 20f;

@@ -1,6 +1,7 @@
 using Aquila.AbilityEditor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Editor.AbilityEditor
 {
@@ -11,6 +12,8 @@ namespace Editor.AbilityEditor
     public partial class AbilityEditorWindow
     {
         private TimelineClipManager _clipManager;
+        private TimelineClipUI _selectedClipUI;
+        private EffectClipInspectorProxy _clipInspectorProxy;
 
         /// <summary>
         /// 初始化Clip管理器
@@ -78,8 +81,48 @@ namespace Editor.AbilityEditor
 
             Debug.Log($"Clip selected: {clipUI.ClipData.GetDisplayInfo()}");
 
-            // 这里可以显示clip的属性面板
-            // 例如：显示SkillClipData的SkillId、EffectIds等信息
+            // 保存当前选中的clip
+            _selectedClipUI = clipUI;
+
+            // 在Unity Inspector中显示clip的属性
+            ShowClipInUnityInspector(clipUI);
+        }
+
+        /// <summary>
+        /// 在Unity Inspector中显示Clip的属性
+        /// </summary>
+        private void ShowClipInUnityInspector(TimelineClipUI clipUI)
+        {
+            // 检查是否是EffectClipData
+            if (clipUI.ClipData is EffectClipData effectClip)
+            {
+                // 创建或重用Inspector代理对象
+                if (_clipInspectorProxy == null)
+                {
+                    _clipInspectorProxy = ScriptableObject.CreateInstance<EffectClipInspectorProxy>();
+                    _clipInspectorProxy.name = "Effect Clip Inspector";
+                }
+
+                // 设置代理对象的目标
+                _clipInspectorProxy.TargetClipData = effectClip;
+                _clipInspectorProxy.TargetClipUI = clipUI;
+
+                // 设置Timeline时长（用于限制Trigger Time范围）
+                _clipInspectorProxy.TimelineDuration = _timelineDuration;
+
+                // 从ClipData同步数据到代理对象
+                _clipInspectorProxy.SyncFromClipData();
+
+                // 在Unity Inspector中显示代理对象
+                Selection.activeObject = _clipInspectorProxy;
+
+                Debug.Log($"Showing Effect Clip in Unity Inspector - ID: {effectClip.EffectId}, Timeline Duration: {_timelineDuration:F2}s");
+            }
+            else
+            {
+                // 不是EffectClip，清除选择
+                Selection.activeObject = null;
+            }
         }
 
         private void OnClipModified(TimelineClipUI clipUI)
@@ -87,13 +130,9 @@ namespace Editor.AbilityEditor
             if (clipUI == null)
                 return;
 
-            Debug.Log($"Clip modified: {clipUI.ClipData.GetDisplayInfo()}");
-
             // 标记数据为dirty，需要保存
             if (_currentAbilityData != null)
-            {
                 EditorUtility.SetDirty(_currentAbilityData);
-            }
         }
 
         private void OnClipDeleted(TimelineClipUI clipUI)
@@ -103,11 +142,8 @@ namespace Editor.AbilityEditor
 
             Debug.Log($"Clip deleted: {clipUI.ClipData.GetDisplayInfo()}");
 
-            // 标记数据为dirty，需要保存
             if (_currentAbilityData != null)
-            {
                 EditorUtility.SetDirty(_currentAbilityData);
-            }
         }
 
         #endregion

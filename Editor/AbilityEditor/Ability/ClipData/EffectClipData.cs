@@ -66,8 +66,6 @@ namespace Aquila.AbilityEditor
             _canStack = false;
         }
 
-        #region Properties
-
         public int EffectId
         {
             get => _effectId;
@@ -85,8 +83,6 @@ namespace Aquila.AbilityEditor
             get => _canStack;
             set => _canStack = value;
         }
-
-        #endregion
 
         #region Override Methods
 

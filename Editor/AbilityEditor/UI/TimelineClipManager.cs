@@ -12,35 +12,13 @@ namespace Aquila.AbilityEditor
     /// </summary>
     public class TimelineClipManager
     {
-        // 轨道与其对应的clip UI映射
-        private Dictionary<TimelineTrackItem, List<TimelineClipUI>> _trackClipUIs;
-
-        // 轨道与其timeline UI元素的映射
-        private Dictionary<TimelineTrackItem, VisualElement> _trackTimelineElements;
-
-        // 当前选中的clip
-        private TimelineClipUI _selectedClip;
-
-        // Timeline参数
-        private float _pixelsPerSecond = 100f;
-        private float _zoom = 1f;
-        private float _timelineStartTime = 0f;
-        private float _timelineEndTime = 5f;
-
-        // 事件
-        public event Action<TimelineClipUI> OnClipSelected;
-        public event Action<TimelineClipUI> OnClipModified;
-        public event Action<TimelineClipUI> OnClipDeleted;
-
-        public TimelineClipUI SelectedClip => _selectedClip;
-
         public TimelineClipManager()
         {
             _trackClipUIs = new Dictionary<TimelineTrackItem, List<TimelineClipUI>>();
             _trackTimelineElements = new Dictionary<TimelineTrackItem, VisualElement>();
         }
 
-        #region Track Management
+        //Track Management
 
         /// <summary>
         /// 注册轨道和其timeline UI元素
@@ -93,8 +71,6 @@ namespace Aquila.AbilityEditor
             _selectedClip = null;
         }
 
-        #endregion
-
         #region Clip Management
 
         /// <summary>
@@ -105,11 +81,9 @@ namespace Aquila.AbilityEditor
             if (track == null || clipData == null)
                 return null;
 
-            // 添加数据
             if (!track.AddClip(clipData))
                 return null;
 
-            // 创建UI
             return CreateClipUI(track, clipData);
         }
 
@@ -286,7 +260,7 @@ namespace Aquila.AbilityEditor
 
         private void AddEffectClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new EffectClipData( $"Buff", startTime, 1);
+            var clipData = new EffectClipData( $"Effect", startTime, 1);
             AddClip(track, clipData);
         }
 
@@ -326,5 +300,23 @@ namespace Aquila.AbilityEditor
                 _selectedClip = null;
             }
         }
+        
+        // 轨道与其对应的clip UI映射
+        private Dictionary<TimelineTrackItem, List<TimelineClipUI>> _trackClipUIs;
+        // 轨道与其timeline UI元素的映射
+        private Dictionary<TimelineTrackItem, VisualElement> _trackTimelineElements;
+        // 当前选中的clip
+        private TimelineClipUI _selectedClip;
+
+        // Timeline参数
+        private float _pixelsPerSecond = 100f;
+        private float _zoom = 1f;
+        private float _timelineStartTime = 0f;
+        private float _timelineEndTime = 5f;
+
+        // 事件
+        public event Action<TimelineClipUI> OnClipSelected;
+        public event Action<TimelineClipUI> OnClipModified;
+        public event Action<TimelineClipUI> OnClipDeleted;
     }
 }
