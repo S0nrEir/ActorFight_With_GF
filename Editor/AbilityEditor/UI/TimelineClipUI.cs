@@ -302,11 +302,7 @@ namespace Aquila.AbilityEditor
         private void HandleResizeRight(float timeDelta)
         {
             float newEndTime = _dragStartEndTime + timeDelta;
-
-            // 对齐到时间间隔
             newEndTime = SnapTimeToInterval(newEndTime);
-
-            // 约束：不能小于开始时间加最小时长，不能超过timeline结束时间
             newEndTime = Mathf.Clamp(newEndTime, _dragStartTime + Misc.MIN_CLIP_DURATION, _timelineEndTime);
 
             _clipData.EndTime = newEndTime;

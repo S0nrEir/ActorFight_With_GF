@@ -7,16 +7,45 @@ namespace Aquila.AbilityEditor
     /// Effect Clip的Inspector代理类
     /// 用于在Unity Inspector中显示和编辑EffectClipData
     /// </summary>
-    public class EffectClipInspectorProxy : ScriptableObject
+    public class EffectClipInspectorProxy : ClipInspectorProxyBase<EffectClipData>
     {
-        [HideInInspector]
-        public EffectClipData TargetClipData;
+        /// <summary>
+        /// 将对应的EffectClip数据绑定到自己（为了保持向后兼容）
+        /// </summary>
+        public void BindEffectClipData(EffectClipData effectClipData, TimelineClipUI clipUI, float duration)
+        {
+            BindClipData(effectClipData, clipUI, duration);
+        }
 
-        [HideInInspector]
-        public TimelineClipUI TargetClipUI;
+        /// <summary>
+        /// 从EffectClipData同步数据到代理对象
+        /// </summary>
+        public override void SyncFromClipData()
+        {
+            if (!IsDataValid())
+                return;
 
-        [HideInInspector]
-        public float TimelineDuration = 5f; // Timeline的总时长
+            _effectId = TargetClipData.EffectId;
+            _clipName = TargetClipData.ClipName;
+            // 限制TriggerTime范围
+            _triggerTime = Mathf.Clamp(TargetClipData.TriggerTime, 0f, TimelineDuration);
+        }
+
+        /// <summary>
+        /// 同步代理对象的数据到EffectClipData
+        /// </summary>
+        public override void SyncToClipData()
+        {
+            if (!IsDataValid())
+                return;
+
+            TargetClipData.EffectId = _effectId;
+            TargetClipData.ClipName = _clipName;
+            TargetClipData.TriggerTime = _triggerTime;
+
+            // 刷新UI显示
+            RefreshUI();
+        }
 
         [Header("Effect Clip Properties")]
         [SerializeField]
@@ -68,39 +97,6 @@ namespace Aquila.AbilityEditor
                 }
             }
         }
-
-        /// <summary>
-        /// 从EffectClipData同步数据到代理对象
-        /// </summary>
-        public void SyncFromClipData()
-        {
-            if (TargetClipData != null)
-            {
-                _effectId = TargetClipData.EffectId;
-                _clipName = TargetClipData.ClipName;
-                // 限制TriggerTime范围
-                _triggerTime = Mathf.Clamp(TargetClipData.TriggerTime, 0f, TimelineDuration);
-            }
-        }
-
-        /// <summary>
-        /// 同步代理对象的数据到EffectClipData
-        /// </summary>
-        public void SyncToClipData()
-        {
-            if (TargetClipData != null)
-            {
-                TargetClipData.EffectId = _effectId;
-                TargetClipData.ClipName = _clipName;
-                TargetClipData.TriggerTime = _triggerTime;
-
-                // 刷新UI显示
-                if (TargetClipUI != null)
-                {
-                    TargetClipUI.Refresh();
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -118,6 +114,25 @@ namespace Aquila.AbilityEditor
             _effectIdProp = serializedObject.FindProperty("_effectId");
             _clipNameProp = serializedObject.FindProperty("_clipName");
             _triggerTimeProp = serializedObject.FindProperty("_triggerTime");
+
+            // 注册编辑器更新回调，用于实时刷新Inspector
+            EditorApplication.update += OnEditorUpdate;
+        }
+
+        private void OnDisable()
+        {
+            // 取消注册更新回调
+            EditorApplication.update -= OnEditorUpdate;
+        }
+
+        private void OnEditorUpdate()
+        {
+            // 定期更新SerializedObject，确保Inspector显示最新数据
+            if (target != null)
+            {
+                serializedObject.Update();
+                Repaint();
+            }
         }
 
         public override void OnInspectorGUI()

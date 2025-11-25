@@ -14,6 +14,7 @@ namespace Editor.AbilityEditor
         private TimelineClipManager _clipManager;
         private TimelineClipUI _selectedClipUI;
         private EffectClipInspectorProxy _clipInspectorProxy;
+        private AudioClipInspectorProxy _audioClipInspectorProxy;
 
         /// <summary>
         /// 初始化Clip管理器
@@ -93,34 +94,33 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void ShowClipInUnityInspector(TimelineClipUI clipUI)
         {
-            // 检查是否是EffectClipData
             if (clipUI.ClipData is EffectClipData effectClip)
             {
-                // 创建或重用Inspector代理对象
                 if (_clipInspectorProxy == null)
                 {
-                    _clipInspectorProxy = ScriptableObject.CreateInstance<EffectClipInspectorProxy>();
+                    _clipInspectorProxy = CreateInstance<EffectClipInspectorProxy>();
                     _clipInspectorProxy.name = "Effect Clip Inspector";
                 }
 
-                // 设置代理对象的目标
-                _clipInspectorProxy.TargetClipData = effectClip;
-                _clipInspectorProxy.TargetClipUI = clipUI;
-
-                // 设置Timeline时长（用于限制Trigger Time范围）
-                _clipInspectorProxy.TimelineDuration = _timelineDuration;
-
-                // 从ClipData同步数据到代理对象
-                _clipInspectorProxy.SyncFromClipData();
-
-                // 在Unity Inspector中显示代理对象
+                _clipInspectorProxy.BindEffectClipData(effectClip,clipUI,_timelineDuration);
                 Selection.activeObject = _clipInspectorProxy;
-
                 Debug.Log($"Showing Effect Clip in Unity Inspector - ID: {effectClip.EffectId}, Timeline Duration: {_timelineDuration:F2}s");
+            }
+            else if (clipUI.ClipData is AudioClipData audioClip)
+            {
+                if (_audioClipInspectorProxy == null)
+                {
+                    _audioClipInspectorProxy = CreateInstance<AudioClipInspectorProxy>();
+                    _audioClipInspectorProxy.name = "Audio Clip Inspector";
+                }
+
+                _audioClipInspectorProxy.BindAudioClipData(audioClip, clipUI, _timelineDuration);
+                Selection.activeObject = _audioClipInspectorProxy;
+                Debug.Log($"Showing Audio Clip in Unity Inspector - Path: {audioClip.AudioPath}, Timeline Duration: {_timelineDuration:F2}s");
             }
             else
             {
-                // 不是EffectClip，清除选择
+                // 不是EffectClip或AudioClip，清除选择
                 Selection.activeObject = null;
             }
         }
@@ -130,7 +130,21 @@ namespace Editor.AbilityEditor
             if (clipUI == null)
                 return;
 
-            // 标记数据为dirty，需要保存
+            // 如果修改的是当前选中的clip，同步更新Inspector显示
+            if (_selectedClipUI == clipUI)
+            {
+                if (clipUI.ClipData is EffectClipData && _clipInspectorProxy != null)
+                {
+                    _clipInspectorProxy.SyncFromClipData();
+                    EditorUtility.SetDirty(_clipInspectorProxy);
+                }
+                else if (clipUI.ClipData is AudioClipData && _audioClipInspectorProxy != null)
+                {
+                    _audioClipInspectorProxy.SyncFromClipData();
+                    EditorUtility.SetDirty(_audioClipInspectorProxy);
+                }
+            }
+
             if (_currentAbilityData != null)
                 EditorUtility.SetDirty(_currentAbilityData);
         }

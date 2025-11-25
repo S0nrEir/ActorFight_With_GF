@@ -350,6 +350,9 @@ namespace Editor.AbilityEditor
             // 更新clip管理器的timeline参数
             UpdateClipManagerTimelineParams();
 
+            // 刷新所有clips UI（重新创建clips，因为timeline被清空了）
+            RefreshAllClipsUI();
+
             // 注册拖动线事件并更新其高度
             RegisterScrubberEvents( _timelineContainer );
             UpdateScrubberHeight();
