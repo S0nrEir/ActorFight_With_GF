@@ -1,8 +1,8 @@
+using Aquila.Toolkit;
 using UnityEngine;
 
 namespace Aquila.AbilityEditor
 {
-    
     /// <summary>
     /// 技能编辑器场景启动器
     /// </summary>
@@ -10,10 +10,9 @@ namespace Aquila.AbilityEditor
     {
         void Start()
         {
-        
+            Tools.SetActive(_entryObject,true);
         }
 
         [SerializeField] private GameObject _entryObject = null;
     }
-
 }
