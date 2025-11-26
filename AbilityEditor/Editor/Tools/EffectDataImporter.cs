@@ -15,7 +15,6 @@ namespace Aquila.AbilityEditor.Tools
     /// </summary>
     public static class EffectDataImporter
     {
-        private const string OUTPUT_DIR = "Assets/Editor/AbilityEditor/Config/Effects";
         private const string PYTHON_SCRIPT = "Tools/generate_effect_json.py";
         private const string EXCEL_PATH = "DataTable/designer_configs/Datas/Effect.xlsx";
         private const string TEMP_JSON_PATH = "Temp/effect_data.json";
@@ -112,12 +111,11 @@ namespace Aquila.AbilityEditor.Tools
 
         private static void CreateEffectAssets(List<EffectDataJson> effectJsonList)
         {
-            // 确保输出目录存在
-            if (!Directory.Exists(OUTPUT_DIR))
-            {
-                Directory.CreateDirectory(OUTPUT_DIR);
-                Debug.Log($"Created directory: {OUTPUT_DIR}");
-            }
+            // if (!Directory.Exists(OUTPUT_DIR))
+            // {
+            //     Directory.CreateDirectory(OUTPUT_DIR);
+            //     Debug.Log($"Created directory: {OUTPUT_DIR}");
+            // }
 
             int successCount = 0;
             int failCount = 0;
@@ -126,7 +124,7 @@ namespace Aquila.AbilityEditor.Tools
             {
                 try
                 {
-                    string assetPath = $"{OUTPUT_DIR}/{effectJson.id}.asset";
+                    string assetPath = $"{Misc.NEW_EFFECT_DATA_PATH}/{effectJson.id}.asset";
 
                     EffectData effectData = AssetDatabase.LoadAssetAtPath<EffectData>(assetPath);
                     bool isNewAsset = effectData == null;
@@ -189,7 +187,7 @@ namespace Aquila.AbilityEditor.Tools
             AssetDatabase.Refresh();
 
             Debug.Log($"<color=cyan>Asset Creation Summary:</color> Success: {successCount}, Failed: {failCount}");
-            Debug.Log($"Assets saved to: {OUTPUT_DIR}");
+            Debug.Log($"Assets saved to: {Misc.NEW_EFFECT_DATA_PATH}");
         }
 
         [Serializable]

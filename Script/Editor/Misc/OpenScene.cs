@@ -18,7 +18,7 @@ namespace Aquila.Editor
         [MenuItem( "File/OpenScene/AbilityEditor" )]
         public static void OpenScene_AbilityEditor()
         {
-            EditorSceneManager.OpenScene( @"Assets/Editor/AbilityEditor/AbilityEditorEntry.unity" );
+            EditorSceneManager.OpenScene( "Assets/AbilityEditor/AbilityEditorEntry.unity" );
             EditorSceneManager.sceneOpened += OnSceneOpened;
         }
 

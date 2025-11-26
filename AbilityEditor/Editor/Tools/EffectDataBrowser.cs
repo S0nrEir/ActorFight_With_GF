@@ -56,16 +56,14 @@ namespace Aquila.AbilityEditor.Tools
 
         private void CreateNewAsset(EffectData sourceData)
         {
-            string folderPath = "Assets/Editor/AbilityEditor/Config/Effects";
-
-            if (!AssetDatabase.IsValidFolder(folderPath))
-            {
-                EditorUtility.DisplayDialog("Error", $"Folder not found: {folderPath}", "OK");
-                return;
-            }
+            // if (!AssetDatabase.IsValidFolder(folderPath))
+            // {
+            //     EditorUtility.DisplayDialog("Error", $"Folder not found: {folderPath}", "OK");
+            //     return;
+            // }
 
             string fileName = $"{sourceData.id}.asset";
-            string fullPath = $"{folderPath}/{fileName}";
+            string fullPath = $"{Misc.NEW_EFFECT_DATA_PATH}/{fileName}";
 
             if (AssetDatabase.LoadAssetAtPath<EffectData>(fullPath) != null)
             {
@@ -105,14 +103,10 @@ namespace Aquila.AbilityEditor.Tools
             newData.EffectType = sourceData.EffectType;
 
             if (sourceData.DeriveEffects != null)
-            {
                 newData.DeriveEffects = (int[])sourceData.DeriveEffects.Clone();
-            }
 
             if (sourceData.AwakeEffects != null)
-            {
                 newData.AwakeEffects = (int[])sourceData.AwakeEffects.Clone();
-            }
 
             AssetDatabase.CreateAsset(newData, fullPath);
             AssetDatabase.SaveAssets();
@@ -121,7 +115,7 @@ namespace Aquila.AbilityEditor.Tools
             Selection.activeObject = newData;
             EditorGUIUtility.PingObject(newData);
 
-            Debug.Log($"Created new EffectData at: {fullPath}");
+            Debug.Log($"<color=green>Created new EffectData at: {fullPath}</color>");
             EditorUtility.DisplayDialog("Success", $"Created new EffectData:\n{fullPath}", "OK");
         }
     }

@@ -115,19 +115,16 @@ namespace Aquila.AbilityEditor
             _clipNameProp = serializedObject.FindProperty("_clipName");
             _triggerTimeProp = serializedObject.FindProperty("_triggerTime");
 
-            // 注册编辑器更新回调，用于实时刷新Inspector
             EditorApplication.update += OnEditorUpdate;
         }
 
         private void OnDisable()
         {
-            // 取消注册更新回调
             EditorApplication.update -= OnEditorUpdate;
         }
 
         private void OnEditorUpdate()
         {
-            // 定期更新SerializedObject，确保Inspector显示最新数据
             if (target != null)
             {
                 serializedObject.Update();

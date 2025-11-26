@@ -38,9 +38,7 @@ namespace Aquila.AbilityEditor
         protected void RefreshUI()
         {
             if (TargetClipUI != null)
-            {
                 TargetClipUI.Refresh();
-            }
         }
 
         /// <summary>
