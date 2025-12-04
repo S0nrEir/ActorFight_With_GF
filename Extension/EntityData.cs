@@ -113,6 +113,10 @@ namespace Aquila
             }
         }
 
-        public abstract void Clear();
+        public virtual void Clear()
+        {
+            m_Id = -1;
+            m_TypeId = -1;
+        }
     }
 }

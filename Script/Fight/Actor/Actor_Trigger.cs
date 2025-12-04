@@ -149,6 +149,10 @@ namespace Aquila.Fight.Actor
         public TriggerActorEntityData( int entityID ) : base( entityID, typeof( Actor_Trigger ).GetHashCode() )
         {
         }
+
+        public TriggerActorEntityData()
+        {
+        }
     }
 
 }

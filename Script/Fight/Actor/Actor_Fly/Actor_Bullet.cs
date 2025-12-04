@@ -18,6 +18,15 @@ namespace Aquila.Fight.Actor
         public Actor_Bullet_EntityData( int entityID ) : base( entityID ,typeof(Actor_Bullet).GetHashCode())
         { 
         }
+
+        public Actor_Bullet_EntityData()
+        {
+        }
+
+        public override void Clear()
+        {
+            
+        }
     }
 
 }
