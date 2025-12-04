@@ -36,7 +36,7 @@ namespace Aquila.Editor
                 break;
 
                 case "AbilityEditorEntry":
-                    ConfigureAbilityEditorProcedure();
+                    //ConfigureAbilityEditorProcedure();
                     break;
 
                 default:

@@ -7,7 +7,17 @@ namespace Aquila.AbilityEditor
     public static class Misc
     {
         /// <summary>
-        /// effect数据的保存路径
+        /// 训练场木桩角色配置ID / sand box dummy meta role id
+        /// </summary>
+        public const int DUMMY_META_ROLE_ID = 999998;
+        
+        /// <summary>
+        /// 训练场玩家角色ID / sand box player meta role id
+        /// </summary>
+        public const int PLYAER_META_ROLE_ID = 999999;
+        
+        /// <summary>
+        /// effect数据的保存路径 / path for saving effect data
         /// </summary>
         public static readonly string NEW_EFFECT_DATA_PATH = "Assets/Editor/AbilityEditor/Config/Effects";
         

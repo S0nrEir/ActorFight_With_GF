@@ -11,6 +11,22 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_EnterAbilityEditorSandBox : ProcedureBase
     {
+        /// <summary>
+        /// 创建木桩 / create dummy
+        /// </summary>
+        private bool CreateDummy()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// 创建玩家 / create player
+        /// </summary>
+        private bool CreatePlayer()
+        {
+            return true;
+        }
+
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnInit(procedureOwner);
@@ -24,6 +40,10 @@ namespace Aquila.Procedure
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
+            //create dummy / player.
+            //give ability to player
+            CreateDummy();
+            CreatePlayer();
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
@@ -38,6 +58,7 @@ namespace Aquila.Procedure
         {
             ChangeState<Procedure_RunningAbilityEditorSandBox>(procedureOwner);
         }
+        
     }
 }
 #endif
