@@ -22,7 +22,7 @@ namespace Aquila.AbilityEditor
         public static readonly string NEW_EFFECT_DATA_PATH = "Assets/Editor/AbilityEditor/Config/Effects";
         
         // UI布局文件路径
-        public static readonly string UXML_FILE_PATH = "Assets/Editor/AbilityEditor/EditorUILayout/AbilityEditorWindow.uxml";
+        public static readonly string UXML_FILE_PATH = "Assets/AbilityEditor/Editor/EditorUILayout/AbilityEditorWindow.uxml";
 
         /// <summary>
         /// 默认的clip ui的固定宽度

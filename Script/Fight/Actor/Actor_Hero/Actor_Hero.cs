@@ -111,6 +111,10 @@ namespace Aquila.Fight.Actor
 
     public class HeroActorEntityData : Actor_Base_EntityData
     {
+        public HeroActorEntityData()
+        {
+        }
+
         public HeroActorEntityData( int entityID ) : base( entityID, typeof( Actor_Hero ).GetHashCode() )
         {
         }

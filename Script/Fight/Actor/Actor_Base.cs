@@ -369,6 +369,16 @@ namespace Aquila.Fight.Actor
         {
         }
 
+        public Actor_Base_EntityData()
+        {
+            
+        }
+
+        public override void Clear()
+        {
+            _roleMetaID = -1;
+        }
+
         /// <summary>
         /// 角色meta表ID
         /// </summary>
