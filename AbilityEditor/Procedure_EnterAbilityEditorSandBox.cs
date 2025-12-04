@@ -14,12 +14,12 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_EnterAbilityEditorSandBox : ProcedureBase
     {
-        private void MarkLoadFinish()
+        private void MarkLoadFinish(IFsm<IProcedureManager> owner)
         {
             if (_loadFinishSign != ALL_LOAD_FLAG)
                 return;
             
-            
+            ChangeState<Procedure_RunningAbilityEditorSandBox>(owner);
         }
 
         /// <summary>
@@ -30,6 +30,7 @@ namespace Aquila.Procedure
             var dummyActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
             dummyActorEntityData._roleMetaID = 4001;
             _dummyEntityID = ActorIDPool.Gen();
+            dummyActorEntityData.Init(_dummyEntityID,typeof( Actor_Hero ).GetHashCode());
             var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_dummyEntityID,4001,dummyActorEntityData,_dummyEntityID.ToString());
 
             if (entity is null)
@@ -41,7 +42,7 @@ namespace Aquila.Procedure
             _loadFinishSign |= 0b0010;
             (entity.Logic as Actor_Hero)?.SetWorldPosition(new Vector3(5.289566f,-5.782828f,-21.05478f));
             (entity.Logic as Actor_Hero)?.SetRotation(new Vector3(0,-261.314f,0));
-            MarkLoadFinish();
+            MarkLoadFinish(_owner);
         }
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace Aquila.Procedure
             var playerActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
             playerActorEntityData._roleMetaID = 4000;
             _playerEntityID = ActorIDPool.Gen();
+            playerActorEntityData.Init(_playerEntityID,typeof( Actor_Hero ).GetHashCode());
             var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_playerEntityID, 4000, playerActorEntityData, _playerEntityID.ToString());
             
             if (entity is null)
@@ -63,17 +65,13 @@ namespace Aquila.Procedure
             (entity.Logic as Actor_Hero)?.SetWorldPosition(new Vector3(18.90956f,-5.782828f,-22.24478f));
             (entity.Logic as Actor_Hero)?.SetRotation(new Vector3(0,-64.988f,0));
             _loadFinishSign |= 0b0001;
-            MarkLoadFinish();
+            MarkLoadFinish(_owner);
         }
 
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnInit(procedureOwner);
-        }
-
-        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
-        {
-            base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+            _owner = null;
         }
 
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
@@ -82,11 +80,16 @@ namespace Aquila.Procedure
             //create dummy / player.
             CreateDummy();
             CreatePlayer();
+            _owner = procedureOwner;
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
         {
             base.OnLeave(procedureOwner, isShutdown);
+            _loadFinishSign = 0b0000;
+            _playerEntityID = -1;
+            _dummyEntityID = -1;
+            _owner = null;
         }
 
         /// <summary>
@@ -96,7 +99,8 @@ namespace Aquila.Procedure
         {
             ChangeState<Procedure_RunningAbilityEditorSandBox>(procedureOwner);
         }
-        
+
+        private IFsm<IProcedureManager> _owner = null;
         private const int ALL_LOAD_FLAG = 0b0011;
         private int _loadFinishSign = 0b0000;
         private int _playerEntityID = -1;

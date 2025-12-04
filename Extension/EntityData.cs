@@ -25,11 +25,19 @@ namespace Aquila
         [SerializeField]
         private string m_ModelPath = string.Empty;
 
+        public void Init(int EntityId, int TypeId)
+        {
+            m_Id = EntityId;
+            m_TypeId = TypeId;
+        }
+        
+        
+        
         public EntityData( int entityId, int typeId )
         {
-            m_Id = entityId;
-            m_TypeId = typeId;
+            Init(entityId, typeId);
         }
+
 
         public EntityData()
         {
