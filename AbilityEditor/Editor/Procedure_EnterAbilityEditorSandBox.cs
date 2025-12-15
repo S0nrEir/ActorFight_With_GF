@@ -6,6 +6,7 @@ using UnityEngine;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using GameFramework;
+using Aquila.AbilityEditor;
 
 namespace Aquila.Procedure
 {
@@ -14,6 +15,10 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_EnterAbilityEditorSandBox : ProcedureBase
     {
+
+        /// <summary>
+        /// 标记流程完成 / mark procedure as finished
+        /// </summary>
         private void MarkLoadFinish(IFsm<IProcedureManager> owner)
         {
             if (_loadFinishSign != ALL_LOAD_FLAG)
@@ -28,20 +33,27 @@ namespace Aquila.Procedure
         private async void CreateDummy()
         {
             var dummyActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
-            dummyActorEntityData._roleMetaID = 4001;
+            dummyActorEntityData._roleMetaID = Misc.DUMMY_META_ROLE_ID;
             _dummyEntityID = ActorIDPool.Gen();
             dummyActorEntityData.Init(_dummyEntityID,typeof( Actor_Hero ).GetHashCode());
-            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_dummyEntityID,4001,dummyActorEntityData,_dummyEntityID.ToString());
+            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_dummyEntityID, Misc.DUMMY_META_ROLE_ID, dummyActorEntityData, _dummyEntityID.ToString());
 
             if (entity is null)
             {
-                Debug.LogError("Failed to create dummy!");
+                Debug.LogError("Failed to create dummy entity!");
+                return;
+            }
+
+            var dummyActor = entity.Logic as Actor_Hero;
+            if (dummyActor is null)
+            {
+                Debug.LogError($"Failed to convert dummy entity.Logic to Actor_Hero! Actual type: {entity.Logic?.GetType().Name ?? "null"}");
                 return;
             }
 
             _loadFinishSign |= 0b0010;
-            (entity.Logic as Actor_Hero)?.SetWorldPosition(new Vector3(5.289566f,-5.782828f,-21.05478f));
-            (entity.Logic as Actor_Hero)?.SetRotation(new Vector3(0,-261.314f,0));
+            dummyActor.SetWorldPosition(new Vector3(5.289566f,-5.782828f,-21.05478f));
+            dummyActor.SetRotation(new Vector3(0,-261.314f,0));
             MarkLoadFinish(_owner);
         }
 
@@ -51,19 +63,26 @@ namespace Aquila.Procedure
         private async void CreatePlayer()
         {
             var playerActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
-            playerActorEntityData._roleMetaID = 4000;
+            playerActorEntityData._roleMetaID = Misc.PLYAER_META_ROLE_ID;
             _playerEntityID = ActorIDPool.Gen();
             playerActorEntityData.Init(_playerEntityID,typeof( Actor_Hero ).GetHashCode());
-            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_playerEntityID, 4000, playerActorEntityData, _playerEntityID.ToString());
-            
+            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_playerEntityID, Misc.PLYAER_META_ROLE_ID, playerActorEntityData, _playerEntityID.ToString());
+
             if (entity is null)
             {
-                Debug.LogError("Failed to create player!");
+                Debug.LogError("Failed to create player entity!");
                 return;
             }
 
-            (entity.Logic as Actor_Hero)?.SetWorldPosition(new Vector3(18.90956f,-5.782828f,-22.24478f));
-            (entity.Logic as Actor_Hero)?.SetRotation(new Vector3(0,-64.988f,0));
+            var playerActor = entity.Logic as Actor_Hero;
+            if (playerActor is null)
+            {
+                Debug.LogError($"Failed to convert player entity.Logic to Actor_Hero! Actual type: {entity.Logic?.GetType().Name ?? "null"}");
+                return;
+            }
+
+            playerActor.SetWorldPosition(new Vector3(18.90956f,-5.782828f,-22.24478f));
+            playerActor.SetRotation(new Vector3(0,-64.988f,0));
             _loadFinishSign |= 0b0001;
             MarkLoadFinish(_owner);
         }

@@ -1,5 +1,7 @@
+using Aquila.AbilityEditor;
 using Aquila.Extension;
 using Aquila.Fight.Impact;
+using UnityEngine;
 
 namespace Aquila
 {
@@ -104,6 +106,16 @@ namespace Aquila
             private set;
         }
 
+#if UNITY_EDITOR
+
+        public static Component_AbilityEditorSandBox AbilityEditorSandBox
+        {
+            get;
+            private set;
+        }
+
+#endif
+        
         /// <summary>
         /// 初始化自定义组件
         /// </summary>
@@ -120,6 +132,10 @@ namespace Aquila
             Impact      = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
             UI          = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
             Async       = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Async>();
+            
+#if UNITY_EDITOR
+            AbilityEditorSandBox = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_AbilityEditorSandBox>();
+#endif
         }
     }
 }
