@@ -23,67 +23,65 @@ namespace Aquila.Procedure
         {
             if (_loadFinishSign != ALL_LOAD_FLAG)
                 return;
-            
+
             ChangeState<Procedure_RunningAbilityEditorSandBox>(owner);
         }
 
         /// <summary>
-        /// 创建木桩 / create dummy
+        /// 创建玩家角色 / create player actor
         /// </summary>
-        private async void CreateDummy()
+        private async void CreatePlayer()
         {
-            var dummyActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
-            dummyActorEntityData._roleMetaID = Misc.DUMMY_META_ROLE_ID;
-            _dummyEntityID = ActorIDPool.Gen();
-            dummyActorEntityData.Init(_dummyEntityID,typeof( Actor_Hero ).GetHashCode());
-            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_dummyEntityID, Misc.DUMMY_META_ROLE_ID, dummyActorEntityData, _dummyEntityID.ToString());
+            _playerEntityID = ActorIDPool.Gen();
 
-            if (entity is null)
+            var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
+            var entity = await actor_fac.ShowActorAsync(
+                _playerEntityID,
+                Misc.PLYAER_META_ROLE_ID,
+                new HeroActorEntityData(_playerEntityID) { _roleMetaID = Misc.PLYAER_META_ROLE_ID },
+                "AbilityEditor_Player"
+            );
+
+            if (entity != null)
             {
-                Debug.LogError("Failed to create dummy entity!");
-                return;
+                var actor = entity.Logic as Actor_Hero;
+                if (actor != null)
+                {
+                    actor.SetWorldPosition(new Vector3(18.90956f, -5.782828f, -22.24478f));
+                    actor.SetRotation(new Vector3(0, -64.988f, 0));
+                }
             }
 
-            var dummyActor = entity.Logic as Actor_Hero;
-            if (dummyActor is null)
-            {
-                Debug.LogError($"Failed to convert dummy entity.Logic to Actor_Hero! Actual type: {entity.Logic?.GetType().Name ?? "null"}");
-                return;
-            }
-
-            _loadFinishSign |= 0b0010;
-            dummyActor.SetWorldPosition(new Vector3(5.289566f,-5.782828f,-21.05478f));
-            dummyActor.SetRotation(new Vector3(0,-261.314f,0));
+            _loadFinishSign |= 0b0001;
             MarkLoadFinish(_owner);
         }
 
         /// <summary>
-        /// 创建玩家 / create player
+        /// 创建木桩假人 / create dummy actor
         /// </summary>
-        private async void CreatePlayer()
+        private async void CreateDummy()
         {
-            var playerActorEntityData = ReferencePool.Acquire<HeroActorEntityData>();
-            playerActorEntityData._roleMetaID = Misc.PLYAER_META_ROLE_ID;
-            _playerEntityID = ActorIDPool.Gen();
-            playerActorEntityData.Init(_playerEntityID,typeof( Actor_Hero ).GetHashCode());
-            var entity = await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync(_playerEntityID, Misc.PLYAER_META_ROLE_ID, playerActorEntityData, _playerEntityID.ToString());
+            _dummyEntityID = ActorIDPool.Gen();
 
-            if (entity is null)
+            var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
+            var entity = await actor_fac.ShowActorAsync(
+                _dummyEntityID,
+                Misc.DUMMY_META_ROLE_ID,
+                new HeroActorEntityData(_dummyEntityID) { _roleMetaID = Misc.DUMMY_META_ROLE_ID },
+                "AbilityEditor_Dummy"
+            );
+
+            if (entity != null)
             {
-                Debug.LogError("Failed to create player entity!");
-                return;
+                var actor = entity.Logic as Actor_Hero;
+                if (actor != null)
+                {
+                    actor.SetWorldPosition(new Vector3(5.289566f, -5.782828f, -21.05478f));
+                    actor.SetRotation(new Vector3(0, -261.314f, 0));
+                }
             }
 
-            var playerActor = entity.Logic as Actor_Hero;
-            if (playerActor is null)
-            {
-                Debug.LogError($"Failed to convert player entity.Logic to Actor_Hero! Actual type: {entity.Logic?.GetType().Name ?? "null"}");
-                return;
-            }
-
-            playerActor.SetWorldPosition(new Vector3(18.90956f,-5.782828f,-22.24478f));
-            playerActor.SetRotation(new Vector3(0,-64.988f,0));
-            _loadFinishSign |= 0b0001;
+            _loadFinishSign |= 0b0010;
             MarkLoadFinish(_owner);
         }
 
