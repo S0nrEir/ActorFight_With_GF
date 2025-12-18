@@ -33,7 +33,7 @@ namespace Aquila.Editor
                 DataTableGenerator.GenerateDataFile( dataTableProcessor, dataTableName );
                 DataTableGenerator.GenerateCodeFile( dataTableProcessor, dataTableName );
             }
-            GenFormIdEnum.GenFormIdEnum_();
+            FormIdEnumGenerator.GenFormIdEnum();
             AssetDatabase.Refresh();
         }
 
