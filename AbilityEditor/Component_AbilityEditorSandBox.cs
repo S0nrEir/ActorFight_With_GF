@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityGameFramework.Runtime;
 
 namespace Aquila.AbilityEditor
@@ -7,13 +9,12 @@ namespace Aquila.AbilityEditor
     /// </summary>
     public class Component_AbilityEditorSandBox : GameFrameworkComponent
     {
-#if UNITY_EDITOR
-
         public void Init()
         {
             
         }
-#endif
     }
 }
+
+#endif
 

@@ -182,10 +182,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2411166006233517648}
   - component: {fileID: -887334950819524418}
-  - component: {fileID: 6035444798778814919}
   - component: {fileID: 8865545527483507144}
   - component: {fileID: 1271902741629866471}
   - component: {fileID: 9064737242260611039}
+  - component: {fileID: -1010570076984024139}
   m_Layer: 5
   m_Name: AbilityEditorTestForm
   m_TagString: Untagged
@@ -229,21 +229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f627c32af5133a24f829e711fafe42fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6035444798778814919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2271090351989924269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a425df0157d9524ab4dbcff56349af9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hostileTestButton: {fileID: 7899808632789899981}
-  _tempGameObejct: {fileID: 6702093255351973906}
-  _grid: {fileID: 5314157243142567129}
 --- !u!223 &8865545527483507144
 Canvas:
   m_ObjectHideFlags: 0
@@ -261,6 +246,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -305,6 +291,18 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!114 &-1010570076984024139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2271090351989924269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0916a7ee3f8652941809ebb9734e7274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2750089158920588170
 GameObject:
   m_ObjectHideFlags: 0
