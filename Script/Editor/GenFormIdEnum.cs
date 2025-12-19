@@ -4,6 +4,7 @@ using GameFramework;
 using UnityEditor;
 using UnityEngine;
 
+//ReSharper disable once CheckNamespace
 namespace Aquila.Editor
 {
     /// <summary>
