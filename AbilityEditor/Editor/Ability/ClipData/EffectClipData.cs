@@ -11,6 +11,37 @@ namespace Aquila.AbilityEditor
     public class EffectClipData : TimelineClipData
     {
         /// <summary>
+        /// Effect扩展参数（嵌套类）
+        /// </summary>
+        [Serializable]
+        public class EffectExtensionParam
+        {
+            [SerializeField] public float FloatParam_1 = -1f;
+            [SerializeField] public float FloatParam_2 = -1f;
+            [SerializeField] public float FloatParam_3 = -1f;
+            [SerializeField] public float FloatParam_4 = -1f;
+            [SerializeField] public int IntParam_1 = -1;
+            [SerializeField] public int IntParam_2 = -1;
+            [SerializeField] public int IntParam_3 = -1;
+            [SerializeField] public int IntParam_4 = -1;
+
+            public EffectExtensionParam Clone()
+            {
+                return new EffectExtensionParam
+                {
+                    FloatParam_1 = this.FloatParam_1,
+                    FloatParam_2 = this.FloatParam_2,
+                    FloatParam_3 = this.FloatParam_3,
+                    FloatParam_4 = this.FloatParam_4,
+                    IntParam_1 = this.IntParam_1,
+                    IntParam_2 = this.IntParam_2,
+                    IntParam_3 = this.IntParam_3,
+                    IntParam_4 = this.IntParam_4
+                };
+            }
+        }
+
+        /// <summary>
         /// Effect ID（关联到配置表中的效果）
         /// </summary>
         [SerializeField]
@@ -27,6 +58,76 @@ namespace Aquila.AbilityEditor
         /// </summary>
         [SerializeField]
         private bool _canStack;
+
+        #region Effect配置字段
+
+        /// <summary>
+        /// Effect类型
+        /// </summary>
+        [SerializeField]
+        private Cfg.Enum.EffectType _effectType = Cfg.Enum.EffectType.Instant_Cost;
+
+        /// <summary>
+        /// 数值修改器类型
+        /// </summary>
+        [SerializeField]
+        private Cfg.Enum.NumricModifierType _modifierType = Cfg.Enum.NumricModifierType.None;
+
+        /// <summary>
+        /// 影响的属性类型
+        /// </summary>
+        [SerializeField]
+        private Cfg.Enum.actor_attribute _affectedAttribute = Cfg.Enum.actor_attribute.Curr_HP;
+
+        /// <summary>
+        /// 目标类型（0=我方，1=敌方）
+        /// </summary>
+        [SerializeField]
+        private int _target = 0;
+
+        /// <summary>
+        /// 持续时间（秒），-1表示瞬时
+        /// </summary>
+        [SerializeField]
+        private float _duration = -1f;
+
+        /// <summary>
+        /// 生效周期（秒）
+        /// </summary>
+        [SerializeField]
+        private float _period = 0f;
+
+        /// <summary>
+        /// 生效策略
+        /// </summary>
+        [SerializeField]
+        private Cfg.Enum.DurationPolicy _policy = Cfg.Enum.DurationPolicy.Instant;
+
+        /// <summary>
+        /// 是否立即生效
+        /// </summary>
+        [SerializeField]
+        private bool _effectOnAwake = true;
+
+        /// <summary>
+        /// 扩展参数
+        /// </summary>
+        [SerializeField]
+        private EffectExtensionParam _extensionParam = new EffectExtensionParam();
+
+        /// <summary>
+        /// 派生效果ID列表
+        /// </summary>
+        [SerializeField]
+        private int[] _deriveEffects = new int[0];
+
+        /// <summary>
+        /// 唤醒效果ID列表
+        /// </summary>
+        [SerializeField]
+        private int[] _awakeEffects = new int[0];
+
+        #endregion
 
         public override TimelineClipType ClipType => TimelineClipType.Buff;
 
@@ -84,6 +185,76 @@ namespace Aquila.AbilityEditor
             set => _canStack = value;
         }
 
+        #region Effect配置属性
+
+        public Cfg.Enum.EffectType EffectType
+        {
+            get => _effectType;
+            set => _effectType = value;
+        }
+
+        public Cfg.Enum.NumricModifierType ModifierType
+        {
+            get => _modifierType;
+            set => _modifierType = value;
+        }
+
+        public Cfg.Enum.actor_attribute AffectedAttribute
+        {
+            get => _affectedAttribute;
+            set => _affectedAttribute = value;
+        }
+
+        public int Target
+        {
+            get => _target;
+            set => _target = value;
+        }
+
+        public float Duration
+        {
+            get => _duration;
+            set => _duration = value;
+        }
+
+        public float Period
+        {
+            get => _period;
+            set => _period = value;
+        }
+
+        public Cfg.Enum.DurationPolicy Policy
+        {
+            get => _policy;
+            set => _policy = value;
+        }
+
+        public bool EffectOnAwake
+        {
+            get => _effectOnAwake;
+            set => _effectOnAwake = value;
+        }
+
+        public EffectExtensionParam ExtensionParam
+        {
+            get => _extensionParam;
+            set => _extensionParam = value;
+        }
+
+        public int[] DeriveEffects
+        {
+            get => _deriveEffects;
+            set => _deriveEffects = value;
+        }
+
+        public int[] AwakeEffects
+        {
+            get => _awakeEffects;
+            set => _awakeEffects = value;
+        }
+
+        #endregion
+
         #region Override Methods
 
         public override TimelineClipData Clone()
@@ -93,6 +264,20 @@ namespace Aquila.AbilityEditor
             clone._effectId = _effectId;
             clone._stackCount = _stackCount;
             clone._canStack = _canStack;
+
+            // 复制Effect配置字段
+            clone._effectType = _effectType;
+            clone._modifierType = _modifierType;
+            clone._affectedAttribute = _affectedAttribute;
+            clone._target = _target;
+            clone._duration = _duration;
+            clone._period = _period;
+            clone._policy = _policy;
+            clone._effectOnAwake = _effectOnAwake;
+            clone._extensionParam = _extensionParam?.Clone() ?? new EffectExtensionParam();
+            clone._deriveEffects = _deriveEffects != null ? (int[])_deriveEffects.Clone() : new int[0];
+            clone._awakeEffects = _awakeEffects != null ? (int[])_awakeEffects.Clone() : new int[0];
+
             return clone;
         }
 
@@ -110,6 +295,20 @@ namespace Aquila.AbilityEditor
             if (_stackCount < 1)
             {
                 errorMessage = "Stack count must be at least 1";
+                return false;
+            }
+
+            // 验证Duration
+            if (_duration < -1)
+            {
+                errorMessage = "Duration cannot be less than -1";
+                return false;
+            }
+
+            // 验证Period
+            if (_period < 0)
+            {
+                errorMessage = "Period cannot be negative";
                 return false;
             }
 

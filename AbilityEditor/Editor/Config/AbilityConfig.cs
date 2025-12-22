@@ -132,8 +132,6 @@ namespace Editor.AbilityEditor.Config
 
         #endregion
 
-        #region Constructor
-
         public AbilityConfig()
         {
             Name = string.Empty;
@@ -162,9 +160,6 @@ namespace Editor.AbilityEditor.Config
             if (vfxs != null) _vfxs.AddRange(vfxs);
         }
 
-        #endregion
-
-        #region Query Methods
 
         /// <summary>
         /// Get all clips at specific time (within 0.01s tolerance)
@@ -221,9 +216,7 @@ namespace Editor.AbilityEditor.Config
 
             return clips.OrderBy(c => c.StartTime).ToList();
         }
-
-        #endregion
-
+        
         #region Validation
 
         /// <summary>
