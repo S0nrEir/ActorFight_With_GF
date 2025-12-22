@@ -8,9 +8,7 @@ using UnityEngine.UIElements;
 namespace Editor.AbilityEditor
 {
     public partial class AbilityEditorWindow : EditorWindow
-    {
-        public static string TestString = "TestString1111111111";
-        
+    {   
         [MenuItem( "Aquila/AbilityEditor/AbilityEditorWindow" )]
         public static void OpenAbilityEditorWindow()
         {

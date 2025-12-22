@@ -34,8 +34,9 @@
                     <ui:Label text="Duration" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
                     <ui:TextField picking-mode="Ignore" name="DurationTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
                 </ui:VisualElement>
-                <ui:VisualElement style="flex-direction: row; align-items: center;">
-                    <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: middle-left; flex-direction: column;" />
+                <ui:VisualElement style="flex-direction: column; align-items: center;">
+                    <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: lower-center; flex-direction: column; width: 195px; white-space: nowrap;" />
+                    <ui:Button text="GenConfig" display-tooltip-when-elided="true" name="GenConfigBtn" style="-unity-text-align: middle-center; flex-direction: column; width: 195px;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="TrackPanel" style="flex-direction: column; justify-content: flex-start; width: 116px; height: 510px; opacity: 1; color: rgb(200, 200, 200); -unity-text-outline-width: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 0; border-right-width: 1px; border-bottom-width: 0; border-left-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96);">

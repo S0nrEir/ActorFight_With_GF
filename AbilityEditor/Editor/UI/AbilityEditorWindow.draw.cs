@@ -1,5 +1,6 @@
 using Aquila.AbilityEditor;
 using Cfg.Enum;
+using Editor.AbilityEditor.Config;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -32,9 +33,13 @@ namespace Editor.AbilityEditor
                 _trackPanel = abilityBaseInfoPanel.Q<VisualElement>( "TrackPanel" );
                 _timelineTrackPanel = abilityBaseInfoPanel.Q<VisualElement>( "TimelineTrackPanel" );
 
-                var genTimelineTrackButton = abilityBaseInfoPanel.Q<Button>( "GenTimelineTrackBtn" );
-                if ( genTimelineTrackButton != null )
-                    genTimelineTrackButton.clicked += DrawTimelineTrackItems;
+                var tempBtn = abilityBaseInfoPanel.Q<Button>( "GenTimelineTrackBtn" );
+                if ( tempBtn != null )
+                    tempBtn.clicked += DrawTimelineTrackItems;
+                
+                tempBtn = abilityBaseInfoPanel.Q<Button>( "GenConfigBtn" );
+                if ( tempBtn != null )
+                    tempBtn.clicked += OnClickGenConfigBtn;
             }
             var headerMenu = _root.Q<VisualElement>( "HeaderMenu" );
             if ( headerMenu != null )
@@ -271,6 +276,49 @@ namespace Editor.AbilityEditor
             {
                 isDragging = false;
             } );
+        }
+
+        /// <summary>
+        /// 点击生成配置
+        /// </summary>
+        private void OnClickGenConfigBtn()
+        {
+            try
+            {
+                Debug.Log("[AbilityEditorWindow] Starting config generation...");
+                var config = AbilityConfigGenerator.Generate(this);
+                AbilityConfigAccessor.SetConfig(config);
+                ShowNotification(new GUIContent("✓ Config generated successfully"));
+                Debug.Log($"[AbilityEditorWindow] Config generation complete:\n{AbilityConfigAccessor.ToString()}");
+            }
+            catch (ArgumentException ex)
+            {
+                // Metadata validation error
+                var message = $"✗ Invalid metadata: {ex.Message}";
+                ShowNotification(new GUIContent(message), 5.0);
+                Debug.LogError($"[AbilityEditorWindow] {message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Timeline validation error
+                var message = $"✗ Invalid timeline: {ex.Message}";
+                ShowNotification(new GUIContent(message), 5.0);
+                Debug.LogError($"[AbilityEditorWindow] {message}");
+            }
+            catch (System.IO.InvalidDataException ex)
+            {
+                // Effect data validation error
+                var message = $"✗ Invalid effect data: {ex.Message}";
+                ShowNotification(new GUIContent(message), 5.0);
+                Debug.LogError($"[AbilityEditorWindow] {message}");
+            }
+            catch (Exception ex)
+            {
+                // Unexpected error
+                var message = "✗ Config generation failed. Check console.";
+                ShowNotification(new GUIContent(message), 5.0);
+                Debug.LogError($"[AbilityEditorWindow] Unexpected error during config generation:\n{ex}");
+            }
         }
 
         /// <summary>
