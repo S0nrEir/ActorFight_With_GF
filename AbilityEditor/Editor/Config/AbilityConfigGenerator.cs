@@ -177,9 +177,7 @@ namespace Editor.AbilityEditor.Config
             var abilityIDField = editorType.GetField("_abilityIDTextField",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var abilityIDTextField = abilityIDField?.GetValue(editor) as UnityEngine.UIElements.TextField;
-
             if (abilityIDTextField != null && int.TryParse(abilityIDTextField.value, out int abilityID))
-                
                 metadata.AbilityID = abilityID;
             else
                 throw new ArgumentException("Ability ID is empty or invalid");
@@ -194,34 +192,27 @@ namespace Editor.AbilityEditor.Config
             metadata.Desc = descTextField?.value ?? string.Empty;
 
             // Parse Cost Effect ID
-            var costField = editorType.GetField("_costIDTextField",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var costField = editorType.GetField("_costIDTextField",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var costTextField = costField?.GetValue(editor) as UnityEngine.UIElements.TextField;
-
             if (costTextField != null && int.TryParse(costTextField.value, out int costID))
-            {
                 metadata.CostEffectID = costID;
-            }
+            else
+                metadata.CostEffectID = -1;
 
             // Parse CoolDown Effect ID
-            var coolDownField = editorType.GetField("_coolDownIDTextField",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var coolDownField = editorType.GetField("_coolDownIDTextField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var coolDownTextField = coolDownField?.GetValue(editor) as UnityEngine.UIElements.TextField;
-
             if (coolDownTextField != null && int.TryParse(coolDownTextField.value, out int coolDownID))
-            {
                 metadata.CoolDownEffectID = coolDownID;
-            }
-
-            // Parse Timeline ID
-            var timelineIDField = editorType.GetField("_timelineIDTextField",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            else
+                metadata.CoolDownEffectID = -1;
+            
+            var timelineIDField = editorType.GetField("_timelineIDTextField",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var timelineIDTextField = timelineIDField?.GetValue(editor) as UnityEngine.UIElements.TextField;
-
             if (timelineIDTextField != null && int.TryParse(timelineIDTextField.value, out int timelineID))
-            {
                 metadata.TimelineID = timelineID;
-            }
+            else
+                metadata.TimelineID = -1;
    
             // Parse Target Type
             var targetTypeField = editorType.GetField("_targetTypeDropdown",

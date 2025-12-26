@@ -93,7 +93,6 @@ namespace Editor.AbilityEditor
             {
                 // 设置滚动条样式
                 _timelineScrollView.horizontalScroller.style.height = 16;
-
                 // 注册滚动控制事件
                 RegisterHorizontalScrollControl( _timelineScrollView );
             }
@@ -103,9 +102,7 @@ namespace Editor.AbilityEditor
             }
 
             if ( _timelineContainer == null )
-            {
                 Debug.LogError( "InitializeUIElements: TimelineContainer not found in UXML!" );
-            }
         }
 
         /// <summary>
