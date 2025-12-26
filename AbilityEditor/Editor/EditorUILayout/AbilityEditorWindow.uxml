@@ -36,7 +36,6 @@
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: column; align-items: center;">
                     <ui:Button text="GenTimelineTrack" display-tooltip-when-elided="true" name="GenTimelineTrackBtn" style="-unity-text-align: lower-center; flex-direction: column; width: 195px; white-space: nowrap;" />
-                    <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveBtn" style="-unity-text-align: middle-center; flex-direction: column; width: 195px;" />
                     <ui:Button text="GenConfig" display-tooltip-when-elided="true" name="GenConfigBtn" style="-unity-text-align: middle-center; flex-direction: column; width: 195px;" />
                 </ui:VisualElement>
             </ui:VisualElement>

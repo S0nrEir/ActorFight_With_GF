@@ -37,9 +37,9 @@ namespace Editor.AbilityEditor
                 if ( tempBtn != null )
                     tempBtn.clicked += DrawTimelineTrackItems;
 
-                tempBtn = abilityBaseInfoPanel.Q<Button>( "SaveBtn" );
-                if ( tempBtn != null )
-                    tempBtn.clicked += OnSaveButtonClicked;
+                // tempBtn = abilityBaseInfoPanel.Q<Button>( "SaveBtn" );
+                // if ( tempBtn != null )
+                //     tempBtn.clicked += OnSaveButtonClicked;
 
                 tempBtn = abilityBaseInfoPanel.Q<Button>( "GenConfigBtn" );
                 if ( tempBtn != null )
