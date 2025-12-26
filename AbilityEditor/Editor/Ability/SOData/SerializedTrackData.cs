@@ -109,7 +109,6 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
-            // 验证每个 Clip
             for (int i = 0; i < Clips.Count; i++)
             {
                 var clip = Clips[i];

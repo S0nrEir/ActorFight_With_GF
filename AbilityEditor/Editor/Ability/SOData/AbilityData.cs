@@ -122,9 +122,17 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
+            
+            
             // 验证所有 Tracks
             if (_tracks != null)
             {
+                if (_tracks.Count == 0)
+                {
+                    error = "tracks list is empty";
+                    return false;
+                }
+
                 for (int i = 0; i < _tracks.Count; i++)
                 {
                     var track = _tracks[i];
