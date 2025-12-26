@@ -24,8 +24,8 @@ namespace  Aquila.Fight
                 //按百分比，要拿出基数计算一下
                 case effect_mod_attr_condition.Percentage:
                 {
-                    var actionInstnace = Meta.Target == 0 ? param._castor : param._target;
-                    var addon = actionInstnace.GetAddon<Addon_BaseAttrNumric>();
+                    // var actionInstnace = Meta.Target == 0 ? param._castor : param._target;
+                    var addon = param._target.GetAddon<Addon_BaseAttrNumric>();
                     //拿要检查的属性
                     var attrType = Meta.ExtensionParam.IntParam_3; 
                     if (attrType >= (int)actor_attribute.Max ||
@@ -62,25 +62,11 @@ namespace  Aquila.Fight
         {
             base.Init(meta,castor,target);
             _cumulation = 0f;
-            var instance = meta.Target == 0 ? castor : target;
-            var addon = instance.GetAddon<Addon_Event>();
-            addon.Register((int)AddonEventTypeEnum.ON_ACTOR_HITTED, (int)EventAddonPrioerityTypeEnum.EFFECT_SPEC, OnHitted);
         }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             base.OnEffectEnd(castor, target);
-            var instance = Meta.Target == 0 ? castor : target;
-            var addon = instance.GetAddon<Addon_Event>();
-            addon.UnRegister((int)AddonEventTypeEnum.ON_ACTOR_HITTED,OnHitted);
-            //移除时移除修饰器
-            Aquila.GameEntry.Module.GetModule<Module_ProxyActor>().RemoveModifierFromActor_Effect
-                (
-                    Meta.Target == 0 ? castor : target,
-                    _modifier,
-                    (actor_attribute)Meta.ExtensionParam.IntParam_2 
-                );
-            // Log.Info("<color=white>EffectSpec_OnHitted_Trigger_ModifyAttr.OnEffectEnd ---> release</color>");
         }
 
         /// <summary>
@@ -89,15 +75,6 @@ namespace  Aquila.Fight
         public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
         {
             base.Apply(castor, target, result);
-            _modifier.Setup(Meta.ModifierType,Meta.ExtensionParam.FloatParam_2);
-            if (!Aquila.GameEntry.Module.GetModule<Module_ProxyActor>().AddModifierToActor_Effect
-                (
-                    Meta.Target == 0 ? castor : target,
-                    _modifier,
-                    (actor_attribute)Meta.ExtensionParam.IntParam_2
-                ))
-                Log.Warning("<color=yellow>faild to modify actor attribute</color>");
-            
         }
 
         public override void Clear()
@@ -111,7 +88,6 @@ namespace  Aquila.Fight
         /// </summary>
         private void OnHitted(int eventType, object param)
         {
-            //Log.Info("<color=white>on actor hitted!</color>");
             var hitParam = param as OnActorHittedParam;
             if (hitParam is null)
                 return;
