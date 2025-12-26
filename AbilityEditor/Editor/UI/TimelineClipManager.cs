@@ -245,18 +245,18 @@ namespace Aquila.AbilityEditor
                 float clickTime = localX / (_pixelsPerSecond * _zoom);
                 clickTime = Mathf.Clamp(clickTime, _timelineStartTime, _timelineEndTime);
 
-                evt.menu.AppendAction("Add Skill Clip", action => AddSkillClip(track, clickTime));
+                // evt.menu.AppendAction("Add Skill Clip", action => AddSkillClip(track, clickTime));
                 evt.menu.AppendAction("Add Effect Clip", action => AddEffectClip( track, clickTime));
                 evt.menu.AppendAction("Add Audio Clip", action => AddAudioClip(track, clickTime));
                 evt.menu.AppendAction("Add VFX Clip", action => AddVFXClip(track, clickTime));
             }));
         }
 
-        private void AddSkillClip(TimelineTrackItem track, float startTime)
-        {
-            var clipData = new SkillClipData($"Skill", startTime, startTime + 0.5f, 1);
-            AddClip(track, clipData);
-        }
+        // private void AddSkillClip(TimelineTrackItem track, float startTime)
+        // {
+        //     var clipData = new SkillClipData($"Skill", startTime, startTime + 0.5f, 1);
+        //     AddClip(track, clipData);
+        // }
 
         private void AddEffectClip(TimelineTrackItem track, float startTime)
         {

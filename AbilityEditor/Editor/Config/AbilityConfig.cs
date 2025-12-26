@@ -95,13 +95,18 @@ namespace Editor.AbilityEditor.Config
         /// </summary>
         public float TimelineDuration { get; set; }
 
+        /// <summary>
+        /// Data source for debugging ("AbilityData" or "EditorMemory")
+        /// </summary>
+        public string DataSource { get; set; }
+
         #endregion
 
         #region Clip Collections
 
         private readonly List<TriggerData> _triggers;
         private readonly List<EffectClipData> _effects;
-        private readonly List<SkillClipData> _skills;
+        // private readonly List<SkillClipData> _skills;
         private readonly List<AudioClipData> _audios;
         private readonly List<VFXClipData> _vfxs;
 
@@ -118,7 +123,7 @@ namespace Editor.AbilityEditor.Config
         /// <summary>
         /// All skill clips
         /// </summary>
-        public IReadOnlyList<SkillClipData> Skills => _skills.AsReadOnly();
+        // public IReadOnlyList<SkillClipData> Skills => _skills.AsReadOnly();
 
         /// <summary>
         /// All audio clips
@@ -136,9 +141,10 @@ namespace Editor.AbilityEditor.Config
         {
             Name = string.Empty;
             Desc = string.Empty;
+            DataSource = "EditorMemory"; // Default value
             _triggers = new List<TriggerData>();
             _effects = new List<EffectClipData>();
-            _skills = new List<SkillClipData>();
+            // _skills = new List<SkillClipData>();
             _audios = new List<AudioClipData>();
             _vfxs = new List<VFXClipData>();
         }
@@ -149,15 +155,20 @@ namespace Editor.AbilityEditor.Config
         public void Initialize(
             List<TriggerData> triggers,
             List<EffectClipData> effects,
-            List<SkillClipData> skills,
             List<AudioClipData> audios,
             List<VFXClipData> vfxs)
         {
-            if (triggers != null) _triggers.AddRange(triggers);
-            if (effects != null) _effects.AddRange(effects);
-            if (skills != null) _skills.AddRange(skills);
-            if (audios != null) _audios.AddRange(audios);
-            if (vfxs != null) _vfxs.AddRange(vfxs);
+            if (triggers != null)
+                _triggers.AddRange(triggers);
+            
+            if (effects != null) 
+                _effects.AddRange(effects);
+            
+            if (audios != null) 
+                _audios.AddRange(audios);
+            
+            if (vfxs != null)
+                _vfxs.AddRange(vfxs);
         }
 
 
@@ -170,7 +181,7 @@ namespace Editor.AbilityEditor.Config
             var clips = new List<TimelineClipData>();
 
             clips.AddRange(_effects.Where(c => Math.Abs(c.TriggerTime - time) < tolerance));
-            clips.AddRange(_skills.Where(c => Math.Abs(c.StartTime - time) < tolerance));
+            // clips.AddRange(_skills.Where(c => Math.Abs(c.StartTime - time) < tolerance));
             clips.AddRange(_audios.Where(c => Math.Abs(c.StartTime - time) < tolerance));
             clips.AddRange(_vfxs.Where(c => Math.Abs(c.StartTime - time) < tolerance));
 
@@ -184,8 +195,8 @@ namespace Editor.AbilityEditor.Config
         {
             if (typeof(T) == typeof(EffectClipData))
                 return _effects.Cast<T>().ToList();
-            if (typeof(T) == typeof(SkillClipData))
-                return _skills.Cast<T>().ToList();
+            // if (typeof(T) == typeof(SkillClipData))
+            //     return _skills.Cast<T>().ToList();
             if (typeof(T) == typeof(AudioClipData))
                 return _audios.Cast<T>().ToList();
             if (typeof(T) == typeof(VFXClipData))
@@ -210,7 +221,6 @@ namespace Editor.AbilityEditor.Config
             var clips = new List<TimelineClipData>();
 
             clips.AddRange(_effects.Where(c => c.TriggerTime >= start && c.TriggerTime <= end));
-            clips.AddRange(_skills.Where(c => c.StartTime >= start && c.StartTime <= end));
             clips.AddRange(_audios.Where(c => c.StartTime >= start && c.StartTime <= end));
             clips.AddRange(_vfxs.Where(c => c.StartTime >= start && c.StartTime <= end));
 
@@ -237,8 +247,7 @@ namespace Editor.AbilityEditor.Config
                 errorMessage = "Timeline duration must be greater than 0";
                 return false;
             }
-
-            // Check all clips are within timeline bounds
+            
             foreach (var effect in _effects)
             {
                 if (effect.TriggerTime > TimelineDuration)
@@ -273,16 +282,11 @@ namespace Editor.AbilityEditor.Config
         }
 
         #endregion
-
-        #region Debugging
-
         public override string ToString()
         {
-            return $"AbilityConfig[ID={AbilityID}, Name={Name}, Duration={TimelineDuration}s, " +
-                   $"Triggers={_triggers.Count}, Effects={_effects.Count}, Skills={_skills.Count}, " +
+            return $"AbilityConfig[ID={AbilityID}, Name={Name}, DataSource={DataSource}, Duration={TimelineDuration}s, " +
+                   $"Triggers={_triggers.Count}, Effects={_effects.Count}," +
                    $"Audios={_audios.Count}, VFXs={_vfxs.Count}]";
         }
-
-        #endregion
     }
 }

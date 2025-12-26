@@ -36,7 +36,11 @@ namespace Editor.AbilityEditor
                 var tempBtn = abilityBaseInfoPanel.Q<Button>( "GenTimelineTrackBtn" );
                 if ( tempBtn != null )
                     tempBtn.clicked += DrawTimelineTrackItems;
-                
+
+                tempBtn = abilityBaseInfoPanel.Q<Button>( "SaveBtn" );
+                if ( tempBtn != null )
+                    tempBtn.clicked += OnSaveButtonClicked;
+
                 tempBtn = abilityBaseInfoPanel.Q<Button>( "GenConfigBtn" );
                 if ( tempBtn != null )
                     tempBtn.clicked += OnClickGenConfigBtn;
@@ -283,42 +287,11 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void OnClickGenConfigBtn()
         {
-            try
-            {
-                Debug.Log("[AbilityEditorWindow] Starting config generation...");
-                var config = AbilityConfigGenerator.Generate(this);
-                AbilityConfigAccessor.SetConfig(config);
-                ShowNotification(new GUIContent("✓ Config generated successfully"));
-                Debug.Log($"[AbilityEditorWindow] Config generation complete:\n{AbilityConfigAccessor.ToString()}");
-            }
-            catch (ArgumentException ex)
-            {
-                // Metadata validation error
-                var message = $"✗ Invalid metadata: {ex.Message}";
-                ShowNotification(new GUIContent(message), 5.0);
-                Debug.LogError($"[AbilityEditorWindow] {message}");
-            }
-            catch (InvalidOperationException ex)
-            {
-                // Timeline validation error
-                var message = $"✗ Invalid timeline: {ex.Message}";
-                ShowNotification(new GUIContent(message), 5.0);
-                Debug.LogError($"[AbilityEditorWindow] {message}");
-            }
-            catch (System.IO.InvalidDataException ex)
-            {
-                // Effect data validation error
-                var message = $"✗ Invalid effect data: {ex.Message}";
-                ShowNotification(new GUIContent(message), 5.0);
-                Debug.LogError($"[AbilityEditorWindow] {message}");
-            }
-            catch (Exception ex)
-            {
-                // Unexpected error
-                var message = "✗ Config generation failed. Check console.";
-                ShowNotification(new GUIContent(message), 5.0);
-                Debug.LogError($"[AbilityEditorWindow] Unexpected error during config generation:\n{ex}");
-            }
+            Debug.Log("[AbilityEditorWindow] Starting config generation...");
+            var config = AbilityConfigGenerator.Generate(this);
+            AbilityConfigAccessor.SetConfig(config);
+            ShowNotification(new GUIContent("✓ Config generated successfully"));
+            Debug.Log($"[AbilityEditorWindow] Config generation complete:\n{AbilityConfigAccessor.ToString()}");
         }
 
         /// <summary>

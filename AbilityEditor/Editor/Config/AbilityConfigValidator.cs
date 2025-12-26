@@ -39,9 +39,7 @@ namespace Editor.AbilityEditor.Config
         }
 
         #endregion
-
-        #region Timeline Validation
-
+        
         /// <summary>
         /// Validate timeline duration and clip bounds
         /// </summary>
@@ -49,7 +47,6 @@ namespace Editor.AbilityEditor.Config
         public static void ValidateTimeline(
             float timelineDuration,
             List<EffectClipData> effects,
-            List<SkillClipData> skills,
             List<AudioClipData> audios,
             List<VFXClipData> vfxs)
         {
@@ -67,17 +64,7 @@ namespace Editor.AbilityEditor.Config
                         $"Effect clip '{effect.ClipName}' at {effect.TriggerTime:F2}s exceeds timeline duration {timelineDuration:F2}s");
                 }
             }
-
-            // Check skill clips
-            foreach (var skill in skills)
-            {
-                if (skill.StartTime > timelineDuration)
-                {
-                    throw new InvalidOperationException(
-                        $"Skill clip '{skill.ClipName}' at {skill.StartTime:F2}s exceeds timeline duration {timelineDuration:F2}s");
-                }
-            }
-
+            
             // Check audio clips
             foreach (var audio in audios)
             {
@@ -98,11 +85,6 @@ namespace Editor.AbilityEditor.Config
                 }
             }
         }
-
-        #endregion
-
-        #region Effect ID Validation
-
         /// <summary>
         /// Validate all effect IDs are non-negative
         /// </summary>
@@ -118,30 +100,6 @@ namespace Editor.AbilityEditor.Config
                 }
             }
         }
-
-        /// <summary>
-        /// Validate skill effect IDs array
-        /// </summary>
-        /// <exception cref="System.IO.InvalidDataException">Thrown when skill effect ID is invalid</exception>
-        public static void ValidateSkillEffectIDs(List<SkillClipData> skills)
-        {
-            foreach (var skill in skills)
-            {
-                if (skill.EffectIds != null)
-                {
-                    for (int i = 0; i < skill.EffectIds.Length; i++)
-                    {
-                        if (skill.EffectIds[i] < 0)
-                        {
-                            throw new System.IO.InvalidDataException(
-                                $"Skill clip '{skill.ClipName}' has negative EffectID at index {i}: {skill.EffectIds[i]}");
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion
 
         #region Trigger Collision Detection
 
@@ -167,8 +125,6 @@ namespace Editor.AbilityEditor.Config
         }
 
         #endregion
-
-        #region Placeholder Warnings
 
         /// <summary>
         /// Log warnings for incomplete VFX and Audio data
@@ -198,8 +154,6 @@ namespace Editor.AbilityEditor.Config
             }
         }
 
-        #endregion
-
         #region Comprehensive Validation
 
         /// <summary>
@@ -211,7 +165,7 @@ namespace Editor.AbilityEditor.Config
             int timelineID,
             float timelineDuration,
             List<EffectClipData> effects,
-            List<SkillClipData> skills,
+            // List<SkillClipData> skills,
             List<AudioClipData> audios,
             List<VFXClipData> vfxs,
             List<TriggerData> triggers)
@@ -220,18 +174,12 @@ namespace Editor.AbilityEditor.Config
             ValidateAbilityMetadata(abilityID, name, timelineID);
 
             // Timeline validation (throws exceptions on failure)
-            ValidateTimeline(timelineDuration, effects, skills, audios, vfxs);
+            ValidateTimeline(timelineDuration, effects,audios, vfxs);
 
             // Effect ID validation (throws exceptions on failure)
             if (effects != null && effects.Count > 0)
             {
                 ValidateEffectIDs(effects);
-            }
-
-            // Skill effect ID validation (throws exceptions on failure)
-            if (skills != null && skills.Count > 0)
-            {
-                ValidateSkillEffectIDs(skills);
             }
 
             // Trigger collision detection (warning only)

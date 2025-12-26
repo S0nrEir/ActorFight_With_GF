@@ -64,7 +64,7 @@ namespace Editor.AbilityEditor.Config
                    $"  Duration: {_current.TimelineDuration:F2}s\n" +
                    $"  Triggers: {_current.Triggers.Count}\n" +
                    $"  Effects: {_current.Effects.Count}\n" +
-                   $"  Skills: {_current.Skills.Count}\n" +
+                   // $"  Skills: {_current.Skills.Count}\n" +
                    $"  Audios: {_current.Audios.Count}\n" +
                    $"  VFXs: {_current.VFXs.Count}";
         }

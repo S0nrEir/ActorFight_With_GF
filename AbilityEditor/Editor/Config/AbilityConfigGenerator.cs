@@ -12,17 +12,20 @@ namespace Editor.AbilityEditor.Config
     /// </summary>
     public static class AbilityConfigGenerator
     {
+        /// <summary>
+        /// Generate config from AbilityEditorWindow (legacy method)
+        /// </summary>
         public static AbilityConfig Generate(AbilityEditorWindow editor)
         {
             if (editor == null)
                 throw new ArgumentNullException(nameof(editor), "Editor window cannot be null");
-            
+
             //从UI字段转换元数据
             var metadata = ParseMetadata(editor);
-                
+
             //收集轨道上的所有clips
             var clipCollections = CollectClips(editor);
-                
+
             //从effect clip收集数据
             var triggers = GenerateTriggers(clipCollections.Effects);
 
@@ -33,11 +36,10 @@ namespace Editor.AbilityEditor.Config
                 metadata.TimelineID,
                 metadata.TimelineDuration,
                 clipCollections.Effects,
-                clipCollections.Skills,
                 clipCollections.Audios,
                 clipCollections.VFXs,
                 triggers);
-                
+
             //创建配置
             var config = new AbilityConfig
             {
@@ -48,13 +50,98 @@ namespace Editor.AbilityEditor.Config
                 CoolDownEffectID = metadata.CoolDownEffectID,
                 TargetType = metadata.TargetType,
                 TimelineID = metadata.TimelineID,
-                TimelineDuration = metadata.TimelineDuration
+                TimelineDuration = metadata.TimelineDuration,
+                DataSource = "EditorMemory"
             };
 
             config.Initialize(
                 triggers,
                 clipCollections.Effects,
-                clipCollections.Skills,
+                clipCollections.Audios,
+                clipCollections.VFXs);
+
+            Debug.Log($"[AbilityConfigGenerator] Successfully generated config: {config}");
+            return config;
+        }
+
+        /// <summary>
+        /// Generate config from AbilityData with optional editor tracks fallback
+        /// </summary>
+        public static AbilityConfig Generate(
+            AbilityData sourceData,
+            List<TimelineTrackItem> editorTracks = null)
+        {
+            if (sourceData == null)
+                throw new ArgumentNullException(nameof(sourceData), "AbilityData cannot be null");
+
+            // Determine data source priority: AbilityData.Tracks > editorTracks
+            ClipCollections clipCollections;
+            string dataSource;
+
+            if (sourceData.Tracks != null && sourceData.Tracks.Count > 0)
+            {
+                // Primary: Load from AbilityData.Tracks
+                Debug.Log($"[AbilityConfigGenerator] Generating config from AbilityData: {sourceData.name}");
+                clipCollections = CollectClipsFromSerializedTracks(sourceData.Tracks);
+                dataSource = "AbilityData";
+            }
+            else if (editorTracks != null && editorTracks.Count > 0)
+            {
+                // Fallback: Load from editor memory
+                Debug.LogWarning($"[AbilityConfigGenerator] AbilityData.Tracks is empty. Using editor memory state.");
+                clipCollections = CollectClipsFromTracks(editorTracks);
+                dataSource = "EditorMemory";
+            }
+            else
+            {
+                // No data available
+                throw new ArgumentException("No track data available. Either provide AbilityData.Tracks or editorTracks parameter.");
+            }
+
+            // Extract metadata from AbilityData
+            var metadata = new AbilityMetadata
+            {
+                AbilityID = sourceData.Id,
+                Name = !string.IsNullOrWhiteSpace(sourceData.Name) ? sourceData.Name : $"Ability_{sourceData.Id}",
+                Desc = sourceData.Desc ?? string.Empty,
+                CostEffectID = sourceData.CostEffectID,
+                CoolDownEffectID = sourceData.CoolDownEffectID,
+                TargetType = sourceData.TargetType,
+                TimelineID = sourceData.TimelineID,
+                TimelineDuration = sourceData.TimelineDuration
+            };
+
+            // Generate triggers
+            var triggers = GenerateTriggers(clipCollections.Effects);
+
+            // Validate
+            AbilityConfigValidator.ValidateAll(
+                metadata.AbilityID,
+                metadata.Name,
+                metadata.TimelineID,
+                metadata.TimelineDuration,
+                clipCollections.Effects,
+                clipCollections.Audios,
+                clipCollections.VFXs,
+                triggers);
+
+            // Create config
+            var config = new AbilityConfig
+            {
+                AbilityID = metadata.AbilityID,
+                Name = metadata.Name,
+                Desc = metadata.Desc,
+                CostEffectID = metadata.CostEffectID,
+                CoolDownEffectID = metadata.CoolDownEffectID,
+                TargetType = metadata.TargetType,
+                TimelineID = metadata.TimelineID,
+                TimelineDuration = metadata.TimelineDuration,
+                DataSource = dataSource
+            };
+
+            config.Initialize(
+                triggers,
+                clipCollections.Effects,
                 clipCollections.Audios,
                 clipCollections.VFXs);
 
@@ -171,7 +258,7 @@ namespace Editor.AbilityEditor.Config
         private struct ClipCollections
         {
             public List<EffectClipData> Effects;
-            public List<SkillClipData> Skills;
+            // public List<SkillClipData> Skills;
             public List<AudioClipData> Audios;
             public List<VFXClipData> VFXs;
         }
@@ -184,7 +271,6 @@ namespace Editor.AbilityEditor.Config
             var collections = new ClipCollections
             {
                 Effects = new List<EffectClipData>(),
-                Skills = new List<SkillClipData>(),
                 Audios = new List<AudioClipData>(),
                 VFXs = new List<VFXClipData>()
             };
@@ -229,9 +315,9 @@ namespace Editor.AbilityEditor.Config
                             collections.Effects.Add(effectClip);
                             break;
 
-                        case SkillClipData skillClip:
-                            collections.Skills.Add(skillClip);
-                            break;
+                        // case SkillClipData skillClip:
+                        //     collections.Skills.Add(skillClip);
+                        //     break;
 
                         case AudioClipData audioClip:
                             collections.Audios.Add(audioClip);
@@ -250,7 +336,183 @@ namespace Editor.AbilityEditor.Config
 
             Debug.Log($"[AbilityConfigGenerator] Collected clips: " +
                      $"Effects={collections.Effects.Count}, " +
-                     $"Skills={collections.Skills.Count}, " +
+                     $"Audios={collections.Audios.Count}, " +
+                     $"VFXs={collections.VFXs.Count}");
+
+            return collections;
+        }
+
+        /// <summary>
+        /// Collect clips from SerializedTrackData (from AbilityData.Tracks)
+        /// </summary>
+        private static ClipCollections CollectClipsFromSerializedTracks(IReadOnlyList<SerializedTrackData> tracks)
+        {
+            var collections = new ClipCollections
+            {
+                Effects = new List<EffectClipData>(),
+                // Skills = new List<SkillClipData>(),
+                Audios = new List<AudioClipData>(),
+                VFXs = new List<VFXClipData>()
+            };
+
+            if (tracks == null || tracks.Count == 0)
+            {
+                Debug.LogWarning("[AbilityConfigGenerator] No serialized tracks found");
+                return collections;
+            }
+
+            foreach (var track in tracks)
+            {
+                if (track == null)
+                {
+                    Debug.LogWarning("[AbilityConfigGenerator] Null track in serialized tracks");
+                    continue;
+                }
+
+                if (!track.IsEnabled)
+                {
+                    Debug.Log($"[AbilityConfigGenerator] Skipping disabled track: {track.TrackName}");
+                    continue;
+                }
+
+                var clips = track.Clips;
+                if (clips == null || clips.Count == 0)
+                    continue;
+
+                foreach (var clip in clips)
+                {
+                    if (clip == null)
+                    {
+                        Debug.LogWarning($"[AbilityConfigGenerator] Null clip in track: {track.TrackName}");
+                        continue;
+                    }
+
+                    if (!clip.IsEnabled)
+                    {
+                        Debug.Log($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
+                        continue;
+                    }
+
+                    // Validate clip before adding
+                    if (!clip.Validate(out string error))
+                    {
+                        Debug.LogWarning($"[AbilityConfigGenerator] Skipping invalid clip in track '{track.TrackName}': {error}");
+                        continue;
+                    }
+
+                    switch (clip)
+                    {
+                        case EffectClipData effectClip:
+                            collections.Effects.Add(effectClip);
+                            break;
+
+                        // case SkillClipData skillClip:
+                        //     collections.Skills.Add(skillClip);
+                        //     break;
+
+                        case AudioClipData audioClip:
+                            collections.Audios.Add(audioClip);
+                            break;
+
+                        case VFXClipData vfxClip:
+                            collections.VFXs.Add(vfxClip);
+                            break;
+
+                        default:
+                            Debug.LogWarning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
+                            break;
+                    }
+                }
+            }
+
+            Debug.Log($"[AbilityConfigGenerator] Collected clips from serialized tracks: " +
+                     $"Effects={collections.Effects.Count}, " +
+                     // $"Skills={collections.Skills.Count}, " +
+                     $"Audios={collections.Audios.Count}, " +
+                     $"VFXs={collections.VFXs.Count}");
+
+            return collections;
+        }
+
+        /// <summary>
+        /// Collect clips from TimelineTrackItem (from editor memory)
+        /// </summary>
+        private static ClipCollections CollectClipsFromTracks(List<TimelineTrackItem> trackItems)
+        {
+            var collections = new ClipCollections
+            {
+                Effects = new List<EffectClipData>(),
+                // Skills = new List<SkillClipData>(),
+                Audios = new List<AudioClipData>(),
+                VFXs = new List<VFXClipData>()
+            };
+
+            if (trackItems == null || trackItems.Count == 0)
+            {
+                Debug.LogWarning("[AbilityConfigGenerator] No track items found");
+                return collections;
+            }
+
+            foreach (var track in trackItems)
+            {
+                if (track == null)
+                {
+                    Debug.LogWarning("[AbilityConfigGenerator] Null track in track items");
+                    continue;
+                }
+
+                if (!track.IsEnabled)
+                {
+                    Debug.Log($"[AbilityConfigGenerator] Skipping disabled track: {track.Name}");
+                    continue;
+                }
+
+                var clips = track.Clips;
+                if (clips == null || clips.Count == 0)
+                    continue;
+
+                foreach (var clip in clips)
+                {
+                    if (clip == null)
+                    {
+                        Debug.LogWarning($"[AbilityConfigGenerator] Null clip in track: {track.Name}");
+                        continue;
+                    }
+
+                    if (!clip.IsEnabled)
+                    {
+                        Debug.Log($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
+                        continue;
+                    }
+
+                    switch (clip)
+                    {
+                        case EffectClipData effectClip:
+                            collections.Effects.Add(effectClip);
+                            break;
+
+                        // case SkillClipData skillClip:
+                        //     collections.Skills.Add(skillClip);
+                        //     break;
+
+                        case AudioClipData audioClip:
+                            collections.Audios.Add(audioClip);
+                            break;
+
+                        case VFXClipData vfxClip:
+                            collections.VFXs.Add(vfxClip);
+                            break;
+
+                        default:
+                            Debug.LogWarning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
+                            break;
+                    }
+                }
+            }
+
+            Debug.Log($"[AbilityConfigGenerator] Collected clips from track items: " +
+                     $"Effects={collections.Effects.Count}, " +
+                     // $"Skills={collections.Skills.Count}, " +
                      $"Audios={collections.Audios.Count}, " +
                      $"VFXs={collections.VFXs.Count}");
 

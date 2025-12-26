@@ -280,7 +280,7 @@ namespace Aquila.AbilityEditor
 
                 // 目标类型使用自定义显示
                 int target = _targetProp.intValue;
-                target = EditorGUILayout.IntPopup("目标类型", target, new string[] { "我方", "敌方" }, new int[] { 0, 1 });
+                target = EditorGUILayout.IntPopup("目标类型 / Target", target, new string[] { "Friendly", "Enemy" }, new int[] { 0, 1 });
                 _targetProp.intValue = target;
 
                 EditorGUI.indentLevel--;
@@ -334,13 +334,13 @@ namespace Aquila.AbilityEditor
             }
 
             // 派生效果Foldout
-            _deriveEffectsFoldout = EditorGUILayout.Foldout(_deriveEffectsFoldout, "派生效果", true, EditorStyles.foldoutHeader);
+            _deriveEffectsFoldout = EditorGUILayout.Foldout(_deriveEffectsFoldout, "派生Effect", true, EditorStyles.foldoutHeader);
             EditorPrefs.SetBool("EffectClipInspector_DeriveEffects_Foldout", _deriveEffectsFoldout);
             if (_deriveEffectsFoldout)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(_deriveEffectsProp, new GUIContent("派生效果ID列表"), true);
-                EditorGUILayout.PropertyField(_awakeEffectsProp, new GUIContent("唤醒效果ID列表"), true);
+                EditorGUILayout.PropertyField(_deriveEffectsProp, new GUIContent("派生EffectID列表"), true);
+                EditorGUILayout.PropertyField(_awakeEffectsProp, new GUIContent("唤起EffectID列表"), true);
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Space();
             }
