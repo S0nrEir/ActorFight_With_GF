@@ -25,7 +25,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         Policy = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
         Duration = _buf.ReadFloat();
-        Target = _buf.ReadInt();
         EffectType = (Enum.actor_attribute)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
@@ -70,10 +69,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// </summary>
     public float Duration { get; private set; }
     /// <summary>
-    /// 目标类型，0=我方，1=敌方
-    /// </summary>
-    public int Target { get; private set; }
-    /// <summary>
     /// 影响的数值类型
     /// </summary>
     public Enum.actor_attribute EffectType { get; private set; }
@@ -111,7 +106,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "Policy:" + Policy + ","
         + "Period:" + Period + ","
         + "Duration:" + Duration + ","
-        + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
         + "AwakeEffects:" + Bright.Common.StringUtil.CollectionToString(AwakeEffects) + ","
