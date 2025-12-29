@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "SlashCommand(/openspec:proposal add-ability-config-test-tool)",
+      "Bash(openspec list:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

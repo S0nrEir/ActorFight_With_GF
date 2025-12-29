@@ -9,7 +9,14 @@ using UnityEngine.UIElements;
 namespace Editor.AbilityEditor
 {
     public partial class AbilityEditorWindow : EditorWindow
-    {   
+    {
+        [MenuItem("Aquila/AbilityEditor/FillInAbilityParam")]
+        public static void FillInAbilityParam()
+        {
+            
+        }
+
+
         [MenuItem( "Aquila/AbilityEditor/AbilityEditorWindow" )]
         public static void OpenAbilityEditorWindow()
         {
