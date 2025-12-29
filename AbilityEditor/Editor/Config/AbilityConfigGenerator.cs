@@ -277,7 +277,7 @@ namespace Editor.AbilityEditor.Config
                 Debug.LogWarning("[AbilityConfigGenerator] No tracks found in editor");
                 return collections;
             }
-            
+
             // Iterate through all tracks
             foreach (var track in trackItems)
             {

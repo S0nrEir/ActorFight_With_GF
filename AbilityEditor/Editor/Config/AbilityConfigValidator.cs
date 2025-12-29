@@ -178,11 +178,15 @@ namespace Editor.AbilityEditor.Config
 
             // Effect ID validation (throws exceptions on failure)
             if (effects != null && effects.Count > 0)
+            {
                 ValidateEffectIDs(effects);
+            }
 
             // Trigger collision detection (warning only)
             if (triggers != null && triggers.Count > 0)
+            {
                 CheckTriggerCollisions(triggers);
+            }
 
             // Placeholder warnings (warning only)
             WarnIncompletePlaceholders(
