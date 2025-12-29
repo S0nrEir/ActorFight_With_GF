@@ -279,16 +279,16 @@ namespace Editor.AbilityEditor
             } );
         }
 
-        /// <summary>
-        /// 点击生成配置
-        /// </summary>
+        // 点击生成配置
         private void OnClickGenConfigBtn()
         {
-            Debug.Log("[AbilityEditorWindow] Starting config generation...");
+            Debug.Log("[AbilityEditorWindow] 开始生成配置...");
             var config = AbilityConfigGenerator.Generate(this);
             AbilityConfigAccessor.SetConfig(config);
-            ShowNotification(new GUIContent("✓ Config generated successfully"));
-            Debug.Log($"[AbilityEditorWindow] Config generation complete:\n{AbilityConfigAccessor.ToString()}");
+            AbilityDataExporter.ExportToAsset(config, _timelineTrackItems);
+            ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
+
+            Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
         }
 
         /// <summary>

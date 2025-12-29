@@ -23,6 +23,11 @@ namespace Aquila.AbilityEditor
         public static readonly string UXML_FILE_PATH = "Assets/AbilityEditor/Editor/EditorUILayout/AbilityEditorWindow.uxml";
 
         /// <summary>
+        /// 技能配置生成路径 / ability config gen path
+        /// </summary>
+        public const string ABILITY_CFG_GEN_PATH = "AbilityEditor/Editor/Config/Ability";
+        
+        /// <summary>
         /// 默认的clip ui的固定宽度
         /// </summary>
         public const float DEFAULT_INSTANT_CLIP_UI_WIDTH = 24f;

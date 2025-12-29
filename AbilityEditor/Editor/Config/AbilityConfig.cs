@@ -53,8 +53,6 @@ namespace Editor.AbilityEditor.Config
     /// </summary>
     public class AbilityConfig
     {
-        #region Basic Metadata
-
         /// <summary>
         /// Ability ID
         /// </summary>
@@ -99,8 +97,6 @@ namespace Editor.AbilityEditor.Config
         /// Data source for debugging ("AbilityData" or "EditorMemory")
         /// </summary>
         public string DataSource { get; set; }
-
-        #endregion
 
         #region Clip Collections
 
