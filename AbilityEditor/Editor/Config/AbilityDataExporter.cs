@@ -9,32 +9,49 @@ namespace Editor.AbilityEditor.Config
     // 配置导出工具类，负责将 AbilityConfig 导出为 AbilityData 资产文件
     public static class AbilityDataExporter
     {
-        /// <summary>
-        /// 导出配置为 AbilityData 资产文件 / Export configuration as AbilityData asset file
-        /// </summary>
+        private const string ASSET_BASE_PATH = "Assets/AbilityEditor/Editor/Config/Ability";
+
+        // 导出配置为 AbilityData 资产文件
+        // config: 生成的配置
+        // tracks: 编辑器中的轨道数据
         public static void ExportToAsset(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            string assetPath = Path.Combine(Application.dataPath , Misc.ABILITY_CFG_GEN_PATH , $"{config.AbilityID}.asset");
-            if(File.Exists(assetPath))
+            string assetPath = $"{ASSET_BASE_PATH}/{config.AbilityID}.asset";
+            EnsureDirectoryExists(ASSET_BASE_PATH);
+            var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityData>(assetPath);
+            bool isOverwrite = existingAsset != null;
+            AbilityData abilityData;
+            if (isOverwrite)
             {
-                throw new System.InvalidOperationException($"资产文件已存在: {assetPath}。请先删除现有文件或使用不同 的技能ID。");
+                //覆盖旧资产 / overwrite old asset
+                abilityData = existingAsset;
+                UpdateAbilityData(abilityData, config, tracks);
+                EditorUtility.SetDirty(abilityData);
             }
-            EnsureDirectoryExists(assetPath);
-            var abilityData = CreateAbilityData(config, tracks);
-            
-            AssetDatabase.CreateAsset(abilityData, assetPath);
+            else
+            {
+                //新资产 / new asset
+                abilityData = CreateAbilityData(config, tracks);
+                AssetDatabase.CreateAsset(abilityData, assetPath);
+            }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"[AbilityDataExporter] 已导出配置到: {assetPath}");
+            string action = isOverwrite ? "已覆盖" : "已创建";
+            Debug.Log($"[AbilityDataExporter] {action}配置资产: {assetPath}");
         }
-        
-        /// <summary>
-        /// 从 AbilityConfig 和 Tracks 创建 AbilityData / Create AbilityData from AbilityConfig and Tracks
-        /// </summary>
+
+        // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
         private static AbilityData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
             var abilityData = ScriptableObject.CreateInstance<AbilityData>();
-            
+            UpdateAbilityData(abilityData, config, tracks);
+            return abilityData;
+        }
+
+        // 更新现有 AbilityData 的数据
+        private static void UpdateAbilityData(AbilityData abilityData, AbilityConfig config, List<TimelineTrackItem> tracks)
+        {
+            // 复制元数据
             abilityData.Id = config.AbilityID;
             abilityData.Name = config.Name;
             abilityData.Desc = config.Desc;
@@ -44,31 +61,32 @@ namespace Editor.AbilityEditor.Config
             abilityData.TimelineID = config.TimelineID;
             abilityData.TimelineDuration = config.TimelineDuration;
 
-            // 转换 Tracks 数据 / convert track data
+            // 转换 Tracks 数据
             var serializedTracks = ConvertTracksToSerialized(tracks);
             abilityData.SetTracks(serializedTracks);
-
-            return abilityData;
         }
-        
-        /// <summary>
-        /// 将 TimelineTrackItem 转换为 SerializedTrackData / convert TimelineTrackItem to SerializedTrackData
-        /// </summary>
+
+        // 将 TimelineTrackItem 转换为 SerializedTrackData
         private static List<SerializedTrackData> ConvertTracksToSerialized(List<TimelineTrackItem> tracks)
         {
             var serialized = new List<SerializedTrackData>();
 
+            if (tracks == null)
+                return serialized;
+
             foreach (var track in tracks)
             {
-                var trackData = new SerializedTrackData(track);
-                // 不保存轨道颜色，使用默认白色
-                trackData.TrackColor = Color.white;
-                serialized.Add(trackData);
+                if (track != null)
+                {
+                    var trackData = new SerializedTrackData(track);
+                    serialized.Add(trackData);
+                }
             }
 
             return serialized;
         }
 
+        // 确保目录存在
         private static void EnsureDirectoryExists(string path)
         {
             if (!Directory.Exists(path))

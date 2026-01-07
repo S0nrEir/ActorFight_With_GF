@@ -20,16 +20,12 @@ namespace Editor.AbilityEditor.Config
             if (editor == null)
                 throw new ArgumentNullException(nameof(editor), "Editor window cannot be null");
 
-            //从UI字段转换元数据
+            //从UI字段转换元数据 / Converting metadata from UI fields
             var metadata = ParseMetadata(editor);
-
-            //收集轨道上的所有clips
+            //收集轨道上的所有clips / Collect all clips on the timeline
             var clipCollections = CollectClips(editor);
-
-            //从effect clip收集数据
+            //从effect clip收集数据 / Collect data from effect clips.
             var triggers = GenerateTriggers(clipCollections.Effects);
-
-            //验证
             AbilityConfigValidator.ValidateAll(
                 metadata.AbilityID,
                 metadata.Name,
@@ -40,7 +36,7 @@ namespace Editor.AbilityEditor.Config
                 clipCollections.VFXs,
                 triggers);
 
-            //创建配置
+            //create config
             var config = new AbilityConfig
             {
                 AbilityID = metadata.AbilityID,
