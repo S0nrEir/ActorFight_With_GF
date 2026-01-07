@@ -18,6 +18,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     public Table_Effect(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
+        Name = _buf.ReadString();
         Type = (Enum.EffectType)_buf.ReadInt();
         ExtensionParam = Bean.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
@@ -40,6 +41,10 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// id
     /// </summary>
     public int id { get; private set; }
+    /// <summary>
+    /// Name
+    /// </summary>
+    public string Name { get; private set; }
     /// <summary>
     /// Effect的类型
     /// </summary>
@@ -99,6 +104,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
+        + "Name:" + Name + ","
         + "Type:" + Type + ","
         + "ExtensionParam:" + ExtensionParam + ","
         + "ModifierType:" + ModifierType + ","

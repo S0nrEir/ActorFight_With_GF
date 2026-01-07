@@ -62,23 +62,23 @@ namespace Editor.AbilityEditor.Testing
 
             // Track 1: Effect Track
             var effectTrack = new TimelineTrackItem("Effect Track", Color.red, true);
-            var effectClip1 = new EffectClipData("伤害效果", 1.0f, 2001);
-            var effectClip2 = new EffectClipData("治疗效果", 2.0f, 2002);
+            var effectClip1 = new EffectClipData("伤害效果", 1.0f, 1002);
+            var effectClip2 = new EffectClipData("治疗效果", 2.0f, 1002);
             effectTrack.AddClip(effectClip1);
             effectTrack.AddClip(effectClip2);
             tracks.Add(effectTrack);
 
             // Track 2: Audio Track
-            var audioTrack = new TimelineTrackItem("Audio Track", Color.blue, true);
-            var audioClip = new AudioClipData("技能音效", 0.5f, 2.5f, "audio/skill_cast");
-            audioTrack.AddClip(audioClip);
-            tracks.Add(audioTrack);
+            // var audioTrack = new TimelineTrackItem("Audio Track", Color.blue, true);
+            // var audioClip = new AudioClipData("技能音效", 0.5f, 2.5f, "audio/skill_cast");
+            // audioTrack.AddClip(audioClip);
+            // tracks.Add(audioTrack);
 
             // Track 3: VFX Track
-            var vfxTrack = new TimelineTrackItem("VFX Track", Color.yellow, true);
-            var vfxClip = new VFXClipData("技能特效", 1.5f, 2.5f, "vfx/skill_impact");
-            vfxTrack.AddClip(vfxClip);
-            tracks.Add(vfxTrack);
+            // var vfxTrack = new TimelineTrackItem("VFX Track", Color.yellow, true);
+            // var vfxClip = new VFXClipData("技能特效", 1.5f, 2.5f, "vfx/skill_impact");
+            // vfxTrack.AddClip(vfxClip);
+            // tracks.Add(vfxTrack);
 
             return tracks;
         }
