@@ -14,6 +14,10 @@ namespace Cfg.Enum
     public enum EffectType
     {
         /// <summary>
+        /// 无效
+        /// </summary>
+        Invalid = 0,
+        /// <summary>
         /// 冷却类effect
         /// </summary>
         Period_CoolDown = 1,

@@ -19,7 +19,7 @@ MonoBehaviour:
   CoolDownEffectID: 1001
   TargetType: 2
   TimelineID: 1000
-  TimelineDuration: 5
+  TimelineDuration: 2.5
   _tracks:
   - TrackName: Effect Track
     TrackColor: {r: 0, g: 1, b: 1, a: 1}
@@ -41,22 +41,22 @@ MonoBehaviour:
         _effectId: 1011
         _stackCount: 1
         _canStack: 0
-        _effectType: 2
-        _modifierType: 4
-        _affectedAttribute: 0
+        _effectType: 11
+        _modifierType: 2
+        _affectedAttribute: -1
         _target: 0
-        _duration: -1
-        _period: 0
-        _policy: 1
+        _duration: 20
+        _period: 999
+        _policy: 2
         _effectOnAwake: 1
         _extensionParam:
-          FloatParam_1: -1
-          FloatParam_2: -1
+          FloatParam_1: 0.1
+          FloatParam_2: 0.05
           FloatParam_3: -1
           FloatParam_4: -1
-          IntParam_1: -1
-          IntParam_2: -1
-          IntParam_3: -1
+          IntParam_1: 1
+          IntParam_2: 4
+          IntParam_3: 1
           IntParam_4: -1
         _deriveEffects: 
         _awakeEffects: 
