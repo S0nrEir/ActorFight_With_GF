@@ -19,7 +19,7 @@ MonoBehaviour:
   CoolDownEffectID: 1001
   TargetType: 2
   TimelineID: 1000
-  TimelineDuration: 5
+  TimelineDuration: 2.5
   _tracks:
   - TrackName: Effect Track
     TrackColor: {r: 0, g: 1, b: 1, a: 1}
