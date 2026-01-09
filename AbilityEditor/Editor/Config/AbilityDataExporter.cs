@@ -59,6 +59,7 @@ namespace Editor.AbilityEditor.Config
             abilityData.CoolDownEffectID = config.CoolDownEffectID;
             abilityData.TargetType = config.TargetType;
             abilityData.TimelineID = config.TimelineID;
+            abilityData.TimelineAssetPath = config.TimelineAssetPath;
             abilityData.TimelineDuration = config.TimelineDuration;
 
             // 转换 Tracks 数据

@@ -50,6 +50,11 @@ namespace Aquila.AbilityEditor
         public int TimelineID;
 
         /// <summary>
+        /// Timeline 资产路径
+        /// </summary>
+        public string TimelineAssetPath = "";
+
+        /// <summary>
         /// 触发器节点集合，原表为数组/复杂字符串，这里先保存为字符串数组（每项为原单元格文本）,,由timeline编辑器生成
         /// </summary>
         // public string[] Triggers;
@@ -122,8 +127,12 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
-            
-            
+            // 验证 Timeline 资产路径格式（可选字段，仅警告）
+            if (!string.IsNullOrEmpty(TimelineAssetPath) && !TimelineAssetPath.StartsWith("Assets/"))
+            {
+                UnityEngine.Debug.LogWarning($"Timeline asset path should start with 'Assets/': {TimelineAssetPath}");
+            }
+
             // 验证所有 Tracks
             if (_tracks != null)
             {

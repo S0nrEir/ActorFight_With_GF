@@ -325,6 +325,9 @@ namespace Editor.AbilityEditor
                 if (_timelineIDTextField != null && int.TryParse(_timelineIDTextField.value, out int timelineID))
                     _currentAbilityData.TimelineID = timelineID;
 
+                if (_timelineAssetPathTxtField != null)
+                    _currentAbilityData.TimelineAssetPath = _timelineAssetPathTxtField.value;
+
                 if (_targetTypeDropdown != null && System.Enum.TryParse<Cfg.Enum.AbilityTargetType>(_targetTypeDropdown.value, out var targetType))
                     _currentAbilityData.TargetType = targetType;
 
@@ -526,6 +529,7 @@ namespace Editor.AbilityEditor
         private TextField _costIDTextField;
         private TextField _coolDownIDTextField;
         private TextField _timelineIDTextField;
+        private TextField _timelineAssetPathTxtField;
         private DropdownField _targetTypeDropdown;
         private TextField _durationTextField;
         private VisualTreeAsset _abilityTreeAsset;

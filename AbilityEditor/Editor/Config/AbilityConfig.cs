@@ -89,6 +89,11 @@ namespace Editor.AbilityEditor.Config
         public int TimelineID { get; set; }
 
         /// <summary>
+        /// Timeline asset path
+        /// </summary>
+        public string TimelineAssetPath { get; set; }
+
+        /// <summary>
         /// Timeline duration in seconds
         /// </summary>
         public float TimelineDuration { get; set; }

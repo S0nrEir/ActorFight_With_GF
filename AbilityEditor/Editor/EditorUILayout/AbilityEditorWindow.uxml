@@ -31,6 +31,10 @@
                     <ui:TextField picking-mode="Ignore" name="TimelineIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement style="flex-direction: row; align-items: center;">
+                    <ui:Label text="TimelineAssetPath" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="TimelineAssetPathTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-direction: row; align-items: center;">
                     <ui:Label text="Duration" style="width: 56px; -unity-text-align: middle-left; margin-right: 20px;" />
                     <ui:TextField picking-mode="Ignore" name="DurationTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 88px; border-right-width: 0;" />
                 </ui:VisualElement>

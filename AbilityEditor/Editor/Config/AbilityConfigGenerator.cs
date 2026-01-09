@@ -46,6 +46,7 @@ namespace Editor.AbilityEditor.Config
                 CoolDownEffectID = metadata.CoolDownEffectID,
                 TargetType = metadata.TargetType,
                 TimelineID = metadata.TimelineID,
+                TimelineAssetPath = metadata.TimelineAssetPath,
                 TimelineDuration = metadata.TimelineDuration,
                 DataSource = "EditorMemory"
             };
@@ -104,6 +105,7 @@ namespace Editor.AbilityEditor.Config
                 CoolDownEffectID = sourceData.CoolDownEffectID,
                 TargetType = sourceData.TargetType,
                 TimelineID = sourceData.TimelineID,
+                TimelineAssetPath = sourceData.TimelineAssetPath ?? string.Empty,
                 TimelineDuration = sourceData.TimelineDuration
             };
 
@@ -131,6 +133,7 @@ namespace Editor.AbilityEditor.Config
                 CoolDownEffectID = metadata.CoolDownEffectID,
                 TargetType = metadata.TargetType,
                 TimelineID = metadata.TimelineID,
+                TimelineAssetPath = metadata.TimelineAssetPath,
                 TimelineDuration = metadata.TimelineDuration,
                 DataSource = dataSource
             };
@@ -156,6 +159,7 @@ namespace Editor.AbilityEditor.Config
             public int CoolDownEffectID;
             public AbilityTargetType TargetType;
             public int TimelineID;
+            public string TimelineAssetPath;
             public float TimelineDuration;
         }
 
@@ -209,7 +213,12 @@ namespace Editor.AbilityEditor.Config
                 metadata.TimelineID = timelineID;
             else
                 metadata.TimelineID = -1;
-   
+
+            // Parse Timeline Asset Path
+            var timelineAssetPathField = editorType.GetField("_timelineAssetPathTxtField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var timelineAssetPathTextField = timelineAssetPathField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            metadata.TimelineAssetPath = timelineAssetPathTextField?.value ?? string.Empty;
+
             // Parse Target Type
             var targetTypeField = editorType.GetField("_targetTypeDropdown",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

@@ -28,6 +28,7 @@ namespace Editor.AbilityEditor
                 _costIDTextField = abilityBaseInfoPanel.Q<TextField>( "CostIDTxtField" );
                 _coolDownIDTextField = abilityBaseInfoPanel.Q<TextField>( "CoolDownIDTxtField" );
                 _timelineIDTextField = abilityBaseInfoPanel.Q<TextField>( "TimelineIDTxtField" );
+                _timelineAssetPathTxtField = abilityBaseInfoPanel.Q<TextField>( "TimelineAssetPathTxtField" );
                 _targetTypeDropdown = abilityBaseInfoPanel.Q<DropdownField>( "TargetTypeDropdown" );
                 _durationTextField = abilityBaseInfoPanel.Q<TextField>( "DurationTxtField" );
                 _trackPanel = abilityBaseInfoPanel.Q<VisualElement>( "TrackPanel" );
@@ -58,6 +59,7 @@ namespace Editor.AbilityEditor
                 _costIDTextField == null ||
                 _coolDownIDTextField == null ||
                 _timelineIDTextField == null ||
+                _timelineAssetPathTxtField == null ||
                 _targetTypeDropdown == null ||
                 _trackPanel == null )
             {
@@ -388,6 +390,7 @@ namespace Editor.AbilityEditor
             _costIDTextField.value = data.CostEffectID.ToString();
             _coolDownIDTextField.value = data.CoolDownEffectID.ToString();
             _timelineIDTextField.value = data.TimelineID.ToString();
+            _timelineAssetPathTxtField.value = data.TimelineAssetPath ?? string.Empty;
             _targetTypeDropdown.value = data.TargetType.ToString();
         }
 
