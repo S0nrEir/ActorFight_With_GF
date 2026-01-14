@@ -20,40 +20,54 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void InitializeUIElements()
         {
-            var abilityBaseInfoPanel = _root.Q<VisualElement>( "AbilityEditPanel" );
-            if ( abilityBaseInfoPanel != null )
+            var tempPanel = _root.Q<VisualElement>( "BaseArea_1" );
+            if ( tempPanel != null )
             {
-                _abilityIDTextField = abilityBaseInfoPanel.Q<TextField>( "AbilityIDTxtField" );
-                _abilityDescTextField = abilityBaseInfoPanel.Q<TextField>( "AbilityDescTxtField" );
-                _costIDTextField = abilityBaseInfoPanel.Q<TextField>( "CostIDTxtField" );
-                _coolDownIDTextField = abilityBaseInfoPanel.Q<TextField>( "CoolDownIDTxtField" );
-                _timelineIDTextField = abilityBaseInfoPanel.Q<TextField>( "TimelineIDTxtField" );
-                _timelineAssetPathTxtField = abilityBaseInfoPanel.Q<TextField>( "TimelineAssetPathTxtField" );
-                _targetTypeDropdown = abilityBaseInfoPanel.Q<DropdownField>( "TargetTypeDropdown" );
-                _durationTextField = abilityBaseInfoPanel.Q<TextField>( "DurationTxtField" );
-                _trackPanel = abilityBaseInfoPanel.Q<VisualElement>( "TrackPanel" );
-                _timelineTrackPanel = abilityBaseInfoPanel.Q<VisualElement>( "TimelineTrackPanel" );
+                _abilityIDTextField   = tempPanel.Q<TextField>( "AbilityIDTxtField" );
+                _abilityDescTextField = tempPanel.Q<TextField>( "AbilityDescTxtField" );
+                _costIDTextField      = tempPanel.Q<TextField>( "CostIDTxtField" );
+                _coolDownIDTextField  = tempPanel.Q<TextField>( "CoolDownIDTxtField" );
+            }
+            
+            tempPanel = _root.Q<VisualElement>( "BaseArea_2" );
+            if (tempPanel != null)
+            {
+                _timelineIDTextField       = tempPanel.Q<TextField>( "TimelineIDTxtField" );
+                _timelineAssetPathTxtField = tempPanel.Q<TextField>( "TimelineAssetPathTxtField");
+                _targetTypeDropdown        = tempPanel.Q<DropdownField>( "TargetTypeDropdown" );
+                _durationTextField         = tempPanel.Q<TextField>( "DurationTxtField" );
+            }
 
-                var tempBtn = abilityBaseInfoPanel.Q<Button>( "GenTimelineTrackBtn" );
+            tempPanel = _root.Q<VisualElement>( "BaseArea_3" );
+            if (tempPanel != null)
+            {
+                var tempBtn = tempPanel.Q<Button>( "GenTimelineTrackBtn" );
                 if ( tempBtn != null )
                     tempBtn.clicked += DrawTimelineTrackItems;
 
-                // tempBtn = abilityBaseInfoPanel.Q<Button>( "SaveBtn" );
+                // tempBtn = tempPanel.Q<Button>( "SaveBtn" );
                 // if ( tempBtn != null )
                 //     tempBtn.clicked += OnSaveButtonClicked;
 
-                tempBtn = abilityBaseInfoPanel.Q<Button>( "GenConfigBtn" );
+                tempBtn = tempPanel.Q<Button>( "GenConfigBtn" );
                 if ( tempBtn != null )
                     tempBtn.clicked += OnClickGenConfigBtn;
             }
-            var headerMenu = _root.Q<VisualElement>( "HeaderMenu" );
-            if ( headerMenu != null )
+
+            tempPanel = _root.Q<VisualElement>( "HeaderMenu" );
+            if ( tempPanel != null )
             {
-                var tempBtn = headerMenu.Q<Button>( "AddNewTrackBtn" );
+                var tempBtn = tempPanel.Q<Button>( "AddNewTrackBtn" );
                 tempBtn.clicked += AddNewTrack;
             }
-
-            // 验证控件是否成功获取，如果有任何一个为空则返回
+            
+            tempPanel = _root.Q<VisualElement>( "AbilityEditPanel" );
+            if ( tempPanel != null )
+            {
+                _trackPanel         = tempPanel.Q<VisualElement>( "TrackPanel" );
+                _timelineTrackPanel = tempPanel.Q<VisualElement>( "TimelineTrackPanel" );
+            } 
+            
             if ( _abilityIDTextField == null ||
                 _abilityDescTextField == null ||
                 _costIDTextField == null ||
