@@ -534,5 +534,8 @@ namespace Editor.AbilityEditor
         private VisualElement _selectedTrackElement;
         private TimelineTrackItem _selectedTrackItem;
         private VisualElement _timelineTrackPanel;
+
+        // Track Inspector Proxy
+        private Aquila.AbilityEditor.TrackInspectorProxy _trackInspectorProxy;
     }
 }

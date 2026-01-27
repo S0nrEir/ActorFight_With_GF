@@ -161,7 +161,6 @@ namespace Editor.AbilityEditor
             trackElement.style.backgroundColor = trackData.TrackColor;
             _selectedTrackElement = null;
             _selectedTrackItem = null;
-            Debug.Log( $"Unselected track: {trackData.Name}" );
         }
 
         /// <summary>
@@ -186,7 +185,53 @@ namespace Editor.AbilityEditor
             Color highlightColor = track.TrackColor * 1.3f;
             highlightColor.a = 1f;
             _selectedTrackElement.style.backgroundColor = highlightColor;
+
+            // 绑定到Inspector
+            ShowTrackInInspector(track, trackElement);
+
             Debug.Log( $"Selected track: {_selectedTrackItem.Name}" );
+        }
+
+        /// <summary>
+        /// 在Inspector中显示Track信息
+        /// </summary>
+        private void ShowTrackInInspector(TimelineTrackItem track, VisualElement trackElement)
+        {
+            if (track == null)
+                return;
+
+            if (_trackInspectorProxy == null)
+                _trackInspectorProxy = ScriptableObject.CreateInstance<Aquila.AbilityEditor.TrackInspectorProxy>();
+
+            _trackInspectorProxy.BindTrackData(track, trackElement, OnTrackNameChanged);
+            Selection.activeObject = _trackInspectorProxy;
+        }
+
+        /// <summary>
+        /// Track名称变更回调
+        /// </summary>
+        private void OnTrackNameChanged(TimelineTrackItem track, string newName)
+        {
+            if (_selectedTrackElement == null)
+                return;
+
+            // 更新TrackPanel中的Label
+            var trackLabel = _selectedTrackElement.Q<Label>();
+            if (trackLabel != null)
+                trackLabel.text = newName;
+
+            // 如果时间轴已生成，重新绘制以更新Timeline中的名称
+            if (_timelineContainer != null && _timelineContainer.childCount > 0)
+            {
+                if (_durationTextField != null &&
+                    float.TryParse(_durationTextField.value, out float duration) &&
+                    duration > 0)
+                {
+                    DrawTimelineTrackItems();
+                }
+            }
+
+            Debug.Log($"Track name changed to: {newName}");
         }
 
         /// <summary>
