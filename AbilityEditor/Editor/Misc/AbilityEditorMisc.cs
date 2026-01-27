@@ -72,11 +72,13 @@ namespace Aquila.AbilityEditor
         /// </summary>
         private static readonly Color[] TrackColors = new Color[]
         {
-            new Color(0.4f, 0.6f, 0.8f),
-            new Color(0.6f, 0.8f, 0.4f),
-            new Color(0.8f, 0.6f, 0.4f),
-            new Color(0.8f, 0.4f, 0.6f),
-            new Color(0.6f, 0.4f, 0.8f),
+            new Color(.8f, .4f,0f),
+            new Color(.8f, .8f, 0f),
+            new Color(.4f, .8f, 0f),
+            new Color(0f, .4f, .8f),
+            new Color(.8f, 0f, .4f),
+            new Color(.6f, .4f, 1f),
+            
         };
 
         /// <summary>
