@@ -19,6 +19,7 @@ MonoBehaviour:
   CoolDownEffectID: 1008
   TargetType: 2
   TimelineID: 1001
+  TimelineAssetPath: 
   TimelineDuration: 2.5
   _tracks:
   - TrackName: Effect Track

@@ -439,20 +439,14 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void ClearAllTracks()
         {
-            // 清空数据列表
             if (_timelineTrackItems != null)
-            {
                 _timelineTrackItems.Clear();
-            }
 
-            // 清空 TrackPanel UI（左侧轨道列表）
             if (_trackPanel != null)
             {
-                // 移除所有子元素（除了标题 Label）
                 var children = _trackPanel.Children().ToList();
                 foreach (var child in children)
                 {
-                    // 保留 "Tracks" 标题 Label
                     if (child is Label label && label.text == "Tracks")
                         continue;
 
@@ -460,13 +454,9 @@ namespace Editor.AbilityEditor
                 }
             }
 
-            // 清空 TimelineTrackPanel UI（右侧时间轴）
             if (_timelineContainer != null)
-            {
                 _timelineContainer.Clear();
-            }
 
-            // 清空选中状态
             _selectedTrackElement = null;
             _selectedTrackItem = null;
 

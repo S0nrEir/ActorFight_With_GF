@@ -93,9 +93,7 @@ namespace Aquila.AbilityEditor
             _timelineStartTime = timelineStartTime;
             _timelineEndTime = timelineEndTime;
 
-            // 判断是否为即时clip
             bool isInstant = _clipData.IsInstantClip;
-            // 使用VisualElementFactory创建clip容器
             _clipElement = VisualElementFactory.GenClipContainer(_clipData.ClipId, _clipData.ClipColor, isInstant);
             _clipElement.userData = this;
 

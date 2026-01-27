@@ -13,27 +13,33 @@ MonoBehaviour:
   m_Name: 999
   m_EditorClassIdentifier: 
   Id: 999
-  Name: "\u6D4B\u8BD5\u6280\u80FD_\u65B0\u5EFA"
+  Name: "\u8FD9\u662F\u4E00\u4E2A\u6D4B\u8BD5\u6280\u80FD\u63CF\u8FF0"
   Desc: "\u8FD9\u662F\u4E00\u4E2A\u6D4B\u8BD5\u6280\u80FD\u63CF\u8FF0"
   CostEffectID: 1001
   CoolDownEffectID: 1002
   TargetType: 2
   TimelineID: 5001
+  TimelineAssetPath: 
   TimelineDuration: 3.5
   _tracks:
   - TrackName: Effect Track
     TrackColor: {r: 1, g: 0, b: 0, a: 1}
     IsEnabled: 1
     Clips:
-    - rid: 1420048021311455232
-    - rid: 1420048021311455233
+    - rid: 1420048474423689216
+    - rid: 1420048474423689217
+  - TrackName: Track_2
+    TrackColor: {r: 0.6, g: 0.8, b: 0.4, a: 1}
+    IsEnabled: 1
+    Clips:
+    - rid: 1420048474423689218
   references:
     version: 2
     RefIds:
-    - rid: 1420048021311455232
+    - rid: 1420048474423689216
       type: {class: EffectClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
       data:
-        _clipId: 0a04ded1-20f6-4919-b00e-0335372c6968
+        _clipId: 529868ef-2140-462e-8655-6f70371bfb66
         _clipName: "\u4F24\u5BB3\u6548\u679C"
         _startTime: 1
         _endTime: 1
@@ -61,10 +67,10 @@ MonoBehaviour:
           IntParam_4: -1
         _deriveEffects: 
         _awakeEffects: 
-    - rid: 1420048021311455233
+    - rid: 1420048474423689217
       type: {class: EffectClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
       data:
-        _clipId: cf5d4c17-2633-422c-8a16-ccdbfa3beeb9
+        _clipId: e8123285-4bbc-41fb-a79f-cee6ee3cdecf
         _clipName: "\u6CBB\u7597\u6548\u679C"
         _startTime: 2
         _endTime: 2
@@ -92,3 +98,17 @@ MonoBehaviour:
           IntParam_4: -1
         _deriveEffects: 
         _awakeEffects: 
+    - rid: 1420048474423689218
+      type: {class: AudioClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
+      data:
+        _clipId: 52e6bd9a-0557-4c43-a621-2acc174d9a2e
+        _clipName: Audio
+        _startTime: 1
+        _endTime: 2
+        _clipColor: {r: 0.4, g: 0.8, b: 0.4, a: 1}
+        _isEnabled: 1
+        _audioPath: audio/default
+        _volume: 1
+        _loop: 0
+        _fadeInDuration: 0
+        _fadeOutDuration: 0

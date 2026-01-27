@@ -139,7 +139,7 @@ namespace Aquila.AbilityEditor
         public float FadeInDuration
         {
             get => _fadeInDuration;
-            set
+            set 
             {
                 float clampedValue = Mathf.Max(0, value);
                 if (Mathf.Abs(_fadeInDuration - clampedValue) > 0.001f)

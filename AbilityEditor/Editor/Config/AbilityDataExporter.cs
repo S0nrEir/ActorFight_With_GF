@@ -9,15 +9,21 @@ namespace Editor.AbilityEditor.Config
     // 配置导出工具类，负责将 AbilityConfig 导出为 AbilityData 资产文件
     public static class AbilityDataExporter
     {
-        private const string ASSET_BASE_PATH = "Assets/AbilityEditor/Editor/Config/Ability";
+        /// <summary>
+        /// 导出所有技能资产配置为.ablt文件
+        /// </summary>
+        public static void ExportToConfig()
+        {
+            
+        }
 
         // 导出配置为 AbilityData 资产文件
         // config: 生成的配置
         // tracks: 编辑器中的轨道数据
         public static void ExportToAsset(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            string assetPath = $"{ASSET_BASE_PATH}/{config.AbilityID}.asset";
-            EnsureDirectoryExists(ASSET_BASE_PATH);
+            string assetPath = $"{Misc.ABILITY_ASSET_BASE_PATH}/{config.AbilityID}.asset";
+            EnsureDirectoryExists( Misc.ABILITY_ASSET_BASE_PATH );
             var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityData>(assetPath);
             bool isOverwrite = existingAsset != null;
             AbilityData abilityData;

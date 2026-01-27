@@ -13,7 +13,12 @@ namespace Aquila.AbilityEditor
         /// 训练场玩家角色ID / sand box player meta role id
         /// </summary>
         public const int PLYAER_META_ROLE_ID = 999999;
-        
+
+        /// <summary>
+        /// 编辑器技能数据的存储目录 / ability data asset storage path
+        /// </summary>
+        public static readonly string ABILITY_ASSET_BASE_PATH = "Assets/AbilityEditor/Editor/Config/Ability";
+
         /// <summary>
         /// effect数据的保存路径 / path for saving effect data
         /// </summary>
@@ -25,7 +30,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 技能配置生成路径 / ability config gen path
         /// </summary>
-        public const string ABILITY_CFG_GEN_PATH = "AbilityEditor/Editor/Config/Ability";
+        //public const string ABILITY_CFG_GEN_PATH = "AbilityEditor/Editor/Config/Ability";
         
         /// <summary>
         /// 默认的clip ui的固定宽度
