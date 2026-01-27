@@ -414,12 +414,12 @@ namespace Editor.AbilityEditor
                 var trackRow = VisualElementFactory.GenTrackRow(totalWidth, trackHeight);
 
                 // 使用VisualElementFactory创建轨道名称标签
-                var trackNameLabel = VisualElementFactory.GenTrackNameLabelForTimeline(track.Name);
+                //var trackNameLabel = VisualElementFactory.GenTrackNameLabelForTimeline(track.Name);
 
                 var trackTimeline = VisualElementFactory.GenTrackTimeline( track.TrackColor, totalWidth, trackHeight );
                 trackTimeline.userData = track;
 
-                trackRow.Add( trackNameLabel );
+                //trackRow.Add( trackNameLabel );
                 trackRow.Add( trackTimeline );
                 _timelineContainer.Add( trackRow );
 
