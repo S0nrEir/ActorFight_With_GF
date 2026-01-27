@@ -371,8 +371,9 @@ namespace Aquila.AbilityEditor
                     flexDirection = FlexDirection.Row,
                     height = trackHeight,
                     marginBottom = 2,
-                    width = totalWidth + 50,
-                    minWidth = totalWidth + 50
+                    marginLeft = 50,
+                    width = totalWidth,
+                    minWidth = totalWidth
                 }
             };
         }
