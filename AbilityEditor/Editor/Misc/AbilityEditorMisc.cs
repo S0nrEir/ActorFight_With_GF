@@ -20,6 +20,11 @@ namespace Aquila.AbilityEditor
         public static readonly string ABILITY_ASSET_BASE_PATH = "Assets/AbilityEditor/Editor/Config/Ability";
 
         /// <summary>
+        /// 二进制技能数据的存储目录
+        /// </summary>
+        public static readonly string ABILITY_BIN_ASSET_PATH = "Assets/Res/Config/Ability";
+        
+        /// <summary>
         /// effect数据的保存路径 / path for saving effect data
         /// </summary>
         public static readonly string NEW_EFFECT_DATA_PATH = "Assets/Editor/AbilityEditor/Config/Effects";
