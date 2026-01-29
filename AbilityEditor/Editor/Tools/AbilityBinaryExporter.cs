@@ -57,7 +57,10 @@ namespace Editor.AbilityEditor.Tools
             Debug.Log($"[AbilityBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
         }
 
-        private static void ExportAbility(AbilityData data, string outputPath)
+        /// <summary>
+        /// 导出单个AbilityData为.ablt文件
+        /// </summary>
+        public static void ExportAbility(AbilityData data, string outputPath)
         {
             using (FileStream fs = new FileStream(outputPath, FileMode.Create))
             {
