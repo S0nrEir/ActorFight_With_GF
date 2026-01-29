@@ -42,7 +42,7 @@ namespace Editor.AbilityEditor.Tools
             return !string.IsNullOrEmpty(assetPath) && Path.GetExtension(assetPath).Equals(".ablt");
         }
 
-        [MenuItem("Aquila/AbilityEditor/.ablt Export|Import/.ablt Importer")]
+        [MenuItem("Aquila/AbilityEditor/.ablt Export|Import/Importe .abl")]
         public static void ReadAbltFile()
         {
             string filePath = EditorUtility.OpenFilePanel("Select .ablt File", "Assets/Res/Config/Ability", "ablt");
