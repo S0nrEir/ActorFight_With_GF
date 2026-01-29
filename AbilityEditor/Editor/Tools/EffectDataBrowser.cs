@@ -11,7 +11,7 @@ namespace Aquila.AbilityEditor.Tools
     {
         private static EffectData _tempEffectData;
 
-        [MenuItem("Aquila/AbilityEditor/Effect Data Browser")]
+        [MenuItem("Aquila/AbilityEditor/EffectDataInspector")]
         public static void ShowInInspector()
         {
             // 如果已经有选中的EffectData，就用选中的
