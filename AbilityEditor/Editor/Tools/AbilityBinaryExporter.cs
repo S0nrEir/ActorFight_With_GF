@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor.Tools
     /// </summary>
     public static class AbilityBinaryExporter
     {
-        [MenuItem("Aquila/AbilityEditor/Export All Abilities (.ablt)")]
+        [MenuItem("Aquila/AbilityEditor/.ablt Export|Import/Export all effect data(.ablt)")]
         public static void ExportAllAbilities()
         {
             if (!Directory.Exists(Misc.ABILITY_ASSET_BASE_PATH))
