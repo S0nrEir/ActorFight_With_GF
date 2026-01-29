@@ -29,7 +29,9 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public static readonly string NEW_EFFECT_DATA_PATH = "Assets/Editor/AbilityEditor/Config/Effects";
         
-        // UI布局文件路径
+        /// <summary>
+        /// UI布局文件路径 / UXML file path
+        /// </summary>
         public static readonly string UXML_FILE_PATH = "Assets/AbilityEditor/Editor/EditorUILayout/AbilityEditorWindow.uxml";
 
         /// <summary>

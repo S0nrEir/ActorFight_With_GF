@@ -201,7 +201,7 @@ namespace Editor.AbilityEditor
                 return;
 
             if (_trackInspectorProxy == null)
-                _trackInspectorProxy = ScriptableObject.CreateInstance<Aquila.AbilityEditor.TrackInspectorProxy>();
+                _trackInspectorProxy = CreateInstance<TrackInspectorProxy>();
 
             _trackInspectorProxy.BindTrackData(track, trackElement, OnTrackNameChanged);
             Selection.activeObject = _trackInspectorProxy;
