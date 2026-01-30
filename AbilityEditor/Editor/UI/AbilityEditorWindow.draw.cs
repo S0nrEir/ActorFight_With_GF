@@ -59,6 +59,17 @@ namespace Editor.AbilityEditor
             {
                 var tempBtn = tempPanel.Q<Button>( "AddNewTrackBtn" );
                 tempBtn.clicked += AddNewTrack;
+
+                var toggle = tempPanel.Q<Toggle>( "GenerateTempDataToggle" );
+                if ( toggle != null )
+                {
+                    toggle.value = true;
+                    toggle.RegisterValueChangedCallback(evt =>
+                    {
+                        Debug.Log(111);
+                        _isGenerateTempDataOnSave = evt.newValue;
+                    });
+                }
             }
             
             tempPanel = _root.Q<VisualElement>( "AbilityEditPanel" );

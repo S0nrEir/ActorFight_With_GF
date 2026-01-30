@@ -17,9 +17,13 @@ namespace Aquial.UI
 		/// WindUp界面
 		/// <summary>
 		WindUpForm,
+
+#if UNITY_EDITOR
 		/// <summary>
-		/// 技能测试界面
+		/// 技能沙盒测试界面
 		/// <summary>
-		AbilityEditorTestForm,
+		AbilitySandBoxForm,
+#endif
+		
 	}
 }

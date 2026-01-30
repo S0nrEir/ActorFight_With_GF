@@ -7,6 +7,7 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using GameFramework;
 using Aquila.AbilityEditor;
+using Editor.AbilityEditor.Config;
 
 namespace Aquila.Procedure
 {
@@ -103,6 +104,9 @@ namespace Aquila.Procedure
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
         {
             base.OnLeave(procedureOwner, isShutdown);
+            
+            GameEntry.AbilityEditorSandBox.Init();
+            
             _loadFinishSign = 0b0000;
             _playerEntityID = -1;
             _dummyEntityID = -1;
