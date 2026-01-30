@@ -64,11 +64,11 @@ namespace Editor.AbilityEditor
                 if ( toggle != null )
                 {
                     toggle.value = true;
-                    toggle.RegisterValueChangedCallback(evt =>
-                    {
-                        Debug.Log(111);
-                        _isGenerateTempDataOnSave = evt.newValue;
-                    });
+                    toggle.RegisterValueChangedCallback(OnToggleValueChanged);
+                }
+                else
+                {
+                    throw new Exception("faield to get GenerateTempDataToggle.");
                 }
             }
             
@@ -147,6 +147,11 @@ namespace Editor.AbilityEditor
                     HighlightTrackSelection( trackElement );
             } );
             _trackPanel.Add( trackElement );
+        }
+
+        private void OnToggleValueChanged(ChangeEvent<bool> evt)
+        {
+            _isGenSandBoxAblt = evt.newValue;
         }
 
         /// <summary>
@@ -359,8 +364,13 @@ namespace Editor.AbilityEditor
             AbilityConfigAccessor.SetConfig(config);
             AbilityDataExporter.ExportToAsset(config, _timelineTrackItems);
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
-
             Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
+            
+            //导出沙盒技能配置
+            if (_isGenSandBoxAblt)
+            {
+                
+            }
         }
 
         /// <summary>

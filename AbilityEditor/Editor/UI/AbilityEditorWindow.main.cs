@@ -522,7 +522,7 @@ namespace Editor.AbilityEditor
         private TextField _timelineAssetPathTxtField;
         private DropdownField _targetTypeDropdown;
         private TextField _durationTextField;
-        private bool _isGenerateTempDataOnSave = true;
+        private bool _isGenSandBoxAblt = true;
         private VisualTreeAsset _abilityTreeAsset;
 
         //ability datad
