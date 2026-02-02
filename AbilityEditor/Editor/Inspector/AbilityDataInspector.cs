@@ -10,12 +10,12 @@ namespace Editor.AbilityEditor.Inspector
     /// <summary>
     /// AbilityData的自定义Inspector
     /// </summary>
-    [CustomEditor(typeof(AbilityData))]
+    [CustomEditor(typeof(AbilityEditorSOData))]
     public class AbilityDataInspector : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
-            var abilityData = (AbilityData)target;
+            var abilityData = (AbilityEditorSOData)target;
 
             if (GUILayout.Button("Export to Binary (.ablt)", GUILayout.Height(30)))
                 ExportToBinary(abilityData);
@@ -28,7 +28,7 @@ namespace Editor.AbilityEditor.Inspector
             DrawDefaultInspector();
         }
 
-        private void ExportToBinary(AbilityData data)
+        private void ExportToBinary(AbilityEditorSOData data)
         {
             if (!data.Validate(out string error))
             {
@@ -45,7 +45,7 @@ namespace Editor.AbilityEditor.Inspector
             EditorUtility.DisplayDialog("Export Success", $"Exported to:\n{outputPath}", "OK");
         }
 
-        private void ExportEffectsToAssets(AbilityData data)
+        private void ExportEffectsToAssets(AbilityEditorSOData data)
         {
             if (data.Tracks == null || data.Tracks.Count == 0)
             {
@@ -90,11 +90,11 @@ namespace Editor.AbilityEditor.Inspector
         {
             string assetPath = $"{Misc.NEW_EFFECT_DATA_PATH}/{effectClip.EffectId}.asset";
 
-            EffectData effectData = AssetDatabase.LoadAssetAtPath<EffectData>(assetPath);
+            var effectData = AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
             bool isNewAsset = effectData == null;
 
             if (isNewAsset)
-                effectData = ScriptableObject.CreateInstance<EffectData>();
+                effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
 
             // 从EffectClipData复制数据到EffectData
             effectData.id = effectClip.EffectId;

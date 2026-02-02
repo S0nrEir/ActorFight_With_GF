@@ -93,7 +93,7 @@ namespace Editor.AbilityEditor
                 DragAndDrop.AcceptDrag();
                 foreach ( var obj in DragAndDrop.objectReferences )
                 {
-                    if ( obj is AbilityData abilityData )
+                    if ( obj is AbilityEditorSOData abilityData )
                     {
                         _currentAbilityData = abilityData;
                         OnAbilityDataChanged( _currentAbilityData );
@@ -268,7 +268,7 @@ namespace Editor.AbilityEditor
         {
             foreach ( var obj in DragAndDrop.objectReferences )
             {
-                if ( obj is AbilityData )
+                if ( obj is AbilityEditorSOData )
                     return true;
             }
             return false;
@@ -277,7 +277,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 当 AbilityData 改变时调用
         /// </summary>
-        private void OnAbilityDataChanged( AbilityData data )
+        private void OnAbilityDataChanged( AbilityEditorSOData data )
         {
             if ( data is null )
                 return;
@@ -372,7 +372,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 从 AbilityData 加载 Tracks 到编辑器
         /// </summary>
-        private void LoadTracksFromAbilityData(AbilityData data)
+        private void LoadTracksFromAbilityData(AbilityEditorSOData data)
         {
             if (data == null)
                 return;
@@ -526,7 +526,7 @@ namespace Editor.AbilityEditor
         private VisualTreeAsset _abilityTreeAsset;
 
         //ability datad
-        private AbilityData _currentAbilityData;
+        private AbilityEditorSOData _currentAbilityData;
 
         //ui elements
         private VisualElement _root;

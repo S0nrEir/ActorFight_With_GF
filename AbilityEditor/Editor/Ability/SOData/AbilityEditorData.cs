@@ -6,7 +6,7 @@ using Cfg.Enum;
 namespace Aquila.AbilityEditor
 {
     [CreateAssetMenu(fileName = "New Skill", menuName = "Ability Editor/New Ability")]
-    public class AbilityData : ScriptableObject
+    public class AbilityEditorSOData : ScriptableObject
     {
         /// <summary>
         /// 技能id

@@ -9,7 +9,7 @@ namespace Aquila.AbilityEditor.Config
     /// 从Excel直接导入，不依赖LuBan运行时
     /// </summary>
     [CreateAssetMenu(fileName = "EffectData", menuName = "Ability Editor/Effect Data")]
-    public class EffectData : ScriptableObject
+    public class EffectEditorSOData : ScriptableObject
     {
         [Header("Basic Info")]
         [Tooltip("Effect ID")]

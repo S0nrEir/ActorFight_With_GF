@@ -32,8 +32,7 @@ namespace Editor.AbilityEditor.Tools
             foreach (string guid in assetGuids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                AbilityData abilityData = AssetDatabase.LoadAssetAtPath<AbilityData>(assetPath);
-
+                var abilityData = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(assetPath);
                 if (abilityData == null)
                 {
                     Debug.LogWarning($"[AbilityBinaryExporter] Failed to load: {assetPath}");
@@ -60,7 +59,7 @@ namespace Editor.AbilityEditor.Tools
         /// <summary>
         /// 导出单个AbilityData为.ablt文件
         /// </summary>
-        public static void ExportAbility(AbilityData data, string outputPath)
+        public static void ExportAbility(AbilityEditorSOData data, string outputPath)
         {
             using (FileStream fs = new FileStream(outputPath, FileMode.Create))
             {

@@ -463,7 +463,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 将 AbilityData 数据更新到 UI 控件
         /// </summary>
-        private void UpdateUIFromData( AbilityData data )
+        private void UpdateUIFromData( AbilityEditorSOData data )
         {
             _abilityIDTextField.value        = data.Id.ToString();
             _abilityDescTextField.value      = data.Desc ?? string.Empty;

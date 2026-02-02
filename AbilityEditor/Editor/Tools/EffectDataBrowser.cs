@@ -9,13 +9,13 @@ namespace Aquila.AbilityEditor.Tools
     /// </summary>
     public class EffectDataBrowser
     {
-        private static EffectData _tempEffectData;
+        private static EffectEditorSOData _tempEffectData;
 
         [MenuItem("Aquila/AbilityEditor/EffectDataInspector")]
         public static void ShowInInspector()
         {
             // 如果已经有选中的EffectData，就用选中的
-            if (Selection.activeObject is EffectData selectedEffect)
+            if (Selection.activeObject is EffectEditorSOData selectedEffect)
             {
                 _tempEffectData = selectedEffect;
                 EditorGUIUtility.PingObject(_tempEffectData);
@@ -25,7 +25,7 @@ namespace Aquila.AbilityEditor.Tools
             {
                 if (_tempEffectData == null)
                 {
-                    _tempEffectData = ScriptableObject.CreateInstance<EffectData>();
+                    _tempEffectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
                     _tempEffectData.name = "New Effect Data";
                 }
                 Selection.activeObject = _tempEffectData;
@@ -36,12 +36,12 @@ namespace Aquila.AbilityEditor.Tools
     /// <summary>
     /// EffectData的自定义Inspector
     /// </summary>
-    [CustomEditor(typeof(EffectData))]
+    [CustomEditor(typeof(EffectEditorSOData))]
     public class EffectDataEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
-            EffectData effectData = (EffectData)target;
+            var effectData = (EffectEditorSOData)target;
             DrawDefaultInspector();
 
             EditorGUILayout.Space(10);
@@ -54,7 +54,7 @@ namespace Aquila.AbilityEditor.Tools
             GUI.backgroundColor = Color.white;
         }
 
-        private void CreateNewAsset(EffectData sourceData)
+        private void CreateNewAsset(EffectEditorSOData sourceData)
         {
             // if (!AssetDatabase.IsValidFolder(folderPath))
             // {
@@ -65,7 +65,7 @@ namespace Aquila.AbilityEditor.Tools
             string fileName = $"{sourceData.id}.asset";
             string fullPath = $"{Misc.NEW_EFFECT_DATA_PATH}/{fileName}";
 
-            if (AssetDatabase.LoadAssetAtPath<EffectData>(fullPath) != null)
+            if (AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(fullPath) != null)
             {
                 EditorUtility.DisplayDialog("File Exists",
                     $"EffectData with ID {sourceData.id} already exists at:\n{fullPath}\n\nPlease use a different ID.",
@@ -73,7 +73,7 @@ namespace Aquila.AbilityEditor.Tools
                 return;
             }
 
-            EffectData newData = ScriptableObject.CreateInstance<EffectData>();
+            var newData = ScriptableObject.CreateInstance<EffectEditorSOData>();
 
             newData.id = sourceData.id;
             newData.Description = sourceData.Description;

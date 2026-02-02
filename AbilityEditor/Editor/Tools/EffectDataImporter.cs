@@ -126,11 +126,11 @@ namespace Aquila.AbilityEditor.Tools
                 {
                     string assetPath = $"{Misc.NEW_EFFECT_DATA_PATH}/{effectJson.id}.asset";
 
-                    EffectData effectData = AssetDatabase.LoadAssetAtPath<EffectData>(assetPath);
+                    var effectData = AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
                     bool isNewAsset = effectData == null;
 
                     if (isNewAsset)
-                        effectData = ScriptableObject.CreateInstance<EffectData>();
+                        effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
 
                     // 复制数据
                     effectData.id = effectJson.id;

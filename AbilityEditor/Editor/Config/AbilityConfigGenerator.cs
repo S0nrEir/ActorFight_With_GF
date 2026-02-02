@@ -65,7 +65,7 @@ namespace Editor.AbilityEditor.Config
         /// Generate config from AbilityData with optional editor tracks fallback
         /// </summary>
         public static AbilityConfig Generate(
-            AbilityData sourceData,
+            AbilityEditorSOData sourceData,
             List<TimelineTrackItem> editorTracks = null)
         {
             if (sourceData == null)

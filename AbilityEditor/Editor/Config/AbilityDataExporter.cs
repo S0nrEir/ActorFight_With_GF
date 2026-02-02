@@ -24,9 +24,9 @@ namespace Editor.AbilityEditor.Config
         {
             string assetPath = $"{Misc.ABILITY_ASSET_BASE_PATH}/{config.AbilityID}.asset";
             EnsureDirectoryExists( Misc.ABILITY_ASSET_BASE_PATH );
-            var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityData>(assetPath);
+            var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(assetPath);
             bool isOverwrite = existingAsset != null;
-            AbilityData abilityData;
+            AbilityEditorSOData abilityData;
             if (isOverwrite)
             {
                 //覆盖旧资产 / overwrite old asset
@@ -47,15 +47,15 @@ namespace Editor.AbilityEditor.Config
         }
 
         // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
-        private static AbilityData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
+        private static AbilityEditorSOData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            var abilityData = ScriptableObject.CreateInstance<AbilityData>();
+            var abilityData = ScriptableObject.CreateInstance<AbilityEditorSOData>();
             UpdateAbilityData(abilityData, config, tracks);
             return abilityData;
         }
 
         // 更新现有 AbilityData 的数据
-        private static void UpdateAbilityData(AbilityData abilityData, AbilityConfig config, List<TimelineTrackItem> tracks)
+        private static void UpdateAbilityData(AbilityEditorSOData abilityData, AbilityConfig config, List<TimelineTrackItem> tracks)
         {
             // 复制元数据
             abilityData.Id = config.AbilityID;
