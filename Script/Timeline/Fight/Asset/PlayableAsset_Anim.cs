@@ -11,6 +11,7 @@ namespace Aquila.Timeline
             var bhvr = new PlayableBhvr_Anim();
             bhvr._animName = _animName;
             //暂时先这样做
+            // Toolkit.Tools.GetComponent<PlayableDirector>(owner);
             bhvr._director = Tools.GetComponent<PlayableDirector>( owner );
             bhvr._animator = Tools.GetComponent<Animator>( owner );
 

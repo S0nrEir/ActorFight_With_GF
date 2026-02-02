@@ -465,13 +465,13 @@ namespace Editor.AbilityEditor
         /// </summary>
         private void UpdateUIFromData( AbilityData data )
         {
-            _abilityIDTextField.value = data.Id.ToString();
-            _abilityDescTextField.value = data.Desc ?? string.Empty;
-            _costIDTextField.value = data.CostEffectID.ToString();
-            _coolDownIDTextField.value = data.CoolDownEffectID.ToString();
-            _timelineIDTextField.value = data.TimelineID.ToString();
+            _abilityIDTextField.value        = data.Id.ToString();
+            _abilityDescTextField.value      = data.Desc ?? string.Empty;
+            _costIDTextField.value           = data.CostEffectID.ToString();
+            _coolDownIDTextField.value       = data.CoolDownEffectID.ToString();
+            _timelineIDTextField.value       = data.TimelineID.ToString();
             _timelineAssetPathTxtField.value = data.TimelineAssetPath ?? string.Empty;
-            _targetTypeDropdown.value = data.TargetType.ToString();
+            _targetTypeDropdown.value        = data.TargetType.ToString();
         }
 
         /// <summary>
