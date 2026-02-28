@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
+using Aquila.Toolkit;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace Editor.AbilityEditor.Tools
     /// </summary>
     public static class AbilityBinaryExporter
     {
-        [MenuItem("Aquila/AbilityEditor/.ablt Export|Import/Export all effect data(.ablt)")]
+        [MenuItem("Aquila/AbilityEditor/.ablt Export|Import/Export all ability data(.ablt)")]
         public static void ExportAllAbilities()
         {
             if (!Directory.Exists(Misc.ABILITY_ASSET_BASE_PATH))
@@ -24,7 +23,6 @@ namespace Editor.AbilityEditor.Tools
             }
 
             EnsureDirectoryExists(Misc.ABILITY_BIN_ASSET_PATH);
-
             string[] assetGuids = AssetDatabase.FindAssets("t:AbilityData", new[] { Misc.ABILITY_ASSET_BASE_PATH });
             int successCount = 0;
             int failCount = 0;
@@ -63,23 +61,23 @@ namespace Editor.AbilityEditor.Tools
         {
             using (FileStream fs = new FileStream(outputPath, FileMode.Create))
             {
-                using (BinaryWriter writer = new BinaryWriter(fs, Encoding.UTF8))
+                using (Aquila.Toolkit.Tools.ByteWriter writer = new Aquila.Toolkit.Tools.ByteWriter(fs))
                 {
                     //write Header
-                    writer.Write(Encoding.ASCII.GetBytes(MAGIC));
-                    writer.Write(VERSION);
+                    writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
+                    writer.WriteByte(VERSION);
 
                     //write Basic Info
-                    writer.Write(data.Id);
-                    writer.Write(data.CostEffectID);
-                    writer.Write(data.CoolDownEffectID);
-                    writer.Write((int)data.TargetType);
-                    writer.Write(data.TimelineID);
-                    writer.Write(data.TimelineDuration);
+                    writer.WriteInt32(data.Id);
+                    writer.WriteInt32(data.CostEffectID);
+                    writer.WriteInt32(data.CoolDownEffectID);
+                    writer.WriteInt32((int)data.TargetType);
+                    writer.WriteInt32(data.TimelineID);
+                    writer.WriteSingle(data.TimelineDuration);
 
                     //write Tracks
                     var tracks = data.Tracks;
-                    writer.Write(tracks?.Count ?? 0);
+                    writer.WriteInt32(tracks?.Count ?? 0);
 
                     if (tracks != null)
                     {
@@ -91,7 +89,7 @@ namespace Editor.AbilityEditor.Tools
             Debug.Log($"[AbilityBinaryExporter] Exported: {outputPath}");
         }
 
-        private static void WriteTrack(BinaryWriter writer, SerializedTrackData track)
+        private static void WriteTrack(Aquila.Toolkit.Tools.ByteWriter writer, SerializedTrackData track)
         {
             // writer.Write(track.IsEnabled);
             // writer.Write(track.TrackColor.r);
@@ -101,7 +99,7 @@ namespace Editor.AbilityEditor.Tools
 
             var clips = track.Clips;
             //write clip count
-            writer.Write(clips?.Count ?? 0);
+            writer.WriteInt32(clips?.Count ?? 0);
             if (clips != null)
             {
                 foreach (var clip in clips)
@@ -109,13 +107,13 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static void WriteClip(BinaryWriter writer, TimelineClipData clip)
+        private static void WriteClip(Aquila.Toolkit.Tools.ByteWriter writer, TimelineClipData clip)
         {
             // ClipType
-            writer.Write((int)clip.ClipType);
+            writer.WriteInt32((int)clip.ClipType);
             // Common fields
-            writer.Write(clip.StartTime);
-            writer.Write(clip.EndTime);
+            writer.WriteSingle(clip.StartTime);
+            writer.WriteSingle(clip.EndTime);
             // writer.Write(clip.IsEnabled);
 
             // Type-specific data
@@ -139,50 +137,32 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static void WriteEffectClip(BinaryWriter writer, EffectClipData clip)
+        private static void WriteEffectClip(Aquila.Toolkit.Tools.ByteWriter writer, EffectClipData clip)
         {
             // Effect Clip只写入EffectId
-            writer.Write(clip.EffectId);
+            writer.WriteInt32(clip.EffectId);
         }
 
-        private static void WriteAudioClip(BinaryWriter writer, AudioClipData clip)
+        private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
         {
-            WriteString(writer, clip.AudioPath);
-            writer.Write(clip.Volume);
-            writer.Write(clip.Loop);
-            writer.Write(clip.FadeInDuration);
-            writer.Write(clip.FadeOutDuration);
+            writer.WriteString(clip.AudioPath);
+            writer.WriteSingle(clip.Volume);
+            writer.WriteBoolean(clip.Loop);
+            writer.WriteSingle(clip.FadeInDuration);
+            writer.WriteSingle(clip.FadeOutDuration);
         }
 
-        private static void WriteVFXClip(BinaryWriter writer, VFXClipData clip)
+        private static void WriteVFXClip(Aquila.Toolkit.Tools.ByteWriter writer, VFXClipData clip)
         {
-            WriteString(writer, clip.VfxPath);
-            WriteString(writer, clip.AttachPoint);
+            writer.WriteString(clip.VfxPath);
+            writer.WriteString(clip.AttachPoint);
             // PositionOffset
-            writer.Write(clip.PositionOffset.x);
-            writer.Write(clip.PositionOffset.y);
-            writer.Write(clip.PositionOffset.z);
+            writer.WriteVector3(clip.PositionOffset);
             // RotationOffset
-            writer.Write(clip.RotationOffset.x);
-            writer.Write(clip.RotationOffset.y);
-            writer.Write(clip.RotationOffset.z);
+            writer.WriteVector3(clip.RotationOffset);
             // Scale
-            writer.Write(clip.Scale.x);
-            writer.Write(clip.Scale.y);
-            writer.Write(clip.Scale.z);
-            writer.Write(clip.FollowAttachPoint);
-        }
-
-        private static void WriteString(BinaryWriter writer, string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                writer.Write(0);
-                return;
-            }
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
-            writer.Write(bytes.Length);
-            writer.Write(bytes);
+            writer.WriteVector3(clip.Scale);
+            writer.WriteBoolean(clip.FollowAttachPoint);
         }
 
         private static void EnsureDirectoryExists(string path)

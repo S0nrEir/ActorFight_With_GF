@@ -17,7 +17,7 @@ namespace Aquila.Fight
         private int _target;
         private float _duration;
         private float _period;
-        private DurationPolicy _policy;
+        private ushort _policy;
         private bool _effectOnAwake;
         private int[] _deriveEffects;
         private int[] _awakeEffects;
@@ -41,7 +41,7 @@ namespace Aquila.Fight
             int target,
             float duration,
             float period,
-            DurationPolicy policy,
+            ushort policy,
             bool effectOnAwake,
             int[] deriveEffects,
             int[] awakeEffects,
@@ -88,7 +88,7 @@ namespace Aquila.Fight
         public int GetTarget() => _target;
         public float GetDuration() => _duration;
         public float GetPeriod() => _period;
-        public DurationPolicy GetPolicy() => _policy;
+        public ushort GetPolicy() => _policy;
         public bool GetEffectOnAwake() => _effectOnAwake;
         public int[] GetDeriveEffects() => _deriveEffects;
         public int[] GetAwakeEffects() => _awakeEffects;
@@ -108,10 +108,10 @@ namespace Aquila.Fight
         public void SetEffectType(EffectType value) => _effectType = value;
         public void SetModifierType(ushort value) => _modifierType = value;
         public void SetAffectedAttribute(actor_attribute value) => _affectedAttribute = value;
-        public void SetTarget(int value) => _target = value;
         public void SetDuration(float value) => _duration = value;
+        public void SetTarget(int value) => _target = value;
         public void SetPeriod(float value) => _period = value;
-        public void SetPolicy(DurationPolicy value) => _policy = value;
+        public void SetPolicy(ushort value) => _policy = value;
         public void SetEffectOnAwake(bool value) => _effectOnAwake = value;
         public void SetDeriveEffects(int[] value) => _deriveEffects = value;
         public void SetAwakeEffects(int[] value) => _awakeEffects = value;

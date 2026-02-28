@@ -82,8 +82,7 @@ namespace Editor.AbilityEditor.Inspector
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            EditorUtility.DisplayDialog("Export Complete", 
-                $"Exported: {successCount} effects\nSkipped: {skipCount} (invalid ID)\nPath: {Misc.NEW_EFFECT_DATA_PATH}", "OK");
+            EditorUtility.DisplayDialog("Export Complete", $"Exported: {successCount} effects\nSkipped: {skipCount} (invalid ID)\nPath: {Misc.NEW_EFFECT_DATA_PATH}", "OK");
         }
 
         private void ExportEffectClipToAsset(EffectClipData effectClip)
