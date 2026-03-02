@@ -4,6 +4,7 @@ using Aquila.AbilityEditor.Config;
 using Editor.AbilityEditor.Tools;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Editor.AbilityEditor.Inspector
 {
@@ -13,10 +14,42 @@ namespace Editor.AbilityEditor.Inspector
     [CustomEditor(typeof(AbilityEditorSOData))]
     public class AbilityDataInspector : UnityEditor.Editor
     {
+        private int _effectIdToAdd = 0;
+        private float _triggerTime = 0.0f;
+
+        // 预定义的轨道颜色
+        private static readonly Color[] TrackColors = new Color[]
+        {
+            new Color(0.8867924f, 0.4475792f, 0.4475792f, 1f), // 红色
+            new Color(0.8f, 0.8f, 0f, 1f),                      // 黄色
+            new Color(0.4475792f, 0.8867924f, 0.4475792f, 1f), // 绿色
+            new Color(0.4475792f, 0.4475792f, 0.8867924f, 1f), // 蓝色
+            new Color(0.8867924f, 0.4475792f, 0.8867924f, 1f), // 紫色
+        };
+
         public override void OnInspectorGUI()
         {
             var abilityData = (AbilityEditorSOData)target;
 
+            // Quick Add Effect Clip Section
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Quick Add Effect Clip", EditorStyles.boldLabel);
+            
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Effect ID:", GUILayout.Width(70));
+            _effectIdToAdd = EditorGUILayout.IntField(_effectIdToAdd, GUILayout.Width(80));
+            
+            EditorGUILayout.LabelField("Trigger Time:", GUILayout.Width(80));
+            _triggerTime = EditorGUILayout.FloatField(_triggerTime, GUILayout.Width(60));
+            EditorGUILayout.EndHorizontal();
+
+            if (GUILayout.Button("Add Effect Clip", GUILayout.Height(25)))
+                AddEffectClipById(abilityData, _effectIdToAdd, _triggerTime);
+
+            EditorGUILayout.Space(10);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+            // Export Buttons
             if (GUILayout.Button("Export to Binary (.ablt)", GUILayout.Height(30)))
                 ExportToBinary(abilityData);
 
@@ -145,5 +178,133 @@ namespace Editor.AbilityEditor.Inspector
                 AssetDatabase.Refresh();
             }
         }
+
+        #region Quick Add Effect Clip
+
+        /// <summary>
+        /// 根据 Effect ID 添加 Effect Clip 到 Ability
+        /// </summary>
+        private void AddEffectClipById(AbilityEditorSOData abilityData, int effectId, float triggerTime)
+        {
+            if (effectId <= 0)
+            {
+                EditorUtility.DisplayDialog("Invalid Input", "Effect ID must be greater than 0", "OK");
+                return;
+            }
+
+            // 加载 Effect 数据
+            var effectData = LoadEffectData(effectId);
+            if (effectData == null)
+            {
+                EditorUtility.DisplayDialog("Effect Not Found", 
+                    $"Could not find Effect asset: Assets/AbilityEditor/Editor/Config/Effects/{effectId}.asset", "OK");
+                return;
+            }
+
+            // 创建 EffectClipData
+            var effectClip = CreateEffectClipFromData(effectData, triggerTime);
+
+            // 确保至少有一个 Track
+            var tracks = new System.Collections.Generic.List<SerializedTrackData>();
+            if (abilityData.Tracks != null && abilityData.Tracks.Count > 0)
+            {
+                // 复制现有 tracks
+                foreach (var track in abilityData.Tracks)
+                {
+                    tracks.Add(track);
+                }
+            }
+            else
+            {
+                // 创建新的 Track
+                var newTrack = new SerializedTrackData
+                {
+                    TrackName = "Effect Track",
+                    TrackColor = TrackColors[Random.Range(0, TrackColors.Length)],
+                    IsEnabled = true,
+                    Clips = new System.Collections.Generic.List<TimelineClipData>()
+                };
+                tracks.Add(newTrack);
+            }
+
+            // 添加 Clip 到第一个 Track
+            if (tracks[0].Clips == null)
+                tracks[0].Clips = new System.Collections.Generic.List<TimelineClipData>();
+            
+            tracks[0].Clips.Add(effectClip);
+
+            // 更新 AbilityData
+            abilityData.SetTracks(tracks);
+
+            // 标记为脏并保存
+            EditorUtility.SetDirty(abilityData);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log($"[AbilityDataInspector] Added Effect Clip {effectId} to {abilityData.name} at time {triggerTime}s");
+            EditorUtility.DisplayDialog("Success", 
+                $"Added Effect Clip {effectId} to track '{tracks[0].TrackName}' at {triggerTime}s", "OK");
+        }
+
+        /// <summary>
+        /// 加载 Effect 资产数据
+        /// </summary>
+        private EffectEditorSOData LoadEffectData(int effectId)
+        {
+            string assetPath = $"Assets/AbilityEditor/Editor/Config/Effects/{effectId}.asset";
+            return AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
+        }
+
+        /// <summary>
+        /// 从 EffectEditorSOData 创建 EffectClipData
+        /// </summary>
+        private EffectClipData CreateEffectClipFromData(EffectEditorSOData effectData, float triggerTime)
+        {
+            var clip = new EffectClipData
+            {
+                ClipName = $"Effect_{effectData.id}",
+                TriggerTime = triggerTime,
+                ClipColor = new Color(0.8f, 0.4f, 0.8f, 1f), // 紫色
+                IsEnabled = true,
+
+                // 映射 Effect 数据
+                EffectId = effectData.id,
+                EffectType = effectData.Type,
+                ModifierType = effectData.ModifierType,
+                AffectedAttribute = effectData.EffectType,
+                Target = effectData.Target,
+                Duration = effectData.Duration,
+                Period = effectData.Period,
+                Policy = effectData.Policy,
+                EffectOnAwake = effectData.EffectOnAwake,
+                StackCount = 1,
+                CanStack = false
+            };
+
+            // 复制扩展参数
+            if (effectData.ExtensionParam != null)
+            {
+                clip.ExtensionParam = new EffectClipData.EffectExtensionParam
+                {
+                    FloatParam_1 = effectData.ExtensionParam.float_1,
+                    FloatParam_2 = effectData.ExtensionParam.float_2,
+                    FloatParam_3 = effectData.ExtensionParam.float_3,
+                    FloatParam_4 = effectData.ExtensionParam.float_4,
+                    IntParam_1 = effectData.ExtensionParam.int_1,
+                    IntParam_2 = effectData.ExtensionParam.int_2,
+                    IntParam_3 = effectData.ExtensionParam.int_3,
+                    IntParam_4 = effectData.ExtensionParam.int_4
+                };
+            }
+
+            // 复制数组字段
+            clip.DeriveEffects = effectData.DeriveEffects != null ? 
+                (int[])effectData.DeriveEffects.Clone() : new int[0];
+            clip.AwakeEffects = effectData.AwakeEffects != null ? 
+                (int[])effectData.AwakeEffects.Clone() : new int[0];
+
+            return clip;
+        }
+
+        #endregion
     }
 }
