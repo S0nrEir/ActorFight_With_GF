@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1005
   Description: "\u57FA\u4E8E\u751F\u547D\u503C\u4E0A\u9650\u7684%d\u767E\u5206\u6BD4\u751F\u547D\u503C\u79FB\u9664"
-  Type: 8
+  Type: 6
   ExtensionParam:
     float_1: -1
     float_2: -1
@@ -24,12 +24,12 @@ MonoBehaviour:
     int_2: -1
     int_3: -1
     int_4: -1
-  ModifierType: 1
+  ModifierType: 2
   EffectOnAwake: 0
-  Policy: 0
+  Policy: 1
   Period: 0
   Duration: -1
   Target: 1
-  EffectType: 3
+  EffectType: 0
   DeriveEffects: 
   AwakeEffects: 

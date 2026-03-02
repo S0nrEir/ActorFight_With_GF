@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1009
   Description: "\u6DFB\u52A0\u541F\u5531effect,windup,Duration=\u6301\u7EED\u65F6\u95F4"
-  Type: 7
+  Type: 10
   ExtensionParam:
     float_1: -1
     float_2: -1
@@ -24,12 +24,12 @@ MonoBehaviour:
     int_2: -1
     int_3: -1
     int_4: -1
-  ModifierType: 0
+  ModifierType: 4
   EffectOnAwake: 1
-  Policy: 1
+  Policy: 2
   Period: 4
   Duration: 3
   Target: 0
-  EffectType: 0
+  EffectType: -1
   DeriveEffects: 
   AwakeEffects: 

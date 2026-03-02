@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1004
   Description: "\u6BD2\u6027\u4F24\u5BB3debuff\u6D4B\u8BD5\uFF08\u6301\u7EED3\u79D2\uFF0C\u6BCF\u79D2\u751F\u6548\u4E00\u6B21\uFF0C\u6BCF\u6B21\u751F\u6548\u9020\u621015\u795E\u5723\u4F24\u5BB3\uFF09"
-  Type: 3
+  Type: 5
   ExtensionParam:
     float_1: -15
     float_2: -1
@@ -24,12 +24,12 @@ MonoBehaviour:
     int_2: -1
     int_3: -1
     int_4: -1
-  ModifierType: 0
+  ModifierType: 1
   EffectOnAwake: 0
-  Policy: 1
+  Policy: 2
   Period: 1
   Duration: 3
   Target: 1
-  EffectType: 3
+  EffectType: 0
   DeriveEffects: 
   AwakeEffects: 

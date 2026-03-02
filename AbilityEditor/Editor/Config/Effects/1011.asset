@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1011
   Description: "\u53D7\u51FB\u89E6\u53D1\u66F4\u6539\u5C5E\u6027\u7C7Beffect\uFF0C\u5C5E\u6027\u53D8\u66F4\u6309\u767E\u5206\u6BD4\u8BA1\u7B97\u3002int_1=\u89E6\u53D1\u6761\u4EF6\uFF0C1=\u5F53\u635F\u5931\u767E\u5206\u6BD4\uFF0C2=\u5F53\u635F\u5931\u56FA\u5B9A\u6570\u91CF\uFF0C\u4F7F\u7528Enum.effect_mod_attr_condition\uFF1Bfloat_1=\u8981\u7528\u4E8E\u6761\u4EF6\u68C0\u67E5\u7684\u6570\u503C\uFF1Bint_2=\u8981\u5F71\u54CD\u7684\u5C5E\u6027\uFF0C\u4F7F\u7528Enum.actor_attribute\uFF08\u4E0D\u7528\u3010\u5F71\u54CD\u5C5E\u6027\u3011\u5B57\u6BB5\uFF09\uFF0C\u4E0D\u5728\u5176\u4E2D\u5B9A\u4E49\u7684\uFF0C1000=currHP\uFF0C1001=currMP\u3002int_3=\u8981\u68C0\u67E5\u7684\u5C5E\u6027\uFF0C\u4F7F\u7528Enum.actor_attribute,float_2=\u8981\u4FEE\u6539\u591A\u5C11"
-  Type: 0
+  Type: 11
   ExtensionParam:
     float_1: 0.1
     float_2: 0.05
@@ -24,9 +24,9 @@ MonoBehaviour:
     int_2: 4
     int_3: 1
     int_4: -1
-  ModifierType: 1
+  ModifierType: 2
   EffectOnAwake: 1
-  Policy: 1
+  Policy: 2
   Period: 999
   Duration: 20
   Target: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1010
   Description: "\u79D2\u6740\uFF0C\u9020\u6210\u5DE8\u989D\u4F24\u5BB3"
-  Type: 2
+  Type: 3
   ExtensionParam:
     float_1: -9999
     float_2: -1
@@ -24,12 +24,12 @@ MonoBehaviour:
     int_2: -1
     int_3: -1
     int_4: -1
-  ModifierType: 0
+  ModifierType: 1
   EffectOnAwake: 1
-  Policy: 0
+  Policy: 1
   Period: 0
   Duration: -1
   Target: 1
-  EffectType: 3
+  EffectType: 0
   DeriveEffects: 
   AwakeEffects: 

@@ -24,12 +24,12 @@ MonoBehaviour:
     int_2: -1
     int_3: -1
     int_4: -1
-  ModifierType: 0
+  ModifierType: 4
   EffectOnAwake: 1
-  Policy: 0
+  Policy: 1
   Period: 0
   Duration: -1
   Target: 0
-  EffectType: 0
+  EffectType: -1
   DeriveEffects: 
   AwakeEffects: 
