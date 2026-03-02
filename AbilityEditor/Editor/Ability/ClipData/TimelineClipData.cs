@@ -59,7 +59,7 @@ namespace Aquila.AbilityEditor
         public TimelineClipData()
         {
             _clipId = Guid.NewGuid().ToString();
-            _clipName = "New Clip";
+            _clipName = "NewClip";
             _startTime = 0f;
             _endTime = 1f;
             _clipColor = Color.white;

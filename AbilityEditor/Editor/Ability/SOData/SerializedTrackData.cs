@@ -9,7 +9,7 @@ namespace Aquila.AbilityEditor
     /// 用于将 TimelineTrackItem（运行时对象）序列化到 AbilityData（ScriptableObject）
     /// </summary>
     [Serializable]
-    public class SerializedTrackData
+    public class SerializedTrackData : UnityEngine.ISerializationCallbackReceiver
     {
         /// <summary>
         /// 轨道名称
@@ -41,6 +41,30 @@ namespace Aquila.AbilityEditor
             TrackColor = Color.white;
             IsEnabled = true;
             Clips = new List<TimelineClipData>();
+        }
+
+        /// <summary>
+        /// Unity 序列化前调用
+        /// </summary>
+        public void OnBeforeSerialize()
+        {
+            // 确保 Clips 列表不为 null
+            if (Clips == null)
+            {
+                Clips = new List<TimelineClipData>();
+            }
+        }
+
+        /// <summary>
+        /// Unity 反序列化后调用，确保 Clips 列表被初始化
+        /// </summary>
+        public void OnAfterDeserialize()
+        {
+            // 确保 Clips 列表不为 null
+            if (Clips == null)
+            {
+                Clips = new List<TimelineClipData>();
+            }
         }
 
         /// <summary>
