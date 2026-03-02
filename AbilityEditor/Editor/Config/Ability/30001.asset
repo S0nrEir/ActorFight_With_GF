@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e88d7417367fc5f4caa10eeaf0db3650, type: 3}
+  m_Name: 30001
+  m_EditorClassIdentifier: 
+  Id: 30001
+  Name: "\u6CD5\u7403\u5E73A\u51FB\u4E2D"
+  Desc: "\u6CD5\u7403\u5E73A\u51FB\u4E2D"
+  CostEffectID: 1000
+  CoolDownEffectID: 1008
+  TargetType: 0
+  TimelineID: 1001
+  TimelineAssetPath: 
+  TimelineDuration: 5
+  _tracks:
+  - TrackName: Effect Track
+    TrackColor: {r: 0.8867924, g: 0.4475792, b: 0.4475792, a: 1}
+    IsEnabled: 1
+    Clips:
+    - rid: -2
+    - rid: 4815668569557696515
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 4815668569557696515
+      type: {class: EffectClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
+      data:
+        _clipId: f6db414d-3144-4984-a6be-a09306afbb87
+        _clipName: Effect_1000
+        _startTime: 1.5
+        _endTime: 1.5
+        _clipColor: {r: 0.8, g: 0.4, b: 0.8, a: 1}
+        _isEnabled: 1
+        _effectId: 1000
+        _stackCount: 1
+        _canStack: 0
+        _effectType: 0
+        _modifierType: 1
+        _affectedAttribute: 2
+        _target: 0
+        _duration: -1
+        _period: 0
+        _policy: 1
+        _effectOnAwake: 1
+        _extensionParam:
+          FloatParam_1: -10
+          FloatParam_2: -1
+          FloatParam_3: -1
+          FloatParam_4: -1
+          IntParam_1: -1
+          IntParam_2: -1
+          IntParam_3: -1
+          IntParam_4: -1
+        _deriveEffects: 
+        _awakeEffects: 
