@@ -26,17 +26,14 @@ MonoBehaviour:
     TrackColor: {r: 0.8867924, g: 0.4475792, b: 0.4475792, a: 1}
     IsEnabled: 1
     Clips:
-    - rid: -2
-    - rid: 4815668569557696515
+    - rid: 4815668613526323200
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 4815668569557696515
+    - rid: 4815668613526323200
       type: {class: EffectClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
       data:
-        _clipId: f6db414d-3144-4984-a6be-a09306afbb87
+        _clipId: 516d6e2a-8ee1-40d9-875d-b6bde25dd5e8
         _clipName: Effect_1000
         _startTime: 1.5
         _endTime: 1.5

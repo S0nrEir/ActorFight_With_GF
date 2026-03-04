@@ -35,11 +35,11 @@ MonoBehaviour:
       data:
         _clipId: 15d06976-4c8c-4eb2-9b1a-98521369416b
         _clipName: NewClip
-        _startTime: 0
-        _endTime: 0
+        _startTime: 2
+        _endTime: 2
         _clipColor: {r: 0.8396226, g: 0.73268956, b: 0.8396226, a: 1}
         _isEnabled: 1
-        _effectId: 0
+        _effectId: 1004
         _stackCount: 1
         _canStack: 0
         _effectType: 2
