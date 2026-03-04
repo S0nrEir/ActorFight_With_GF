@@ -24,8 +24,7 @@ namespace Editor.AbilityEditor.Tools
 
             string projectPath = Path.GetDirectoryName(Application.dataPath);
             string tempPath = Path.Combine(projectPath, TEMP_EXPORT_PATH);
-            string logPath = Path.Combine(projectPath, LOG_PATH);
-
+            string logPath = GetLogPath();
             try
             {
                 EditorUtility.DisplayProgressBar("Ability Verification", "Starting verification...", 0f);
@@ -106,8 +105,7 @@ namespace Editor.AbilityEditor.Tools
         public static void OpenVerificationLog()
         {
             string projectPath = Path.GetDirectoryName(Application.dataPath);
-            string logPath = Path.Combine(projectPath, LOG_PATH);
-
+            string logPath = GetLogPath();
             if (File.Exists(logPath))
             {
                 System.Diagnostics.Process.Start(logPath);
@@ -124,12 +122,14 @@ namespace Editor.AbilityEditor.Tools
         [MenuItem("Aquila/AbilityEditor/Tools/Open Verification Log", true)]
         public static bool ValidateOpenVerificationLog()
         {
-            string projectPath = Path.GetDirectoryName(Application.dataPath);
-            string logPath = Path.Combine(projectPath, LOG_PATH);
-            return File.Exists(logPath);
+            return File.Exists(GetLogPath());
+        }
+        
+        private static string GetLogPath()
+        {
+            return Path.Combine(Application.dataPath, "..", "Log", "Ability", "ability_verification.txt");
         }
         
         private const string TEMP_EXPORT_PATH = "Temp/AbilityVerification";
-        private const string LOG_PATH = "/../Log/Ability/ability_verification.txt";
     }
 }
