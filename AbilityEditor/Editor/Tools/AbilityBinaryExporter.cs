@@ -23,7 +23,7 @@ namespace Editor.AbilityEditor.Tools
             }
 
             EnsureDirectoryExists(Misc.ABILITY_BIN_ASSET_PATH);
-            string[] assetGuids = AssetDatabase.FindAssets("t:AbilityData", new[] { Misc.ABILITY_ASSET_BASE_PATH });
+            string[] assetGuids = AssetDatabase.FindAssets("t:AbilityEditorSOData", new[] { Misc.ABILITY_ASSET_BASE_PATH });
             int successCount = 0;
             int failCount = 0;
 
