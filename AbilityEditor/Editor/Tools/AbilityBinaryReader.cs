@@ -159,8 +159,71 @@ namespace Editor.AbilityEditor.Tools
 
         private static void ReadEffectClip(BinaryReader reader, StringBuilder sb, string indent)
         {
+            // 基础字段
             int effectId = reader.ReadInt32();
+            int stackCount = reader.ReadInt32();
+            bool canStack = reader.ReadBoolean();
+            
             sb.AppendLine($"{indent}EffectId: {effectId}");
+            sb.AppendLine($"{indent}StackCount: {stackCount}");
+            sb.AppendLine($"{indent}CanStack: {canStack}");
+            
+            // Effect 配置字段
+            int effectType = reader.ReadInt32();
+            ushort modifierType = reader.ReadUInt16();
+            int affectedAttribute = reader.ReadInt32();
+            int target = reader.ReadInt32();
+            float duration = reader.ReadSingle();
+            float period = reader.ReadSingle();
+            ushort policy = reader.ReadUInt16();
+            bool effectOnAwake = reader.ReadBoolean();
+            
+            sb.AppendLine($"{indent}EffectType: {effectType}");
+            sb.AppendLine($"{indent}ModifierType: {modifierType}");
+            sb.AppendLine($"{indent}AffectedAttribute: {affectedAttribute}");
+            sb.AppendLine($"{indent}Target: {target}");
+            sb.AppendLine($"{indent}Duration: {duration}");
+            sb.AppendLine($"{indent}Period: {period}");
+            sb.AppendLine($"{indent}Policy: {policy}");
+            sb.AppendLine($"{indent}EffectOnAwake: {effectOnAwake}");
+            
+            // 扩展参数
+            float floatParam1 = reader.ReadSingle();
+            float floatParam2 = reader.ReadSingle();
+            float floatParam3 = reader.ReadSingle();
+            float floatParam4 = reader.ReadSingle();
+            int intParam1 = reader.ReadInt32();
+            int intParam2 = reader.ReadInt32();
+            int intParam3 = reader.ReadInt32();
+            int intParam4 = reader.ReadInt32();
+            
+            sb.AppendLine($"{indent}ExtensionParams: F({floatParam1}, {floatParam2}, {floatParam3}, {floatParam4}) I({intParam1}, {intParam2}, {intParam3}, {intParam4})");
+            
+            // 派生效果数组
+            int deriveCount = reader.ReadInt32();
+            if (deriveCount > 0)
+            {
+                sb.Append($"{indent}DeriveEffects: [");
+                for (int i = 0; i < deriveCount; i++)
+                {
+                    if (i > 0) sb.Append(", ");
+                    sb.Append(reader.ReadInt32());
+                }
+                sb.AppendLine("]");
+            }
+            
+            // 唤醒效果数组
+            int awakeCount = reader.ReadInt32();
+            if (awakeCount > 0)
+            {
+                sb.Append($"{indent}AwakeEffects: [");
+                for (int i = 0; i < awakeCount; i++)
+                {
+                    if (i > 0) sb.Append(", ");
+                    sb.Append(reader.ReadInt32());
+                }
+                sb.AppendLine("]");
+            }
         }
 
         private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)

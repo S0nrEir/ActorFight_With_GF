@@ -139,8 +139,43 @@ namespace Editor.AbilityEditor.Tools
 
         private static void WriteEffectClip(Aquila.Toolkit.Tools.ByteWriter writer, EffectClipData clip)
         {
-            // Effect Clip只写入EffectId
+            // Effect Clip 基础字段
             writer.WriteInt32(clip.EffectId);
+            writer.WriteInt32(clip.StackCount);
+            writer.WriteBoolean(clip.CanStack);
+            
+            // Effect 配置字段
+            writer.WriteInt32((int)clip.EffectType);
+            writer.WriteUInt16((ushort)clip.ModifierType);
+            writer.WriteInt32((int)clip.AffectedAttribute);
+            writer.WriteInt32(clip.Target);
+            writer.WriteSingle(clip.Duration);
+            writer.WriteSingle(clip.Period);
+            writer.WriteUInt16((ushort)clip.Policy);
+            writer.WriteBoolean(clip.EffectOnAwake);
+            
+            // 扩展参数
+            var extParam = clip.ExtensionParam;
+            writer.WriteSingle(extParam.FloatParam_1);
+            writer.WriteSingle(extParam.FloatParam_2);
+            writer.WriteSingle(extParam.FloatParam_3);
+            writer.WriteSingle(extParam.FloatParam_4);
+            writer.WriteInt32(extParam.IntParam_1);
+            writer.WriteInt32(extParam.IntParam_2);
+            writer.WriteInt32(extParam.IntParam_3);
+            writer.WriteInt32(extParam.IntParam_4);
+            
+            // 派生效果数组
+            var deriveEffects = clip.DeriveEffects ?? new int[0];
+            writer.WriteInt32(deriveEffects.Length);
+            foreach (var effectId in deriveEffects)
+                writer.WriteInt32(effectId);
+            
+            // 唤醒效果数组
+            var awakeEffects = clip.AwakeEffects ?? new int[0];
+            writer.WriteInt32(awakeEffects.Length);
+            foreach (var effectId in awakeEffects)
+                writer.WriteInt32(effectId);
         }
 
         private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
