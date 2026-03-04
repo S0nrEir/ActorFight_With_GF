@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using GameFramework;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Aquila.Toolkit
         /// 通用字节读取工具类
         /// 支持从 byte[] 或 Stream 读取各种类型的数据
         /// </summary>
-        public class ByteReader : IReference
+        public class ByteReader : IReference, IDisposable, IAsyncDisposable
         {
             private Stream _stream;
             private bool _ownsStream;
@@ -207,6 +208,30 @@ namespace Aquila.Toolkit
                 _disposed = true;
                 if (_ownsStream != null)
                     _stream.Dispose();
+                
+                _stream = null;
+            }
+
+            public void Dispose()
+            {
+                if (_disposed)
+                    return;
+                
+                _disposed = true;
+                if (_ownsStream && _stream != null)
+                    _stream.Dispose();
+                
+                _stream = null;
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                if (_disposed)
+                    return;
+                
+                _disposed = true;
+                if (_ownsStream && _stream != null)
+                    await _stream.DisposeAsync();
                 
                 _stream = null;
             }

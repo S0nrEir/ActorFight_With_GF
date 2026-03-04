@@ -14,18 +14,6 @@ namespace Editor.AbilityEditor.Inspector
     [CustomEditor(typeof(AbilityEditorSOData))]
     public class AbilityDataInspector : UnityEditor.Editor
     {
-        private int _effectIdToAdd = 0;
-        private float _triggerTime = 0.0f;
-
-        // 预定义的轨道颜色
-        private static readonly Color[] TrackColors = new Color[]
-        {
-            new Color(0.8867924f, 0.4475792f, 0.4475792f, 1f), // 红色
-            new Color(0.8f, 0.8f, 0f, 1f),                      // 黄色
-            new Color(0.4475792f, 0.8867924f, 0.4475792f, 1f), // 绿色
-            new Color(0.4475792f, 0.4475792f, 0.8867924f, 1f), // 蓝色
-            new Color(0.8867924f, 0.4475792f, 0.8867924f, 1f), // 紫色
-        };
 
         public override void OnInspectorGUI()
         {
@@ -305,6 +293,20 @@ namespace Editor.AbilityEditor.Inspector
             return clip;
         }
 
+        #endregion
+        
+        #region fields
+        private int _effectIdToAdd = 0;
+        private float _triggerTime = 0.0f;
+        // 预定义的轨道颜色
+        private static readonly Color[] TrackColors = new Color[]
+        {
+            new Color(0.8867924f, 0.4475792f, 0.4475792f, 1f), // 红色
+            new Color(0.8f, 0.8f, 0f, 1f),                      // 黄色
+            new Color(0.4475792f, 0.8867924f, 0.4475792f, 1f), // 绿色
+            new Color(0.4475792f, 0.4475792f, 0.8867924f, 1f), // 蓝色
+            new Color(0.8867924f, 0.4475792f, 0.8867924f, 1f), // 紫色
+        };
         #endregion
     }
 }

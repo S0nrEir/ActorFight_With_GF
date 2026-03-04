@@ -366,7 +366,7 @@ namespace Editor.AbilityEditor
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
             Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
             
-            //导出沙盒技能配置
+            //导出沙盒技能配置 / export sand box ability config
             if (_isGenSandBoxAblt)
             {
                 
