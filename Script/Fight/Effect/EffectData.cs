@@ -1,47 +1,27 @@
+using System.Collections.Generic;
+using System.Linq;
 using Cfg.Enum;
 
 namespace Aquila.Fight
 {
     /// <summary>
-    /// Effect数据
+    /// Effect数据（不可变结构体）
     /// </summary>
-    public struct EffectData
+    public readonly struct EffectData
     {
-        private float _triggerTime;
-        private int _effectId;
-        private int _stackCount;
-        private bool _canStack;
-        private EffectType _effectType;
-        private ushort _modifierType;
-        private actor_attribute _affectedAttribute;
-        private int _target;
-        private float _duration;
-        private float _period;
-        private ushort _policy;
-        private bool _effectOnAwake;
-        private int[] _deriveEffects;
-        private int[] _awakeEffects;
-        private float _floatParam1;
-        private float _floatParam2;
-        private float _floatParam3;
-        private float _floatParam4;
-        private int _intParam1;
-        private int _intParam2;
-        private int _intParam3;
-        private int _intParam4;
-
         public EffectData(
-            float triggerTime,
             int effectId,
             int stackCount,
             bool canStack,
+            float startTime,
+            float endTime,
             EffectType effectType,
-            ushort modifierType,
+            NumricModifierType modifierType,
             actor_attribute affectedAttribute,
             int target,
             float duration,
             float period,
-            ushort policy,
+            DurationPolicy policy,
             bool effectOnAwake,
             int[] deriveEffects,
             int[] awakeEffects,
@@ -54,10 +34,11 @@ namespace Aquila.Fight
             int intParam3 = 0,
             int intParam4 = 0)
         {
-            _triggerTime = triggerTime;
             _effectId = effectId;
             _stackCount = stackCount;
             _canStack = canStack;
+            _startTime = startTime;
+            _endTime = endTime;
             _effectType = effectType;
             _modifierType = modifierType;
             _affectedAttribute = affectedAttribute;
@@ -66,8 +47,8 @@ namespace Aquila.Fight
             _period = period;
             _policy = policy;
             _effectOnAwake = effectOnAwake;
-            _deriveEffects = deriveEffects;
-            _awakeEffects = awakeEffects;
+            _deriveEffects = deriveEffects?.ToArray() ?? System.Array.Empty<int>();
+            _awakeEffects = awakeEffects?.ToArray() ?? System.Array.Empty<int>();
             _floatParam1 = floatParam1;
             _floatParam2 = floatParam2;
             _floatParam3 = floatParam3;
@@ -78,20 +59,22 @@ namespace Aquila.Fight
             _intParam4 = intParam4;
         }
 
-        public float GetTriggerTime() => _triggerTime;
+        // Getter 方法
         public int GetEffectId() => _effectId;
         public int GetStackCount() => _stackCount;
         public bool GetCanStack() => _canStack;
+        public float GetStartTime() => _startTime;
+        public float GetEndTime() => _endTime;
         public EffectType GetEffectType() => _effectType;
-        public ushort GetModifierType() => _modifierType;
+        public NumricModifierType GetModifierType() => _modifierType;
         public actor_attribute GetAffectedAttribute() => _affectedAttribute;
         public int GetTarget() => _target;
         public float GetDuration() => _duration;
         public float GetPeriod() => _period;
-        public ushort GetPolicy() => _policy;
+        public DurationPolicy GetPolicy() => _policy;
         public bool GetEffectOnAwake() => _effectOnAwake;
-        public int[] GetDeriveEffects() => _deriveEffects;
-        public int[] GetAwakeEffects() => _awakeEffects;
+        public IReadOnlyList<int> GetDeriveEffects() => _deriveEffects;
+        public IReadOnlyList<int> GetAwakeEffects() => _awakeEffects;
         public float GetFloatParam1() => _floatParam1;
         public float GetFloatParam2() => _floatParam2;
         public float GetFloatParam3() => _floatParam3;
@@ -100,28 +83,39 @@ namespace Aquila.Fight
         public int GetIntParam2() => _intParam2;
         public int GetIntParam3() => _intParam3;
         public int GetIntParam4() => _intParam4;
-
-        public void SetTriggerTime(float value) => _triggerTime = value;
-        public void SetEffectId(int value) => _effectId = value;
-        public void SetStackCount(int value) => _stackCount = value;
-        public void SetCanStack(bool value) => _canStack = value;
-        public void SetEffectType(EffectType value) => _effectType = value;
-        public void SetModifierType(ushort value) => _modifierType = value;
-        public void SetAffectedAttribute(actor_attribute value) => _affectedAttribute = value;
-        public void SetDuration(float value) => _duration = value;
-        public void SetTarget(int value) => _target = value;
-        public void SetPeriod(float value) => _period = value;
-        public void SetPolicy(ushort value) => _policy = value;
-        public void SetEffectOnAwake(bool value) => _effectOnAwake = value;
-        public void SetDeriveEffects(int[] value) => _deriveEffects = value;
-        public void SetAwakeEffects(int[] value) => _awakeEffects = value;
-        public void SetFloatParam1(float value) => _floatParam1 = value;
-        public void SetFloatParam2(float value) => _floatParam2 = value;
-        public void SetFloatParam3(float value) => _floatParam3 = value;
-        public void SetFloatParam4(float value) => _floatParam4 = value;
-        public void SetIntParam1(int value) => _intParam1 = value;
-        public void SetIntParam2(int value) => _intParam2 = value;
-        public void SetIntParam3(int value) => _intParam3 = value;
-        public void SetIntParam4(int value) => _intParam4 = value;
+        
+        
+        // 基础字段
+        private readonly int _effectId;
+        private readonly int _stackCount;
+        private readonly bool _canStack;
+        
+        // 时间字段
+        private readonly float _startTime;
+        private readonly float _endTime;
+        
+        // Effect 配置
+        private readonly EffectType _effectType;
+        private readonly NumricModifierType _modifierType;
+        private readonly actor_attribute _affectedAttribute;
+        private readonly int _target;
+        private readonly float _duration;
+        private readonly float _period;
+        private readonly DurationPolicy _policy;
+        private readonly bool _effectOnAwake;
+        
+        // 扩展参数
+        private readonly float _floatParam1;
+        private readonly float _floatParam2;
+        private readonly float _floatParam3;
+        private readonly float _floatParam4;
+        private readonly int _intParam1;
+        private readonly int _intParam2;
+        private readonly int _intParam3;
+        private readonly int _intParam4;
+        
+        // 数组（不可变）
+        private readonly IReadOnlyList<int> _deriveEffects;
+        private readonly IReadOnlyList<int> _awakeEffects;
     }
 }

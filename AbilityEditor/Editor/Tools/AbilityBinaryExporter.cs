@@ -91,12 +91,6 @@ namespace Editor.AbilityEditor.Tools
 
         private static void WriteTrack(Aquila.Toolkit.Tools.ByteWriter writer, SerializedTrackData track)
         {
-            // writer.Write(track.IsEnabled);
-            // writer.Write(track.TrackColor.r);
-            // writer.Write(track.TrackColor.g);
-            // writer.Write(track.TrackColor.b);
-            // writer.Write(track.TrackColor.a);
-
             var clips = track.Clips;
             //write clip count
             writer.WriteInt32(clips?.Count ?? 0);

@@ -1,77 +1,55 @@
+using System.Collections.Generic;
+using System.Linq;
 using Cfg.Enum;
 
 namespace Aquila.Fight
 {
     /// <summary>
-    /// 技能数据
+    /// 技能数据（不可变结构体）
     /// </summary>
-    public struct AbilityData
+    public readonly struct AbilityData
     {
-        private int _id;
-        // private string _name;
-        // private string _desc;
-        private int _costEffectID;
-        private int _coolDownEffectID;
-        private AbilityTargetType _targetType;
-        private int _timelineID;
-        // private string _timelineAssetPath;
-        private float _timelineDuration;
-        private EffectData[] _effects;
-        private AudioData[] _audios;
-        private VFXData[] _vfxs;
+        private readonly int _id;
+        private readonly int _costEffectID;
+        private readonly int _coolDownEffectID;
+        private readonly AbilityTargetType _targetType;
+        private readonly int _timelineID;
+        private readonly float _timelineDuration;
+        private readonly IReadOnlyList<EffectData> _effects;
+        // private readonly IReadOnlyList<AudioData> _audios;
+        // private readonly IReadOnlyList<VFXData> _vfxs;
 
         public AbilityData(
             int id,
-            string name,
-            string desc,
             int costEffectID,
             int coolDownEffectID,
             AbilityTargetType targetType,
             int timelineID,
-            string timelineAssetPath,
             float timelineDuration,
-            EffectData[] effects,
-            AudioData[] audios,
-            VFXData[] vfxs)
+            EffectData[] effects)
+            // AudioData[] audios,
+            // VFXData[] vfxs)
         {
             _id = id;
-            // _name = name;
-            // _desc = desc;
             _costEffectID = costEffectID;
             _coolDownEffectID = coolDownEffectID;
             _targetType = targetType;
             _timelineID = timelineID;
-            // _timelineAssetPath = timelineAssetPath;
             _timelineDuration = timelineDuration;
-            _effects = effects;
-            _audios = audios;
-            _vfxs = vfxs;
+            _effects = effects?.ToArray() ?? System.Array.Empty<EffectData>();
+            // _audios = audios?.ToArray() ?? System.Array.Empty<AudioData>();
+            // _vfxs = vfxs?.ToArray() ?? System.Array.Empty<VFXData>();
         }
 
+        // Getter 方法
         public int GetId() => _id;
-        // public string GetName() => _name;
-        // public string GetDesc() => _desc;
         public int GetCostEffectID() => _costEffectID;
         public int GetCoolDownEffectID() => _coolDownEffectID;
         public AbilityTargetType GetTargetType() => _targetType;
         public int GetTimelineID() => _timelineID;
-        // public string GetTimelineAssetPath() => _timelineAssetPath;
         public float GetTimelineDuration() => _timelineDuration;
-        public EffectData[] GetEffects() => _effects;
-        public AudioData[] GetAudios() => _audios;
-        public VFXData[] GetVFXs() => _vfxs;
-
-        public void SetId(int value) => _id = value;
-        // public void SetName(string value) => _name = value;
-        // public void SetDesc(string value) => _desc = value;
-        public void SetCostEffectID(int value) => _costEffectID = value;
-        public void SetCoolDownEffectID(int value) => _coolDownEffectID = value;
-        public void SetTargetType(AbilityTargetType value) => _targetType = value;
-        public void SetTimelineID(int value) => _timelineID = value;
-        // public void SetTimelineAssetPath(string value) => _timelineAssetPath = value;
-        public void SetTimelineDuration(float value) => _timelineDuration = value;
-        public void SetEffects(EffectData[] value) => _effects = value;
-        public void SetAudios(AudioData[] value) => _audios = value;
-        public void SetVFXs(VFXData[] value) => _vfxs = value;
+        public IReadOnlyList<EffectData> GetEffects() => _effects;
+        // public IReadOnlyList<AudioData> GetAudios() => _audios;
+        // public IReadOnlyList<VFXData> GetVFXs() => _vfxs;
     }
 }
