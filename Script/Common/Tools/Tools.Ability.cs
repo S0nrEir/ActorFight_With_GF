@@ -167,6 +167,306 @@ namespace Aquila.Toolkit
             /// </summary>
             private static Dictionary<int, Type> _effectTypeDic = null;
 
+            #region Binary Loading
+#if UNITY_EDITOR
+            /// <summary>
+            /// 从二进制文件加载所有技能数据，组装成运行时 AbilityData
+            /// </summary>
+            public static IReadOnlyDictionary<int, AbilityData> LoadAllAbilityData_Editor()
+            {
+                var effectTemplates = new Dictionary<int, EffectData>();
+                var result = new Dictionary<int, AbilityData>();
+                string effectDir = System.IO.Path.Combine(UnityEngine.Application.dataPath, EFFECT_BIN_DIR);
+                string abilityDir = System.IO.Path.Combine(UnityEngine.Application.dataPath, ABILITY_BIN_DIR);
+
+                if (System.IO.Directory.Exists(effectDir))
+                {
+                    foreach (var file in System.IO.Directory.GetFiles(effectDir, "*.efct"))
+                    {
+                        var effectData = ParseEffectBinary(System.IO.File.ReadAllBytes(file));
+                        if (effectData.GetEffectId() != 0)
+                            effectTemplates[effectData.GetEffectId()] = effectData;
+                    }
+                }
+
+                if (System.IO.Directory.Exists(abilityDir))
+                {
+                    foreach (var file in System.IO.Directory.GetFiles(abilityDir, "*.ablt"))
+                    {
+                        var abilityData = ParseAbilityBinary(System.IO.File.ReadAllBytes(file), effectTemplates);
+                        if (abilityData.GetId() != 0)
+                            result[abilityData.GetId()] = abilityData;
+                    }
+                }
+                return result;
+            }
+#endif
+            private static EffectData ParseEffectBinary(byte[] data)
+            {
+                using (var reader = new ByteReader(data))
+                {
+                    string magic = reader.ReadFixedString(6);
+                    byte version = reader.ReadByte();
+
+                    if (magic != EFCT_MAGIC || version != BIN_VERSION)
+                    {
+                        Log.Warning($"Tools.Ability.ParseEffectBinary: invalid header (magic={magic}, version={version})");
+                        return default;
+                    }
+
+                    int id = reader.ReadInt32();
+                    var type = (EffectType)reader.ReadInt32();
+                    var modifierType = (NumricModifierType)reader.ReadUInt16();
+                    bool effectOnAwake = reader.ReadBoolean();
+                    var policy = (DurationPolicy)reader.ReadUInt16();
+                    float period = reader.ReadSingle();
+                    float duration = reader.ReadSingle();
+                    int target = reader.ReadInt32();
+                    var affectedAttribute = (actor_attribute)reader.ReadInt32();
+                    float float1 = reader.ReadSingle();
+                    float float2 = reader.ReadSingle();
+                    float float3 = reader.ReadSingle();
+                    float float4 = reader.ReadSingle();
+                    int int1 = reader.ReadInt32();
+                    int int2 = reader.ReadInt32();
+                    int int3 = reader.ReadInt32();
+                    int int4 = reader.ReadInt32();
+
+                    int deriveCount = reader.ReadInt32();
+                    var deriveEffects = new int[deriveCount];
+                    for (int i = 0; i < deriveCount; i++)
+                        deriveEffects[i] = reader.ReadInt32();
+
+                    int awakeCount = reader.ReadInt32();
+                    var awakeEffects = new int[awakeCount];
+                    for (int i = 0; i < awakeCount; i++)
+                        awakeEffects[i] = reader.ReadInt32();
+
+                    return new EffectData(
+                        effectId: id,
+                        stackCount: 0,
+                        canStack: false,
+                        startTime: 0f,
+                        endTime: 0f,
+                        effectType: type,
+                        modifierType: modifierType,
+                        affectedAttribute: affectedAttribute,
+                        target: target,
+                        duration: duration,
+                        period: period,
+                        policy: policy,
+                        effectOnAwake: effectOnAwake,
+                        deriveEffects: deriveEffects,
+                        awakeEffects: awakeEffects,
+                        floatParam1: float1,
+                        floatParam2: float2,
+                        floatParam3: float3,
+                        floatParam4: float4,
+                        intParam1: int1,
+                        intParam2: int2,
+                        intParam3: int3,
+                        intParam4: int4);
+                }
+            }
+
+            private static AbilityData ParseAbilityBinary(byte[] data, Dictionary<int, EffectData> effectTemplates)
+            {
+                using (var reader = new ByteReader(data))
+                {
+                    string magic = reader.ReadFixedString(4);
+                    byte version = reader.ReadByte();
+
+                    if (magic != ABLT_MAGIC || version != BIN_VERSION)
+                    {
+                        Log.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
+                        return default;
+                    }
+
+                    int id = reader.ReadInt32();
+                    int costEffectID = reader.ReadInt32();
+                    int coolDownEffectID = reader.ReadInt32();
+                    var targetType = (AbilityTargetType)reader.ReadInt32();
+                    int timelineID = reader.ReadInt32();
+                    float timelineDuration = reader.ReadSingle();
+
+                    var effectDataList = new List<EffectData>();
+                    int trackCount = reader.ReadInt32();
+
+                    for (int t = 0; t < trackCount; t++)
+                    {
+                        int clipCount = reader.ReadInt32();
+                        for (int c = 0; c < clipCount; c++)
+                        {
+                            int clipType = reader.ReadInt32();
+                            float startTime = reader.ReadSingle();
+                            float endTime = reader.ReadSingle();
+
+                            switch (clipType)
+                            {
+                                case 1:
+                                    ReadEffectClip(reader, startTime, endTime, effectTemplates, effectDataList);
+                                    break;
+                                
+                                case 2:
+                                    SkipAudioClip(reader);
+                                    break;
+                                
+                                case 3:
+                                    SkipVfxClip(reader);
+                                    break;
+                                
+                                default:
+                                    Log.Warning($"Tools.Ability.ParseAbilityBinary: unknown clip type {clipType} in ability {id}");
+                                    break;
+                            }
+                        }
+                    }
+
+                    return new AbilityData(
+                        id: id,
+                        costEffectID: costEffectID,
+                        coolDownEffectID: coolDownEffectID,
+                        targetType: targetType,
+                        timelineID: timelineID,
+                        timelineDuration: timelineDuration,
+                        effects: effectDataList.ToArray());
+                }
+            }
+
+            /// <summary>
+            /// 从 .ablt 二进制流中读取一个 Effect Clip，
+            /// 优先使用 .efct 模板的配置字段，找不到则回退使用 .ablt 内联数据
+            /// </summary>
+            private static void ReadEffectClip(
+                ByteReader reader,
+                float startTime,
+                float endTime,
+                Dictionary<int, EffectData> effectTemplates,
+                List<EffectData> effectDataList)
+            {
+                int effectId = reader.ReadInt32();
+                int stackCount = reader.ReadInt32();
+                bool canStack = reader.ReadBoolean();
+                var inlineType = (EffectType)reader.ReadInt32();
+                var inlineModifier = (NumricModifierType)reader.ReadUInt16();
+                var inlineAttr = (actor_attribute)reader.ReadInt32();
+                int inlineTarget = reader.ReadInt32();
+                float inlineDuration = reader.ReadSingle();
+                float inlinePeriod = reader.ReadSingle();
+                var inlinePolicy = (DurationPolicy)reader.ReadUInt16();
+                bool inlineOnAwake = reader.ReadBoolean();
+                float f1 = reader.ReadSingle();
+                float f2 = reader.ReadSingle();
+                float f3 = reader.ReadSingle();
+                float f4 = reader.ReadSingle();
+                int i1 = reader.ReadInt32();
+                int i2 = reader.ReadInt32();
+                int i3 = reader.ReadInt32();
+                int i4 = reader.ReadInt32();
+
+                int deriveCount = reader.ReadInt32();
+                var inlineDerives = new int[deriveCount];
+                for (int i = 0; i < deriveCount; i++)
+                    inlineDerives[i] = reader.ReadInt32();
+
+                int awakeCount = reader.ReadInt32();
+                var inlineAwakes = new int[awakeCount];
+                for (int i = 0; i < awakeCount; i++)
+                    inlineAwakes[i] = reader.ReadInt32();
+
+                EffectData effectData;
+                if (effectTemplates.TryGetValue(effectId, out var tmpl))
+                {
+                    var srcDerives = tmpl.GetDeriveEffects();
+                    var dArr = new int[srcDerives.Count];
+                    for (int i = 0; i < srcDerives.Count; i++) dArr[i] = srcDerives[i];
+
+                    var srcAwakes = tmpl.GetAwakeEffects();
+                    var aArr = new int[srcAwakes.Count];
+                    for (int i = 0; i < srcAwakes.Count; i++) aArr[i] = srcAwakes[i];
+
+                    effectData = new EffectData(
+                        effectId: effectId,
+                        stackCount: stackCount,
+                        canStack: canStack,
+                        startTime: startTime,
+                        endTime: endTime,
+                        effectType: tmpl.GetEffectType(),
+                        modifierType: tmpl.GetModifierType(),
+                        affectedAttribute: tmpl.GetAffectedAttribute(),
+                        target: tmpl.GetTarget(),
+                        duration: tmpl.GetDuration(),
+                        period: tmpl.GetPeriod(),
+                        policy: tmpl.GetPolicy(),
+                        effectOnAwake: tmpl.GetEffectOnAwake(),
+                        deriveEffects: dArr,
+                        awakeEffects: aArr,
+                        floatParam1: tmpl.GetFloatParam1(),
+                        floatParam2: tmpl.GetFloatParam2(),
+                        floatParam3: tmpl.GetFloatParam3(),
+                        floatParam4: tmpl.GetFloatParam4(),
+                        intParam1: tmpl.GetIntParam1(),
+                        intParam2: tmpl.GetIntParam2(),
+                        intParam3: tmpl.GetIntParam3(),
+                        intParam4: tmpl.GetIntParam4());
+                }
+                else
+                {
+                    effectData = new EffectData(
+                        effectId: effectId,
+                        stackCount: stackCount,
+                        canStack: canStack,
+                        startTime: startTime,
+                        endTime: endTime,
+                        effectType: inlineType,
+                        modifierType: inlineModifier,
+                        affectedAttribute: inlineAttr,
+                        target: inlineTarget,
+                        duration: inlineDuration,
+                        period: inlinePeriod,
+                        policy: inlinePolicy,
+                        effectOnAwake: inlineOnAwake,
+                        deriveEffects: inlineDerives,
+                        awakeEffects: inlineAwakes,
+                        floatParam1: f1,
+                        floatParam2: f2,
+                        floatParam3: f3,
+                        floatParam4: f4,
+                        intParam1: i1,
+                        intParam2: i2,
+                        intParam3: i3,
+                        intParam4: i4);
+                }
+
+                effectDataList.Add(effectData);
+            }
+
+            private static void SkipAudioClip(ByteReader reader)
+            {
+                reader.ReadString();
+                reader.ReadSingle();
+                reader.ReadBoolean();
+                reader.ReadSingle();
+                reader.ReadSingle();
+            }
+
+            private static void SkipVfxClip(ByteReader reader)
+            {
+                reader.ReadString();
+                reader.ReadString();
+                reader.ReadVector3();
+                reader.ReadVector3();
+                reader.ReadVector3();
+                reader.ReadBoolean();
+            }
+
+            #endregion
+
+            private const string ABILITY_BIN_DIR = "Res/Config/Ability";
+            private const string EFFECT_BIN_DIR = "Res/Config/Effect";
+            private const string ABLT_MAGIC = "ABLT";
+            private const string EFCT_MAGIC = "EFFECT";
+            private const byte BIN_VERSION = 0x01;
         }//end class Ability
     }//end class Tools
 }
