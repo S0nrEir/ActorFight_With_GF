@@ -42,16 +42,16 @@ MonoBehaviour:
         _effectId: 1004
         _stackCount: 1
         _canStack: 0
-        _effectType: 2
-        _modifierType: 4
+        _effectType: 5
+        _modifierType: 1
         _affectedAttribute: 0
-        _target: 0
-        _duration: -1
-        _period: 0
-        _policy: 1
-        _effectOnAwake: 1
+        _target: 1
+        _duration: 3
+        _period: 1
+        _policy: 2
+        _effectOnAwake: 0
         _extensionParam:
-          FloatParam_1: -1
+          FloatParam_1: -15
           FloatParam_2: -1
           FloatParam_3: -1
           FloatParam_4: -1
