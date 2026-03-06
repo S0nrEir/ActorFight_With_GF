@@ -215,7 +215,7 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static CachedEffectData ReadBinaryFile(string filePath)
+        internal static CachedEffectData ReadBinaryFile(string filePath)
         {
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             using (Aquila.Toolkit.Tools.ByteReader reader = new Aquila.Toolkit.Tools.ByteReader(fs))
@@ -449,7 +449,7 @@ namespace Editor.AbilityEditor.Tools
             public List<string> Differences = new List<string>();
         }
 
-        private class CachedEffectData
+        internal class CachedEffectData
         {
             public int Id;
             public EffectType Type;

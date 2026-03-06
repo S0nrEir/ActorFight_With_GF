@@ -14,7 +14,9 @@ namespace Editor.AbilityEditor.Tools
         {
             if (!EditorUtility.DisplayDialog(
                 "Verify Ability Export",
-                "This will export all abilities to temporary files and verify their correctness.\n\n" +
+                "This will:\n" +
+                "1. Export all abilities to temporary files and verify binary round-trip.\n" +
+                "2. Read production .ablt/.efct files, assemble AbilityData, and cross-verify.\n\n" +
                 "The process may take a few moments.",
                 "Start Verification",
                 "Cancel"))
@@ -27,12 +29,12 @@ namespace Editor.AbilityEditor.Tools
             string logPath = GetLogPath();
             try
             {
-                EditorUtility.DisplayProgressBar("Ability Verification", "Starting verification...", 0f);
-
-                //验证然后显示结果 / verify then show result
-                var result = AbilityVerificationTool.VerifyAllAbilities(tempPath, logPath);
+                EditorUtility.DisplayProgressBar("Ability Verification", "Phase 1: Export round-trip verification...", 0f);
+                var exportResult = AbilityVerificationTool.VerifyAllAbilities(tempPath, logPath);
+                EditorUtility.DisplayProgressBar("Ability Verification", "Phase 2: AbilityData assembly verification...", 0.5f);
+                var assemblyResult = AbilityDataAssemblyVerifier.VerifyAssembly(logPath);
                 EditorUtility.ClearProgressBar();
-                ShowResult(result, logPath);
+                ShowResult(exportResult, assemblyResult, logPath);
             }
             catch (System.Exception ex)
             {
@@ -45,43 +47,65 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static void ShowResult(AbilityVerificationTool.VerificationResult result, string logPath)
+        private static void ShowResult(
+            AbilityVerificationTool.VerificationResult exportResult,
+            AbilityDataAssemblyVerifier.AssemblyVerificationResult assemblyResult,
+            string logPath)
         {
-            if (result.IsSuccess)
+            bool allSuccess = exportResult.IsSuccess && assemblyResult.IsSuccess;
+
+            if (allSuccess)
             {
                 EditorUtility.DisplayDialog(
                     "Verification Successful",
-                    $"All {result.SuccessfulAbilities.Count} abilities verified successfully!\n\n" +
-                    $"All exported binary files match the original configurations.",
+                    $"Phase 1 - Export Round-Trip: All {exportResult.SuccessfulAbilities.Count} abilities verified.\n" +
+                    $"Phase 2 - Assembly: All {assemblyResult.SuccessfulAbilities.Count} abilities assembled and cross-verified.\n\n" +
+                    $"All data is consistent.",
                     "OK");
             }
             else
             {
-                string message = $"Verification completed with issues:\n\n" +
-                                $"Total Abilities: {result.TotalAbilities}\n" +
-                                $"Successful: {result.SuccessfulAbilities.Count}\n" +
-                                $"Failed: {result.Failures.Count}\n\n";
+                string message = "=== Phase 1: Export Round-Trip ===\n" +
+                                $"Total: {exportResult.TotalAbilities} | " +
+                                $"OK: {exportResult.SuccessfulAbilities.Count} | " +
+                                $"Failed: {exportResult.Failures.Count}\n";
 
-                if (!string.IsNullOrEmpty(result.ErrorMessage))
-                    message += $"Error: {result.ErrorMessage}\n\n";
+                if (!string.IsNullOrEmpty(exportResult.ErrorMessage))
+                    message += $"Error: {exportResult.ErrorMessage}\n";
 
-                if (result.Failures.Count > 0)
+                if (exportResult.Failures.Count > 0)
                 {
-                    message += "Failed Ability IDs:\n";
-                    foreach (var failure in result.Failures)
+                    foreach (var failure in exportResult.Failures)
                     {
-                        message += $"  - {failure.AbilityId}";
+                        message += $"  - Ability {failure.AbilityId}";
                         if (!string.IsNullOrEmpty(failure.ErrorMessage))
                             message += $" ({failure.ErrorMessage})";
-                        
                         message += "\n";
                     }
-                    message += "\n";
                 }
 
-                message += $"Detailed report saved to:\n{logPath}\n\nWould you like to open the log file?";
+                message += $"\n=== Phase 2: Assembly Verification ===\n" +
+                          $"Total: {assemblyResult.TotalAbilities} | " +
+                          $"OK: {assemblyResult.SuccessfulAbilities.Count} | " +
+                          $"Failed: {assemblyResult.Failures.Count}\n";
 
-                if (EditorUtility.DisplayDialog("Verification Failed", message, "Open Log", "Close"))
+                if (!string.IsNullOrEmpty(assemblyResult.ErrorMessage))
+                    message += $"Error: {assemblyResult.ErrorMessage}\n";
+
+                if (assemblyResult.Failures.Count > 0)
+                {
+                    foreach (var failure in assemblyResult.Failures)
+                    {
+                        message += $"  - Ability {failure.AbilityId}";
+                        if (!string.IsNullOrEmpty(failure.ErrorMessage))
+                            message += $" ({failure.ErrorMessage})";
+                        message += "\n";
+                    }
+                }
+
+                message += $"\nDetailed report: {logPath}\nOpen log file?";
+
+                if (EditorUtility.DisplayDialog("Verification Results", message, "Open Log", "Close"))
                     OpenLogFile(logPath);
             }
         }

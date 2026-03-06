@@ -280,7 +280,7 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static CachedAbilityData ReadBinaryFile(string filePath)
+        internal static CachedAbilityData ReadBinaryFile(string filePath)
         {
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             using (Aquila.Toolkit.Tools.ByteReader reader = new Aquila.Toolkit.Tools.ByteReader(fs))
@@ -710,7 +710,7 @@ namespace Editor.AbilityEditor.Tools
             public List<string> Differences = new List<string>();
         }
 
-        private class CachedAbilityData
+        internal class CachedAbilityData
         {
             public int Id;
             public int CostEffectID;
@@ -721,19 +721,19 @@ namespace Editor.AbilityEditor.Tools
             public List<CachedTrackData> Tracks;
         }
 
-        private class CachedTrackData
+        internal class CachedTrackData
         {
             public List<CachedClipData> Clips;
         }
 
-        private abstract class CachedClipData
+        internal abstract class CachedClipData
         {
             public TimelineClipType ClipType;
             public float StartTime;
             public float EndTime;
         }
 
-        private class CachedEffectClipData : CachedClipData
+        internal class CachedEffectClipData : CachedClipData
         {
             public int EffectId;
             public int StackCount;
@@ -758,7 +758,7 @@ namespace Editor.AbilityEditor.Tools
             public int[] AwakeEffects;
         }
 
-        private class CachedAudioClipData : CachedClipData
+        internal class CachedAudioClipData : CachedClipData
         {
             public string AudioPath;
             public float Volume;
@@ -767,7 +767,7 @@ namespace Editor.AbilityEditor.Tools
             public float FadeOutDuration;
         }
 
-        private class CachedVFXClipData : CachedClipData
+        internal class CachedVFXClipData : CachedClipData
         {
             public string VfxPath;
             public string AttachPoint;
