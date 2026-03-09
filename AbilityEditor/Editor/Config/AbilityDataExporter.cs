@@ -46,6 +46,39 @@ namespace Editor.AbilityEditor.Config
             Debug.Log($"[AbilityDataExporter] {action}配置资产: {assetPath}");
         }
 
+        /// <summary>
+        /// 导出配置为沙盒测试用的 AbilityData 资产文件（固定路径和文件名）
+        /// </summary>
+        public static void ExportToSandBox(AbilityConfig config, List<TimelineTrackItem> tracks)
+        {
+            string assetPath = $"{Misc.SANDBOX_ABILITY_PATH}/{Misc.SANDBOX_ABILITY_FILENAME}";
+            EnsureDirectoryExists(Misc.SANDBOX_ABILITY_PATH);
+
+            var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(assetPath);
+            bool isOverwrite = existingAsset != null;
+
+            AbilityEditorSOData abilityData;
+            if (isOverwrite)
+            {
+                // 覆盖旧资产 / overwrite old asset
+                abilityData = existingAsset;
+                UpdateAbilityData(abilityData, config, tracks);
+                EditorUtility.SetDirty(abilityData);
+            }
+            else
+            {
+                // 新资产 / new asset
+                abilityData = CreateAbilityData(config, tracks);
+                AssetDatabase.CreateAsset(abilityData, assetPath);
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            string action = isOverwrite ? "已覆盖" : "已创建";
+            Debug.Log($"[AbilityDataExporter] {action}沙盒测试配置: {assetPath}");
+        }
+
         // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
         private static AbilityEditorSOData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
         {

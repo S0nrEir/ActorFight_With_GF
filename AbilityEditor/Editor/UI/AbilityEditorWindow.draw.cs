@@ -64,7 +64,10 @@ namespace Editor.AbilityEditor
                 if ( toggle != null )
                 {
                     toggle.value = true;
-                    toggle.RegisterValueChangedCallback(OnToggleValueChanged);
+                    toggle.RegisterValueChangedCallback((evt) =>
+                    {
+                        _isGenSandBoxAblt = evt.newValue;
+                    });
                 }
                 else
                 {
@@ -147,11 +150,6 @@ namespace Editor.AbilityEditor
                     HighlightTrackSelection( trackElement );
             } );
             _trackPanel.Add( trackElement );
-        }
-
-        private void OnToggleValueChanged(ChangeEvent<bool> evt)
-        {
-            _isGenSandBoxAblt = evt.newValue;
         }
 
         /// <summary>
@@ -361,15 +359,16 @@ namespace Editor.AbilityEditor
         {
             Debug.Log("[AbilityEditorWindow] 开始生成配置...");
             var config = AbilityConfigGenerator.Generate(this);
-            AbilityConfigAccessor.SetConfig(config);
+            // AbilityConfigAccessor.SetConfig(config);
             AbilityDataExporter.ExportToAsset(config, _timelineTrackItems);
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
-            Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
+            // Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
             
-            //导出沙盒技能配置 / export sand box ability config
+            
             if (_isGenSandBoxAblt)
             {
-                
+                AbilityDataExporter.ExportToSandBox(config, _timelineTrackItems);
+                ShowNotification(new GUIContent($"✓ 沙盒测试数据已生成"));
             }
         }
 

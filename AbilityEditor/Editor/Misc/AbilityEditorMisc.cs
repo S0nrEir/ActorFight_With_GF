@@ -23,6 +23,16 @@ namespace Aquila.AbilityEditor
         /// 二进制技能数据的存储目录
         /// </summary>
         public static readonly string ABILITY_BIN_ASSET_PATH = "Assets/Res/Config/Ability";
+
+        /// <summary>
+        /// 沙盒测试技能数据的存储路径 / sandbox test ability data storage path
+        /// </summary>
+        public static readonly string SANDBOX_ABILITY_PATH = "Assets/AbilityEditor/SandBox";
+
+        /// <summary>
+        /// 沙盒测试技能数据的文件名 / sandbox test ability data filename
+        /// </summary>
+        public const string SANDBOX_ABILITY_FILENAME = "SandBoxAbilityData.asset";
         
         /// <summary>
         /// 编辑器 Effect 数据的存储目录 / effect data asset storage path
