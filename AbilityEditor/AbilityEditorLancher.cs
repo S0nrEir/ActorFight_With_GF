@@ -11,6 +11,7 @@ namespace Aquila.AbilityEditor
         void Start()
         {
             Tools.SetActive(_entryObject,true);
+            Destroy(gameObject);
         }
 
         [SerializeField] private GameObject _entryObject = null;
