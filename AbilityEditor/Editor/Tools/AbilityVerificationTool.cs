@@ -27,41 +27,22 @@ namespace Editor.AbilityEditor.Tools
         {
             var result = new VerificationResult();
             var cachedData = new Dictionary<int, CachedAbilityData>();
-
-            try
+            
+            if (!LoadAndCacheAbilities(cachedData, result))
             {
-                // 1. 读取并缓存所有 Ability 资产
-                if (!LoadAndCacheAbilities(cachedData, result))
-                {
-                    result.ErrorMessage = "Failed to load abilities";
-                    return result;
-                }
-
-                // 2. 确保临时导出目录存在
-                EnsureDirectoryExists(tempExportPath);
-
-                // 3. 导出所有 Ability 到临时目录
-                if (!ExportAbilitiesToTemp(cachedData, tempExportPath, result))
-                {
-                    result.ErrorMessage = "Failed to export abilities";
-                    return result;
-                }
-
-                // 4. 读取并验证导出的文件
-                VerifyExportedFiles(cachedData, tempExportPath, result);
-
-                // 5. 生成报告
-                GenerateReport(result, logPath);
-
-                // 6. 清理临时文件
-                CleanupTempFiles(tempExportPath);
+                result.ErrorMessage = "Failed to load abilities";
+                return result;
             }
-            catch (Exception ex)
+            EnsureDirectoryExists(tempExportPath);
+            if (!ExportAbilitiesToTemp(cachedData, tempExportPath, result))
             {
-                result.ErrorMessage = $"Verification failed with exception: {ex.Message}\n{ex.StackTrace}";
-                Debug.LogError($"[AbilityVerificationTool] {result.ErrorMessage}");
+                result.ErrorMessage = "Failed to export abilities";
+                return result;
             }
-
+            VerifyExportedFiles(cachedData, tempExportPath, result);
+            GenerateReport(result, logPath);
+            CleanupTempFiles(tempExportPath);
+            
             return result;
         }
 
@@ -215,16 +196,7 @@ namespace Editor.AbilityEditor.Tools
                 }
 
                 string outputFile = Path.Combine(tempPath, $"{abilityId}.ablt");
-                
-                try
-                {
-                    AbilityBinaryExporter.ExportAbility(abilityData, outputFile);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"[AbilityVerificationTool] Failed to export ability {abilityId}: {ex.Message}");
-                    return false;
-                }
+                AbilityBinaryExporter.ExportAbility(abilityData, outputFile);
             }
 
             return true;
@@ -248,34 +220,22 @@ namespace Editor.AbilityEditor.Tools
                     result.Failures.Add(failure);
                     continue;
                 }
+                
+                var readData = ReadBinaryFile(binaryFile);
+                var differences = CompareAbilityData(cached, readData);
 
-                try
-                {
-                    var readData = ReadBinaryFile(binaryFile);
-                    var differences = CompareAbilityData(cached, readData);
-
-                    if (differences.Count > 0)
-                    {
-                        var failure = new AbilityVerificationFailure
-                        {
-                            AbilityId = abilityId,
-                            Differences = differences
-                        };
-                        result.Failures.Add(failure);
-                    }
-                    else
-                    {
-                        result.SuccessfulAbilities.Add(abilityId);
-                    }
-                }
-                catch (Exception ex)
+                if (differences.Count > 0)
                 {
                     var failure = new AbilityVerificationFailure
                     {
                         AbilityId = abilityId,
-                        ErrorMessage = $"Failed to read/compare: {ex.Message}"
+                        Differences = differences
                     };
                     result.Failures.Add(failure);
+                }
+                else
+                {
+                    result.SuccessfulAbilities.Add(abilityId);
                 }
             }
         }
@@ -669,17 +629,10 @@ namespace Editor.AbilityEditor.Tools
 
         private static void CleanupTempFiles(string tempPath)
         {
-            try
+            if (Directory.Exists(tempPath))
             {
-                if (Directory.Exists(tempPath))
-                {
-                    Directory.Delete(tempPath, true);
-                    Debug.Log($"[AbilityVerificationTool] Cleaned up temp directory: {tempPath}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"[AbilityVerificationTool] Failed to cleanup temp files: {ex.Message}");
+                Directory.Delete(tempPath, true);
+                Debug.Log($"[AbilityVerificationTool] Cleaned up temp directory: {tempPath}");
             }
         }
 

@@ -102,7 +102,6 @@ namespace Aquila.AbilityPool
         }
 
         //----------------------- priv -----------------------
-
         /// <summary>
         /// 加载所有 .efct 文件到 _effectPool
         /// </summary>

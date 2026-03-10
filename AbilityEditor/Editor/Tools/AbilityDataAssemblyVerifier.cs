@@ -678,8 +678,8 @@ namespace Editor.AbilityEditor.Tools
                     if (editorEffect.Target != prodEffect.Target)
                         differences.Add($"{editorPrefix} Target | EditorSO: {editorEffect.Target} | .efct: {prodEffect.Target}");
 
-                    if (editorEffect.EffectType != prodEffect.EffectType)
-                        differences.Add($"{editorPrefix} EffectType(Attribute) | EditorSO: {editorEffect.EffectType} | .efct: {prodEffect.EffectType}");
+                    if (editorEffect.AffectedAttribute != prodEffect.EffectType)
+                        differences.Add($"{editorPrefix} EffectType(Attribute) | EditorSO: {editorEffect.AffectedAttribute} | .efct: {prodEffect.EffectType}");
 
                     if (editorEffect.ExtensionParam != null)
                     {

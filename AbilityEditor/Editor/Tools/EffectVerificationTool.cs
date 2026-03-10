@@ -114,7 +114,7 @@ namespace Editor.AbilityEditor.Tools
                 Period = data.Period,
                 Duration = data.Duration,
                 Target = data.Target,
-                EffectType = data.EffectType
+                EffectType = data.AffectedAttribute
             };
 
             if (data.ExtensionParam != null)

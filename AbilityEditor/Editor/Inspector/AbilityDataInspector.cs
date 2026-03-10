@@ -126,7 +126,7 @@ namespace Editor.AbilityEditor.Inspector
             effectData.Period = effectClip.Period;
             effectData.Duration = effectClip.Duration;
             effectData.Target = effectClip.Target;
-            effectData.EffectType = effectClip.AffectedAttribute;
+            effectData.AffectedAttribute = effectClip.AffectedAttribute;
             effectData.DeriveEffects = effectClip.DeriveEffects ?? new int[0];
             effectData.AwakeEffects = effectClip.AwakeEffects ?? new int[0];
 
@@ -258,7 +258,7 @@ namespace Editor.AbilityEditor.Inspector
                 EffectId = effectData.id,
                 EffectType = effectData.Type,
                 ModifierType = effectData.ModifierType,
-                AffectedAttribute = effectData.EffectType,
+                AffectedAttribute = effectData.AffectedAttribute,
                 Target = effectData.Target,
                 Duration = effectData.Duration,
                 Period = effectData.Period,

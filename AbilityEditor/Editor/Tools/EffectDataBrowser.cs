@@ -100,7 +100,7 @@ namespace Aquila.AbilityEditor.Tools
             newData.Period = sourceData.Period;
             newData.Duration = sourceData.Duration;
             newData.Target = sourceData.Target;
-            newData.EffectType = sourceData.EffectType;
+            newData.AffectedAttribute = sourceData.AffectedAttribute;
 
             if (sourceData.DeriveEffects != null)
                 newData.DeriveEffects = (int[])sourceData.DeriveEffects.Clone();

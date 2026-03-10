@@ -68,6 +68,77 @@ namespace Editor.AbilityEditor.Tools
         /// <summary>
         /// 导出单个 EffectEditorSOData 为 .efct 文件
         /// </summary>
+        public static void ExportEffect(EffectClipData data, string outputPath)
+        {
+            using (FileStream fs = new FileStream(outputPath, FileMode.Create))
+            {
+                using (Aquila.Toolkit.Tools.ByteWriter writer = new Aquila.Toolkit.Tools.ByteWriter(fs))
+                {
+                    // Write Header
+                    writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
+                    writer.WriteByte(VERSION);
+
+                    // Write Basic Info
+                    writer.WriteInt32(data.EffectId);
+                    writer.WriteInt32((int)data.EffectType);
+                    writer.WriteUInt16((ushort)data.ModifierType);
+                    writer.WriteBoolean(data.EffectOnAwake);
+                    writer.WriteUInt16((ushort)data.Policy);
+                    writer.WriteSingle(data.Period);
+                    writer.WriteSingle(data.Duration);
+                    writer.WriteInt32(data.Target);
+                    writer.WriteInt32((int)data.AffectedAttribute); // actor_attribute
+
+                    // Write Extension Parameters
+                    var extParam = data.ExtensionParam;
+                    if (extParam != null)
+                    {
+                        writer.WriteSingle(extParam.FloatParam_1);
+                        writer.WriteSingle(extParam.FloatParam_2);
+                        writer.WriteSingle(extParam.FloatParam_3);
+                        writer.WriteSingle(extParam.FloatParam_4);
+                        writer.WriteInt32(extParam.IntParam_1);
+                        writer.WriteInt32(extParam.IntParam_2);
+                        writer.WriteInt32(extParam.IntParam_3);
+                        writer.WriteInt32(extParam.IntParam_4);
+                    }
+                    else
+                    {
+                        // Write default values
+                        writer.WriteSingle(0f);
+                        writer.WriteSingle(0f);
+                        writer.WriteSingle(0f);
+                        writer.WriteSingle(0f);
+                        writer.WriteInt32(0);
+                        writer.WriteInt32(0);
+                        writer.WriteInt32(0);
+                        writer.WriteInt32(0);
+                    }
+
+                    // Write Derive Effects
+                    var deriveEffects = data.DeriveEffects ?? new int[0];
+                    writer.WriteInt32(deriveEffects.Length);
+                    foreach (var effectId in deriveEffects)
+                    {
+                        writer.WriteInt32(effectId);
+                    }
+
+                    // Write Awake Effects
+                    var awakeEffects = data.AwakeEffects ?? new int[0];
+                    writer.WriteInt32(awakeEffects.Length);
+                    foreach (var effectId in awakeEffects)
+                    {
+                        writer.WriteInt32(effectId);
+                    }
+                }
+            }
+            
+            Debug.Log($"[EffectBinaryExporter] Exported: {outputPath}");
+        }
+
+        /// <summary>
+        /// 导出单个 EffectEditorSOData 为 .efct 文件
+        /// </summary>
         public static void ExportEffect(EffectEditorSOData data, string outputPath)
         {
             using (FileStream fs = new FileStream(outputPath, FileMode.Create))
@@ -87,7 +158,7 @@ namespace Editor.AbilityEditor.Tools
                     writer.WriteSingle(data.Period);
                     writer.WriteSingle(data.Duration);
                     writer.WriteInt32(data.Target);
-                    writer.WriteInt32((int)data.EffectType); // actor_attribute
+                    writer.WriteInt32((int)data.AffectedAttribute); // actor_attribute
 
                     // Write Extension Parameters
                     var extParam = data.ExtensionParam;
@@ -135,7 +206,7 @@ namespace Editor.AbilityEditor.Tools
             
             Debug.Log($"[EffectBinaryExporter] Exported: {outputPath}");
         }
-
+        
         private static void EnsureDirectoryExists(string path)
         {
             if (!Directory.Exists(path))

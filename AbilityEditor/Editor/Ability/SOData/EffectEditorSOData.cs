@@ -48,7 +48,7 @@ namespace Aquila.AbilityEditor.Config
         public int Target;
 
         [Tooltip("影响的数值类型")]
-        public actor_attribute EffectType;
+        public actor_attribute AffectedAttribute;
 
         [Header("Derive Effects")]
         [Tooltip("派生effect")]

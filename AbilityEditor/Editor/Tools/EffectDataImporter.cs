@@ -142,7 +142,7 @@ namespace Aquila.AbilityEditor.Tools
                     effectData.Period = effectJson.Period;
                     effectData.Duration = effectJson.Duration;
                     effectData.Target = effectJson.Target;
-                    effectData.EffectType = (Cfg.Enum.actor_attribute)effectJson.EffectType;
+                    effectData.AffectedAttribute = (Cfg.Enum.actor_attribute)effectJson.EffectType;
                     effectData.DeriveEffects = effectJson.DeriveEffects ?? new int[0];
                     effectData.AwakeEffects = effectJson.AwakeEffects ?? new int[0];
 

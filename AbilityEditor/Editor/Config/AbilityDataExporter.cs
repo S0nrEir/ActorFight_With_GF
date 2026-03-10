@@ -79,22 +79,19 @@ namespace Editor.AbilityEditor.Config
                 if (track.Clips == null)
                     continue;
 
+                //var effectSOData = ScriptableObject.CreateInstance<EffectEditorSOData>();
                 foreach (var clip in track.Clips)
                 {
                     if (clip is EffectClipData effectClip && effectClip.EffectId > 0)
                     {
-                        // 避免重复导出相同的 Effect
                         if (exportedEffectIds.Contains(effectClip.EffectId))
                             continue;
 
                         exportedEffectIds.Add(effectClip.EffectId);
-
-                        // 创建临时 EffectEditorSOData
-                        var effectData = CreateEffectDataFromClip(effectClip);
-
-                        // 导出为 .efct 文件
+                        // var effectData = CreateEffectDataFromClip(effectClip,effectSOData);
+                        //CreateEffectDataFromClip(effectClip,effectSOData);
                         string efctPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{effectClip.EffectId}.efct");
-                        EffectBinaryExporter.ExportEffect(effectData, efctPath);
+                        EffectBinaryExporter.ExportEffect(effectClip, efctPath);
                     }
                 }
             }
@@ -108,13 +105,13 @@ namespace Editor.AbilityEditor.Config
         /// <summary>
         /// 从 EffectClipData 创建 EffectEditorSOData
         /// </summary>
-        private static EffectEditorSOData CreateEffectDataFromClip(EffectClipData clip)
+        private static void CreateEffectDataFromClip(EffectClipData clip,EffectEditorSOData effectData)
         {
-            var effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
+            //var effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
             effectData.id = clip.EffectId;
             effectData.Type = clip.EffectType;
             effectData.ModifierType = clip.ModifierType;
-            effectData.EffectType = clip.AffectedAttribute;
+            effectData.AffectedAttribute = clip.AffectedAttribute;
             effectData.Target = clip.Target;
             effectData.Duration = clip.Duration;
             effectData.Period = clip.Period;
@@ -137,7 +134,7 @@ namespace Editor.AbilityEditor.Config
                 int_4 = extParam.IntParam_4
             };
 
-            return effectData;
+            //return effectData;
         }
 
         // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
