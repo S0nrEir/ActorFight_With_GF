@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Aquila.AbilityEditor;
+using Aquila.AbilityEditor.Config;
 using Editor.AbilityEditor.Tools;
 using UnityEditor;
 using UnityEngine;
