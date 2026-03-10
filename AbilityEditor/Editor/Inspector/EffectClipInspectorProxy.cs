@@ -29,6 +29,8 @@ namespace Aquila.AbilityEditor
             _clipName = TargetClipData.ClipName;
             // 限制TriggerTime范围
             _triggerTime = Mathf.Clamp(TargetClipData.TriggerTime, 0f, TimelineDuration);
+            _canStack = TargetClipData.CanStack;
+            _stackCount = TargetClipData.StackCount;
 
             // 同步Effect配置字段
             _effectType = TargetClipData.EffectType;
@@ -55,6 +57,8 @@ namespace Aquila.AbilityEditor
             TargetClipData.EffectId = _effectId;
             TargetClipData.ClipName = _clipName;
             TargetClipData.TriggerTime = _triggerTime;
+            TargetClipData.CanStack = _canStack;
+            TargetClipData.StackCount = _stackCount;
 
             // 同步Effect配置字段到ClipData
             TargetClipData.EffectType = _effectType;
@@ -82,6 +86,12 @@ namespace Aquila.AbilityEditor
 
         [SerializeField]
         private float _triggerTime;
+
+        [SerializeField]
+        private bool _canStack;
+
+        [SerializeField]
+        private int _stackCount = 1;
 
         [Header("Effect配置")]
         [SerializeField]
@@ -168,6 +178,8 @@ namespace Aquila.AbilityEditor
         private SerializedProperty _effectIdProp;
         private SerializedProperty _clipNameProp;
         private SerializedProperty _triggerTimeProp;
+        private SerializedProperty _canStackProp;
+        private SerializedProperty _stackCountProp;
 
         // Effect配置属性
         private SerializedProperty _effectTypeProp;
@@ -193,6 +205,8 @@ namespace Aquila.AbilityEditor
             _effectIdProp = serializedObject.FindProperty("_effectId");
             _clipNameProp = serializedObject.FindProperty("_clipName");
             _triggerTimeProp = serializedObject.FindProperty("_triggerTime");
+            _canStackProp = serializedObject.FindProperty("_canStack");
+            _stackCountProp = serializedObject.FindProperty("_stackCount");
 
             // 查找Effect配置属性
             _effectTypeProp = serializedObject.FindProperty("_effectType");
@@ -251,6 +265,14 @@ namespace Aquila.AbilityEditor
 
             // Clip Name
             EditorGUILayout.PropertyField(_clipNameProp, new GUIContent("Clip名称"));
+
+            // Can Stack
+            EditorGUILayout.PropertyField(_canStackProp, new GUIContent("可堆叠"));
+
+            // Stack Count - 只在可堆叠时启用
+            EditorGUI.BeginDisabledGroup(!_canStackProp.boolValue);
+            EditorGUILayout.PropertyField(_stackCountProp, new GUIContent("堆叠层数"));
+            EditorGUI.EndDisabledGroup();
 
             // Trigger Time - 使用Slider，范围限制为0到timeline时长
             float currentTriggerTime = _triggerTimeProp.floatValue;

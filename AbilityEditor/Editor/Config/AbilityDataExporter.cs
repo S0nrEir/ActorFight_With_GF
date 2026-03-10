@@ -53,20 +53,13 @@ namespace Editor.AbilityEditor.Config
         /// </summary>
         public static void ExportToSandBox(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            // 确保目录存在
             EnsureDirectoryExists(Misc.SANDBOX_ABILITY_PATH);
-
             // 创建临时 AbilityEditorSOData 用于导出
             AbilityEditorSOData abilityData = CreateAbilityData(config, tracks);
-
-            // 导出 .ablt 文件（使用固定文件名，去掉 .asset 扩展名）
-            string abilityFileName = Path.GetFileNameWithoutExtension(Misc.SANDBOX_ABILITY_FILENAME);
+            string abilityFileName = Path.GetFileNameWithoutExtension("sand_box");
             string abltPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{abilityFileName}.ablt");
             AbilityBinaryExporter.ExportAbility(abilityData, abltPath);
-
-            // 导出所有 Effect Clips 为 .efct 文件
             ExportEffectClipsToSandBox(abilityData);
-
             AssetDatabase.Refresh();
             Debug.Log($"[AbilityDataExporter] 已导出沙盒测试配置: {abltPath}");
         }

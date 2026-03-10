@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 1000
   m_EditorClassIdentifier: 
   Id: 1000
-  Name: "\u6280\u80FD1"
+  Name: "\u6D4B\u8BD5\u6280\u80FD1_\u4F24\u5BB3"
   Desc: "\u6D4B\u8BD5\u6280\u80FD1_\u4F24\u5BB3"
   CostEffectID: 1000
   CoolDownEffectID: 1001
-  TargetType: 0
+  TargetType: 2
   TimelineID: 1000
   TimelineAssetPath: Assets/Res/Timeline/Common/Common_Ability_1002.playable
   TimelineDuration: 5
@@ -26,14 +26,14 @@ MonoBehaviour:
     TrackColor: {r: 0.4475792, g: 0.8867924, b: 0.4475792, a: 1}
     IsEnabled: 1
     Clips:
-    - rid: 4815668567513759747
+    - rid: 4815668750953742342
   references:
     version: 2
     RefIds:
-    - rid: 4815668567513759747
+    - rid: 4815668750953742342
       type: {class: EffectClipData, ns: Aquila.AbilityEditor, asm: Assembly-CSharp-Editor}
       data:
-        _clipId: 88984bfb-faa6-49c5-91bf-4e4833452750
+        _clipId: ab06571f-2001-44eb-9467-47b1af45d313
         _clipName: Effect_1002
         _startTime: 2
         _endTime: 2

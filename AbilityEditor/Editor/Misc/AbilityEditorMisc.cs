@@ -32,7 +32,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 沙盒测试技能数据的文件名 / sandbox test ability data filename
         /// </summary>
-        public const string SANDBOX_ABILITY_FILENAME = "SandBoxAbilityData.asset";
+        // public const string SANDBOX_ABILITY_FILENAME = "SandBoxAbilityData.asset";
         
         /// <summary>
         /// 编辑器 Effect 数据的存储目录 / effect data asset storage path
