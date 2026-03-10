@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Aquila.AbilityEditor;
+using Editor.AbilityEditor.Tools;
 using UnityEditor;
 using UnityEngine;
 
@@ -47,36 +48,102 @@ namespace Editor.AbilityEditor.Config
         }
 
         /// <summary>
-        /// 导出配置为沙盒测试用的 AbilityData 资产文件（固定路径和文件名）
+        /// 导出配置为沙盒测试用的 .ablt 和 .efct 二进制文件（固定路径和文件名）
         /// </summary>
         public static void ExportToSandBox(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            string assetPath = $"{Misc.SANDBOX_ABILITY_PATH}/{Misc.SANDBOX_ABILITY_FILENAME}";
+            // 确保目录存在
             EnsureDirectoryExists(Misc.SANDBOX_ABILITY_PATH);
 
-            var existingAsset = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(assetPath);
-            bool isOverwrite = existingAsset != null;
+            // 创建临时 AbilityEditorSOData 用于导出
+            AbilityEditorSOData abilityData = CreateAbilityData(config, tracks);
 
-            AbilityEditorSOData abilityData;
-            if (isOverwrite)
-            {
-                // 覆盖旧资产 / overwrite old asset
-                abilityData = existingAsset;
-                UpdateAbilityData(abilityData, config, tracks);
-                EditorUtility.SetDirty(abilityData);
-            }
-            else
-            {
-                // 新资产 / new asset
-                abilityData = CreateAbilityData(config, tracks);
-                AssetDatabase.CreateAsset(abilityData, assetPath);
-            }
+            // 导出 .ablt 文件（使用固定文件名，去掉 .asset 扩展名）
+            string abilityFileName = Path.GetFileNameWithoutExtension(Misc.SANDBOX_ABILITY_FILENAME);
+            string abltPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{abilityFileName}.ablt");
+            AbilityBinaryExporter.ExportAbility(abilityData, abltPath);
 
-            AssetDatabase.SaveAssets();
+            // 导出所有 Effect Clips 为 .efct 文件
+            ExportEffectClipsToSandBox(abilityData);
+
             AssetDatabase.Refresh();
+            Debug.Log($"[AbilityDataExporter] 已导出沙盒测试配置: {abltPath}");
+        }
 
-            string action = isOverwrite ? "已覆盖" : "已创建";
-            Debug.Log($"[AbilityDataExporter] {action}沙盒测试配置: {assetPath}");
+        /// <summary>
+        /// 导出技能中的所有 Effect Clips 为 .efct 文件到沙盒目录
+        /// </summary>
+        private static void ExportEffectClipsToSandBox(AbilityEditorSOData abilityData)
+        {
+            if (abilityData.Tracks == null)
+                return;
+
+            HashSet<int> exportedEffectIds = new HashSet<int>();
+
+            foreach (var track in abilityData.Tracks)
+            {
+                if (track.Clips == null)
+                    continue;
+
+                foreach (var clip in track.Clips)
+                {
+                    if (clip is EffectClipData effectClip && effectClip.EffectId > 0)
+                    {
+                        // 避免重复导出相同的 Effect
+                        if (exportedEffectIds.Contains(effectClip.EffectId))
+                            continue;
+
+                        exportedEffectIds.Add(effectClip.EffectId);
+
+                        // 创建临时 EffectEditorSOData
+                        var effectData = CreateEffectDataFromClip(effectClip);
+
+                        // 导出为 .efct 文件
+                        string efctPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{effectClip.EffectId}.efct");
+                        EffectBinaryExporter.ExportEffect(effectData, efctPath);
+                    }
+                }
+            }
+
+            if (exportedEffectIds.Count > 0)
+            {
+                Debug.Log($"[AbilityDataExporter] 已导出 {exportedEffectIds.Count} 个 Effect 到沙盒目录");
+            }
+        }
+
+        /// <summary>
+        /// 从 EffectClipData 创建 EffectEditorSOData
+        /// </summary>
+        private static EffectEditorSOData CreateEffectDataFromClip(EffectClipData clip)
+        {
+            var effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
+            effectData.id = clip.EffectId;
+            effectData.Type = clip.EffectType;
+            effectData.ModifierType = clip.ModifierType;
+            effectData.EffectType = clip.AffectedAttribute;
+            effectData.Target = clip.Target;
+            effectData.Duration = clip.Duration;
+            effectData.Period = clip.Period;
+            effectData.Policy = clip.Policy;
+            effectData.EffectOnAwake = clip.EffectOnAwake;
+            effectData.DeriveEffects = clip.DeriveEffects;
+            effectData.AwakeEffects = clip.AwakeEffects;
+
+            // 复制扩展参数
+            var extParam = clip.ExtensionParam;
+            effectData.ExtensionParam = new EffectExtensionParam
+            {
+                float_1 = extParam.FloatParam_1,
+                float_2 = extParam.FloatParam_2,
+                float_3 = extParam.FloatParam_3,
+                float_4 = extParam.FloatParam_4,
+                int_1 = extParam.IntParam_1,
+                int_2 = extParam.IntParam_2,
+                int_3 = extParam.IntParam_3,
+                int_4 = extParam.IntParam_4
+            };
+
+            return effectData;
         }
 
         // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
