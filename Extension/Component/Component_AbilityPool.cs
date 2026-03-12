@@ -14,7 +14,8 @@ namespace Aquila.AbilityPool
     public class Component_AbilityPool : GameFrameworkComponent
     {
         //----------------------- pub -----------------------
-
+        
+        
         public void Init()
         {
             _abilityPool = new Dictionary<int, AbilityData>(_defaultCapacity);
@@ -43,6 +44,45 @@ namespace Aquila.AbilityPool
         public bool HasAbility(int abilityId)
         {
             return _abilityPool.ContainsKey(abilityId);
+        }
+
+        /// <summary>
+        /// <para>传入角色 MetaID，查 LuBan 角色表拿到该角色的所有技能 ID，从技能池中返回对应的 AbilityData 数组。AbilityData 是 readonly struct，返回的是值拷贝，修改不影响池内数据。</para>
+        /// <para>Pass in the character MetaID, query the LuBan character table to get all skill IDs for that character,and return the corresponding AbilityData array from the skill pool.AbilityData is a readonly struct, so a value copy is returned, and modifications do not affect the data in the pool.</para>
+        /// </summary>
+        public AbilityData[] GetAbilities(int roleMetaId)
+        {
+            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get(roleMetaId);
+            if (roleMeta == null)
+            {
+                Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
+                return System.Array.Empty<AbilityData>();
+            }
+            if (roleMeta.AbilityBaseID == null || roleMeta.AbilityBaseID.Length == 0)
+                return System.Array.Empty<AbilityData>();
+
+            var result = new AbilityData[roleMeta.AbilityBaseID.Length];
+            var count = 0;
+            foreach (var id in roleMeta.AbilityBaseID)
+            {
+                if (_abilityPool.TryGetValue(id, out var data))
+                {result[count++] = data;
+                }
+                else
+                {
+                    Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: ability id={id} not found in pool (roleMetaId={roleMetaId})");
+                    return System.Array.Empty<AbilityData>();
+                }
+            }
+
+            if (count < result.Length)
+            {
+                var trimmed = new AbilityData[count];
+                System.Array.Copy(result, trimmed, count);
+                return trimmed;
+            }
+
+            return result;
         }
 
         public IReadOnlyCollection<int> GetAllAbilityIds()
