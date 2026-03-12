@@ -28,41 +28,23 @@ namespace Editor.AbilityEditor.Tools
         {
             var result = new VerificationResult();
             var cachedData = new Dictionary<int, CachedEffectData>();
-
-            try
+            
+            if (!LoadAndCacheEffects(cachedData, result))
             {
-                // 1. 读取并缓存所有 Effect 资产
-                if (!LoadAndCacheEffects(cachedData, result))
-                {
-                    result.ErrorMessage = "Failed to load effects";
-                    return result;
-                }
-
-                // 2. 确保临时导出目录存在
-                EnsureDirectoryExists(tempExportPath);
-
-                // 3. 导出所有 Effect 到临时目录
-                if (!ExportEffectsToTemp(cachedData, tempExportPath, result))
-                {
-                    result.ErrorMessage = "Failed to export effects";
-                    return result;
-                }
-
-                // 4. 读取并验证导出的文件
-                VerifyExportedFiles(cachedData, tempExportPath, result);
-
-                // 5. 生成报告
-                GenerateReport(result, logPath);
-
-                // 6. 清理临时文件
-                CleanupTempFiles(tempExportPath);
-            }
-            catch (Exception ex)
-            {
-                result.ErrorMessage = $"Verification failed with exception: {ex.Message}\n{ex.StackTrace}";
-                Debug.LogError($"[EffectVerificationTool] {result.ErrorMessage}");
+                result.ErrorMessage = "Failed to load effects";
+                return result;
             }
 
+            EnsureDirectoryExists(tempExportPath);
+            if (!ExportEffectsToTemp(cachedData, tempExportPath, result))
+            {
+                result.ErrorMessage = "Failed to export effects";
+                return result;
+            }
+            VerifyExportedFiles(cachedData, tempExportPath, result);
+            GenerateReport(result, logPath);
+            CleanupTempFiles(tempExportPath);
+            
             return result;
         }
 
