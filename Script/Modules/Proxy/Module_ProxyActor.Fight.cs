@@ -115,7 +115,7 @@ namespace Aquila.Module
         public void ApplyAwakeEffect(int castorID, int targetID, EffectSpec_Base effect)
         {
             //ApplyAwakeEffect(Get(castorID), Get(targetID), effect);
-            ApplyEffect( GameEntry.Module.GetModule<Module_ActorMgr>().Get( castorID ), GameEntry.Module.GetModule<Module_ActorMgr>().Get( targetID ), effect );
+            ApplyAwakeEffect( GameEntry.Module.GetModule<Module_ActorMgr>().Get( castorID ), GameEntry.Module.GetModule<Module_ActorMgr>().Get( targetID ), effect );
         }
 
         /// <summary>
