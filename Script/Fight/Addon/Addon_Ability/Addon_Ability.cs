@@ -1,5 +1,6 @@
 using Aquila.Event;
 using Aquila.Module;
+using System.Collections.Generic;
 using Cfg.Fight;
 using GameFramework;
 using UnityGameFramework.Runtime;
@@ -25,10 +26,16 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (float remain, float duration) CoolDown( int abilityID )
         {
-            _cahchedAbility = GetAbilitySpec( abilityID );
-            return (_cahchedAbility.CoolDown._remain, _cahchedAbility.CoolDown._totalDuration);
+            var spec = GetAbilitySpec( abilityID );
+            if ( spec is null )
+            {
+                Log.Warning( $"<color=yellow>Addon_Ability.CoolDown()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return (0f, 0f);
+            }
+
+            return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
         }
-        
+
         /// <summary>
         /// 使用技能
         /// </summary>
@@ -37,7 +44,7 @@ namespace Aquila.Fight.Addon
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
             {
-                Log.Warning( "<color=yellow>Addon_Ability.UseAbility--->spec is null</color>" );
+                Log.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 result._stateDescription = Aquila.Toolkit.Tools.SetBitValue( result._stateDescription,
                     ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
                 return false;
@@ -73,18 +80,16 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private AbilitySpecBase GetAbilitySpec( int metaID )
         {
-            if ( _specArr is null || _specArr.Length == 0 )
+            if ( _specMap is null || _specMap.Count == 0 )
             {
-                Log.Warning( " <color=yellow>is null || _spec_arr.Length == 0</color>" );
+                Log.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->_specMap is null or empty, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 return null;
             }
 
-            foreach ( var tempSpec in _specArr )
-            {
-                if ( tempSpec.AbilityId == metaID )
-                    return tempSpec;
-            }
+            if ( _specMap.TryGetValue( metaID, out var spec ) )
+                return spec;
 
+            Log.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->ability spec not found, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}, specCount:{_specMap.Count}</color>" );
             return null;
         }
 
@@ -105,14 +110,26 @@ namespace Aquila.Fight.Addon
             var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
             if (abilities == null || abilities.Length == 0)
             {
-                Log.Warning("<color=yellow>Addon_Ability.InitSpec: no abilities found</color>");
+                Log.Warning("<color=yellow>Addon_Ability.InitSpec()--->no abilities found</color>");
                 return false;
             }
-            
+
             _specArr = new AbilitySpecBase[abilities.Length];
-            for (int i = 0; i < abilities.Length; i++)
-                _specArr[i] = AbilitySpecBase.Gen(abilities[i], _actorInstance);
-            
+            _specMap = new Dictionary<int, AbilitySpecBase>( abilities.Length );
+            for ( int i = 0; i < abilities.Length; i++ )
+            {
+                var spec = AbilitySpecBase.Gen( abilities[i], _actorInstance );
+                _specArr[i] = spec;
+
+                if ( _specMap.ContainsKey( spec.AbilityId ) )
+                {
+                    Log.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    continue;
+                }
+
+                _specMap.Add( spec.AbilityId, spec );
+            }
+
             return true;
         }
 
@@ -141,20 +158,20 @@ namespace Aquila.Fight.Addon
             }
 
             _specArr = null;
-            // _meta      = null;
+            _specMap = null;
             _initFlag = false;
             base.Dispose();
         }
-        
-        /// <summary>
-        /// 临时缓存变量
-        /// </summary>
-        private AbilitySpecBase _cahchedAbility = null;
-        
+
         /// <summary>
         /// 持有的技能
         /// </summary>
         private AbilitySpecBase[] _specArr = null;
+
+        /// <summary>
+        /// 技能ID到逻辑实例的索引
+        /// </summary>
+        private Dictionary<int, AbilitySpecBase> _specMap = null;
 
         /// <summary>
         /// 初始化标记
