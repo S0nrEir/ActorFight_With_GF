@@ -34,29 +34,27 @@ namespace Aquila.Fight
 
         public void SetModifier( EffectSpec_Base parent)
         {
-            var parentExtension = parent.Meta.ExtensionParam;
             float fac = 0f;
-            //#todo修改switch/case逻辑，不用switch/case
             switch ( parent.StackCount )
             {
                 case 1:
-                    fac = parentExtension.FloatParam_1;
+                    fac = parent.Meta.GetFloatParam1();
                     break;
 
                 case 2:
-                    fac = parentExtension.FloatParam_2;
+                    fac = parent.Meta.GetFloatParam2();
                     break;
 
                 case 3: 
-                    fac = parentExtension.FloatParam_3;
+                    fac = parent.Meta.GetFloatParam3();
                     break;
 
                 case 4:
-                    fac = parentExtension.FloatParam_4;
+                    fac = parent.Meta.GetFloatParam4();
                     break;
             }
 
-            _modifier.Setup( Meta.ModifierType, fac );
+            _modifier.Setup( ModifierType, fac );
         }
 
         public override void Clear()

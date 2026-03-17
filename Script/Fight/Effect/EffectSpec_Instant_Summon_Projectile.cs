@@ -14,13 +14,13 @@ namespace Aquila.Fight
         public override async void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             base.Apply( castor, target, result );
-            if ( Meta.ExtensionParam.IntParam_1 < 0 )
+            if ( _effectData.GetIntParam1() < 0 )
             {
-                Log.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->Meta.ExtensionParam.IntParam_1 < 0 ,meta id:{Meta.id}</color>" );
+                Log.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->IntParam1 < 0, effectId:{_effectData.GetEffectId()}</color>" );
                 return;
             }
 
-            var roleMetaID = Meta.ExtensionParam.IntParam_1;
+            var roleMetaID = _effectData.GetIntParam1();
             EntityData entityData;
             var entityID = ActorIDPool.Gen();
             //按照位置生成召唤物

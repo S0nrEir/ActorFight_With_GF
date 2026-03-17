@@ -200,7 +200,7 @@ namespace Editor.AbilityEditor.Tools
                         {
                             effectData = new EffectData(
                                 effectId: effectClip.EffectId,
-                                stackCount: effectClip.StackCount,
+                                stackLimit: effectClip.StackCount,
                                 canStack: effectClip.CanStack,
                                 startTime: effectClip.StartTime,
                                 endTime: effectClip.EndTime,
@@ -227,7 +227,7 @@ namespace Editor.AbilityEditor.Tools
                         {
                             effectData = new EffectData(
                                 effectId: effectClip.EffectId,
-                                stackCount: effectClip.StackCount,
+                                stackLimit: effectClip.StackCount,
                                 canStack: effectClip.CanStack,
                                 startTime: effectClip.StartTime,
                                 endTime: effectClip.EndTime,
@@ -329,8 +329,8 @@ namespace Editor.AbilityEditor.Tools
                 if (ae.GetEffectId() != ee.EffectId)
                     differences.Add($"{prefix} EffectId | Assembled: {ae.GetEffectId()} | Editor: {ee.EffectId}");
 
-                if (ae.GetStackCount() != ee.StackCount)
-                    differences.Add($"{prefix} StackCount | Assembled: {ae.GetStackCount()} | Editor: {ee.StackCount}");
+                if (ae.GetStackLimit() != ee.StackCount)
+                    differences.Add($"{prefix} StackCount | Assembled: {ae.GetStackLimit()} | Editor: {ee.StackCount}");
 
                 if (ae.GetCanStack() != ee.CanStack)
                     differences.Add($"{prefix} CanStack | Assembled: {ae.GetCanStack()} | Editor: {ee.CanStack}");

@@ -81,7 +81,7 @@ namespace Aquila.Fight.Addon
 
             foreach ( var tempSpec in _specArr )
             {
-                if ( tempSpec.Meta.id == metaID )
+                if ( tempSpec.AbilityId == metaID )
                     return tempSpec;
             }
 
@@ -102,26 +102,17 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get( _actorInstance.Actor.RoleMetaID );
-            if ( roleMeta is null )
+            var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
+            if (abilities == null || abilities.Length == 0)
             {
-                Log.Warning( "Addon_Ability.Init()->role_meta is null" );
+                Log.Warning("<color=yellow>Addon_Ability.InitSpec: no abilities found</color>");
                 return false;
             }
-            var abilityIdSet = roleMeta.AbilityBaseID;
-            _specArr = new AbilitySpecBase[abilityIdSet.Length];
-            Table_AbilityBase abilityBaseMeta = null;
-            var len = _specArr.Length;
-            for ( var i = 0; i < len && i < abilityIdSet.Length; i++ )
-            {
-                abilityBaseMeta = GameEntry.LuBan.Tables.Ability.Get( abilityIdSet[i] );
-                if ( abilityBaseMeta is null )
-                {
-                    Log.Warning( "Addon_Ability.Init()->ability_base_meta is null" );
-                    return false;
-                }
-                _specArr[i] = AbilitySpecBase.Gen( abilityBaseMeta, _actorInstance );
-            }
+            
+            _specArr = new AbilitySpecBase[abilities.Length];
+            for (int i = 0; i < abilities.Length; i++)
+                _specArr[i] = AbilitySpecBase.Gen(abilities[i], _actorInstance);
+            
             return true;
         }
 

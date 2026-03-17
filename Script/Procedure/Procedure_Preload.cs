@@ -66,6 +66,7 @@ namespace Aquila.Procedure
             PreLoadTables();
             PreloadInternalTable();
             PreloadInfoBoard();
+            PreloadAbilityPool();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -78,6 +79,11 @@ namespace Aquila.Procedure
         private void PreloadInfoBoard()
         {
             GameEntry.InfoBoard.Preload();
+        }
+        
+        private void PreloadAbilityPool()
+        {
+            GameEntry.AbilityPool.Init();
         }
 
         /// <summary>

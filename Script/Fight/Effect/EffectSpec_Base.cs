@@ -5,6 +5,7 @@ using Aquila.Toolkit;
 using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
+using UnityEngine.Profiling.Memory.Experimental;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -14,6 +15,10 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base : IReference
     {
+
+        public EffectData Meta => _effectData;
+        public DurationPolicy Policy => _effectData.GetPolicy();
+        
         /// <summary>
         /// 当覆盖时重置
         /// </summary>
@@ -28,51 +33,124 @@ namespace Aquila.Fight
         /// </summary>
         public int StackLimit
         {
-            get => _stackLimit;
-            set => _stackLimit = value;
+            get;
+            set;
         }
 
         /// <summary>
         /// 当前叠加层数
         /// </summary>
-        public virtual int StackCount
+        public virtual ushort StackCount
         {
             get => _stackCount;
             set => _stackCount = value;
         }
 
-        public virtual void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        /// <summary>
+        /// 从 EffectData 初始化（新数据源）
+        /// </summary>
+        public virtual void Init(EffectData meta, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
         {
-            Meta = meta;
+            _effectData = meta;
             _modifier = default;
+            // EffectId = data.GetEffectId();
+            // EffectType = data.GetEffectType();
+            // Policy = data.GetPolicy();
+            // Duration = data.GetDuration();
+            // Period = data.GetPeriod();
+            // Target = data.GetTarget();
+            // AffectedAttribute = data.GetAffectedAttribute();
+            // ModifierType = data.GetModifierType();
+            // EffectOnAwake = data.GetEffectOnAwake();
+            //
+            // FloatParam1 = data.GetFloatParam1();
+            // FloatParam2 = data.GetFloatParam2();
+            // FloatParam3 = data.GetFloatParam3();
+            // FloatParam4 = data.GetFloatParam4();
+            //
+            // IntParam1 = data.GetIntParam1();
+            // IntParam2 = data.GetIntParam2();
+            // IntParam3 = data.GetIntParam3();
+            // IntParam4 = data.GetIntParam4();
+            
+            // var derives = data.GetDeriveEffects();
+            // DeriveEffects = new int[derives.Count];
+            // for (int i = 0; i < derives.Count; i++)
+            //     DeriveEffects[i] = derives[i];
+            //
+            // var awakes = data.GetAwakeEffects();
+            // AwakeEffects = new int[awakes.Count];
+            // for (int i = 0; i < awakes.Count; i++)
+            //     AwakeEffects[i] = awakes[i];
+
         }
+
+        /// <summary>
+        /// 从 Table_Effect 初始化（LuBan 配置，用于派生 effect 回退）
+        /// </summary>
+        // public virtual void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null)
+        // {
+        //     // EffectId = meta.id;
+        //     // EffectType = meta.Type;
+        //     // Policy = meta.Policy;
+        //     // Duration = meta.Duration;
+        //     // Period = meta.Period;
+        //     // Target = meta.Target;
+        //     // AffectedAttribute = meta.EffectType;
+        //     // ModifierType = meta.ModifierType;
+        //     // EffectOnAwake = meta.EffectOnAwake;
+        //     //
+        //     // FloatParam1 = meta.ExtensionParam.FloatParam_1;
+        //     // FloatParam2 = meta.ExtensionParam.FloatParam_2;
+        //     // FloatParam3 = meta.ExtensionParam.FloatParam_3;
+        //     // FloatParam4 = meta.ExtensionParam.FloatParam_4;
+        //     //
+        //     // IntParam1 = meta.ExtensionParam.IntParam_1;
+        //     // IntParam2 = meta.ExtensionParam.IntParam_2;
+        //     // IntParam3 = meta.ExtensionParam.IntParam_3;
+        //     // IntParam4 = meta.ExtensionParam.IntParam_4;
+        //     //
+        //     // DeriveEffects = meta.DeriveEffects;
+        //     // AwakeEffects = meta.AwakeEffects;
+        //     //
+        //      // _modifier = default;
+        // }
 
         /// <summary>
         /// effect被唤起时
         /// </summary>
         public virtual void OnEffectAwake( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            //派发子effe
-            Cfg.Common.Table_Effect meta = null;
+            //派发子effect
             EffectSpec_Base newEffect = null;
-            //这里并不能复用AbilitySpec的逻辑
-            foreach ( var effectID in Meta.AwakeEffects )
+            foreach ( var effectID in _effectData.GetAwakeEffects() )
             {
-                meta = GameEntry.LuBan.Tables.Effect.Get( effectID );
-                if ( meta is null )
+                if (GameEntry.AbilityPool.TryGetEffect(effectID, out var effectData))
                 {
-                    Log.Warning( $"<color=yellow>EffectSpec_Period_Deriging.Apply()--->meta is null,id:{effectID}</color>" );
-                    continue;
+                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, castor, target);
                 }
-                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( meta ,castor,target);
+                else
+                {
+                    Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake --> No effect found with id: {effectID}</color>");
+                    // 回退到 LuBan 查询
+                    // var meta = GameEntry.LuBan.Tables.Effect.Get(effectID);
+                    // if (meta == null)
+                    // {
+                    //     Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake()--->effect not found in pool or LuBan, id:{effectID}</color>");
+                    //     continue;
+                    // }
+                    // newEffect = Tools.Ability.CreateEffectSpecByReferencePool(meta, castor, target);
+                }
+                
                 if ( newEffect is null )
                 {
-                    Log.Warning( $"EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{meta.ToString()}" );
-                    break;
+                    Log.Warning( $"EffectSpec_Base.OnEffectAwake()--->newEffect is null, effectID:{effectID}" );
+                    continue;
                 }
 
-                if ( newEffect.Meta.Policy != DurationPolicy.Instant )
+                if ( effectData.GetPolicy() != DurationPolicy.Instant )
                 {
                     GameEntry.Impact.Attach( newEffect, castor.Actor.ActorID, target.Actor.ActorID );
                 }
@@ -102,27 +180,22 @@ namespace Aquila.Fight
         public virtual void Clear()
         {
             _modifier          = default;
-            Meta               = null;
+            ModifierType       = default;
             StackCount         = 1;
-            StackLimit         = 0;
-            _impactEntityIndex = 0;
+            // StackLimit         = 0;
+            // _impactEntityIndex = 0;
             ResetWhenOverride  = false;
+            _effectData = default;
         }
 
         protected EffectSpec_Base()
         {
-
-        }
-
-        protected EffectSpec_Base( Table_Effect meta )
-        {
-            Init( meta );
         }
 
         /// <summary>
         /// 叠加层数
         /// </summary>
-        private int _stackCount = 1;
+        // private int _stackCount = 1;
 
         /// <summary>
         /// 叠加层数上限
@@ -134,14 +207,76 @@ namespace Aquila.Fight
         /// </summary>
         public int _impactEntityIndex = 0;
 
+        // /// <summary>
+        // /// Effect ID
+        // /// </summary>
+        // public int EffectId;
+        //
+        // /// <summary>
+        // /// Effect 类型
+        // /// </summary>
+        // public EffectType EffectType;
+        //
+        // /// <summary>
+        // /// 持续策略
+        // /// </summary>
+        // public DurationPolicy Policy;
+        //
+        // /// <summary>
+        // /// 持续时间
+        // /// </summary>
+        // public float Duration;
+        //
+        // /// <summary>
+        // /// 周期
+        // /// </summary>
+        // public float Period;
+        //
+        // /// <summary>
+        // /// 目标
+        // /// </summary>
+        // public int Target;
+        //
+        // /// <summary>
+        // /// 影响的属性
+        // /// </summary>
+        // public actor_attribute AffectedAttribute;
+        
         /// <summary>
-        /// 元数据
+        /// 修改器类型
         /// </summary>
-        public Table_Effect Meta { get; private set; } = null;
+        public NumricModifierType ModifierType;
+        
+        /// <summary>
+        /// 唤醒时生效
+        /// </summary>
+        // public bool EffectOnAwake;
+        //
+        // /// <summary>
+        // /// 浮点参数
+        // /// </summary>
+        // public float FloatParam1, FloatParam2, FloatParam3, FloatParam4;
+        //
+        // /// <summary>
+        // /// 整数参数
+        // /// </summary>
+        // public int IntParam1, IntParam2, IntParam3, IntParam4;
+        //
+        // /// <summary>
+        // /// 派生效果 ID 列表
+        // /// </summary>
+        // public int[] DeriveEffects;
+        //
+        // /// <summary>
+        // /// 唤醒效果 ID 列表
+        // /// </summary>
+        // public int[] AwakeEffects;
 
         /// <summary>
         /// 对应的数值修改器
         /// </summary>
         protected Numric_Modifier _modifier;
+        protected EffectData _effectData = default;
+        protected ushort _stackCount = 0;
     }
 }

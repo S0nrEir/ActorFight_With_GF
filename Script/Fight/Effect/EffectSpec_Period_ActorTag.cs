@@ -15,8 +15,8 @@ namespace Aquila.Fight
         {
             base.OnEffectAwake( castor, target );
             //添加tag
-            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
-            var tagToAdd = Meta.ExtensionParam.IntParam_2;
+            var mainType = (ActorTagType)_effectData.GetIntParam1();
+            var tagToAdd = _effectData.GetIntParam2();
             target.Actor.AddTag( mainType,(ushort)tagToAdd ,
                 (currTag, tagToRemove, isAdd) =>
                 {
@@ -33,8 +33,8 @@ namespace Aquila.Fight
         {
             base.OnEffectEnd( castor, target );
             //移除tag
-            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
-            var tagToRemove = Meta.ExtensionParam.IntParam_2;
+            var mainType = (ActorTagType)_effectData.GetIntParam1();
+            var tagToRemove = _effectData.GetIntParam2();
             target.Actor.RemoveTag( mainType,tagToRemove ,
                 (currTag, tagToRemove, isAdd) =>
                 {

@@ -73,25 +73,50 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 根据配表类型获取对应的effect逻辑实例，拿不到返回null
             /// </summary>
-            public static EffectSpec_Base CreateEffectSpecByReferencePool( Table_Effect meta,Module_ProxyActor.ActorInstance castor,Module_ProxyActor.ActorInstance target)
+            // public static EffectSpec_Base CreateEffectSpecByReferencePool( Table_Effect meta,Module_ProxyActor.ActorInstance castor,Module_ProxyActor.ActorInstance target)
+            // {
+            //     var type = ( int ) meta.Type;
+            //
+            //     if (!_effectTypeDic.TryGetValue(type, out var effectType))
+            //     {
+            //         Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->!_effectTypeDic.ContainsKey( ( int ) meta.Type ),key{meta.Type}" );
+            //         return null;
+            //     }
+            //
+            //     var effect = ReferencePool.Acquire(effectType) as EffectSpec_Base;
+            //     if (effect is null)
+            //     {
+            //         Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
+            //         return null;
+            //     }
+            //
+            //     effect.Init(meta, castor, target);
+            //     return effect;
+            // }
+
+            /// <summary>
+            /// 根据 EffectData 创建对应的 effect 逻辑实例，拿不到返回 null
+            /// </summary>
+            public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
-                var type = ( int ) meta.Type;
+                var type = (int)data.GetEffectType();
 
                 if (!_effectTypeDic.TryGetValue(type, out var effectType))
                 {
-                    Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->!_effectTypeDic.ContainsKey( ( int ) meta.Type ),key{meta.Type}" );
+                    Log.Warning($"Tools.Ability.CreateEffectSpecByReferencePool()--->Unknown effect type: {data.GetEffectType()}");
                     return null;
                 }
 
                 var effect = ReferencePool.Acquire(effectType) as EffectSpec_Base;
-                if (effect is null)
+                if (effect == null)
                 {
-                    Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
+                    Log.Warning("Tools.Ability.CreateEffectSpecByReferencePool()--->Failed to acquire effect from pool");
                     return null;
                 }
 
-                effect.Init(meta, castor, target);
+                effect.Init(data, castor, target);
                 return effect;
+            }
                 #region nouse
 
                 //EffectSpec_Base effect = null;
@@ -129,7 +154,7 @@ namespace Aquila.Toolkit
                 //return effect;
 
                 #endregion
-            }
+            //}
 
             /// <summary>
             /// 创建对应的effect逻辑实例，创建失败返回null
@@ -151,11 +176,11 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 创建对应的effect逻辑实例，创建失败返回null
             /// </summary>
-            public static T CreateEffectSpecByReferencePool<T>(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-                Module_ProxyActor.ActorInstance target = null) where T : EffectSpec_Base
-            {
-                return CreateEffectSpecByReferencePool(meta,castor,target) as T;
-            }
+            // public static T CreateEffectSpecByReferencePool<T>(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+            //     Module_ProxyActor.ActorInstance target = null) where T : EffectSpec_Base
+            // {
+            //     return CreateEffectSpecByReferencePool(meta,castor,target) as T;
+            // }
 
             /// <summary>
             /// 初始化标记
@@ -244,7 +269,7 @@ namespace Aquila.Toolkit
 
                     return new EffectData(
                         effectId: id,
-                        stackCount: 0,
+                        stackLimit: 0,
                         canStack: false,
                         startTime: 0f,
                         endTime: 0f,
@@ -387,7 +412,7 @@ namespace Aquila.Toolkit
 
                     effectData = new EffectData(
                         effectId: effectId,
-                        stackCount: stackCount,
+                        stackLimit: stackCount,
                         canStack: canStack,
                         startTime: startTime,
                         endTime: endTime,
@@ -414,7 +439,7 @@ namespace Aquila.Toolkit
                 {
                     effectData = new EffectData(
                         effectId: effectId,
-                        stackCount: stackCount,
+                        stackLimit: stackCount,
                         canStack: canStack,
                         startTime: startTime,
                         endTime: endTime,

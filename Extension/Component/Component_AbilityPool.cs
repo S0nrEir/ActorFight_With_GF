@@ -90,6 +90,20 @@ namespace Aquila.AbilityPool
             return _abilityPool.Keys;
         }
 
+        public bool TryGetEffect(int effectId, out EffectData data)
+        {
+            return _effectPool.TryGetValue(effectId, out data);
+        }
+
+        public EffectData GetEffect(int effectId)
+        {
+            if (_effectPool.TryGetValue(effectId, out var data))
+                return data;
+
+            Log.Warning($"[AbilityPool] Effect not found: {effectId}");
+            return default;
+        }
+
         /// <summary>
         /// 从指定 .ablt 文件路径加载并组装 AbilityData 写入池。（二进制形式）
         /// 若该 Ability 依赖的 Effect 尚未在 _effectPool 中，可额外传入 effectFilePaths 预先加载。
@@ -239,7 +253,7 @@ namespace Aquila.AbilityPool
 
             data = new EffectData(
                 effectId:          id,
-                stackCount:        1,
+                stackLimit:        1,
                 canStack:          false,
                 startTime:         0f,
                 endTime:           0f,
@@ -336,7 +350,7 @@ namespace Aquila.AbilityPool
         private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime)
         {
             int effectId        = reader.ReadInt32();
-            int stackCount      = reader.ReadInt32();
+            int stackLimit      = reader.ReadInt32();
             bool canStack       = reader.ReadBoolean();
 
             var effectType      = (EffectType)reader.ReadInt32();
@@ -375,7 +389,7 @@ namespace Aquila.AbilityPool
 
             return new EffectData(
                 effectId:          effectId,
-                stackCount:        stackCount,
+                stackLimit:        stackLimit,
                 canStack:          canStack,
                 startTime:         startTime,
                 endTime:           endTime,

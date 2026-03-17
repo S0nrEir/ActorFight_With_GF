@@ -11,7 +11,7 @@ namespace Aquila.Fight
     {
         public EffectData(
             int effectId,
-            int stackCount,
+            int stackLimit,
             bool canStack,
             float startTime,
             float endTime,
@@ -35,7 +35,7 @@ namespace Aquila.Fight
             int intParam4 = 0)
         {
             _effectId = effectId;
-            _stackCount = stackCount;
+            _stackLimit = stackLimit;
             _canStack = canStack;
             _startTime = startTime;
             _endTime = endTime;
@@ -61,7 +61,7 @@ namespace Aquila.Fight
 
         // Getter 方法
         public int GetEffectId() => _effectId;
-        public int GetStackCount() => _stackCount;
+        public int GetStackLimit() => _stackLimit;
         public bool GetCanStack() => _canStack;
         public float GetStartTime() => _startTime;
         public float GetEndTime() => _endTime;
@@ -87,7 +87,7 @@ namespace Aquila.Fight
         
         // 基础字段
         private readonly int _effectId;
-        private readonly int _stackCount;
+        private readonly int _stackLimit;
         private readonly bool _canStack;
         
         // 时间字段

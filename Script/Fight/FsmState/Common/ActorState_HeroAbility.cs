@@ -27,14 +27,14 @@ namespace Aquila.Fight.FSM
                 return false;
             }
             var result = param as AbilityResult_Use;
-            _abilityMeta = GameEntry.LuBan.Tables.Ability.Get( result._abilityID );
-            if ( _abilityMeta is null )
+            
+            if (!GameEntry.AbilityPool.TryGetAbility(result._abilityID, out _abilityData))
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->_abilityMeta is null</color>" );
-                state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META, true );
+                Log.Warning($"<color=yellow>HeroStateAddon.IsAbilityDataValid()--->Ability {result._abilityID} not found in pool</color>");
+                state = Tools.SetBitValue(state, (int)AbilityUseResultTypeEnum.NONE_ABILITY_META, true);
             }
 
-            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.Get( _abilityMeta.Timeline );
+            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.Get( _abilityData.GetTimelineID() );
             if ( _timelineMeta is null )
             {
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );
@@ -45,7 +45,7 @@ namespace Aquila.Fight.FSM
             if ( abilityAddon is null )
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
 
-            var canUseFlag = abilityAddon.CanUseAbility( _abilityMeta.id );
+            var canUseFlag = abilityAddon.CanUseAbility( _abilityData.GetId() );
             if ( canUseFlag != 0 )
                 state = Tools.SetBitValue( state, ( ushort ) canUseFlag, true );
 
@@ -73,41 +73,27 @@ namespace Aquila.Fight.FSM
             if (_time >= _timelineMeta.Duration)
                 return;
 
-            if (_currTriggerIndex >= _abilityMeta.Triggers.Length)
+            if (_currTriggerIndex >= _abilityData.GetEffects().Count)
                 return;
 
-            var nextTrigger = _abilityMeta.Triggers[_currTriggerIndex];
-            if (_time >= nextTrigger.TriggerTime)
+            var nextEffect = _abilityData.GetEffects()[_currTriggerIndex];
+            // 简化：直接在 timeline 触发时间点触发所有效果
+            // TODO: 未来可以根据 EffectData.GetStartTime() 实现多段触发
+            if (_time >= nextEffect.GetStartTime() && !_abilityFinishFlag)
             {
                 if (Tools.GetBitValue(_result._stateDescription, (int)AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION))
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_currTriggerIndex, _castorID, -1, _abilityMeta.id, _result._targetPosition );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(0, _castorID, -1, _abilityData.GetId(), _result._targetPosition );
                 }
                 else
                 {
                     foreach ( var targetID in _result._targetIDArr )
-                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(_currTriggerIndex, _castorID, targetID, _abilityMeta.id, _result._targetPosition );
+                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(0, _castorID, targetID, _abilityData.GetId(), _result._targetPosition );
                 }
                 GameEntry.Event.FireNow(_fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
+                _abilityFinishFlag = true;
                 _currTriggerIndex++;
-                if (_currTriggerIndex >= _abilityMeta.Triggers.Length)
-                    _abilityFinishFlag = true;
             }
-            // if ( !_abilityFinishFlag && _time >= _timelineMeta.TriggerTime )
-            // {
-            //     if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
-            //     {
-            //         //以位置作为依据的，不需要目标actorID
-            //         GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, -1, _abilityMeta.id, _result._targetPosition );
-            //     }
-            //     else
-            //     {
-            //         foreach ( var targetID in _result._targetIDArr )
-            //             GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _castorID, targetID, _abilityMeta.id, _result._targetPosition );
-            //     }
-            //     GameEntry.Event.Fire( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
-            //     _abilityFinishFlag = true;
-            // }
         }
 
         /// <summary>
@@ -132,7 +118,7 @@ namespace Aquila.Fight.FSM
             }
             //技能消耗
             //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始在做
-            _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityMeta.id } );
+            _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityData.GetId() } );
             _time = 0f;
             _abilityFinishFlag = false;
             _currTriggerIndex = 0;
@@ -150,7 +136,7 @@ namespace Aquila.Fight.FSM
             base.OnLeave( param );
             //#todo施法结束回调
             _timelineMeta     = null;
-            _abilityMeta      = null;
+            _abilityData      = default;
             _castorID         = -1;
             _currTriggerIndex = -1;
             
@@ -178,7 +164,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 技能数据
         /// </summary>
-        private Table_AbilityBase _abilityMeta = null;
+        private AbilityData _abilityData;
 
         /// <summary>
         /// 技能timeline配置

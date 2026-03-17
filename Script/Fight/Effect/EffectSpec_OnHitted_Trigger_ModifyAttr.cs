@@ -19,15 +19,15 @@ namespace  Aquila.Fight
         {
             _cumulation += param._effectedValue;
             var canApply = false;
-            switch ((Cfg.Enum.effect_mod_attr_condition)Meta.ExtensionParam.IntParam_1)
+            switch ((Cfg.Enum.effect_mod_attr_condition)_effectData.GetIntParam1())
             {
                 //按百分比，要拿出基数计算一下
                 case effect_mod_attr_condition.Percentage:
                 {
-                    // var actionInstnace = Meta.Target == 0 ? param._castor : param._target;
+                    // var actionInstnace = Target == 0 ? param._castor : param._target;
                     var addon = param._target.GetAddon<Addon_BaseAttrNumric>();
                     //拿要检查的属性
-                    var attrType = Meta.ExtensionParam.IntParam_3; 
+                    var attrType = _effectData.GetIntParam3();
                     if (attrType >= (int)actor_attribute.Max ||
                         attrType < 0)
                     {
@@ -39,7 +39,7 @@ namespace  Aquila.Fight
                     canApply = Tools.Ability.CanApplyModifyAttrByEffect_ByPercentage
                         (
                             baseVal,
-                            Meta.ExtensionParam.FloatParam_1,
+                            _effectData.GetFloatParam1(),
                             _cumulation
                         );
                 }
@@ -47,7 +47,7 @@ namespace  Aquila.Fight
                 
                 //按固定数值
                 case effect_mod_attr_condition.FixedValue:
-                    canApply = Tools.Ability.CanApplyModifyAttrEffect_ByFixed(Meta.ExtensionParam.FloatParam_1, _cumulation);
+                    canApply = Tools.Ability.CanApplyModifyAttrEffect_ByFixed(_effectData.GetFloatParam1(), _cumulation);
                     break;
             }
             
@@ -57,12 +57,19 @@ namespace  Aquila.Fight
             return canApply;
         }
 
-        public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init(meta,castor,target);
+            base.Init(data, castor, target);
             _cumulation = 0f;
         }
+        
+        // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null)
+        // {
+        //     base.Init(meta, castor, target);
+        //     _cumulation = 0f;
+        // }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {

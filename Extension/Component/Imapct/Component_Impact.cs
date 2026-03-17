@@ -181,7 +181,7 @@ namespace Aquila.Fight.Impact
                     GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
 
                 //唤起一次性的effect
-                if ( newEffect.Meta.AwakeEffects.Length != 0 )
+                if ( newEffect.Meta.GetAwakeEffects().Count != 0 )
                 {
                     GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect
                         ( 
@@ -292,11 +292,11 @@ namespace Aquila.Fight.Impact
         {
             impactData._castorActorID             = castorActorID;
             impactData._targetActorID             = targetActorID;
-            impactData._duration                  = effect.Meta.Duration;
+            impactData._duration                  = effect.Meta.GetDuration();
             impactData._effectHash                = effectHashCode;
-            impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
-            impactData._period                    = effect.Meta.Period;
-            impactData._policy                    = effect.Meta.Policy;
+            impactData._effectOnAwake             = effect.Meta.GetEffectOnAwake();
+            impactData._period                    = effect.Meta.GetPeriod();
+            impactData._policy                    = effect.Meta.GetPolicy();
             impactData._elapsed                   = 0f;
             impactData._interval                  = 0f;
             impactData._stackCount                = effect.StackCount;

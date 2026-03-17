@@ -34,7 +34,7 @@ namespace Aquila.Fight
 
         /// <summary>
         /// cd effect
-        /// </summary>
+        /// </summary>1
         public EffectSpec_Period_CoolDown CoolDown => _cdEffect;
 
         /// <summary>
@@ -63,22 +63,54 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 设置该技能的meta信息
+        /// 从 AbilityData 设置技能信息（新数据源）
         /// </summary>
-        public virtual void Setup( Table_AbilityBase meta )
+        public virtual void Setup(AbilityData data)
         {
-            Meta = meta;
-            if ( Meta is null)
-                return;
-
-            if (meta.Triggers is null || meta.Triggers.Length == 0)
-                Log.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
-
-            _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
-            _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
-            _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
-            _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
+            _data = data;
+            
+            // 初始化 Cost 和 CoolDown effect
+            var costEffectId = data.GetCostEffectID();
+            var cdEffectId = data.GetCoolDownEffectID();
+            
+            if (GameEntry.AbilityPool.TryGetEffect(costEffectId, out var costData))
+            {
+                _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
+                _costEffect.Init(costData);
+            }
+            else
+            {
+                Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Cost effect {costEffectId} not found in pool</color>");
+            }
+            
+            if (GameEntry.AbilityPool.TryGetEffect(cdEffectId, out var cdData))
+            {
+                _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
+                _cdEffect.Init(cdData);
+            }
+            else
+            {
+                Log.Warning($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect {cdEffectId} not found in pool</color>");
+            }
         }
+        
+        /// <summary>
+        /// 从 Table_AbilityBase 设置技能信息（LuBan 配置，保留用于兼容）
+        /// </summary>
+        // public virtual void Setup( Table_AbilityBase meta )
+        // {
+        //     Meta = meta;
+        //     if ( Meta is null)
+        //         return;
+        //
+        //     if (meta.Triggers is null || meta.Triggers.Length == 0)
+        //         Log.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
+        //
+        //     _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
+        //     _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
+        //     _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
+        //     _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
+        // }
 
         /// <summary>
         /// 使用技能
@@ -88,41 +120,68 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            Table_Effect effectMeta = null;
-            EffectSpec_Base tempEffect = null;
-            if (triggerIndex >= Meta.Triggers.Length)
+            // 如果使用 AbilityData，从 effects 列表中根据 StartTime/EndTime 筛选
+            if (_data.GetId() > 0)
             {
-                Log.Warning($"<color=yellow>AbilitySpec.UseAbility--->triggerIndex >= Meta.Triggers.Length,index:{triggerIndex},abilityID:{Meta.id}</color>");
-            }
-            
-            var trigger = Meta.Triggers[triggerIndex];
-            foreach (var effectID in trigger.CarrayedEffects)
-            // foreach ( var effectID in Meta.effects )
-            {
-                effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
-                if ( effectMeta is null )
+                var effects = _data.GetEffects();
+                foreach (var effectData in effects)
                 {
-                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
-                    break;
-                }
-                tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectMeta,_owner,target);
-                if ( tempEffect is null )
-                {
-                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
-                    break;
-                }
+                    var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, _owner, target);
+                    if (tempEffect == null)
+                    {
+                        Log.Warning($"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}");
+                        continue;
+                    }
 
-                if ( tempEffect.Meta.Policy != DurationPolicy.Instant )
-                {
-                    GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
+                    if (tempEffect.Policy != DurationPolicy.Instant)
+                    {
+                        GameEntry.Impact.Attach(tempEffect, _owner.Actor.ActorID, target.Actor.ActorID);
+                    }
+                    else
+                    {
+                        tempEffect.Apply(_owner, target, result);
+                        GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect(_owner, target, tempEffect);
+                    }
                 }
-                else
-                {
-                    tempEffect.Apply( _owner, target, result );
-                    //tempEffect.OnEffectEnd(_owner,target);
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
-                    //ReferencePool.Release( tempEffect );
-                }
+            }
+            // 否则使用 LuBan 配置（保留兼容）
+            // else if (Meta != null)
+            else
+            {
+                Log.Warning($"<color=yellow>AbilitySpec_Base.UseAbility --> Invalid Ability ID , {_data.GetId()} </color>");
+                // Table_Effect effectMeta = null;
+                // EffectSpec_Base tempEffect = null;
+                // if (triggerIndex >= Meta.Triggers.Length)
+                // {
+                //     Log.Warning($"<color=yellow>AbilitySpec.UseAbility--->triggerIndex >= Meta.Triggers.Length,index:{triggerIndex},abilityID:{Meta.id}</color>");
+                // }
+                //
+                // var trigger = Meta.Triggers[triggerIndex];
+                // foreach (var effectID in trigger.CarrayedEffects)
+                // {
+                //     effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
+                //     if ( effectMeta is null )
+                //     {
+                //         Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
+                //         break;
+                //     }
+                //     tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectMeta,_owner,target);
+                //     if ( tempEffect is null )
+                //     {
+                //         Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
+                //         break;
+                //     }
+                //
+                //     if ( tempEffect.Policy != DurationPolicy.Instant )
+                //     {
+                //         GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
+                //     }
+                //     else
+                //     {
+                //         tempEffect.Apply( _owner, target, result );
+                //         GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
+                //     }
+                // }
             }
 
             if ( !OnAfterAbility( result ) )
@@ -169,6 +228,7 @@ namespace Aquila.Fight
         public virtual void Clear()
         {
             Meta          = null;
+            _data         = default;
             //处理CD和Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
@@ -221,9 +281,19 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 表数据
+        /// 表数据（LuBan 配置，保留用于兼容）
         /// </summary>
         public Table_AbilityBase Meta { get; private set; } = null;
+
+        /// <summary>
+        /// 技能数据（新数据源）
+        /// </summary>
+        private AbilityData _data;
+        
+        /// <summary>
+        /// 技能 ID（优先从 AbilityData 获取，否则从 Meta 获取）
+        /// </summary>
+        public int AbilityId => _data.GetId() != 0 ? _data.GetId() : (Meta?.id ?? 0);
 
         /// <summary>
         /// 该技能持有的tag
@@ -253,17 +323,28 @@ namespace Aquila.Fight
         }
 
         /// <summary>
+        /// 根据 AbilityData 生成一个 spec 实例
+        /// </summary>
+        public static AbilitySpecBase Gen(AbilityData data, Module_ProxyActor.ActorInstance instance)
+        {
+            var spec = ReferencePool.Acquire<AbilitySpecBase>();
+            spec.Setup(data);
+            spec._owner = instance;
+            return spec;
+        }
+        
+        /// <summary>
         /// 根据表格配置生成一个spec实例
         /// </summary>
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>
-        public static AbilitySpecBase Gen( Table_AbilityBase meta, Module_ProxyActor.ActorInstance instance )
-        {
-            var spec = ReferencePool.Acquire<AbilitySpecBase>();
-            spec.Setup( meta );
-            spec._owner = instance;
-            return spec;
-        }
+        // public static AbilitySpecBase Gen( Table_AbilityBase meta, Module_ProxyActor.ActorInstance instance )
+        // {
+        //     var spec = ReferencePool.Acquire<AbilitySpecBase>();
+        //     spec.Setup( meta );
+        //     spec._owner = instance;
+        //     return spec;
+        // }
     }
 }
 

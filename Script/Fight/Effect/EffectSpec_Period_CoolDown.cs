@@ -8,13 +8,21 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Period_CoolDown : EffectSpec_Base
     {
-        public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-            Module_ProxyActor.ActorInstance target = null )
+        public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init( meta ,castor,target);
-            _totalDuration = meta.ExtensionParam.FloatParam_1;
+            base.Init(data, castor, target);
+            _totalDuration = _effectData.GetFloatParam1();
             _remain = 0f;
         }
+        
+        // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null )
+        // {
+        //     base.Init( meta ,castor,target);
+        //     _totalDuration = FloatParam1;
+        //     _remain = 0f;
+        // }
 
         public EffectSpec_Period_CoolDown()
         {
