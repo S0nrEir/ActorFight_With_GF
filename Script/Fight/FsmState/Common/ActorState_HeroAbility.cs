@@ -40,7 +40,7 @@ namespace Aquila.Fight.FSM
                 Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
             }
-            //检查CD和消耗
+            // 检查 CD 与消耗
             var abilityAddon = _fsm.ActorInstance().GetAddon<Addon_Ability>();
             if ( abilityAddon is null )
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_PARAM, true );
@@ -49,7 +49,7 @@ namespace Aquila.Fight.FSM
             if ( canUseFlag != 0 )
                 state = Tools.SetBitValue( state, ( ushort ) canUseFlag, true );
 
-            //到最后设置succ
+            // 最后设置成功标记
             result._stateDescription = state;
             result._succ = result.StateFlagIsClean();
             if ( result._succ )
@@ -62,36 +62,43 @@ namespace Aquila.Fight.FSM
         }
 
         /// <summary>
-        /// 尝试使用技能，到触发时间使用技能
+        /// 尝试在触发时间点释放技能效果
         /// </summary>
         private void TryUseAbility( float deltaTime )
         {
             _time += deltaTime;
-            if (_abilityFinishFlag)
+            if ( _abilityFinishFlag )
                 return;
 
-            if (_time >= _timelineMeta.Duration)
+            if ( _time > _timelineMeta.Duration )
                 return;
 
-            if (_currTriggerIndex >= _abilityData.GetEffects().Count)
+            var effects = _abilityData.GetEffects();
+            if ( effects is null || effects.Count == 0 )
                 return;
-
-            var nextEffect = _abilityData.GetEffects()[_currTriggerIndex];
-            // 简化：直接在 timeline 触发时间点触发所有效果
-            // TODO: 未来可以根据 EffectData.GetStartTime() 实现多段触发
-            if (_time >= nextEffect.GetStartTime() && !_abilityFinishFlag)
+            
+            while ( _currTriggerIndex < effects.Count )
             {
-                if (Tools.GetBitValue(_result._stateDescription, (int)AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION))
+                var nextEffect = effects[_currTriggerIndex];
+                if ( _time < nextEffect.GetStartTime() )
+                    break;
+
+                if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(0, _castorID, -1, _abilityData.GetId(), _result._targetPosition );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _currTriggerIndex, _castorID, -1, _abilityData.GetId(), _result._targetPosition );
                 }
                 else
                 {
                     foreach ( var targetID in _result._targetIDArr )
-                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility(0, _castorID, targetID, _abilityData.GetId(), _result._targetPosition );
+                        GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _currTriggerIndex, _castorID, targetID, _abilityData.GetId(), _result._targetPosition );
                 }
-                GameEntry.Event.FireNow(_fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
-                _abilityFinishFlag = true;
+
+                if ( !_onUseEventFired )
+                {
+                    GameEntry.Event.FireNow( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
+                    _onUseEventFired = true;
+                }
+
                 _currTriggerIndex++;
             }
         }
@@ -101,13 +108,15 @@ namespace Aquila.Fight.FSM
         /// </summary>
         private void FinishAbility()
         {
-            if(_abilityFinishFlag)
-                _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE,null,null);
-            
-            // if ( _time >= _timelineMeta.Duration )
-            //     _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
-        }
+            if ( _abilityFinishFlag )
+                return;
 
+            if ( _time < _timelineMeta.Duration )
+                return;
+
+            _abilityFinishFlag = true;
+            _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
+        }
         public override void OnEnter( object param )
         {
             base.OnEnter( param );
@@ -116,12 +125,13 @@ namespace Aquila.Fight.FSM
                 _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
                 return;
             }
-            //技能消耗
-            //可以释放技能后，先扣除消耗和计算CD，不要等timeline开始在做
+            // 技能消耗
+            // 技能释放时先扣消耗并开始计算 CD，不等待 timeline 结束
             _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityData.GetId() } );
             _time = 0f;
             _abilityFinishFlag = false;
             _currTriggerIndex = 0;
+            _onUseEventFired = false;
             GameEntry.Timeline.Play( _timelineMeta.AssetPath, Tools.GetComponent<PlayableDirector>( _actor.transform ) );
         }
 
@@ -134,11 +144,12 @@ namespace Aquila.Fight.FSM
         public override void OnLeave( object param )
         {
             base.OnLeave( param );
-            //#todo施法结束回调
+            //#todo 施法结束回调
             _timelineMeta     = null;
             _abilityData      = default;
             _castorID         = -1;
             _currTriggerIndex = -1;
+            _onUseEventFired = false;
             
             if ( _result != null )
                 ReferencePool.Release( _result );
@@ -151,13 +162,12 @@ namespace Aquila.Fight.FSM
         }
 
         /// <summary>
-        /// 施法者ActorID
+        /// 施法者 ActorID
         /// </summary>
         private int _castorID = -1;
 
-        /// <summary>；
-        /// 
-        /// 使用状态结果
+        /// <summary>
+        /// 施法结果
         /// </summary>
         private AbilityResult_Use _result = null;
 
@@ -167,7 +177,7 @@ namespace Aquila.Fight.FSM
         private AbilityData _abilityData;
 
         /// <summary>
-        /// 技能timeline配置
+        /// 技能 Timeline 配置
         /// </summary>
         private Table_AbilityTimeline _timelineMeta = null;
 
@@ -177,13 +187,18 @@ namespace Aquila.Fight.FSM
         private bool _abilityFinishFlag = false;
 
         /// <summary>
-        /// 进入该状态时间
+        /// 进入该状态后的累计时间
         /// </summary>
         private float _time = 0f;
 
         /// <summary>
-        /// 当前走到的触发器节点索引
+        /// 当前触发到的效果索引
         /// </summary>
         private int _currTriggerIndex = -1;
+
+        /// <summary>
+        /// 单次施法的 OnUse 事件触发标记
+        /// </summary>
+        private bool _onUseEventFired = false;
     }
 }

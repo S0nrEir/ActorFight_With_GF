@@ -23,22 +23,22 @@ namespace Aquila.Fight
         /// </summary>
         public void Deduct()
         {
-            //刷新CD
+            // 刷新 CD
             if ( _cdEffect != null )
                 _cdEffect._remain = _cdEffect._totalDuration;
 
-            //扣除cost
+            // 扣除 Cost
             if ( _costEffect != null )
                 _costEffect.Apply( _owner, _owner, null );
         }
 
         /// <summary>
-        /// cd effect
-        /// </summary>1
+        /// 冷却效果
+        /// </summary>
         public EffectSpec_Period_CoolDown CoolDown => _cdEffect;
 
         /// <summary>
-        /// 移除tag
+        /// 移除 Tag
         /// </summary>
         public void RemoveTag( ushort bitToRemove ,Action<UInt32, int , bool> callBack = null)
         {
@@ -46,7 +46,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 添加tag
+        /// 添加 Tag
         /// </summary>
         public void AddTag( ushort bitToAdd,Action<UInt32, int , bool> callBack = null)
         {
@@ -54,7 +54,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 包含某个tag
+        /// 是否包含指定 Tag
         /// </summary>
         public bool ContainsTag( ushort bitTag )
         {
@@ -63,13 +63,13 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 从 AbilityData 设置技能信息（新数据源）
+        /// 使用 AbilityData 设置技能信息（新数据源）
         /// </summary>
         public virtual void Setup(AbilityData data)
         {
             _data = data;
             
-            // 初始化 Cost 和 CoolDown effect
+            // 初始化 Cost 与 CoolDown 效果
             var costEffectId = data.GetCostEffectID();
             var cdEffectId = data.GetCoolDownEffectID();
             
@@ -95,7 +95,7 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 从 Table_AbilityBase 设置技能信息（LuBan 配置，保留用于兼容）
+        /// 使用 Table_AbilityBase 设置技能信息（LuBan 配置，保留兼容）
         /// </summary>
         // public virtual void Setup( Table_AbilityBase meta )
         // {
@@ -120,68 +120,50 @@ namespace Aquila.Fight
             if ( !OnPreAbility( result ) )
                 return false;
 
-            // 如果使用 AbilityData，从 effects 列表中根据 StartTime/EndTime 筛选
-            if (_data.GetId() > 0)
+            // 使用 AbilityData 时，根据 triggerIndex 仅执行对应 Effect
+            if ( _data.GetId() > 0 )
             {
                 var effects = _data.GetEffects();
-                foreach (var effectData in effects)
+                if ( effects is null || effects.Count == 0 )
                 {
-                    var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, _owner, target);
-                    if (tempEffect == null)
+                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->ability {_data.GetId()} has no effects" );
+                    return false;
+                }
+
+                if ( triggerIndex < 0 || triggerIndex >= effects.Count )
+                {
+                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->invalid triggerIndex:{triggerIndex}, abilityID:{_data.GetId()}, effectCount:{effects.Count}" );
+                    return false;
+                }
+
+                var effectData = effects[triggerIndex];
+                var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectData, _owner, target );
+                if ( tempEffect == null )
+                {
+                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
+                    return false;
+                }
+
+                if ( tempEffect.Policy != DurationPolicy.Instant )
+                {
+                    if ( target == null )
                     {
-                        Log.Warning($"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}");
-                        continue;
+                        Log.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
+                        return false;
                     }
 
-                    if (tempEffect.Policy != DurationPolicy.Instant)
-                    {
-                        GameEntry.Impact.Attach(tempEffect, _owner.Actor.ActorID, target.Actor.ActorID);
-                    }
-                    else
-                    {
-                        tempEffect.Apply(_owner, target, result);
-                        GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect(_owner, target, tempEffect);
-                    }
+                    GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
+                }
+                else
+                {
+                    tempEffect.Apply( _owner, target, result );
+                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
                 }
             }
             // 否则使用 LuBan 配置（保留兼容）
-            // else if (Meta != null)
             else
             {
                 Log.Warning($"<color=yellow>AbilitySpec_Base.UseAbility --> Invalid Ability ID , {_data.GetId()} </color>");
-                // Table_Effect effectMeta = null;
-                // EffectSpec_Base tempEffect = null;
-                // if (triggerIndex >= Meta.Triggers.Length)
-                // {
-                //     Log.Warning($"<color=yellow>AbilitySpec.UseAbility--->triggerIndex >= Meta.Triggers.Length,index:{triggerIndex},abilityID:{Meta.id}</color>");
-                // }
-                //
-                // var trigger = Meta.Triggers[triggerIndex];
-                // foreach (var effectID in trigger.CarrayedEffects)
-                // {
-                //     effectMeta = GameEntry.LuBan.Table<Effect>().Get( effectID );
-                //     if ( effectMeta is null )
-                //     {
-                //         Log.Warning( $"AbilitySpec_Base.UseAbility()--->effectMeta is null,id:{effectID}" );
-                //         break;
-                //     }
-                //     tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectMeta,_owner,target);
-                //     if ( tempEffect is null )
-                //     {
-                //         Log.Warning( $"AbilitySpec_Base.UseAbility()--->tempEffect is null,effectMeta:{effectMeta.ToString()}" );
-                //         break;
-                //     }
-                //
-                //     if ( tempEffect.Policy != DurationPolicy.Instant )
-                //     {
-                //         GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
-                //     }
-                //     else
-                //     {
-                //         tempEffect.Apply( _owner, target, result );
-                //         GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
-                //     }
-                // }
             }
 
             if ( !OnAfterAbility( result ) )
@@ -191,9 +173,8 @@ namespace Aquila.Fight
 
             return true;
         }
-
         /// <summary>
-        /// 使用技能前置函数
+        /// 使用技能前置逻辑
         /// </summary>
         public virtual bool OnPreAbility( AbilityResult_Hit result )
         {
@@ -201,7 +182,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 使用技能后置函数
+        /// 使用技能后置逻辑
         /// </summary>
         public virtual bool OnAfterAbility( AbilityResult_Hit result )
         {
@@ -209,7 +190,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 是否可以使用技能，
+        /// 是否可以使用技能
         /// </summary>
         public virtual int CanUseAbility()
         {
@@ -229,7 +210,7 @@ namespace Aquila.Fight
         {
             Meta          = null;
             _data         = default;
-            //处理CD和Cost
+            // 清理 CD 和 Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
             // _tagContainer = null;
@@ -240,7 +221,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 刷帧，处理CD
+        /// 刷帧处理 CD
         /// </summary>
         public virtual void OnUpdate( float delta_time )
         {
@@ -273,7 +254,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// tag发生改变的回调
+        /// Tag 变化回调
         /// </summary>
         private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
         {
@@ -281,7 +262,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 表数据（LuBan 配置，保留用于兼容）
+        /// 表数据（LuBan 配置，保留兼容）
         /// </summary>
         public Table_AbilityBase Meta { get; private set; } = null;
 
@@ -296,13 +277,13 @@ namespace Aquila.Fight
         public int AbilityId => _data.GetId() != 0 ? _data.GetId() : (Meta?.id ?? 0);
 
         /// <summary>
-        /// 该技能持有的tag
+        /// 该技能持有的 Tag
         /// </summary>
         // private TagContainer _tagContainer = null;
         private TagContainer _tagContainer;
         
         /// <summary>
-        /// 技能CD
+        /// 技能 CD
         /// </summary>
         private EffectSpec_Period_CoolDown _cdEffect = null;
 
@@ -312,7 +293,7 @@ namespace Aquila.Fight
         private EffectSpec_Instant_Cost _costEffect = null;
 
         /// <summary>
-        /// 持有的actor代理实例，技能的持有者
+        /// 持有该技能的 Actor 实例
         /// </summary>
         public Module_ProxyActor.ActorInstance _owner = null;
 
@@ -323,7 +304,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 根据 AbilityData 生成一个 spec 实例
+        /// 根据 AbilityData 生成一个 Spec 实例
         /// </summary>
         public static AbilitySpecBase Gen(AbilityData data, Module_ProxyActor.ActorInstance instance)
         {
@@ -334,7 +315,7 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 根据表格配置生成一个spec实例
+        /// 根据表格配置生成一个 Spec 实例
         /// </summary>
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>
@@ -347,4 +328,3 @@ namespace Aquila.Fight
         // }
     }
 }
-
