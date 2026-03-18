@@ -364,9 +364,9 @@ namespace Editor.AbilityEditor
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
             // Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
             
-            
             if (_isGenSandBoxAblt)
             {
+                
                 AbilityDataExporter.ExportToSandBox(config, _timelineTrackItems);
                 ShowNotification(new GUIContent($"✓ 沙盒测试数据已生成"));
             }

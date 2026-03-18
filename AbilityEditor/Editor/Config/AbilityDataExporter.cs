@@ -54,6 +54,8 @@ namespace Editor.AbilityEditor.Config
         public static void ExportToSandBox(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
             EnsureDirectoryExists(Misc.SANDBOX_ABILITY_PATH);
+            ClearDirectory(Misc.SANDBOX_ABILITY_PATH);
+            
             // 创建临时 AbilityEditorSOData 用于导出
             AbilityEditorSOData abilityData = CreateAbilityData(config, tracks);
             string abilityFileName = Path.GetFileNameWithoutExtension("sand_box");
@@ -192,6 +194,13 @@ namespace Editor.AbilityEditor.Config
                 Directory.CreateDirectory(path);
                 AssetDatabase.Refresh();
             }
+        }
+
+        // 清空目录下所有文件（保留目录本身）
+        private static void ClearDirectory(string path)
+        {
+            foreach (var file in Directory.GetFiles(path))
+                File.Delete(file);
         }
     }
 }
