@@ -14,6 +14,31 @@ namespace Aquila.Fight.Addon
     {
         //----------------------pub----------------------
         /// <summary>
+        /// 给与addon某个技能 / Give a ability to an addon
+        /// </summary>
+        public void GiveAbility(AbilityData data)
+        {
+            if (_specMap == null)
+                _specMap = new Dictionary<int, AbilitySpecBase>();
+            if (_specArr == null)
+                _specArr = new AbilitySpecBase[0];
+
+            var spec = AbilitySpecBase.Gen(data, _actorInstance);
+            if (_specMap.ContainsKey(spec.AbilityId))
+            {
+                Log.Warning($"<color=yellow>Addon_Ability.SetupWithAbilityData()--->duplicate ability id:{spec.AbilityId}</color>");
+                return;
+            }
+
+            var newArr = new AbilitySpecBase[_specArr.Length + 1];
+            _specArr.CopyTo(newArr, 0);
+            newArr[_specArr.Length] = spec;
+            _specArr = newArr;
+            _specMap.Add(spec.AbilityId, spec);
+            _initFlag = true;
+        }
+
+        /// <summary>
         /// 扣除技能消耗
         /// </summary>
         private void Deduct( int abilityID )

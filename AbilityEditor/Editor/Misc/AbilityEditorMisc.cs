@@ -5,6 +5,16 @@ namespace Aquila.AbilityEditor
     public static class Misc
     {
         /// <summary>
+        /// 训练场木桩角色存取key / Training ground wooden stake role access key
+        /// </summary>
+        public const string KEY_PLAYER_ENTITY_ID = "SandBox_PlayerEntityID";
+        
+        /// <summary>
+        /// 训练场木桩角色存取key / Training ground wooden stake role access key
+        /// </summary>
+        public const string KEY_DUMMY_ENTITY_ID  = "SandBox_DummyEntityID";
+        
+        /// <summary>
         /// 训练场木桩角色配置ID / sand box dummy meta role id
         /// </summary>
         public const int DUMMY_META_ROLE_ID = 999998;

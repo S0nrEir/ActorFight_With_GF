@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.Fight;
@@ -155,6 +156,103 @@ namespace Aquila.AbilityPool
             Log.Info($"[AbilityPool] Loaded ability {abilityData.GetId()} from {abltFilePath}");
         }
 
+        /// <summary>
+        /// 从沙盒目录加载 .ablt 和同目录 .efct 文件，校验后组装 AbilityData 写入池，并返回组装结果
+        /// </summary>
+        public bool LoadSandBoxAbility(string sandBoxDir, out AbilityData abilityData)
+        {
+            abilityData = default;
+
+            string abltPath = Path.Combine(sandBoxDir, "sand_box.ablt");
+            if (!File.Exists(abltPath))
+            {
+                Log.Error($"[AbilityPool] LoadSandBoxAbility: .ablt not found: {abltPath}");
+                return false;
+            }
+
+            if (!TryReadAbility(abltPath, out var rawAbility))
+            {
+                Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read ability: {abltPath}");
+                return false;
+            }
+
+            // 收集 ability 中所有需要的 effectID
+            var requiredEffectIds = new HashSet<int>();
+            if (rawAbility.GetCostEffectID() > 0)
+                requiredEffectIds.Add(rawAbility.GetCostEffectID());
+            
+            if (rawAbility.GetCoolDownEffectID() > 0)
+                requiredEffectIds.Add(rawAbility.GetCoolDownEffectID());
+            
+            var effects = rawAbility.GetEffects();
+            if (effects != null)
+            {
+                foreach (var e in effects)
+                {
+                    if (e.GetEffectId() > 0)
+                        requiredEffectIds.Add(e.GetEffectId());
+                }
+            }
+
+            // 扫描沙盒目录下所有 .efct 文件，文件名即 effectID
+            string[] efctFiles = Directory.GetFiles(sandBoxDir, "*.efct");
+            var availableEffectIds = new HashSet<int>();
+            var efctPathMap = new Dictionary<int, string>();
+            foreach (var efctPath in efctFiles)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(efctPath);
+                if (int.TryParse(fileName, out int parsedId))
+                {
+                    availableEffectIds.Add(parsedId);
+                    efctPathMap[parsedId] = efctPath;
+                }
+                else
+                {
+                    Log.Error($"[AbilityPool] LoadSandBoxAbility: invalid .efct filename (not an int): {efctPath}");
+                    return false;
+                }
+            }
+
+            // 校验：required 与 available 必须完全一致
+            foreach (var id in requiredEffectIds)
+            {
+                if (!availableEffectIds.Contains(id))
+                {
+                    Log.Error($"[AbilityPool] LoadSandBoxAbility: required effect {id} not found in sandbox dir");
+                    return false;
+                }
+            }
+            foreach (var id in availableEffectIds)
+            {
+                if (!requiredEffectIds.Contains(id))
+                {
+                    Log.Error($"[AbilityPool] LoadSandBoxAbility: extra .efct file {id} not referenced by ability");
+                    return false;
+                }
+            }
+
+            // 加载所有 .efct 写入池
+            foreach (var kvp in efctPathMap)
+            {
+                if (!TryReadEffect(kvp.Value, out var effectData))
+                {
+                    Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read effect: {kvp.Value}");
+                    return false;
+                }
+                if (effectData.GetEffectId() != kvp.Key)
+                {
+                    Log.Error($"[AbilityPool] LoadSandBoxAbility: effect file {kvp.Value} contains id={effectData.GetEffectId()}, expected {kvp.Key}");
+                    return false;
+                }
+                _effectPool[effectData.GetEffectId()] = effectData;
+            }
+
+            _abilityPool[rawAbility.GetId()] = rawAbility;
+            abilityData = rawAbility;
+            Log.Info($"[AbilityPool] LoadSandBoxAbility: loaded ability {rawAbility.GetId()} with {requiredEffectIds.Count} effects");
+            return true;
+        }
+        
         //----------------------- priv -----------------------
         /// <summary>
         /// 加载所有 .efct 文件到 _effectPool

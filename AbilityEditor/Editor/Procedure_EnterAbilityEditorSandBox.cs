@@ -7,7 +7,8 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using GameFramework;
 using Aquila.AbilityEditor;
-using Editor.AbilityEditor.Config;
+using Aquila.Fight;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -17,24 +18,20 @@ namespace Aquila.Procedure
     public class Procedure_EnterAbilityEditorSandBox : ProcedureBase
     {
 
-        /// <summary>
-        /// 标记流程完成 / mark procedure as finished
-        /// </summary>
         private void MarkLoadFinish(IFsm<IProcedureManager> owner)
         {
             if (_loadFinishSign != ALL_LOAD_FLAG)
                 return;
 
+            LoadSandBoxAbility(out var abilityData);
+            PassActorIDs(owner);
+            GameEntry.AbilityEditorSandBox.Init(abilityData);
             ChangeState<Procedure_RunningAbilityEditorSandBox>(owner);
         }
 
-        /// <summary>
-        /// 创建玩家角色 / create player actor
-        /// </summary>
         private async void CreatePlayer()
         {
             _playerEntityID = ActorIDPool.Gen();
-
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             var entity = await actor_fac.ShowActorAsync(
                 _playerEntityID,
@@ -42,7 +39,6 @@ namespace Aquila.Procedure
                 new HeroActorEntityData(_playerEntityID) { _roleMetaID = Misc.PLYAER_META_ROLE_ID },
                 "AbilityEditor_Player"
             );
-
             if (entity != null)
             {
                 var actor = entity.Logic as Actor_Hero;
@@ -52,18 +48,13 @@ namespace Aquila.Procedure
                     actor.SetRotation(new Vector3(0, -64.988f, 0));
                 }
             }
-
             _loadFinishSign |= 0b0001;
             MarkLoadFinish(_owner);
         }
 
-        /// <summary>
-        /// 创建木桩假人 / create dummy actor
-        /// </summary>
         private async void CreateDummy()
         {
             _dummyEntityID = ActorIDPool.Gen();
-
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             var entity = await actor_fac.ShowActorAsync(
                 _dummyEntityID,
@@ -71,7 +62,6 @@ namespace Aquila.Procedure
                 new HeroActorEntityData(_dummyEntityID) { _roleMetaID = Misc.DUMMY_META_ROLE_ID },
                 "AbilityEditor_Dummy"
             );
-
             if (entity != null)
             {
                 var actor = entity.Logic as Actor_Hero;
@@ -81,51 +71,62 @@ namespace Aquila.Procedure
                     actor.SetRotation(new Vector3(0, -261.314f, 0));
                 }
             }
-
             _loadFinishSign |= 0b0010;
             MarkLoadFinish(_owner);
         }
 
+        private void PassActorIDs(IFsm<IProcedureManager> owner)
+        {
+            var playerVar = ReferencePool.Acquire<VarInt32>();
+            playerVar.Value = _playerEntityID;
+            owner.SetData<VarInt32>(Misc.KEY_PLAYER_ENTITY_ID, playerVar);
+
+            var dummyVar = ReferencePool.Acquire<VarInt32>();
+            dummyVar.Value = _dummyEntityID;
+            owner.SetData<VarInt32>(Misc.KEY_DUMMY_ENTITY_ID, dummyVar);
+        }
+
+        private bool LoadSandBoxAbility(out AbilityData abilityData)
+        {
+            abilityData = default;
+            string sandBoxDir = System.IO.Path.GetFullPath(Misc.SANDBOX_ABILITY_PATH);
+            if (!GameEntry.AbilityPool.LoadSandBoxAbility(sandBoxDir, out var tempAbilityData))
+            {
+                UnityGameFramework.Runtime.Log.Error("[EnterSandBox] LoadSandBoxAbility failed");
+                return false;
+            }
+
+            abilityData = tempAbilityData;
+            return true;
+        }
+
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
-            base.OnInit(procedureOwner);
             _owner = null;
         }
 
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnEnter(procedureOwner);
-            //create dummy / player.
+            _owner = procedureOwner;
             CreateDummy();
             CreatePlayer();
-            _owner = procedureOwner;
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
         {
             base.OnLeave(procedureOwner, isShutdown);
-            
-            GameEntry.AbilityEditorSandBox.Init();
-            
             _loadFinishSign = 0b0000;
             _playerEntityID = -1;
-            _dummyEntityID = -1;
-            _owner = null;
-        }
-
-        /// <summary>
-        /// 切换到运行沙盒流程
-        /// </summary>
-        public void SwitchToRunningState(IFsm<IProcedureManager> procedureOwner)
-        {
-            ChangeState<Procedure_RunningAbilityEditorSandBox>(procedureOwner);
+            _dummyEntityID  = -1;
+            _owner          = null;
         }
 
         private IFsm<IProcedureManager> _owner = null;
         private const int ALL_LOAD_FLAG = 0b0011;
         private int _loadFinishSign = 0b0000;
         private int _playerEntityID = -1;
-        private int _dummyEntityID = -1;
+        private int _dummyEntityID  = -1;
     }
 }
 #endif
