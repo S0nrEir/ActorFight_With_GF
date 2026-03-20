@@ -17,7 +17,6 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_EnterAbilityEditorSandBox : ProcedureBase
     {
-
         private void MarkLoadFinish(IFsm<IProcedureManager> owner)
         {
             if (_loadFinishSign != ALL_LOAD_FLAG)
@@ -35,8 +34,8 @@ namespace Aquila.Procedure
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             var entity = await actor_fac.ShowActorAsync(
                 _playerEntityID,
-                Misc.PLYAER_META_ROLE_ID,
-                new HeroActorEntityData(_playerEntityID) { _roleMetaID = Misc.PLYAER_META_ROLE_ID },
+                PLYAER_META_ROLE_ID,
+                new HeroActorEntityData(_playerEntityID) { _roleMetaID = PLYAER_META_ROLE_ID },
                 "AbilityEditor_Player"
             );
             if (entity != null)
@@ -58,8 +57,8 @@ namespace Aquila.Procedure
             var actor_fac = GameEntry.Module.GetModule<Module_Actor_Fac>();
             var entity = await actor_fac.ShowActorAsync(
                 _dummyEntityID,
-                Misc.DUMMY_META_ROLE_ID,
-                new HeroActorEntityData(_dummyEntityID) { _roleMetaID = Misc.DUMMY_META_ROLE_ID },
+                DUMMY_META_ROLE_ID,
+                new HeroActorEntityData(_dummyEntityID) { _roleMetaID = DUMMY_META_ROLE_ID },
                 "AbilityEditor_Dummy"
             );
             if (entity != null)
@@ -79,17 +78,17 @@ namespace Aquila.Procedure
         {
             var playerVar = ReferencePool.Acquire<VarInt32>();
             playerVar.Value = _playerEntityID;
-            owner.SetData<VarInt32>(Misc.KEY_PLAYER_ENTITY_ID, playerVar);
+            owner.SetData<VarInt32>(KEY_PLAYER_ENTITY_ID, playerVar);
 
             var dummyVar = ReferencePool.Acquire<VarInt32>();
             dummyVar.Value = _dummyEntityID;
-            owner.SetData<VarInt32>(Misc.KEY_DUMMY_ENTITY_ID, dummyVar);
+            owner.SetData<VarInt32>(KEY_DUMMY_ENTITY_ID, dummyVar);
         }
 
         private bool LoadSandBoxAbility(out AbilityData abilityData)
         {
             abilityData = default;
-            string sandBoxDir = System.IO.Path.GetFullPath(Misc.SANDBOX_ABILITY_PATH);
+            string sandBoxDir = System.IO.Path.GetFullPath(SANDBOX_ABILITY_PATH);
             if (!GameEntry.AbilityPool.LoadSandBoxAbility(sandBoxDir, out var tempAbilityData))
             {
                 UnityGameFramework.Runtime.Log.Error("[EnterSandBox] LoadSandBoxAbility failed");
@@ -127,6 +126,12 @@ namespace Aquila.Procedure
         private int _loadFinishSign = 0b0000;
         private int _playerEntityID = -1;
         private int _dummyEntityID  = -1;
+        
+        public const string KEY_PLAYER_ENTITY_ID = "SandBox_PlayerEntityID";
+        public const string KEY_DUMMY_ENTITY_ID  = "SandBox_DummyEntityID";
+        public const int DUMMY_META_ROLE_ID      = 999998;
+        public const int PLYAER_META_ROLE_ID     = 999999;
+        public static readonly string SANDBOX_ABILITY_PATH = "Assets/AbilityEditor/SandBox";
     }
 }
 #endif

@@ -29,8 +29,8 @@ namespace Aquila.Procedure
         {
             base.OnEnter(procedureOwner);
 
-            var playerIdVar = procedureOwner.GetData(Misc.KEY_PLAYER_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
-            var dummyIdVar  = procedureOwner.GetData(Misc.KEY_DUMMY_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
+            var playerIdVar = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_PLAYER_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
+            var dummyIdVar  = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_DUMMY_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
 
             if (playerIdVar == null || dummyIdVar == null)
             {
@@ -43,8 +43,8 @@ namespace Aquila.Procedure
 
             ReferencePool.Release(playerIdVar);
             ReferencePool.Release(dummyIdVar);
-            procedureOwner.RemoveData(Misc.KEY_PLAYER_ENTITY_ID);
-            procedureOwner.RemoveData(Misc.KEY_DUMMY_ENTITY_ID);
+            procedureOwner.RemoveData(Procedure_EnterAbilityEditorSandBox.KEY_PLAYER_ENTITY_ID);
+            procedureOwner.RemoveData(Procedure_EnterAbilityEditorSandBox.KEY_DUMMY_ENTITY_ID);
 
             var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             _playerInstance = actorMgr.Get(playerEntityId);

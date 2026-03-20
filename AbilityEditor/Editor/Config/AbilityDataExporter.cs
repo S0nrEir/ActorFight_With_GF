@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
+using Aquila.Procedure;
 using Editor.AbilityEditor.Tools;
 using UnityEditor;
 using UnityEngine;
@@ -53,13 +54,13 @@ namespace Editor.AbilityEditor.Config
         /// </summary>
         public static void ExportToSandBox(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
-            EnsureDirectoryExists(Misc.SANDBOX_ABILITY_PATH);
-            ClearDirectory(Misc.SANDBOX_ABILITY_PATH);
+            EnsureDirectoryExists(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH);
+            ClearDirectory(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH);
             
             // 创建临时 AbilityEditorSOData 用于导出
             AbilityEditorSOData abilityData = CreateAbilityData(config, tracks);
             string abilityFileName = Path.GetFileNameWithoutExtension("sand_box");
-            string abltPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{abilityFileName}.ablt");
+            string abltPath = Path.Combine(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH, $"{abilityFileName}.ablt");
             AbilityBinaryExporter.ExportAbility(abilityData, abltPath);
             ExportEffectClipsToSandBox(abilityData);
             AssetDatabase.Refresh();
@@ -92,7 +93,7 @@ namespace Editor.AbilityEditor.Config
                         exportedEffectIds.Add(effectClip.EffectId);
                         // var effectData = CreateEffectDataFromClip(effectClip,effectSOData);
                         //CreateEffectDataFromClip(effectClip,effectSOData);
-                        string efctPath = Path.Combine(Misc.SANDBOX_ABILITY_PATH, $"{effectClip.EffectId}.efct");
+                        string efctPath = Path.Combine(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH, $"{effectClip.EffectId}.efct");
                         EffectBinaryExporter.ExportEffect(effectClip, efctPath);
                     }
                 }

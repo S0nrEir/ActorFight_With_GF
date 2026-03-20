@@ -5,26 +5,6 @@ namespace Aquila.AbilityEditor
     public static class Misc
     {
         /// <summary>
-        /// 训练场木桩角色存取key / Training ground wooden stake role access key
-        /// </summary>
-        public const string KEY_PLAYER_ENTITY_ID = "SandBox_PlayerEntityID";
-        
-        /// <summary>
-        /// 训练场木桩角色存取key / Training ground wooden stake role access key
-        /// </summary>
-        public const string KEY_DUMMY_ENTITY_ID  = "SandBox_DummyEntityID";
-        
-        /// <summary>
-        /// 训练场木桩角色配置ID / sand box dummy meta role id
-        /// </summary>
-        public const int DUMMY_META_ROLE_ID = 999998;
-        
-        /// <summary>
-        /// 训练场玩家角色ID / sand box player meta role id
-        /// </summary>
-        public const int PLYAER_META_ROLE_ID = 999999;
-
-        /// <summary>
         /// 编辑器技能数据的存储目录 / ability data asset storage path
         /// </summary>
         public static readonly string ABILITY_ASSET_BASE_PATH = "Assets/AbilityEditor/Editor/Config/Ability";
@@ -33,11 +13,6 @@ namespace Aquila.AbilityEditor
         /// 二进制技能数据的存储目录
         /// </summary>
         public static readonly string ABILITY_BIN_ASSET_PATH = "Assets/Res/Config/Ability";
-
-        /// <summary>
-        /// 沙盒测试技能数据的存储路径 / sandbox test ability data storage path
-        /// </summary>
-        public static readonly string SANDBOX_ABILITY_PATH = "Assets/AbilityEditor/SandBox";
 
         /// <summary>
         /// 沙盒测试技能数据的文件名 / sandbox test ability data filename
