@@ -108,6 +108,7 @@ namespace Aquila.Procedure
         {
             base.OnEnter(procedureOwner);
             _owner = procedureOwner;
+            GameEntry.LuBan.LoadDataTable();
             CreateDummy();
             CreatePlayer();
         }
