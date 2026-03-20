@@ -2566,7 +2566,7 @@ MonoBehaviour:
   m_AvailableProcedureTypeNames:
   - Aquila.Procedure.Procedure_EnterAbilityEditorSandBox
   - Aquila.Procedure.Procedure_RunningAbilityEditorSandBox
-  m_EntranceProcedureTypeName: Aquila.Procedure.Procedure_RunningAbilityEditorSandBox
+  m_EntranceProcedureTypeName: Aquila.Procedure.Procedure_EnterAbilityEditorSandBox
   _is_enter_test_scene: 1
 --- !u!114 &1775901076
 MonoBehaviour:
