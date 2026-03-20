@@ -1,5 +1,6 @@
 using Aquila.ObjectPool;
 using Aquila.Procedure;
+using Aquila.Event;
 using GameFramework.Resource;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,7 +109,6 @@ namespace Aquila.Extension
             return board_pos;
         }
 
-        //-----------------------priv-----------------------
         public void Preload()
         {
             if ( _init_flag )
@@ -132,6 +132,8 @@ namespace Aquila.Extension
                              if ( GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure )
                                  //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
                                  procedure.LoadHPBarFinish();
+
+                             GameEntry.Event.Fire( this, PreloadItemCompleteEventArgs.Create( PreloadItemType.HPBar ) );
                          },
                         LoadAssetFaildCallBack
                 ) );
@@ -152,6 +154,8 @@ namespace Aquila.Extension
 
                             if ( GameEntry.Procedure.CurrentProcedure is Procedure_Prelaod procedure )
                                 procedure.LoadDmgNumberFinish();
+
+                            GameEntry.Event.Fire( this, PreloadItemCompleteEventArgs.Create( PreloadItemType.DamageNumber ) );
                         },
                         LoadAssetFaildCallBack
                     )
@@ -160,6 +164,7 @@ namespace Aquila.Extension
             _init_flag = true;
         }
 
+        //-----------------------priv-----------------------
         /// <summary>
         /// 处理正在显示中的DamageNumber
         /// </summary>

@@ -67,7 +67,8 @@ namespace Aquila.AbilityPool
             foreach (var id in roleMeta.AbilityBaseID)
             {
                 if (_abilityPool.TryGetValue(id, out var data))
-                {result[count++] = data;
+                {
+                    result[count++] = data;
                 }
                 else
                 {

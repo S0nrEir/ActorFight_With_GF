@@ -8,6 +8,9 @@ using Aquila.Module;
 using GameFramework;
 using Aquila.AbilityEditor;
 using Aquila.Fight;
+using Aquila.Event;
+using GameFramework.Resource;
+using GameFramework.Event;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
@@ -85,6 +88,41 @@ namespace Aquila.Procedure
             owner.SetData<VarInt32>(KEY_DUMMY_ENTITY_ID, dummyVar);
         }
 
+        /// <summary>
+        /// 预加载项目完成事件处理
+        /// </summary>
+        private void OnPreloadItemComplete( object sender, GameEventArgs e )
+        {
+            var args = e as PreloadItemCompleteEventArgs;
+            if ( args == null )
+                return;
+
+            switch ( args.ItemType )
+            {
+                case PreloadItemType.HPBar:
+                    _loadFinishSign |= 0b0100;
+                    break;
+                
+                case PreloadItemType.DamageNumber:
+                    _loadFinishSign |= 0b1000;
+                    break;
+            }
+
+            // 检查所有InfoBoard项目是否加载完成
+            if ( ( _loadFinishSign & INFOBOARD_LOAD_FLAG ) == INFOBOARD_LOAD_FLAG )
+            {
+                // InfoBoard项目全部加载完成，开始创建Actor
+                if ( !_actorCreationStarted )
+                {
+                    _actorCreationStarted = true;
+                    CreateDummy();
+                    CreatePlayer();
+                }
+            }
+
+            MarkLoadFinish( _owner );
+        }
+
         private bool LoadSandBoxAbility(out AbilityData abilityData)
         {
             abilityData = default;
@@ -108,23 +146,31 @@ namespace Aquila.Procedure
         {
             base.OnEnter(procedureOwner);
             _owner = procedureOwner;
+            GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
             GameEntry.LuBan.LoadDataTable();
-            CreateDummy();
-            CreatePlayer();
+            GameEntry.AbilityPool.Init();
+            
+            // 先加载InfoBoard项目，等待完成后再创建Actor
+            GameEntry.InfoBoard.Preload();
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
         {
             base.OnLeave(procedureOwner, isShutdown);
+            GameEntry.Event.Unsubscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
+            
             _loadFinishSign = 0b0000;
+            _actorCreationStarted = false;
             _playerEntityID = -1;
             _dummyEntityID  = -1;
             _owner          = null;
         }
 
         private IFsm<IProcedureManager> _owner = null;
-        private const int ALL_LOAD_FLAG = 0b0011;
+        private const int ALL_LOAD_FLAG = 0b1111;
+        private const int INFOBOARD_LOAD_FLAG = 0b1100;
         private int _loadFinishSign = 0b0000;
+        private bool _actorCreationStarted = false;
         private int _playerEntityID = -1;
         private int _dummyEntityID  = -1;
         
