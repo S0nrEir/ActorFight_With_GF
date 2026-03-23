@@ -107,11 +107,11 @@ namespace Aquila.Procedure
                     _loadFinishSign |= 0b1000;
                     break;
             }
+            
 
             // 检查所有InfoBoard项目是否加载完成
-            if ( ( _loadFinishSign & INFOBOARD_LOAD_FLAG ) == INFOBOARD_LOAD_FLAG )
+            if ((_loadFinishSign & INFOBOARD_LOAD_FLAG ) == INFOBOARD_LOAD_FLAG )
             {
-                // InfoBoard项目全部加载完成，开始创建Actor
                 if ( !_actorCreationStarted )
                 {
                     _actorCreationStarted = true;
@@ -120,7 +120,7 @@ namespace Aquila.Procedure
                 }
             }
 
-            MarkLoadFinish( _owner );
+            // MarkLoadFinish( _owner );
         }
 
         private bool LoadSandBoxAbility(out AbilityData abilityData)
