@@ -59,7 +59,7 @@ namespace Aquila.AbilityPool
                 Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
                 return System.Array.Empty<AbilityData>();
             }
-            if (roleMeta.AbilityBaseID == null || roleMeta.AbilityBaseID.Length == 0)
+            if (roleMeta.AbilityBaseID == null || roleMeta.AbilityBaseID.Length <= 0)
                 return System.Array.Empty<AbilityData>();
 
             var result = new AbilityData[roleMeta.AbilityBaseID.Length];
