@@ -82,7 +82,6 @@ namespace Editor.AbilityEditor.Config
                 if (track.Clips == null)
                     continue;
 
-                //var effectSOData = ScriptableObject.CreateInstance<EffectEditorSOData>();
                 foreach (var clip in track.Clips)
                 {
                     if (clip is EffectClipData effectClip && effectClip.EffectId > 0)
@@ -91,18 +90,45 @@ namespace Editor.AbilityEditor.Config
                             continue;
 
                         exportedEffectIds.Add(effectClip.EffectId);
-                        // var effectData = CreateEffectDataFromClip(effectClip,effectSOData);
-                        //CreateEffectDataFromClip(effectClip,effectSOData);
                         string efctPath = Path.Combine(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH, $"{effectClip.EffectId}.efct");
                         EffectBinaryExporter.ExportEffect(effectClip, efctPath);
                     }
                 }
             }
 
+            // 导出 Cost Effect 和 CoolDown Effect
+            ExportEffectSODataById(abilityData.CostEffectID, exportedEffectIds);
+            ExportEffectSODataById(abilityData.CoolDownEffectID, exportedEffectIds);
+
             if (exportedEffectIds.Count > 0)
             {
                 Debug.Log($"[AbilityDataExporter] 已导出 {exportedEffectIds.Count} 个 Effect 到沙盒目录");
             }
+        }
+
+        /// <summary>
+        /// 按 ID 从 EFFECT_ASSET_BASE_PATH 查找并导出对应的 EffectEditorSOData 到沙盒目录
+        /// </summary>
+        private static void ExportEffectSODataById(int effectId, HashSet<int> exportedEffectIds)
+        {
+            if (effectId <= 0 || exportedEffectIds.Contains(effectId))
+                return;
+
+            string[] guids = AssetDatabase.FindAssets("t:EffectEditorSOData", new[] { Misc.EFFECT_ASSET_BASE_PATH });
+            foreach (var guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var effectData = AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
+                if (effectData == null || effectData.id != effectId)
+                    continue;
+
+                exportedEffectIds.Add(effectId);
+                string efctPath = Path.Combine(Procedure_EnterAbilityEditorSandBox.SANDBOX_ABILITY_PATH, $"{effectId}.efct");
+                EffectBinaryExporter.ExportEffect(effectData, efctPath);
+                return;
+            }
+
+            Debug.LogWarning($"[AbilityDataExporter] 未找到 Effect ID={effectId} 的资产文件");
         }
 
         /// <summary>
