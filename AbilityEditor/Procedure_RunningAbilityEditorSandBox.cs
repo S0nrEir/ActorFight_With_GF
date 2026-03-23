@@ -41,8 +41,6 @@ namespace Aquila.Procedure
             int playerEntityId = playerIdVar.Value;
             int dummyEntityId  = dummyIdVar.Value;
 
-            ReferencePool.Release(playerIdVar);
-            ReferencePool.Release(dummyIdVar);
             procedureOwner.RemoveData(Procedure_EnterAbilityEditorSandBox.KEY_PLAYER_ENTITY_ID);
             procedureOwner.RemoveData(Procedure_EnterAbilityEditorSandBox.KEY_DUMMY_ENTITY_ID);
 
