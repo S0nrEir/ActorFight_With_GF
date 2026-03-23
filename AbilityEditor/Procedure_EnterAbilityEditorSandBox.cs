@@ -123,6 +123,9 @@ namespace Aquila.Procedure
             // MarkLoadFinish( _owner );
         }
 
+        /// <summary>
+        /// 加载编辑器生成的的沙盒配置技能
+        /// </summary>
         private bool LoadSandBoxAbility(out AbilityData abilityData)
         {
             abilityData = default;
