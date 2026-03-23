@@ -44,7 +44,7 @@ namespace Aquila.AbilityEditor
             
             _cdTxt = Tools.GetComponent<Text>( gameObject, "AbilityButton/Text" );
             _cdImg = Tools.GetComponent<Image>( gameObject, "AbilityButton/Image" );
-            _abilityIdText = Tools.GetComponent<Text>( gameObject, "AbilityIDInputField/AbilityIdText" );
+            _abilityIdText = Tools.GetComponent<Text>( gameObject, "AbilityButton/AbilityIdText" );
             
             _abilityIdText.text = _abilityID.ToString();
 
