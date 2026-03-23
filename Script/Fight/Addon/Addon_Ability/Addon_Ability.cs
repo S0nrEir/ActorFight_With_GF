@@ -127,8 +127,37 @@ namespace Aquila.Fight.Addon
                 Deduct( temp._abilityID );
         }
 
+#if UNITY_EDITOR
         /// <summary>
-        /// 初始化组件持有的技能和对应的spec
+        /// <para>编辑器下初始化组件持有的技能和对应的spec</para>
+        /// <para>Initialize the abilities and corresponding specs held by the component in editor mode</para>
+        /// </summary>
+        private bool InitSpec_Editor()
+        {
+            var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
+            _specArr = new AbilitySpecBase[abilities.Length];
+            _specMap = new Dictionary<int, AbilitySpecBase>( abilities.Length );
+            for ( int i = 0; i < abilities.Length; i++ )
+            {
+                var spec = AbilitySpecBase.Gen( abilities[i], _actorInstance );
+                _specArr[i] = spec;
+
+                if ( _specMap.ContainsKey( spec.AbilityId ) )
+                {
+                    Log.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    continue;
+                }
+
+                _specMap.Add( spec.AbilityId, spec );
+            }
+
+            return true;
+        }
+#endif
+        
+        /// <summary>
+        /// <para>初始化组件持有的技能和对应的spec</para>
+        /// <para>Initialize the abilities and corresponding specs held by the component</para>
         /// </summary>
         private bool InitSpec()
         {
@@ -138,7 +167,6 @@ namespace Aquila.Fight.Addon
                 Log.Warning("<color=yellow>Addon_Ability.InitSpec()--->no abilities found</color>");
                 return false;
             }
-
             _specArr = new AbilitySpecBase[abilities.Length];
             _specMap = new Dictionary<int, AbilitySpecBase>( abilities.Length );
             for ( int i = 0; i < abilities.Length; i++ )
@@ -167,9 +195,13 @@ namespace Aquila.Fight.Addon
         public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );
+#if UNITY_EDITOR
+            if ( !InitSpec_Editor() )
+                return;
+#else
             if ( !InitSpec() )
                 return;
-
+#endif
             _initFlag = true;
             instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) EventAddonPrioerityTypeEnum.ADDON_ABILITY, OnUseAbility );
         }
