@@ -7,10 +7,13 @@ using Aquila.Fight.Actor;
 using Aquila.Module;
 using GameFramework;
 using Aquila.AbilityEditor;
+using Aquila.Config;
 using Aquila.Fight;
 using Aquila.Event;
+using Aquila.Toolkit;
 using GameFramework.Resource;
 using GameFramework.Event;
+using UGFExtensions;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
@@ -123,6 +126,15 @@ namespace Aquila.Procedure
             // MarkLoadFinish( _owner );
         }
 
+        private void PreloadInternalTable()
+        {
+            foreach ( var tableName in GameConfig.Misc.DataTableConfigs )
+            {
+                var assetPath = Tools.Path.ConfigPath( tableName );
+                GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
+            }
+        }
+        
         /// <summary>
         /// 加载编辑器生成的的沙盒配置技能
         /// </summary>
@@ -149,11 +161,12 @@ namespace Aquila.Procedure
         {
             base.OnEnter(procedureOwner);
             _owner = procedureOwner;
-            GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
             GameEntry.LuBan.LoadDataTable();
             GameEntry.AbilityPool.Init();
+            PreloadInternalTable();
             
             // 先加载InfoBoard项目，等待完成后再创建Actor
+            GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
             GameEntry.InfoBoard.Preload();
         }
 
