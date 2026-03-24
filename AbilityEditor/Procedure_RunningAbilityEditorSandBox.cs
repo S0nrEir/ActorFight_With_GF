@@ -67,6 +67,15 @@ namespace Aquila.Procedure
                 UnityGameFramework.Runtime.Log.Error("[RunningAbilityEditorSandBox] no sandbox ability data found");
             }
 
+            _playerInstance.Actor.SetWorldPosition( new Vector3( -4.4f, -5.782828f, 15.1f ) );
+            _playerInstance.Actor.SetRotation( new Vector3( 0f, 295.011993f, 0f ) );
+
+            if ( _dummyInstance != null )
+            {
+                _dummyInstance.Actor.SetWorldPosition( new Vector3( -21.6f, -5.782828f, 19.1f ) );
+                _dummyInstance.Actor.SetRotation( new Vector3( 0f, 98.6860046f, 0f ) );
+            }
+
             GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param());
         }
 
