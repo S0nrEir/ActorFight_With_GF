@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 597848049fa94ea42972e5c426b1d247, type: 3}
+  m_Name: 1006
+  m_EditorClassIdentifier: 
+  id: 1006
+  Description: "\u5B9A\u671F\u6D3E\u53D1effect\uFF0C\u5E26\u53E0\u5C42\uFF0C\u53E0\u5C42\u6548\u679C\u52A0\u7ED9\u6D3E\u751Feffect\uFF0C\u6D41\u8840\uFF0C\u6BCF\u79D2\u79FB\u9664\u57FA\u4E8E\u751F\u547D\u503C\u4E0A\u9650\u767E\u5206\u6BD4\u7684\u8840\u91CF\uFF0C\u6301\u7EED\u4E94\u79D2\uFF0C\u6700\u591A\u53E0\u52A0\u4E09\u5C42\uFF0C\u7B2C\u4E003%\uFF0C\u7B2C\u4E8C\u5C425%\uFF0C\u7B2C\u4E09\u5C428%"
+  Type: 7
+  ExtensionParam:
+    float_1: 0.02
+    float_2: 0.05
+    float_3: 0.08
+    float_4: -1
+    int_1: 3
+    int_2: 0
+    int_3: -1
+    int_4: -1
+  ModifierType: 4
+  EffectOnAwake: 0
+  Policy: 1
+  Period: 1
+  Duration: 5
+  Target: 1
+  EffectType: 0
+  DeriveEffects: ed030000
+  AwakeEffects: 

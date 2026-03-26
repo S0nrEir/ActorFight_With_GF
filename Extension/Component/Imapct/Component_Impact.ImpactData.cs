@@ -58,7 +58,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 叠加层数
             /// </summary>
-            public int _stackCount;
+            public ushort _stackCount;
 
             /// <summary>
             /// 叠加层数上限

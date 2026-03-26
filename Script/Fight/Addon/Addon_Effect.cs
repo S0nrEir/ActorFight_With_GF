@@ -164,10 +164,24 @@ namespace Aquila.Fight.Addon
     /// <summary>
     /// 特效实体数据
     /// </summary>
+    //todo:统一下类名格式
     public class ActorEffectEntityData : EntityData
     {
         public ActorEffectEntityData( int entityID ) : base( entityID, typeof( ActorEffectEntityData ).GetHashCode() )
         {
+        }
+
+        public ActorEffectEntityData()
+        {
+            
+        }
+
+        public override void Clear()
+        {
+            base.Clear();
+            _duration = 0f;
+            _effectPointName = string.Empty;
+            _localPositionOffset = Vector3.zero;
         }
 
         /// <summary>

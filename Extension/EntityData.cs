@@ -1,10 +1,11 @@
 ﻿using System;
+using GameFramework;
 using UnityEngine;
 
 namespace Aquila
 {
     [Serializable]
-    public abstract class EntityData
+    public abstract class EntityData : IReference
     {
         [SerializeField]
         private int m_Id = 0;
@@ -24,10 +25,24 @@ namespace Aquila
         [SerializeField]
         private string m_ModelPath = string.Empty;
 
+        public void Init(int EntityId, int TypeId)
+        {
+            m_Id = EntityId;
+            m_TypeId = TypeId;
+        }
+        
+        
+        
         public EntityData( int entityId, int typeId )
         {
-            m_Id = entityId;
-            m_TypeId = typeId;
+            Init(entityId, typeId);
+        }
+
+
+        public EntityData()
+        {
+            m_Id = -1;
+            m_TypeId = -1;
         }
 
         /// <summary>
@@ -104,6 +119,12 @@ namespace Aquila
             {
                 m_ModelPath = value;
             }
+        }
+
+        public virtual void Clear()
+        {
+            m_Id = -1;
+            m_TypeId = -1;
         }
     }
 }

@@ -173,7 +173,7 @@ namespace Aquila.Fight.Actor
         //--------------------override--------------------
         protected override void OnShow( object userData )
         {
-            var regSucc = GameEntry.Module.GetModule<Module_ProxyActor>().Register( this );
+            var regSucc = GameEntry.Module.GetModule<Module_ActorMgr>().Register( this );
             if ( !regSucc.regSucc )
             {
                 Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
@@ -186,7 +186,8 @@ namespace Aquila.Fight.Actor
             InitAddons( regSucc.instance );
 
             foreach ( var addon in GetAllAddon() )
-                GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
+                //GameEntry.Module.GetModule<Module_ProxyActor>().AddToAddonSystem( addon );
+                GameEntry.Module.GetModule<Module_AddonSystem>().AddToAddonSystem( addon );
 
             _eventAddon.Ready();
             base.OnShow( userData );
@@ -211,7 +212,7 @@ namespace Aquila.Fight.Actor
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
-            var unRegSucc = GameEntry.Module.GetModule<Module_ProxyActor>().UnRegister( ActorID );
+            var unRegSucc = GameEntry.Module.GetModule<Module_ActorMgr>().UnRegister( ActorID );
             if (!unRegSucc)
                 Log.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
                 
@@ -264,7 +265,7 @@ namespace Aquila.Fight.Actor
             var addonToAdd = new T();
             addonToAdd.OnAdd();
             //将actor和addon关联
-            GameEntry.Module.GetModule<Module_ProxyActor>().AddAddon( this, addonToAdd );
+            GameEntry.Module.GetModule<Module_ActorMgr>().AddAddon( this, addonToAdd );
             return addonToAdd;
         }
 
@@ -303,7 +304,8 @@ namespace Aquila.Fight.Actor
         protected void RemoveAddon( Addon_Base addon )
         {
             addon.OnRemove();
-            GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
+            //GameEntry.Module.GetModule<Module_ProxyActor>().RemoveFromAddonSystem( addon );
+            GameEntry.Module.GetModule<Module_AddonSystem>().RemoveFromAddonSystem( addon );
         }
 
         /// <summary>
@@ -365,6 +367,16 @@ namespace Aquila.Fight.Actor
     {
         public Actor_Base_EntityData(int entityId, int typeId) : base(entityId, typeId)
         {
+        }
+
+        public Actor_Base_EntityData()
+        {
+            
+        }
+
+        public override void Clear()
+        {
+            _roleMetaID = -1;
         }
 
         /// <summary>

@@ -102,8 +102,9 @@ namespace Aquila.Module
                 Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
                 return;
             }
-            
-            var module = GameEntry.Module.GetModule<Module_ProxyActor>();
+
+            //var module = GameEntry.Module.GetModule<Module_ProxyActor>();
+            var module = GameEntry.Module.GetModule<Module_ActorMgr>();
 
             //todo:这里要检查一下状态，如果召唤者actor已经死了就从死亡位置发出，如果还活着就从武器挂点发出
             var position = module.GetPosition( orbData._callerID );

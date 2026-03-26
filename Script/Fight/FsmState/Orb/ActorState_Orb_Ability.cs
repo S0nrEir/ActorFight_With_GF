@@ -31,19 +31,21 @@ namespace Aquila.Fight.FSM
             _castorID = abilityInfo.CastorActorID;
             _targetID = abilityInfo.TargetActorID;
             _position = abilityInfo.Position;
-            _abilityMeta = GameEntry.LuBan.Tables.Ability.Get(id);
-            if(_abilityMeta is null)
-                Log.Error($"<color=red>ActorState_Orb_Ability.OnEnter--->_abilityMeta is null,id:{id}</color>");
+            
+            if (!GameEntry.AbilityPool.TryGetAbility(id, out _abilityData))
+            {
+                Log.Error($"<color=red>ActorState_Orb_Ability.OnEnter--->Ability not found in pool, id:{id}</color>");
+            }
         }
 
         public override void OnUpdate(float deltaTime)
         {
             _passedTime += deltaTime;
-            if (deltaTime >= _abilityMeta.Triggers[0].TriggerTime)
+            if (deltaTime >= _abilityData.GetTimelineDuration())
             {
                 var module = GameEntry.Module.GetModule<Module_ProxyActor>();
                 //法球类型的触发直接用第一个effect
-                module.AffectAbility(0,_castorID,_targetID,_abilityMeta.id,_position);
+                module.AffectAbility(0,_castorID,_targetID,_abilityData.GetId(),_position);
                 Clear();
                 //触发完直接隐藏
                 GameEntry.Entity.HideEntity(_castorID);
@@ -52,7 +54,7 @@ namespace Aquila.Fight.FSM
 
         public override void OnLeave(object param)
         {
-            _abilityMeta = null;
+            _abilityData = default;
             Clear();
         }
 
@@ -67,7 +69,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 技能数据
         /// </summary>
-        private Table_AbilityBase _abilityMeta = null;
+        private AbilityData _abilityData;
         
         /// <summary>
         /// 该状态内经过的时间

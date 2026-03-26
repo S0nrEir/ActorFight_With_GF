@@ -73,7 +73,7 @@ namespace Aquila.Extension
             var form = _uiComp.GetUIForm( row.AssetName );
             if ( form is null )
             {
-                Log.Warning( $"<color=yellow>Component_UI.Close()--->form is null,asset:{row.AssetName}</color>" );
+                Log.Warning( $"<color=yellow>Component_UI.CloseForm()--->form is null,asset:{row.AssetName}</color>" );
                 return;
             }
 

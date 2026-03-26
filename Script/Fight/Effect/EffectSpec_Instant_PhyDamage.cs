@@ -2,7 +2,6 @@ using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
@@ -22,16 +21,16 @@ namespace Aquila.Fight
             }
 
             var cur_hp = attr_addon.GetCurrHPCorrection();
-            var final = cur_hp + Meta.ExtensionParam.FloatParam_1;
+            var final = cur_hp + _effectData.GetFloatParam1();
             attr_addon.SetCurrHP(final);
-            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)Meta.ExtensionParam.FloatParam_1 );
+            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)_effectData.GetFloatParam1() );
         }
 
         public EffectSpec_Instant_PhyDamage()
         {
 
         }
-        public EffectSpec_Instant_PhyDamage( Table_Effect meta ) : base( meta )
+        public EffectSpec_Instant_PhyDamage( EffectData meta )
         {
         }
     }

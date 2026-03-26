@@ -1,4 +1,4 @@
-using Aquila.Module;
+﻿using Aquila.Module;
 using Aquila.ObjectPool;
 using Cfg.Enum;
 using UnityEngine;
@@ -11,11 +11,11 @@ namespace Aquila.Fight.Addon
         //-------------------------pub-------------------------
 
         /// <summary>
-        /// 基于当前血量刷新slider
+        /// 基于当前血量刷新 slider
         /// </summary>
         public void Refresh()
         {
-            //基于当前血量和血量上限刷新
+            // 基于当前血量和血量上限刷新
             var attrAddon = _actorInstance.GetAddon<Addon_BaseAttrNumric>();
             if ( attrAddon is null )
             {
@@ -24,13 +24,12 @@ namespace Aquila.Fight.Addon
             }
 
             var cur = attrAddon.GetCurrHPCorrection();
-            // var max = attrAddon.GetCorrectionFinalValue(Actor_Attr.Max_HP, 0f);
-            var max = attrAddon.GetCorrectionValue( /*Actor_Base_Attr.HP*/ actor_attribute.Max_HP , 0f );
+            var max = attrAddon.GetCorrectionValue( actor_attribute.Max_HP, 0f );
             _hpObj.SetValue( ( int ) cur, ( int ) max );
         }
 
         /// <summary>
-        /// 设置hp slider的值
+        /// 设置 hp slider 的值
         /// </summary>
         public void SetValue( int cur, int max )
         {
@@ -41,11 +40,7 @@ namespace Aquila.Fight.Addon
 
         public override void OnUpdate( float elapseSeconds, float realElapseSeconds )
         {
-            if ( _cachedPos == _actorTransform.position )
-                return;
-
-            _hpObj.SetScreenPos( GameEntry.InfoBoard.WorldPos2BoardRectPos( _actorTransform.position + _offset, GameEntry.GlobalVar.MainCamera ) );
-            _cachedPos = _actorTransform.position;
+            UpdateScreenPos( false );
         }
 
         public override void OnAdd()
@@ -59,21 +54,70 @@ namespace Aquila.Fight.Addon
             _actorTransform = instance.Actor.transform;
             Refresh();
             _offset = GameEntry.LuBan.Tables.SceneConfig.HPBarPosOffset;
-            _cachedPos = _actorTransform.position;
+            _cachedPos = Vector3.zero;
+            _cachedCameraPos = Vector3.zero;
+            _cachedCameraRot = Quaternion.identity;
+            _hasCachedScreenState = false;
+
+            // 首次初始化后立即定位，避免静止 actor 不刷新导致血条不在头顶。
+            UpdateScreenPos( true );
         }
 
         public override void Dispose()
         {
-            GameEntry.InfoBoard.UnSpawn<Object_HPBar>( typeof( Object_HPBar ).Name, _hpObj.Target );
+            if ( _hpObj != null )
+                GameEntry.InfoBoard.UnSpawn<Object_HPBar>( typeof( Object_HPBar ).Name, _hpObj.Target );
+
             _hpObj = null;
             _actorTransform = null;
+            _hasCachedScreenState = false;
             base.Dispose();
+        }
+
+        private void UpdateScreenPos( bool force )
+        {
+            if ( _hpObj == null || _actorTransform == null )
+                return;
+
+            //#todo：可能的高频调用
+            var worldCamera = ResolveWorldCamera();
+            if ( worldCamera == null )
+                return;
+
+            var actorPos = _actorTransform.position;
+            var cameraTransform = worldCamera.transform;
+            var cameraPos = cameraTransform.position;
+            var cameraRot = cameraTransform.rotation;
+
+            if ( !force
+                && _hasCachedScreenState
+                && _cachedPos == actorPos
+                && _cachedCameraPos == cameraPos
+                && _cachedCameraRot == cameraRot )
+            {
+                return;
+            }
+
+            _hpObj.SetScreenPos( GameEntry.InfoBoard.WorldPos2BoardRectPos( actorPos + _offset, worldCamera ) );
+            _cachedPos = actorPos;
+            _cachedCameraPos = cameraPos;
+            _cachedCameraRot = cameraRot;
+            _hasCachedScreenState = true;
+        }
+
+        private Camera ResolveWorldCamera()
+        {
+            var mainCamera = GameEntry.GlobalVar.MainCamera;
+            if ( mainCamera != null && mainCamera.isActiveAndEnabled )
+                return mainCamera;
+
+            return Camera.main;
         }
 
         private Object_HPBar _hpObj = null;
 
         /// <summary>
-        /// 持有缓存的actor的transform
+        /// 持有缓存的 actor transform
         /// </summary>
         private Transform _actorTransform = null;
 
@@ -83,9 +127,11 @@ namespace Aquila.Fight.Addon
         private Vector3 _offset = Vector3.zero;
 
         /// <summary>
-        /// 缓存actor位置
+        /// 缓存 actor 与相机状态，用于减少重复坐标转换。
         /// </summary>
         private Vector3 _cachedPos = Vector3.zero;
+        private Vector3 _cachedCameraPos = Vector3.zero;
+        private Quaternion _cachedCameraRot = Quaternion.identity;
+        private bool _hasCachedScreenState = false;
     }
-
 }

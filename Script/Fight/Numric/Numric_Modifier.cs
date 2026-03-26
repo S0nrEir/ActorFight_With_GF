@@ -1,7 +1,5 @@
 using Cfg.Enum;
-using GameFramework;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
@@ -20,6 +18,11 @@ namespace Aquila.Numric
             return _valueFac;
         }
 
+        /// <summary>
+        /// 音频
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="fac"></param>
         public Numric_Modifier( NumricModifierType type, float fac )
         {
             _type = type;

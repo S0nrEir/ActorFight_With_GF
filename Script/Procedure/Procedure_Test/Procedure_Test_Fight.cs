@@ -34,7 +34,7 @@ namespace Aquila.Procedure
                 return;
 
             var param = ReferencePool.Acquire<Form_Ability.Form_AbilityParam>();
-            param._mainActorID = _actorID1;
+            param. _mainActorID = _actorID1;
             param._enemyActorID = new int[] { _actorID2, _actorID3, _actorID4 };
             param._abilityID = GameEntry.LuBan.Tables.RoleMeta.Get( 1 ).AbilityBaseID;
             GameEntry.UI.OpenForm( FormIdEnum.AbilityForm, param );

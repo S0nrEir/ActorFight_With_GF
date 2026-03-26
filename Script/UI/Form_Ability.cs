@@ -58,7 +58,8 @@ namespace Aquila.UI
         {
             var selfID = _enemyActorIdArr[0];
             var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
-            _actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            //_actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( selfID, selfID, abilityID, GameEntry.GlobalVar.InvalidPosition );
         }
 
         /// <summary>
@@ -75,8 +76,8 @@ namespace Aquila.UI
             var castorID = _actorID;
             //一些特殊技能的测试
             var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
-            
-            _actorProxy.Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
+
+            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
         }
         
         /// <summary>
@@ -186,7 +187,8 @@ namespace Aquila.UI
             _actorID         = param._mainActorID;
             _enemyActorIdArr = param._enemyActorID;
             _abilityIdArr    = param._abilityID;
-            _actorProxy = GameEntry.Module.GetModule<Module_ProxyActor>();
+            //_actorProxy = GameEntry.Module.GetModule<Module_ProxyActor>();
+            _actorProxy = GameEntry.Module.GetModule<Module_ActorMgr>();
             InitAbilityIconItem();
             _testBtn = Tools.GetComponent<Button>( gameObject, "ExitButton" );
             _testBtn.onClick.AddListener(() =>
@@ -241,7 +243,7 @@ namespace Aquila.UI
         /// <summary>
         /// actor模块
         /// </summary>
-        private Module_ProxyActor _actorProxy = null;
+        private Module_ActorMgr _actorProxy = null;
 
         /// <summary>
         /// 要操作的actorID

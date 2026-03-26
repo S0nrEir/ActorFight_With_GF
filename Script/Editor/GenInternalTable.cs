@@ -10,6 +10,7 @@ using Aquila.Procedure;
 using GameFramework;
 using System.IO;
 using System.Text;
+using Aquila.Config;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace Aquila.Editor
         private static void GenInternalTable_()
         {
             //foreach ( string dataTableName in ProcedurePreload.DataTableNames )
-            foreach ( string dataTableName in Procedure_Prelaod.Configs )
+            foreach ( string dataTableName in GameConfig.Misc.DataTableConfigs  )
             {
                 DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor( dataTableName );
                 if ( !DataTableGenerator.CheckRawData( dataTableProcessor, dataTableName ) )
@@ -33,7 +34,7 @@ namespace Aquila.Editor
                 DataTableGenerator.GenerateDataFile( dataTableProcessor, dataTableName );
                 DataTableGenerator.GenerateCodeFile( dataTableProcessor, dataTableName );
             }
-            GenFormIdEnum.GenFormIdEnum_();
+            FormIdEnumGenerator.GenFormIdEnum();
             AssetDatabase.Refresh();
         }
 

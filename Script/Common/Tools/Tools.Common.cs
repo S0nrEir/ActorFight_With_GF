@@ -162,8 +162,18 @@ namespace Aquila.Toolkit
             if ( go.activeSelf != active )
                 go.SetActive( active );
         }
+        
+        /// <summary>
+        /// 获取某个gameobject上的首个匹配的子类型组件
+        /// </summary>
+        public static T GetCompoentInChildren<T>(GameObject go) where T : Component
+        {
+            if (go == null)
+                return null;
 
-
+            return go.GetComponentInChildren<T>();
+        }
+        
         /// <summary>
         /// 获取某个GameObject上指定子路径的组件，拿不到返回空
         /// </summary>

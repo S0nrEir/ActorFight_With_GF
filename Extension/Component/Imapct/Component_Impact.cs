@@ -178,17 +178,47 @@ namespace Aquila.Fight.Impact
                 AddMapIndex( targetActorID, impactData._effectHash );
 
                 if ( impactData._effectOnAwake )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect( impactData._castorActorID, impactData._targetActorID, newEffect );
-
-                //唤起一次性的effect
-                if ( newEffect.Meta.AwakeEffects.Length != 0 )
-                {
                     GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect
                         ( 
                             impactData._castorActorID, 
                             impactData._targetActorID, 
                             newEffect 
                         );
+
+                var awakeEffects = newEffect.Meta.GetAwakeEffects();
+                // 唤起携带的 AwakeEffects（依次触发每个子 effect 的 Awake 逻辑）
+                if ( awakeEffects.Count != 0 )
+                {
+                    var proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
+                    var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
+                    var castor = actorMgr.Get( impactData._castorActorID );
+                    var target = actorMgr.Get( impactData._targetActorID );
+
+                    if ( castor is null || target is null )
+                    {
+                        Log.Warning( $"<color=yellow>Component_Impact.Attach()--->castor or target is null when trigger awake effects, castor:{impactData._castorActorID}, target:{impactData._targetActorID}</color>" );
+                    }
+                    else
+                    {
+                        foreach ( var awakeEffectID in awakeEffects )
+                        {
+                            if ( !GameEntry.AbilityPool.TryGetEffect( awakeEffectID, out var awakeEffectData ) )
+                            {
+                                Log.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect not found, id:{awakeEffectID}</color>" );
+                                continue;
+                            }
+
+                            var awakeEffect = Aquila.Toolkit.Tools.Ability.CreateEffectSpecByReferencePool( awakeEffectData, castor, target );
+                            if ( awakeEffect is null )
+                            {
+                                Log.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect create failed, id:{awakeEffectID}</color>" );
+                                continue;
+                            }
+
+                            proxyActor.ApplyAwakeEffect( castor, target, awakeEffect );
+                            proxyActor.InvalidEffect( castor, target, awakeEffect, true );
+                        }
+                    }
                 }
             }
         }
@@ -292,11 +322,11 @@ namespace Aquila.Fight.Impact
         {
             impactData._castorActorID             = castorActorID;
             impactData._targetActorID             = targetActorID;
-            impactData._duration                  = effect.Meta.Duration;
+            impactData._duration                  = effect.Meta.GetDuration();
             impactData._effectHash                = effectHashCode;
-            impactData._effectOnAwake             = effect.Meta.EffectOnAwake;
-            impactData._period                    = effect.Meta.Period;
-            impactData._policy                    = effect.Meta.Policy;
+            impactData._effectOnAwake             = effect.Meta.GetEffectOnAwake();
+            impactData._period                    = effect.Meta.GetPeriod();
+            impactData._policy                    = effect.Meta.GetPolicy();
             impactData._elapsed                   = 0f;
             impactData._interval                  = 0f;
             impactData._stackCount                = effect.StackCount;

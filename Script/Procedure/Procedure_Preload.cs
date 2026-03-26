@@ -5,6 +5,7 @@ using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System.Collections.Generic;
+using Aquila.Config;
 using Aquila.UI;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
@@ -44,6 +45,8 @@ namespace Aquila.Procedure
 
             System.GC.Collect();
 
+            //#todo初始化技能数据先暂时放到这里。
+            Tools.Ability.InitEffectSpecGenerator();
             //测试进入战斗流程
             NextProcedure();
         }
@@ -57,13 +60,14 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _handler = new PreloadHandler( Configs );
+            _handler = new PreloadHandler( GameConfig.Misc.DataTableConfigs );
 
             GameEntry.Event.Subscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
 
             PreLoadTables();
             PreloadInternalTable();
             PreloadInfoBoard();
+            PreloadAbilityPool();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -77,13 +81,18 @@ namespace Aquila.Procedure
         {
             GameEntry.InfoBoard.Preload();
         }
+        
+        private void PreloadAbilityPool()
+        {
+            GameEntry.AbilityPool.Init();
+        }
 
         /// <summary>
         /// 预加载内部数据表
         /// </summary>
         private void PreloadInternalTable()
         {
-            foreach ( var tableName in Configs )
+            foreach ( var tableName in GameConfig.Misc.DataTableConfigs )
             {
                 var assetPath = Tools.Path.ConfigPath( tableName );
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
@@ -150,16 +159,6 @@ namespace Aquila.Procedure
         /// 预加载处理器
         /// </summary>
         private PreloadHandler _handler = null;
-
-        //#todo放到config里
-        /// <summary>
-        /// 预加载的form配置
-        /// </summary>
-        public static readonly string[] Configs = new string[]
-            {
-                "UIForm",
-                "Preload"
-            };
     }
 
     /// <summary>

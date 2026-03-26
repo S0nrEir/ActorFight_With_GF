@@ -6,16 +6,24 @@ namespace Aquial.UI
 	public enum FormIdEnum : byte 
 	{
 		/// <summary>
-		/// ���Խ���
+		/// 测试界面
 		/// <summary>
 		TestForm,
 		/// <summary>
-		/// ���ܽ���
+		/// 技能界面
 		/// <summary>
 		AbilityForm,
 		/// <summary>
-		/// WindUp����
+		/// WindUp界面
 		/// <summary>
 		WindUpForm,
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// 技能沙盒测试界面
+		/// <summary>
+		AbilitySandBoxForm,
+#endif
+		
 	}
 }
