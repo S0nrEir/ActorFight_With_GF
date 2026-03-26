@@ -1,4 +1,4 @@
-using Aquila.Toolkit;
+﻿using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
 using GameFramework.Event;
@@ -36,7 +36,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 如果所有与加载完成，就进入下一个流程
+        /// 如果所有与加载完成，就进入下一个流
         /// </summary>
         private void GoToNextProcedureIfFinished()
         {
@@ -44,7 +44,6 @@ namespace Aquila.Procedure
                 return;
 
             System.GC.Collect();
-            Tools.Ability.InitEffectSpecGenerator();
             //测试进入战斗流程
             NextProcedure();
         }
@@ -108,16 +107,16 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 下一个流程
+        /// 下一个流
         /// </summary>
         private void NextProcedure()
         {
             ChangeState<Procedure_Test_Fight>( _procedureOwner );
             return;
 
-#pragma warning disable CS0162 // 检测到无法访问的代码
+#pragma warning disable CS0162 // 检测到无法访问的代
             if ( GameEntry.Procedure._is_enter_test_scene )
-#pragma warning restore CS0162 // 检测到无法访问的代码
+#pragma warning restore CS0162 // 检测到无法访问的代
             {
                 ChangeState<Procedure_Test>( _procedureOwner );
             }
@@ -136,7 +135,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        ///  表加载成功回调
+        ///  表加载成功回
         /// </summary>
         private void OnLoadDataTableSucc( object sender, GameEventArgs e )
         {
@@ -149,7 +148,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 状态机拥有者
+        /// 状态机拥有
         /// </summary>
         private IFsm<IProcedureManager> _procedureOwner = null;
 
@@ -165,7 +164,7 @@ namespace Aquila.Procedure
     internal class PreloadHandler
     {
         /// <summary>
-        /// 加载数据表完成
+        /// 加载数据表完
         /// </summary>
         public void LoadDataTableFinish()
         {
@@ -189,7 +188,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 内部数据表加载成功
+        /// 内部数据表加载成
         /// </summary>
         public void OnDataTableLoadSucc( string assetName )
         {
@@ -210,7 +209,7 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 预加载全部完成
+        /// 预加载全部完
         /// </summary>
         public bool PreLoadFinish()
         {
@@ -229,12 +228,12 @@ namespace Aquila.Procedure
 
         //------------fields------------
         /// <summary>
-        /// 各个资源模块的加载标记
+        /// 各个资源模块的加载标
         /// </summary>
         private int _preloadFlag = 0;
 
         /// <summary>
-        /// 数据表加载完成
+        /// 数据表加载完
         /// </summary>
         private const int _tableLoadFinish = 0b_0000_0000_0001;
 
@@ -244,7 +243,7 @@ namespace Aquila.Procedure
         public const int _infoboardDmgNumberLoadFinish = 0b_0000_0000_0010;
 
         /// <summary>
-        /// 数据表加载标记
+        /// 数据表加载标
         /// </summary>
         private const int _datatableLoadFinish = 0b_0000_0000_0100;
 
@@ -259,8 +258,9 @@ namespace Aquila.Procedure
         private const int _preloadStateFinish = 0b_0000_0000_1111;
 
         /// <summary>
-        /// 保存未加载完成的数据表
+        /// 保存未加载完成的数据
         /// </summary>
         private HashSet<string> _datatableLoadedSet = null;
     }
 }
+

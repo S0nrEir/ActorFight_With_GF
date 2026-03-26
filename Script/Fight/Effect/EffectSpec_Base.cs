@@ -1,3 +1,5 @@
+﻿using System;
+using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Numric;
@@ -47,7 +49,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 从 EffectData 初始化（新数据源）
+        /// EffectData 初始化（新数据源）
         /// </summary>
         public virtual void Init(EffectData meta, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
@@ -87,7 +89,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 从 Table_Effect 初始化（LuBan 配置，用于派生 effect 回退）
+        /// Table_Effect 初始化（LuBan 配置，用于派effect 回退
         /// </summary>
         // public virtual void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
         //     Module_ProxyActor.ActorInstance target = null)
@@ -134,7 +136,7 @@ namespace Aquila.Fight
                 else
                 {
                     Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake --> No effect found with id: {effectID}</color>");
-                    // 回退到 LuBan 查询
+                    // 回退LuBan 查询
                     // var meta = GameEntry.LuBan.Tables.Effect.Get(effectID);
                     // if (meta == null)
                     // {
@@ -163,7 +165,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 当effect销毁
+        /// 当effect销
         /// </summary>
         public virtual void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
@@ -171,7 +173,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 将effect施加到actor上
+        /// 将effect施加到actor
         /// </summary>
         public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
@@ -203,7 +205,7 @@ namespace Aquila.Fight
         private int _stackLimit = 0;
 
         /// <summary>
-        /// impact数据的实体索引
+        /// impact数据的实体索
         /// </summary>
         public int _impactEntityIndex = 0;
 
@@ -238,17 +240,17 @@ namespace Aquila.Fight
         // public int Target;
         //
         // /// <summary>
-        // /// 影响的属性
+        // /// 影响的属
         // /// </summary>
         // public actor_attribute AffectedAttribute;
         
         /// <summary>
-        /// 修改器类型
+        /// 修改器类
         /// </summary>
         public NumricModifierType ModifierType;
         
         /// <summary>
-        /// 唤醒时生效
+        /// 唤醒时生
         /// </summary>
         // public bool EffectOnAwake;
         //
@@ -280,3 +282,169 @@ namespace Aquila.Fight
         protected ushort _stackCount = 0;
     }
 }
+
+namespace Aquila.Fight
+{
+    /// <summary>
+    /// EffectSpec ͳһʼעУʵ
+    /// </summary>
+    public static class EffectSpecFactory
+    {
+        public static void Initialize()
+        {
+            lock (_initLock)
+            {
+                if (_initialized)
+                {
+                    return;
+                }
+
+                BuildRegistrationMap();
+                ValidateRegistrationMap();
+                _initialized = true;
+
+                Log.Info($"[EffectSpecFactory] Initialize complete. Registered={_effectSpecTypeByEffectType.Count}");
+            }
+        }
+
+        public static void EnsureInitialized()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            Initialize();
+        }
+
+        public static EffectSpec_Base CreateEffectSpecByReferencePool(
+            EffectData data,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target)
+        {
+            EnsureInitialized();
+
+            var effectType = data.GetEffectType();
+            if (!_effectSpecTypeByEffectType.TryGetValue(effectType, out var specType))
+            {
+                Log.Warning($"[EffectSpecFactory] No EffectSpec registered for EffectType={effectType}, EffectID={data.GetEffectId()}.");
+                return null;
+            }
+
+            var effect = ReferencePool.Acquire(specType) as EffectSpec_Base;
+            if (effect == null)
+            {
+                var message = $"[EffectSpecFactory] Acquire failed. EffectType={effectType}, SpecType={specType.FullName}.";
+                Log.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            effect.Init(data, castor, target);
+            return effect;
+        }
+
+        public static T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
+        {
+            EnsureInitialized();
+
+            var specType = typeof(T);
+            if (!_effectTypeByEffectSpecType.ContainsKey(specType))
+            {
+                Log.Warning($"[EffectSpecFactory] EffectSpec type is not registered: {specType.FullName}.");
+                return null;
+            }
+
+            return ReferencePool.Acquire(specType) as T;
+        }
+
+        private static void BuildRegistrationMap()
+        {
+            _effectSpecTypeByEffectType.Clear();
+            _effectTypeByEffectSpecType.Clear();
+
+            Register<EffectSpec_Period_CoolDown>(EffectType.Period_CoolDown);
+            Register<EffectSpec_Instant_Cost>(EffectType.Instant_Cost);
+            Register<EffectSpec_Instant_PhyDamage>(EffectType.Instant_PhyDamage);
+            Register<EffectSpec_Instant_Summon_Projectile>(EffectType.Instant_Summon_Projectile);
+            Register<EffectSpec_Period_FixedDamage>(EffectType.Period_FixedDamage);
+            Register<EffectSpec_Instant_PercentageRemoveHealth>(EffectType.Instant_PercentageRemoveHealth);
+            Register<EffectSpec_Period_DerivingStack>(EffectType.Period_DerivingStack);
+            Register<EffectSpec_Period_ActorTag>(EffectType.Period_ActorTag);
+            Register<EffectSpec_Period_AbilityTag>(EffectType.Period_AbilityTag);
+            Register<EffectSpec_Period_WindUp>(EffectType.Period_WindUp);
+            Register<EffectSpec_OnHitted_Trigger_ModifyAttr>(EffectType.OnHitted_Trigger_ModifyAttr);
+        }
+
+        private static void Register<T>(EffectType effectType) where T : EffectSpec_Base
+        {
+            var specType = typeof(T);
+
+            if (!typeof(EffectSpec_Base).IsAssignableFrom(specType))
+            {
+                var message = $"[EffectSpecFactory] Invalid registration. {specType.FullName} is not EffectSpec_Base.";
+                Log.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            if (_effectSpecTypeByEffectType.ContainsKey(effectType))
+            {
+                var message = $"[EffectSpecFactory] Duplicate EffectType registration: {effectType}.";
+                Log.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            if (_effectTypeByEffectSpecType.ContainsKey(specType))
+            {
+                var message = $"[EffectSpecFactory] Duplicate EffectSpec type registration: {specType.FullName}.";
+                Log.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            _effectSpecTypeByEffectType.Add(effectType, specType);
+            _effectTypeByEffectSpecType.Add(specType, effectType);
+        }
+
+        private static void ValidateRegistrationMap()
+        {
+            var missing = new List<EffectType>();
+            foreach (EffectType effectType in Enum.GetValues(typeof(EffectType)))
+            {
+                if (effectType == EffectType.Invalid)
+                {
+                    continue;
+                }
+
+                if (!_effectSpecTypeByEffectType.TryGetValue(effectType, out var specType))
+                {
+                    missing.Add(effectType);
+                    continue;
+                }
+
+                if (specType == null || !typeof(EffectSpec_Base).IsAssignableFrom(specType))
+                {
+                    var message = $"[EffectSpecFactory] Invalid mapped type for {effectType}.";
+                    Log.Error(message);
+                    throw new InvalidOperationException(message);
+                }
+            }
+
+            if (missing.Count > 0)
+            {
+                var message =
+                    $"[EffectSpecFactory] Registration incomplete. Missing EffectType: {string.Join(", ", missing)}";
+                Log.Error(message);
+                throw new InvalidOperationException(message);
+            }
+        }
+
+        private static readonly Dictionary<EffectType, Type> _effectSpecTypeByEffectType =
+            new Dictionary<EffectType, Type>(16);
+
+        private static readonly Dictionary<Type, EffectType> _effectTypeByEffectSpecType =
+            new Dictionary<Type, EffectType>(16);
+
+        private static readonly object _initLock = new object();
+        private static bool _initialized;
+    }
+}
+

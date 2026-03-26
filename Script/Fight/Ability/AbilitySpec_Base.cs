@@ -1,4 +1,4 @@
-using Aquila.Event;
+﻿using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
@@ -19,7 +19,7 @@ namespace Aquila.Fight
     public /*abstract*/ class AbilitySpecBase : IReference
     {
         /// <summary>
-        /// 扣除技能消耗
+        /// 扣除技能消
         /// </summary>
         public void Deduct()
         {
@@ -75,8 +75,21 @@ namespace Aquila.Fight
             
             if (GameEntry.AbilityPool.TryGetEffect(costEffectId, out var costData))
             {
-                _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
-                _costEffect.Init(costData);
+                var costEffect = Tools.Ability.CreateEffectSpecByReferencePool(costData, null, null);
+                if (costEffect is EffectSpec_Instant_Cost costSpec)
+                {
+                    _costEffect = costSpec;
+                }
+                else
+                {
+                    if (costEffect != null)
+                    {
+                        Log.Error($"<color=yellow>AbilitySpecBase.Setup: Cost effect type mismatch, effectId={costEffectId}, expected={nameof(EffectSpec_Instant_Cost)}, actual={costEffect.GetType().Name}</color>");
+                        ReferencePool.Release(costEffect);
+                    }
+
+                    Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create Cost effect {costEffectId}</color>");
+                }
             }
             else
             {
@@ -85,8 +98,21 @@ namespace Aquila.Fight
             
             if (GameEntry.AbilityPool.TryGetEffect(cdEffectId, out var cdData))
             {
-                _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
-                _cdEffect.Init(cdData);
+                var cdEffect = Tools.Ability.CreateEffectSpecByReferencePool(cdData, null, null);
+                if (cdEffect is EffectSpec_Period_CoolDown cdSpec)
+                {
+                    _cdEffect = cdSpec;
+                }
+                else
+                {
+                    if (cdEffect != null)
+                    {
+                        Log.Error($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect type mismatch, effectId={cdEffectId}, expected={nameof(EffectSpec_Period_CoolDown)}, actual={cdEffect.GetType().Name}</color>");
+                        ReferencePool.Release(cdEffect);
+                    }
+
+                    Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create CoolDown effect {cdEffectId}</color>");
+                }
             }
             else
             {
@@ -113,14 +139,14 @@ namespace Aquila.Fight
         // }
 
         /// <summary>
-        /// 使用技能
+        /// 使用技
         /// </summary>
         public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             if ( !OnPreAbility( result ) )
                 return false;
 
-            // 使用 AbilityData 时，根据 triggerIndex 仅执行对应 Effect
+            // 使用 AbilityData 时，根据 triggerIndex 仅执行对Effect
             if ( _data.GetId() > 0 )
             {
                 var effects = _data.GetEffects();
@@ -190,7 +216,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 是否可以使用技能
+        /// 是否可以使用技
         /// </summary>
         public virtual int CanUseAbility()
         {
@@ -210,7 +236,7 @@ namespace Aquila.Fight
         {
             Meta          = null;
             _data         = default;
-            // 清理 CD 和 Cost
+            // 清理 CD Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
             // _tagContainer = null;
@@ -230,7 +256,7 @@ namespace Aquila.Fight
 
         //-------------------priv-------------------
         /// <summary>
-        /// 检查技能冷却
+        /// 检查技能冷
         /// </summary>
         private bool CDOK()
         {
@@ -238,7 +264,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 检查技能消耗
+        /// 检查技能消
         /// </summary>
         private bool CostOK()
         {
@@ -272,7 +298,7 @@ namespace Aquila.Fight
         private AbilityData _data;
         
         /// <summary>
-        /// 技能 ID（优先从 AbilityData 获取，否则从 Meta 获取）
+        /// 技ID（优先从 AbilityData 获取，否则从 Meta 获取
         /// </summary>
         public int AbilityId => _data.GetId() != 0 ? _data.GetId() : (Meta?.id ?? 0);
 
@@ -283,12 +309,12 @@ namespace Aquila.Fight
         private TagContainer _tagContainer;
         
         /// <summary>
-        /// 技能 CD
+        /// 技CD
         /// </summary>
         private EffectSpec_Period_CoolDown _cdEffect = null;
 
         /// <summary>
-        /// 技能消耗
+        /// 技能消
         /// </summary>
         private EffectSpec_Instant_Cost _costEffect = null;
 
@@ -304,7 +330,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 根据 AbilityData 生成一个 Spec 实例
+        /// 根据 AbilityData 生成一Spec 实例
         /// </summary>
         public static AbilitySpecBase Gen(AbilityData data, Module_ProxyActor.ActorInstance instance)
         {
@@ -315,7 +341,7 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 根据表格配置生成一个 Spec 实例
+        /// 根据表格配置生成一Spec 实例
         /// </summary>
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>
@@ -328,3 +354,4 @@ namespace Aquila.Fight
         // }
     }
 }
+

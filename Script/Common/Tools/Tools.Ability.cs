@@ -1,4 +1,4 @@
-using Aquila.Fight;
+﻿using Aquila.Fight;
 using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
@@ -13,7 +13,7 @@ namespace Aquila.Toolkit
     {
         /// <summary>
         /// 技能工具类
-        /// <para>#todo此处暂时存放了一些技能数据，工具类不该存放这些技能数据，之后要处理一下</para>
+        /// <para>#todo此处暂时存放了一些技能数据，工具类不该存放这些技能数据，之后要处理一个</para>
         /// </summary>
         public static class Ability
         {
@@ -39,36 +39,11 @@ namespace Aquila.Toolkit
             }
             
             /// <summary>
-            /// 初始化effect生成器
+            /// 初始化effect生成
             /// </summary>
             public static void InitEffectSpecGenerator()
             {
-                //#todo初始化技能数据先暂时放到这里。
-                if ( _generatorInitFlag )                 
-                {
-                    Log.Warning( $"<color=yellow>Tools.Ability.InitEffectSpecGenerator()--->_generatorInitFlag is true</color>" );
-                    return;
-                }
-
-                var enumFields = typeof( EffectType ).GetFields();
-                var len = enumFields.Length;
-                _effectTypeDic = new Dictionary<int, Type>( len );
-                object fieldInst = null;
-                EffectType tempEnum = EffectType.Period_CoolDown;
-                string typeName = string.Empty;
-                //从1开始：system.int32跳过
-                for ( var i = 1; i < len; i++ )
-                {
-                    var field = enumFields[i];
-                    if ( !field.FieldType.IsEnum )
-                        continue;
-
-                    tempEnum = ( EffectType ) field.GetValue( fieldInst );
-                    typeName = $"Aquila.Fight.EffectSpec_{field.Name}";
-                    _effectTypeDic.Add( ( int ) tempEnum, Type.GetType( typeName ) );
-                }
-
-                _generatorInitFlag = true;
+                EffectSpecFactory.EnsureInitialized();
             }
 
             /// <summary>
@@ -96,27 +71,11 @@ namespace Aquila.Toolkit
             // }
 
             /// <summary>
-            /// 根据 EffectData 创建对应的 effect 逻辑实例，拿不到返回 null
+            /// 根据 EffectData 创建对应effect 逻辑实例，拿不到返回 null
             /// </summary>
             public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
-                var type = (int)data.GetEffectType();
-
-                if (!_effectTypeDic.TryGetValue(type, out var effectType))
-                {
-                    Log.Warning($"Tools.Ability.CreateEffectSpecByReferencePool()--->Unknown effect type: {data.GetEffectType()}");
-                    return null;
-                }
-
-                var effect = ReferencePool.Acquire(effectType) as EffectSpec_Base;
-                if (effect == null)
-                {
-                    Log.Warning("Tools.Ability.CreateEffectSpecByReferencePool()--->Failed to acquire effect from pool");
-                    return null;
-                }
-
-                effect.Init(data, castor, target);
-                return effect;
+                return EffectSpecFactory.CreateEffectSpecByReferencePool(data, castor, target);
             }
                 #region nouse
 
@@ -162,16 +121,7 @@ namespace Aquila.Toolkit
             /// </summary>
             public static T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
             {
-                foreach (var type in _effectTypeDic.Values)
-                {
-                    if (type == typeof(T))
-                    {
-                        var effect = ReferencePool.Acquire(type);
-                        return effect as T;
-                    }
-                }
-
-                return null;
+                return EffectSpecFactory.CreateEffectSpecByReferencePool<T>();
             }
 
             /// <summary>
@@ -182,16 +132,6 @@ namespace Aquila.Toolkit
             // {
             //     return CreateEffectSpecByReferencePool(meta,castor,target) as T;
             // }
-
-            /// <summary>
-            /// 初始化标记
-            /// </summary>
-            private static bool _generatorInitFlag = false;
-
-            /// <summary>
-            /// effect类型集合，存储所有effect的类型，方便生成
-            /// </summary>
-            private static Dictionary<int, Type> _effectTypeDic = null;
 
             #region Binary Loading
 #if UNITY_EDITOR
@@ -360,7 +300,7 @@ namespace Aquila.Toolkit
             }
 
             /// <summary>
-            /// 从 .ablt 二进制流中读取一个 Effect Clip，
+            /// .ablt 二进制流中读取一Effect Clip
             /// 优先使用 .efct 模板的配置字段，找不到则回退使用 .ablt 内联数据
             /// </summary>
             private static void ReadEffectClip(
