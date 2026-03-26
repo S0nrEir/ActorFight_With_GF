@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 
 using Aquial.UI;
 using Aquila.AbilityEditor;
@@ -54,8 +54,10 @@ namespace Aquila.Procedure
                 return;
             }
 
+            int sandBoxAbilityId = -1;
             if (GameEntry.AbilityEditorSandBox.TryGetSandBoxAbility(out var abilityData))
             {
+                sandBoxAbilityId = abilityData.GetId();
                 var abilityAddon = _playerInstance.GetAddon<Addon_Ability>();
                 if (abilityAddon != null)
                     abilityAddon.GiveAbility(abilityData);
@@ -76,7 +78,12 @@ namespace Aquila.Procedure
                 _dummyInstance.Actor.SetRotation( new Vector3( 0f, 98.6860046f, 0f ) );
             }
 
-            GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param());
+            GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param()
+            {
+                _playerID = playerEntityId,
+                _dummyID = dummyEntityId,
+                _abilityID = sandBoxAbilityId
+            });
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
@@ -91,3 +98,4 @@ namespace Aquila.Procedure
     }
 }
 #endif
+

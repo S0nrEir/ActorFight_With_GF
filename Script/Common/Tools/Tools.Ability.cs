@@ -43,6 +43,7 @@ namespace Aquila.Toolkit
             /// </summary>
             public static void InitEffectSpecGenerator()
             {
+                //#todo初始化技能数据先暂时放到这里。
                 if ( _generatorInitFlag )                 
                 {
                     Log.Warning( $"<color=yellow>Tools.Ability.InitEffectSpecGenerator()--->_generatorInitFlag is true</color>" );
