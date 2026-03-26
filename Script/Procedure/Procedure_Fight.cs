@@ -103,11 +103,6 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
-        /// 场景主相机
-        /// </summary>
-        private Camera _mainCamera = null;
-
-        /// <summary>
         /// 模块
         /// </summary>
         //private Module_Input _input_module = null;

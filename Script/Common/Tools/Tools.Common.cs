@@ -274,7 +274,9 @@ namespace Aquila.Toolkit
         public static Int64 SetBitValue_i64( Int64 value, int index, bool bit_value )
         {
             var val = 1 << index;
+#pragma warning disable CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
             return ( bit_value ? ( value | val ) : ( value & ~val ) );
+#pragma warning restore CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
         }
 
         /// <summary>
