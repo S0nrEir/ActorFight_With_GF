@@ -30,7 +30,7 @@ namespace Aquila.Extension
             //init
             obj.Setup( obj.Target as GameObject );
             //set pos
-            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.GlobalVar.MainCamera );
+            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.CameraHub.GetWorldCamera() );
             obj.SetPos( rect_pos );
             obj.SetNumber( num, Color.red );
             _damage_number_spawn_dic.Add( obj.GetHashCode(), obj );

@@ -28,43 +28,10 @@ namespace  Aquila.Extension
         /// </summary>
         public const int InvalidID = -1;
 
-        /// <summary>
-        /// 主相机
-        /// </summary>
-        public Camera MainCamera
-        {
-            get
-            {
-                if (_mainCamera == null)
-                    _mainCamera = GetMainCamera();
-
-                return _mainCamera;
-            }
-        }
-        
-        //--------------priv--------------
-        /// <summary>
-        /// 主相机
-        /// </summary>
-        private Camera _mainCamera = null;
-
-        private Camera GetMainCamera()
-        {
-            var camera_go = GameObject.FindWithTag("MainCamera");
-            if (camera_go == null)
-            {
-                Log.Warning("<color=yellow>faild to get main camera</color>");
-                return null;
-            }
-            DontDestroyOnLoad(camera_go);
-            return camera_go.GetComponent<Camera>();
-        }
-
         //--------------override--------------
         protected override void Awake()
         {
             base.Awake();
-            _mainCamera = GetMainCamera();
         }
     }
 

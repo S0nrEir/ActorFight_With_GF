@@ -107,7 +107,7 @@ namespace Aquila.Fight.Addon
 
         private Camera ResolveWorldCamera()
         {
-            var mainCamera = GameEntry.GlobalVar.MainCamera;
+            var mainCamera = GameEntry.CameraHub.GetWorldCamera();
             if ( mainCamera != null && mainCamera.isActiveAndEnabled )
                 return mainCamera;
 

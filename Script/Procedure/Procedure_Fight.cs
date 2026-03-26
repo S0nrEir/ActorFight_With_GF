@@ -9,6 +9,7 @@ using System;
 using Cfg.Common;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+using Aquila.CameraSystem;
 
 namespace Aquila.Procedure
 {
@@ -94,7 +95,7 @@ namespace Aquila.Procedure
         /// </summary>
         private void MainCameraInitializeSetting()
         {
-            _mainCamera = GameEntry.GlobalVar.MainCamera;
+            GameEntry.CameraHub.TryGetCamera( CameraRole.MainWorld, out var _mainCamera );
             var sceneConfig = GameEntry.LuBan.Tables.SceneConfig;
             _mainCamera.transform.eulerAngles = sceneConfig.Main_Camera_Default_Euler;
             _mainCamera.transform.position = sceneConfig.MainCameraDefaultPosition;
