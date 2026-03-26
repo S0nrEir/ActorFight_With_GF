@@ -39,7 +39,7 @@ namespace Aquila.AbilityEditor
             _actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             _proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
 
-            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/Button" );
+            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/Image" );
             _abilityButton.onClick.AddListener( OnAbilityButtonClicked );
             
             _cdTxt = Tools.GetComponent<Text>( gameObject, "AbilityButton/Text" );
