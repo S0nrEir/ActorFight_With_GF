@@ -203,7 +203,7 @@ namespace Aquila.AbilityPool
                 }
             }
 
-            // 扫描沙盒目录下所.efct 文件，文件名effectID
+            // 扫描沙盒目录下所有.efct 文件，文件名effectID
             string[] efctFiles = Directory.GetFiles(sandBoxDir, "*.efct");
             var availableEffectIds = new HashSet<int>();
             var efctPathMap = new Dictionary<int, string>();
@@ -222,7 +222,7 @@ namespace Aquila.AbilityPool
                 }
             }
 
-            // 校验：required available 必须完全一
+            // 校验：required 与 available 必须完全一致
             foreach (var id in requiredEffectIds)
             {
                 if (!availableEffectIds.Contains(id))
@@ -240,7 +240,7 @@ namespace Aquila.AbilityPool
                 }
             }
 
-            // 加载所.efct 写入
+            // 加载所有 .efct 写入池
             foreach (var kvp in efctPathMap)
             {
                 if (!TryReadEffect(kvp.Value, out var effectData))
@@ -264,7 +264,7 @@ namespace Aquila.AbilityPool
         
         //----------------------- priv -----------------------
         /// <summary>
-        /// 加载所.efct 文件_effectPool
+        /// 加载所有 .efct 文件到 _effectPool
         /// </summary>
         private void LoadAllEffects()
         {
@@ -286,7 +286,7 @@ namespace Aquila.AbilityPool
         }
 
         /// <summary>
-        /// 加载所.ablt 文件_abilityPool
+        /// 加载所有 .ablt 文件到 _abilityPool
         /// </summary>
         private void LoadAllAbilities()
         {
@@ -308,7 +308,7 @@ namespace Aquila.AbilityPool
         }
 
         /// <summary>
-        /// 读取单个 .efct 文件，格式与 EffectBinaryExporter 写出顺序一
+        /// 读取单个 .efct 文件，格式与 EffectBinaryExporter 写出顺序一致
         /// </summary>
         private bool TryReadEffect(string filePath, out EffectData data)
         {
@@ -387,7 +387,7 @@ namespace Aquila.AbilityPool
         }
 
         /// <summary>
-        /// 读取单个 .ablt 文件，格式与 AbilityBinaryExporter.ExportAbility 写出顺序一
+        /// 读取单个 .ablt 文件，格式与 AbilityBinaryExporter.ExportAbility 写出顺序一致
         /// </summary>
         private bool TryReadAbility(string filePath, out AbilityData data)
         {
@@ -411,8 +411,8 @@ namespace Aquila.AbilityPool
             var targetType      = (AbilityTargetType)reader.ReadInt32();
             int timelineId      = reader.ReadInt32();
             float duration      = reader.ReadSingle();
-
-            // Tracks collect all EffectClipData
+            
+            // Tracks → collect all EffectClipData
             var effectList = new List<EffectData>();
             int trackCount = reader.ReadInt32();
 
@@ -433,7 +433,7 @@ namespace Aquila.AbilityPool
                     }
                     else
                     {
-                        // 跳过Effect clip 的数据（Audio / VFX
+                        // 跳过非 Effect clip 的数据（Audio / VFX）
                         SkipNonEffectClip(reader, clipType);
                     }
                 }
@@ -563,12 +563,12 @@ namespace Aquila.AbilityPool
         [SerializeField] private int _defaultCapacity = 32;
 
         /// <summary>
-        /// 相对Application.dataPath Effect 二进制目
+        /// 相对于 Application.dataPath 的 Effect 二进制目录
         /// </summary>
         private const string EFFECT_DIR  = "Res/Config/Effect";
 
         /// <summary>
-        /// 相对Application.dataPath Ability 二进制目
+        /// 相对于 Application.dataPath 的 Ability 二进制目录
         /// </summary>
         private const string ABILITY_DIR = "Res/Config/Ability";
 

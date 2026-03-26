@@ -13,7 +13,7 @@ namespace Aquila.Toolkit
     {
         /// <summary>
         /// 技能工具类
-        /// <para>#todo此处暂时存放了一些技能数据，工具类不该存放这些技能数据，之后要处理一个</para>
+        /// <para>#todo此处暂时存放了一些技能数据，工具类不该存放这些技能数据，之后要处理一下</para>
         /// </summary>
         public static class Ability
         {
@@ -39,7 +39,7 @@ namespace Aquila.Toolkit
             }
             
             /// <summary>
-            /// 初始化effect生成
+            /// 初始化effect生成器
             /// </summary>
             public static void InitEffectSpecGenerator()
             {
@@ -71,7 +71,7 @@ namespace Aquila.Toolkit
             // }
 
             /// <summary>
-            /// 根据 EffectData 创建对应effect 逻辑实例，拿不到返回 null
+            /// 根据 EffectData 创建对应的 effect 逻辑实例，拿不到返回 null
             /// </summary>
             public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
@@ -300,7 +300,7 @@ namespace Aquila.Toolkit
             }
 
             /// <summary>
-            /// .ablt 二进制流中读取一Effect Clip
+            /// 从 .ablt 二进制流中读取一个 Effect Clip，
             /// 优先使用 .efct 模板的配置字段，找不到则回退使用 .ablt 内联数据
             /// </summary>
             private static void ReadEffectClip(

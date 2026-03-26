@@ -19,7 +19,7 @@ namespace Aquila.Fight
     public /*abstract*/ class AbilitySpecBase : IReference
     {
         /// <summary>
-        /// 扣除技能消
+        /// 扣除技能消耗
         /// </summary>
         public void Deduct()
         {
@@ -139,14 +139,14 @@ namespace Aquila.Fight
         // }
 
         /// <summary>
-        /// 使用技
+        /// 使用技能
         /// </summary>
         public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             if ( !OnPreAbility( result ) )
                 return false;
 
-            // 使用 AbilityData 时，根据 triggerIndex 仅执行对Effect
+            // 使用 AbilityData 时，根据 triggerIndex 仅执行对应 Effect
             if ( _data.GetId() > 0 )
             {
                 var effects = _data.GetEffects();
@@ -216,7 +216,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 是否可以使用技
+        /// 是否可以使用技能
         /// </summary>
         public virtual int CanUseAbility()
         {
@@ -236,7 +236,7 @@ namespace Aquila.Fight
         {
             Meta          = null;
             _data         = default;
-            // 清理 CD Cost
+            // 清理 CD 和 Cost
             _costEffect?.Clear();
             _cdEffect?.Clear();
             // _tagContainer = null;
@@ -256,7 +256,7 @@ namespace Aquila.Fight
 
         //-------------------priv-------------------
         /// <summary>
-        /// 检查技能冷
+        /// 检查技能冷却
         /// </summary>
         private bool CDOK()
         {
@@ -264,7 +264,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 检查技能消
+        /// 检查技能消耗
         /// </summary>
         private bool CostOK()
         {
@@ -298,7 +298,7 @@ namespace Aquila.Fight
         private AbilityData _data;
         
         /// <summary>
-        /// 技ID（优先从 AbilityData 获取，否则从 Meta 获取
+        /// 技能 ID（优先从 AbilityData 获取，否则从 Meta 获取）
         /// </summary>
         public int AbilityId => _data.GetId() != 0 ? _data.GetId() : (Meta?.id ?? 0);
 
@@ -309,12 +309,12 @@ namespace Aquila.Fight
         private TagContainer _tagContainer;
         
         /// <summary>
-        /// 技CD
+        /// 技能 CD
         /// </summary>
         private EffectSpec_Period_CoolDown _cdEffect = null;
 
         /// <summary>
-        /// 技能消
+        /// 技能消耗
         /// </summary>
         private EffectSpec_Instant_Cost _costEffect = null;
 
@@ -330,7 +330,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 根据 AbilityData 生成一Spec 实例
+        /// 根据 AbilityData 生成一个 Spec 实例
         /// </summary>
         public static AbilitySpecBase Gen(AbilityData data, Module_ProxyActor.ActorInstance instance)
         {
@@ -341,7 +341,7 @@ namespace Aquila.Fight
         }
         
         /// <summary>
-        /// 根据表格配置生成一Spec 实例
+        /// 根据表格配置生成一个 Spec 实例
         /// </summary>
         /// <param name="meta">技能元数据</param>
         /// <param name="instance">携带的各个组件</param>

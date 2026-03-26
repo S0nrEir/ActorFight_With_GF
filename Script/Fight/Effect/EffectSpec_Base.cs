@@ -49,7 +49,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// EffectData 初始化（新数据源）
+        /// 从 EffectData 初始化（新数据源）
         /// </summary>
         public virtual void Init(EffectData meta, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
@@ -89,7 +89,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// Table_Effect 初始化（LuBan 配置，用于派effect 回退
+        /// 从 Table_Effect 初始化（LuBan 配置，用于派生 effect 回退）
         /// </summary>
         // public virtual void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
         //     Module_ProxyActor.ActorInstance target = null)
@@ -136,7 +136,7 @@ namespace Aquila.Fight
                 else
                 {
                     Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake --> No effect found with id: {effectID}</color>");
-                    // 回退LuBan 查询
+                    // 回退到 LuBan 查询
                     // var meta = GameEntry.LuBan.Tables.Effect.Get(effectID);
                     // if (meta == null)
                     // {
@@ -165,7 +165,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 当effect销
+        /// 当effect销毁
         /// </summary>
         public virtual void OnEffectEnd( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
@@ -173,7 +173,7 @@ namespace Aquila.Fight
         }
 
         /// <summary>
-        /// 将effect施加到actor
+        /// 将effect施加到actor上
         /// </summary>
         public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
@@ -205,7 +205,7 @@ namespace Aquila.Fight
         private int _stackLimit = 0;
 
         /// <summary>
-        /// impact数据的实体索
+        /// impact数据的实体索引
         /// </summary>
         public int _impactEntityIndex = 0;
 
@@ -240,17 +240,17 @@ namespace Aquila.Fight
         // public int Target;
         //
         // /// <summary>
-        // /// 影响的属
+        // /// 影响的属性
         // /// </summary>
         // public actor_attribute AffectedAttribute;
         
         /// <summary>
-        /// 修改器类
+        /// 修改器类型
         /// </summary>
         public NumricModifierType ModifierType;
         
         /// <summary>
-        /// 唤醒时生
+        /// 唤醒时生效
         /// </summary>
         // public bool EffectOnAwake;
         //
