@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityGameFramework.Runtime;
 
@@ -112,6 +113,48 @@ namespace Aquila.Extension
                 return false;
 
             SetPrimaryInternal( role, camera );
+            return true;
+        }
+
+        public bool TryAttachOverlayToBaseCamera(CameraRole role, Camera overlayCamera)
+        {
+            TryGetCamera(role,out var baseCamera );
+            return TryAttachOverlayToBaseCamera(baseCamera, overlayCamera);
+        }
+
+        /// <summary>
+        /// 将 overlay 相机叠加到 base 相机（URP 相机栈）。
+        /// </summary>
+        public bool TryAttachOverlayToBaseCamera( Camera baseCamera, Camera overlayCamera )
+        {
+            if ( baseCamera == null || overlayCamera == null )
+                return false;
+
+            if ( baseCamera == overlayCamera )
+                return true;
+
+            if ( !baseCamera.isActiveAndEnabled || !overlayCamera.isActiveAndEnabled )
+                return false;
+
+            var baseData = baseCamera.GetUniversalAdditionalCameraData();
+            var overlayData = overlayCamera.GetUniversalAdditionalCameraData();
+            if ( baseData == null || overlayData == null )
+                return false;
+
+            if ( overlayData.renderType != CameraRenderType.Overlay )
+                overlayData.renderType = CameraRenderType.Overlay;
+
+            var stack = baseData.cameraStack;
+            if ( stack == null )
+                return false;
+
+            for ( int i = 0; i < stack.Count; i++ )
+            {
+                if ( stack[i] == overlayCamera )
+                    return true;
+            }
+
+            stack.Add( overlayCamera );
             return true;
         }
 
@@ -295,8 +338,7 @@ namespace Aquila.Extension
 
         private bool SetPrimaryInternal( CameraRole role, Camera camera )
         {
-            Camera old = null;
-            _primaryByRole.TryGetValue( role, out old );
+            _primaryByRole.TryGetValue( role, out var old );
 
             if ( old == camera )
                 return camera != null;
@@ -353,7 +395,7 @@ namespace Aquila.Extension
         private readonly Dictionary<CameraRole, List<CameraBinding>> _roleBindings = new Dictionary<CameraRole, List<CameraBinding>>( 8 );
 
         private readonly Dictionary<CameraRole, Camera> _primaryByRole = new Dictionary<CameraRole, Camera>( 8 );
-        
+
         [SerializeField] private bool _useCameraMainFallback = true;
         [SerializeField] private string _uiCameraTag = "UICamera";
         [SerializeField] private string _infoBoardCameraTag = "InfoBoardCamera";

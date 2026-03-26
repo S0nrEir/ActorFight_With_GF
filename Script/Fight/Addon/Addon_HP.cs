@@ -79,6 +79,7 @@ namespace Aquila.Fight.Addon
             if ( _hpObj == null || _actorTransform == null )
                 return;
 
+            //#todo：可能的高频调用
             var worldCamera = ResolveWorldCamera();
             if ( worldCamera == null )
                 return;

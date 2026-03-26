@@ -74,6 +74,12 @@ namespace Aquila
             private set;
         }
 
+        public static Component_CameraHub CameraHub
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Timeline组件
         /// </summary>
@@ -135,15 +141,42 @@ namespace Aquila
             //TimeWheel = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_TimeWheel>();
             InfoBoard = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_InfoBoard>();
             GlobalVar = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
+            CameraHub = EnsureCameraHubComponent();
             Timeline = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
             Impact = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
             UI = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
             Async = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Async>();
             AbilityPool = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_AbilityPool>();
-
 #if UNITY_EDITOR
             AbilityEditorSandBox = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_AbilityEditorSandBox>();
 #endif
         }
+
+        private static Component_CameraHub EnsureCameraHubComponent()
+        {
+            var cameraHub = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_CameraHub>();
+            if ( cameraHub != null )
+                return cameraHub;
+
+            if ( GlobalVar != null )
+            {
+                cameraHub = GlobalVar.gameObject.GetComponent<Component_CameraHub>();
+                if ( cameraHub == null )
+                    cameraHub = GlobalVar.gameObject.AddComponent<Component_CameraHub>();
+            }
+
+            if ( cameraHub == null && InfoBoard != null )
+            {
+                cameraHub = InfoBoard.gameObject.GetComponent<Component_CameraHub>();
+                if ( cameraHub == null )
+                    cameraHub = InfoBoard.gameObject.AddComponent<Component_CameraHub>();
+            }
+
+            if ( cameraHub == null )
+                Debug.LogWarning( "GameEntry.InitCustomComponents()--->camera hub create failed" );
+
+            return cameraHub;
+        }
     }
 }
+

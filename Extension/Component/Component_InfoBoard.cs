@@ -3,6 +3,7 @@ using Aquila.Procedure;
 using Aquila.Event;
 using GameFramework.Resource;
 using System.Collections.Generic;
+using Aquila.CameraSystem;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using Object_DamageNumber = Aquila.ObjectPool.Object_DamageNumber;
@@ -83,7 +84,7 @@ namespace Aquila.Extension
             return null;
         }
 
-        /// <summary>
+        /// <summary>x
         /// 回收
         /// </summary>
         public bool UnSpawn<T>( string pool_name, object obj ) where T : Object_Base
@@ -114,6 +115,9 @@ namespace Aquila.Extension
             if ( _init_flag )
                 return;
 
+            //叠加相机 / overlay camera
+            GameEntry.CameraHub.TryAttachOverlayToBaseCamera(CameraRole.MainWorld, _camera);
+            
             //创建hpbar对象池和资源
             var hp_pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>( typeof( Object_HPBar ).Name, 0xf );
             hp_pool.ExpireTime = 360f;
@@ -211,7 +215,7 @@ namespace Aquila.Extension
             _damage_number_spawn_dic = new Dictionary<int, Object_DamageNumber>( 0xf );
             _damage_number_unspawn_set = new HashSet<int>( 0xf );
         }
-
+        
         /// <summary>
         /// 刷帧，主要处理伤害数字
         /// </summary>
