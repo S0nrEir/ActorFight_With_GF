@@ -17,8 +17,6 @@ namespace Aquila.Fight
     /// </summary>
     public abstract class EffectSpec_Base : IReference
     {
-
-        public EffectData Meta => _effectData;
         public DurationPolicy Policy => _effectData.GetPolicy();
         
         /// <summary>
@@ -280,6 +278,7 @@ namespace Aquila.Fight
         protected Numric_Modifier _modifier;
         protected EffectData _effectData = default;
         protected ushort _stackCount = 0;
+        public EffectData Meta => _effectData;
     }
 }
 
