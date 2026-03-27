@@ -54,7 +54,7 @@ namespace Aquila.Fight
                     break;
             }
 
-            _modifier.Setup( ModifierType, fac );
+            _modifier.Setup( Meta.GetModifierType(), fac );
         }
 
         public override void Clear()

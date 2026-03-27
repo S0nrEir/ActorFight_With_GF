@@ -33,7 +33,7 @@ namespace Aquila.Fight
             Module_ProxyActor.ActorInstance target = null)
         {
             base.Init(data, castor, target);
-            _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
+            _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
         
         // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,

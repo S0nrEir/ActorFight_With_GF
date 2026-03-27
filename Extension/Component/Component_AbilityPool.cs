@@ -17,9 +17,6 @@ namespace Aquila.AbilityPool
     public class Component_AbilityPool : GameFrameworkComponent
     {
         //----------------------- pub -----------------------
-        
-        
-        
         public void Init()
         {
             if (_initialized)
@@ -29,9 +26,6 @@ namespace Aquila.AbilityPool
             }
 
             EffectSpecFactory.EnsureInitialized();
-
-
-
             _abilityPool = new Dictionary<int, AbilityData>(_defaultCapacity);
             _effectPool  = new Dictionary<int, EffectData>(_defaultCapacity);
 

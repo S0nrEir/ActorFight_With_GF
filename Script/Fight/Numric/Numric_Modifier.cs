@@ -61,7 +61,7 @@ namespace Aquila.Numric
                     break;
                 
                 default:
-                    Log.Warning("none modifier type.");
+                    Log.Warning("<color=yellow>none modifier type.</color>");
                     // throw new GameFrameworkException( "invalid modifier type!" );
                     break;
             }

@@ -182,7 +182,7 @@ namespace Aquila.Fight
         public virtual void Clear()
         {
             _modifier          = default;
-            ModifierType       = default;
+            // ModifierType       = default;
             StackCount         = 1;
             // StackLimit         = 0;
             // _impactEntityIndex = 0;
@@ -247,7 +247,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 修改器类型
         /// </summary>
-        public NumricModifierType ModifierType;
+        //public NumricModifierType ModifierType;
         
         /// <summary>
         /// 唤醒时生效
