@@ -366,7 +366,6 @@ namespace Editor.AbilityEditor
             
             if (_isGenSandBoxAblt)
             {
-                
                 AbilityDataExporter.ExportToSandBox(config, _timelineTrackItems);
                 ShowNotification(new GUIContent($"✓ 沙盒测试数据已生成"));
             }
