@@ -1,4 +1,5 @@
 ﻿using Aquila.Fight;
+using Aquila.AbilityPool;
 using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
@@ -41,10 +42,10 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 初始化effect生成器
             /// </summary>
-            public static void InitEffectSpecGenerator()
-            {
-                EffectSpecFactory.EnsureInitialized();
-            }
+            // public static void InitEffectSpecGenerator()
+            // {
+            //     EffectSpecFactory.EnsureInitialized();
+            // }
 
             /// <summary>
             /// 根据配表类型获取对应的effect逻辑实例，拿不到返回null
@@ -75,7 +76,13 @@ namespace Aquila.Toolkit
             /// </summary>
             public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
-                return EffectSpecFactory.CreateEffectSpecByReferencePool(data, castor, target);
+                if (GameEntry.AbilityPool == null)
+                {
+                    Log.Error("Tools.Ability.CreateEffectSpecByReferencePool()--->GameEntry.AbilityPool is null");
+                    return null;
+                }
+
+                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool(data, castor, target);
             }
                 #region nouse
 
@@ -121,7 +128,13 @@ namespace Aquila.Toolkit
             /// </summary>
             public static T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
             {
-                return EffectSpecFactory.CreateEffectSpecByReferencePool<T>();
+                if (GameEntry.AbilityPool == null)
+                {
+                    Log.Error("Tools.Ability.CreateEffectSpecByReferencePool<T>()--->GameEntry.AbilityPool is null");
+                    return null;
+                }
+
+                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool<T>();
             }
 
             /// <summary>
@@ -436,3 +449,4 @@ namespace Aquila.Toolkit
         }//end class Ability
     }//end class Tools
 }
+
