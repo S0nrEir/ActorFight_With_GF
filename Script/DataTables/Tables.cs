@@ -23,6 +23,7 @@ public partial class Tables
     public Role.RoleMeta RoleMeta {get; }
     public Single.GameText GameText {get; }
     public Fight.AbilityBase AbilityBase {get; }
+    public Common.SoundEffectMap SoundEffectMap {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -47,6 +48,8 @@ public partial class Tables
         tables.Add("Single.GameText", GameText);
         AbilityBase = new Fight.AbilityBase(loader("fight_abilitybase")); 
         tables.Add("Fight.AbilityBase", AbilityBase);
+        SoundEffectMap = new Common.SoundEffectMap(loader("common_soundeffectmap")); 
+        tables.Add("Common.SoundEffectMap", SoundEffectMap);
 
         PostInit();
         TbItem.Resolve(tables); 
@@ -59,6 +62,7 @@ public partial class Tables
         RoleMeta.Resolve(tables); 
         GameText.Resolve(tables); 
         AbilityBase.Resolve(tables); 
+        SoundEffectMap.Resolve(tables); 
         PostResolve();
     }
 
@@ -74,6 +78,7 @@ public partial class Tables
         RoleMeta.TranslateText(translator); 
         GameText.TranslateText(translator); 
         AbilityBase.TranslateText(translator); 
+        SoundEffectMap.TranslateText(translator); 
     }
     
     partial void PostInit();
