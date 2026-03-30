@@ -29,15 +29,15 @@ public sealed partial class Table_SoundEffectMap :  Bright.Config.BeanBase
     }
 
     /// <summary>
-    /// ????ID
+    /// 音效ID
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// ????????? Resources ???????????????
+    /// 音效资源路径（Assets/Res 开始的完整路径）
     /// </summary>
     public string asset_path { get; private set; }
     /// <summary>
-    /// ??
+    /// 备注
     /// </summary>
     public string desc { get; private set; }
 
