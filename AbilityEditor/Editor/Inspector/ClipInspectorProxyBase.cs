@@ -64,6 +64,6 @@ namespace Aquila.AbilityEditor
         /// Timeline的总时长
         /// </summary>
         [HideInInspector]
-        public float TimelineDuration = 0f;
+        public float TimelineDuration;
     }
 }

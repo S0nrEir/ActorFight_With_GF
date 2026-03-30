@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
 using Aquila.Fight;
-using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
 
@@ -102,7 +101,7 @@ namespace Editor.AbilityEditor.Tools
             catch (Exception ex)
             {
                 result.ErrorMessage = $"Assembly verification failed: {ex.Message}\n{ex.StackTrace}";
-                Debug.LogError($"[AbilityDataAssemblyVerifier] {result.ErrorMessage}");
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityDataAssemblyVerifier] {result.ErrorMessage}");
             }
 
             return result;
@@ -149,7 +148,7 @@ namespace Editor.AbilityEditor.Tools
 
             if (!Directory.Exists(efctDir))
             {
-                Debug.LogWarning($"[AbilityDataAssemblyVerifier] Production effect directory not found: {efctDir}");
+                Aquila.Toolkit.Tools.Logger.Warning($"[AbilityDataAssemblyVerifier] Production effect directory not found: {efctDir}");
                 return map;
             }
 
@@ -162,11 +161,11 @@ namespace Editor.AbilityEditor.Tools
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogWarning($"[AbilityDataAssemblyVerifier] Failed to read .efct: {file} - {ex.Message}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityDataAssemblyVerifier] Failed to read .efct: {file} - {ex.Message}");
                 }
             }
 
-            Debug.Log($"[AbilityDataAssemblyVerifier] Loaded {map.Count} production .efct files");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataAssemblyVerifier] Loaded {map.Count} production .efct files");
             return map;
         }
 
@@ -866,7 +865,7 @@ namespace Editor.AbilityEditor.Tools
             EnsureDirectoryExists(Path.GetDirectoryName(logPath));
             File.AppendAllText(logPath, "\n\n" + reportContent);
 
-            Debug.Log($"[AbilityDataAssemblyVerifier] Report:\n{reportContent}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataAssemblyVerifier] Report:\n{reportContent}");
         }
 
         private static void EnsureDirectoryExists(string path)

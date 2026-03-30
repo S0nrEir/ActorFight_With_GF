@@ -42,7 +42,7 @@ namespace Aquila.AbilityEditor
 
         public override TimelineClipType ClipType => TimelineClipType.Audio;
 
-        public AudioClipData() : base()
+        public AudioClipData()
         {
             _audioPath = string.Empty;
             _volume = 1f;

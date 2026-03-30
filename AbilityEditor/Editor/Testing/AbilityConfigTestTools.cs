@@ -42,7 +42,7 @@ namespace Editor.AbilityEditor.Testing
         [MenuItem("Aquila/AbilityEditor/Testing/运行所有测试")]
         public static void RunAllTests()
         {
-            Debug.Log("<color=cyan><b>========== 开始运行所有测试 ==========</b></color>");
+            Aquila.Toolkit.Tools.Logger.Info("<color=cyan><b>========== 开始运行所有测试 ==========</b></color>");
 
             int totalTests = 4;
             int passedTests = 0;
@@ -96,25 +96,25 @@ namespace Editor.AbilityEditor.Testing
                 failedTests++;
             }
 
-            Debug.Log($"<color=cyan><b>========== 测试汇总 ==========</b></color>");
-            Debug.Log($"<color=white>总测试数: {totalTests}</color>");
-            Debug.Log($"<color=green>通过: {passedTests}</color>");
-            Debug.Log($"<color=red>失败: {failedTests}</color>");
+            Aquila.Toolkit.Tools.Logger.Info("<color=cyan><b>========== 测试汇总 ==========</b></color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=white>总测试数: {totalTests}</color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=green>通过: {passedTests}</color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=red>失败: {failedTests}</color>");
 
             if (failedTests == 0)
             {
-                Debug.Log("<color=green><b>✓ 所有测试通过!</b></color>");
+                Aquila.Toolkit.Tools.Logger.Info("<color=green><b>✓ 所有测试通过!</b></color>");
             }
             else
             {
-                Debug.LogWarning($"<color=yellow><b>⚠ 部分测试失败 ({failedTests}/{totalTests})</b></color>");
+                Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow><b>⚠ 部分测试失败 ({failedTests}/{totalTests})</b></color>");
             }
         }
 
         [MenuItem("Aquila/AbilityEditor/Testing/清除测试数据")]
         public static void ClearTestData()
         {
-            Debug.Log("<color=green>[AbilityConfigTestTool] 测试数据已清除</color>");
+            Aquila.Toolkit.Tools.Logger.Info("<color=green>[AbilityConfigTestTool] 测试数据已清除</color>");
         }
         
         /// <summary>
@@ -124,19 +124,19 @@ namespace Editor.AbilityEditor.Testing
         {
             if (logHeader)
             {
-                Debug.Log($"<color=cyan><b>========== 开始运行{testName} ==========</b></color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=cyan><b>========== 开始运行{testName} ==========</b></color>");
             }
             else
             {
-                Debug.Log($"<color=cyan>--- {testName} ---</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=cyan>--- {testName} ---</color>");
             }
 
             bool testPassed = true;
             var tracks = CreateTestTracks(scenario);
-            Debug.Log($"<color=green>✓ 创建测试数据: {tracks.Count}个轨道</color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ 创建测试数据: {tracks.Count}个轨道</color>");
 
             var config = GenerateConfig(scenario, tracks);
-            Debug.Log($"<color=green>✓ 生成配置成功: AbilityID={config.AbilityID}</color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ 生成配置成功: AbilityID={config.AbilityID}</color>");
 
             testPassed = ValidateConfig(config, scenario, tracks);
 
@@ -144,9 +144,9 @@ namespace Editor.AbilityEditor.Testing
             //     testPassed = TestAccessor(config);
 
             if (testPassed)
-                Debug.Log($"<color=green><b>========== {testName}通过! ==========</b></color>\n");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green><b>========== {testName}通过! ==========</b></color>\n");
             else
-                Debug.LogError($"<color=red><b>========== {testName}失败! ==========</b></color>\n");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red><b>========== {testName}失败! ==========</b></color>\n");
             
             // AbilityConfigAccessor.Clear();
             return testPassed;
@@ -289,7 +289,7 @@ namespace Editor.AbilityEditor.Testing
         {
             if (config == null)
             {
-                Debug.LogError("<color=red>✗ 配置对象为 null</color>");
+                Aquila.Toolkit.Tools.Logger.Error("<color=red>✗ 配置对象为 null</color>");
                 return false;
             }
 
@@ -297,22 +297,22 @@ namespace Editor.AbilityEditor.Testing
 
             if (config.AbilityID != scenario.AbilityID)
             {
-                Debug.LogError($"<color=red>✗ AbilityID 不匹配: 期望={scenario.AbilityID}, 实际={config.AbilityID}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ AbilityID 不匹配: 期望={scenario.AbilityID}, 实际={config.AbilityID}</color>");
                 passed = false;
             }
             else
             {
-                Debug.Log($"<color=green>✓ AbilityID 验证通过: {config.AbilityID}</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ AbilityID 验证通过: {config.AbilityID}</color>");
             }
 
             if (config.TimelineDuration != scenario.Duration)
             {
-                Debug.LogError($"<color=red>✗ Duration 不匹配: 期望={scenario.Duration}, 实际={config.TimelineDuration}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ Duration 不匹配: 期望={scenario.Duration}, 实际={config.TimelineDuration}</color>");
                 passed = false;
             }
             else
             {
-                Debug.Log($"<color=green>✓ Timeline Duration 验证通过: {config.TimelineDuration}s</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ Timeline Duration 验证通过: {config.TimelineDuration}s</color>");
             }
 
             return passed;
@@ -344,11 +344,11 @@ namespace Editor.AbilityEditor.Testing
 
             if (config.Triggers.Count != uniqueTimes)
             {
-                Debug.LogError($"<color=red>✗ Trigger 数量不匹配: 期望={uniqueTimes}, 实际={config.Triggers.Count}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ Trigger 数量不匹配: 期望={uniqueTimes}, 实际={config.Triggers.Count}</color>");
                 return false;
             }
 
-            Debug.Log($"<color=green>✓ Triggers 验证通过: {config.Triggers.Count}个</color>");
+            Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ Triggers 验证通过: {config.Triggers.Count}个</color>");
 
             // 验证 Trigger 排序
             var times = config.Triggers.Select(t => t.TriggerTime).ToList();
@@ -357,11 +357,11 @@ namespace Editor.AbilityEditor.Testing
 
             if (!sorted)
             {
-                Debug.LogError("<color=red>✗ Triggers 未按时间排序</color>");
+                Aquila.Toolkit.Tools.Logger.Error("<color=red>✗ Triggers 未按时间排序</color>");
                 return false;
             }
 
-            Debug.Log("<color=green>✓ Triggers 排序验证通过</color>");
+            Aquila.Toolkit.Tools.Logger.Info("<color=green>✓ Triggers 排序验证通过</color>");
 
             return true;
         }
@@ -395,34 +395,34 @@ namespace Editor.AbilityEditor.Testing
             // 验证 EffectClips
             if (config.Effects.Count != expectedEffects)
             {
-                Debug.LogError($"<color=red>✗ EffectClips 数量不匹配: 期望={expectedEffects}, 实际={config.Effects.Count}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ EffectClips 数量不匹配: 期望={expectedEffects}, 实际={config.Effects.Count}</color>");
                 passed = false;
             }
             else
             {
-                Debug.Log($"<color=green>✓ EffectClips 验证通过: {config.Effects.Count}个</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ EffectClips 验证通过: {config.Effects.Count}个</color>");
             }
 
             // 验证 AudioClips
             if (config.Audios.Count != expectedAudios)
             {
-                Debug.LogError($"<color=red>✗ AudioClips 数量不匹配: 期望={expectedAudios}, 实际={config.Audios.Count}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ AudioClips 数量不匹配: 期望={expectedAudios}, 实际={config.Audios.Count}</color>");
                 passed = false;
             }
             else
             {
-                Debug.Log($"<color=green>✓ AudioClips 验证通过: {config.Audios.Count}个</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ AudioClips 验证通过: {config.Audios.Count}个</color>");
             }
 
             // 验证 VFXClips
             if (config.VFXs.Count != expectedVFXs)
             {
-                Debug.LogError($"<color=red>✗ VFXClips 数量不匹配: 期望={expectedVFXs}, 实际={config.VFXs.Count}</color>");
+                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ VFXClips 数量不匹配: 期望={expectedVFXs}, 实际={config.VFXs.Count}</color>");
                 passed = false;
             }
             else
             {
-                Debug.Log($"<color=green>✓ VFXClips 验证通过: {config.VFXs.Count}个</color>");
+                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ VFXClips 验证通过: {config.VFXs.Count}个</color>");
             }
 
             return passed;
@@ -440,27 +440,27 @@ namespace Editor.AbilityEditor.Testing
         //     AbilityConfigAccessor.SetConfig(config);
         //     if (AbilityConfigAccessor.Current != config)
         //     {
-        //         Debug.LogError("<color=red>✗ AbilityConfigAccessor.Current 不正确</color>");
+        //         Aquila.Toolkit.Tools.Logger.Error("<color=red>✗ AbilityConfigAccessor.Current 不正确</color>");
         //         passed = false;
         //     }
         //     else
         //     {
-        //         Debug.Log("<color=green>✓ AbilityConfigAccessor.Current 验证通过</color>");
+        //         Aquila.Toolkit.Tools.Logger.Info("<color=green>✓ AbilityConfigAccessor.Current 验证通过</color>");
         //     }
         //
         //     if (!_eventTriggered)
         //     {
-        //         Debug.LogError("<color=red>✗ OnConfigChanged 事件未触发</color>");
+        //         Aquila.Toolkit.Tools.Logger.Error("<color=red>✗ OnConfigChanged 事件未触发</color>");
         //         passed = false;
         //     }
         //     else if (_eventConfig != config)
         //     {
-        //         Debug.LogError("<color=red>✗ OnConfigChanged 事件参数不正确</color>");
+        //         Aquila.Toolkit.Tools.Logger.Error("<color=red>✗ OnConfigChanged 事件参数不正确</color>");
         //         passed = false;
         //     }
         //     else
         //     {
-        //         Debug.Log("<color=green>✓ OnConfigChanged 事件验证通过</color>");
+        //         Aquila.Toolkit.Tools.Logger.Info("<color=green>✓ OnConfigChanged 事件验证通过</color>");
         //     }
         //     
         //     AbilityConfigAccessor.OnConfigChanged -= OnConfigChanged;
@@ -476,7 +476,7 @@ namespace Editor.AbilityEditor.Testing
             _eventConfig = config;
         }
         
-        private static bool _eventTriggered = false;
-        private static AbilityConfig _eventConfig = null;
+        private static bool _eventTriggered;
+        private static AbilityConfig _eventConfig;
     }
 }

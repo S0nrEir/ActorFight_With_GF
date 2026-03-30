@@ -1,11 +1,9 @@
-using Aquila.Extension;
+using System;
 using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
-using System;
-using System.Collections.Generic;
 using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -130,7 +128,7 @@ namespace Aquila.Fight.Actor
 
         public void SetWorldPosition( Vector2 posToSet )
         {
-            Debug.Log( $"<color=orange>SetWorldPosition,actorID:{ActorID}</color>" );
+            Tools.Logger.Info( $"<color=orange>SetWorldPosition,actorID:{ActorID}</color>" );
             if ( CachedTransform == null )
                 return;
 
@@ -176,7 +174,7 @@ namespace Aquila.Fight.Actor
             var regSucc = GameEntry.Module.GetModule<Module_ActorMgr>().Register( this );
             if ( !regSucc.regSucc )
             {
-                Log.Warning( $"<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
+                Tools.Logger.Warning( "<color=yellow>ActorBase.OnInit()--->!res.succ!</color>" );
                 return;
             }
 
@@ -214,7 +212,7 @@ namespace Aquila.Fight.Actor
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
             var unRegSucc = GameEntry.Module.GetModule<Module_ActorMgr>().UnRegister( ActorID );
             if (!unRegSucc)
-                Log.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
+                Tools.Logger.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
                 
             base.OnHide( isShutdown, userData );
         }
@@ -224,7 +222,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            // Log.Info("111111111111111111111111111");
+            // Aquila.Toolkit.Tools.Logger.Info("111111111111111111111111111");
             // _tagContainer = null;
             base.OnRecycle();
         }
@@ -280,7 +278,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 初始化自己的Addons
         /// </summary>
-        protected virtual void InitAddons( Module_ProxyActor.ActorInstance instance )
+        protected virtual void InitAddons( ActorInstance instance )
         {
             var addons = GetAllAddon();
             foreach ( var addon in addons )
@@ -317,11 +315,6 @@ namespace Aquila.Fight.Actor
                 Setup(data._roleMetaID);
         }
 
-        protected Actor_Base()
-        {
-
-        }
-
         #region fields
 
         /// <summary>
@@ -342,7 +335,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 事件组件
         /// </summary>
-        protected Addon_Event _eventAddon = null;
+        protected Addon_Event _eventAddon;
 
         /// <summary>
         /// 数据组件
@@ -352,13 +345,13 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// actor实例
         /// </summary>
-        private ActorInstance _instance = null;
+        private ActorInstance _instance;
 
         /// <summary>
         /// tag管理器
         /// </summary>
         // protected TagContainer _tagContainer = null;
-        protected TagContainer[] _tagContainer = null;
+        protected TagContainer[] _tagContainer;
 
         #endregion
     }

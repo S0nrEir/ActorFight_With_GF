@@ -62,7 +62,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// 已经分配了entity的impact组件位置索引集合
             /// </summary>
-            private int[] _attachedEntityArr = null;
+            private int[] _attachedEntityArr;
 
             /// <summary> 
             /// impact组件回收池数量
@@ -72,7 +72,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// impact组件回收池
             /// </summary>
-            private int[] _recycleImpactDataArr = null;
+            private int[] _recycleImpactDataArr;
 
             /// <summary>
             /// impact组件数量l
@@ -82,7 +82,7 @@ namespace Aquila.Fight.Impact
             /// <summary>
             /// Impact组件集合
             /// </summary>
-            private ImpactData[] _impactDataArr = null;
+            private ImpactData[] _impactDataArr;
         }
     }
 }

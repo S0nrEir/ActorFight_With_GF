@@ -37,10 +37,10 @@ namespace UGFExtensions.Await
         
         public WebResult Init(byte[] bytes, bool isError, string errorMessage, object userData)
         {
-            this.Bytes = bytes;
-            this.IsError = isError;
-            this.ErrorMessage = errorMessage;
-            this.UserData = userData;
+            Bytes = bytes;
+            IsError = isError;
+            ErrorMessage = errorMessage;
+            UserData = userData;
             return this;
         }
         public void Clear()

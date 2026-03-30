@@ -82,8 +82,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 预定义的轨道颜色数组（用于区分不同轨道）
         /// </summary>
-        private static readonly Color[] TrackColors = new Color[]
-        {
+        private static readonly Color[] TrackColors = {
             new Color(.8f, .4f,0f),
             new Color(.8f, .8f, 0f),
             new Color(.4f, .8f, 0f),

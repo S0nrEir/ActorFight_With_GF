@@ -8,10 +8,10 @@ namespace Aquila
     public abstract class EntityData : IReference
     {
         [SerializeField]
-        private int m_Id = 0;
+        private int m_Id;
 
         [SerializeField]
-        private int m_TypeId = 0;
+        private int m_TypeId;
 
         [SerializeField]
         private Vector3 m_Position = Vector3.zero;

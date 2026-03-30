@@ -1,11 +1,6 @@
 using Aquila.Fight;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
-using Aquila.Module;
-using Aquila.Numric;
-using Cfg.Enum;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Toolkit
 {
@@ -19,17 +14,17 @@ namespace Aquila.Toolkit
             {
                 if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTarget;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoCastor;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotEnoughMana;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.CD_NOT_OK ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.CD_NOT_OK ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_PARAM ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_PARAM ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoParam;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoMeta;
-                else if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META ) )
+                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTimeline;
 
                 return string.Empty;
@@ -53,7 +48,7 @@ namespace Aquila.Toolkit
                 var result = x * Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Precision + z;
                 if ( result > Table.GetSceneConfig().Fight_Scene_Terrain_Coordinate_Range )
                 {
-                    Log.Error( $"terrain range wrong!,value is :{result}" );
+                    Logger.Error( $"terrain range wrong!,value is :{result}" );
                     return -1;
                 }
                 return result;
@@ -116,12 +111,12 @@ namespace Aquila.Toolkit
                 var effectPoint = actor.CachedTransform.Find( effect_entity_data._effectPointName );
                 if ( effectPoint == null )
                 {
-                    effectPoint = Tools.AddChild( actor.CachedTransform );
+                    effectPoint = AddChild( actor.CachedTransform );
                     effectPoint.gameObject.name = effect_entity_data._effectPointName;
 
-                    effectPoint.localScale = UnityEngine.Vector3.one;
-                    effectPoint.localEulerAngles = UnityEngine.Vector3.zero;
-                    effectPoint.localPosition = UnityEngine.Vector3.zero;
+                    effectPoint.localScale = Vector3.one;
+                    effectPoint.localEulerAngles = Vector3.zero;
+                    effectPoint.localPosition = Vector3.zero;
                     effectPoint.SetAsFirstSibling();
                 }
 
@@ -129,11 +124,11 @@ namespace Aquila.Toolkit
                 effectPoint.SetParent( actor.CachedTransform );
 
                 effect.CachedTransform.SetParent( effectPoint );
-                effect.CachedTransform.localScale = UnityEngine.Vector3.one;
+                effect.CachedTransform.localScale = Vector3.one;
 
                 effect.CachedTransform.localPosition = effect_entity_data._localPositionOffset;
-                effect.CachedTransform.eulerAngles = UnityEngine.Vector3.zero;
-                effect.CachedTransform.localEulerAngles = UnityEngine.Vector3.zero;
+                effect.CachedTransform.eulerAngles = Vector3.zero;
+                effect.CachedTransform.localEulerAngles = Vector3.zero;
             }
         }
     }

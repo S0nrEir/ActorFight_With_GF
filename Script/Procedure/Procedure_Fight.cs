@@ -1,15 +1,12 @@
-using Aquila.Config;
+using System;
+using Aquila.CameraSystem;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Common;
 using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System;
-using Cfg.Common;
-using UnityEngine;
-using UnityGameFramework.Runtime;
-using Aquila.CameraSystem;
 
 namespace Aquila.Procedure
 {
@@ -31,7 +28,7 @@ namespace Aquila.Procedure
             _procedureOwner = procedureOwner;
             if ( !InitializeData( procedureOwner ) )
             {
-                Log.Error( "procedure data initialize failed!" );
+                Tools.Logger.Error( "procedure data initialize failed!" );
                 return;
             }
 
@@ -65,7 +62,7 @@ namespace Aquila.Procedure
             //_actor_fac_module.End();
             _procedureOwner = null;
             if ( !procedureOwner.RemoveData( typeof( Procedure_Fight_Variable ).Name ) )
-                Log.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
+                Tools.Logger.Error( "Failed to remove procedure data Procedure_Fight_Variable " );
 
             base.OnLeave( procedureOwner, isShutdown );
         }
@@ -84,7 +81,7 @@ namespace Aquila.Procedure
             _data = variable.GetValue() as Procedure_Fight_Data;
             if ( _data is null )
             {
-                Log.Error( "_data is null!" );
+                Tools.Logger.Error( "_data is null!" );
                 return false;
             }
             return true;
@@ -120,12 +117,12 @@ namespace Aquila.Procedure
         /// <summary>
         /// 战斗阶段状态数据
         /// </summary>
-        private Procedure_Fight_Data _data = null;
+        private Procedure_Fight_Data _data;
 
         /// <summary>
         /// 流程持有者
         /// </summary>
-        private IFsm<IProcedureManager> _procedureOwner = null;
+        private IFsm<IProcedureManager> _procedureOwner;
     }
 
     internal class Procedure_Fight_Data : IReference
@@ -144,7 +141,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 场景脚本表数据
         /// </summary>
-        public Table_Scripts _sceneScriptMeta = null;
+        public Table_Scripts _sceneScriptMeta;
     }
 
     /// <summary>
@@ -189,7 +186,7 @@ namespace Aquila.Procedure
         public override void Clear()
         {
             if ( Value is IReference )
-                ReferencePool.Release( ( Value as IReference ) );
+                ReferencePool.Release( Value );
 
             Value = null;
             //base.Clear();

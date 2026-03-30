@@ -1,4 +1,3 @@
-using Aquila;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
@@ -20,6 +19,6 @@ public class StartUp : MonoBehaviour
         DontDestroyOnLoad( _eventSystem );
     }
 
-    [SerializeField] private GameObject _entryObject = null;
-    [SerializeField] private GameObject _eventSystem = null;
+    [SerializeField] private GameObject _entryObject;
+    [SerializeField] private GameObject _eventSystem;
 }

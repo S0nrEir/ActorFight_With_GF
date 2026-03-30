@@ -21,19 +21,19 @@
 //         {
 //             if (config == null)
 //             {
-//                 Debug.LogWarning("[AbilityConfigAccessor] SetConfig called with null config. Use Clear() instead.");
+//                 Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigAccessor] SetConfig called with null config. Use Clear() instead.");
 //                 return;
 //             }
 //             
 //             if (!config.Validate(out string errorMessage))
 //             {
-//                 Debug.LogError($"[AbilityConfigAccessor] Cannot set invalid config: {errorMessage}");
+//                 Aquila.Toolkit.Tools.Logger.Error($"[AbilityConfigAccessor] Cannot set invalid config: {errorMessage}");
 //                 return;
 //             }
 //
 //             _current = config;
 //
-//             Debug.Log($"[AbilityConfigAccessor] Config set: {config}");
+//             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigAccessor] Config set: {config}");
 //             OnConfigChanged?.Invoke(_current);
 //         }
 //
@@ -44,10 +44,10 @@
 //         {
 //             if (_current == null)
 //             {
-//                 Debug.LogWarning("[AbilityConfigAccessor] Clear called but no config is loaded");
+//                 Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigAccessor] Clear called but no config is loaded");
 //                 return;
 //             }
-//             Debug.Log($"[AbilityConfigAccessor] Clearing config: {_current}");
+//             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigAccessor] Clearing config: {_current}");
 //             _current = null;
 //             
 //             OnConfigChanged?.Invoke(null);

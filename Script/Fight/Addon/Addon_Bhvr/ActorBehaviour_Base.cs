@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
@@ -46,7 +43,7 @@ namespace Aquila.Fight
         /// <summary>
         /// actor实例
         /// </summary>
-        protected ActorInstance _instance = null;
+        protected ActorInstance _instance;
     }
 
 }

@@ -1,6 +1,5 @@
-using Aquila.AbilityEditor;
+﻿using Aquila.AbilityEditor;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.AbilityEditor
@@ -32,7 +31,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 注册轨道到clip管理器
         /// </summary>
-        private void RegisterTrackItemToClipManager(TimelineTrackItem track, UnityEngine.UIElements.VisualElement timelineElement)
+        private void RegisterTrackItemToClipManager(TimelineTrackItem track, VisualElement timelineElement)
         {
             if (_clipManager == null)
                 InitializeClipManager();
@@ -80,7 +79,7 @@ namespace Editor.AbilityEditor
             if (clipUI == null)
                 return;
 
-            Debug.Log($"Clip selected: {clipUI.ClipData.GetDisplayInfo()}");
+            Aquila.Toolkit.Tools.Logger.Info($"Clip selected: {clipUI.ClipData.GetDisplayInfo()}");
 
             // 保存当前选中的clip
             _selectedClipUI = clipUI;
@@ -104,7 +103,7 @@ namespace Editor.AbilityEditor
 
                 _clipInspectorProxy.BindEffectClipData(effectClip,clipUI,_timelineDuration);
                 Selection.activeObject = _clipInspectorProxy;
-                Debug.Log($"Showing Effect Clip in Unity Inspector - ID: {effectClip.EffectId}, Timeline Duration: {_timelineDuration:F2}s");
+                Aquila.Toolkit.Tools.Logger.Info($"Showing Effect Clip in Unity Inspector - ID: {effectClip.EffectId}, Timeline Duration: {_timelineDuration:F2}s");
             }
             else if (clipUI.ClipData is AudioClipData audioClip)
             {
@@ -116,7 +115,7 @@ namespace Editor.AbilityEditor
 
                 _audioClipInspectorProxy.BindAudioClipData(audioClip, clipUI, _timelineDuration);
                 Selection.activeObject = _audioClipInspectorProxy;
-                Debug.Log($"Showing Audio Clip in Unity Inspector - Path: {audioClip.AudioPath}, Timeline Duration: {_timelineDuration:F2}s");
+                Aquila.Toolkit.Tools.Logger.Info($"Showing Audio Clip in Unity Inspector - Path: {audioClip.AudioPath}, Timeline Duration: {_timelineDuration:F2}s");
             }
             else
             {
@@ -154,7 +153,7 @@ namespace Editor.AbilityEditor
             if (clipUI == null)
                 return;
 
-            Debug.Log($"Clip deleted: {clipUI.ClipData.GetDisplayInfo()}");
+            Aquila.Toolkit.Tools.Logger.Info($"Clip deleted: {clipUI.ClipData.GetDisplayInfo()}");
 
             if (_currentAbilityData != null)
                 EditorUtility.SetDirty(_currentAbilityData);

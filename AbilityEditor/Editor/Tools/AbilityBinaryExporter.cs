@@ -1,9 +1,7 @@
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
-using Aquila.Toolkit;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -18,7 +16,7 @@ namespace Editor.AbilityEditor.Tools
         {
             if (!Directory.Exists(Misc.ABILITY_ASSET_BASE_PATH))
             {
-                Debug.LogError($"[AbilityBinaryExporter] Source path not found: {Misc.ABILITY_ASSET_BASE_PATH}");
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryExporter] Source path not found: {Misc.ABILITY_ASSET_BASE_PATH}");
                 return;
             }
 
@@ -33,14 +31,14 @@ namespace Editor.AbilityEditor.Tools
                 var abilityData = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(assetPath);
                 if (abilityData == null)
                 {
-                    Debug.LogWarning($"[AbilityBinaryExporter] Failed to load: {assetPath}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityBinaryExporter] Failed to load: {assetPath}");
                     failCount++;
                     continue;
                 }
 
                 if (!abilityData.Validate(out string error))
                 {
-                    Debug.LogWarning($"[AbilityBinaryExporter] Validation failed for {assetPath}: {error}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityBinaryExporter] Validation failed for {assetPath}: {error}");
                     failCount++;
                     continue;
                 }
@@ -51,7 +49,7 @@ namespace Editor.AbilityEditor.Tools
             }
 
             AssetDatabase.Refresh();
-            Debug.Log($"[AbilityBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace Editor.AbilityEditor.Tools
                     }
                 }
             }
-            Debug.Log($"[AbilityBinaryExporter] Exported: {outputPath}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Exported: {outputPath}");
         }
 
         private static void WriteTrack(Aquila.Toolkit.Tools.ByteWriter writer, SerializedTrackData track)
@@ -126,7 +124,7 @@ namespace Editor.AbilityEditor.Tools
                     break;
                 
                 default:
-                    Debug.LogWarning($"[AbilityBinaryExporter] Unknown clip type: {clip.ClipType}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityBinaryExporter] Unknown clip type: {clip.ClipType}");
                     break;
             }
         }

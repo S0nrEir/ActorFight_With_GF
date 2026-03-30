@@ -1,6 +1,6 @@
+﻿using Aquila.AbilityEditor.Config;
 using UnityEditor;
 using UnityEngine;
-using Aquila.AbilityEditor.Config;
 
 namespace Aquila.AbilityEditor.Tools
 {
@@ -73,7 +73,7 @@ namespace Aquila.AbilityEditor.Tools
                 return;
             }
 
-            var newData = ScriptableObject.CreateInstance<EffectEditorSOData>();
+            var newData = CreateInstance<EffectEditorSOData>();
 
             newData.id = sourceData.id;
             newData.Description = sourceData.Description;
@@ -115,7 +115,7 @@ namespace Aquila.AbilityEditor.Tools
             Selection.activeObject = newData;
             EditorGUIUtility.PingObject(newData);
 
-            Debug.Log($"<color=green>Created new EffectData at: {fullPath}</color>");
+            Toolkit.Tools.Logger.Info($"<color=green>Created new EffectData at: {fullPath}</color>");
             EditorUtility.DisplayDialog("Success", $"Created new EffectData:\n{fullPath}", "OK");
         }
     }

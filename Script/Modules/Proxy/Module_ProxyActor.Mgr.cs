@@ -40,7 +40,7 @@
 //            if ( _proxyActorDic is null || _proxyActorDic.Count == 0 )
 //#pragma warning restore CS0162 // 检测到无法访问的代码
 //            {
-//                Log.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
+//                Aquila.Toolkit.Tools.Logger.Warning( "<color=yellow>_proxy_actor_dic is null || _proxy_actor_dic.Count == 0</color>" );
 //                return false;
 //            }
 

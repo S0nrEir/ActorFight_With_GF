@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +16,7 @@ namespace Aquila.Item
         /// <summary>
         /// 文本
         /// </summary>
-        public Text _text = null;
+        public Text _text;
     }
 
 }

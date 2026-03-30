@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Aquila.AbilityEditor;
 using Cfg.Enum;
-using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Editor.AbilityEditor.Config
 {
@@ -57,7 +58,7 @@ namespace Editor.AbilityEditor.Config
                 clipCollections.Audios,
                 clipCollections.VFXs);
 
-            Debug.Log($"[AbilityConfigGenerator] Successfully generated config: {config}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;
         }
 
@@ -78,14 +79,14 @@ namespace Editor.AbilityEditor.Config
             if (sourceData.Tracks != null && sourceData.Tracks.Count > 0)
             {
                 // Primary: Load from AbilityData.Tracks
-                Debug.Log($"[AbilityConfigGenerator] Generating config from AbilityData: {sourceData.name}");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Generating config from AbilityData: {sourceData.name}");
                 clipCollections = CollectClipsFromSerializedTracks(sourceData.Tracks);
                 dataSource = "AbilityData";
             }
             else if (editorTracks != null && editorTracks.Count > 0)
             {
                 // Fallback: Load from editor memory
-                Debug.LogWarning($"[AbilityConfigGenerator] AbilityData.Tracks is empty. Using editor memory state.");
+                Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] AbilityData.Tracks is empty. Using editor memory state.");
                 clipCollections = CollectClipsFromTracks(editorTracks);
                 dataSource = "EditorMemory";
             }
@@ -144,7 +145,7 @@ namespace Editor.AbilityEditor.Config
                 clipCollections.Audios,
                 clipCollections.VFXs);
 
-            Debug.Log($"[AbilityConfigGenerator] Successfully generated config: {config}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;
         }
         
@@ -175,16 +176,16 @@ namespace Editor.AbilityEditor.Config
 
             // Parse Ability ID
             var abilityIDField = editorType.GetField("_abilityIDTextField",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var abilityIDTextField = abilityIDField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var abilityIDTextField = abilityIDField?.GetValue(editor) as TextField;
             if (abilityIDTextField != null && int.TryParse(abilityIDTextField.value, out int abilityID))
                 metadata.AbilityID = abilityID;
             else
                 throw new ArgumentException("Ability ID is empty or invalid");
 
             // Parse Ability Name (use ID as name if description field is empty)
-            var descField = editorType.GetField("_abilityDescTextField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var descTextField = descField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            var descField = editorType.GetField("_abilityDescTextField", BindingFlags.NonPublic | BindingFlags.Instance);
+            var descTextField = descField?.GetValue(editor) as TextField;
 
             metadata.Name = !string.IsNullOrWhiteSpace(descTextField?.value)
                 ? descTextField.value
@@ -192,37 +193,37 @@ namespace Editor.AbilityEditor.Config
             metadata.Desc = descTextField?.value ?? string.Empty;
 
             // Parse Cost Effect ID
-            var costField = editorType.GetField("_costIDTextField",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var costTextField = costField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            var costField = editorType.GetField("_costIDTextField",BindingFlags.NonPublic | BindingFlags.Instance);
+            var costTextField = costField?.GetValue(editor) as TextField;
             if (costTextField != null && int.TryParse(costTextField.value, out int costID))
                 metadata.CostEffectID = costID;
             else
                 metadata.CostEffectID = -1;
 
             // Parse CoolDown Effect ID
-            var coolDownField = editorType.GetField("_coolDownIDTextField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var coolDownTextField = coolDownField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            var coolDownField = editorType.GetField("_coolDownIDTextField", BindingFlags.NonPublic | BindingFlags.Instance);
+            var coolDownTextField = coolDownField?.GetValue(editor) as TextField;
             if (coolDownTextField != null && int.TryParse(coolDownTextField.value, out int coolDownID))
                 metadata.CoolDownEffectID = coolDownID;
             else
                 metadata.CoolDownEffectID = -1;
             
-            var timelineIDField = editorType.GetField("_timelineIDTextField",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var timelineIDTextField = timelineIDField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            var timelineIDField = editorType.GetField("_timelineIDTextField",BindingFlags.NonPublic | BindingFlags.Instance);
+            var timelineIDTextField = timelineIDField?.GetValue(editor) as TextField;
             if (timelineIDTextField != null && int.TryParse(timelineIDTextField.value, out int timelineID))
                 metadata.TimelineID = timelineID;
             else
                 metadata.TimelineID = -1;
 
             // Parse Timeline Asset Path
-            var timelineAssetPathField = editorType.GetField("_timelineAssetPathTxtField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var timelineAssetPathTextField = timelineAssetPathField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+            var timelineAssetPathField = editorType.GetField("_timelineAssetPathTxtField", BindingFlags.NonPublic | BindingFlags.Instance);
+            var timelineAssetPathTextField = timelineAssetPathField?.GetValue(editor) as TextField;
             metadata.TimelineAssetPath = timelineAssetPathTextField?.value ?? string.Empty;
 
             // Parse Target Type
             var targetTypeField = editorType.GetField("_targetTypeDropdown",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var targetTypeDropdown = targetTypeField?.GetValue(editor) as UnityEngine.UIElements.DropdownField;
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var targetTypeDropdown = targetTypeField?.GetValue(editor) as DropdownField;
 
             if (targetTypeDropdown != null && Enum.TryParse<AbilityTargetType>(targetTypeDropdown.value, out var targetType))
             {
@@ -231,8 +232,8 @@ namespace Editor.AbilityEditor.Config
 
             // Parse Duration
             var durationField = editorType.GetField("_durationTextField",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var durationTextField = durationField?.GetValue(editor) as UnityEngine.UIElements.TextField;
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var durationTextField = durationField?.GetValue(editor) as TextField;
 
             if (durationTextField != null && float.TryParse(durationTextField.value, out float duration))
             {
@@ -274,12 +275,12 @@ namespace Editor.AbilityEditor.Config
             // Access _timelineTrackItems using reflection
             var editorType = editor.GetType();
             var trackItemsField = editorType.GetField("_timelineTrackItems",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                BindingFlags.NonPublic | BindingFlags.Instance);
             var trackItems = trackItemsField?.GetValue(editor) as List<TimelineTrackItem>;
 
             if (trackItems == null || trackItems.Count == 0)
             {
-                Debug.LogWarning("[AbilityConfigGenerator] No tracks found in editor");
+                Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] No tracks found in editor");
                 return collections;
             }
 
@@ -288,7 +289,7 @@ namespace Editor.AbilityEditor.Config
             {
                 if (!track.IsEnabled)
                 {
-                    Debug.Log($"[AbilityConfigGenerator] Skipping disabled track: {track.Name}");
+                    Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled track: {track.Name}");
                     continue;
                 }
 
@@ -301,7 +302,7 @@ namespace Editor.AbilityEditor.Config
                 {
                     if (!clip.IsEnabled)
                     {
-                        Debug.Log($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
+                        Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
                         continue;
                     }
                     
@@ -324,16 +325,16 @@ namespace Editor.AbilityEditor.Config
                             break;
 
                         default:
-                            Debug.LogWarning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
+                            Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
                     }
                 }
             }
 
-            Debug.Log($"[AbilityConfigGenerator] Collected clips: " +
-                     $"Effects={collections.Effects.Count}, " +
-                     $"Audios={collections.Audios.Count}, " +
-                     $"VFXs={collections.VFXs.Count}");
+            Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips: " +
+                                             $"Effects={collections.Effects.Count}, " +
+                                             $"Audios={collections.Audios.Count}, " +
+                                             $"VFXs={collections.VFXs.Count}");
 
             return collections;
         }
@@ -353,7 +354,7 @@ namespace Editor.AbilityEditor.Config
 
             if (tracks == null || tracks.Count == 0)
             {
-                Debug.LogWarning("[AbilityConfigGenerator] No serialized tracks found");
+                Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] No serialized tracks found");
                 return collections;
             }
 
@@ -361,13 +362,13 @@ namespace Editor.AbilityEditor.Config
             {
                 if (track == null)
                 {
-                    Debug.LogWarning("[AbilityConfigGenerator] Null track in serialized tracks");
+                    Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] Null track in serialized tracks");
                     continue;
                 }
 
                 if (!track.IsEnabled)
                 {
-                    Debug.Log($"[AbilityConfigGenerator] Skipping disabled track: {track.TrackName}");
+                    Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled track: {track.TrackName}");
                     continue;
                 }
 
@@ -379,20 +380,20 @@ namespace Editor.AbilityEditor.Config
                 {
                     if (clip == null)
                     {
-                        Debug.LogWarning($"[AbilityConfigGenerator] Null clip in track: {track.TrackName}");
+                        Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Null clip in track: {track.TrackName}");
                         continue;
                     }
 
                     if (!clip.IsEnabled)
                     {
-                        Debug.Log($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
+                        Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
                         continue;
                     }
 
                     // Validate clip before adding
                     if (!clip.Validate(out string error))
                     {
-                        Debug.LogWarning($"[AbilityConfigGenerator] Skipping invalid clip in track '{track.TrackName}': {error}");
+                        Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Skipping invalid clip in track '{track.TrackName}': {error}");
                         continue;
                     }
 
@@ -415,17 +416,17 @@ namespace Editor.AbilityEditor.Config
                             break;
 
                         default:
-                            Debug.LogWarning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
+                            Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
                     }
                 }
             }
 
-            Debug.Log($"[AbilityConfigGenerator] Collected clips from serialized tracks: " +
-                     $"Effects={collections.Effects.Count}, " +
-                     // $"Skills={collections.Skills.Count}, " +
-                     $"Audios={collections.Audios.Count}, " +
-                     $"VFXs={collections.VFXs.Count}");
+            Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips from serialized tracks: " +
+                                             $"Effects={collections.Effects.Count}, " +
+                                             // $"Skills={collections.Skills.Count}, " +
+                                             $"Audios={collections.Audios.Count}, " +
+                                             $"VFXs={collections.VFXs.Count}");
 
             return collections;
         }
@@ -445,7 +446,7 @@ namespace Editor.AbilityEditor.Config
 
             if (trackItems == null || trackItems.Count == 0)
             {
-                Debug.LogWarning("[AbilityConfigGenerator] No track items found");
+                Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] No track items found");
                 return collections;
             }
 
@@ -453,13 +454,13 @@ namespace Editor.AbilityEditor.Config
             {
                 if (track == null)
                 {
-                    Debug.LogWarning("[AbilityConfigGenerator] Null track in track items");
+                    Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] Null track in track items");
                     continue;
                 }
 
                 if (!track.IsEnabled)
                 {
-                    Debug.Log($"[AbilityConfigGenerator] Skipping disabled track: {track.Name}");
+                    Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled track: {track.Name}");
                     continue;
                 }
 
@@ -471,13 +472,13 @@ namespace Editor.AbilityEditor.Config
                 {
                     if (clip == null)
                     {
-                        Debug.LogWarning($"[AbilityConfigGenerator] Null clip in track: {track.Name}");
+                        Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Null clip in track: {track.Name}");
                         continue;
                     }
 
                     if (!clip.IsEnabled)
                     {
-                        Debug.Log($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
+                        Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Skipping disabled clip: {clip.ClipName}");
                         continue;
                     }
 
@@ -500,17 +501,17 @@ namespace Editor.AbilityEditor.Config
                             break;
 
                         default:
-                            Debug.LogWarning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
+                            Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
                     }
                 }
             }
 
-            Debug.Log($"[AbilityConfigGenerator] Collected clips from track items: " +
-                     $"Effects={collections.Effects.Count}, " +
-                     // $"Skills={collections.Skills.Count}, " +
-                     $"Audios={collections.Audios.Count}, " +
-                     $"VFXs={collections.VFXs.Count}");
+            Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips from track items: " +
+                                             $"Effects={collections.Effects.Count}, " +
+                                             // $"Skills={collections.Skills.Count}, " +
+                                             $"Audios={collections.Audios.Count}, " +
+                                             $"VFXs={collections.VFXs.Count}");
 
             return collections;
         }
@@ -525,7 +526,7 @@ namespace Editor.AbilityEditor.Config
         {
             if (effects == null || effects.Count == 0)
             {
-                Debug.LogWarning("[AbilityConfigGenerator] No effect clips to generate triggers from");
+                Aquila.Toolkit.Tools.Logger.Warning("[AbilityConfigGenerator] No effect clips to generate triggers from");
                 return new List<TriggerData>();
             }
             
@@ -548,10 +549,10 @@ namespace Editor.AbilityEditor.Config
 
                 triggers.Add(trigger);
 
-                Debug.Log($"[AbilityConfigGenerator] Created trigger at {group.Key:F2}s with {effectIDs.Count} effects");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Created trigger at {group.Key:F2}s with {effectIDs.Count} effects");
             }
 
-            Debug.Log($"[AbilityConfigGenerator] Generated {triggers.Count} triggers total");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Generated {triggers.Count} triggers total");
 
             return triggers;
         }

@@ -5,7 +5,6 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
-using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
@@ -91,7 +90,7 @@ namespace Aquila.AbilityEditor
         {
             if ( _proxyActor == null || _playerID == -1 || _dummyID == -1 || _abilityID == -1 )
             {
-                Log.Warning( "<color=yellow>Form_AbilitySandBox: 参数无效，无法释放技能</color>" );
+                Tools.Logger.Warning( "<color=yellow>Form_AbilitySandBox: 参数无效，无法释放技能</color>" );
                 return;
             }
 
@@ -132,7 +131,7 @@ namespace Aquila.AbilityEditor
             var result = (arg as EventArg_OnUseAblity)._resultParam;
             if ( !result._succ )
             {
-                Log.Info( $"<color=white>技能使用失败: {Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
+                Tools.Logger.Info( $"<color=white>技能使用失败: {Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
             }
         }
 
@@ -156,12 +155,12 @@ namespace Aquila.AbilityEditor
         private int _playerID = -1;
         private int _dummyID = -1;
         private int _abilityID = -1;
-        private Module_ActorMgr _actorMgr = null;
-        private Module_ProxyActor _proxyActor = null;
-        private Button _abilityButton = null;
-        private Text _cdTxt = null;
-        private Image _cdImg = null;
-        private Text _abilityIdText = null;
+        private Module_ActorMgr _actorMgr;
+        private Module_ProxyActor _proxyActor;
+        private Button _abilityButton;
+        private Text _cdTxt;
+        private Image _cdImg;
+        private Text _abilityIdText;
 
         /// <summary>
         /// 沙盒界面参数类

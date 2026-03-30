@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.Playables;
-
 namespace Aquila.Timeline
 {
     /// <summary>

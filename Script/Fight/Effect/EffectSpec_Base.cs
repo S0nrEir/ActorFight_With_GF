@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Numric;
 using Aquila.Toolkit;
-using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
-using UnityEngine.Profiling.Memory.Experimental;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -133,12 +128,12 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake --> No effect found with id: {effectID}</color>");
+                    Tools.Logger.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake --> No effect found with id: {effectID}</color>");
                     // 回退到 LuBan 查询
                     // var meta = GameEntry.LuBan.Tables.Effect.Get(effectID);
                     // if (meta == null)
                     // {
-                    //     Log.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake()--->effect not found in pool or LuBan, id:{effectID}</color>");
+                    //     Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow>EffectSpec_Base.OnEffectAwake()--->effect not found in pool or LuBan, id:{effectID}</color>");
                     //     continue;
                     // }
                     // newEffect = Tools.Ability.CreateEffectSpecByReferencePool(meta, castor, target);
@@ -146,7 +141,7 @@ namespace Aquila.Fight
                 
                 if ( newEffect is null )
                 {
-                    Log.Warning( $"EffectSpec_Base.OnEffectAwake()--->newEffect is null, effectID:{effectID}" );
+                    Tools.Logger.Warning( $"EffectSpec_Base.OnEffectAwake()--->newEffect is null, effectID:{effectID}" );
                     continue;
                 }
 
@@ -186,10 +181,6 @@ namespace Aquila.Fight
             // _impactEntityIndex = 0;
             ResetWhenOverride  = false;
             _effectData = default;
-        }
-
-        protected EffectSpec_Base()
-        {
         }
 
         /// <summary>
@@ -276,8 +267,8 @@ namespace Aquila.Fight
         /// 对应的数值修改器
         /// </summary>
         protected Numric_Modifier _modifier;
-        protected EffectData _effectData = default;
-        protected ushort _stackCount = 0;
+        protected EffectData _effectData;
+        protected ushort _stackCount;
         public EffectData Meta => _effectData;
     }
 }

@@ -1,5 +1,4 @@
 using Aquial.UI;
-using Aquila.Event;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
@@ -26,7 +25,7 @@ namespace Aquila.UI
                     var uiForm = GameEntry.BaseUI.GetUIForm((int)FormIdEnum.WindUpForm);
                     if (uiForm is null || uiForm.Logic is null)
                     {
-                        Log.Warning($"<color=yellow>Form_Windup.ActiveWindUpForm()--->uiForm is null || uiForm.Logic is null</color>");
+                        Tools.Logger.Warning("<color=yellow>Form_Windup.ActiveWindUpForm()--->uiForm is null || uiForm.Logic is null</color>");
                         return;
                     }
                     
@@ -35,7 +34,7 @@ namespace Aquila.UI
                 //没有的话直接打开
                 else
                 {
-                    var formParam = ReferencePool.Acquire<Form_WindUp.Form_WindUpParam>();
+                    var formParam = ReferencePool.Acquire<Form_WindUpParam>();
                     formParam._totalTime = totalTime;
                     GameEntry.UI.OpenForm(FormIdEnum.WindUpForm,formParam);
                 }
@@ -62,7 +61,7 @@ namespace Aquila.UI
         {
             if (rootGo == null)
             {
-                Log.Warning("<color=yellow>Form_Ability.InitWindUpItem--->rootGo is null</color>");
+                Tools.Logger.Warning("<color=yellow>Form_Ability.InitWindUpItem--->rootGo is null</color>");
                 return;
             }
 
@@ -116,12 +115,12 @@ namespace Aquila.UI
         /// <summary>
         /// windup对象根节点
         /// </summary>
-        [SerializeField] private GameObject _rootGO = null;
+        [SerializeField] private GameObject _rootGO;
 
         /// <summary>
         /// windup item
         /// </summary>
-        private WindUpItem _windUpItem = null;
+        private WindUpItem _windUpItem;
 
         /// <summary>
         /// 读条进度
@@ -214,32 +213,32 @@ namespace Aquila.UI
             /// <summary>
             /// 准备标记
             /// </summary>
-            public bool ReadyFlag { get; private set; } = false;
+            public bool ReadyFlag { get; private set; }
 
             /// <summary>
             /// 读条
             /// </summary>
-            private Slider _slider = null;
+            private Slider _slider;
             
             /// <summary>
             /// 总时长
             /// </summary>
-            private float _totalTime = 0f;
+            private float _totalTime;
             
             /// <summary>
             /// 剩余时间文本
             /// </summary>
-            private Text _remainText = null;
+            private Text _remainText;
 
             /// <summary>
             /// 经过时间
             /// </summary>
-            private float _passedTime = 0f;
+            private float _passedTime;
             
             /// <summary>
             /// 跟对象
             /// </summary>
-            private GameObject _root = null;
+            private GameObject _root;
         }
 
         /// <summary>
@@ -247,7 +246,7 @@ namespace Aquila.UI
         /// </summary>
         public class Form_WindUpParam : IReference
         {
-            public float _totalTime = 0f;
+            public float _totalTime;
 
             public void Clear() => _totalTime = 0f;
         }

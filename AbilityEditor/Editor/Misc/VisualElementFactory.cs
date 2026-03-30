@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.UIElements.Cursor;
 
 namespace Aquila.AbilityEditor
 {
@@ -84,7 +85,7 @@ namespace Aquila.AbilityEditor
                     bottom = 0,
                     width = Misc.HANDLE_WIDTH,
                     backgroundColor = new Color(1f, 1f, 1f, 0.2f),
-                    cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
+                    cursor = new Cursor { texture = null, hotspot = Vector2.zero },
                     borderTopLeftRadius = 4,
                     borderBottomLeftRadius = 4
                 }
@@ -107,7 +108,7 @@ namespace Aquila.AbilityEditor
                     bottom = 0,
                     width = Misc.HANDLE_WIDTH,
                     backgroundColor = new Color(1f, 1f, 1f, 0.2f),
-                    cursor = new UnityEngine.UIElements.Cursor { texture = null, hotspot = Vector2.zero },
+                    cursor = new Cursor { texture = null, hotspot = Vector2.zero },
                     borderTopRightRadius = 4,
                     borderBottomRightRadius = 4
                 }
@@ -119,7 +120,7 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public static Label GenInstantClipTimeLabel()
         {
-            return new Label()
+            return new Label
             {
                 pickingMode = PickingMode.Ignore,
                 style =
@@ -151,7 +152,7 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public static Label GenDurationClipStartTimeLabel()
         {
-            return new Label()
+            return new Label
             {
                 pickingMode = PickingMode.Ignore,
                 style =
@@ -184,7 +185,7 @@ namespace Aquila.AbilityEditor
         /// </summary>
         public static Label GenDurationClipEndTimeLabel()
         {
-            return new Label()
+            return new Label
             {
                 pickingMode = PickingMode.Ignore,
                 style =

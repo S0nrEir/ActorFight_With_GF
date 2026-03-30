@@ -42,7 +42,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 持有的播放组件
         /// </summary>
-        private PlayableDirector _director = null;
+        private PlayableDirector _director;
     }
 }
 

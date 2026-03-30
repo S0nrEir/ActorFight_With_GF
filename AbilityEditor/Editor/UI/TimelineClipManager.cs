@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -170,7 +170,7 @@ namespace Aquila.AbilityEditor
         {
             if (!_trackTimelineElements.TryGetValue(track, out var timelineElement))
             {
-                Debug.LogError($"TimelineClipManager: No timeline element found for track '{track.Name}'");
+                Toolkit.Tools.Logger.Error($"TimelineClipManager: No timeline element found for track '{track.Name}'");
                 return null;
             }
 
@@ -260,19 +260,19 @@ namespace Aquila.AbilityEditor
 
         private void AddEffectClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new EffectClipData( $"Effect", startTime, 1);
+            var clipData = new EffectClipData( "Effect", startTime, 1);
             AddClip(track, clipData);
         }
 
         private void AddAudioClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new AudioClipData($"Audio", startTime, startTime + 1f, "audio/default");
+            var clipData = new AudioClipData("Audio", startTime, startTime + 1f, "audio/default");
             AddClip(track, clipData);
         }
 
         private void AddVFXClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new VFXClipData($"VFX", startTime, startTime + 1f, "vfx/default");
+            var clipData = new VFXClipData("VFX", startTime, startTime + 1f, "vfx/default");
             AddClip(track, clipData);
         }
 
@@ -311,7 +311,7 @@ namespace Aquila.AbilityEditor
         // Timeline参数
         private float _pixelsPerSecond = 100f;
         private float _zoom = 1f;
-        private float _timelineStartTime = 0f;
+        private float _timelineStartTime;
         private float _timelineEndTime = 5f;
 
         // 事件

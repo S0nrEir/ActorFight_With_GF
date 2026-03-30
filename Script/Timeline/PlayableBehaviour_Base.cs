@@ -1,5 +1,5 @@
+using Aquila.Toolkit;
 using UnityEngine.Playables;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Timeline
 {
@@ -7,14 +7,14 @@ namespace Aquila.Timeline
     {
         public PlayableBehaviour_Base()
         {
-            Log.Info($"<color=white>PlayableBhvr_Base</color>");
+            Tools.Logger.Info("<color=white>PlayableBhvr_Base</color>");
         }
         
         public override void OnPlayableDestroy(Playable playable)
         {
             base.OnPlayableDestroy(playable);
             _asset = null;
-            Log.Info($"<color=white>PlayableBhvr_Base.OnPlayableDestroy</color>");
+            Tools.Logger.Info("<color=white>PlayableBhvr_Base.OnPlayableDestroy</color>");
         }
         
         /// <summary>
@@ -25,6 +25,6 @@ namespace Aquila.Timeline
         //     _asset = asset;
         // }
 
-        public PlayableAsset _asset = null;
+        public PlayableAsset _asset;
     }
 }

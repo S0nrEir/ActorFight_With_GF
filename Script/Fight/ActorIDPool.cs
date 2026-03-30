@@ -1,4 +1,4 @@
-﻿using UnityGameFramework.Runtime;
+﻿using Aquila.Toolkit;
 
 namespace Aquila.Fight.Actor
 {
@@ -21,7 +21,7 @@ namespace Aquila.Fight.Actor
         {
             if ( initID < 0 )
             {
-                Log.Error( "Init ID < 0!" );
+                Tools.Logger.Error( "Init ID < 0!" );
                 return -1;
             }
 

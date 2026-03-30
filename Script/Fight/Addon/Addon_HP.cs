@@ -1,8 +1,8 @@
-﻿using Aquila.Module;
+using Aquila.Module;
 using Aquila.ObjectPool;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
@@ -19,7 +19,7 @@ namespace Aquila.Fight.Addon
             var attrAddon = _actorInstance.GetAddon<Addon_BaseAttrNumric>();
             if ( attrAddon is null )
             {
-                Log.Warning( "<color=yellow>Addon_HP--->attr_addon is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>Addon_HP--->attr_addon is null</color>" );
                 return;
             }
 
@@ -114,12 +114,12 @@ namespace Aquila.Fight.Addon
             return Camera.main;
         }
 
-        private Object_HPBar _hpObj = null;
+        private Object_HPBar _hpObj;
 
         /// <summary>
         /// 持有缓存的 actor transform
         /// </summary>
-        private Transform _actorTransform = null;
+        private Transform _actorTransform;
 
         /// <summary>
         /// 偏移位置
@@ -132,6 +132,6 @@ namespace Aquila.Fight.Addon
         private Vector3 _cachedPos = Vector3.zero;
         private Vector3 _cachedCameraPos = Vector3.zero;
         private Quaternion _cachedCameraRot = Quaternion.identity;
-        private bool _hasCachedScreenState = false;
+        private bool _hasCachedScreenState;
     }
 }

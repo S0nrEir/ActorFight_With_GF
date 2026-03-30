@@ -1,4 +1,5 @@
 using Aquila.Module;
+
 namespace Aquila.Fight.Addon
 {
     /// <summary>

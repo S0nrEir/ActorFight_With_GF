@@ -1,5 +1,4 @@
 using Aquila.Module;
-using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -24,20 +23,15 @@ namespace Aquila.Fight
         //     _remain = 0f;
         // }
 
-        public EffectSpec_Period_CoolDown()
-        {
-            
-        }
-
         /// <summary>
         /// 剩余时间
         /// </summary>
-        public float _remain = 0f;
+        public float _remain;
         
         /// <summary>
         /// cool down
         /// </summary>
-        public float _totalDuration = 0f;
+        public float _totalDuration;
     }
    
 }

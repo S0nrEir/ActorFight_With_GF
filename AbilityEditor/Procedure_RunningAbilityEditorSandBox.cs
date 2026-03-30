@@ -1,13 +1,13 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 
 using Aquial.UI;
-using Aquila.AbilityEditor;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using GameFramework;
+using Aquila.Toolkit;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
+using UnityGameFramework.Runtime;
 using Form_AbilitySandBox = Aquila.AbilityEditor.Form_AbilitySandBox;
 using Module_ActorMgr = Aquila.Module.Module_ActorMgr;
 
@@ -29,12 +29,12 @@ namespace Aquila.Procedure
         {
             base.OnEnter(procedureOwner);
 
-            var playerIdVar = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_PLAYER_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
-            var dummyIdVar  = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_DUMMY_ENTITY_ID) as UnityGameFramework.Runtime.VarInt32;
+            var playerIdVar = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_PLAYER_ENTITY_ID) as VarInt32;
+            var dummyIdVar  = procedureOwner.GetData(Procedure_EnterAbilityEditorSandBox.KEY_DUMMY_ENTITY_ID) as VarInt32;
 
             if (playerIdVar == null || dummyIdVar == null)
             {
-                UnityGameFramework.Runtime.Log.Error("[RunningAbilityEditorSandBox] actor ID data not found in FSM");
+                Tools.Logger.Error("[RunningAbilityEditorSandBox] actor ID data not found in FSM");
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace Aquila.Procedure
 
             if (_playerInstance == null)
             {
-                UnityGameFramework.Runtime.Log.Error($"[RunningAbilityEditorSandBox] player instance not found, id={playerEntityId}");
+                Tools.Logger.Error($"[RunningAbilityEditorSandBox] player instance not found, id={playerEntityId}");
                 return;
             }
 
@@ -62,11 +62,11 @@ namespace Aquila.Procedure
                 if (abilityAddon != null)
                     abilityAddon.GiveAbility(abilityData);
                 else
-                    UnityGameFramework.Runtime.Log.Error("[RunningAbilityEditorSandBox] player has no Addon_Ability");
+                    Tools.Logger.Error("[RunningAbilityEditorSandBox] player has no Addon_Ability");
             }
             else
             {
-                UnityGameFramework.Runtime.Log.Error("[RunningAbilityEditorSandBox] no sandbox ability data found");
+                Tools.Logger.Error("[RunningAbilityEditorSandBox] no sandbox ability data found");
             }
 
             _playerInstance.Actor.SetWorldPosition( new Vector3( -4.4f, -5.782828f, 15.1f ) );
@@ -78,7 +78,7 @@ namespace Aquila.Procedure
                 _dummyInstance.Actor.SetRotation( new Vector3( 0f, 98.6860046f, 0f ) );
             }
 
-            GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param()
+            GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param
             {
                 _playerID = playerEntityId,
                 _dummyID = dummyEntityId,
@@ -93,8 +93,8 @@ namespace Aquila.Procedure
             _dummyInstance  = null;
         }
 
-        private Module_ProxyActor.ActorInstance _playerInstance = null;
-        private Module_ProxyActor.ActorInstance _dummyInstance  = null;
+        private Module_ProxyActor.ActorInstance _playerInstance;
+        private Module_ProxyActor.ActorInstance _dummyInstance;
     }
 }
 #endif

@@ -14,6 +14,6 @@ namespace Aquila.AbilityEditor
             Destroy(gameObject);
         }
 
-        [SerializeField] private GameObject _entryObject = null;
+        [SerializeField] private GameObject _entryObject;
     }
 }

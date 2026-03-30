@@ -1,9 +1,5 @@
-using System;
-using Aquila.Module;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.Addon
@@ -18,7 +14,7 @@ namespace Aquila.Fight.Addon
             if ( _behaviourDic.TryGetValue( ( int ) type, out var bhvr ) )
                 return bhvr;
 
-            Log.Warning( $"Addon_Behaviour.GetBehaviour()--->_behaviourDic.TryGetValue( ( int ) type, out var bhvr ) , type{type.ToString()}" );
+            Tools.Logger.Warning( $"Addon_Behaviour.GetBehaviour()--->_behaviourDic.TryGetValue( ( int ) type, out var bhvr ) , type{type.ToString()}" );
             return null;
         }
 
@@ -30,7 +26,7 @@ namespace Aquila.Fight.Addon
             var intType = ( int ) type;
             if ( !_behaviourDic.ContainsKey( intType ) )
             {
-                Log.Warning( $"behaviour【{type}】 doesnt exsit" );
+                Tools.Logger.Warning( $"behaviour【{type}】 doesnt exsit" );
                 return;
             }
 
@@ -42,7 +38,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool RemoveBehaviour( ActorBehaviourTypeEnum type )
         {
-            Debug.Log( "remove---------------------------" );
+            Tools.Logger.Info( "remove---------------------------" );
             lock ( _behaviourDic )
                 return _behaviourDic.Remove( ( int ) type );
         }
@@ -55,7 +51,7 @@ namespace Aquila.Fight.Addon
             var intType = ( int ) type;
             if ( _behaviourDic.ContainsKey( intType ) )
             {
-                Log.Warning( $"AddonBehaviour:same behaviour,type:{type}" );
+                Tools.Logger.Warning( $"AddonBehaviour:same behaviour,type:{type}" );
                 return null;
             }
 
@@ -80,7 +76,7 @@ namespace Aquila.Fight.Addon
             // }
             // catch (InvalidOperationException e)
             // {
-            //     Debug.Log("*********** releaseFlag:"+ReleasFlag);
+            //     Aquila.Toolkit.Tools.Logger.Info("*********** releaseFlag:"+ReleasFlag);
             //     Debug.Break();
             // }
         }
@@ -90,7 +86,7 @@ namespace Aquila.Fight.Addon
             _behaviourDic = new Dictionary<int, ActorBehaviour_Base>();
         }
 
-        public override void Init( Module_ProxyActor.ActorInstance instance )
+        public override void Init( ActorInstance instance )
         {
             base.Init( instance );
         }
@@ -113,7 +109,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 保存行为集合
         /// </summary>
-        private Dictionary<int, ActorBehaviour_Base> _behaviourDic = null;
+        private Dictionary<int, ActorBehaviour_Base> _behaviourDic;
 
         //#todo是否不用switch/case，改成别的方式
         /// <summary>

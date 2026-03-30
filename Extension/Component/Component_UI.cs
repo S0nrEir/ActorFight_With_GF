@@ -1,10 +1,8 @@
 using Aquial.UI;
+using Aquila.Toolkit;
 using Aquila.UI;
 using GameFramework;
 using GameFramework.DataTable;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Extension
@@ -33,7 +31,7 @@ namespace Aquila.Extension
             var row = table.GetDataRow( formID );
             if ( row is null )
             {
-                Log.Warning( $"<color=yellow>Component_UI.Open()--->row is null,id:{formID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Component_UI.Open()--->row is null,id:{formID}</color>" );
                 return;
             }
 
@@ -41,7 +39,7 @@ namespace Aquila.Extension
             {
                 if ( _uiComp.IsLoadingUIForm( row.Id ) || _uiComp.HasUIForm( row.Id ) )
                 {
-                    Log.Warning( $"_uiComp.IsLoadingUIForm( row.Id ) || _uiComp.HasUIForm( row.Id ),id:{row.Id} " );
+                    Tools.Logger.Warning( $"_uiComp.IsLoadingUIForm( row.Id ) || _uiComp.HasUIForm( row.Id ),id:{row.Id} " );
                     return;
                 }
             }
@@ -66,14 +64,14 @@ namespace Aquila.Extension
             var row = table.GetDataRow( formID );
             if ( row is null )
             {
-                Log.Warning( $"<color=yellow>Component_UI.Close()--->row is null,id:{formID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Component_UI.Close()--->row is null,id:{formID}</color>" );
                 return;
             }
 
             var form = _uiComp.GetUIForm( row.AssetName );
             if ( form is null )
             {
-                Log.Warning( $"<color=yellow>Component_UI.CloseForm()--->form is null,asset:{row.AssetName}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Component_UI.CloseForm()--->form is null,asset:{row.AssetName}</color>" );
                 return;
             }
 
@@ -101,6 +99,6 @@ namespace Aquila.Extension
             base.Awake();
         }
 
-        public UIComponent _uiComp = null;
+        public UIComponent _uiComp;
     }
 }

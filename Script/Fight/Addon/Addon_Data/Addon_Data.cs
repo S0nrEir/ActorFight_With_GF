@@ -1,15 +1,13 @@
-using Aquila.Fight.Actor;
 using Aquila.Module;
 using Cfg.Role;
 using GameFramework;
-using UnityEngine;
 
 namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 数据组件
     /// </summary>
-    public partial class Addon_Data : Addon_Base
+    public class Addon_Data : Addon_Base
     {
         public override AddonTypeEnum AddonType => AddonTypeEnum.DATA;
 
@@ -44,7 +42,7 @@ namespace Aquila.Fight.Addon
                 throw new GameFrameworkException( $"faild to set meta role id:{instance.Actor.RoleMetaID},meta is null" );
         }
 
-        private Table_RoleMeta _meta = null;
+        private Table_RoleMeta _meta;
     }
 }
 

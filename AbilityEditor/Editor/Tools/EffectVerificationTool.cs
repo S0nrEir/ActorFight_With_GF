@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
-using Aquila.Toolkit;
 using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -54,7 +53,7 @@ namespace Editor.AbilityEditor.Tools
 
             if (assetGuids.Length == 0)
             {
-                Debug.LogWarning($"[EffectVerificationTool] No effects found in {Misc.EFFECT_ASSET_BASE_PATH}");
+                Aquila.Toolkit.Tools.Logger.Warning($"[EffectVerificationTool] No effects found in {Misc.EFFECT_ASSET_BASE_PATH}");
                 return false;
             }
 
@@ -65,13 +64,13 @@ namespace Editor.AbilityEditor.Tools
 
                 if (effectData == null)
                 {
-                    Debug.LogWarning($"[EffectVerificationTool] Failed to load: {assetPath}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[EffectVerificationTool] Failed to load: {assetPath}");
                     continue;
                 }
 
                 if (effectData.id <= 0)
                 {
-                    Debug.LogWarning($"[EffectVerificationTool] Invalid ID for {assetPath}: {effectData.id}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[EffectVerificationTool] Invalid ID for {assetPath}: {effectData.id}");
                     continue;
                 }
 
@@ -80,7 +79,7 @@ namespace Editor.AbilityEditor.Tools
                 result.TotalEffects++;
             }
 
-            Debug.Log($"[EffectVerificationTool] Loaded and cached {cache.Count} effects");
+            Aquila.Toolkit.Tools.Logger.Info($"[EffectVerificationTool] Loaded and cached {cache.Count} effects");
             return cache.Count > 0;
         }
 
@@ -127,7 +126,7 @@ namespace Editor.AbilityEditor.Tools
 
                 if (effectData == null)
                 {
-                    Debug.LogWarning($"[EffectVerificationTool] Failed to reload effect {effectId} for export");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[EffectVerificationTool] Failed to reload effect {effectId} for export");
                     continue;
                 }
 
@@ -139,7 +138,7 @@ namespace Editor.AbilityEditor.Tools
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[EffectVerificationTool] Failed to export effect {effectId}: {ex.Message}");
+                    Aquila.Toolkit.Tools.Logger.Error($"[EffectVerificationTool] Failed to export effect {effectId}: {ex.Message}");
                     return false;
                 }
             }
@@ -385,7 +384,7 @@ namespace Editor.AbilityEditor.Tools
             File.WriteAllText(logPath, reportContent);
 
             // Also log to console
-            Debug.Log($"[EffectVerificationTool] Report:\n{reportContent}");
+            Aquila.Toolkit.Tools.Logger.Info($"[EffectVerificationTool] Report:\n{reportContent}");
         }
 
         private static void CleanupTempFiles(string tempPath)
@@ -395,12 +394,12 @@ namespace Editor.AbilityEditor.Tools
                 if (Directory.Exists(tempPath))
                 {
                     Directory.Delete(tempPath, true);
-                    Debug.Log($"[EffectVerificationTool] Cleaned up temp directory: {tempPath}");
+                    Aquila.Toolkit.Tools.Logger.Info($"[EffectVerificationTool] Cleaned up temp directory: {tempPath}");
                 }
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[EffectVerificationTool] Failed to cleanup temp files: {ex.Message}");
+                Aquila.Toolkit.Tools.Logger.Warning($"[EffectVerificationTool] Failed to cleanup temp files: {ex.Message}");
             }
         }
 

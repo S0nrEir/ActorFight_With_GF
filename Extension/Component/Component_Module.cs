@@ -1,4 +1,3 @@
-using GameFramework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -143,7 +142,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 开启标记
         /// </summary>
-        protected bool _open_flag = false;
+        protected bool _open_flag;
 
     }
 }

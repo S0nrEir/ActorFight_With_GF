@@ -1,5 +1,4 @@
 using Cfg.Enum;
-using System;
 
 namespace Aquila.Fight.Impact
 {

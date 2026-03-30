@@ -1,8 +1,8 @@
-using Aquila.Module;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityGameFramework.Runtime;
+using Aquila.Module;
+using Aquila.Toolkit;
 
 namespace Aquila.Fight.Addon
 {
@@ -18,14 +18,14 @@ namespace Aquila.Fight.Addon
         {
             if ( !readyFlag )
             {
-                Log.Error( "<color=red>Addon_Event.Notify--->!readyFlag </>" );
+                Tools.Logger.Error( "<color=red>Addon_Event.Notify--->!readyFlag </>" );
                 return;
             }
 
             if ( !_eventDic.TryGetValue( eventType, out var callList ) )
             {
                 //可能没有注册的addon，取消报错log
-                //Log.Error( $"<color=red>Addon_Event.Notify()--->!_eventDic.TryGetValue( eventType, out var callList ),eventType:{eventType},enum:{( ( AddonEventTypeEnum ) eventType ).ToString()}</color>" );
+                //Aquila.Toolkit.Tools.Logger.Error( $"<color=red>Addon_Event.Notify()--->!_eventDic.TryGetValue( eventType, out var callList ),eventType:{eventType},enum:{( ( AddonEventTypeEnum ) eventType ).ToString()}</color>" );
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace Aquila.Fight.Addon
         {
             // if ( eventType == ( int ) AddonTypeEnum.EVENT )
             // {
-            //     Log.Error( "<color=red>could not add event addon to event addon.</color>" );
+            //     Aquila.Toolkit.Tools.Logger.Error( "<color=red>could not add event addon to event addon.</color>" );
             //     return this;
             // }
 
@@ -137,12 +137,12 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 准备完成标记
         /// </summary>
-        private bool readyFlag = false;
+        private bool readyFlag;
 
         /// <summary>
         /// 事件集 k=事件类型，action<int,object>:int=组件类型，object=参数
         /// </summary>
-        private Dictionary<int, List<(int addonType, Action<int, object> call)>> _eventDic = null;
+        private Dictionary<int, List<(int addonType, Action<int, object> call)>> _eventDic;
 
         #region nouse
         //----------------------- public-----------------------

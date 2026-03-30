@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
-using Aquila.Toolkit;
 using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -52,7 +51,7 @@ namespace Editor.AbilityEditor.Tools
             
             if (assetGuids.Length == 0)
             {
-                Debug.LogWarning($"[AbilityVerificationTool] No abilities found in {Misc.ABILITY_ASSET_BASE_PATH}");
+                Aquila.Toolkit.Tools.Logger.Warning($"[AbilityVerificationTool] No abilities found in {Misc.ABILITY_ASSET_BASE_PATH}");
                 return false;
             }
 
@@ -63,13 +62,13 @@ namespace Editor.AbilityEditor.Tools
                 
                 if (abilityData == null)
                 {
-                    Debug.LogWarning($"[AbilityVerificationTool] Failed to load: {assetPath}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityVerificationTool] Failed to load: {assetPath}");
                     continue;
                 }
 
                 if (!abilityData.Validate(out string error))
                 {
-                    Debug.LogWarning($"[AbilityVerificationTool] Validation failed for {assetPath}: {error}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityVerificationTool] Validation failed for {assetPath}: {error}");
                     continue;
                 }
 
@@ -78,7 +77,7 @@ namespace Editor.AbilityEditor.Tools
                 result.TotalAbilities++;
             }
 
-            Debug.Log($"[AbilityVerificationTool] Loaded and cached {cache.Count} abilities");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityVerificationTool] Loaded and cached {cache.Count} abilities");
             return cache.Count > 0;
         }
 
@@ -191,7 +190,7 @@ namespace Editor.AbilityEditor.Tools
                 
                 if (abilityData == null)
                 {
-                    Debug.LogWarning($"[AbilityVerificationTool] Failed to reload ability {abilityId} for export");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[AbilityVerificationTool] Failed to reload ability {abilityId} for export");
                     continue;
                 }
 
@@ -305,13 +304,13 @@ namespace Editor.AbilityEditor.Tools
                         EffectId = reader.ReadInt32(),
                         StackCount = reader.ReadInt32(),
                         CanStack = reader.ReadBoolean(),
-                        EffectType = (Cfg.Enum.EffectType)reader.ReadInt32(),
-                        ModifierType = (Cfg.Enum.NumricModifierType)reader.ReadUInt16(),
-                        AffectedAttribute = (Cfg.Enum.actor_attribute)reader.ReadInt32(),
+                        EffectType = (EffectType)reader.ReadInt32(),
+                        ModifierType = (NumricModifierType)reader.ReadUInt16(),
+                        AffectedAttribute = (actor_attribute)reader.ReadInt32(),
                         Target = reader.ReadInt32(),
                         Duration = reader.ReadSingle(),
                         Period = reader.ReadSingle(),
-                        Policy = (Cfg.Enum.DurationPolicy)reader.ReadUInt16(),
+                        Policy = (DurationPolicy)reader.ReadUInt16(),
                         EffectOnAwake = reader.ReadBoolean(),
                         FloatParam1 = reader.ReadSingle(),
                         FloatParam2 = reader.ReadSingle(),
@@ -624,7 +623,7 @@ namespace Editor.AbilityEditor.Tools
             File.WriteAllText(logPath, reportContent);
             
             // Also log to console
-            Debug.Log($"[AbilityVerificationTool] Report:\n{reportContent}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityVerificationTool] Report:\n{reportContent}");
         }
 
         private static void CleanupTempFiles(string tempPath)
@@ -632,7 +631,7 @@ namespace Editor.AbilityEditor.Tools
             if (Directory.Exists(tempPath))
             {
                 Directory.Delete(tempPath, true);
-                Debug.Log($"[AbilityVerificationTool] Cleaned up temp directory: {tempPath}");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityVerificationTool] Cleaned up temp directory: {tempPath}");
             }
         }
 
@@ -691,13 +690,13 @@ namespace Editor.AbilityEditor.Tools
             public int EffectId;
             public int StackCount;
             public bool CanStack;
-            public Cfg.Enum.EffectType EffectType;
-            public Cfg.Enum.NumricModifierType ModifierType;
-            public Cfg.Enum.actor_attribute AffectedAttribute;
+            public EffectType EffectType;
+            public NumricModifierType ModifierType;
+            public actor_attribute AffectedAttribute;
             public int Target;
             public float Duration;
             public float Period;
-            public Cfg.Enum.DurationPolicy Policy;
+            public DurationPolicy Policy;
             public bool EffectOnAwake;
             public float FloatParam1;
             public float FloatParam2;

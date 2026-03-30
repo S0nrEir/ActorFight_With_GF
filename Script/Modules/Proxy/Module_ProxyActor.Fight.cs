@@ -1,14 +1,12 @@
 using Aquila.Event;
 using Aquila.Extension;
 using Aquila.Fight;
-using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Numric;
 using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -30,7 +28,7 @@ namespace Aquila.Module
         /// <summary> 添加一个actor的effect类型的属性修改器 </summary>
         public bool AddModifierToActor_Effect
         (
-            Module_ProxyActor.ActorInstance actorInstance,
+            ActorInstance actorInstance,
             Numric_Modifier modifier,
             actor_attribute attrType
         )
@@ -58,7 +56,7 @@ namespace Aquila.Module
         /// <summary> 移除一个actor上的effect属性修饰器 </summary>
         public bool RemoveModifierFromActor_Effect
         (
-            Module_ProxyActor.ActorInstance actorInstance,
+            ActorInstance actorInstance,
             Numric_Modifier modifier,
             actor_attribute attrType
         )
@@ -66,7 +64,7 @@ namespace Aquila.Module
             //#todo:加上修改属性回调
             if (actorInstance is null)
             {
-                Log.Warning("<color=yellow>Tools.Fight.RemoveModifierFromActor_Effect ---> actorInstance is null</color>");
+                Tools.Logger.Warning("<color=yellow>Tools.Fight.RemoveModifierFromActor_Effect ---> actorInstance is null</color>");
                 return false;
             }
 
@@ -95,7 +93,7 @@ namespace Aquila.Module
             var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
             if ( castor is null || target is null )
             {
-                Log.Warning( $"<color=yellow>Module_ProxyActor.Fight=====>ImplImpact()--->castor is null || target is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ImplImpact()--->castor is null || target is null</color>" );
                 //ReferencePool.Release( result );
                 InvalidEffect( castor, target, effect, false );
                 GameEntry.Event.Fire( this, EventArg_OnHitAbility.Create( result ) );
@@ -125,7 +123,7 @@ namespace Aquila.Module
         {
             if ( castor is null || target is null )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
                 return;
             }
             var result = AbilityResult_Hit.Gen( castor.Actor.ActorID, target.Actor.ActorID );
@@ -148,12 +146,12 @@ namespace Aquila.Module
             var castorInstance = GameEntry.Module.GetModule<Module_ActorMgr>().Get( castorID );
             //if ( !castorInstance.has )
             //{
-            //    Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
+            //    Aquila.Toolkit.Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
             //    return;
             //}
             if ( castorInstance is null )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has </color>" );
                 return;
             }
 
@@ -164,12 +162,12 @@ namespace Aquila.Module
                 var temp = GameEntry.Module.GetModule<Module_ActorMgr>().Get( targetID );
                 //if ( !temp.has )
                 //{
-                //    Log.Warning( "<color=yellow>Module_ProxyActor.Fight===>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                //    Aquila.Toolkit.Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight===>ApplyEffect2Actor()--->!targetInstance.has</color>" );
                 //    return;
                 //}
                 if ( temp is null )
                 {
-                    Log.Warning( "<color=yellow>Module_ProxyActor.Fight===>ApplyEffect2Actor()--->!targetInstance.has</color>" );
+                    Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight===>ApplyEffect2Actor()--->!targetInstance.has</color>" );
                     return;
                 }
                 targetInstance = temp;
@@ -189,7 +187,7 @@ namespace Aquila.Module
             var addon = castorInstance.GetAddon<Addon_Ability>();
             if ( addon is null )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has</color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>ApplyEffect2Actor()--->!castorInstance.has</color>" );
                 return;
             }
 
@@ -222,7 +220,7 @@ namespace Aquila.Module
         {
             if ( castor is null || target is null )
             {
-                Log.Warning( $"<color=yellow>Module_ProxyActor.Fight=====>InvalidEffect()--->castor is null || target is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Fight=====>InvalidEffect()--->castor is null || target is null</color>" );
                 return;
             }
             if ( callEnd )
@@ -260,7 +258,7 @@ namespace Aquila.Module
             //if ( Get( targetID ) != null )
             if ( GameEntry.Module.GetModule<Module_ActorMgr>().Get( targetID ) != null )
             {
-                result._targetIDArr = new int[] { targetID }; result._stateDescription = Tools.SetBitValue( result._stateDescription,
+                result._targetIDArr = new[] { targetID }; result._stateDescription = Tools.SetBitValue( result._stateDescription,
                     ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION, false );
             }
             else

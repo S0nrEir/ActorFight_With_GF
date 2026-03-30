@@ -1,6 +1,5 @@
 using Aquila.Toolkit;
 using UnityEngine.Playables;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
@@ -16,7 +15,7 @@ namespace Aquila.Fight.FSM
         public override void OnEnter( object param )
         {
             GameEntry.Timeline.Play( Tools.Actor.CommonDieTimelineAssetPath(), Tools.GetComponent<PlayableDirector>( _actor.transform ) );
-            Log.Info($"actor die!actor:{_actor.ActorID}");
+            Tools.Logger.Info($"actor die!actor:{_actor.ActorID}");
         }
 
         public override void OnUpdate( float deltaTime )

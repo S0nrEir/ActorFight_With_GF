@@ -1,10 +1,9 @@
-﻿using GameFramework.Fsm;
+﻿using Aquila.Toolkit;
 using GameFramework.Procedure;
 using GameFramework.Resource;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -24,7 +23,7 @@ namespace Aquila.Procedure
             var value = _move_action.ReadValue<Vector2>();
             if ( value != Vector2.zero )
             {
-                Debug.Log($"RunInput--->vector value:{value}");
+                Tools.Logger.Info($"RunInput--->vector value:{value}");
             }
         }
 
@@ -38,13 +37,13 @@ namespace Aquila.Procedure
             var action_asset = ( asset as InputActionAsset );
             if ( action_asset is null || action_asset.actionMaps.Count == 0)
             {
-                Debug.LogError( $"action_asset is null || action_asset.actionMaps.Count == 0" );
+                Tools.Logger.Error( "action_asset is null || action_asset.actionMaps.Count == 0" );
                 return;
             }
 
             // if ( action_asset.actionMaps.Count == 0 )
             // {
-            //     Debug.LogError( $"action_asset.actionMaps.Count == 0,path={assetName}" );
+            //     Aquila.Toolkit.Tools.Logger.Error( $"action_asset.actionMaps.Count == 0,path={assetName}" );
             //     return;
             // }
 
@@ -59,8 +58,8 @@ namespace Aquila.Procedure
             _fire_action.Enable();
             action_asset.Enable();
         }
-        private InputAction _move_action = null;
-        private InputAction _fire_action = null;
+        private InputAction _move_action;
+        private InputAction _fire_action;
 
         /// <summary>
         /// 点击回调
@@ -69,7 +68,7 @@ namespace Aquila.Procedure
         {
             if ( ctx.interaction is PressInteraction )
             {
-                Debug.Log( "fire action performed!" );
+                Tools.Logger.Info( "fire action performed!" );
             }
         }
 
@@ -80,13 +79,13 @@ namespace Aquila.Procedure
         {
             if ( ctx.interaction is PressInteraction )
             {
-                Debug.Log( "move action performed!" );
+                Tools.Logger.Info( "move action performed!" );
             }
         }
 
         private void OnLoadActionsFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
-            Debug.LogError( $"load action faild , status = {status.ToString()}" );
+            Tools.Logger.Error( $"load action faild , status = {status.ToString()}" );
         }
     }
 

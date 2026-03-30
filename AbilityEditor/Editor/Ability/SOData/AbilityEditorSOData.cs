@@ -1,7 +1,6 @@
-using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Cfg.Enum;
+using UnityEngine;
 
 namespace Aquila.AbilityEditor
 {
@@ -130,7 +129,7 @@ namespace Aquila.AbilityEditor
             // 验证 Timeline 资产路径格式（可选字段，仅警告）
             if (!string.IsNullOrEmpty(TimelineAssetPath) && !TimelineAssetPath.StartsWith("Assets/"))
             {
-                UnityEngine.Debug.LogWarning($"Timeline asset path should start with 'Assets/': {TimelineAssetPath}");
+                Toolkit.Tools.Logger.Warning($"Timeline asset path should start with 'Assets/': {TimelineAssetPath}");
             }
 
             // 验证所有 Tracks

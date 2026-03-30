@@ -1,8 +1,8 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -17,7 +17,7 @@ namespace Aquila.Fight
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
             if ( addon is null )
             {
-                Log.Warning( $"<color=yellow>EffectSpec_RemoveHealth.Apply()--->addon is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>EffectSpec_RemoveHealth.Apply()--->addon is null</color>" );
                 return;
             }
             if ( !_initFlag )
@@ -72,6 +72,6 @@ namespace Aquila.Fight
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _initFlag = false;
+        private bool _initFlag;
     }
 }

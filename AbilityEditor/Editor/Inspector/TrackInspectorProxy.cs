@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Aquila.AbilityEditor
@@ -13,7 +14,7 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 绑定Track数据到代理
         /// </summary>
-        public void BindTrackData(TimelineTrackItem trackItem, VisualElement trackElement, System.Action<TimelineTrackItem, string> onNameChanged)
+        public void BindTrackData(TimelineTrackItem trackItem, VisualElement trackElement, Action<TimelineTrackItem, string> onNameChanged)
         {
             _targetTrackItem = trackItem;
             _targetTrackElement = trackElement;
@@ -70,10 +71,9 @@ namespace Aquila.AbilityEditor
         [HideInInspector]
         public TimelineTrackItem _targetTrackItem;
 
-        [HideInInspector]
         public VisualElement _targetTrackElement;
 
-        private System.Action<TimelineTrackItem, string> _onNameChanged;
+        private Action<TimelineTrackItem, string> _onNameChanged;
     }
 
     /// <summary>

@@ -8,7 +8,6 @@ using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
 {
@@ -35,10 +34,10 @@ namespace Aquila.Procedure
 
             var param = ReferencePool.Acquire<Form_Ability.Form_AbilityParam>();
             param. _mainActorID = _actorID1;
-            param._enemyActorID = new int[] { _actorID2, _actorID3, _actorID4 };
+            param._enemyActorID = new[] { _actorID2, _actorID3, _actorID4 };
             param._abilityID = GameEntry.LuBan.Tables.RoleMeta.Get( 1 ).AbilityBaseID;
             GameEntry.UI.OpenForm( FormIdEnum.AbilityForm, param );
-            Log.Info( "<color=white>all set load finish</color>" );
+            Tools.Logger.Info( "<color=white>all set load finish</color>" );
         }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace Aquila.Procedure
         {
             if ( actor is null )
             {
-                Log.Info( "<color=warning>my_actor is null || enemy_actor is null</color>" );
+                Tools.Logger.Info( "<color=warning>my_actor is null || enemy_actor is null</color>" );
                 return;
             }
             actor.SetWorldPosition( position );
@@ -133,10 +132,10 @@ namespace Aquila.Procedure
             LoadActor();
         }
 
-        private int _actorID1 = 0;
-        private int _actorID2 = 0;
-        private int _actorID3 = 0;
-        private int _actorID4 = 0;
+        private int _actorID1;
+        private int _actorID2;
+        private int _actorID3;
+        private int _actorID4;
 
 
         /// <summary>
@@ -172,12 +171,12 @@ namespace Aquila.Procedure
         /// <summary>
         /// 当前的加载状态
         /// </summary>
-        private int _loadFlagCurrState = 0b_0000;
+        private int _loadFlagCurrState;
 
         /// <summary>
         /// 流程持有者
         /// </summary>
-        private IFsm<IProcedureManager> _owner = null;
+        private IFsm<IProcedureManager> _owner;
 
         /// <summary>
         /// 测试技能ID

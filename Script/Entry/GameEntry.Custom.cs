@@ -1,8 +1,8 @@
-﻿using Aquila.AbilityEditor;
+using Aquila.AbilityEditor;
 using Aquila.AbilityPool;
 using Aquila.Extension;
 using Aquila.Fight.Impact;
-using UnityEngine;
+using Aquila.Toolkit;
 
 namespace Aquila
 {
@@ -173,7 +173,7 @@ namespace Aquila
             }
 
             if ( cameraHub == null )
-                Debug.LogWarning( "GameEntry.InitCustomComponents()--->camera hub create failed" );
+                Tools.Logger.Warning( "GameEntry.InitCustomComponents()--->camera hub create failed" );
 
             return cameraHub;
         }

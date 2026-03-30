@@ -1,8 +1,8 @@
+using System;
+using Aquila.AbilityEditor;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Aquila.AbilityEditor;
-using System;
 
 namespace Editor.AbilityEditor.Inspector
 {
@@ -88,12 +88,12 @@ namespace Editor.AbilityEditor.Inspector
                 _currentProperty = clipsProp;
                 _clipsList = new ReorderableList(clipsProp.serializedObject, clipsProp, true, true, true, true);
 
-                _clipsList.drawHeaderCallback = (Rect rect) =>
+                _clipsList.drawHeaderCallback = rect =>
                 {
                     EditorGUI.LabelField(rect, "Clips");
                 };
 
-                _clipsList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+                _clipsList.drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     var element = clipsProp.GetArrayElementAtIndex(index);
                     if (element != null)
@@ -102,13 +102,13 @@ namespace Editor.AbilityEditor.Inspector
                     }
                 };
 
-                _clipsList.elementHeightCallback = (int index) =>
+                _clipsList.elementHeightCallback = index =>
                 {
                     var element = clipsProp.GetArrayElementAtIndex(index);
                     return element != null ? EditorGUI.GetPropertyHeight(element, true) + 4 : EditorGUIUtility.singleLineHeight;
                 };
 
-                _clipsList.onAddDropdownCallback = (Rect buttonRect, ReorderableList list) =>
+                _clipsList.onAddDropdownCallback = (buttonRect, list) =>
                 {
                     var menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Effect Clip"), false, () => AddClip(clipsProp, typeof(EffectClipData)));

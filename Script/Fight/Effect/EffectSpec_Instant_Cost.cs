@@ -1,7 +1,6 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -42,11 +41,6 @@ namespace Aquila.Fight
         //     base.Init(meta, castor, target);
         //     _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
         // }
-
-        public EffectSpec_Instant_Cost()
-        {
-
-        }
     }
    
 }

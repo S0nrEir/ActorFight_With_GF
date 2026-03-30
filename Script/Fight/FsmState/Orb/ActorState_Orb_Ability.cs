@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Module;
-using Cfg.Fight;
+using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
@@ -22,7 +18,7 @@ namespace Aquila.Fight.FSM
         {
             if (!(param is OrbAbilityStateParam))
             {
-                Log.Error($"<color=red>ActorState_Orb_Ability.OnEnter--->param is not OrbAbilityStateParam</color>");
+                Tools.Logger.Error("<color=red>ActorState_Orb_Ability.OnEnter--->param is not OrbAbilityStateParam</color>");
                 return;
             }
 
@@ -34,7 +30,7 @@ namespace Aquila.Fight.FSM
             
             if (!GameEntry.AbilityPool.TryGetAbility(id, out _abilityData))
             {
-                Log.Error($"<color=red>ActorState_Orb_Ability.OnEnter--->Ability not found in pool, id:{id}</color>");
+                Tools.Logger.Error($"<color=red>ActorState_Orb_Ability.OnEnter--->Ability not found in pool, id:{id}</color>");
             }
         }
 
@@ -74,7 +70,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 该状态内经过的时间
         /// </summary>
-        private float _passedTime = 0f;
+        private float _passedTime;
 
         /// <summary>
         /// 施法者ID，为自己

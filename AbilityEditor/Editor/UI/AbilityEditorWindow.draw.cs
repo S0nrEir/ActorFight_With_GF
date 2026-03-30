@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Aquila.AbilityEditor;
 using Cfg.Enum;
 using Editor.AbilityEditor.Config;
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -64,7 +64,7 @@ namespace Editor.AbilityEditor
                 if ( toggle != null )
                 {
                     toggle.value = true;
-                    toggle.RegisterValueChangedCallback((evt) =>
+                    toggle.RegisterValueChangedCallback(evt =>
                     {
                         _isGenSandBoxAblt = evt.newValue;
                     });
@@ -91,7 +91,7 @@ namespace Editor.AbilityEditor
                 _targetTypeDropdown == null ||
                 _trackPanel == null )
             {
-                Debug.LogError( "faild to get ui controls,can not init editor window." );
+                Aquila.Toolkit.Tools.Logger.Error( "faild to get ui controls,can not init editor window." );
                 return;
             }
 
@@ -128,11 +128,11 @@ namespace Editor.AbilityEditor
             }
             else
             {
-                Debug.LogError( "InitializeUIElements: TimelineScrollView not found in UXML!" );
+                Aquila.Toolkit.Tools.Logger.Error( "InitializeUIElements: TimelineScrollView not found in UXML!" );
             }
 
             if ( _timelineContainer == null )
-                Debug.LogError( "InitializeUIElements: TimelineContainer not found in UXML!" );
+                Aquila.Toolkit.Tools.Logger.Error( "InitializeUIElements: TimelineContainer not found in UXML!" );
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Editor.AbilityEditor
             // 绑定到Inspector
             ShowTrackInInspector(track, trackElement);
 
-            Debug.Log( $"Selected track: {_selectedTrackItem.Name}" );
+            Aquila.Toolkit.Tools.Logger.Info( $"Selected track: {_selectedTrackItem.Name}" );
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Editor.AbilityEditor
                 }
             }
 
-            Debug.Log($"Track name changed to: {newName}");
+            Aquila.Toolkit.Tools.Logger.Info($"Track name changed to: {newName}");
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Editor.AbilityEditor
                     {
                         _currentZoom = newZoom;
                         DrawTimelineTrackItems();
-                        Debug.Log( $"Zoom changed: {_currentZoom:F2}x ({_currentZoom * 100:F0}%)" );
+                        Aquila.Toolkit.Tools.Logger.Info( $"Zoom changed: {_currentZoom:F2}x ({_currentZoom * 100:F0}%)" );
                     }
                 }
             } );
@@ -357,17 +357,17 @@ namespace Editor.AbilityEditor
         // 点击生成配置
         private void OnClickGenConfigBtn()
         {
-            Debug.Log("[AbilityEditorWindow] 开始生成配置...");
+            Aquila.Toolkit.Tools.Logger.Info("[AbilityEditorWindow] 开始生成配置...");
             var config = AbilityConfigGenerator.Generate(this);
             // AbilityConfigAccessor.SetConfig(config);
             AbilityDataExporter.ExportToAsset(config, _timelineTrackItems);
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));
-            // Debug.Log($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
+            // Aquila.Toolkit.Tools.Logger.Info($"[AbilityEditorWindow] 配置生成完成:\n{AbilityConfigAccessor.ToString()}");
             
             if (_isGenSandBoxAblt)
             {
                 AbilityDataExporter.ExportToSandBox(config, _timelineTrackItems);
-                ShowNotification(new GUIContent($"✓ 沙盒测试数据已生成"));
+                ShowNotification(new GUIContent("\u2713 沙盒测试数据已生成"));
             }
         }
 
@@ -378,7 +378,7 @@ namespace Editor.AbilityEditor
         {
             if ( _timelineScrollView == null || _timelineContainer == null )
             {
-                Debug.LogError( "DrawTimelineTrackItems: _timelineScrollView or _timelineContainer is null!" );
+                Aquila.Toolkit.Tools.Logger.Error( "DrawTimelineTrackItems: _timelineScrollView or _timelineContainer is null!" );
                 return;
             }
 
@@ -455,7 +455,7 @@ namespace Editor.AbilityEditor
             RegisterScrubberEvents( _timelineContainer );
             UpdateScrubberHeight();
 
-            Debug.Log( $"Generated timeline track items: Duration={duration}s, Tracks={_timelineTrackItems.Count}, TotalWidth={totalWidth}px, Zoom={_currentZoom:F2}" );
+            Aquila.Toolkit.Tools.Logger.Info( $"Generated timeline track items: Duration={duration}s, Tracks={_timelineTrackItems.Count}, TotalWidth={totalWidth}px, Zoom={_currentZoom:F2}" );
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace Editor.AbilityEditor
         {
             if (_timelineScrubber == null || timelineContainer == null)
             {
-                Debug.LogError("RegisterScrubberEvents: Required elements are null!");
+                Aquila.Toolkit.Tools.Logger.Error("RegisterScrubberEvents: Required elements are null!");
                 return;
             }
 
@@ -510,7 +510,7 @@ namespace Editor.AbilityEditor
             var timeLabel = _timelineScrubber.Q<Label>();
             if (timeLabel == null)
             {
-                Debug.LogError("RegisterScrubberEvents: timeLabel not found!");
+                Aquila.Toolkit.Tools.Logger.Error("RegisterScrubberEvents: timeLabel not found!");
                 return;
             }
 
@@ -529,7 +529,7 @@ namespace Editor.AbilityEditor
             timelineContainer.RegisterCallback<MouseUpEvent>(OnTimelineMouseUp);
             timelineContainer.RegisterCallback<MouseLeaveEvent>(OnTimelineMouseLeave);
 
-            Debug.Log("RegisterScrubberEvents: Timeline scrubber events registered successfully");
+            Aquila.Toolkit.Tools.Logger.Info("RegisterScrubberEvents: Timeline scrubber events registered successfully");
         }
 
         /// <summary>

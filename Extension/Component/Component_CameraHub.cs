@@ -1,6 +1,7 @@
-﻿using Aquila.CameraSystem;
 using System;
 using System.Collections.Generic;
+using Aquila.CameraSystem;
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -373,7 +374,7 @@ namespace Aquila.Extension
         private void Start()
         {
             if ( !TryGetCamera( CameraRole.MainWorld, out _mainCamera ) )
-                Log.Warning( "<color=yellow>MainWorld camera not found at start.</color>" );
+                Tools.Logger.Warning( "<color=yellow>MainWorld camera not found at start.</color>" );
         }
 
         protected override void Awake()
@@ -409,6 +410,6 @@ namespace Aquila.Extension
         [SerializeField] private string _uiCameraTag = "UICamera";
         [SerializeField] private string _infoBoardCameraTag = "InfoBoardCamera";
         public event Action<CameraRole, Camera> OnRoleCameraChanged;
-        private Camera _mainCamera = null;
+        private Camera _mainCamera;
     }
 }

@@ -1,8 +1,8 @@
-﻿using Aquila.Config;
+﻿using System;
+using Aquila.Config;
 using Aquila.Toolkit;
-using GameFramework;
-using System;
 using Cfg.Common;
+using GameFramework;
 using XLua;
 
 namespace Aquila.Extension
@@ -101,7 +101,7 @@ namespace Aquila.Extension
             /// <summary>
             /// 脚本表格数据
             /// </summary>
-            public Table_Scripts _script_meta = null;
+            public Table_Scripts _script_meta;
 
             /// <summary>
             /// 脚本key
@@ -123,33 +123,33 @@ namespace Aquila.Extension
             /// </summary>
             public string Chunk_Name { get; private set; } = string.Empty;
 
-            public LuaTable Lua_Table { get; private set; } = null;
+            public LuaTable Lua_Table { get; private set; }
 
             /// <summary>
             /// 关联的timer
             /// </summary>
-            public Component_Timer.Timer Timer { get; private set; } = null;
+            public Component_Timer.Timer Timer { get; private set; }
 
             #region 周期函数
             /// <summary>
             /// 脚本开始
             /// </summary>
-            private Action _lua_on_start = null;
+            private Action _lua_on_start;
 
             /// <summary>
             /// 刷帧
             /// </summary>
-            private Action<float> _lua_on_update = null;
+            private Action<float> _lua_on_update;
 
             /// <summary>
             /// 时间回调
             /// </summary>
-            private Action<float> _lua_on_timer_tick = null;
+            private Action<float> _lua_on_timer_tick;
 
             /// <summary>
             /// 脚本结束
             /// </summary>
-            private Action _lua_on_finish = null;
+            private Action _lua_on_finish;
 
             #endregion
 

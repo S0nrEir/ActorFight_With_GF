@@ -1,5 +1,4 @@
-﻿using Aquila.Fight.Addon;
-using Aquila.Toolkit;
+﻿using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
 using UnityEngine.AI;
@@ -117,7 +116,7 @@ namespace Aquila.Fight.Addon
             _agent = Tools.GetComponent<NavMeshAgent>( Actor.gameObject );
             if ( _agent == null )
             {
-                if ( !Tools.TryAddComponent<NavMeshAgent>( Actor.gameObject, out _agent ) )
+                if ( !Tools.TryAddComponent( Actor.gameObject, out _agent ) )
                     throw new GameFrameworkException( $"faild to add navMeshAgent to actor:{Actor.ActorID}" );
             }
             //初始参数设置
@@ -159,7 +158,7 @@ namespace Aquila.Fight.Addon
             //}
         }
 
-        private bool _openFlag = false;
+        private bool _openFlag;
 
         /// <summary>
         /// 目标点

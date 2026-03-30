@@ -1,10 +1,5 @@
-﻿using Aquila.Config;
-using Aquila.Module;
-using GameFramework.Fsm;
+﻿using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aquila.Procedure
 {

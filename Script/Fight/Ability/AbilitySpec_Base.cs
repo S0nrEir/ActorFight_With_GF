@@ -1,15 +1,12 @@
-﻿using Aquila.Event;
+using System;
+using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
 using Cfg.Enum;
 using Cfg.Fight;
 using GameFramework;
-using System;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -84,16 +81,16 @@ namespace Aquila.Fight
                 {
                     if (costEffect != null)
                     {
-                        Log.Error($"<color=yellow>AbilitySpecBase.Setup: Cost effect type mismatch, effectId={costEffectId}, expected={nameof(EffectSpec_Instant_Cost)}, actual={costEffect.GetType().Name}</color>");
+                        Tools.Logger.Error($"<color=yellow>AbilitySpecBase.Setup: Cost effect type mismatch, effectId={costEffectId}, expected={nameof(EffectSpec_Instant_Cost)}, actual={costEffect.GetType().Name}</color>");
                         ReferencePool.Release(costEffect);
                     }
 
-                    Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create Cost effect {costEffectId}</color>");
+                    Tools.Logger.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create Cost effect {costEffectId}</color>");
                 }
             }
             else
             {
-                Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Cost effect {costEffectId} not found in pool</color>");
+                Tools.Logger.Warning($"<color=yellow>AbilitySpecBase.Setup: Cost effect {costEffectId} not found in pool</color>");
             }
             
             if (GameEntry.AbilityPool.TryGetEffect(cdEffectId, out var cdData))
@@ -107,16 +104,16 @@ namespace Aquila.Fight
                 {
                     if (cdEffect != null)
                     {
-                        Log.Error($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect type mismatch, effectId={cdEffectId}, expected={nameof(EffectSpec_Period_CoolDown)}, actual={cdEffect.GetType().Name}</color>");
+                        Tools.Logger.Error($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect type mismatch, effectId={cdEffectId}, expected={nameof(EffectSpec_Period_CoolDown)}, actual={cdEffect.GetType().Name}</color>");
                         ReferencePool.Release(cdEffect);
                     }
 
-                    Log.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create CoolDown effect {cdEffectId}</color>");
+                    Tools.Logger.Warning($"<color=yellow>AbilitySpecBase.Setup: Failed to create CoolDown effect {cdEffectId}</color>");
                 }
             }
             else
             {
-                Log.Warning($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect {cdEffectId} not found in pool</color>");
+                Tools.Logger.Warning($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect {cdEffectId} not found in pool</color>");
             }
         }
         
@@ -130,7 +127,7 @@ namespace Aquila.Fight
         //         return;
         //
         //     if (meta.Triggers is null || meta.Triggers.Length == 0)
-        //         Log.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
+        //         Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
         //
         //     _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
         //     _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
@@ -152,13 +149,13 @@ namespace Aquila.Fight
                 var effects = _data.GetEffects();
                 if ( effects is null || effects.Count == 0 )
                 {
-                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->ability {_data.GetId()} has no effects" );
+                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->ability {_data.GetId()} has no effects" );
                     return false;
                 }
 
                 if ( triggerIndex < 0 || triggerIndex >= effects.Count )
                 {
-                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->invalid triggerIndex:{triggerIndex}, abilityID:{_data.GetId()}, effectCount:{effects.Count}" );
+                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->invalid triggerIndex:{triggerIndex}, abilityID:{_data.GetId()}, effectCount:{effects.Count}" );
                     return false;
                 }
 
@@ -166,7 +163,7 @@ namespace Aquila.Fight
                 var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectData, _owner, target );
                 if ( tempEffect == null )
                 {
-                    Log.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
+                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
                     return false;
                 }
 
@@ -174,7 +171,7 @@ namespace Aquila.Fight
                 {
                     if ( target == null )
                     {
-                        Log.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
+                        Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
                         return false;
                     }
 
@@ -189,7 +186,7 @@ namespace Aquila.Fight
             // 否则使用 LuBan 配置（保留兼容）
             else
             {
-                Log.Warning($"<color=yellow>AbilitySpec_Base.UseAbility --> Invalid Ability ID , {_data.GetId()} </color>");
+                Tools.Logger.Warning($"<color=yellow>AbilitySpec_Base.UseAbility --> Invalid Ability ID , {_data.GetId()} </color>");
             }
 
             if ( !OnAfterAbility( result ) )
@@ -284,13 +281,13 @@ namespace Aquila.Fight
         /// </summary>
         private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
         {
-            Log.Info( $"tag changed,tag:{changedTag}" );
+            Tools.Logger.Info( $"tag changed,tag:{changedTag}" );
         }
 
         /// <summary>
         /// 表数据（LuBan 配置，保留兼容）
         /// </summary>
-        public Table_AbilityBase Meta { get; private set; } = null;
+        public Table_AbilityBase Meta { get; private set; }
 
         /// <summary>
         /// 技能数据（新数据源）
@@ -311,17 +308,17 @@ namespace Aquila.Fight
         /// <summary>
         /// 技能 CD
         /// </summary>
-        private EffectSpec_Period_CoolDown _cdEffect = null;
+        private EffectSpec_Period_CoolDown _cdEffect;
 
         /// <summary>
         /// 技能消耗
         /// </summary>
-        private EffectSpec_Instant_Cost _costEffect = null;
+        private EffectSpec_Instant_Cost _costEffect;
 
         /// <summary>
         /// 持有该技能的 Actor 实例
         /// </summary>
-        public Module_ProxyActor.ActorInstance _owner = null;
+        public Module_ProxyActor.ActorInstance _owner;
 
         public AbilitySpecBase()
         {

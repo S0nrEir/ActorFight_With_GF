@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Aquila.Fight;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Aquila.AbilityPool
         {
             if (_initialized)
             {
-                Log.Info("[AbilityPool] Init skipped. Already initialized.");
+                Tools.Logger.Info("[AbilityPool] Init skipped. Already initialized.");
                 return;
             }
 
@@ -33,7 +34,7 @@ namespace Aquila.AbilityPool
             LoadAllAbilities();
 
             _initialized = true;
-            Log.Info($"[AbilityPool] Init complete. Abilities={_abilityPool.Count}, Effects={_effectPool.Count}");
+            Tools.Logger.Info($"[AbilityPool] Init complete. Abilities={_abilityPool.Count}, Effects={_effectPool.Count}");
         }
 
         public bool TryGetAbility(int abilityId, out AbilityData data)
@@ -46,7 +47,7 @@ namespace Aquila.AbilityPool
             if (_abilityPool.TryGetValue(abilityId, out var data))
                 return data;
 
-            Log.Warning($"[AbilityPool] Ability not found: {abilityId}");
+            Tools.Logger.Warning($"[AbilityPool] Ability not found: {abilityId}");
             return default;
         }
 
@@ -64,11 +65,11 @@ namespace Aquila.AbilityPool
             var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get(roleMetaId);
             if (roleMeta == null)
             {
-                Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
-                return System.Array.Empty<AbilityData>();
+                Tools.Logger.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
+                return Array.Empty<AbilityData>();
             }
             if (roleMeta.AbilityBaseID == null || roleMeta.AbilityBaseID.Length <= 0)
-                return System.Array.Empty<AbilityData>();
+                return Array.Empty<AbilityData>();
 
             var result = new AbilityData[roleMeta.AbilityBaseID.Length];
             var count = 0;
@@ -80,15 +81,15 @@ namespace Aquila.AbilityPool
                 }
                 else
                 {
-                    Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: ability id={id} not found in pool (roleMetaId={roleMetaId})");
-                    return System.Array.Empty<AbilityData>();
+                    Tools.Logger.Warning($"[AbilityPool] GetAbilitiesByRoleId: ability id={id} not found in pool (roleMetaId={roleMetaId})");
+                    return Array.Empty<AbilityData>();
                 }
             }
 
             if (count < result.Length)
             {
                 var trimmed = new AbilityData[count];
-                System.Array.Copy(result, trimmed, count);
+                Array.Copy(result, trimmed, count);
                 return trimmed;
             }
 
@@ -110,7 +111,7 @@ namespace Aquila.AbilityPool
             if (_effectPool.TryGetValue(effectId, out var data))
                 return data;
 
-            Log.Warning($"[AbilityPool] Effect not found: {effectId}");
+            Tools.Logger.Warning($"[AbilityPool] Effect not found: {effectId}");
             return default;
         }
 
@@ -135,13 +136,13 @@ namespace Aquila.AbilityPool
         {
             if (string.IsNullOrEmpty(abltFilePath))
             {
-                Log.Error("[AbilityPool] LoadAbilityFromPath: abltFilePath is null or empty");
+                Tools.Logger.Error("[AbilityPool] LoadAbilityFromPath: abltFilePath is null or empty");
                 return;
             }
 
             if (!File.Exists(abltFilePath))
             {
-                Log.Error($"[AbilityPool] LoadAbilityFromPath: file not found: {abltFilePath}");
+                Tools.Logger.Error($"[AbilityPool] LoadAbilityFromPath: file not found: {abltFilePath}");
                 return;
             }
 
@@ -152,7 +153,7 @@ namespace Aquila.AbilityPool
                 {
                     if (string.IsNullOrEmpty(efctPath) || !File.Exists(efctPath))
                     {
-                        Log.Warning($"[AbilityPool] LoadAbilityFromPath: effect file not found: {efctPath}");
+                        Tools.Logger.Warning($"[AbilityPool] LoadAbilityFromPath: effect file not found: {efctPath}");
                         continue;
                     }
 
@@ -161,9 +162,9 @@ namespace Aquila.AbilityPool
                         if (TryReadEffect(efctPath, out var effectData))
                             _effectPool[effectData.GetEffectId()] = effectData;
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
-                        Log.Error($"[AbilityPool] LoadAbilityFromPath: failed to read effect {efctPath}: {ex.Message}");
+                        Tools.Logger.Error($"[AbilityPool] LoadAbilityFromPath: failed to read effect {efctPath}: {ex.Message}");
                     }
                 }
             }
@@ -172,10 +173,10 @@ namespace Aquila.AbilityPool
                 return;
 
             if (_abilityPool.ContainsKey(abilityData.GetId()))
-                Log.Warning($"[AbilityPool] LoadAbilityFromPath: overwriting existing ability {abilityData.GetId()}");
+                Tools.Logger.Warning($"[AbilityPool] LoadAbilityFromPath: overwriting existing ability {abilityData.GetId()}");
 
             _abilityPool[abilityData.GetId()] = abilityData;
-            Log.Info($"[AbilityPool] Loaded ability {abilityData.GetId()} from {abltFilePath}");
+            Tools.Logger.Info($"[AbilityPool] Loaded ability {abilityData.GetId()} from {abltFilePath}");
         }
 
         /// <summary>
@@ -188,13 +189,13 @@ namespace Aquila.AbilityPool
             string abltPath = Path.Combine(sandBoxDir, "sand_box.ablt");
             if (!File.Exists(abltPath))
             {
-                Log.Error($"[AbilityPool] LoadSandBoxAbility: .ablt not found: {abltPath}");
+                Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: .ablt not found: {abltPath}");
                 return false;
             }
 
             if (!TryReadAbility(abltPath, out var rawAbility))
             {
-                Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read ability: {abltPath}");
+                Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: failed to read ability: {abltPath}");
                 return false;
             }
 
@@ -230,7 +231,7 @@ namespace Aquila.AbilityPool
                 }
                 else
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: invalid .efct filename (not an int): {efctPath}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: invalid .efct filename (not an int): {efctPath}");
                     return false;
                 }
             }
@@ -240,7 +241,7 @@ namespace Aquila.AbilityPool
             {
                 if (!availableEffectIds.Contains(id))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: required effect {id} not found in sandbox dir");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: required effect {id} not found in sandbox dir");
                     return false;
                 }
             }
@@ -248,7 +249,7 @@ namespace Aquila.AbilityPool
             {
                 if (!requiredEffectIds.Contains(id))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: extra .efct file {id} not referenced by ability");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: extra .efct file {id} not referenced by ability");
                     return false;
                 }
             }
@@ -258,12 +259,12 @@ namespace Aquila.AbilityPool
             {
                 if (!TryReadEffect(kvp.Value, out var effectData))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read effect: {kvp.Value}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: failed to read effect: {kvp.Value}");
                     return false;
                 }
                 if (effectData.GetEffectId() != kvp.Key)
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: effect file {kvp.Value} contains id={effectData.GetEffectId()}, expected {kvp.Key}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: effect file {kvp.Value} contains id={effectData.GetEffectId()}, expected {kvp.Key}");
                     return false;
                 }
                 _effectPool[effectData.GetEffectId()] = effectData;
@@ -271,7 +272,7 @@ namespace Aquila.AbilityPool
 
             _abilityPool[rawAbility.GetId()] = rawAbility;
             abilityData = rawAbility;
-            Log.Info($"[AbilityPool] LoadSandBoxAbility: loaded ability {rawAbility.GetId()} with {requiredEffectIds.Count} effects");
+            Tools.Logger.Info($"[AbilityPool] LoadSandBoxAbility: loaded ability {rawAbility.GetId()} with {requiredEffectIds.Count} effects");
             return true;
         }
         
@@ -284,7 +285,7 @@ namespace Aquila.AbilityPool
             string fullDir = Path.Combine(Application.dataPath, EFFECT_DIR);
             if (!Directory.Exists(fullDir))
             {
-                Log.Warning($"[AbilityPool] Effect directory not found: {fullDir}");
+                Tools.Logger.Warning($"[AbilityPool] Effect directory not found: {fullDir}");
                 return;
             }
 
@@ -306,7 +307,7 @@ namespace Aquila.AbilityPool
             string fullDir = Path.Combine(Application.dataPath, ABILITY_DIR);
             if (!Directory.Exists(fullDir))
             {
-                Log.Warning($"[AbilityPool] Ability directory not found: {fullDir}");
+                Tools.Logger.Warning($"[AbilityPool] Ability directory not found: {fullDir}");
                 return;
             }
 
@@ -334,7 +335,7 @@ namespace Aquila.AbilityPool
             byte version = reader.ReadByte();
             if (magic != EFFECT_MAGIC)
             {
-                Log.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
                 return false;
             }
 
@@ -413,7 +414,7 @@ namespace Aquila.AbilityPool
             byte version = reader.ReadByte();
             if (magic != ABILITY_MAGIC)
             {
-                Log.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
                 return false;
             }
 
@@ -503,7 +504,7 @@ namespace Aquila.AbilityPool
 
             if (effectId <= 0)
             {
-                Log.Warning($"[AbilityPool] Skipping effect clip with invalid ID: {effectId}");
+                Tools.Logger.Warning($"[AbilityPool] Skipping effect clip with invalid ID: {effectId}");
                 return null;
             }
 
@@ -569,7 +570,7 @@ namespace Aquila.AbilityPool
 
         //----------------------- fields -----------------------
 
-        private bool _initialized = false;
+        private bool _initialized;
         private Dictionary<int, AbilityData> _abilityPool;
         private Dictionary<int, EffectData>  _effectPool;
 
@@ -610,7 +611,7 @@ namespace Aquila.AbilityPool
                 ValidateRegistrationMap();
                 _initialized = true;
 
-                Log.Info($"[EffectSpecFactory] Initialize complete. Registered={_effectSpecTypeByEffectType.Count}");
+                Tools.Logger.Info($"[EffectSpecFactory] Initialize complete. Registered={_effectSpecTypeByEffectType.Count}");
             }
         }
 
@@ -634,7 +635,7 @@ namespace Aquila.AbilityPool
             var effectType = data.GetEffectType();
             if (!_effectSpecTypeByEffectType.TryGetValue(effectType, out var specType))
             {
-                Log.Warning($"[EffectSpecFactory] No EffectSpec registered for EffectType={effectType}, EffectID={data.GetEffectId()}.");
+                Tools.Logger.Warning($"[EffectSpecFactory] No EffectSpec registered for EffectType={effectType}, EffectID={data.GetEffectId()}.");
                 return null;
             }
 
@@ -642,7 +643,7 @@ namespace Aquila.AbilityPool
             if (effect == null)
             {
                 var message = $"[EffectSpecFactory] Acquire failed. EffectType={effectType}, SpecType={specType.FullName}.";
-                Log.Error(message);
+                Tools.Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
 
@@ -657,7 +658,7 @@ namespace Aquila.AbilityPool
             var specType = typeof(T);
             if (!_effectTypeByEffectSpecType.ContainsKey(specType))
             {
-                Log.Warning($"[EffectSpecFactory] EffectSpec type is not registered: {specType.FullName}.");
+                Tools.Logger.Warning($"[EffectSpecFactory] EffectSpec type is not registered: {specType.FullName}.");
                 return null;
             }
 
@@ -689,21 +690,21 @@ namespace Aquila.AbilityPool
             if (!typeof(EffectSpec_Base).IsAssignableFrom(specType))
             {
                 var message = $"[EffectSpecFactory] Invalid registration. {specType.FullName} is not EffectSpec_Base.";
-                Log.Error(message);
+                Tools.Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
 
             if (_effectSpecTypeByEffectType.ContainsKey(effectType))
             {
                 var message = $"[EffectSpecFactory] Duplicate EffectType registration: {effectType}.";
-                Log.Error(message);
+                Tools.Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
 
             if (_effectTypeByEffectSpecType.ContainsKey(specType))
             {
                 var message = $"[EffectSpecFactory] Duplicate EffectSpec type registration: {specType.FullName}.";
-                Log.Error(message);
+                Tools.Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
 
@@ -730,7 +731,7 @@ namespace Aquila.AbilityPool
                 if (specType == null || !typeof(EffectSpec_Base).IsAssignableFrom(specType))
                 {
                     var message = $"[EffectSpecFactory] Invalid mapped type for {effectType}.";
-                    Log.Error(message);
+                    Tools.Logger.Error(message);
                     throw new InvalidOperationException(message);
                 }
             }
@@ -739,7 +740,7 @@ namespace Aquila.AbilityPool
             {
                 var message =
                     $"[EffectSpecFactory] Registration incomplete. Missing EffectType: {string.Join(", ", missing)}";
-                Log.Error(message);
+                Tools.Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
         }

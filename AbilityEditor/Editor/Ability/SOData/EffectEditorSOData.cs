@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 using Cfg.Enum;
+using UnityEngine;
 
 namespace Aquila.AbilityEditor.Config
 {

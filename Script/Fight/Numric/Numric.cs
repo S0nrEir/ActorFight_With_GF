@@ -1,6 +1,5 @@
-using System.ComponentModel.Design;
+using Aquila.Toolkit;
 using GameFramework;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Numric
 {
@@ -40,7 +39,7 @@ namespace Aquila.Numric
         {
             var succ = _correction.Remove( toRemove );
             if ( !succ )
-                Log.Error("remove numric modifier faild!");
+                Tools.Logger.Error("remove numric modifier faild!");
 
             return succ;
         }
@@ -58,10 +57,6 @@ namespace Aquila.Numric
                 _correctionValue += iter.Current.Calc(_correctionValue);
             
             return _correctionValue;
-        }
-
-        public Numric()
-        {
         }
 
         /// <summary>
@@ -100,12 +95,12 @@ namespace Aquila.Numric
         /// <summary>
         /// 变更标记
         /// </summary>
-        protected bool _changeFlag = false;
+        protected bool _changeFlag;
 
         /// <summary>
         /// 该数值类型的基础值
         /// </summary>
-        protected float _value = 0f;
+        protected float _value;
 
         /// <summary>
         /// 修正加成值，保存所有修正运算后的结果

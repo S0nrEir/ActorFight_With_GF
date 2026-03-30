@@ -176,7 +176,7 @@ namespace Editor.AbilityEditor.Testing
                 Duration = 5.0f
             };
 
-            var track1 = new TrackTemplate("effect track", new Color(0.8f, 0.4f, 0.8f), true);
+            var track1 = new TrackTemplate("effect track", new Color(0.8f, 0.4f, 0.8f));
             track1.Clips.Add(new EffectClipTemplate("dmg effect 1", 0.5f, 2001));
             track1.Clips.Add(new EffectClipTemplate("dmg effect 2", 1.0f, 2002));
 
@@ -205,16 +205,16 @@ namespace Editor.AbilityEditor.Testing
             };
 
             // Track 1: Effect Clips
-            var track1 = new TrackTemplate("效果轨道", new Color(0.8f, 0.4f, 0.8f), true);
+            var track1 = new TrackTemplate("效果轨道", new Color(0.8f, 0.4f, 0.8f));
             track1.Clips.Add(new EffectClipTemplate("伤害效果1", 0.5f, 2001));
             track1.Clips.Add(new EffectClipTemplate("伤害效果2", 1.5f, 2002));
 
             // Track 2: Audio Clip
-            var track2 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f), true);
+            var track2 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
             track2.Clips.Add(new AudioClipTemplate("攻击音效", 1.0f, "Audio/Attack_01"));
 
             // Track 3: VFX Clip
-            var track3 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f), true);
+            var track3 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));
             track3.Clips.Add(new VFXClipTemplate("爆炸特效", 2.0f, "VFX/Explosion_01"));
 
             scenario.Tracks.Add(track1);
@@ -244,7 +244,7 @@ namespace Editor.AbilityEditor.Testing
             };
 
             // Track 1: 多个 Effect (包含相同时间点)
-            var track1 = new TrackTemplate("主效果轨道", new Color(0.8f, 0.4f, 0.8f), true);
+            var track1 = new TrackTemplate("主效果轨道", new Color(0.8f, 0.4f, 0.8f));
             track1.Clips.Add(new EffectClipTemplate("伤害1", 0.5f, 2001));
             track1.Clips.Add(new EffectClipTemplate("伤害2", 0.5f, 2002)); // 相同时间
             track1.Clips.Add(new EffectClipTemplate("伤害3", 1.0f, 2003));
@@ -252,26 +252,26 @@ namespace Editor.AbilityEditor.Testing
             track1.Clips.Add(new EffectClipTemplate("伤害5", 2.0f, 2005)); // 相同时间
 
             // Track 2: 次要效果
-            var track2 = new TrackTemplate("次要效果轨道", new Color(0.6f, 0.3f, 0.6f), true);
+            var track2 = new TrackTemplate("次要效果轨道", new Color(0.6f, 0.3f, 0.6f));
             track2.Clips.Add(new EffectClipTemplate("减速", 1.5f, 3001));
             track2.Clips.Add(new EffectClipTemplate("眩晕", 3.0f, 3002));
             track2.Clips.Add(new EffectClipTemplate("流血", 4.0f, 3003));
 
             // Track 3: 多个音效
-            var track3 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f), true);
+            var track3 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
             track3.Clips.Add(new AudioClipTemplate("蓄力音效", 0.0f, "Audio/Charge"));
             track3.Clips.Add(new AudioClipTemplate("释放音效", 0.5f, "Audio/Release"));
             track3.Clips.Add(new AudioClipTemplate("爆炸音效", 2.0f, "Audio/Boom"));
 
             // Track 4: 多个特效
-            var track4 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f), true);
+            var track4 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));
             track4.Clips.Add(new VFXClipTemplate("蓄力光环", 0.0f, "VFX/ChargeAura"));
             track4.Clips.Add(new VFXClipTemplate("冲击波", 0.5f, "VFX/Shockwave"));
             track4.Clips.Add(new VFXClipTemplate("爆炸", 2.0f, "VFX/Explosion"));
             track4.Clips.Add(new VFXClipTemplate("余波", 3.0f, "VFX/Aftershock"));
 
             // Track 5: 额外效果
-            var track5 = new TrackTemplate("持续效果轨道", new Color(0.5f, 0.5f, 0.8f), true);
+            var track5 = new TrackTemplate("持续效果轨道", new Color(0.5f, 0.5f, 0.8f));
             track5.Clips.Add(new EffectClipTemplate("持续伤害1", 5.0f, 4001));
             track5.Clips.Add(new EffectClipTemplate("持续伤害2", 6.0f, 4002));
             track5.Clips.Add(new EffectClipTemplate("持续伤害3", 7.0f, 4003));
@@ -306,20 +306,20 @@ namespace Editor.AbilityEditor.Testing
             };
 
             // Track 1: 空轨道 (没有 Clip)
-            var track1 = new TrackTemplate("空轨道", Color.gray, true);
+            var track1 = new TrackTemplate("空轨道", Color.gray);
 
             // Track 2: 禁用的轨道 (包含 Clip 但不应被处理)
             var track2 = new TrackTemplate("禁用轨道", Color.red, false);
             track2.Clips.Add(new EffectClipTemplate("不应生效的效果", 1.0f, 9001));
 
             // Track 3: 包含禁用 Clip 的启用轨道
-            var track3 = new TrackTemplate("混合轨道", new Color(0.8f, 0.4f, 0.8f), true);
-            track3.Clips.Add(new EffectClipTemplate("正常效果", 0.5f, 2001, true));
+            var track3 = new TrackTemplate("混合轨道", new Color(0.8f, 0.4f, 0.8f));
+            track3.Clips.Add(new EffectClipTemplate("正常效果", 0.5f, 2001));
             track3.Clips.Add(new EffectClipTemplate("禁用效果", 1.0f, 2002, false)); // 禁用
-            track3.Clips.Add(new EffectClipTemplate("正常效果2", 1.5f, 2003, true));
+            track3.Clips.Add(new EffectClipTemplate("正常效果2", 1.5f, 2003));
 
             // Track 4: 包含时间为 0 的 Clip
-            var track4 = new TrackTemplate("起始效果轨道", new Color(0.6f, 0.6f, 0.8f), true);
+            var track4 = new TrackTemplate("起始效果轨道", new Color(0.6f, 0.6f, 0.8f));
             track4.Clips.Add(new EffectClipTemplate("起始效果", 0.0f, 3001)); // 时间为0
 
             scenario.Tracks.Add(track1);

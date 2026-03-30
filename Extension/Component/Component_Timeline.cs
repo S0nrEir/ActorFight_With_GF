@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using Aquila.ObjectPool;
+using Aquila.Toolkit;
 using GameFramework.ObjectPool;
 using GameFramework.Resource;
-using System.Collections.Generic;
 using UnityEngine.Playables;
 using UnityGameFramework.Runtime;
 
@@ -16,7 +17,7 @@ namespace Aquila.Extension
         {
             if ( string.IsNullOrEmpty( assetPath ) )
             {
-                Log.Warning( "<color=yellow>Compoent_Timeline.Play()--->string.IsNullOrEmpty( path )</color>" );
+                Tools.Logger.Warning( "<color=yellow>Compoent_Timeline.Play()--->string.IsNullOrEmpty( path )</color>" );
                 return;
             }
 
@@ -55,7 +56,7 @@ namespace Aquila.Extension
             var playableAsset = asset as PlayableAsset;
             if ( playableAsset is null )
             {
-                Log.Warning( "<color=yellow>Component_Timeline.OnLoadAssetSucc()--->playableAsset is null </color>" );
+                Tools.Logger.Warning( "<color=yellow>Component_Timeline.OnLoadAssetSucc()--->playableAsset is null </color>" );
                 ClearLoadingState( assetName );
                 return;
             }
@@ -70,7 +71,7 @@ namespace Aquila.Extension
             {
                 if ( !ReferenceEquals( cachedAsset, playableAsset ) )
                 {
-                    Log.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->duplicate asset callback ignored, asset:{assetName}</color>" );
+                    Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->duplicate asset callback ignored, asset:{assetName}</color>" );
                 }
 
                 return;
@@ -83,7 +84,7 @@ namespace Aquila.Extension
             }
             else
             {
-                Log.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->asset target already registered, asset:{assetName}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->asset target already registered, asset:{assetName}</color>" );
             }
 
             _assetCache.Add( assetName, playableAsset );
@@ -93,14 +94,14 @@ namespace Aquila.Extension
         {
             if ( director == null )
             {
-                Log.Warning( $"<color=yellow>Component_Timeline.Play()--->director is null, asset:{assetName}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Component_Timeline.Play()--->director is null, asset:{assetName}</color>" );
                 return;
             }
 
             director.playableAsset = playableAsset;
             if ( director.playableAsset is null )
             {
-                Log.Warning( "<color=yellow>Component_Timeline.Play()--->director.playableAsset is null </color>" );
+                Tools.Logger.Warning( "<color=yellow>Component_Timeline.Play()--->director.playableAsset is null </color>" );
                 return;
             }
 
@@ -109,7 +110,7 @@ namespace Aquila.Extension
 
         private void OnLoadAssetFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
-            Log.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetFaild()--->asset:{assetName},status:{status},error:{errorMessage}</color>" );
+            Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetFaild()--->asset:{assetName},status:{status},error:{errorMessage}</color>" );
             ClearLoadingState( assetName );
         }
 
@@ -126,8 +127,8 @@ namespace Aquila.Extension
         }
 
         private Dictionary<string, PlayableAsset> _assetCache = new Dictionary<string, PlayableAsset>();
-        private IObjectPool<Object_PlayableAsset> _assetPool = null;
-        private LoadAssetCallbacks _loadAssetCallBack = null;
+        private IObjectPool<Object_PlayableAsset> _assetPool;
+        private LoadAssetCallbacks _loadAssetCallBack;
         private HashSet<string> _loadingAssetNames = new HashSet<string>();
         private Dictionary<string, List<PlayableDirector>> _pendingPlayRequests = new Dictionary<string, List<PlayableDirector>>();
         private HashSet<PlayableAsset> _registeredAssets = new HashSet<PlayableAsset>();

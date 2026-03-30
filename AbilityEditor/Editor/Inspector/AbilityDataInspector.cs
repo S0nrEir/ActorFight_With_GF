@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
@@ -114,7 +115,7 @@ namespace Editor.AbilityEditor.Inspector
             bool isNewAsset = effectData == null;
 
             if (isNewAsset)
-                effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
+                effectData = CreateInstance<EffectEditorSOData>();
 
             // 从EffectClipData复制数据到EffectData
             effectData.id = effectClip.EffectId;
@@ -149,12 +150,12 @@ namespace Editor.AbilityEditor.Inspector
             if (isNewAsset)
             {
                 AssetDatabase.CreateAsset(effectData, assetPath);
-                Debug.Log($"[AbilityDataInspector] Created: {assetPath}");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataInspector] Created: {assetPath}");
             }
             else
             {
                 EditorUtility.SetDirty(effectData);
-                Debug.Log($"[AbilityDataInspector] Updated: {assetPath}");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataInspector] Updated: {assetPath}");
             }
         }
 
@@ -193,7 +194,7 @@ namespace Editor.AbilityEditor.Inspector
             var effectClip = CreateEffectClipFromData(effectData, triggerTime);
 
             // 确保至少有一个 Track
-            var tracks = new System.Collections.Generic.List<SerializedTrackData>();
+            var tracks = new List<SerializedTrackData>();
             if (abilityData.Tracks != null && abilityData.Tracks.Count > 0)
             {
                 // 复制现有 tracks
@@ -210,14 +211,14 @@ namespace Editor.AbilityEditor.Inspector
                     TrackName = "Effect Track",
                     TrackColor = TrackColors[Random.Range(0, TrackColors.Length)],
                     IsEnabled = true,
-                    Clips = new System.Collections.Generic.List<TimelineClipData>()
+                    Clips = new List<TimelineClipData>()
                 };
                 tracks.Add(newTrack);
             }
 
             // 添加 Clip 到第一个 Track
             if (tracks[0].Clips == null)
-                tracks[0].Clips = new System.Collections.Generic.List<TimelineClipData>();
+                tracks[0].Clips = new List<TimelineClipData>();
             
             tracks[0].Clips.Add(effectClip);
 
@@ -228,7 +229,7 @@ namespace Editor.AbilityEditor.Inspector
             EditorUtility.SetDirty(abilityData);
             AssetDatabase.SaveAssets();
 
-            Debug.Log($"[AbilityDataInspector] Added Effect Clip {effectId} to {abilityData.name} at time {triggerTime}s");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataInspector] Added Effect Clip {effectId} to {abilityData.name} at time {triggerTime}s");
             EditorUtility.DisplayDialog("Success", 
                 $"Added Effect Clip {effectId} to track '{tracks[0].TrackName}' at {triggerTime}s", "OK");
         }
@@ -296,11 +297,10 @@ namespace Editor.AbilityEditor.Inspector
         #endregion
         
         #region fields
-        private int _effectIdToAdd = 0;
-        private float _triggerTime = 0.0f;
+        private int _effectIdToAdd;
+        private float _triggerTime;
         // 预定义的轨道颜色
-        private static readonly Color[] TrackColors = new Color[]
-        {
+        private static readonly Color[] TrackColors = {
             new Color(0.8867924f, 0.4475792f, 0.4475792f, 1f), // 红色
             new Color(0.8f, 0.8f, 0f, 1f),                      // 黄色
             new Color(0.4475792f, 0.8867924f, 0.4475792f, 1f), // 绿色

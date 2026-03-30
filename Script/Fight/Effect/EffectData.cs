@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cfg.Enum;
@@ -47,8 +48,8 @@ namespace Aquila.Fight
             _period = period;
             _policy = policy;
             _effectOnAwake = effectOnAwake;
-            _deriveEffects = deriveEffects?.ToArray() ?? System.Array.Empty<int>();
-            _awakeEffects = awakeEffects?.ToArray() ?? System.Array.Empty<int>();
+            _deriveEffects = deriveEffects?.ToArray() ?? Array.Empty<int>();
+            _awakeEffects = awakeEffects?.ToArray() ?? Array.Empty<int>();
             _floatParam1 = floatParam1;
             _floatParam2 = floatParam2;
             _floatParam3 = floatParam3;

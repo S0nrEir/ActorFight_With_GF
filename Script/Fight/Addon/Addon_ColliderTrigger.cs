@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Aquila.Toolkit;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
@@ -70,7 +70,7 @@ namespace Aquila.Fight.Addon
             InitTriggerBhvr();
             _typedActor = Actor as ITriggerHitBehavior;
             if (_typedActor is null)
-                Log.Error( $"_typedActor is null" );
+                Tools.Logger.Error( "_typedActor is null" );
         }
 
         public override void Reset ()
@@ -92,7 +92,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 盒碰撞触发器
         /// </summary>
-        private TriggerAddonBehavior _triggerBhvr = null;
+        private TriggerAddonBehavior _triggerBhvr;
 
         /// <summary>
         /// 触发过的actorID集合
@@ -107,12 +107,12 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// trigger命中次数
         /// </summary>
-        private int _triggerCounter = 0;
+        private int _triggerCounter;
 
         /// <summary>
         /// 类型化的actor方便拿取
         /// </summary>
-        private ITriggerHitBehavior _typedActor = null;
+        private ITriggerHitBehavior _typedActor;
     }
 
     /// <summary>
@@ -169,13 +169,13 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 初始化标
         /// </summary>
-        public bool InitFlag { get; private set; } = false;
+        public bool InitFlag { get; private set; }
 
         /// <summary>
         /// 碰撞回调
         /// </summary>
-        private Action<object> _on_trigger_enter = null;
+        private Action<object> _on_trigger_enter;
 
-        private Collider _collider = null;
+        private Collider _collider;
     }
 }

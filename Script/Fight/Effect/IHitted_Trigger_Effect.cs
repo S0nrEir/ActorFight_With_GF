@@ -1,4 +1,3 @@
-
 using Aquila.Module;
 using GameFramework;
 
@@ -42,12 +41,12 @@ namespace Aquila.Fight
             _target = null;
         }
         
-        public Module_ProxyActor.ActorInstance _castor = null;
-        public Module_ProxyActor.ActorInstance _target = null;
+        public Module_ProxyActor.ActorInstance _castor;
+        public Module_ProxyActor.ActorInstance _target;
         
         /// <summary>
         /// 影响的值
         /// </summary>
-        public float _effectedValue = 0f;
+        public float _effectedValue;
     }
 }

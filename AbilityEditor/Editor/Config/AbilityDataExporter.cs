@@ -46,7 +46,7 @@ namespace Editor.AbilityEditor.Config
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             string action = isOverwrite ? "已覆盖" : "已创建";
-            Debug.Log($"[AbilityDataExporter] {action}配置资产: {assetPath}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataExporter] {action}配置资产: {assetPath}");
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Editor.AbilityEditor.Config
             AbilityBinaryExporter.ExportAbility(abilityData, abltPath);
             ExportEffectClipsToSandBox(abilityData);
             AssetDatabase.Refresh();
-            Debug.Log($"[AbilityDataExporter] 已导出沙盒测试配置: {abltPath}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataExporter] 已导出沙盒测试配置: {abltPath}");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Editor.AbilityEditor.Config
 
             if (exportedEffectIds.Count > 0)
             {
-                Debug.Log($"[AbilityDataExporter] 已导出 {exportedEffectIds.Count} 个 Effect 到沙盒目录");
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataExporter] 已导出 {exportedEffectIds.Count} 个 Effect 到沙盒目录");
             }
         }
 
@@ -128,7 +128,7 @@ namespace Editor.AbilityEditor.Config
                 return;
             }
 
-            Debug.LogWarning($"[AbilityDataExporter] 未找到 Effect ID={effectId} 的资产文件");
+            Aquila.Toolkit.Tools.Logger.Warning($"[AbilityDataExporter] 未找到 Effect ID={effectId} 的资产文件");
         }
 
         /// <summary>

@@ -1,8 +1,6 @@
 using Aquila.Fight.Addon;
-using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
@@ -16,7 +14,7 @@ namespace Aquila.Fight
         {
             if ( _radius <= 0f )
             {
-                Log.Warning( $"<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
+                Tools.Logger.Warning( "<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
                 return;
             }
 
@@ -31,7 +29,7 @@ namespace Aquila.Fight
         {
             if ( _radius <= 0f )
             {
-                Log.Warning( $"<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
+                Tools.Logger.Warning( "<color=yellow>ActorBehaviour_TargetingPosition.GetReady()--->_radius <= 0f </color>" );
                 return;
             }
 
@@ -81,7 +79,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 缓存actor transform
         /// </summary>
-        private Transform _cachedActorTransform = null;
+        private Transform _cachedActorTransform;
 
         /// <summary>
         /// 目标位置
@@ -91,12 +89,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 就绪标记
         /// </summary>
-        public bool _readyFlag = false;
+        public bool _readyFlag;
 
         /// <summary>
         /// 范围
         /// </summary>
-        public float _radius = 0f;
+        public float _radius;
 
         /// <summary>
         /// 默认速度

@@ -1,12 +1,12 @@
-﻿using Aquila.Toolkit;
+﻿using System;
+using System.Collections.Generic;
+using Aquila.Config;
+using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
 using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections.Generic;
-using Aquila.Config;
-using Aquila.UI;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
@@ -43,7 +43,7 @@ namespace Aquila.Procedure
             if ( !_handler.PreLoadFinish() )
                 return;
 
-            System.GC.Collect();
+            GC.Collect();
             //测试进入战斗流程
             NextProcedure();
         }
@@ -124,7 +124,7 @@ namespace Aquila.Procedure
             {
                 var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
                 var scene_script_meta = GameEntry.LuBan.Table<Scripts>().Get( 10000 );
-                procedure_variable.SetValue( new Procedure_Fight_Data()
+                procedure_variable.SetValue( new Procedure_Fight_Data
                 {
                     _sceneScriptMeta = scene_script_meta,
                     _chunkName = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
@@ -150,12 +150,12 @@ namespace Aquila.Procedure
         /// <summary>
         /// 状态机拥有者
         /// </summary>
-        private IFsm<IProcedureManager> _procedureOwner = null;
+        private IFsm<IProcedureManager> _procedureOwner;
 
         /// <summary>
         /// 预加载处理器
         /// </summary>
-        private PreloadHandler _handler = null;
+        private PreloadHandler _handler;
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 各个资源模块的加载标记
         /// </summary>
-        private int _preloadFlag = 0;
+        private int _preloadFlag;
 
         /// <summary>
         /// 数据表加载完成
@@ -260,7 +260,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 保存未加载完成的数据表
         /// </summary>
-        private HashSet<string> _datatableLoadedSet = null;
+        private HashSet<string> _datatableLoadedSet;
     }
 }
 

@@ -21,7 +21,7 @@
 //             string jsonPath = EditorUtility.OpenFilePanel("Select AbilityData JSON", Application.dataPath, "json");
 //             if (string.IsNullOrEmpty(jsonPath))
 //             {
-//                 Debug.Log("[AbilityDataImporter] Import cancelled");
+//                 Aquila.Toolkit.Tools.Logger.Info("[AbilityDataImporter] Import cancelled");
 //                 return;
 //             }
 //
@@ -33,7 +33,7 @@
 //
 //                 if (abilities == null || abilities.Count == 0)
 //                 {
-//                     Debug.LogError("[AbilityDataImporter] No abilities found in JSON file");
+//                     Aquila.Toolkit.Tools.Logger.Error("[AbilityDataImporter] No abilities found in JSON file");
 //                     return;
 //                 }
 //
@@ -60,11 +60,11 @@
 //                 // 显示结果
 //                 string message = $"导入完成!\n成功: {successCount}\n跳过: {skippedCount}";
 //                 EditorUtility.DisplayDialog("AbilityData Import", message, "OK");
-//                 Debug.Log($"[AbilityDataImporter] {message}");
+//                 Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataImporter] {message}");
 //             }
 //             catch (Exception ex)
 //             {
-//                 Debug.LogError($"[AbilityDataImporter] Import failed: {ex.Message}");
+//                 Aquila.Toolkit.Tools.Logger.Error($"[AbilityDataImporter] Import failed: {ex.Message}");
 //                 EditorUtility.DisplayDialog("Import Error", $"Failed to import: {ex.Message}", "OK");
 //             }
 //         }
@@ -93,7 +93,7 @@
 //
 //                 if (!overwrite)
 //                 {
-//                     Debug.Log($"[AbilityDataImporter] Skipped ability ID {abilityJson.id}");
+//                     Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataImporter] Skipped ability ID {abilityJson.id}");
 //                     skipped = true;
 //                     return false;
 //                 }
@@ -148,12 +148,12 @@
 //                     clipCount += track.Clips.Count;
 //                 }
 //
-//                 Debug.Log($"[AbilityDataImporter] Created asset: {assetPath} (ID={abilityJson.id}, Tracks={serializedTracks.Count}, Clips={clipCount})");
+//                 Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataImporter] Created asset: {assetPath} (ID={abilityJson.id}, Tracks={serializedTracks.Count}, Clips={clipCount})");
 //                 return true;
 //             }
 //             catch (Exception ex)
 //             {
-//                 Debug.LogError($"[AbilityDataImporter] Failed to import ability ID {abilityJson.id}: {ex.Message}");
+//                 Aquila.Toolkit.Tools.Logger.Error($"[AbilityDataImporter] Failed to import ability ID {abilityJson.id}: {ex.Message}");
 //                 return false;
 //             }
 //         }
@@ -170,7 +170,7 @@
 //             }
 //             catch
 //             {
-//                 Debug.LogWarning($"[AbilityDataImporter] Failed to parse TargetType: {targetTypeStr}, using default Enemy");
+//                 Aquila.Toolkit.Tools.Logger.Warning($"[AbilityDataImporter] Failed to parse TargetType: {targetTypeStr}, using default Enemy");
 //                 return AbilityTargetType.Enemy;
 //             }
 //         }

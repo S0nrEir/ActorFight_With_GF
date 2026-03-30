@@ -1,11 +1,10 @@
-using Aquila.Config;
-using Aquila.Fight.Actor;
 using System;
 using System.Collections.Generic;
+using Aquila.Config;
 using Aquila.Module;
+using Aquila.Toolkit;
 using UGFExtensions.Await;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
@@ -33,7 +32,7 @@ namespace Aquila.Fight.Addon
             effectEntityData.ModelPath = assetPath;
             var task = await AwaitableExtensions.ShowEntity
                 (
-                    Aquila.GameEntry.Entity,
+                    GameEntry.Entity,
                     fxID,
                     typeof( ActorFX ),
                     assetPath,
@@ -45,7 +44,7 @@ namespace Aquila.Fight.Addon
             var actorEffect = task.Logic as ActorFX;
             if ( actorEffect is null )
             {
-                Log.Error( $"create actor effect faild--->id:{fxID}" );
+                Tools.Logger.Error( $"create actor effect faild--->id:{fxID}" );
                 return;
             }
 
@@ -73,7 +72,7 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool Hide( int effectID )
         {
-            Aquila.GameEntry.Entity.HideEntity( effectID );
+            GameEntry.Entity.HideEntity( effectID );
             return Remove( effectID );
         }
 
@@ -156,7 +155,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 放出的特效集合
         /// </summary>
-        private Dictionary<int, ActorFX> _releasedEffectDic = null;
+        private Dictionary<int, ActorFX> _releasedEffectDic;
 
         #endregion
     }
@@ -187,7 +186,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 特效持续时间
         /// </summary>
-        public float _duration = 0f;
+        public float _duration;
 
         /// <summary>
         /// 特效节点是否改成读取配置

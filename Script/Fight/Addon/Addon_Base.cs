@@ -1,7 +1,5 @@
 using Aquila.Fight.Actor;
 using Aquila.Module;
-using GameFramework.ObjectPool;
-using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -52,7 +50,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 持有的actor实例
         /// </summary>
-        protected Module_ProxyActor.ActorInstance _actorInstance = null;
+        protected Module_ProxyActor.ActorInstance _actorInstance;
 
         /// <summary>
         /// 当组件被添加到actor上

@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Aquila.AbilityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor.Config
 {
@@ -95,7 +94,7 @@ namespace Editor.AbilityEditor.Config
             {
                 if (effect.EffectId < 0)
                 {
-                    throw new System.IO.InvalidDataException(
+                    throw new InvalidDataException(
                         $"Effect ID cannot be negative. Clip '{effect.ClipName}' has EffectID={effect.EffectId}");
                 }
             }
@@ -117,7 +116,7 @@ namespace Editor.AbilityEditor.Config
 
                 if (timeDiff > 0 && timeDiff < TRIGGER_COLLISION_THRESHOLD)
                 {
-                    Debug.LogWarning(
+                    Aquila.Toolkit.Tools.Logger.Warning(
                         $"[AbilityConfig] Triggers at {triggers[i].TriggerTime:F3}s and {triggers[i + 1].TriggerTime:F3}s " +
                         $"are very close ({timeDiff * 1000:F1}ms apart). Consider merging or adjusting timing.");
                 }
@@ -136,9 +135,9 @@ namespace Editor.AbilityEditor.Config
             {
                 if (string.IsNullOrWhiteSpace(audio.AudioPath))
                 {
-                    Debug.LogWarning(
+                    Aquila.Toolkit.Tools.Logger.Warning(
                         $"[AbilityConfig] Audio clip '{audio.ClipName}' at {audio.StartTime:F2}s has no asset path. " +
-                        $"Remember to assign Audio assets later.");
+                        "Remember to assign Audio assets later.");
                 }
             }
 
@@ -147,9 +146,9 @@ namespace Editor.AbilityEditor.Config
             {
                 if (string.IsNullOrWhiteSpace(vfx.VfxPath))
                 {
-                    Debug.LogWarning(
+                    Aquila.Toolkit.Tools.Logger.Warning(
                         $"[AbilityConfig] VFX clip '{vfx.ClipName}' at {vfx.StartTime:F2}s has no asset path. " +
-                        $"Remember to assign VFX assets later.");
+                        "Remember to assign VFX assets later.");
                 }
             }
         }
