@@ -224,10 +224,8 @@ namespace Aquila.Procedure
         private void OnLoadAssetSuccess( string assetName, object asset, float duration, object userData )
         {
             if ( _hasLoadFailed || _hasChangedState )
-            {
                 return;
-            }
-
+            
             if ( !( userData is int index ) )
             {
                 Tools.Logger.Error( $"[Procedure_ResourcePreload] load success callback userData type invalid, asset: {assetName}." );
