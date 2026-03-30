@@ -12,7 +12,7 @@ namespace Aquila.Procedure
     /// <summary>
     /// 参数化资源预加载流程
     /// </summary>
-    public class Procedure_ResourcePreload : ProcedureBase
+    public class Procedure_PreloadResource : ProcedureBase
     {
         /// <summary>
         /// FSM 数据键
@@ -97,9 +97,7 @@ namespace Aquila.Procedure
             ResetRuntimeState();
 
             if ( !TryReadPreloadParams( procedureOwner ) )
-            {
                 return;
-            }
 
             DispatchPreloadRequests();
         }
@@ -165,11 +163,11 @@ namespace Aquila.Procedure
                 return false;
             }
 
-            if ( !typeof( ProcedureBase ).IsAssignableFrom( data.NextProcedureType ) )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure type '{data.NextProcedureType.FullName}' does not inherit ProcedureBase." );
-                return false;
-            }
+            // if ( !typeof( ProcedureBase ).IsAssignableFrom( data.NextProcedureType ) )
+            // {
+            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure type '{data.NextProcedureType.FullName}' does not inherit ProcedureBase." );
+            //     return false;
+            // }
 
             if ( !procedureOwner.Owner.HasProcedure( data.NextProcedureType ) )
             {
@@ -242,11 +240,11 @@ namespace Aquila.Procedure
                 return;
             }
 
-            if ( _resourceAssetPaths == null || index < 0 || index >= _resourceAssetPaths.Length )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] load success callback index out of range, asset: {assetName}, index: {index}." );
-                return;
-            }
+            // if ( _resourceAssetPaths == null || index < 0 || index >= _resourceAssetPaths.Length )
+            // {
+            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] load success callback index out of range, asset: {assetName}, index: {index}." );
+            //     return;
+            // }
 
             if ( _loadedResourceIndexSet != null && !_loadedResourceIndexSet.Add( index ) )
             {
@@ -273,14 +271,10 @@ namespace Aquila.Procedure
         private void TryGotoNextProcedure()
         {
             if ( _hasLoadFailed || _hasChangedState )
-            {
                 return;
-            }
 
             if ( _loadFinishFlag != _loadFinishFlagMask )
-            {
                 return;
-            }
 
             if ( _procedureOwner == null || _nextProcedureType == null )
             {
