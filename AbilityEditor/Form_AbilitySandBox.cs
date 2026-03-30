@@ -38,14 +38,16 @@ namespace Aquila.AbilityEditor
             _actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             _proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
 
-            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/Image" );
+            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/AbilityIcon" );
             _abilityButton.onClick.AddListener( OnAbilityButtonClicked );
             
             _cdTxt = Tools.GetComponent<Text>( gameObject, "AbilityButton/Text" );
-            _cdImg = Tools.GetComponent<Image>( gameObject, "AbilityButton/Image" );
+            _cdImg = Tools.GetComponent<Image>( gameObject, "AbilityButton/CD" );
             _abilityIdText = Tools.GetComponent<Text>( gameObject, "AbilityButton/AbilityIdText" );
             
             _abilityIdText.text = _abilityID.ToString();
+            Tools.SetActive( _cdTxt.gameObject, false );
+            Tools.SetActive( _abilityIdText.gameObject, true );
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
@@ -113,7 +115,10 @@ namespace Aquila.AbilityEditor
             //Tools.SetActive( _cdImg.gameObject, percent > 0 );
             //Tools.SetActive( _cdTxt.gameObject, percent > 0 );
 
-            if ( percent > 0 )
+            var isOnCD = percent > 0.0001;
+            Tools.SetActive( _cdTxt.gameObject, isOnCD );
+            Tools.SetActive( _abilityIdText.gameObject, !isOnCD );
+            if ( isOnCD )
             {
                 _cdImg.fillAmount = percent;
                 _cdTxt.text = cd.remain.ToString( "F1" );
