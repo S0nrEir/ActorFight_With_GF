@@ -110,7 +110,7 @@ namespace Aquila.Procedure
             }
 
             _procedureOwner = null;
-            _nextProcedureType = null;
+            _nextProcedure = null;
             _resourceAssetPaths = null;
             _loadedResourceIndexSet = null;
             _hasLoadFailed = false;
@@ -137,19 +137,19 @@ namespace Aquila.Procedure
         /// </summary>
         private bool TryReadPreloadParams( IFsm<IProcedureManager> procedureOwner )
         {
-            if ( !procedureOwner.HasData( KEY_RESOURCE_PRELOAD_VARIABLE ) )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] missing preload parameter variable." );
-                return false;
-            }
+            // if ( !procedureOwner.HasData( KEY_RESOURCE_PRELOAD_VARIABLE ) )
+            // {
+            //     Tools.Logger.Error( "[Procedure_ResourcePreload] missing preload parameter variable." );
+            //     return false;
+            // }
+            //
+            // if ( variable == null )
+            // {
+            //     Tools.Logger.Error( "[Procedure_ResourcePreload] preload variable type mismatch." );
+            //     return false;
+            // }
 
             var variable = procedureOwner.GetData( KEY_RESOURCE_PRELOAD_VARIABLE ) as Procedure_ResourcePreload_Variable;
-            if ( variable == null )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] preload variable type mismatch." );
-                return false;
-            }
-
             var data = variable.GetValue() as Procedure_ResourcePreload_Data;
             if ( data == null )
             {
@@ -157,11 +157,11 @@ namespace Aquila.Procedure
                 return false;
             }
 
-            if ( data.NextProcedureType == null )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] next procedure type is null." );
-                return false;
-            }
+            // if ( data.NextProcedureType == null )
+            // {
+            //     Tools.Logger.Error( "[Procedure_ResourcePreload] next procedure type is null." );
+            //     return false;
+            // }
 
             // if ( !typeof( ProcedureBase ).IsAssignableFrom( data.NextProcedureType ) )
             // {
@@ -169,11 +169,11 @@ namespace Aquila.Procedure
             //     return false;
             // }
 
-            if ( !procedureOwner.Owner.HasProcedure( data.NextProcedureType ) )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure '{data.NextProcedureType.FullName}' is not registered in ProcedureComponent." );
-                return false;
-            }
+            // if ( !procedureOwner.Owner.HasProcedure( data.NextProcedureType ) )
+            // {
+            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure '{data.NextProcedureType.FullName}' is not registered in ProcedureComponent." );
+            //     return false;
+            // }
 
             if ( data.ResourceAssetPaths == null || data.ResourceAssetPaths.Length == 0 )
             {
@@ -196,7 +196,7 @@ namespace Aquila.Procedure
                 }
             }
 
-            _nextProcedureType = data.NextProcedureType;
+            _nextProcedure = data.NextProcedureType;
             _resourceAssetPaths = data.ResourceAssetPaths;
             _loadedResourceIndexSet = new HashSet<int>( _resourceAssetPaths.Length );
             _loadFinishFlagMask = ( 1UL << _resourceAssetPaths.Length ) - 1UL;
@@ -209,19 +209,13 @@ namespace Aquila.Procedure
         private void DispatchPreloadRequests()
         {
             if ( _resourceAssetPaths == null || _resourceAssetPaths.Length == 0 )
-            {
                 return;
-            }
 
             if ( _loadAssetCallbacks == null )
-            {
                 _loadAssetCallbacks = new LoadAssetCallbacks( OnLoadAssetSuccess, OnLoadAssetFailed );
-            }
 
             for ( int i = 0; i < _resourceAssetPaths.Length; i++ )
-            {
                 GameEntry.Resource.LoadAsset( _resourceAssetPaths[i], _loadAssetCallbacks, i );
-            }
         }
 
         /// <summary>
@@ -276,14 +270,14 @@ namespace Aquila.Procedure
             if ( _loadFinishFlag != _loadFinishFlagMask )
                 return;
 
-            if ( _procedureOwner == null || _nextProcedureType == null )
+            if ( _procedureOwner == null || _nextProcedure == null )
             {
                 Tools.Logger.Error( "[Procedure_ResourcePreload] cannot change state, owner or next procedure type is null." );
                 return;
             }
 
             _hasChangedState = true;
-            ChangeState( _procedureOwner, _nextProcedureType );
+            ChangeState( _procedureOwner, _nextProcedure );
         }
 
         /// <summary>
@@ -292,9 +286,9 @@ namespace Aquila.Procedure
         private IFsm<IProcedureManager> _procedureOwner;
 
         /// <summary>
-        /// 目标流程类型
+        /// 加载完成后要进入的流程
         /// </summary>
-        private Type _nextProcedureType;
+        private Type _nextProcedure;
 
         /// <summary>
         /// 待加载资源路径
@@ -337,14 +331,13 @@ namespace Aquila.Procedure
     /// </summary>
     internal class Procedure_ResourcePreload_Data : IReference
     {
-        public string[] ResourceAssetPaths;
-        public Type NextProcedureType;
-
         public void Clear()
         {
             ResourceAssetPaths = null;
             NextProcedureType = null;
         }
+        public string[] ResourceAssetPaths;
+        public Type NextProcedureType;
     }
 
     /// <summary>
@@ -357,9 +350,7 @@ namespace Aquila.Procedure
         public override void Clear()
         {
             if ( Value is IReference )
-            {
                 ReferencePool.Release( Value );
-            }
 
             Value = null;
         }
