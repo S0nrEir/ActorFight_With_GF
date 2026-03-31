@@ -112,11 +112,10 @@ namespace Aquila.Procedure
             _procedureOwner = null;
             _nextProcedure = null;
             _resourceAssetPaths = null;
-            _loadedResourceIndexSet = null;
+            _pendingIndexSet = null;
+            _loadedIndexSet = null;
             _hasLoadFailed = false;
             _hasChangedState = false;
-            _loadFinishFlag = 0UL;
-            _loadFinishFlagMask = 0UL;
 
             base.OnLeave( procedureOwner, isShutdown );
         }
@@ -128,8 +127,8 @@ namespace Aquila.Procedure
         {
             _hasLoadFailed = false;
             _hasChangedState = false;
-            _loadFinishFlag = 0UL;
-            _loadFinishFlagMask = 0UL;
+            _pendingIndexSet = null;
+            _loadedIndexSet = null;
         }
 
         /// <summary>
@@ -181,12 +180,6 @@ namespace Aquila.Procedure
                 return false;
             }
 
-            if ( data.ResourceAssetPaths.Length > 63 )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] resource list is too large ({data.ResourceAssetPaths.Length}), max supported count is 63." );
-                return false;
-            }
-
             for ( int i = 0; i < data.ResourceAssetPaths.Length; i++ )
             {
                 if ( string.IsNullOrEmpty( data.ResourceAssetPaths[i] ) )
@@ -198,8 +191,10 @@ namespace Aquila.Procedure
 
             _nextProcedure = data.NextProcedureType;
             _resourceAssetPaths = data.ResourceAssetPaths;
-            _loadedResourceIndexSet = new HashSet<int>( _resourceAssetPaths.Length );
-            _loadFinishFlagMask = ( 1UL << _resourceAssetPaths.Length ) - 1UL;
+            _pendingIndexSet = new HashSet<int>( _resourceAssetPaths.Length );
+            _loadedIndexSet = new HashSet<int>( _resourceAssetPaths.Length );
+            for ( int i = 0; i < _resourceAssetPaths.Length; i++ )
+                _pendingIndexSet.Add( i );
             return true;
         }
 
@@ -238,13 +233,12 @@ namespace Aquila.Procedure
             //     return;
             // }
 
-            if ( _loadedResourceIndexSet != null && !_loadedResourceIndexSet.Add( index ) )
+            if ( _loadedIndexSet != null && !_loadedIndexSet.Add( index ) )
             {
                 Tools.Logger.Warning( $"[Procedure_ResourcePreload] duplicate success callback ignored, asset: {assetName}, index: {index}." );
                 return;
             }
 
-            _loadFinishFlag |= ( 1UL << index );
             TryGotoNextProcedure();
         }
 
@@ -265,7 +259,7 @@ namespace Aquila.Procedure
             if ( _hasLoadFailed || _hasChangedState )
                 return;
 
-            if ( _loadFinishFlag != _loadFinishFlagMask )
+            if ( _loadedIndexSet == null || _pendingIndexSet == null || _loadedIndexSet.Count != _pendingIndexSet.Count )
                 return;
 
             if ( _procedureOwner == null || _nextProcedure == null )
@@ -294,19 +288,14 @@ namespace Aquila.Procedure
         private string[] _resourceAssetPaths;
 
         /// <summary>
-        /// 已成功加载的资源索引集合（用于防重复回调）
+        /// 待加载资源索引集合
         /// </summary>
-        private HashSet<int> _loadedResourceIndexSet;
+        private HashSet<int> _pendingIndexSet;
 
         /// <summary>
-        /// 已完成加载标记位
+        /// 已成功加载的资源索引集合
         /// </summary>
-        private ulong _loadFinishFlag;
-
-        /// <summary>
-        /// 预期完成加载标记位
-        /// </summary>
-        private ulong _loadFinishFlagMask;
+        private HashSet<int> _loadedIndexSet;
 
         /// <summary>
         /// 是否出现加载失败
