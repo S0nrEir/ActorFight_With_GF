@@ -14,81 +14,6 @@ namespace Aquila.Procedure
     /// </summary>
     public class Procedure_PreloadResource : ProcedureBase
     {
-        /// <summary>
-        /// FSM 数据键
-        /// </summary>
-        public const string KEY_RESOURCE_PRELOAD_VARIABLE = nameof( Procedure_ResourcePreload_Variable );
-
-        /// <summary>
-        /// 启动参数化预加载（泛型入口）
-        /// </summary>
-        public static bool StartWith<TNextProcedure>( IFsm<IProcedureManager> procedureOwner, params string[] resourceAssetPaths ) where TNextProcedure : ProcedureBase
-        {
-            return StartWith( procedureOwner, typeof( TNextProcedure ), resourceAssetPaths );
-        }
-
-        /// <summary>
-        /// 启动参数化预加载（运行时类型入口）
-        /// </summary>
-        public static bool StartWith( IFsm<IProcedureManager> procedureOwner, Type nextProcedureType, IList<string> resourceAssetPaths )
-        {
-            if ( procedureOwner == null )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] StartWith failed: procedureOwner is null." );
-                return false;
-            }
-
-            if ( nextProcedureType == null )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] StartWith failed: nextProcedureType is null." );
-                return false;
-            }
-
-            if ( !typeof( ProcedureBase ).IsAssignableFrom( nextProcedureType ) )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] StartWith failed: next procedure type '{nextProcedureType.FullName}' does not inherit ProcedureBase." );
-                return false;
-            }
-
-            if ( !procedureOwner.Owner.HasProcedure( nextProcedureType ) )
-            {
-                Tools.Logger.Error( $"[Procedure_ResourcePreload] StartWith failed: next procedure '{nextProcedureType.FullName}' is not registered in ProcedureComponent." );
-                return false;
-            }
-
-            if ( resourceAssetPaths == null || resourceAssetPaths.Count == 0 )
-            {
-                Tools.Logger.Error( "[Procedure_ResourcePreload] StartWith failed: resourceAssetPaths is null or empty." );
-                return false;
-            }
-
-            var paths = new string[resourceAssetPaths.Count];
-            for ( int i = 0; i < resourceAssetPaths.Count; i++ )
-            {
-                var path = resourceAssetPaths[i];
-                if ( string.IsNullOrEmpty( path ) )
-                {
-                    Tools.Logger.Error( $"[Procedure_ResourcePreload] StartWith failed: resource path at index {i} is null or empty." );
-                    return false;
-                }
-
-                paths[i] = path;
-            }
-
-            if ( procedureOwner.HasData( KEY_RESOURCE_PRELOAD_VARIABLE ) )
-            {
-                procedureOwner.RemoveData( KEY_RESOURCE_PRELOAD_VARIABLE );
-            }
-
-            var variable = ReferencePool.Acquire<Procedure_ResourcePreload_Variable>();
-            variable.SetValue( new Procedure_ResourcePreload_Data
-            {
-                ResourceAssetPaths = paths,
-                NextProcedureType = nextProcedureType
-            } );
-            procedureOwner.SetData( KEY_RESOURCE_PRELOAD_VARIABLE, variable );
-            return true;
-        }
 
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
@@ -136,18 +61,6 @@ namespace Aquila.Procedure
         /// </summary>
         private bool TryReadPreloadParams( IFsm<IProcedureManager> procedureOwner )
         {
-            // if ( !procedureOwner.HasData( KEY_RESOURCE_PRELOAD_VARIABLE ) )
-            // {
-            //     Tools.Logger.Error( "[Procedure_ResourcePreload] missing preload parameter variable." );
-            //     return false;
-            // }
-            //
-            // if ( variable == null )
-            // {
-            //     Tools.Logger.Error( "[Procedure_ResourcePreload] preload variable type mismatch." );
-            //     return false;
-            // }
-
             var variable = procedureOwner.GetData( KEY_RESOURCE_PRELOAD_VARIABLE ) as Procedure_ResourcePreload_Variable;
             var data = variable.GetValue() as Procedure_ResourcePreload_Data;
             if ( data == null )
@@ -155,24 +68,6 @@ namespace Aquila.Procedure
                 Tools.Logger.Error( "[Procedure_ResourcePreload] preload data is null." );
                 return false;
             }
-
-            // if ( data.NextProcedureType == null )
-            // {
-            //     Tools.Logger.Error( "[Procedure_ResourcePreload] next procedure type is null." );
-            //     return false;
-            // }
-
-            // if ( !typeof( ProcedureBase ).IsAssignableFrom( data.NextProcedureType ) )
-            // {
-            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure type '{data.NextProcedureType.FullName}' does not inherit ProcedureBase." );
-            //     return false;
-            // }
-
-            // if ( !procedureOwner.Owner.HasProcedure( data.NextProcedureType ) )
-            // {
-            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] next procedure '{data.NextProcedureType.FullName}' is not registered in ProcedureComponent." );
-            //     return false;
-            // }
 
             if ( data.ResourceAssetPaths == null || data.ResourceAssetPaths.Length == 0 )
             {
@@ -227,13 +122,7 @@ namespace Aquila.Procedure
                 return;
             }
 
-            // if ( _resourceAssetPaths == null || index < 0 || index >= _resourceAssetPaths.Length )
-            // {
-            //     Tools.Logger.Error( $"[Procedure_ResourcePreload] load success callback index out of range, asset: {assetName}, index: {index}." );
-            //     return;
-            // }
-
-            if ( _loadedIndexSet != null && !_loadedIndexSet.Add( index ) )
+            if ( !_loadedIndexSet.Add( index ) )
             {
                 Tools.Logger.Warning( $"[Procedure_ResourcePreload] duplicate success callback ignored, asset: {assetName}, index: {index}." );
                 return;
@@ -259,7 +148,7 @@ namespace Aquila.Procedure
             if ( _hasLoadFailed || _hasChangedState )
                 return;
 
-            if ( _loadedIndexSet == null || _pendingIndexSet == null || _loadedIndexSet.Count != _pendingIndexSet.Count )
+            if ( _loadedIndexSet.Count != _pendingIndexSet.Count )
                 return;
 
             if ( _procedureOwner == null || _nextProcedure == null )
@@ -311,12 +200,17 @@ namespace Aquila.Procedure
         /// 加载回调
         /// </summary>
         private LoadAssetCallbacks _loadAssetCallbacks;
+        
+        /// <summary>
+        /// FSM 数据键
+        /// </summary>
+        public const string KEY_RESOURCE_PRELOAD_VARIABLE = nameof( Procedure_ResourcePreload_Variable );
     }
 
     /// <summary>
     /// 参数化资源预加载流程数据
     /// </summary>
-    internal class Procedure_ResourcePreload_Data : IReference
+    public class Procedure_ResourcePreload_Data : IReference
     {
         public void Clear()
         {
@@ -330,7 +224,7 @@ namespace Aquila.Procedure
     /// <summary>
     /// 参数化资源预加载流程数据变量容器
     /// </summary>
-    internal class Procedure_ResourcePreload_Variable : Variable<Procedure_ResourcePreload_Data>
+    public class Procedure_ResourcePreload_Variable : Variable<Procedure_ResourcePreload_Data>
     {
         public override Type Type => typeof( Procedure_ResourcePreload_Variable );
 
