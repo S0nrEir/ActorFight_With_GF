@@ -115,7 +115,7 @@ namespace Editor.AbilityEditor
 
                 _audioClipInspectorProxy.BindAudioClipData(audioClip, clipUI, _timelineDuration);
                 Selection.activeObject = _audioClipInspectorProxy;
-                Aquila.Toolkit.Tools.Logger.Info($"Showing Audio Clip in Unity Inspector - Path: {audioClip.AudioPath}, Timeline Duration: {_timelineDuration:F2}s");
+                Aquila.Toolkit.Tools.Logger.Info($"Showing Audio Clip in Unity Inspector - AudioId: {audioClip.AudioId}, Timeline Duration: {_timelineDuration:F2}s");
             }
             else
             {

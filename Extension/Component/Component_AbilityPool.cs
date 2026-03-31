@@ -542,7 +542,7 @@ namespace Aquila.AbilityPool
         {
             if (clipType == CLIP_TYPE_AUDIO)
             {
-                ReadString(reader);     // AudioPath
+                reader.ReadInt32();     // AudioId
                 reader.ReadSingle();    // Volume
                 reader.ReadBoolean();   // Loop
                 reader.ReadSingle();    // FadeIn

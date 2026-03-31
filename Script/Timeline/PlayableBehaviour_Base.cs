@@ -17,14 +17,6 @@ namespace Aquila.Timeline
             Tools.Logger.Info("<color=white>PlayableBhvr_Base.OnPlayableDestroy</color>");
         }
         
-        /// <summary>
-        /// 设置playable asset给behaviour
-        /// </summary>
-        // public void SetAsset(PlayableAsset asset)
-        // {
-        //     _asset = asset;
-        // }
-
         public PlayableAsset _asset;
     }
 }

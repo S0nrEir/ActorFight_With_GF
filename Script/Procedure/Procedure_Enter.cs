@@ -16,6 +16,14 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
+
+            //#todo:改掉procedure preload
+            // if ( Procedure_PreloadResource.StartWith<Procedure_Prelaod>( procedureOwner, _resourcePreloadPathList ) )
+            // {
+            //     ChangeState<Procedure_PreloadResource>( procedureOwner );
+            //     return;
+            // }
+
             ChangeState<Procedure_Prelaod>( procedureOwner );
         }
 
@@ -23,6 +31,11 @@ namespace Aquila.Procedure
         {
             base.OnLeave( procedureOwner, isShutdown );
         }
-    }
 
+        private static readonly string[] _resourcePreloadPathList =
+        {
+            @"Assets/Res/Prefab/UI/Item/HPBar.prefab",
+            @"Assets/Res/Prefab/UI/Item/DamageNumber.prefab"
+        };
+    }
 }

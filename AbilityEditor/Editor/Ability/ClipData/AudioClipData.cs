@@ -11,10 +11,10 @@ namespace Aquila.AbilityEditor
     public class AudioClipData : TimelineClipData
     {
         /// <summary>
-        /// 音效资源路径或ID
+        /// SoundEffectMap 表中的音效 ID
         /// </summary>
         [SerializeField]
-        private string _audioPath;
+        private int _audioId;
 
         /// <summary>
         /// 音量 (0-1)
@@ -44,7 +44,7 @@ namespace Aquila.AbilityEditor
 
         public AudioClipData()
         {
-            _audioPath = string.Empty;
+            _audioId = 0;
             _volume = 1f;
             _loop = false;
             _fadeInDuration = 0f;
@@ -52,10 +52,10 @@ namespace Aquila.AbilityEditor
             ClipColor = new Color(0.4f, 0.8f, 0.4f); // 绿色
         }
 
-        public AudioClipData(string clipName, float startTime, float endTime, string audioPath)
+        public AudioClipData(string clipName, float startTime, float endTime, int audioId)
             : base(clipName, startTime, endTime, new Color(0.4f, 0.8f, 0.4f))
         {
-            _audioPath = audioPath;
+            _audioId = audioId;
             _volume = 1f;
             _loop = false;
             _fadeInDuration = 0f;
@@ -64,10 +64,10 @@ namespace Aquila.AbilityEditor
 
         #region Properties
 
-        public string AudioPath
+        public int AudioId
         {
-            get => _audioPath;
-            set => _audioPath = value;
+            get => _audioId;
+            set => _audioId = value;
         }
 
         public float Volume
@@ -102,7 +102,7 @@ namespace Aquila.AbilityEditor
         {
             var clone = new AudioClipData();
             CopyBaseTo(clone);
-            clone._audioPath = _audioPath;
+            clone._audioId = _audioId;
             clone._volume = _volume;
             clone._loop = _loop;
             clone._fadeInDuration = _fadeInDuration;
@@ -115,9 +115,9 @@ namespace Aquila.AbilityEditor
             if (!base.Validate(out errorMessage))
                 return false;
 
-            if (string.IsNullOrEmpty(_audioPath))
+            if (_audioId <= 0)
             {
-                errorMessage = "Audio path cannot be empty";
+                errorMessage = "AudioId must be greater than 0";
                 return false;
             }
 
@@ -128,7 +128,7 @@ namespace Aquila.AbilityEditor
         public override string GetDisplayInfo()
         {
             string loopInfo = _loop ? " [Loop]" : "";
-            return $"Audio: {ClipName}{loopInfo} [{StartTime:F2}s - {EndTime:F2}s] Vol:{_volume:F2}";
+            return $"Audio: {ClipName}{loopInfo} [{StartTime:F2}s - {EndTime:F2}s] ID:{_audioId} Vol:{_volume:F2}";
         }
 
         #endregion

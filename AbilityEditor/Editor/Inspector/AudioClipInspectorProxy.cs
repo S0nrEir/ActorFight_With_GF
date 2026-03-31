@@ -26,7 +26,7 @@ namespace Aquila.AbilityEditor
                 return;
 
             _clipName = TargetClipData.ClipName;
-            _audioPath = TargetClipData.AudioPath;
+            _audioId = TargetClipData.AudioId;
             _volume = TargetClipData.Volume;
             _loop = TargetClipData.Loop;
             _fadeInDuration = TargetClipData.FadeInDuration;
@@ -45,7 +45,7 @@ namespace Aquila.AbilityEditor
                 return;
 
             TargetClipData.ClipName = _clipName;
-            TargetClipData.AudioPath = _audioPath;
+            TargetClipData.AudioId = _audioId;
             TargetClipData.Volume = _volume;
             TargetClipData.Loop = _loop;
             TargetClipData.FadeInDuration = _fadeInDuration;
@@ -62,7 +62,7 @@ namespace Aquila.AbilityEditor
         private string _clipName;
 
         [SerializeField]
-        private string _audioPath;
+        private int _audioId;
 
         [SerializeField]
         [Range(0f, 1f)]
@@ -96,14 +96,14 @@ namespace Aquila.AbilityEditor
             }
         }
 
-        public string AudioPath
+        public int AudioId
         {
-            get => _audioPath;
+            get => _audioId;
             set
             {
-                if (_audioPath != value)
+                if (_audioId != value)
                 {
-                    _audioPath = value;
+                    _audioId = value;
                     SyncToClipData();
                 }
             }
@@ -202,7 +202,7 @@ namespace Aquila.AbilityEditor
     public class AudioClipInspectorProxyEditor : UnityEditor.Editor
     {
         private SerializedProperty _clipNameProp;
-        private SerializedProperty _audioPathProp;
+        private SerializedProperty _audioIdProp;
         private SerializedProperty _volumeProp;
         private SerializedProperty _loopProp;
         private SerializedProperty _fadeInDurationProp;
@@ -213,7 +213,7 @@ namespace Aquila.AbilityEditor
         private void OnEnable()
         {
             _clipNameProp        = serializedObject.FindProperty("_clipName");
-            _audioPathProp       = serializedObject.FindProperty("_audioPath");
+            _audioIdProp         = serializedObject.FindProperty("_audioId");
             _volumeProp          = serializedObject.FindProperty("_volume");
             _loopProp            = serializedObject.FindProperty("_loop");
             _fadeInDurationProp  = serializedObject.FindProperty("_fadeInDuration");
@@ -257,7 +257,7 @@ namespace Aquila.AbilityEditor
 
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_clipNameProp, new GUIContent("Clip Name"));
-            EditorGUILayout.PropertyField(_audioPathProp, new GUIContent("Audio Path"));
+            EditorGUILayout.PropertyField(_audioIdProp, new GUIContent("Audio ID"));
             EditorGUILayout.Space();
             EditorGUILayout.Slider(_volumeProp, 0f, 1f, new GUIContent("Volume"));
             EditorGUILayout.PropertyField(_loopProp, new GUIContent("Loop"));

@@ -143,7 +143,7 @@ namespace Editor.AbilityEditor.Tools
                                     ClipType = TimelineClipType.Audio,
                                     StartTime = audioClip.StartTime,
                                     EndTime = audioClip.EndTime,
-                                    AudioPath = audioClip.AudioPath,
+                                    AudioId = audioClip.AudioId,
                                     Volume = audioClip.Volume,
                                     Loop = audioClip.Loop,
                                     FadeInDuration = audioClip.FadeInDuration,
@@ -345,7 +345,7 @@ namespace Editor.AbilityEditor.Tools
                         ClipType = TimelineClipType.Audio,
                         StartTime = startTime,
                         EndTime = endTime,
-                        AudioPath = reader.ReadString(),
+                        AudioId = reader.ReadInt32(),
                         Volume = reader.ReadSingle(),
                         Loop = reader.ReadBoolean(),
                         FadeInDuration = reader.ReadSingle(),
@@ -513,8 +513,8 @@ namespace Editor.AbilityEditor.Tools
             }
             else if (expected is CachedAudioClipData expectedAudio && actual is CachedAudioClipData actualAudio)
             {
-                if (expectedAudio.AudioPath != actualAudio.AudioPath)
-                    differences.Add($"{prefix} (AudioClip) AudioPath | Expected: {expectedAudio.AudioPath} | Actual: {actualAudio.AudioPath}");
+                if (expectedAudio.AudioId != actualAudio.AudioId)
+                    differences.Add($"{prefix} (AudioClip) AudioId | Expected: {expectedAudio.AudioId} | Actual: {actualAudio.AudioId}");
                 
                 if (!FloatEquals(expectedAudio.Volume, actualAudio.Volume))
                     differences.Add($"{prefix} (AudioClip) Volume | Expected: {expectedAudio.Volume} | Actual: {actualAudio.Volume}");
@@ -712,7 +712,7 @@ namespace Editor.AbilityEditor.Tools
 
         internal class CachedAudioClipData : CachedClipData
         {
-            public string AudioPath;
+            public int AudioId;
             public float Volume;
             public bool Loop;
             public float FadeInDuration;

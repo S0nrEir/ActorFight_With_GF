@@ -133,11 +133,11 @@ namespace Editor.AbilityEditor.Config
             // Check audio clips
             foreach (var audio in audios)
             {
-                if (string.IsNullOrWhiteSpace(audio.AudioPath))
+                if (audio.AudioId <= 0)
                 {
                     Aquila.Toolkit.Tools.Logger.Warning(
-                        $"[AbilityConfig] Audio clip '{audio.ClipName}' at {audio.StartTime:F2}s has no asset path. " +
-                        "Remember to assign Audio assets later.");
+                        $"[AbilityConfig] Audio clip '{audio.ClipName}' at {audio.StartTime:F2}s has no AudioId assigned. " +
+                        "Remember to assign a SoundEffectMap ID later.");
                 }
             }
 

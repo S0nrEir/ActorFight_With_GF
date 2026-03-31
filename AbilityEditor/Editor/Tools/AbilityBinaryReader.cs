@@ -226,13 +226,13 @@ namespace Editor.AbilityEditor.Tools
 
         private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)
         {
-            string audioPath = ReadString(reader);
+            int audioId = reader.ReadInt32();
             float volume = reader.ReadSingle();
             bool loop = reader.ReadBoolean();
             float fadeIn = reader.ReadSingle();
             float fadeOut = reader.ReadSingle();
 
-            sb.AppendLine($"{indent}AudioPath: {audioPath}");
+            sb.AppendLine($"{indent}AudioId: {audioId}");
             sb.AppendLine($"{indent}Volume: {volume:F2}");
             sb.AppendLine($"{indent}Loop: {loop}");
             sb.AppendLine($"{indent}FadeIn: {fadeIn:F2}s, FadeOut: {fadeOut:F2}s");

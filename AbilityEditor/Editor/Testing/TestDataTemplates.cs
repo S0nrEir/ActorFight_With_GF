@@ -110,17 +110,17 @@ namespace Editor.AbilityEditor.Testing
     /// </summary>
     public class AudioClipTemplate : ClipTemplate
     {
-        public string AudioPath;
+        public int AudioId;
 
-        public AudioClipTemplate(string name, float startTime, string audioPath = "", bool enabled = true)
+        public AudioClipTemplate(string name, float startTime, int audioId = 0, bool enabled = true)
             : base(name, startTime, enabled)
         {
-            AudioPath = audioPath;
+            AudioId = audioId;
         }
 
         public override TimelineClipData CreateClipData()
         {
-            var clip = new AudioClipData(ClipName, StartTime, StartTime + 1f, AudioPath)
+            var clip = new AudioClipData(ClipName, StartTime, StartTime + 1f, AudioId)
             {
                 IsEnabled = IsEnabled
             };
@@ -211,7 +211,7 @@ namespace Editor.AbilityEditor.Testing
 
             // Track 2: Audio Clip
             var track2 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
-            track2.Clips.Add(new AudioClipTemplate("攻击音效", 1.0f, "Audio/Attack_01"));
+            track2.Clips.Add(new AudioClipTemplate("攻击音效", 1.0f, 0));
 
             // Track 3: VFX Clip
             var track3 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));
@@ -259,9 +259,9 @@ namespace Editor.AbilityEditor.Testing
 
             // Track 3: 多个音效
             var track3 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
-            track3.Clips.Add(new AudioClipTemplate("蓄力音效", 0.0f, "Audio/Charge"));
-            track3.Clips.Add(new AudioClipTemplate("释放音效", 0.5f, "Audio/Release"));
-            track3.Clips.Add(new AudioClipTemplate("爆炸音效", 2.0f, "Audio/Boom"));
+            track3.Clips.Add(new AudioClipTemplate("蓄力音效", 0.0f, 0));
+            track3.Clips.Add(new AudioClipTemplate("释放音效", 0.5f, 0));
+            track3.Clips.Add(new AudioClipTemplate("爆炸音效", 2.0f, 0));
 
             // Track 4: 多个特效
             var track4 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));

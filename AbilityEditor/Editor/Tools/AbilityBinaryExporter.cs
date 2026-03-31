@@ -172,7 +172,7 @@ namespace Editor.AbilityEditor.Tools
 
         private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
         {
-            writer.WriteString(clip.AudioPath);
+            writer.WriteInt32(clip.AudioId);
             writer.WriteSingle(clip.Volume);
             writer.WriteBoolean(clip.Loop);
             writer.WriteSingle(clip.FadeInDuration);

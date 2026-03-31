@@ -732,8 +732,8 @@ namespace Editor.AbilityEditor.Tools
             if (!FloatEquals(editor.EndTime, prod.EndTime))
                 differences.Add($"{prefix} (Audio) EndTime | Editor: {editor.EndTime} | Production: {prod.EndTime}");
 
-            if (editor.AudioPath != prod.AudioPath)
-                differences.Add($"{prefix} (Audio) AudioPath | Editor: {editor.AudioPath} | Production: {prod.AudioPath}");
+            if (editor.AudioId != prod.AudioId)
+                differences.Add($"{prefix} (Audio) AudioId | Editor: {editor.AudioId} | Production: {prod.AudioId}");
 
             if (!FloatEquals(editor.Volume, prod.Volume))
                 differences.Add($"{prefix} (Audio) Volume | Editor: {editor.Volume} | Production: {prod.Volume}");

@@ -266,7 +266,7 @@ namespace Aquila.AbilityEditor
 
         private void AddAudioClip(TimelineTrackItem track, float startTime)
         {
-            var clipData = new AudioClipData("Audio", startTime, startTime + 1f, "audio/default");
+            var clipData = new AudioClipData("Audio", startTime, startTime + 1f, -1);
             AddClip(track, clipData);
         }
 
