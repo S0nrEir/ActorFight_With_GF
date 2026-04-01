@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Aquila.AbilityEditor;
 using UnityEditor;
 using UnityEditorInternal;
@@ -13,8 +14,7 @@ namespace Editor.AbilityEditor.Inspector
     [CustomPropertyDrawer(typeof(SerializedTrackData))]
     public class SerializedTrackDataDrawer : PropertyDrawer
     {
-        private ReorderableList _clipsList;
-        private SerializedProperty _currentProperty;
+        private readonly Dictionary<string, ReorderableList> _clipsListCache = new Dictionary<string, ReorderableList>();
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -80,35 +80,32 @@ namespace Editor.AbilityEditor.Inspector
             EditorGUI.EndProperty();
         }
 
-        private void DrawClipsList(Rect position, SerializedProperty clipsProp)
+        private ReorderableList GetOrCreateClipsList(SerializedProperty clipsProp)
         {
-            // 初始化 ReorderableList（如果需要）
-            if (_clipsList == null || _currentProperty != clipsProp)
+            string key = clipsProp.propertyPath;
+            if (!_clipsListCache.TryGetValue(key, out var list))
             {
-                _currentProperty = clipsProp;
-                _clipsList = new ReorderableList(clipsProp.serializedObject, clipsProp, true, true, true, true);
+                list = new ReorderableList(clipsProp.serializedObject, clipsProp, true, true, true, true);
 
-                _clipsList.drawHeaderCallback = rect =>
+                list.drawHeaderCallback = rect =>
                 {
                     EditorGUI.LabelField(rect, "Clips");
                 };
 
-                _clipsList.drawElementCallback = (rect, index, isActive, isFocused) =>
+                list.drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     var element = clipsProp.GetArrayElementAtIndex(index);
                     if (element != null)
-                    {
                         EditorGUI.PropertyField(rect, element, GUIContent.none, true);
-                    }
                 };
 
-                _clipsList.elementHeightCallback = index =>
+                list.elementHeightCallback = index =>
                 {
                     var element = clipsProp.GetArrayElementAtIndex(index);
                     return element != null ? EditorGUI.GetPropertyHeight(element, true) + 4 : EditorGUIUtility.singleLineHeight;
                 };
 
-                _clipsList.onAddDropdownCallback = (buttonRect, list) =>
+                list.onAddDropdownCallback = (buttonRect, l) =>
                 {
                     var menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Effect Clip"), false, () => AddClip(clipsProp, typeof(EffectClipData)));
@@ -116,9 +113,16 @@ namespace Editor.AbilityEditor.Inspector
                     menu.AddItem(new GUIContent("VFX Clip"), false, () => AddClip(clipsProp, typeof(VFXClipData)));
                     menu.ShowAsContext();
                 };
-            }
 
-            _clipsList.DoList(position);
+                _clipsListCache[key] = list;
+            }
+            return list;
+        }
+
+        private void DrawClipsList(Rect position, SerializedProperty clipsProp)
+        {
+            var list = GetOrCreateClipsList(clipsProp);
+            list.DoList(position);
         }
 
         private void AddClip(SerializedProperty clipsProp, Type clipType)
@@ -158,9 +162,10 @@ namespace Editor.AbilityEditor.Inspector
 
             // Clips
             var clipsProp = property.FindPropertyRelative("Clips");
-            if (clipsProp != null && _clipsList != null)
+            if (clipsProp != null)
             {
-                height += _clipsList.GetHeight();
+                var list = GetOrCreateClipsList(clipsProp);
+                height += list.GetHeight();
             }
 
             return height;
