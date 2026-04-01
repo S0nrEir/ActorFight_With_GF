@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Aquila.Item;
 using Aquila.Toolkit;
 using GameFramework;
@@ -87,12 +85,12 @@ namespace  Aquila.ObjectPool
         /// <summary>
         /// 持有的伤害数字对象
         /// </summary>
-        private Item_DamageNumber _damageNumberItem = null;
+        private Item_DamageNumber _damageNumberItem;
 
         /// <summary>
         /// 出生到目前为止的经过时间
         /// </summary>
-        private float _passedTime = 0f;
+        private float _passedTime;
 
         /// <summary>
         /// 统一3秒后销毁
@@ -107,7 +105,7 @@ namespace  Aquila.ObjectPool
         /// <summary>
         /// dmgNum实例的矩形变换组件
         /// </summary>
-        private RectTransform _rect = null;
+        private RectTransform _rect;
     }
    
 }

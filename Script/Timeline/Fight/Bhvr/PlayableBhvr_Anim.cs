@@ -1,6 +1,6 @@
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Timeline
 {
@@ -10,10 +10,10 @@ namespace Aquila.Timeline
         {
             base.OnGraphStart( playable );
             if ( string.IsNullOrEmpty( _animName ) )
-                Log.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->string.IsNullOrEmpty( _animName ) </color>" );
+                Tools.Logger.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->string.IsNullOrEmpty( _animName ) </color>" );
 
             if ( _director == null )
-                Log.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->_director == null </color>" );
+                Tools.Logger.Warning( "<color=yellow>PlaybleBhvr_Anim.OnGraphStart()--->_director == null </color>" );
 
             //_director.Play();
             //#todo暂时先用animator模拟，没时间整playable
@@ -51,12 +51,12 @@ namespace Aquila.Timeline
         /// <summary>
         /// 暂时先用animator。还没时间做playable相关的东西
         /// </summary>
-        public Animator _animator = null;
+        public Animator _animator;
 
         /// <summary>
         /// director
         /// </summary>
-        public PlayableDirector _director = null;
+        public PlayableDirector _director;
 
         /// <summary>
         /// 动画名称
@@ -66,8 +66,7 @@ namespace Aquila.Timeline
         /// <summary>
         /// 临时的动画状态名，#todo后面改了
         /// </summary>
-        private static string[] _stateName = new string[]
-        {
+        private static string[] _stateName = {
             "Idle",
             "Ability",
             "Walk",

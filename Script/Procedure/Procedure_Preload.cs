@@ -1,11 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using Aquila.Config;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
 using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System.Collections.Generic;
-using Aquila.UI;
 using UGFExtensions;
 using UnityGameFramework.Runtime;
 
@@ -42,10 +43,7 @@ namespace Aquila.Procedure
             if ( !_handler.PreLoadFinish() )
                 return;
 
-            System.GC.Collect();
-
-            //#todo初始化技能数据先暂时放到这里。
-            Tools.Ability.InitEffectSpecGenerator();
+            GC.Collect();
             //测试进入战斗流程
             NextProcedure();
         }
@@ -59,13 +57,14 @@ namespace Aquila.Procedure
         protected override void OnEnter( IFsm<IProcedureManager> procedureOwner )
         {
             base.OnEnter( procedureOwner );
-            _handler = new PreloadHandler( Configs );
+            _handler = new PreloadHandler( GameConfig.Misc.DataTableConfigs );
 
             GameEntry.Event.Subscribe( LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSucc );
 
             PreLoadTables();
             PreloadInternalTable();
             PreloadInfoBoard();
+            PreloadAbilityPool();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -79,13 +78,18 @@ namespace Aquila.Procedure
         {
             GameEntry.InfoBoard.Preload();
         }
+        
+        private void PreloadAbilityPool()
+        {
+            GameEntry.AbilityPool.Init();
+        }
 
         /// <summary>
         /// 预加载内部数据表
         /// </summary>
         private void PreloadInternalTable()
         {
-            foreach ( var tableName in Configs )
+            foreach ( var tableName in GameConfig.Misc.DataTableConfigs )
             {
                 var assetPath = Tools.Path.ConfigPath( tableName );
                 GameEntry.DataTable.LoadDataTable( tableName, assetPath, null );
@@ -120,7 +124,7 @@ namespace Aquila.Procedure
             {
                 var procedure_variable = ReferencePool.Acquire<Procedure_Fight_Variable>();
                 var scene_script_meta = GameEntry.LuBan.Table<Scripts>().Get( 10000 );
-                procedure_variable.SetValue( new Procedure_Fight_Data()
+                procedure_variable.SetValue( new Procedure_Fight_Data
                 {
                     _sceneScriptMeta = scene_script_meta,
                     _chunkName = Tools.Lua.GetChunkName( scene_script_meta.AssetPath )
@@ -146,22 +150,12 @@ namespace Aquila.Procedure
         /// <summary>
         /// 状态机拥有者
         /// </summary>
-        private IFsm<IProcedureManager> _procedureOwner = null;
+        private IFsm<IProcedureManager> _procedureOwner;
 
         /// <summary>
         /// 预加载处理器
         /// </summary>
-        private PreloadHandler _handler = null;
-
-        //#todo放到config里
-        /// <summary>
-        /// 预加载的form配置
-        /// </summary>
-        public static readonly string[] Configs = new string[]
-            {
-                "UIForm",
-                "Preload"
-            };
+        private PreloadHandler _handler;
     }
 
     /// <summary>
@@ -236,7 +230,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 各个资源模块的加载标记
         /// </summary>
-        private int _preloadFlag = 0;
+        private int _preloadFlag;
 
         /// <summary>
         /// 数据表加载完成
@@ -266,6 +260,7 @@ namespace Aquila.Procedure
         /// <summary>
         /// 保存未加载完成的数据表
         /// </summary>
-        private HashSet<string> _datatableLoadedSet = null;
+        private HashSet<string> _datatableLoadedSet;
     }
 }
+

@@ -1,8 +1,5 @@
 using GameFramework;
 using GameFramework.Event;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aquila.Event
 {

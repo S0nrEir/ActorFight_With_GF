@@ -1,6 +1,7 @@
-using GameFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Aquila.Toolkit;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -56,12 +57,12 @@ namespace Aquila.Extension
         /// <summary>
         /// 时间轮任务集合索引
         /// </summary>
-        private Dictionary<int, TimeWheel_Task> _task_dic = null;
+        private Dictionary<int, TimeWheel_Task> _task_dic;
 
         /// <summary>
         /// 流逝时间
         /// </summary>
-        private float _elpased = 0f;
+        private float _elpased;
 
         /// <summary>
         /// 时间轮尺度
@@ -71,7 +72,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 当前时间轮
         /// </summary>
-        private TimeWheel _current = null;
+        private TimeWheel _current;
 
         /// <summary>
         /// 时间轮默认尺度
@@ -115,7 +116,7 @@ namespace Aquila.Extension
         {
             if ( task_ is null )
             {
-                Log.Warning( "TimeWheel.AddTask--->task_ is null." );
+                Tools.Logger.Warning( "TimeWheel.AddTask--->task_ is null." );
                 return;
             }
 
@@ -135,11 +136,9 @@ namespace Aquila.Extension
                 //next_pos = next_pos / _size;
                 return (( int ) next_pos % _size, ( int ) next_pos / _size);
             }
-            else
-            {
-                //next_pos = interval_ * Component_TimeWheel.DEFAULT_WHEEL_SIZE;
-                return (( int ) next_pos, 0);
-            }
+
+            //next_pos = interval_ * Component_TimeWheel.DEFAULT_WHEEL_SIZE;
+            return (( int ) next_pos, 0);
         }
 
         protected TimeWheel() { }
@@ -159,17 +158,17 @@ namespace Aquila.Extension
         /// <summary>
         /// 时间轮长度
         /// </summary>
-        private int _size = 0;
+        private int _size;
 
         /// <summary>
         /// 刻度槽集合，每一轮的所有刻度槽位
         /// </summary>
-        private Bucket[] _buckets = null;
+        private Bucket[] _buckets;
 
         /// <summary>
         /// 时间轮当前指向的刻度
         /// </summary>
-        private int _curr_bucket = 0;
+        private int _curr_bucket;
 
     }//end TimeWheel
 
@@ -185,7 +184,7 @@ namespace Aquila.Extension
         {
             var succ = _tasks.AddLast( task ) != null;
             if ( !succ )
-                Log.Warning( "faild to add task to linklist!" );
+                Tools.Logger.Warning( "faild to add task to linklist!" );
 
             return succ;
         }
@@ -197,7 +196,7 @@ namespace Aquila.Extension
         {
             if ( task is null )
             {
-                Log.Warning( "<color=yellow>task to remove is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>task to remove is null</color>" );
                 return false;
             }
 
@@ -279,7 +278,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 该bucket的持有者
         /// </summary>
-        private TimeWheel _owner = null;
+        private TimeWheel _owner;
 
         /// <summary>
         /// 刻度槽下标位置
@@ -289,17 +288,17 @@ namespace Aquila.Extension
         /// <summary>
         /// 持有的任务集合
         /// </summary>
-        private GameFrameworkLinkedList<TimeWheel_Task> _tasks = null;
+        private GameFrameworkLinkedList<TimeWheel_Task> _tasks;
 
         /// <summary>
         /// 移除队列
         /// </summary>
-        private Queue<TimeWheel_Task> _remove_queue = null;
+        private Queue<TimeWheel_Task> _remove_queue;
 
         /// <summary>
         /// 待移动的task队列
         /// </summary>
-        private Queue<TimeWheel_Task> _move_queue = null;
+        private Queue<TimeWheel_Task> _move_queue;
     }
 
     /// <summary>
@@ -365,7 +364,7 @@ namespace Aquila.Extension
 
         public void Clear()
         {
-            Debug.Log("clear");
+            Tools.Logger.Info("clear");
             Repeat = false;
             DestroyFlag = false;
             _call_back = null;
@@ -374,7 +373,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 销毁标记
         /// </summary>
-        public bool DestroyFlag { get; private set; } = false;
+        public bool DestroyFlag { get; private set; }
 
         /// <summasry>
         /// taskID
@@ -384,7 +383,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 周期任务标记
         /// </summary>
-        public bool Repeat { get; private set; } = false;
+        public bool Repeat { get; private set; }
 
         /// <summary>
         /// 调用间隔
@@ -394,11 +393,11 @@ namespace Aquila.Extension
         /// <summary>
         /// 计数器
         /// </summary>
-        public int Counter { get; private set; } = 0;
+        public int Counter { get; private set; }
 
         /// <summary>
         /// 回调
         /// </summary>
-        private Action _call_back = null;
+        private Action _call_back;
     }
 }

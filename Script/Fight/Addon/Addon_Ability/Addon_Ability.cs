@@ -1,17 +1,42 @@
+using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
-using Cfg.Fight;
+using Aquila.Toolkit;
 using GameFramework;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 技能组件
     /// </summary>
-    public partial class Addon_Ability : Addon_Base
+    public class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
+        /// <summary>
+        /// 给与addon某个技能 / Give a ability to an addon
+        /// </summary>
+        public void GiveAbility(AbilityData data)
+        {
+            if (_specMap == null)
+                _specMap = new Dictionary<int, AbilitySpecBase>();
+            if (_specArr == null)
+                _specArr = new AbilitySpecBase[0];
+
+            var spec = AbilitySpecBase.Gen(data, _actorInstance);
+            if (_specMap.ContainsKey(spec.AbilityId))
+            {
+                Tools.Logger.Warning($"<color=yellow>Addon_Ability.SetupWithAbilityData()--->duplicate ability id:{spec.AbilityId}</color>");
+                return;
+            }
+
+            var newArr = new AbilitySpecBase[_specArr.Length + 1];
+            _specArr.CopyTo(newArr, 0);
+            newArr[_specArr.Length] = spec;
+            _specArr = newArr;
+            _specMap.Add(spec.AbilityId, spec);
+            _initFlag = true;
+        }
+
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
@@ -25,10 +50,16 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public (float remain, float duration) CoolDown( int abilityID )
         {
-            _cahchedAbility = GetAbilitySpec( abilityID );
-            return (_cahchedAbility.CoolDown._remain, _cahchedAbility.CoolDown._totalDuration);
+            var spec = GetAbilitySpec( abilityID );
+            if ( spec is null )
+            {
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.CoolDown()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return (0f, 0f);
+            }
+
+            return (spec.CoolDown._remain, spec.CoolDown._totalDuration);
         }
-        
+
         /// <summary>
         /// 使用技能
         /// </summary>
@@ -37,8 +68,8 @@ namespace Aquila.Fight.Addon
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
             {
-                Log.Warning( "<color=yellow>Addon_Ability.UseAbility--->spec is null</color>" );
-                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue( result._stateDescription,
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
                     ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
                 return false;
             }
@@ -73,18 +104,16 @@ namespace Aquila.Fight.Addon
         /// </summary>
         private AbilitySpecBase GetAbilitySpec( int metaID )
         {
-            if ( _specArr is null || _specArr.Length == 0 )
+            if ( _specMap is null || _specMap.Count == 0 )
             {
-                Log.Warning( " <color=yellow>is null || _spec_arr.Length == 0</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->_specMap is null or empty, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 return null;
             }
 
-            foreach ( var tempSpec in _specArr )
-            {
-                if ( tempSpec.Meta.id == metaID )
-                    return tempSpec;
-            }
+            if ( _specMap.TryGetValue( metaID, out var spec ) )
+                return spec;
 
+            Tools.Logger.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->ability spec not found, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}, specCount:{_specMap.Count}</color>" );
             return null;
         }
 
@@ -97,31 +126,62 @@ namespace Aquila.Fight.Addon
                 Deduct( temp._abilityID );
         }
 
+#if UNITY_EDITOR
         /// <summary>
-        /// 初始化组件持有的技能和对应的spec
+        /// <para>编辑器下初始化组件持有的技能和对应的spec</para>
+        /// <para>Initialize the abilities and corresponding specs held by the component in editor mode</para>
+        /// </summary>
+        private bool InitSpec_Editor()
+        {
+            var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
+            _specArr = new AbilitySpecBase[abilities.Length];
+            _specMap = new Dictionary<int, AbilitySpecBase>( abilities.Length );
+            for ( int i = 0; i < abilities.Length; i++ )
+            {
+                var spec = AbilitySpecBase.Gen( abilities[i], _actorInstance );
+                _specArr[i] = spec;
+
+                if ( _specMap.ContainsKey( spec.AbilityId ) )
+                {
+                    Tools.Logger.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    continue;
+                }
+
+                _specMap.Add( spec.AbilityId, spec );
+            }
+
+            return true;
+        }
+#endif
+        
+        /// <summary>
+        /// <para>初始化组件持有的技能和对应的spec</para>
+        /// <para>Initialize the abilities and corresponding specs held by the component</para>
         /// </summary>
         private bool InitSpec()
         {
-            var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get( _actorInstance.Actor.RoleMetaID );
-            if ( roleMeta is null )
+            var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
+            if (abilities == null || abilities.Length == 0)
             {
-                Log.Warning( "Addon_Ability.Init()->role_meta is null" );
+                Tools.Logger.Warning("<color=yellow>Addon_Ability.InitSpec()--->no abilities found</color>");
                 return false;
             }
-            var abilityIdSet = roleMeta.AbilityBaseID;
-            _specArr = new AbilitySpecBase[abilityIdSet.Length];
-            Table_AbilityBase abilityBaseMeta = null;
-            var len = _specArr.Length;
-            for ( var i = 0; i < len && i < abilityIdSet.Length; i++ )
+            _specArr = new AbilitySpecBase[abilities.Length];
+            _specMap = new Dictionary<int, AbilitySpecBase>( abilities.Length );
+            for ( int i = 0; i < abilities.Length; i++ )
             {
-                abilityBaseMeta = GameEntry.LuBan.Tables.Ability.Get( abilityIdSet[i] );
-                if ( abilityBaseMeta is null )
+                var spec = AbilitySpecBase.Gen( abilities[i], _actorInstance );
+                _specArr[i] = spec;
+
+                if ( _specMap.ContainsKey( spec.AbilityId ) )
                 {
-                    Log.Warning( "Addon_Ability.Init()->ability_base_meta is null" );
-                    return false;
+                    Tools.Logger.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    continue;
                 }
-                _specArr[i] = AbilitySpecBase.Gen( abilityBaseMeta, _actorInstance );
+
+                _specMap.Add( spec.AbilityId, spec );
             }
+
             return true;
         }
 
@@ -134,9 +194,13 @@ namespace Aquila.Fight.Addon
         public override void Init( Module_ProxyActor.ActorInstance instance )
         {
             base.Init( instance );
+#if UNITY_EDITOR
+            if ( !InitSpec_Editor() )
+                return;
+#else
             if ( !InitSpec() )
                 return;
-
+#endif
             _initFlag = true;
             instance.GetAddon<Addon_Event>().Register( ( int ) AddonEventTypeEnum.USE_ABILITY, ( int ) EventAddonPrioerityTypeEnum.ADDON_ABILITY, OnUseAbility );
         }
@@ -150,24 +214,24 @@ namespace Aquila.Fight.Addon
             }
 
             _specArr = null;
-            // _meta      = null;
+            _specMap = null;
             _initFlag = false;
             base.Dispose();
         }
-        
-        /// <summary>
-        /// 临时缓存变量
-        /// </summary>
-        private AbilitySpecBase _cahchedAbility = null;
-        
+
         /// <summary>
         /// 持有的技能
         /// </summary>
-        private AbilitySpecBase[] _specArr = null;
+        private AbilitySpecBase[] _specArr;
+
+        /// <summary>
+        /// 技能ID到逻辑实例的索引
+        /// </summary>
+        private Dictionary<int, AbilitySpecBase> _specMap;
 
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _initFlag = false;
+        private bool _initFlag;
     }
 }

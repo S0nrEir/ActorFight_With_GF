@@ -1,11 +1,9 @@
-using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Numric;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using Cfg.Role;
 using GameFramework;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 //对于当前生命，当前魔法这类变更没有来源依据（比如modifier）属性，无需使用修正值，只需要baseValue即可
 namespace Aquila.Fight.Addon
@@ -210,7 +208,7 @@ namespace Aquila.Fight.Addon
         {
             if ( _numricArr is null || intType >= _numricArr.Length )
             {
-                Log.Warning( $"attr int type {intType.ToString()} is over len:{_numricArr.Length}" );
+                Tools.Logger.Warning( $"attr int type {intType.ToString()} is over len:{_numricArr.Length}" );
                 return true;
             }
             return false;
@@ -225,7 +223,7 @@ namespace Aquila.Fight.Addon
             // if (eventInfo is null)
             //     return;
             //
-            ///Log.Info($"dirty value:{eventInfo._dirtyCorrectionValue},new:{GetCorrectionValue(eventInfo._changedAttr,0f)}");
+            ///Aquila.Toolkit.Tools.Logger.Info($"dirty value:{eventInfo._dirtyCorrectionValue},new:{GetCorrectionValue(eventInfo._changedAttr,0f)}");
         }
 
         //----------------------------override----------------------------
@@ -238,10 +236,10 @@ namespace Aquila.Fight.Addon
         {
             base.Reset();
             //修改所有数值为为修正的状态
-            var meta = GameEntry.LuBan.Table<Cfg.Role.RoleMeta>().Get( _actorInstance.Actor.RoleMetaID );
+            var meta = GameEntry.LuBan.Table<RoleMeta>().Get( _actorInstance.Actor.RoleMetaID );
             if ( meta is null )
             {
-                Log.Warning( $"<color=yellow>meta is null,meta id = {_actorInstance.Actor.RoleMetaID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>meta is null,meta id = {_actorInstance.Actor.RoleMetaID}</color>" );
                 return;
             }
             SetBaseAttr( meta );
@@ -279,7 +277,7 @@ namespace Aquila.Fight.Addon
         public override void OnAdd()
         {
             if ( _numricArr is null )
-                _numricArr = new Numric_ActorBaseAttr[( int ) Cfg.Enum.actor_attribute.Max];
+                _numricArr = new Numric_ActorBaseAttr[( int ) actor_attribute.Max];
 
             var len = _numricArr.Length;
             for ( var i = 0; i < len; i++ )
@@ -291,7 +289,7 @@ namespace Aquila.Fight.Addon
                 }
                 else
                 {
-                    Log.Warning( "Numric arr not not null on add!" );
+                    Tools.Logger.Warning( "Numric arr not not null on add!" );
                 }
             }
 
@@ -305,7 +303,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 所有的数值集合
         /// </summary>
-        private Numric.Numric_ActorBaseAttr[] _numricArr = null;
+        private Numric_ActorBaseAttr[] _numricArr;
 
         /// <summary>
         /// 血量

@@ -18,6 +18,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     public Table_Effect(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
+        Name = _buf.ReadString();
         Type = (Enum.EffectType)_buf.ReadInt();
         ExtensionParam = Bean.EffectExtensionParam.DeserializeEffectExtensionParam(_buf);
         ModifierType = (Enum.NumricModifierType)_buf.ReadInt();
@@ -25,7 +26,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         Policy = (Enum.DurationPolicy)_buf.ReadInt();
         Period = _buf.ReadFloat();
         Duration = _buf.ReadFloat();
-        Target = _buf.ReadInt();
         EffectType = (Enum.actor_attribute)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
@@ -41,6 +41,10 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// id
     /// </summary>
     public int id { get; private set; }
+    /// <summary>
+    /// Name
+    /// </summary>
+    public string Name { get; private set; }
     /// <summary>
     /// Effect的类型
     /// </summary>
@@ -69,10 +73,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// 持续时间,单位秒
     /// </summary>
     public float Duration { get; private set; }
-    /// <summary>
-    /// 目标类型，0=我方，1=敌方
-    /// </summary>
-    public int Target { get; private set; }
     /// <summary>
     /// 影响的数值类型
     /// </summary>
@@ -104,6 +104,7 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
+        + "Name:" + Name + ","
         + "Type:" + Type + ","
         + "ExtensionParam:" + ExtensionParam + ","
         + "ModifierType:" + ModifierType + ","
@@ -111,7 +112,6 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "Policy:" + Policy + ","
         + "Period:" + Period + ","
         + "Duration:" + Duration + ","
-        + "Target:" + Target + ","
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
         + "AwakeEffects:" + Bright.Common.StringUtil.CollectionToString(AwakeEffects) + ","

@@ -20,7 +20,7 @@
 //        {
 //            if ( _existAddon.Contains( addon.GetHashCode() ) )
 //            {
-//                Log.Warning( $"Module_ProxyActor.System.Add()--->_existAddon.Contains( hashCode )" );
+//                Aquila.Toolkit.Tools.Logger.Warning( $"Module_ProxyActor.System.Add()--->_existAddon.Contains( hashCode )" );
 //                return;
 //            }
 

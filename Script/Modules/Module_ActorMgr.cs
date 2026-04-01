@@ -1,12 +1,11 @@
+using System.Collections.Generic;
 using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Module
@@ -84,7 +83,7 @@ namespace Aquila.Module
         {
             if ( actor is null )
             {
-                Log.Warning( "<color=yellow>actor is null.</color>" );
+                Tools.Logger.Warning( "<color=yellow>actor is null.</color>" );
                 return (false, null);
             }
 
@@ -106,13 +105,13 @@ namespace Aquila.Module
         {
             if ( !Contains( id ) )
             {
-                Log.Warning( $"proxy doesnt have actor wich id = {id}" );
+                Tools.Logger.Warning( $"proxy doesnt have actor wich id = {id}" );
                 return false;
             }
 
             if ( !_actorIDToInstance.TryGetValue( id, out var actorCase ) )
             {
-                Log.Warning( $"Module_ProxyActor.Mgr.UnRegister()--->faild to get actor instance,id:{id}" );
+                Tools.Logger.Warning( $"Module_ProxyActor.Mgr.UnRegister()--->faild to get actor instance,id:{id}" );
                 return false;
             }
 
@@ -144,13 +143,13 @@ namespace Aquila.Module
         {
             if ( actor is null )
             {
-                Log.Warning( "<color=yellow>Module_ProxyActor.Register()--->actor is null.</color>" );
+                Tools.Logger.Warning( "<color=yellow>Module_ProxyActor.Register()--->actor is null.</color>" );
                 return (false, null);
             }
 
             if ( Contains( actor.ActorID ) )
             {
-                Log.Warning( $"<color=yellow>Module_ProxyActor.Register()--->proxy has contains actor,id={actor.ActorID}.</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Module_ProxyActor.Register()--->proxy has contains actor,id={actor.ActorID}.</color>" );
                 return (false, null); ;
             }
 
@@ -176,7 +175,7 @@ namespace Aquila.Module
         public ActorInstance Get( int id )
         {
             if ( !_actorIDToInstance.TryGetValue( id, out var actor_instance ) )
-                Log.Warning( $"faild to get actor id={id}" );
+                Tools.Logger.Warning( $"faild to get actor id={id}" );
 
             return actor_instance;
         }

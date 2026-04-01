@@ -3,7 +3,6 @@ using Aquila.Fight.FSM;
 using Aquila.Toolkit;
 using Cfg.Enum;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -42,7 +41,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         private void ColliderTriggerHit( int evnetID, object[] param )
         {
-            Log.Info( $"<color=white>TriggerActor---->ColliderTriggerHit<color=white>" );
+            Tools.Logger.Info( "<color=white>TriggerActor---->ColliderTriggerHit<color=white>" );
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         private void OnEffectTimsUp( int eventID, object[] param )
         {
-            Log.Info( $"<color=white>TriggerActor---->OnEffectTimsUp<color=white>" );
+            Tools.Logger.Info( "<color=white>TriggerActor---->OnEffectTimsUp<color=white>" );
         }
 
         #region impl
@@ -64,7 +63,7 @@ namespace Aquila.Fight.Actor
         /// </summary>
         public void SwitchTo( ActorStateTypeEnum stateType, object enterParam, object existParam )
         {
-            Log.Info( $"<color=white>TriggerActor--->SwitchTo,ActorID:{ActorID}<color>" );
+            Tools.Logger.Info( $"<color=white>TriggerActor--->SwitchTo,ActorID:{ActorID}<color>" );
         }
 
         #endregion
@@ -130,12 +129,12 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 碰撞
         /// </summary>
-        private Addon_ColliderTrigger _triggerAddon = null;
+        private Addon_ColliderTrigger _triggerAddon;
 
         /// <summary>
         /// 特效组件
         /// </summary>
-        private Addon_FX _effectAddon = null;
+        private Addon_FX _effectAddon;
 
         #endregion
     }
@@ -147,6 +146,10 @@ namespace Aquila.Fight.Actor
         public (float x, float y) stepWH;
 
         public TriggerActorEntityData( int entityID ) : base( entityID, typeof( Actor_Trigger ).GetHashCode() )
+        {
+        }
+
+        public TriggerActorEntityData()
         {
         }
     }

@@ -1,6 +1,6 @@
-﻿using GameFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -114,11 +114,11 @@ namespace Aquila.Extension
                 _updateUnRegList.Clear();
             }
         }
-        private Dictionary<int, Timer> _updateCallDic = null;
+        private Dictionary<int, Timer> _updateCallDic;
 
-        private List<int> _updateUnRegList = null;
+        private List<int> _updateUnRegList;
 
-        private Dictionary<int, Timer> _updateRegDic = null;
+        private Dictionary<int, Timer> _updateRegDic;
 
         public const int MAX_TIMER_COUNT = 0x32;//50
 
@@ -182,7 +182,6 @@ namespace Aquila.Extension
                     {
                         _callBack?.Invoke( deltaTime );
                         Close();
-                        return;
                     }
                 }
             }
@@ -214,11 +213,6 @@ namespace Aquila.Extension
             public override string ToString()
             {
                 return $"Timer,ID:{ID}";
-            }
-
-            public Timer()
-            {
-
             }
 
             /// <summary>
@@ -261,27 +255,27 @@ namespace Aquila.Extension
             /// </summary>
             public bool IsActive { get; private set; } = true;
 
-            private float _timePassed = 0f;
+            private float _timePassed;
 
             /// <summary>
             /// 回调间隔（重复为回调间隔，不重复为指定时间后回调）
             /// </summary>
-            public float Interval { get; private set; } = 0f;
+            public float Interval { get; private set; }
 
             /// <summary>
             /// 销毁标记
             /// </summary>
-            public bool ReadyToDestroy { get; private set; } = false;
+            public bool ReadyToDestroy { get; private set; }
 
             /// <summary>
             /// 计数回调上限
             /// </summary>
-            public int CountLimit { get; private set; } = 0;
+            public int CountLimit { get; private set; }
 
             /// <summary>
             /// 计数器
             /// </summary>
-            public int Counter { get; private set; } = 0;
+            public int Counter { get; private set; }
 
             /// <summary>
             /// 是否重复调用，是返回true
@@ -291,7 +285,7 @@ namespace Aquila.Extension
             /// <summary>
             /// 回调
             /// </summary>
-            public Action<float> _callBack { get; private set; } = null;
+            public Action<float> _callBack { get; private set; }
 
             /// <summary>
             /// timerID
@@ -303,7 +297,7 @@ namespace Aquila.Extension
             /// <summary>
             /// TimerID池
             /// </summary>
-            private static int IDPool = 0;
+            private static int IDPool;
             #endregion
         }
     }

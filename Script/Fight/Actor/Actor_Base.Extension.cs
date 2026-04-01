@@ -1,7 +1,5 @@
-using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -58,8 +56,8 @@ namespace Aquila.Fight.Actor
         }
 
         //xz坐标
-        private int _grid_x = 0;
-        private int _grid_z = 0;
+        private int _grid_x;
+        private int _grid_z;
 
         private (int x, int z) _coord = (-1, -1);
     }

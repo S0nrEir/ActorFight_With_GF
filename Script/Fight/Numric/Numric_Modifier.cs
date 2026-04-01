@@ -1,6 +1,6 @@
-using Cfg.Enum;
 using System.Runtime.CompilerServices;
-using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
+using Cfg.Enum;
 
 namespace Aquila.Numric
 {
@@ -61,7 +61,7 @@ namespace Aquila.Numric
                     break;
                 
                 default:
-                    Log.Warning("none modifier type.");
+                    Tools.Logger.Warning("<color=yellow>none modifier type.</color>");
                     // throw new GameFrameworkException( "invalid modifier type!" );
                     break;
             }

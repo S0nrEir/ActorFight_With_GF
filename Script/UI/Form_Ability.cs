@@ -1,11 +1,10 @@
+using System;
+using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
-using System;
-using System.Collections.Generic;
-using Cfg.Fight;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
@@ -48,7 +47,7 @@ namespace Aquila.UI
             
             var result = (arg as EventArg_OnUseAblity)._resultParam;
             if ( !result._succ )
-                Log.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
+                Tools.Logger.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace Aquila.UI
             for ( int i = 0; i < len; i++ )
             {
                 var id = _abilityIdArr[i];
-                generated = GameObject.Instantiate( _tempGameObejct, _grid.transform, true);
+                generated = Instantiate( _tempGameObejct, _grid.transform, true);
                 generated.transform.localScale = Vector3.one;
                 generated.transform.eulerAngles = Vector3.zero;
                 Tools.SetActive( generated, true );
@@ -106,7 +105,7 @@ namespace Aquila.UI
             //hostile；
             Tools.SetActive(_tempGameObejct,false);
             Tools.SetActive(_hostileTestButton,true);
-            generated = GameObject.Instantiate(_hostileTestButton, transform, true);
+            generated = Instantiate(_hostileTestButton, transform, true);
             generated.transform.localScale = Vector3.one;
             generated.transform.eulerAngles = Vector3.zero;
             Tools.SetActive( generated, true );
@@ -223,27 +222,27 @@ namespace Aquila.UI
         /// <summary>
         /// 用于敌人的测试abilityIconItem
         /// </summary>
-        private AbilityIconItem _hostileAbilityIconItem = null;
+        private AbilityIconItem _hostileAbilityIconItem;
         
         /// <summary>
         /// 用于敌人的测试button
         /// </summary>
-        [SerializeField] private GameObject _hostileTestButton = null;
+        [SerializeField] private GameObject _hostileTestButton;
         
         /// <summary>
         /// 模板item
         /// </summary>
-        [SerializeField] private GameObject _tempGameObejct = null;
+        [SerializeField] private GameObject _tempGameObejct;
 
         /// <summary>
         /// grid
         /// </summary>
-        [SerializeField] private GridLayoutGroup _grid = null;
+        [SerializeField] private GridLayoutGroup _grid;
 
         /// <summary>
         /// actor模块
         /// </summary>
-        private Module_ActorMgr _actorProxy = null;
+        private Module_ActorMgr _actorProxy;
 
         /// <summary>
         /// 要操作的actorID
@@ -253,21 +252,21 @@ namespace Aquila.UI
         /// <summary>
         /// 敌人actorID
         /// </summary>
-        private int[] _enemyActorIdArr = null;
+        private int[] _enemyActorIdArr;
 
         /// <summary>
         /// 技能ID
         /// </summary>
-        private int[] _abilityIdArr = null;
+        private int[] _abilityIdArr;
         /// <summary>
         /// item缓存
         /// </summary>
-        private Dictionary<int, AbilityIconItem> _iconItemDic = null;
+        private Dictionary<int, AbilityIconItem> _iconItemDic;
 
         /// <summary>
         /// 测试按钮
         /// </summary>
-        private Button _testBtn = null;
+        private Button _testBtn;
         
         /// <summary>
         /// 图标item
@@ -330,22 +329,22 @@ namespace Aquila.UI
                 clickCallBack?.Invoke( _abilityID );
             }
 
-            private Text _abilityIdText = null;
-            private Text _text          = null;
-            private Image _cd           = null;
-            private Image _image        = null;
-            private Button _button      = null;
+            private Text _abilityIdText;
+            private Text _text;
+            private Image _cd;
+            private Image _image;
+            private Button _button;
             
             /// <summary>
             /// 技能ID
             /// </summary>
             private int _abilityID = -1;
-            private Action<int> clickCallBack = null;
+            private Action<int> clickCallBack;
 
             /// <summary>
             /// 根节点
             /// </summary>
-            private GameObject _root = null;
+            private GameObject _root;
         }
         
 
@@ -356,12 +355,12 @@ namespace Aquila.UI
         {
             public int _mainActorID = -1;
 
-            public int[] _enemyActorID = null;
+            public int[] _enemyActorID;
 
             /// <summary>
             /// {1000,1001,1002}
             /// </summary>
-            public int[] _abilityID = null;
+            public int[] _abilityID;
 
             public void Clear()
             {

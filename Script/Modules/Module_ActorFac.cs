@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aquila.Extension;
 using Aquila.Fight.Actor;
 using Aquila.Toolkit;
 using Cfg.Role;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UGFExtensions.Await;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
@@ -24,7 +25,7 @@ namespace Aquila.Module
             var meta = GameEntry.LuBan.Tables.RoleMeta.Get( roleMetaID );
             if ( meta is null )
             {
-                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->role meta is null, meta id:{roleMetaID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->role meta is null, meta id:{roleMetaID}</color>" );
                 return null;
             }
 
@@ -32,16 +33,14 @@ namespace Aquila.Module
             var entityInfo = Tools.Actor.GetActorEntityInfo( meta.RoleType );
             if ( !entityInfo.genSucc )
             {
-                Log.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->!entityInfo.genSucc,role type:{meta.RoleType}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Module_ActorFac.ShowActorAsync()--->!entityInfo.genSucc,role type:{meta.RoleType}</color>" );
                 return null;
             }
 
-            var result = await AwaitableExtensions.ShowEntityAsync
-                (
-                    GameEntry.Entity,
-                    entityID,
+            var result = await GameEntry.Entity.ShowEntityAsync
+                (entityID,
                     entityInfo.actorType,
-                    @meta.AssetPath,
+                    meta.AssetPath,
                     entityInfo.group,
                     entityInfo.priority,
                     userData
@@ -49,7 +48,7 @@ namespace Aquila.Module
 
             if ( !_actorGenCallBackDic.TryGetValue( entityInfo.actorType, out var onShowSucc ) )
             {
-                Log.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{entityInfo.actorType.ToString()}" );
+                Tools.Logger.Warning( $"Module_ActorFac.ShowActorAsync()--->!_actorGenCallBackDic.ContainsKey( actorType, out var onShowSucc ),type:{entityInfo.actorType}" );
                 return null;
             }
 
@@ -72,7 +71,7 @@ namespace Aquila.Module
 
         public override void EnsureInit()
         {
-            _actorGenCallBackDic = new Dictionary<Type, Action<int, int, object, object, Table_RoleMeta>>()
+            _actorGenCallBackDic = new Dictionary<Type, Action<int, int, object, object, Table_RoleMeta>>
             {
                 { typeof(Actor_Hero),OnShowHeroSucc},
                 { typeof(Actor_Orb),OnShowOrbSucc},
@@ -99,7 +98,7 @@ namespace Aquila.Module
             var orbData = userData as Actor_Orb_EntityData;
             if ( orbData is null )
             {
-                Log.Warning( $"Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
+                Tools.Logger.Warning( "Module_ActorFac.OnShowTracingProjectileActorSucc()--->orbData is null" );
                 return;
             }
 
@@ -112,12 +111,12 @@ namespace Aquila.Module
             var targetTransform = module.GetActorTransform(orbData._targetActorID);
             if (targetTransform == null)
             {
-                Log.Warning($"<color=yellow>Module_ActorFac.OnShowOrbSucc()--->targetTransform == null,target transform id:{orbData._targetActorID}</color>");
+                Tools.Logger.Warning($"<color=yellow>Module_ActorFac.OnShowOrbSucc()--->targetTransform == null,target transform id:{orbData._targetActorID}</color>");
                 return;
             }
             
             temp.SetWorldPosition( position );
-            temp.transform.LookAt( targetTransform, UnityEngine.Vector3.up );
+            temp.transform.LookAt( targetTransform, Vector3.up );
             temp.SetTargetTransformAndReady( targetTransform );
             Tools.SetActive( temp.gameObject, true );
         }
@@ -149,7 +148,7 @@ namespace Aquila.Module
         /// <summary>
         /// 保存actor的生成回调函数合集
         /// </summary>
-        private Dictionary<System.Type, Action<int, int, object, object, Table_RoleMeta>> _actorGenCallBackDic = null;
+        private Dictionary<Type, Action<int, int, object, object, Table_RoleMeta>> _actorGenCallBackDic;
 
     }
 }

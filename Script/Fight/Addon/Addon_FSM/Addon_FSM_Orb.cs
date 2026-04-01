@@ -8,7 +8,7 @@ namespace Aquila.Fight.FSM
     /// </summary>
     public class Addon_FSM_Orb : Addon_FSM
     {
-        public override List<ActorState_Base> StateList => new List<ActorState_Base>()
+        public override List<ActorState_Base> StateList => new List<ActorState_Base>
         {
             new ActorState_Orb_Ability((int)ActorStateTypeEnum.ABILITY_STATE)
         };

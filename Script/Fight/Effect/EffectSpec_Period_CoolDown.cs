@@ -1,5 +1,4 @@
 using Aquila.Module;
-using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -8,28 +7,31 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Period_CoolDown : EffectSpec_Base
     {
-        public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-            Module_ProxyActor.ActorInstance target = null )
+        public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init( meta ,castor,target);
-            _totalDuration = meta.ExtensionParam.FloatParam_1;
+            base.Init(data, castor, target);
+            _totalDuration = _effectData.GetFloatParam1();
             _remain = 0f;
         }
-
-        public EffectSpec_Period_CoolDown()
-        {
-            
-        }
+        
+        // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null )
+        // {
+        //     base.Init( meta ,castor,target);
+        //     _totalDuration = FloatParam1;
+        //     _remain = 0f;
+        // }
 
         /// <summary>
         /// 剩余时间
         /// </summary>
-        public float _remain = 0f;
+        public float _remain;
         
         /// <summary>
         /// cool down
         /// </summary>
-        public float _totalDuration = 0f;
+        public float _totalDuration;
     }
    
 }

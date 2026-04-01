@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using Aquila.CameraSystem;
+using Aquila.Event;
 using Aquila.ObjectPool;
 using Aquila.Procedure;
+using Aquila.Toolkit;
 using GameFramework.Resource;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using Object_DamageNumber = Aquila.ObjectPool.Object_DamageNumber;
@@ -28,7 +31,7 @@ namespace Aquila.Extension
             //init
             obj.Setup( obj.Target as GameObject );
             //set pos
-            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.GlobalVar.MainCamera );
+            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.CameraHub.GetWorldCamera() );
             obj.SetPos( rect_pos );
             obj.SetNumber( num, Color.red );
             _damage_number_spawn_dic.Add( obj.GetHashCode(), obj );
@@ -44,11 +47,11 @@ namespace Aquila.Extension
             {
                 if ( _hp_bar_prefab == null )
                 {
-                    Log.Warning( "<color=red>Component_InfoBoard.GenHPBar()--->obj is null</color>" );
+                    Tools.Logger.Warning( "<color=red>Component_InfoBoard.GenHPBar()--->obj is null</color>" );
                     return null;
                 }
 
-                var go = Instantiate( _hp_bar_prefab ) as GameObject;
+                var go = Instantiate( _hp_bar_prefab );
                 InitTransform( go.transform );
                 //spanw obj
                 var pool = GameEntry.ObjectPool.GetObjectPool<Object_HPBar>( typeof( Object_HPBar ).Name );
@@ -76,13 +79,13 @@ namespace Aquila.Extension
             // var type_name = nameof(T);
             var pool = GameEntry.ObjectPool.GetObjectPool<T>( pool_name );
             if ( pool != null )
-                return pool.Spawn() as T;
+                return pool.Spawn();
 
-            Log.Warning( "<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>" );
+            Tools.Logger.Warning( "<color=yellow>Component_InfoBoard.GenObject--->pool == null</color>" );
             return null;
         }
 
-        /// <summary>
+        /// <summary>x
         /// 回收
         /// </summary>
         public bool UnSpawn<T>( string pool_name, object obj ) where T : Object_Base
@@ -90,7 +93,7 @@ namespace Aquila.Extension
             var pool = GameEntry.ObjectPool.GetObjectPool<T>( pool_name );
             if ( pool is null )
             {
-                Log.Warning( "<color=yellow>Component_InfoBoard.UnSpawn--->pool == null</color>" );
+                Tools.Logger.Warning( "<color=yellow>Component_InfoBoard.UnSpawn--->pool == null</color>" );
                 return false;
             }
             pool.Unspawn( obj );
@@ -108,12 +111,14 @@ namespace Aquila.Extension
             return board_pos;
         }
 
-        //-----------------------priv-----------------------
         public void Preload()
         {
             if ( _init_flag )
                 return;
 
+            //叠加相机 / overlay camera
+            GameEntry.CameraHub.TryAttachOverlayToBaseCamera(CameraRole.MainWorld, _camera);
+            
             //创建hpbar对象池和资源
             var hp_pool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<Object_HPBar>( typeof( Object_HPBar ).Name, 0xf );
             hp_pool.ExpireTime = 360f;
@@ -125,13 +130,15 @@ namespace Aquila.Extension
                              _hp_bar_prefab = asset as GameObject;
                              if ( _hp_bar_prefab == null )
                              {
-                                 Log.Warning( "<color=yellow>HPBar.prefab convert faild</color>" );
+                                 Tools.Logger.Warning( "<color=yellow>HPBar.prefab convert faild</color>" );
                                  return;
                              }
 
                              if ( GameEntry.Procedure.GetProcedure<Procedure_Prelaod>() is Procedure_Prelaod procedure )
                                  //#todo:主动通知流程加载完成，因为GF只有异步加载,暂时没时间加同步，先这样做了
                                  procedure.LoadHPBarFinish();
+
+                             GameEntry.Event.Fire( this, PreloadItemCompleteEventArgs.Create( PreloadItemType.HPBar ) );
                          },
                         LoadAssetFaildCallBack
                 ) );
@@ -148,10 +155,12 @@ namespace Aquila.Extension
                         {
                             _dmg_number_prefab = asset as GameObject;
                             if ( _dmg_number_prefab == null )
-                                Log.Warning( "<color=yellow>DamageNumber.prefab convert faild</color>" );
+                                Tools.Logger.Warning( "<color=yellow>DamageNumber.prefab convert faild</color>" );
 
                             if ( GameEntry.Procedure.CurrentProcedure is Procedure_Prelaod procedure )
                                 procedure.LoadDmgNumberFinish();
+
+                            GameEntry.Event.Fire( this, PreloadItemCompleteEventArgs.Create( PreloadItemType.DamageNumber ) );
                         },
                         LoadAssetFaildCallBack
                     )
@@ -160,6 +169,7 @@ namespace Aquila.Extension
             _init_flag = true;
         }
 
+        //-----------------------priv-----------------------
         /// <summary>
         /// 处理正在显示中的DamageNumber
         /// </summary>
@@ -176,7 +186,6 @@ namespace Aquila.Extension
                     {
                         //remove
                         _damage_number_unspawn_set.Add( iter.Current.Key );
-                        continue;
                     }
                     else
                     {
@@ -206,7 +215,7 @@ namespace Aquila.Extension
             _damage_number_spawn_dic = new Dictionary<int, Object_DamageNumber>( 0xf );
             _damage_number_unspawn_set = new HashSet<int>( 0xf );
         }
-
+        
         /// <summary>
         /// 刷帧，主要处理伤害数字
         /// </summary>
@@ -217,7 +226,7 @@ namespace Aquila.Extension
 
         private void LoadAssetFaildCallBack( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
-            Log.Warning( $"$<color=yellow>load asset {assetName} faild,status:{status.ToString()}</color>" );
+            Tools.Logger.Warning( $"$<color=yellow>load asset {assetName} faild,status:{status.ToString()}</color>" );
         }
 
         //-----------------------fields-----------------------
@@ -231,7 +240,7 @@ namespace Aquila.Extension
                 return _rect;
             }
         }
-        private RectTransform _rect = null;
+        private RectTransform _rect;
 
         /// <summary>
         /// 渲染信息板的画布
@@ -246,12 +255,12 @@ namespace Aquila.Extension
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _init_flag = false;
+        private bool _init_flag;
 
         /// <summary>
         /// 根节点
         /// </summary>
-        [SerializeField] private Transform _root = null;
+        [SerializeField] private Transform _root;
 
         /// <summary>
         /// 画布
@@ -261,26 +270,26 @@ namespace Aquila.Extension
         /// <summary>
         /// hpbar预设
         /// </summary>
-        private GameObject _hp_bar_prefab = null;
+        private GameObject _hp_bar_prefab;
 
         /// <summary>
         /// 伤害数字预设
         /// </summary>
-        private GameObject _dmg_number_prefab = null;
+        private GameObject _dmg_number_prefab;
 
         /// <summary>
         /// 显示用的相机
         /// </summary>
-        [SerializeField] private Camera _camera = null;
+        [SerializeField] private Camera _camera;
 
         /// <summary>
         /// 管理已经放出的DamageNumber实例
         /// </summary>
-        private Dictionary<int, Object_DamageNumber> _damage_number_spawn_dic = null;
+        private Dictionary<int, Object_DamageNumber> _damage_number_spawn_dic;
 
         /// <summary>
         /// 准备释放的DamageNumber集合管理
         /// </summary>
-        private HashSet<int> _damage_number_unspawn_set = null;
+        private HashSet<int> _damage_number_unspawn_set;
     }
 }

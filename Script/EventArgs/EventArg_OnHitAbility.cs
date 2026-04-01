@@ -19,7 +19,7 @@ namespace Aquila.Event
             _resultParam = null;
         }
 
-        public AbilityResult_Hit _resultParam = null;
+        public AbilityResult_Hit _resultParam;
         
         public override int Id => EventID;
     }

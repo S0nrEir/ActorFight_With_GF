@@ -1,11 +1,15 @@
-using Bright.Serialization;
-using Cfg.Role;
-using GameFramework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Aquila.Toolkit;
+using Bright.Serialization;
+using Cfg;
+using Cfg.Role;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+using XLua;
 
 namespace Aquila.Extension
 {
@@ -14,7 +18,7 @@ namespace Aquila.Extension
     /// </summary>
     public class Component_LuBan : GameFrameworkComponent
     {
-        [XLua.DoNotGen]
+        [DoNotGen]
         public void Test()
         {
             var meta = Table<RoleBaseAttr>().Get(10001);
@@ -44,7 +48,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 表数据
         /// </summary>
-        public Cfg.Tables Tables
+        public Tables Tables
         {
             get;
             private set;
@@ -57,19 +61,19 @@ namespace Aquila.Extension
         {
             if ( _loadFlag )
             {
-                Log.Warning( $"<color=yellow>data table has been loaded!</color>" );
+                Tools.Logger.Warning( "<color=yellow>data table has been loaded!</color>" );
                 return false;
             }
 
             if ( string.IsNullOrEmpty( _bytesPath ) )
                 throw new GameFrameworkException( "bytesPath is null or empty!" );
 
-            var tableCtor = typeof( Cfg.Tables ).GetConstructors()[0];
-            var loader = new System.Func<string, ByteBuf>( ( file ) =>
+            var tableCtor = typeof( Tables ).GetConstructors()[0];
+            var loader = new Func<string, ByteBuf>(file =>
              {
                  return new ByteBuf( File.ReadAllBytes( $"{_bytesPath}{file}{_fileExtension}" ) );
              } );
-            Tables = ( Cfg.Tables ) tableCtor.Invoke( new object[] { loader } );
+            Tables = ( Tables ) tableCtor.Invoke( new object[] { loader } );
 
             if ( _is_custom_cache_tables )
             {
@@ -102,12 +106,12 @@ namespace Aquila.Extension
         /// <summary>
         /// 使用自定义缓存表数据
         /// </summary>
-        [SerializeField] private bool _is_custom_cache_tables = false;
+        [SerializeField] private bool _is_custom_cache_tables;
 
         /// <summary>
         /// 自定义缓存表集合
         /// </summary>
-        private Dictionary<int, object> _custom_table_cache = null;
+        private Dictionary<int, object> _custom_table_cache;
 
         /// <summary>
         /// bytes文件路径
@@ -122,6 +126,6 @@ namespace Aquila.Extension
         /// <summary>
         /// 加载标记
         /// </summary>
-        private bool _loadFlag = false;
+        private bool _loadFlag;
     }
 }

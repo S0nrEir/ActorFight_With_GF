@@ -1,8 +1,13 @@
-using GameFramework;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Aquila.Procedure;
+using GameFramework;
+using GameFramework.Procedure;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Toolkit
 {
@@ -162,8 +167,18 @@ namespace Aquila.Toolkit
             if ( go.activeSelf != active )
                 go.SetActive( active );
         }
+        
+        /// <summary>
+        /// 获取某个gameobject上的首个匹配的子类型组件
+        /// </summary>
+        public static T GetCompoentInChildren<T>(GameObject go) where T : Component
+        {
+            if (go == null)
+                return null;
 
-
+            return go.GetComponentInChildren<T>();
+        }
+        
         /// <summary>
         /// 获取某个GameObject上指定子路径的组件，拿不到返回空
         /// </summary>
@@ -264,7 +279,9 @@ namespace Aquila.Toolkit
         public static Int64 SetBitValue_i64( Int64 value, int index, bool bit_value )
         {
             var val = 1 << index;
+#pragma warning disable CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
             return ( bit_value ? ( value | val ) : ( value & ~val ) );
+#pragma warning restore CS0675 // 对进行了带符号扩展的操作数使用了按位或运算符
         }
 
         /// <summary>
@@ -304,6 +321,128 @@ namespace Aquila.Toolkit
         public static int OrBitValue( int orig_value, int attenmp_value )
         {
             return orig_value | attenmp_value;
+        }
+
+        /// <summary>
+        /// 对资源路径集合进行安全校验，校验通过后返回初始化好的 Procedure_ResourcePreload_Variable，失败返回 null。
+        /// </summary>
+        public static Procedure_ResourcePreload_Variable BuildPreloadVariable<TargetProcedure>( IList<string> resourceAssetPaths ) where TargetProcedure : ProcedureBase
+        {
+            if ( resourceAssetPaths == null || resourceAssetPaths.Count == 0 )
+            {
+                Logger.Error( "[Tools.BuildPreloadVariable] resourceAssetPaths is null or empty." );
+                return null;
+            }
+
+            var paths = new string[resourceAssetPaths.Count];
+            for ( int i = 0; i < resourceAssetPaths.Count; i++ )
+            {
+                if ( string.IsNullOrEmpty( resourceAssetPaths[i] ) )
+                {
+                    Logger.Error( $"[Tools.BuildPreloadVariable] resource path at index {i} is null or empty." );
+                    return null;
+                }
+                paths[i] = resourceAssetPaths[i];
+            }
+
+            var variable = ReferencePool.Acquire<Procedure_ResourcePreload_Variable>();
+            variable.SetValue( new Procedure_ResourcePreload_Data
+            {
+                ResourceAssetPaths = paths,
+                NextProcedureType  = typeof(TargetProcedure)
+            } );
+            return variable;
+        }
+
+        /// <summary>
+        /// 统一日志入口，强制按等级映射颜色输出。
+        /// </summary>
+        public static class Logger
+        {
+            private const string InfoColor = "white";
+            private const string WarningColor = "yellow";
+            private const string ErrorColor = "orange";
+            private const string FatalColor = "red";
+
+            private static readonly Regex ColorTagRegex =
+                new Regex(@"</?color(?:=[^>]+)?>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            public static void Info(object message)
+            {
+                Log.Info(FormatWithLevelColor(message, InfoColor));
+            }
+
+            public static void Info(string message)
+            {
+                Log.Info(FormatWithLevelColor(message, InfoColor));
+            }
+
+            public static void Info(string format, params object[] args)
+            {
+                Log.Info(FormatWithLevelColor(FormatMessage(format, args), InfoColor));
+            }
+
+            public static void Warning(object message)
+            {
+                Log.Warning(FormatWithLevelColor(message, WarningColor));
+            }
+
+            public static void Warning(string message)
+            {
+                Log.Warning(FormatWithLevelColor(message, WarningColor));
+            }
+
+            public static void Warning(string format, params object[] args)
+            {
+                Log.Warning(FormatWithLevelColor(FormatMessage(format, args), WarningColor));
+            }
+
+            public static void Error(object message)
+            {
+                Log.Error(FormatWithLevelColor(message, ErrorColor));
+            }
+
+            public static void Error(string message)
+            {
+                Log.Error(FormatWithLevelColor(message, ErrorColor));
+            }
+
+            public static void Error(string format, params object[] args)
+            {
+                Log.Error(FormatWithLevelColor(FormatMessage(format, args), ErrorColor));
+            }
+
+            public static void Fatal(object message)
+            {
+                Log.Fatal(FormatWithLevelColor(message, FatalColor));
+            }
+
+            public static void Fatal(string message)
+            {
+                Log.Fatal(FormatWithLevelColor(message, FatalColor));
+            }
+
+            public static void Fatal(string format, params object[] args)
+            {
+                Log.Fatal(FormatWithLevelColor(FormatMessage(format, args), FatalColor));
+            }
+
+            private static string FormatMessage(string format, params object[] args)
+            {
+                if (args == null || args.Length == 0)
+                {
+                    return format ?? string.Empty;
+                }
+
+                return string.Format(format ?? string.Empty, args);
+            }
+
+            private static string FormatWithLevelColor(object rawMessage, string color)
+            {
+                var message = rawMessage?.ToString() ?? string.Empty;
+                var normalized = ColorTagRegex.Replace(message, string.Empty);
+                return $"<color={color}>{normalized}</color>";
+            }
         }
     }
 }

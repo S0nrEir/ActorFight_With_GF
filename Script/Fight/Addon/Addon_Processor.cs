@@ -1,4 +1,6 @@
-﻿namespace Aquila.Fight.Addon
+﻿using System;
+
+namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 战斗流程处理器by yhc
@@ -17,7 +19,7 @@
         //        var unit = GetReadyNode();
         //        if ( unit is null )
         //        {
-        //            Debug.Log( "ProcessorUnit队列没有空闲处理器" );
+        //            Aquila.Toolkit.Tools.Logger.Info( "ProcessorUnit队列没有空闲处理器" );
         //            return false;
         //        }
 
@@ -100,7 +102,7 @@
         //    {
         //        if ( _processorUnitArr is null )
         //        {
-        //            Debug.LogError( "ProcessorUniArr is null" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "ProcessorUniArr is null" );
         //            return;
         //        }
 
@@ -195,7 +197,7 @@
         //    {
         //        if ( meta is null )
         //        {
-        //            Debug.LogError( "processor meta is null at ProcessorUnit" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "processor meta is null at ProcessorUnit" );
         //            return;
         //        }
         //        _processorID = meta.Id;
@@ -259,7 +261,7 @@
         //                meta.getSubEffectStartTimeCount() != meta.getSubEffectFadeOutTimeCount()
         //           )
         //        {
-        //            Debug.LogError( "pathEffectCount != startCount || endCount != startCount" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "pathEffectCount != startCount || endCount != startCount" );
         //            return;
         //        }
 
@@ -276,7 +278,7 @@
 
         //            if ( i >= _triggerList.Count )
         //            {
-        //                Debug.LogError( "i >= _triggerList.Count" );
+        //                Aquila.Toolkit.Tools.Logger.Error( "i >= _triggerList.Count" );
         //                continue;
         //            }
 
@@ -378,14 +380,14 @@
         //    {
         //        if ( string.IsNullOrEmpty( _effectPath ) )
         //        {
-        //            Debug.LogError( "string.IsNullOrEmpty( _effectPath )" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "string.IsNullOrEmpty( _effectPath )" );
         //            return;
         //        }
 
         //        var path = _effectPath.Split( '/' );
         //        if ( path == null || path.Length == 0 )
         //        {
-        //            Debug.LogError( "path == null || path.Length == 0" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "path == null || path.Length == 0" );
         //            return;
         //        }
 
@@ -393,7 +395,7 @@
         //        var endPath = endPathArr[0];
         //        if ( string.IsNullOrEmpty( endPath ) )
         //        {
-        //            Debug.LogError( "string.IsNullOrEmpty( endPath )" );
+        //            Aquila.Toolkit.Tools.Logger.Error( "string.IsNullOrEmpty( endPath )" );
         //            return;
         //        }
 
@@ -466,11 +468,11 @@
         //    /// </summary>
         //    private string EffectObjName = string.Empty;
         //}
-        public override AddonTypeEnum AddonType => throw new System.NotImplementedException();
+        public override AddonTypeEnum AddonType => throw new NotImplementedException();
 
         public override void OnAdd()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

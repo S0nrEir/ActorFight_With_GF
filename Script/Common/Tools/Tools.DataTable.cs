@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Cfg.Single;
 
 namespace Aquila.Toolkit
 {
@@ -14,7 +12,7 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 获取SceneConfig表实例
             /// </summary>
-            public static Cfg.Single.SceneConfig GetSceneConfig()
+            public static SceneConfig GetSceneConfig()
             {
                 return GameEntry.LuBan.Tables.SceneConfig;
             }

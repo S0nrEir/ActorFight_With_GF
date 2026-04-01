@@ -1,10 +1,8 @@
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
-using Cfg.Enum;
 using Cfg.Bean;
-using UnityGameFramework.Runtime;
+using Cfg.Enum;
 
 namespace Aquila.Fight
 {
@@ -21,25 +19,33 @@ namespace Aquila.Fight
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
             base.Apply( castor, target, result );
-            Cfg.Common.Table_Effect tempMeta = null;
             EffectSpec_Base newEffect = null;
-            //这里并不能复用AbilitySpec的逻辑
-            foreach ( var effectID in Meta.DeriveEffects )
+            foreach ( var effectID in _effectData.GetDeriveEffects() )
             {
-                tempMeta = GameEntry.LuBan.Tables.Effect.Get( effectID );
-                if ( tempMeta is null )
+                if (GameEntry.AbilityPool.TryGetEffect(effectID, out var effectData))
                 {
-                    Log.Warning( $"<color=yellow>EffectSpec_Period_Deriging.Apply()--->meta is null,id:{effectID}</color>" );
-                    continue;
+                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, castor, target);
                 }
-                newEffect = Tools.Ability.CreateEffectSpecByReferencePool( tempMeta ,castor,target);
+                else
+                {
+                    Tools.Logger.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply --> faild to get deriveEffect,id:{effectID}</color>");
+                    // 回退到 LuBan
+                    // var tempMeta = GameEntry.LuBan.Tables.Effect.Get(effectID);
+                    // if (tempMeta == null)
+                    // {
+                    //     Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply()--->effect not found, id:{effectID}</color>");
+                    //     continue;
+                    // }
+                    // newEffect = Tools.Ability.CreateEffectSpecByReferencePool(tempMeta, castor, target);
+                }
+                
                 if ( newEffect is null )
                 {
-                    Log.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null,effectMeta:{tempMeta.ToString()}</color>" );
-                    break;
+                    Tools.Logger.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null, effectID:{effectID}</color>" );
+                    continue;
                 }
 
-                if ( newEffect.Meta.Policy != DurationPolicy.Instant )
+                if ( newEffect.Policy != DurationPolicy.Instant )
                 {
                     GameEntry.Impact.Attach( newEffect, castor.Actor.ActorID, target.Actor.ActorID );
                 }
@@ -55,13 +61,21 @@ namespace Aquila.Fight
             }
         }
 
-        public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-            Module_ProxyActor.ActorInstance target = null )
+        public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
+            Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init( meta ,castor,target);
-            StackLimit = meta.ExtensionParam.IntParam_1;
-            ResetWhenOverride = meta.ExtensionParam.IntParam_2 == 1;
+            base.Init(data, castor, target);
+            StackLimit = _effectData.GetIntParam1();
+            ResetWhenOverride = _effectData.GetIntParam2() == 1;
         }
+        
+        // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null )
+        // {
+        //     base.Init( meta ,castor,target);
+        //     StackLimit = IntParam1;
+        //     ResetWhenOverride = _effectData.GetIntParam2() == 1;
+        // }
 
         public override void Clear()
         {

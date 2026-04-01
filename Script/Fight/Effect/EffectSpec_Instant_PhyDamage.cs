@@ -2,8 +2,6 @@ using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -17,21 +15,21 @@ namespace Aquila.Fight
             var attr_addon = target.GetAddon<Addon_BaseAttrNumric>();
             if (attr_addon is null)
             {
-                Log.Warning("<color=red>EffectSpec_Damage--->attr_addon is null</color>");
+                Tools.Logger.Warning("<color=red>EffectSpec_Damage--->attr_addon is null</color>");
                 return;
             }
 
             var cur_hp = attr_addon.GetCurrHPCorrection();
-            var final = cur_hp + Meta.ExtensionParam.FloatParam_1;
+            var final = cur_hp + _effectData.GetFloatParam1();
             attr_addon.SetCurrHP(final);
-            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)Meta.ExtensionParam.FloatParam_1 );
+            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)_effectData.GetFloatParam1() );
         }
 
         public EffectSpec_Instant_PhyDamage()
         {
 
         }
-        public EffectSpec_Instant_PhyDamage( Table_Effect meta ) : base( meta )
+        public EffectSpec_Instant_PhyDamage( EffectData meta )
         {
         }
     }

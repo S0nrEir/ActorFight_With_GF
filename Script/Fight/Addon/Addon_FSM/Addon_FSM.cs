@@ -1,9 +1,8 @@
+using System.Collections.Generic;
 using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
-using System.Collections.Generic;
-using UnityEngine;
+using Aquila.Toolkit;
 
 namespace Aquila.Fight.Addon
 {
@@ -22,7 +21,7 @@ namespace Aquila.Fight.Addon
             //没有持有该状态
             if ( !ActorFsm.HasState( targetStateID ) )
             {
-                Debug.Log( "dosent has state:" + targetStateID );
+                Tools.Logger.Info( "dosent has state:" + targetStateID );
                 return false;
             }
 
@@ -90,7 +89,7 @@ namespace Aquila.Fight.Addon
             base.Reset();
             // if ( StateList is null )
             // {
-            //     Debug.LogError( "StateList is null" );
+            //     Aquila.Toolkit.Tools.Logger.Error( "StateList is null" );
             //     return;
             // }
 

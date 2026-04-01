@@ -1,5 +1,3 @@
-using UnityGameFramework.Runtime;
-
 namespace Aquila.Fight
 {   
     /// <summary>

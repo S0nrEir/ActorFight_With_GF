@@ -1,10 +1,7 @@
 using Aquila.Fight.Addon;
-using Aquila.Fight.FSM;
 using Aquila.Module;
 using Aquila.Toolkit;
-using GameFramework;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
@@ -21,13 +18,13 @@ namespace Aquila.Fight
         {
             if ( _radius <= 0f )
             {
-                Log.Warning( $"<color=yellow>ActorBehaviour_TracingTransform.GetReady()--->_radius <= 0f</color>" );
+                Tools.Logger.Warning( "<color=yellow>ActorBehaviour_TracingTransform.GetReady()--->_radius <= 0f</color>" );
                 return;
             }
 
             if ( _targetActorID == -1 || _onHitabilityID == -1 )
             {
-                Log.Warning( $"<color=yellow>ActorBehaviour_TracingTransform.GetReady()--->_targetActorID == -1 || abilityID == -1,targetActorID:{_targetActorID},_onHitabilityID:{_onHitabilityID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>ActorBehaviour_TracingTransform.GetReady()--->_targetActorID == -1 || abilityID == -1,targetActorID:{_targetActorID},_onHitabilityID:{_onHitabilityID}</color>" );
                 return;
             }
 
@@ -107,27 +104,27 @@ namespace Aquila.Fight
         /// <summary>
         /// 目标transform
         /// </summary>
-        private Transform _targetTransform = null;
+        private Transform _targetTransform;
 
         /// <summary>
         /// 是否抵达目标点
         /// </summary>
-        private bool _arriveFlag = false;
+        private bool _arriveFlag;
 
         /// <summary>
         /// 就绪标记
         /// </summary>
-        private bool _readyFlag = false;
+        private bool _readyFlag;
 
         /// <summary>
         /// 范围
         /// </summary>
-        public float _radius = 0f;
+        public float _radius;
 
         /// <summary>
         /// 缓存actor的transform
         /// </summary>
-        private Transform _cachedActorTransform = null;
+        private Transform _cachedActorTransform;
 
         /// <summary>
         /// 目标ActorID

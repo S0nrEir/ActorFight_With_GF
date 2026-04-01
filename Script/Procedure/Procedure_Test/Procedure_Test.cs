@@ -1,9 +1,5 @@
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using GameFramework.Resource;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 namespace Aquila.Procedure
 {

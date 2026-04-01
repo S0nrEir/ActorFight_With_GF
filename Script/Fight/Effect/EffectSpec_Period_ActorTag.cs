@@ -1,8 +1,6 @@
-using Aquila.Event;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -15,17 +13,17 @@ namespace Aquila.Fight
         {
             base.OnEffectAwake( castor, target );
             //添加tag
-            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
-            var tagToAdd = Meta.ExtensionParam.IntParam_2;
+            var mainType = (ActorTagType)_effectData.GetIntParam1();
+            var tagToAdd = _effectData.GetIntParam2();
             target.Actor.AddTag( mainType,(ushort)tagToAdd ,
                 (currTag, tagToRemove, isAdd) =>
                 {
-                    Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                    Tools.Logger.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
                 });
             target.Actor.AddTag(mainType,(ushort)tagToAdd, (currTag, tagToRemove, isAdd) =>
             {
-                Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
-                Log.Info($"<color=green>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                Tools.Logger.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                Tools.Logger.Info($"<color=green>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
             });
         }
 
@@ -33,12 +31,12 @@ namespace Aquila.Fight
         {
             base.OnEffectEnd( castor, target );
             //移除tag
-            var mainType = (ActorTagType)Meta.ExtensionParam.IntParam_1;
-            var tagToRemove = Meta.ExtensionParam.IntParam_2;
+            var mainType = (ActorTagType)_effectData.GetIntParam1();
+            var tagToRemove = _effectData.GetIntParam2();
             target.Actor.RemoveTag( mainType,tagToRemove ,
                 (currTag, tagToRemove, isAdd) =>
                 {
-                    Log.Info($"<color=white>remove tag , main type:{mainType} , sub type:{tagToRemove}</color>");
+                    Tools.Logger.Info($"<color=white>remove tag , main type:{mainType} , sub type:{tagToRemove}</color>");
                 });
         }
     }

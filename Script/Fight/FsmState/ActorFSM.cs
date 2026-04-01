@@ -1,6 +1,5 @@
-using Aquila.Fight.Actor;
 using System.Collections.Generic;
-using UnityEngine;
+using Aquila.Toolkit;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight.FSM
@@ -29,7 +28,7 @@ namespace Aquila.Fight.FSM
             var next = GetState( targetStateID );
             if (next is null)
             {
-                Debug.LogError( $"<color=red>cant find state with id:{targetStateID}/color>" );
+                Tools.Logger.Error( $"<color=red>cant find state with id:{targetStateID}/color>" );
                 return;
             }
 
@@ -47,7 +46,7 @@ namespace Aquila.Fight.FSM
 
             if (GetState( state._stateID ) != null)
             {
-                Debug.LogError("has same state! id:"+ state);
+                Tools.Logger.Error("has same state! id:"+ state);
                 return false;
             }
 
@@ -86,7 +85,7 @@ namespace Aquila.Fight.FSM
         {
             if (_stateDic is null)
             {
-                Debug.LogError( "state dic is nulll!" );
+                Tools.Logger.Error( "state dic is nulll!" );
                 return null;
             }
 
@@ -145,7 +144,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// actor实例
         /// </summary>
-        private ActorInstance _instance = null;
+        private ActorInstance _instance;
     }
 
 }

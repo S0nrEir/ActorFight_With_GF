@@ -5,3 +5,4 @@
 	0	测试界面	Assets/Res/UI/TestForm.prefab	Menu	FALSE	FALSE	0	0	FALSE
 	1	技能界面	Assets/Res/UI/AbilityForm.prefab	Menu	FALSE	FALSE	0	0	FALSE
 	2	WindUp界面	Assets/Res/UI/WindUpForm.prefab	Dialog	FALSE	FALSE	0	0	FALSE
+	3	技能测试界面	Assets/AbilityEditor/AbilityEditorTestForm.prefab	Menu	FALSE	FALSE	0	0	FALSE

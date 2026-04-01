@@ -1,7 +1,6 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -17,7 +16,7 @@ namespace Aquila.Fight
                 return;
              
             var curr_value = attr_addon.GetCurrMPCorrection();
-            curr_value += Meta.ExtensionParam.FloatParam_1;
+            curr_value += _effectData.GetFloatParam1();
             attr_addon.SetCurrMP(curr_value);
         }
 
@@ -29,19 +28,19 @@ namespace Aquila.Fight
             return _modifier.Calc(valToModify);
         }
         
-        public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
         {
-            base.Init( meta ,castor,target);
-            //todo_modifier每次初始化都要走子类的重写，这块能不能改一下
-            //_modifier = new Numric.Numric_Modifier( meta.ModifierType,meta.ExtensionParam.FloatParam_1 );
-            _modifier.Setup( meta.ModifierType, meta.ExtensionParam.FloatParam_1 );
+            base.Init(data, castor, target);
+            _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
-
-        public EffectSpec_Instant_Cost()
-        {
-
-        }
+        
+        // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
+        //     Module_ProxyActor.ActorInstance target = null)
+        // {
+        //     base.Init(meta, castor, target);
+        //     _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
+        // }
     }
    
 }

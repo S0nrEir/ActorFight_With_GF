@@ -1,12 +1,10 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
-using Aquila.Fight.FSM;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework.Event;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -37,7 +35,7 @@ namespace Aquila.Fight.Actor
             var onHitAbilityID = DefaultOnHitAbilityID();
             if ( onHitAbilityID < 0 )
             {
-                Log.Warning( $"Actor_Orb.SetTargetPositionAndReady()--->abilityID < 0,abilityID:{onHitAbilityID},roleMetaID:{RoleMetaID}" );
+                Tools.Logger.Warning( $"Actor_Orb.SetTargetPositionAndReady()--->abilityID < 0,abilityID:{onHitAbilityID},roleMetaID:{RoleMetaID}" );
                 return;
             }
 
@@ -57,7 +55,7 @@ namespace Aquila.Fight.Actor
             var onHitAbilityID = DefaultOnHitAbilityID();
             if ( onHitAbilityID < 0 )
             {
-                Log.Warning( $"Actor_Orb.SetTargetTransformAndReady()--->abilityID < 0,abilityID:{onHitAbilityID},roleMetaID:{RoleMetaID}" );
+                Tools.Logger.Warning( $"Actor_Orb.SetTargetTransformAndReady()--->abilityID < 0,abilityID:{onHitAbilityID},roleMetaID:{RoleMetaID}" );
                 return;
             }
 
@@ -119,7 +117,7 @@ namespace Aquila.Fight.Actor
             if ( userData is Actor_Orb_EntityData data )
                 _targetActorID = data._targetActorID;
             else
-                Log.Warning( "<color=yellow>Actor_Orb.OnInitActor()---></color>" );
+                Tools.Logger.Warning( "<color=yellow>Actor_Orb.OnInitActor()---></color>" );
             
             GameEntry.Event.Subscribe(EventArg_OnActorDie.EventID,OnActorDie);
         }
@@ -143,7 +141,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 行为组件
         /// </summary>
-        private Addon_Behaviour _behaviourAddon = null;
+        private Addon_Behaviour _behaviourAddon;
 
         /// <summary>
         /// 目标actorID

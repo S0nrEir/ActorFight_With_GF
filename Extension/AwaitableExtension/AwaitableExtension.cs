@@ -1,16 +1,19 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aquila;
+using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
 using GameFramework.Resource;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+using GameEntry = UnityGameFramework.Runtime.GameEntry;
+using Object = UnityEngine.Object;
 
 namespace UGFExtensions.Await
 {
-    public static partial class AwaitableExtensions
+    public static class AwaitableExtensions
     {
         private static readonly Dictionary<int, TaskCompletionSource<UIForm>> s_UIFormTcs =
             new Dictionary<int, TaskCompletionSource<UIForm>>();
@@ -33,7 +36,7 @@ namespace UGFExtensions.Await
         private static readonly List<DownLoadResult> s_DelayReleaseDownloadResult = new List<DownLoadResult>();
 
 #if UNITY_EDITOR
-        private static bool s_IsSubscribeEvent = false;
+        private static bool s_IsSubscribeEvent;
 #endif
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace UGFExtensions.Await
         /// </summary>
         public static void SubscribeEvent()
         {
-            EventComponent eventComponent = UnityGameFramework.Runtime.GameEntry.GetComponent<EventComponent>();
+            EventComponent eventComponent = GameEntry.GetComponent<EventComponent>();
             eventComponent.Subscribe( OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess );
             eventComponent.Subscribe( OpenUIFormFailureEventArgs.EventId, OnOpenUIFormFailure );
 
@@ -107,7 +110,7 @@ namespace UGFExtensions.Await
             s_UIFormTcs.TryGetValue( ne.SerialId, out TaskCompletionSource<UIForm> tcs );
             if ( tcs != null )
             {
-                Debug.LogError( ne.ErrorMessage );
+                Tools.Logger.Error( ne.ErrorMessage );
                 tcs.SetException( new GameFrameworkException( ne.ErrorMessage ) );
                 s_UIFormTcs.Remove( ne.SerialId );
             }
@@ -162,7 +165,7 @@ namespace UGFExtensions.Await
             s_EntityTcs.TryGetValue( ne.EntityId, out var tcs );
             if ( tcs != null )
             {
-                Debug.LogError( ne.ErrorMessage );
+                Tools.Logger.Error( ne.ErrorMessage );
                 tcs.SetException( new GameFrameworkException( ne.ErrorMessage ) );
                 s_EntityTcs.Remove( ne.EntityId );
             }
@@ -191,7 +194,7 @@ namespace UGFExtensions.Await
             }
             catch ( Exception e )
             {
-                Debug.LogError( e.ToString() );
+                Tools.Logger.Error( e.ToString() );
                 tcs.SetException( e );
                 s_LoadSceneTcs.Remove( sceneAssetName );
             }
@@ -215,7 +218,7 @@ namespace UGFExtensions.Await
             s_LoadSceneTcs.TryGetValue( ne.SceneAssetName, out var tcs );
             if ( tcs != null )
             {
-                Debug.LogError( ne.ErrorMessage );
+                Tools.Logger.Error( ne.ErrorMessage );
                 tcs.SetException( new GameFrameworkException( ne.ErrorMessage ) );
                 s_LoadSceneTcs.Remove( ne.SceneAssetName );
             }
@@ -233,7 +236,7 @@ namespace UGFExtensions.Await
             var isLoadSceneTcs = s_LoadSceneTcs.TryGetValue( sceneAssetName, out var loadSceneTcs );
             if ( isLoadSceneTcs )
             {
-                Debug.Log( "Unload  loading scene" );
+                Tools.Logger.Info( "Unload  loading scene" );
                 await loadSceneTcs.Task;
             }
             s_UnLoadSceneTcs.Add( sceneAssetName, tcs );
@@ -243,7 +246,7 @@ namespace UGFExtensions.Await
             }
             catch ( Exception e )
             {
-                Debug.LogError( e.ToString() );
+                Tools.Logger.Error( e.ToString() );
                 tcs.SetException( e );
                 s_UnLoadSceneTcs.Remove( sceneAssetName );
             }
@@ -266,7 +269,7 @@ namespace UGFExtensions.Await
             s_UnLoadSceneTcs.TryGetValue( ne.SceneAssetName, out var tcs );
             if ( tcs != null )
             {
-                Debug.LogError( $"Unload scene {ne.SceneAssetName} failure." );
+                Tools.Logger.Error( $"Unload scene {ne.SceneAssetName} failure." );
                 tcs.SetException( new GameFrameworkException( $"Unload scene {ne.SceneAssetName} failure." ) );
                 s_UnLoadSceneTcs.Remove( ne.SceneAssetName );
             }
@@ -276,7 +279,7 @@ namespace UGFExtensions.Await
         /// 加载资源（可等待）
         /// </summary>
         public static Task<T> LoadAssetAsync<T>( this ResourceComponent resourceComponent, string assetName )
-            where T : UnityEngine.Object
+            where T : Object
         {
 #if UNITY_EDITOR
             TipsSubscribeEvent();
@@ -294,14 +297,14 @@ namespace UGFExtensions.Await
                     }
                     else
                     {
-                        Debug.LogError( $"Load asset failure load type is {asset.GetType()} but asset type is {typeof( T )}." );
+                        Tools.Logger.Error( $"Load asset failure load type is {asset.GetType()} but asset type is {typeof( T )}." );
                         source.SetException( new GameFrameworkException(
                             $"Load asset failure load type is {asset.GetType()} but asset type is {typeof( T )}." ) );
                     }
                 },
                 ( tempAssetName, status, errorMessage, userdata ) =>
                 {
-                    Debug.LogError( errorMessage );
+                    Tools.Logger.Error( errorMessage );
                     loadAssetTcs.SetException( new GameFrameworkException( errorMessage ) );
                 }
             ) );
@@ -312,7 +315,7 @@ namespace UGFExtensions.Await
         /// <summary>
         /// 加载多个资源（可等待）
         /// </summary>
-        public static async Task<T[]> LoadAssetsAsync<T>( this ResourceComponent resourceComponent, string[] assetName ) where T : UnityEngine.Object
+        public static async Task<T[]> LoadAssetsAsync<T>( this ResourceComponent resourceComponent, string[] assetName ) where T : Object
         {
 #if UNITY_EDITOR
             TipsSubscribeEvent();
@@ -498,7 +501,7 @@ namespace UGFExtensions.Await
             s_DataTableTcs.TryGetValue( ne.DataTableAssetName, out TaskCompletionSource<bool> tcs );
             if ( tcs != null )
             {
-                Log.Info( "Load data table '{0}' OK.", ne.DataTableAssetName );
+                Tools.Logger.Info( "Load data table '{0}' OK.", ne.DataTableAssetName );
                 tcs.SetResult( true );
                 s_DataTableTcs.Remove( ne.DataTableAssetName );
             }
@@ -510,7 +513,7 @@ namespace UGFExtensions.Await
             s_DataTableTcs.TryGetValue( ne.DataTableAssetName, out TaskCompletionSource<bool> tcs );
             if ( tcs != null )
             {
-                Log.Error( "Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName,
+                Tools.Logger.Error( "Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName,
                     ne.DataTableAssetName, ne.ErrorMessage );
                 tcs.SetResult( false );
                 s_DataTableTcs.Remove( ne.DataTableAssetName );

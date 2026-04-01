@@ -1,8 +1,6 @@
 using Aquila.Event;
 using Aquila.Module;
 using Cfg.Enum;
-using UnityEditor;
-using Tools = Aquila.Toolkit.Tools;
 
 namespace Aquila.Fight
 {
@@ -21,7 +19,7 @@ namespace Aquila.Fight
                 return;
             
             target.Actor.AddTag(mainType,tagToAdd);
-            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(Meta.Duration,target.Actor.ActorID));
+            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(_effectData.GetDuration(),target.Actor.ActorID));
         }
 
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
@@ -57,8 +55,8 @@ namespace Aquila.Fight
             if (effect is EffectSpec_Period_ActorTag)
             {
                 //wind up 身上还有wind up类型的effect，返回true，表示有
-                var mainType = effect.Meta.ExtensionParam.IntParam_1;
-                var subType = effect.Meta.ExtensionParam.IntParam_2;
+                var mainType = effect.Meta.GetFloatParam1();
+                var subType =  effect.Meta.GetFloatParam2();
                 
                 if (mainType == (int)ActorTagType.Ability && subType == (int)ActorTagSubType_Ability.WindUp)
                     return true;

@@ -1,8 +1,8 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -17,7 +17,7 @@ namespace Aquila.Fight
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
             if ( addon is null )
             {
-                Log.Warning( $"<color=yellow>EffectSpec_RemoveHealth.Apply()--->addon is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>EffectSpec_RemoveHealth.Apply()--->addon is null</color>" );
                 return;
             }
             if ( !_initFlag )
@@ -34,29 +34,27 @@ namespace Aquila.Fight
 
         public void SetModifier( EffectSpec_Base parent)
         {
-            var parentExtension = parent.Meta.ExtensionParam;
             float fac = 0f;
-            //#todo修改switch/case逻辑，不用switch/case
             switch ( parent.StackCount )
             {
                 case 1:
-                    fac = parentExtension.FloatParam_1;
+                    fac = parent.Meta.GetFloatParam1();
                     break;
 
                 case 2:
-                    fac = parentExtension.FloatParam_2;
+                    fac = parent.Meta.GetFloatParam2();
                     break;
 
                 case 3: 
-                    fac = parentExtension.FloatParam_3;
+                    fac = parent.Meta.GetFloatParam3();
                     break;
 
                 case 4:
-                    fac = parentExtension.FloatParam_4;
+                    fac = parent.Meta.GetFloatParam4();
                     break;
             }
 
-            _modifier.Setup( Meta.ModifierType, fac );
+            _modifier.Setup( Meta.GetModifierType(), fac );
         }
 
         public override void Clear()
@@ -74,6 +72,6 @@ namespace Aquila.Fight
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _initFlag = false;
+        private bool _initFlag;
     }
 }

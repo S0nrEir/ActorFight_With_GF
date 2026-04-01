@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 597848049fa94ea42972e5c426b1d247, type: 3}
+  m_Name: 1007
+  m_EditorClassIdentifier: 
+  id: 1007
+  Description: "\u4E3AActor\u6DFB\u52A0Tag\uFF0C\u6DFB\u52A0\u6D41\u8840tag,int\u53C2\u65701=tag\u7684\u5927\u7C7B\uFF0Cint\u53C2\u65702=tag\u7684\u5C0F\u7C7B\u3002\u53C2\u6570\u5199tag\u7684\u5341\u8FDB\u5236\u679A\u4E3E\u5F62\u5F0F"
+  Type: 8
+  ExtensionParam:
+    float_1: -1
+    float_2: -1
+    float_3: -1
+    float_4: -1
+    int_1: 0
+    int_2: 4
+    int_3: -1
+    int_4: -1
+  ModifierType: 4
+  EffectOnAwake: 1
+  Policy: 2
+  Period: 6
+  Duration: 5
+  Target: 1
+  EffectType: 0
+  DeriveEffects: 
+  AwakeEffects: 
