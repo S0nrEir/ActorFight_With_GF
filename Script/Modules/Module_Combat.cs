@@ -7,20 +7,6 @@ namespace Aquila.Module
 {
     public class Module_Combat : GameFrameworkModuleBase
     {
-        public override void EnsureInit()
-        {
-            base.EnsureInit();
-        }
-
-        public override void Open(object param)
-        {
-            base.Open(param);
-        }
-
-        public override void Close()
-        {
-            base.Close();
-        }
 
         /// <summary>
         /// 施法请求受理检查：仅做参数、目标、冷却和消耗校验，不执行施法。
@@ -73,24 +59,34 @@ namespace Aquila.Module
             {
                 case CastRejectCode.InvalidCmd:
                     return CastRejectFlags.InvalidCmd;
+
                 case CastRejectCode.InvalidCastorId:
                     return CastRejectFlags.InvalidCastorId;
+
                 case CastRejectCode.InvalidAbilityId:
                     return CastRejectFlags.InvalidAbilityId;
+
                 case CastRejectCode.CastorNotFound:
                     return CastRejectFlags.CastorNotFound;
+
                 case CastRejectCode.TargetNotFound:
                     return CastRejectFlags.TargetNotFound;
+
                 case CastRejectCode.MissingAbilityAddon:
                     return CastRejectFlags.MissingAbilityAddon;
+
                 case CastRejectCode.AbilitySpecMissing:
                     return CastRejectFlags.AbilitySpecMissing;
+
                 case CastRejectCode.CooldownNotReady:
                     return CastRejectFlags.CooldownNotReady;
+
                 case CastRejectCode.CostNotEnough:
                     return CastRejectFlags.CostNotEnough;
+
                 case CastRejectCode.UnsupportedTargetType:
                     return CastRejectFlags.UnsupportedTargetType;
+
                 default:
                     return CastRejectFlags.None;
             }
@@ -102,6 +98,22 @@ namespace Aquila.Module
                 return (int)flags;
 
             return (int)code;
+        }
+        
+        
+        public override void EnsureInit()
+        {
+            base.EnsureInit();
+        }
+
+        public override void Open(object param)
+        {
+            base.Open(param);
+        }
+
+        public override void Close()
+        {
+            base.Close();
         }
     }
 }
