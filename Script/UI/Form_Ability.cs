@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -55,10 +56,11 @@ namespace Aquila.UI
         /// </summary>
         private void OnHostileTestIconItemClicked(int abilityID)
         {
-            var selfID = _enemyActorIdArr[0];
-            var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
+            // var selfID = _enemyActorIdArr[0];
+            // var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
             //_actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( selfID, selfID, abilityID, GameEntry.GlobalVar.InvalidPosition );
+            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( selfID, selfID, abilityID, GameEntry.GlobalVar.InvalidPosition );
+            //var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.Create(_actorID,_enemyActorIdArr[0],abilityID));
         }
 
         /// <summary>
@@ -72,11 +74,12 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            var castorID = _actorID;
+            // var castorID = _actorID;
             //一些特殊技能的测试
-            var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
-
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            // var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
+            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.Create(_actorID,_enemyActorIdArr[0],abilityID));
+            
         }
         
         /// <summary>

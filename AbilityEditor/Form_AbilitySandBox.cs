@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -36,7 +37,7 @@ namespace Aquila.AbilityEditor
             }
 
             _actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
-            _proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
+            // _proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
 
             _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/AbilityIcon" );
             _abilityButton.onClick.AddListener( OnAbilityButtonClicked );
@@ -76,7 +77,7 @@ namespace Aquila.AbilityEditor
             _dummyID = -1;
             _abilityID = -1;
             _actorMgr = null;
-            _proxyActor = null;
+            // _proxyActor = null;
             _abilityButton = null;
             _cdTxt = null;
             _cdImg = null;
@@ -90,14 +91,16 @@ namespace Aquila.AbilityEditor
         /// </summary>
         private void OnAbilityButtonClicked()
         {
-            if ( _proxyActor == null || _playerID == -1 || _dummyID == -1 || _abilityID == -1 )
+            if ( _playerID == -1 || _dummyID == -1 || _abilityID == -1 )
             {
                 Tools.Logger.Warning( "<color=yellow>Form_AbilitySandBox: 参数无效，无法释放技能</color>" );
                 return;
             }
 
             // 释放技能：player 对 dummy 释放
-            _proxyActor.Ability2SingleTarget( _playerID, _dummyID, _abilityID, GameEntry.GlobalVar.InvalidPosition );
+            // _proxyActor.Ability2SingleTarget( _playerID, _dummyID, _abilityID, GameEntry.GlobalVar.InvalidPosition );
+            
+            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.Create(_playerID,_dummyID,_abilityID));
         }
 
         /// <summary>
@@ -161,7 +164,7 @@ namespace Aquila.AbilityEditor
         private int _dummyID = -1;
         private int _abilityID = -1;
         private Module_ActorMgr _actorMgr;
-        private Module_ProxyActor _proxyActor;
+        // private Module_ProxyActor _proxyActor;
         private Button _abilityButton;
         private Text _cdTxt;
         private Image _cdImg;
