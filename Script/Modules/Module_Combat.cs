@@ -7,7 +7,6 @@ namespace Aquila.Module
 {
     public class Module_Combat : GameFrameworkModuleBase
     {
-
         /// <summary>
         /// 施法请求受理检查：仅做参数、目标、冷却和消耗校验，不执行施法。
         /// </summary>

@@ -13,6 +13,15 @@ namespace Aquila.Combat
             _abilityID = -1;
         }
 
+        public static CastCmd Create(int castorInstanceId, int targetInstanceId, int abilityId)
+        {
+            var cmd = ReferencePool.Acquire<CastCmd>();
+            cmd._castorInstanceId = castorInstanceId;
+            cmd._targetInstanceId = targetInstanceId;
+            cmd._abilityID = abilityId;
+            return cmd;
+        }
+
         public int _castorInstanceId = -1;
         public int _targetInstanceId = -1;
         public int _abilityID = -1;
