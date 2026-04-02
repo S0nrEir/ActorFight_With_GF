@@ -5,16 +5,13 @@ using Cfg.Enum;
 
 namespace Aquila.Module
 {
-    public class Module_Combat : GameFrameworkModuleBase
+    public class Module_Combat : GameFrameworkModuleBase,IFixedUpdate
     {
         /// <summary>
         /// 施法请求受理检查：仅做参数、目标、冷却和消耗校验，不执行施法。
         /// </summary>
         public CastAcceptResult RequestCast(CastCmd cmd)
         {
-            if (cmd == null)
-                return Reject(cmd, CastRejectCode.InvalidCmd, CastRejectFlags.InvalidCmd);
-
             if (cmd._castorInstanceId <= 0)
                 return Reject(cmd, CastRejectCode.InvalidCastorId, CastRejectFlags.InvalidCastorId);
 
@@ -114,5 +111,11 @@ namespace Aquila.Module
         {
             base.Close();
         }
+
+        public void OnFixedUpdate()
+        {
+        }
+        
+        
     }
 }

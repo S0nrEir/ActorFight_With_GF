@@ -10,7 +10,7 @@ namespace Aquila.Module
     /// <summary>
     /// actor代理的逻辑类，轮询处理所有actor的update
     /// </summary>
-    public class Module_AddonSystem : GameFrameworkModuleBase, IUpdate
+    public class Module_AddonSystem : GameFrameworkModuleBase, IUpdate,IFixedUpdate
     {
         /// <summary>
         /// 添加组件到轮询系统中
@@ -61,7 +61,16 @@ namespace Aquila.Module
             for ( var i = 0; i < _containerList.Length; i++ )
                 _containerList[i].Update( elapsed, realElapsed );
         }
-
+        
+        public void OnFixedUpdate(float elapased, float realElapsed)
+        {
+            SystemFxiedUpdate(elapased, realElapsed);
+        }
+        
+        private void SystemFxiedUpdate( float elapsed, float realElapsed )
+        {
+        }
+        
         /// <summary>
         /// 处理要添加的addon
         /// </summary>
@@ -211,5 +220,6 @@ namespace Aquila.Module
             /// </summary>
             private HashSet<Addon_Base> _toRemove;
         }
+
     }
 }
