@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Fight.Addon
@@ -63,19 +64,19 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
-        {
-            var spec = GetAbilitySpec( abilityID );
-            if ( spec is null )
-            {
-                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
-                return false;
-            }
-
-            return spec.UseAbility(triggerIndex, target, result );
-        }
+        // public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        // {
+        //     var spec = GetAbilitySpec( abilityID );
+        //     if ( spec is null )
+        //     {
+        //         Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+        //         result._stateDescription = Tools.SetBitValue( result._stateDescription,
+        //             ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
+        //         return false;
+        //     }
+        //
+        //     return spec.UseAbility(triggerIndex, target, result );
+        // }
 
         public override void OnUpdate( float deltaTime, float realElapsed )
         {
@@ -93,7 +94,7 @@ namespace Aquila.Fight.Addon
         {
             var spec = GetAbilitySpec( metaID );
             if ( spec is null )
-                return ( int ) AbilityUseResultTypeEnum.NONE_PARAM;
+                return ( int ) CastRejectCode.AbilitySpecMissing;
 
             return spec.CanUseAbility();
         }

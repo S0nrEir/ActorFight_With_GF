@@ -218,10 +218,10 @@ namespace Aquila.Fight
         public virtual int CanUseAbility()
         {
             if ( !CostOK() )
-                return ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH;
+                return ( int ) CastRejectCode.CostNotEnough;
 
             if ( !CDOK() )
-                return ( int ) AbilityUseResultTypeEnum.CD_NOT_OK;
+                return ( int ) CastRejectCode.CooldownNotReady;
 
             return 0;
         }

@@ -1,5 +1,6 @@
-using Aquila.Fight;
+﻿using Aquila.Fight;
 using Aquila.Fight.Addon;
+using Cfg.Enum;
 using UnityEngine;
 
 namespace Aquila.Toolkit
@@ -12,20 +13,61 @@ namespace Aquila.Toolkit
             /// <summary>获取技能使用失败的多语言key</summary>
             public static string UsingAbilityFaildDescription_l10n( int stateDescription )
             {
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_TARGET ) )
+                if ( stateDescription == 0 )
+                    return string.Empty;
+
+                var text = RejectDescriptionByFlags( ( CastRejectFlags ) stateDescription );
+                if ( !string.IsNullOrEmpty( text ) )
+                    return text;
+
+                return RejectDescriptionByCode( ( CastRejectCode ) stateDescription );
+            }
+
+            private static string RejectDescriptionByFlags( CastRejectFlags flags )
+            {
+                if ( flags.HasFlag( CastRejectFlags.TargetNotFound ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTarget;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NO_CASTOR ) )
+
+                if ( flags.HasFlag( CastRejectFlags.CastorNotFound ) || flags.HasFlag( CastRejectFlags.InvalidCastorId ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoCastor;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.COST_NOT_ENOUGH ) )
+
+                if ( flags.HasFlag( CastRejectFlags.CostNotEnough ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotEnoughMana;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.CD_NOT_OK ) )
+
+                if ( flags.HasFlag( CastRejectFlags.CooldownNotReady ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_PARAM ) )
-                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoParam;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_ABILITY_META ) )
+
+                if ( flags.HasFlag( CastRejectFlags.MissingAbilityAddon ) || flags.HasFlag( CastRejectFlags.AbilitySpecMissing ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoMeta;
-                if ( GetBitValue( stateDescription, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META ) )
-                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTimeline;
+
+                if ( flags.HasFlag( CastRejectFlags.InvalidCmd ) || flags.HasFlag( CastRejectFlags.InvalidAbilityId ) || flags.HasFlag( CastRejectFlags.UnsupportedTargetType ) )
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoParam;
+
+                return string.Empty;
+            }
+
+            private static string RejectDescriptionByCode( CastRejectCode code )
+            {
+                switch ( code )
+                {
+                    case CastRejectCode.TargetNotFound:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoTarget;
+                    case CastRejectCode.CastorNotFound:
+                    case CastRejectCode.InvalidCastorId:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoCastor;
+                    case CastRejectCode.CostNotEnough:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotEnoughMana;
+                    case CastRejectCode.CooldownNotReady:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
+                    case CastRejectCode.MissingAbilityAddon:
+                    case CastRejectCode.AbilitySpecMissing:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoMeta;
+                    case CastRejectCode.InvalidCmd:
+                    case CastRejectCode.InvalidAbilityId:
+                    case CastRejectCode.UnsupportedTargetType:
+                    case CastRejectCode.Unknown:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoParam;
+                }
 
                 return string.Empty;
             }
@@ -133,3 +175,4 @@ namespace Aquila.Toolkit
         }
     }
 }
+

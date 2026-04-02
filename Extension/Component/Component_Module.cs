@@ -93,10 +93,12 @@ namespace Aquila.Extension
             var update = module as IUpdate;
             if ( update != null )
                 _allUpdates.Add( update );
+            
             //整理含IFixed的模块
             var fixedUpdate = module as IFixedUpdate;
             if ( fixedUpdate != null )
                 _allFixedUpdates.Add( fixedUpdate );
+            
             return module;
         }
 
