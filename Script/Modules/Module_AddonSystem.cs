@@ -4,6 +4,7 @@ using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
 using static Aquila.Fight.Addon.Addon_Base;
+using UnityEngine;
 
 namespace Aquila.Module
 {
@@ -62,9 +63,9 @@ namespace Aquila.Module
                 _containerList[i].Update( elapsed, realElapsed );
         }
         
-        public void OnFixedUpdate(float elapased, float realElapsed)
+        public void OnFixedUpdate()
         {
-            SystemFxiedUpdate(elapased, realElapsed);
+            SystemFxiedUpdate(Time.fixedDeltaTime, Time.fixedUnscaledDeltaTime);
         }
         
         private void SystemFxiedUpdate( float elapsed, float realElapsed )
