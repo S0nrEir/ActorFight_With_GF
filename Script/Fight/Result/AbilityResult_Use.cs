@@ -9,7 +9,6 @@ namespace Aquila.Fight
     public class AbilityResult_Use : IReference
     {
         public bool _succ;
-        public int _stateDescription;
 
         public int _abilityID = -1;
         public int _castorID = -1;
@@ -19,16 +18,10 @@ namespace Aquila.Fight
         public void Clear()
         {
             _succ = false;
-            _stateDescription = 0;
             _abilityID = -1;
             _castorID = -1;
             _targetIDArr = null;
             _targetPosition = Vector3.zero;
-        }
-
-        public bool StateFlagIsClean()
-        {
-            return _stateDescription == 0;
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Aquila.Combat;
 using Aquila.Extension;
+using Aquila.Fight;
 using Aquila.Fight.Addon;
 using Cfg.Enum;
 using GameFramework;
@@ -26,7 +27,7 @@ namespace Aquila.Module
             if (cmd._abilityID <= 0)
                 argFlags |= CastRejectFlags.InvalidAbilityId;
 
-            if (cmd._targetInstanceId <= 0)
+            if (cmd._targetInstanceIdArr is null || cmd._targetInstanceIdArr.Length <= 0)
                 argFlags |= CastRejectFlags.TargetNotFound;
 
             if (argFlags != CastRejectFlags.None)
@@ -37,12 +38,22 @@ namespace Aquila.Module
                 return RejectAndRelease(cmd, CastRejectCode.Unknown, CastRejectFlags.None);
 
             var castor = actorMgr.Get(cmd._castorInstanceId);
-            var target = actorMgr.Get(cmd._targetInstanceId);
             var actorFlags = CastRejectFlags.None;
+            
             if (castor == null)
                 actorFlags |= CastRejectFlags.CastorNotFound;
-            if (target == null)
-                actorFlags |= CastRejectFlags.TargetNotFound;
+
+            Module_ProxyActor.ActorInstance target = null;
+            foreach (var targetID in cmd._targetInstanceIdArr)
+            {
+                target = actorMgr.Get(targetID);
+
+                if (target == null)
+                {
+                    actorFlags |= CastRejectFlags.TargetNotFound;
+                    break;
+                }
+            }
 
             if (actorFlags != CastRejectFlags.None)
                 return RejectAndRelease(cmd, ResolvePrimaryCode(actorFlags), actorFlags);
@@ -55,6 +66,13 @@ namespace Aquila.Module
             if (canUse != CastRejectCode.None)
                 return RejectAndRelease(cmd, canUse, MapCodeToFlag(canUse));
 
+            var useAbilityResult = ReferencePool.Acquire<AbilityResult_Use>();
+            useAbilityResult._succ = true;
+            useAbilityResult._abilityID = cmd._abilityID;
+            useAbilityResult._castorID = cmd._castorInstanceId;
+            useAbilityResult._targetIDArr = cmd._targetInstanceIdArr;
+            castor.GetAddon<Addon_Behaviour>().Exec(ActorBehaviourTypeEnum.ABILITY,useAbilityResult);
+            
             EnqueueCast(cmd);
             return CastAcceptResult.Accept(cmd);
         }
@@ -214,7 +232,7 @@ namespace Aquila.Module
                         break;
                     }
 
-                    queue.Dequeue();
+                    queue.Dequeue(); 
                     if (cmd != null)
                         ReferencePool.Release(cmd);
                 }

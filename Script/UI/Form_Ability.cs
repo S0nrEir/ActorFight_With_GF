@@ -74,12 +74,12 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            // var castorID = _actorID;
-            //一些特殊技能的测试
-            // var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
-            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
-            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.Create(_actorID,_enemyActorIdArr[0],abilityID));
-            
+            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
+            if (!requestResult.Accepted)
+            {
+                var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
+                Tools.Logger.Info(errorMsg);
+            }
         }
         
         /// <summary>

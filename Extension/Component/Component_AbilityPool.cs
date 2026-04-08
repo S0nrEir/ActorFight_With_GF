@@ -42,13 +42,16 @@ namespace Aquila.AbilityPool
             return _abilityPool.TryGetValue(abilityId, out data);
         }
 
-        public AbilityData GetAbility(int abilityId)
+        public bool GetAbility(int abilityId,out AbilityData abilityData)
         {
-            if (_abilityPool.TryGetValue(abilityId, out var data))
-                return data;
+            abilityData = default;
+            if (_abilityPool.TryGetValue(abilityId, out abilityData))
+            {
+                return true;
+            }
 
             Tools.Logger.Warning($"[AbilityPool] Ability not found: {abilityId}");
-            return default;
+            return false;
         }
 
         public bool HasAbility(int abilityId)

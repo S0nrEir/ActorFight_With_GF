@@ -11,13 +11,7 @@ namespace Aquila.Fight
     {
         public override void Exec( object param )
         {
-            // var addon = _instance.GetAddon<Addon_FSM>();
             var addon = _instance.GetAddon<Addon_FSM_Hero>();
-            if ( addon is null )
-            {
-                Tools.Logger.Warning( "fsm addon is null" );
-                return;
-            }
 
             if ( addon.CurrState != ActorStateTypeEnum.IDLE_STATE && addon.CurrState != ActorStateTypeEnum.MOVE_STATE )
             {
