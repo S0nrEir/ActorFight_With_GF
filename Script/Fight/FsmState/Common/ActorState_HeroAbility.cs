@@ -1,165 +1,101 @@
-using Aquila.Event;
 using Aquila.Fight.Addon;
-using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Fight;
 using GameFramework;
-using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Aquila.Fight.FSM
 {
     /// <summary>
-    /// 使用技能状态
+    /// 使用技能状态：进入后播放技能 Timeline，时长到达后停止并退出到待机状态。
     /// </summary>
     public class ActorState_HeroAbility : ActorState_Base
     {
+        public override void OnEnter(object param)
+        {
+            base.OnEnter(param);
+
+            if (!(param is AbilityResult_Use abilityParam))
+                throw new GameFrameworkException("ActorState_HeroAbility.OnEnter param must be AbilityResult_Use.");
+
+            if (!GameEntry.AbilityPool.GetAbility(abilityParam._abilityID, out var abilityData))
+                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter ability not found, id={abilityParam._abilityID}.");
+
+            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.GetOrDefault(abilityData.GetTimelineID());
+            if (_timelineMeta == null)
+                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter timeline meta not found, timelineID={abilityData.GetTimelineID()}.");
+
+            if (string.IsNullOrEmpty(_timelineMeta.AssetPath))
+                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter timeline asset path is empty, timelineID={_timelineMeta.id}.");
+
+            _director = Tools.GetComponent<PlayableDirector>(_actor.transform);
+
+            _elapsed = 0f;
+            _isTimelinePlaying = true;
+            GameEntry.Timeline.Play(_timelineMeta.AssetPath, _director);
+        }
+
+        public override void OnUpdate(float deltaTime)
+        {
+            base.OnUpdate(deltaTime);
+
+            if (!_isTimelinePlaying || _timelineMeta == null)
+                return;
+
+            if (deltaTime > 0f)
+                _elapsed += deltaTime;
+
+            if (_elapsed < _timelineMeta.Duration)
+                return;
+
+            StopTimeline();
+            _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE, null, null);
+        }
+
+        public override void OnLeave(object param)
+        {
+            base.OnLeave(param);
+
+            StopTimeline();
+            _timelineMeta = null;
+            _director = null;
+            _elapsed = 0f;
+            _isTimelinePlaying = false;
+        }
+
+        public ActorState_HeroAbility(int state_id) : base(state_id)
+        {
+        }
+
+        private void StopTimeline()
+        {
+            if (!_isTimelinePlaying)
+                return;
+
+            if (_director != null)
+                _director.Stop();
+
+            _isTimelinePlaying = false;
+        }
+
         /// <summary>
-        /// 尝试在触发时间点释放技能效果
+        /// 技能 Timeline 配置。
         /// </summary>
-        // private void TryUseAbility( float deltaTime )
-        // {
-        //     _time += deltaTime;
-        //     if ( _abilityFinishFlag )
-        //         return;
-        //
-        //     if ( _time > _timelineMeta.Duration )
-        //         return;
-        //
-        //     var effects = _abilityData.GetEffects();
-        //     if ( effects is null || effects.Count == 0 )
-        //         return;
-        //     
-        //     while ( _currTriggerIndex < effects.Count )
-        //     {
-        //         var nextEffect = effects[_currTriggerIndex];
-        //         if ( _time < nextEffect.GetStartTime() )
-        //             break;
-        //
-        //         if ( Tools.GetBitValue( _result._stateDescription, ( int ) AbilityUseResultTypeEnum.IS_TARGET_AS_POSITION ) )
-        //         {
-        //             GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _currTriggerIndex, _castorID, -1, _abilityData.GetId(), _result._targetPosition );
-        //         }
-        //         else
-        //         {
-        //             foreach ( var targetID in _result._targetIDArr )
-        //                 GameEntry.Module.GetModule<Module_ProxyActor>().AffectAbility( _currTriggerIndex, _castorID, targetID, _abilityData.GetId(), _result._targetPosition );
-        //         }
-        //
-        //         if ( !_onUseEventFired )
-        //         {
-        //             GameEntry.Event.FireNow( _fsm.ActorInstance(), EventArg_OnUseAblity.Create( _result ) );
-        //             _onUseEventFired = true;
-        //         }
-        //
-        //         _currTriggerIndex++;
-        //     }
-        // }
-
-        /// <summary>
-        /// 技能完成检查
-        /// </summary>
-        // private void FinishAbility()
-        // {
-        //     if ( _abilityFinishFlag )
-        //         return;
-        //
-        //     if ( _time < _timelineMeta.Duration )
-        //         return;
-        //
-        //     _abilityFinishFlag = true;
-        //     _fsm.SwitchTo( ( int ) ActorStateTypeEnum.IDLE_STATE, null, null );
-        // }
-        
-        public override void OnEnter( object param )
-        {
-            base.OnEnter( param );
-            var abilityParam = param as AbilityResult_Use;
-            if (abilityParam is null)
-            {
-                Tools.Logger.Error("ActorState_HeroAbility::OnEnter AbilityParam is null");
-                return;
-            }
-
-            if (!GameEntry.AbilityPool.GetAbility(abilityParam._abilityID, out var ability))
-            {
-                Tools.Logger.Error("ActorState_HeroAbility::OnEnter AbilityParam is null");
-                return;
-            }
-
-            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.Get(ability.GetTimelineID());
-            if (_timelineMeta is null)
-            {
-                Tools.Logger.Error("ActorState_HeroAbility::OnEnter AbilityParam is null");
-                return;
-            }
-            
-            
-        }
-
-        public override void OnUpdate( float deltaTime )
-        {
-            base.OnUpdate( deltaTime );
-            
-        }
-        public override void OnLeave( object param )
-        {
-            base.OnLeave( param );
-            // //#todo 施法结束回调
-            _timelineMeta     = null;
-            // _abilityData      = default;
-            // _castorID         = -1;
-            // _currTriggerIndex = -1;
-            // _onUseEventFired = false;
-            //
-            // if ( _result != null )
-            //     ReferencePool.Release( _result );
-            //
-            // _result = null;
-        }
-        public ActorState_HeroAbility( int state_id ) : base( state_id )
-        {
-
-        }
-
-        // /// <summary>
-        // /// 施法者 ActorID
-        // /// </summary>
-        // private int _castorID = -1;
-        //
-        // /// <summary>
-        // /// 施法结果
-        // /// </summary>
-        // private AbilityResult_Use _result;
-        //
-        // /// <summary>
-        // /// 技能数据
-        // /// </summary>
-        // private AbilityData _abilityData;
-        //
-        // /// <summary>
-        // /// 技能 Timeline 配置
-        // /// </summary>
         private Table_AbilityTimeline _timelineMeta;
-        //
-        // /// <summary>
-        // /// 技能完成标记
-        // /// </summary>
-        // private bool _abilityFinishFlag;
-        //
-        // /// <summary>
-        // /// 进入该状态后的累计时间
-        // /// </summary>
-        // private float _time;
-        //
-        // /// <summary>
-        // /// 当前触发到的效果索引
-        // /// </summary>
-        // private int _currTriggerIndex = -1;
-        //
-        // /// <summary>
-        // /// 单次施法的 OnUse 事件触发标记
-        // /// </summary>
-        // private bool _onUseEventFired;
+
+        /// <summary>
+        /// 当前状态累计时间。
+        /// </summary>
+        private float _elapsed;
+
+        /// <summary>
+        /// 当前状态持有的 Timeline 播放组件。
+        /// </summary>
+        private PlayableDirector _director;
+
+        /// <summary>
+        /// 当前状态是否在播放 Timeline。
+        /// </summary>
+        private bool _isTimelinePlaying;
     }
 }
