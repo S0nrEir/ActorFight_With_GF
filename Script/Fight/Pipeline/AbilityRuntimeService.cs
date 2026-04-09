@@ -43,18 +43,10 @@ namespace Aquila.Combat
             }
 
             var castor = actorMgr.Get(cmd._castorInstanceId);
-            var target = actorMgr.Get(cmd._targetInstanceId);
             if (castor == null)
             {
                 rejectCode = CastRejectCode.CastorNotFound;
                 rejectFlags = CastRejectFlags.CastorNotFound;
-                return false;
-            }
-
-            if (target == null)
-            {
-                rejectCode = CastRejectCode.TargetNotFound;
-                rejectFlags = CastRejectFlags.TargetNotFound;
                 return false;
             }
 
@@ -81,14 +73,21 @@ namespace Aquila.Combat
                 return false;
             }
 
-            if (!IsTargetTypeValid(castor, target, abilityData.GetTargetType()))
+            if (cmd._targetInstanceIdArr.Length == 0)
+            {
+                rejectCode = CastRejectCode.TargetNotFound;
+                rejectFlags = CastRejectFlags.TargetNotFound;
+                return false;
+            }
+
+            if (!IsTargetTypeValid(castor, cmd._targetInstanceIdArr, abilityData.GetTargetType()))
             {
                 rejectCode = CastRejectCode.UnsupportedTargetType;
                 rejectFlags = CastRejectFlags.UnsupportedTargetType;
                 return false;
             }
 
-            var castInstance = CastRuntimeInstance.Create(cmd, abilityData, castor, target, abilityAddon);
+            var castInstance = CastRuntimeInstance.Create(cmd, abilityData, castor);
             castInstance.StateMachine.EnterPreCast();
             _activeRuntimeByCaster.Add(cmd._castorInstanceId, castInstance);
             return true;
@@ -214,28 +213,61 @@ namespace Aquila.Combat
 
         private static bool IsTargetTypeValid(
             Module_ProxyActor.ActorInstance castor,
-            Module_ProxyActor.ActorInstance target,
+            List<Module_ProxyActor.ActorInstance> targets,
             AbilityTargetType targetType)
         {
-            if (castor == null || target == null)
+            if (castor == null || targets == null || targets.Count == 0)
                 return false;
 
             if (targetType == AbilityTargetType.Self)
-                return castor.Actor.ActorID == target.Actor.ActorID;
+            {
+                if (targets.Count != 1)
+                    return false;
+                return castor.Actor.ActorID == targets[0].Actor.ActorID;
+            }
 
-            // 当前项目暂未暴露完整阵营关系，先保证“自身目标”严格校验；其他类型按存在性放行。
+            return true;
+        }
+        
+        private static bool IsTargetTypeValid(
+            Module_ProxyActor.ActorInstance castor,
+            int[] targets,
+            AbilityTargetType targetType)
+        {
+            if (castor == null || targets == null || targets.Length == 0)
+                return false;
+
+            if (targetType == AbilityTargetType.Self)
+            {
+                if (targets.Length != 1)
+                    return false;
+
+                return castor.Actor.ActorID == targets[0];
+            }
+
             return true;
         }
 
         private static bool TryRefreshTarget(CastRuntimeInstance instance)
         {
-            var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
-            // if (actorMgr == null)
-            //     return false;
+            // var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
+            var ids = instance.CastCmd._targetInstanceIdArr;
+            
+            if (ids == null || ids.Length == 0)
+                return false;
 
-            var refreshedTarget = actorMgr.Get(instance.CastCmd._targetInstanceId);
-            instance.RefreshTarget(refreshedTarget);
-            return refreshedTarget != null;
+            // var refreshed = new List<Module_ProxyActor.ActorInstance>(ids.Length);
+            // for (var i = 0; i < ids.Length; i++)
+            // {
+            //     var t = actorMgr.Get(ids[i]);
+            //     if (t == null)
+            //         return false;
+            //     
+            //     refreshed.Add(t);
+            // }
+
+            instance.RefreshTargets(ids);
+            return true;
         }
 
         /// <summary>

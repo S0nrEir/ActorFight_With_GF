@@ -141,11 +141,8 @@ namespace Aquila.AbilityEditor
             if ( !(arg is EventArg_OnUseAblity) )
                 return;
 
-            var result = (arg as EventArg_OnUseAblity)._resultParam;
-            if ( !result._succ )
-            {
-                Tools.Logger.Info( $"<color=white>技能使用失败: {Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
-            }
+            //#todo
+            var result = (arg as EventArg_OnUseAblity);
         }
 
         /// <summary>

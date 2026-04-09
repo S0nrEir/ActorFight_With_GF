@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Fight;
@@ -17,10 +18,34 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            Module_ProxyActor.ActorInstance target)
+            List<int> targets)
         {
             var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
-            runtime.Initialize(castCmd, abilityData, castor, target);
+            runtime.Initialize(castCmd, abilityData, castor, targets.ToArray());
+            return runtime;
+        }
+        
+        /// <summary>
+        /// 从对象池获取施法运行时实例并完成初始化。
+        /// </summary>
+        public static CastRuntimeInstance Create(
+            CastCmd castCmd,
+            AbilityData abilityData,
+            Module_ProxyActor.ActorInstance castor,
+            int[] targets)
+        {
+            var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
+            runtime.Initialize(castCmd, abilityData, castor, targets);
+            return runtime;
+        }
+        
+        public static CastRuntimeInstance Create(
+            CastCmd castCmd,
+            AbilityData abilityData,
+            Module_ProxyActor.ActorInstance castor)
+        {
+            var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
+            runtime.Initialize(castCmd, abilityData, castor, castCmd._targetInstanceIdArr);
             return runtime;
         }
 
@@ -49,7 +74,7 @@ namespace Aquila.Combat
 
             AbilityData = default;
             Castor = null;
-            Target = null;
+            Targets = null;
 
             Elapsed = 0f;
             PreCastEndTime = 0f;
@@ -62,9 +87,9 @@ namespace Aquila.Combat
             InterruptReason = CastInterruptReason.None;
         }
 
-        public void RefreshTarget(Module_ProxyActor.ActorInstance target)
+        public void RefreshTargets(int[] targets)
         {
-            Target = target;
+            Targets = targets;
         }
 
         public void Tick(float elapsed)
@@ -94,9 +119,17 @@ namespace Aquila.Combat
 
         public void ExecuteTrigger(int triggerIndex)
         {
-            var targetActorId = Target?.Actor?.ActorID ?? -1;
-            var succ = Castor.GetAddon<Addon_Ability>().UseAbility(CastCmd._abilityID, triggerIndex, Target);
-            GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
+            // if (Targets == null || Targets.Length == 0)
+            //     return;
+
+            var abilityAddon = Castor.GetAddon<Addon_Ability>();
+            for (var i = 0; i < Targets.Length; i++)
+            {
+                var targetActorId = Targets[i];
+                // var targetActorId = target?.Actor?.ActorID ?? -1;
+                var succ = abilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, GameEntry.Module.GetModule<Module_ActorMgr>().Get(targetActorId));
+                GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
+            }
         }
 
         public void MarkInterrupted(CastInterruptReason reason)
@@ -117,12 +150,12 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            Module_ProxyActor.ActorInstance target)
+            int[] targets)
         {
             CastCmd = castCmd;
             AbilityData = abilityData;
             Castor = castor;
-            Target = target;
+            Targets = targets;
             Elapsed = 0f;
             IsCompleted = false;
             IsInterrupted = false;
@@ -164,7 +197,7 @@ namespace Aquila.Combat
         public CastCmd CastCmd { get; private set; }
         public AbilityData AbilityData { get; private set; }
         public Module_ProxyActor.ActorInstance Castor { get; private set; }
-        public Module_ProxyActor.ActorInstance Target { get; private set; }
+        public int[] Targets { get; private set; }
         public TriggerScheduler TriggerScheduler { get; private set; }
         public CastStateMachine StateMachine { get; private set; }
         public float Elapsed { get; private set; }
