@@ -76,9 +76,9 @@ namespace  Aquila.Fight
         /// <summary>
         /// 应用effect
         /// </summary>
-        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result)
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            base.Apply(castor, target, result);
+            base.Apply(castor, target);
         }
 
         public override void Clear()
@@ -97,7 +97,7 @@ namespace  Aquila.Fight
                 return;
 
             var canApplyParam = ReferencePool.Acquire<HittedTriggerEffectParam>();
-            canApplyParam._effectedValue += hitParam._result._dealedDamage;
+            canApplyParam._effectedValue += hitParam._dealedDamage;
             canApplyParam._castor         = hitParam._castor;
             canApplyParam._target         = hitParam._target;
             if(CanApplyEffect(canApplyParam))
@@ -132,12 +132,12 @@ namespace  Aquila.Fight
         public void Clear()
         {
             _castor = null;
-            _castor = null;
-            _result = null;
+            _target = null;
+            _dealedDamage = 0;
         }
         
         public Module_ProxyActor.ActorInstance _castor;
         public Module_ProxyActor.ActorInstance _target;
-        public AbilityResult_Hit _result;
+        public int _dealedDamage;
     }
 }

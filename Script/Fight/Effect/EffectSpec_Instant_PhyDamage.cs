@@ -10,7 +10,7 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Instant_PhyDamage : EffectSpec_Base
     {
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             var attr_addon = target.GetAddon<Addon_BaseAttrNumric>();
             if (attr_addon is null)
@@ -22,7 +22,6 @@ namespace Aquila.Fight
             var cur_hp = attr_addon.GetCurrHPCorrection();
             var final = cur_hp + _effectData.GetFloatParam1();
             attr_addon.SetCurrHP(final);
-            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, (int)_effectData.GetFloatParam1() );
         }
 
         public EffectSpec_Instant_PhyDamage()

@@ -95,14 +95,8 @@ namespace Aquila.Combat
         public void ExecuteTrigger(int triggerIndex)
         {
             var targetActorId = Target?.Actor?.ActorID ?? -1;
-            var hitResult = AbilityResult_Hit.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID);
-            hitResult._targetActorID = targetActorId;
-            hitResult._targetPosition = Target?.Actor?.CachedTransform != null
-                ? Target.Actor.CachedTransform.position
-                : Vector3.zero;
-
-            Castor.GetAddon<Addon_Ability>().UseAbility(CastCmd._abilityID, triggerIndex, Target, hitResult);
-            GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(hitResult));
+            var succ = Castor.GetAddon<Addon_Ability>().UseAbility(CastCmd._abilityID, triggerIndex, Target);
+            GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
         }
 
         public void MarkInterrupted(CastInterruptReason reason)

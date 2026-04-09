@@ -16,9 +16,9 @@ namespace Aquila.Fight
             base.OnEffectAwake( castor, target );
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            base.Apply( castor, target, result );
+            base.Apply( castor, target );
             EffectSpec_Base newEffect = null;
             foreach ( var effectID in _effectData.GetDeriveEffects() )
             {

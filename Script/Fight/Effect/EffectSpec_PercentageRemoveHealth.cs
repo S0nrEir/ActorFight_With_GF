@@ -11,9 +11,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Instant_PercentageRemoveHealth : EffectSpec_Base, ICustomizableEffect
     {
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            base.Apply( castor, target, result );
+            base.Apply( castor, target );
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
             if ( addon is null )
             {
@@ -29,7 +29,6 @@ namespace Aquila.Fight
             var removeVal = _modifier.Calc( _maxHP );
             var curr = addon.GetCurrHPCorrection();
             addon.SetCurrHP( curr - removeVal );
-            result._dealedDamage += ( int ) removeVal;
         }
 
         public void SetModifier( EffectSpec_Base parent)

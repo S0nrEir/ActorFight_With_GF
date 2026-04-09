@@ -25,7 +25,7 @@ namespace Aquila.Fight
         //     _modifier.Setup( ModifierType, FloatParam1 );
         // }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             //get damage
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
@@ -38,7 +38,6 @@ namespace Aquila.Fight
             var currHP = addon.GetCurrHPCorrection();
             currHP = _modifier.Calc( currHP );
             addon.SetCurrHP( currHP );
-            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, ( int ) Mathf.Abs( _modifier.ValueFac() ) );
         }
     }
 }

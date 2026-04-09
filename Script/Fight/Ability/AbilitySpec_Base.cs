@@ -26,7 +26,7 @@ namespace Aquila.Fight
 
             // 扣除 Cost
             if ( _costEffect != null )
-                _costEffect.Apply( _owner, _owner, null );
+                _costEffect.Apply( _owner, _owner );
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能
         /// </summary>
-        public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target )
         {
-            // if ( !OnPreAbility( result ) )
+            // if ( !OnPreAbility() )
             //     return false;
 
             // 使用 AbilityData 时，根据 triggerIndex 仅执行对应 Effect
@@ -153,7 +153,7 @@ namespace Aquila.Fight
             {
             }
             
-            if ( !OnAfterAbility( result ) )
+            if ( !OnAfterAbility() )
                 return false;
 
             // result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.HIT, true );
@@ -163,7 +163,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能前置逻辑
         /// </summary>
-        public virtual bool OnPreAbility( AbilityResult_Hit result )
+        public virtual bool OnPreAbility()
         {
             return true;
         }
@@ -171,7 +171,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 使用技能后置逻辑
         /// </summary>
-        public virtual bool OnAfterAbility( AbilityResult_Hit result )
+        public virtual bool OnAfterAbility()
         {
             return true;
         }
