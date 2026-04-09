@@ -116,83 +116,47 @@ namespace Aquila.Fight
                 Tools.Logger.Warning($"<color=yellow>AbilitySpecBase.Setup: CoolDown effect {cdEffectId} not found in pool</color>");
             }
         }
-        
-        /// <summary>
-        /// 使用 Table_AbilityBase 设置技能信息（LuBan 配置，保留兼容）
-        /// </summary>
-        // public virtual void Setup( Table_AbilityBase meta )
-        // {
-        //     Meta = meta;
-        //     if ( Meta is null)
-        //         return;
-        //
-        //     if (meta.Triggers is null || meta.Triggers.Length == 0)
-        //         Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow>ability id {meta.id},trigger is null || trigger.lenth equlas 0</color>");
-        //
-        //     _costEffect = ReferencePool.Acquire<EffectSpec_Instant_Cost>();
-        //     _costEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CostEffectID ) );
-        //     _cdEffect = ReferencePool.Acquire<EffectSpec_Period_CoolDown>();
-        //     _cdEffect.Init( GameEntry.LuBan.Table<Effect>().Get( Meta.CoolDownEffectID ) );
-        // }
 
         /// <summary>
         /// 使用技能
         /// </summary>
         public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
         {
-            if ( !OnPreAbility( result ) )
-                return false;
+            // if ( !OnPreAbility( result ) )
+            //     return false;
 
             // 使用 AbilityData 时，根据 triggerIndex 仅执行对应 Effect
-            if ( _data.GetId() > 0 )
+            if (_data.GetId() < 0)
+                return false;
+            
+            var effects = _data.GetEffects();
+                
+            var effectData = effects[triggerIndex];
+            var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectData, _owner, target );
+            if ( tempEffect == null )
             {
-                var effects = _data.GetEffects();
-                if ( effects is null || effects.Count == 0 )
-                {
-                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->ability {_data.GetId()} has no effects" );
-                    return false;
-                }
-
-                if ( triggerIndex < 0 || triggerIndex >= effects.Count )
-                {
-                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->invalid triggerIndex:{triggerIndex}, abilityID:{_data.GetId()}, effectCount:{effects.Count}" );
-                    return false;
-                }
-
-                var effectData = effects[triggerIndex];
-                var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectData, _owner, target );
-                if ( tempEffect == null )
-                {
-                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
-                    return false;
-                }
-
-                if ( tempEffect.Policy != DurationPolicy.Instant )
-                {
-                    if ( target == null )
-                    {
-                        Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
-                        return false;
-                    }
-
-                    GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
-                }
-                else
-                {
-                    tempEffect.Apply( _owner, target, result );
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( _owner, target, tempEffect );
-                }
+                Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
+                return false;
             }
-            // 否则使用 LuBan 配置（保留兼容）
+
+            if ( tempEffect.Policy != DurationPolicy.Instant )
+            {
+                if ( target == null )
+                {
+                    Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
+                    return false;
+                }
+
+                GameEntry.Impact.Attach( tempEffect, _owner.Actor.ActorID, target.Actor.ActorID );
+            }
             else
             {
-                Tools.Logger.Warning($"<color=yellow>AbilitySpec_Base.UseAbility --> Invalid Ability ID , {_data.GetId()} </color>");
             }
-
+            
             if ( !OnAfterAbility( result ) )
                 return false;
 
-            result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.HIT, true );
+            // result._stateDescription = Tools.SetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.HIT, true );
 
             return true;
         }

@@ -17,11 +17,10 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            Module_ProxyActor.ActorInstance target,
-            Addon_Ability abilityAddon)
+            Module_ProxyActor.ActorInstance target)
         {
             var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
-            runtime.Initialize(castCmd, abilityData, castor, target, abilityAddon);
+            runtime.Initialize(castCmd, abilityData, castor, target);
             return runtime;
         }
 
@@ -51,7 +50,6 @@ namespace Aquila.Combat
             AbilityData = default;
             Castor = null;
             Target = null;
-            AbilityAddon = null;
 
             Elapsed = 0f;
             PreCastEndTime = 0f;
@@ -63,24 +61,6 @@ namespace Aquila.Combat
             IsInterrupted = false;
             InterruptReason = CastInterruptReason.None;
         }
-
-        public CastCmd CastCmd { get; private set; }
-        public AbilityData AbilityData { get; private set; }
-        public Module_ProxyActor.ActorInstance Castor { get; private set; }
-        public Module_ProxyActor.ActorInstance Target { get; private set; }
-        public Addon_Ability AbilityAddon { get; private set; }
-        public TriggerScheduler TriggerScheduler { get; private set; }
-        public CastStateMachine StateMachine { get; private set; }
-
-        public float Elapsed { get; private set; }
-        public float PreCastEndTime { get; private set; }
-        public float ChannelEndTime { get; private set; }
-        public float BackSwingEndTime { get; private set; }
-
-        public bool ResourceDeducted { get; private set; }
-        public bool IsCompleted { get; private set; }
-        public bool IsInterrupted { get; private set; }
-        public CastInterruptReason InterruptReason { get; private set; }
 
         public void RefreshTarget(Module_ProxyActor.ActorInstance target)
         {
@@ -121,7 +101,7 @@ namespace Aquila.Combat
                 ? Target.Actor.CachedTransform.position
                 : Vector3.zero;
 
-            AbilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, Target, hitResult);
+            Castor.GetAddon<Addon_Ability>().UseAbility(CastCmd._abilityID, triggerIndex, Target, hitResult);
             GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(hitResult));
         }
 
@@ -143,14 +123,12 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            Module_ProxyActor.ActorInstance target,
-            Addon_Ability abilityAddon)
+            Module_ProxyActor.ActorInstance target)
         {
             CastCmd = castCmd;
             AbilityData = abilityData;
             Castor = castor;
             Target = target;
-            AbilityAddon = abilityAddon;
             Elapsed = 0f;
             IsCompleted = false;
             IsInterrupted = false;
@@ -188,5 +166,20 @@ namespace Aquila.Combat
             TriggerScheduler = TriggerScheduler.Create(abilityData);
             StateMachine = CastStateMachine.Create(this);
         }
+
+        public CastCmd CastCmd { get; private set; }
+        public AbilityData AbilityData { get; private set; }
+        public Module_ProxyActor.ActorInstance Castor { get; private set; }
+        public Module_ProxyActor.ActorInstance Target { get; private set; }
+        public TriggerScheduler TriggerScheduler { get; private set; }
+        public CastStateMachine StateMachine { get; private set; }
+        public float Elapsed { get; private set; }
+        public float PreCastEndTime { get; private set; }
+        public float ChannelEndTime { get; private set; }
+        public float BackSwingEndTime { get; private set; }
+        public bool ResourceDeducted { get; private set; }
+        public bool IsCompleted { get; private set; }
+        public bool IsInterrupted { get; private set; }
+        public CastInterruptReason InterruptReason { get; private set; }
     }
 }
