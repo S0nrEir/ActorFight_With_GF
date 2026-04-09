@@ -336,19 +336,6 @@ namespace Aquila.Fight
             spec._owner = instance;
             return spec;
         }
-        
-        /// <summary>
-        /// 根据表格配置生成一个 Spec 实例
-        /// </summary>
-        /// <param name="meta">技能元数据</param>
-        /// <param name="instance">携带的各个组件</param>
-        // public static AbilitySpecBase Gen( Table_AbilityBase meta, Module_ProxyActor.ActorInstance instance )
-        // {
-        //     var spec = ReferencePool.Acquire<AbilitySpecBase>();
-        //     spec.Setup( meta );
-        //     spec._owner = instance;
-        //     return spec;
-        // }
     }
 }
 

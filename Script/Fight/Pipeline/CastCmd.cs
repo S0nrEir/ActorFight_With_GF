@@ -13,7 +13,7 @@ namespace Aquila.Combat
             _abilityID = -1;
         }
 
-        public static CastCmd CreateWithOneTarget(int castorInstanceId, int targetInstanceId, int abilityId)
+        public static CastCmd CreateWithSingleTarget(int castorInstanceId, int targetInstanceId, int abilityId)
         {
             var cmd = ReferencePool.Acquire<CastCmd>();
             cmd._castorInstanceId = castorInstanceId;
