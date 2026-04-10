@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Aquila.Combat.Resolve;
 using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Addon;
@@ -123,11 +124,17 @@ namespace Aquila.Combat
             //     return;
 
             var abilityAddon = Castor.GetAddon<Addon_Ability>();
+            var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             for (var i = 0; i < Targets.Length; i++)
             {
                 var targetActorId = Targets[i];
-                // var targetActorId = target?.Actor?.ActorID ?? -1;
-                var succ = abilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, GameEntry.Module.GetModule<Module_ActorMgr>().Get(targetActorId));
+                var target = actorMgr.Get(targetActorId);
+                bool succ;
+                using (ResolveSourceScope.EnterPipeline(CastCmd._abilityID, triggerIndex, CastCmd._castorInstanceId, targetActorId))
+                {
+                    succ = abilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, target);
+                }
+
                 GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
             }
         }
