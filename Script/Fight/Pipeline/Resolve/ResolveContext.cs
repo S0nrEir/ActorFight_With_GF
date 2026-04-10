@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Combat.Resolve
@@ -9,8 +10,7 @@ namespace Aquila.Combat.Resolve
         public void Setup(ResolveRequest request)
         {
             Request = request;
-            // SourceMeta = request != null ? request.SourceMeta : default;
-            // FinalDelta = request != null ? request.InputDelta : 0f;
+            FinalDelta = request != null ? request.InputDelta : 0f;
             HasApplied = false;
             IsInterrupted = false;
             IsAborted = false;

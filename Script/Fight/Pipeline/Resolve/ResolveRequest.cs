@@ -1,5 +1,6 @@
 ﻿using Aquila.Fight;
 using Aquila.Module;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Combat.Resolve
@@ -44,7 +45,7 @@ namespace Aquila.Combat.Resolve
         public Module_ProxyActor.ActorInstance Target { get; private set; }
         public EffectSpec_Base EffectSpec { get; private set; }
         public EffectData EffectData { get; private set; }
-        // public float InputDelta { get; private set; }
+        public float InputDelta { get; private set; }
         public int ResolveTypeId { get; private set; }
         // public ResolveSourceMeta SourceMeta { get; private set; }
         // public ResolveSourceType SourceType => SourceMeta.SourceType;
@@ -55,7 +56,7 @@ namespace Aquila.Combat.Resolve
             Target = null;
             EffectSpec = null;
             EffectData = default;
-            // InputDelta = 0f;
+            InputDelta = 0f;
             ResolveTypeId = 0;
             // SourceMeta = default;
         }

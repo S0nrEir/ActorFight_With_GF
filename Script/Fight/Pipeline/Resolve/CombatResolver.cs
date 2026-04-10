@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Combat.Resolve

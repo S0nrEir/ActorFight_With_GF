@@ -1,5 +1,6 @@
 ﻿using Aquila.Fight;
 using Aquila.Module;
+using Cfg.Enum;
 
 namespace Aquila.Combat.Resolve
 {

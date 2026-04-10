@@ -1,3 +1,5 @@
+using Cfg.Enum;
+
 namespace Aquila.Combat.Resolve
 {
     /// <summary>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Aquila.Fight.Addon;
+using Cfg.Enum;
 
 namespace Aquila.Combat.Resolve
 {

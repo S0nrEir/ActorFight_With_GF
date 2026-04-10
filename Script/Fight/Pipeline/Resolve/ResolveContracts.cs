@@ -1,4 +1,5 @@
-﻿using GameFramework;
+﻿using Cfg.Enum;
+using GameFramework;
 
 namespace Aquila.Combat.Resolve
 {
