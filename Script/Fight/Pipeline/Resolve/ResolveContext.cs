@@ -5,17 +5,6 @@ namespace Aquila.Combat.Resolve
 {
     public sealed class ResolveContext : IReference
     {
-        private readonly Dictionary<string, float> _floatValues = new Dictionary<string, float>(8);
-        private readonly HashSet<ResolvePhaseType> _skippedPhases = new HashSet<ResolvePhaseType>();
-
-        public ResolveRequest Request { get; private set; }
-        // public ResolveSourceMeta SourceMeta { get; private set; }
-        public float FinalDelta { get; set; }
-        public bool HasApplied { get; set; }
-        public bool IsInterrupted { get; private set; }
-        public bool IsAborted { get; private set; }
-        public string Reason { get; private set; }
-        public ResolvePhaseType LastPhase { get; set; }
 
         public void Setup(ResolveRequest request)
         {
@@ -85,5 +74,17 @@ namespace Aquila.Combat.Resolve
             _floatValues.Clear();
             _skippedPhases.Clear();
         }
+        
+        private readonly Dictionary<string, float> _floatValues = new Dictionary<string, float>(8);
+        private readonly HashSet<ResolvePhaseType> _skippedPhases = new HashSet<ResolvePhaseType>();
+
+        public ResolveRequest Request { get; private set; }
+        // public ResolveSourceMeta SourceMeta { get; private set; }
+        public float FinalDelta { get; set; }
+        public bool HasApplied { get; set; }
+        public bool IsInterrupted { get; private set; }
+        public bool IsAborted { get; private set; }
+        public string Reason { get; private set; }
+        public ResolvePhaseType LastPhase { get; set; }
     }
 }

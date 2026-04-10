@@ -7,7 +7,7 @@ namespace Aquila.Combat.Resolve
     {
         public static int GetResolveTypeId(EffectData effectData)
         {
-            var typeId = effectData.GetIntParam4();
+            var typeId = effectData.GetResolveTypeID();
             return typeId > 0 ? typeId : ResolvePhaseProvider.DefaultResolveTypeId;
         }
 
@@ -15,12 +15,11 @@ namespace Aquila.Combat.Resolve
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
             EffectSpec_Base effectSpec,
-            EffectData effectData,
             ResolveSourceType sourceType = ResolveSourceType.Unknown)
         {
-            var typeId = GetResolveTypeId(effectData);
+            var typeId = GetResolveTypeId(effectSpec.Meta);
             // var sourceMeta = BuildSourceMeta(castor, target, effectSpec, sourceType);
-            var request = ResolveRequest.Create(castor, target, effectSpec, effectData, typeId);
+            var request = ResolveRequest.Create(castor, target, effectSpec, typeId);
             return Resolver.Resolve(request);
         }
 

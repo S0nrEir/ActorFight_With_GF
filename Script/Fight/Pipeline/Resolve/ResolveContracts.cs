@@ -11,12 +11,12 @@ namespace Aquila.Combat.Resolve
     //     public int TargetActorId;
     // }
 
-    public struct ResolveFormulaSlotRef
-    {
-        public int PreFormulaId;
-        public int MainFormulaId;
-        public int PostFormulaId;
-    }
+    // public struct ResolveFormulaSlotRef
+    // {
+    //     public int PreFormulaId;
+    //     public int MainFormulaId;
+    //     public int PostFormulaId;
+    // }
 
     public struct ResolvePhaseDefinition
     {
@@ -24,7 +24,7 @@ namespace Aquila.Combat.Resolve
         public ResolvePhaseType Phase;
         public int PhaseOrder;
         public ResolvePhasePolicy Policy;
-        public ResolveFormulaSlotRef FormulaSlot;
+        // public ResolveFormulaSlotRef FormulaSlot;
     }
 
     public struct ResolveResultData

@@ -10,14 +10,14 @@ namespace Aquila.Combat.Resolve
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
             EffectSpec_Base effectSpec,
-            EffectData effectData,
+            // EffectData effectData,
             int resolveTypeId)
         {
             var request = ReferencePool.Acquire<ResolveRequest>();
             request.Castor = castor;
             request.Target = target;
             request.EffectSpec = effectSpec;
-            request.EffectData = effectData;
+            request.EffectData = effectSpec.Meta;
             request.ResolveTypeId = resolveTypeId;
             // request.SourceMeta = sourceMeta;
             return request;
@@ -27,7 +27,7 @@ namespace Aquila.Combat.Resolve
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
             EffectSpec_Base effectSpec,
-            EffectData effectData,
+            // EffectData effectData,
             float inputDelta,
             int resolveTypeId,
             ResolveSourceType sourceType)
@@ -36,7 +36,7 @@ namespace Aquila.Combat.Resolve
                 castor,
                 target,
                 effectSpec,
-                effectData,
+                // effectData,
                 resolveTypeId);
         }
 

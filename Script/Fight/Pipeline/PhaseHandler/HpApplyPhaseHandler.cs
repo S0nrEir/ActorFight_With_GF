@@ -2,6 +2,9 @@ using Aquila.Fight.Addon;
 
 namespace Aquila.Combat.Resolve
 {
+    /// <summary>
+    /// 生命写入：将最终净值同步至属性组件，通过 Addon_BaseAttrNumric 执行 HP 加减 / HP apply: writes final delta to attribute addon and triggers HP change signal.
+    /// </summary>
     internal sealed class HpApplyPhaseHandler : ResolvePhaseHandlerBase
     {
         public override ResolvePhaseType PhaseType => ResolvePhaseType.HpApply;

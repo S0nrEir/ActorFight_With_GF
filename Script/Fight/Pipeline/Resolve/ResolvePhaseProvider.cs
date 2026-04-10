@@ -55,83 +55,81 @@ namespace Aquila.Combat.Resolve
             _phaseByType.Clear();
             _defaultPhases.Clear();
 
-            BuildFromTables();
+            // BuildFromTables();
             if (_defaultPhases.Count == 0)
                 BuildFallbackDefaults();
         }
 
-        private void BuildFromTables()
-        {
-            var tables = GameEntry.LuBan != null ? GameEntry.LuBan.Tables : null;
-            if (tables == null || tables.CombatPhase == null)
-                return;
+        // private void BuildFromTables()
+        // {
+        //     var tables = GameEntry.LuBan != null ? GameEntry.LuBan.Tables : null;
+        //     if (tables == null || tables.CombatPhase == null)
+        //         return;
+        //
+        //     var formulaMap = tables.FormulaSlot != null ? tables.FormulaSlot.DataMap : null;
+        //
+        //     var rows = tables.CombatPhase.DataList;
+        //     for (var i = 0; i < rows.Count; i++)
+        //     {
+        //         var row = rows[i];
+        //         if (row == null)
+        //             continue;
+        //
+        //         if (!Enum.IsDefined(typeof(ResolvePhaseType), row.phase))
+        //             continue;
+        //
+        //         var phaseType = (ResolvePhaseType)row.phase;
+        //         var typeId = row.profile_id > 0 ? row.profile_id : DefaultResolveTypeId;
+        //         var definition = new ResolvePhaseDefinition
+        //         {
+        //             ResolveTypeId = typeId,
+        //             Phase = phaseType,
+        //             PhaseOrder = row.phase_order,
+        //             Policy = (ResolvePhasePolicy)row.policy,
+        //             FormulaSlot = BuildFormulaSlot(formulaMap, row.phase),
+        //         };
+        //
+        //         if (!_phaseByType.TryGetValue(typeId, out var list))
+        //         {
+        //             list = new List<ResolvePhaseDefinition>(16);
+        //             _phaseByType.Add(typeId, list);
+        //         }
+        //
+        //         list.Add(definition);
+        //     }
+        //
+        //     foreach (var kv in _phaseByType)
+        //         kv.Value.Sort(SortByPhaseOrder);
+        //
+        //     if (_phaseByType.TryGetValue(DefaultResolveTypeId, out var defaults) && defaults.Count > 0)
+        //     {
+        //         _defaultPhases.AddRange(defaults);
+        //         return;
+        //     }
+        //
+        //     foreach (var kv in _phaseByType)
+        //     {
+        //         if (kv.Value.Count <= 0)
+        //             continue;
+        //
+        //         _defaultPhases.AddRange(kv.Value);
+        //         break;
+        //     }
+        // }
 
-            var formulaMap = tables.FormulaSlot != null ? tables.FormulaSlot.DataMap : null;
-
-            var rows = tables.CombatPhase.DataList;
-            for (var i = 0; i < rows.Count; i++)
-            {
-                var row = rows[i];
-                if (row == null)
-                    continue;
-
-                if (!Enum.IsDefined(typeof(ResolvePhaseType), row.phase))
-                    continue;
-
-                var phaseType = (ResolvePhaseType)row.phase;
-                var typeId = row.profile_id > 0 ? row.profile_id : DefaultResolveTypeId;
-                var definition = new ResolvePhaseDefinition
-                {
-                    ResolveTypeId = typeId,
-                    Phase = phaseType,
-                    PhaseOrder = row.phase_order,
-                    Policy = (ResolvePhasePolicy)row.policy,
-                    FormulaSlot = BuildFormulaSlot(formulaMap, row.phase),
-                };
-
-                if (!_phaseByType.TryGetValue(typeId, out var list))
-                {
-                    list = new List<ResolvePhaseDefinition>(16);
-                    _phaseByType.Add(typeId, list);
-                }
-
-                list.Add(definition);
-            }
-
-            foreach (var kv in _phaseByType)
-                kv.Value.Sort(SortByPhaseOrder);
-
-            if (_phaseByType.TryGetValue(DefaultResolveTypeId, out var defaults) && defaults.Count > 0)
-            {
-                _defaultPhases.AddRange(defaults);
-                return;
-            }
-
-            foreach (var kv in _phaseByType)
-            {
-                if (kv.Value.Count <= 0)
-                    continue;
-
-                _defaultPhases.AddRange(kv.Value);
-                break;
-            }
-        }
-
-        private static ResolveFormulaSlotRef BuildFormulaSlot(Dictionary<int, Table_FormulaSlot> formulaMap, int phase)
-        {
-            if (formulaMap == null)
-                return default;
-
-            if (!formulaMap.TryGetValue(phase, out var slot) || slot == null)
-                return default;
-
-            return new ResolveFormulaSlotRef
-            {
-                PreFormulaId = slot.pre_formula_id,
-                MainFormulaId = slot.main_formula_id,
-                PostFormulaId = slot.post_formula_id,
-            };
-        }
+        // private static ResolveFormulaSlotRef BuildFormulaSlot(Dictionary<int, Table_Formula> formulaMap, int phase)
+        // {
+        //     if (formulaMap == null)
+        //         return default;
+        //
+        //     if (!formulaMap.TryGetValue(phase, out var slot) || slot == null)
+        //         return default;
+        //
+        //     return new ResolveFormulaSlotRef
+        //     {
+        //         
+        //     };
+        // }
 
         private void BuildFallbackDefaults()
         {
@@ -144,7 +142,7 @@ namespace Aquila.Combat.Resolve
                     Phase = FallbackPhaseOrder[i],
                     PhaseOrder = sortOrder++,
                     Policy = ResolvePhasePolicy.None,
-                    FormulaSlot = default,
+                    // FormulaSlot = default,
                 });
             }
         }

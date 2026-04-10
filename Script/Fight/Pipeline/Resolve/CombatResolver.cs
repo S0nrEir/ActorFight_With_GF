@@ -132,7 +132,7 @@ namespace Aquila.Combat.Resolve
         }
 
         /// <summary>
-        /// 找到当前结算队列中指定类型的结算类型下标
+        /// 找到当前结算队列中指定类型的结算类型下标 / 
         /// </summary>
         private int FindPhaseIndex(ResolvePhaseType phase)
         {
@@ -145,6 +145,9 @@ namespace Aquila.Combat.Resolve
             return -1;
         }
 
+        /// <summary>
+        /// 构建结算结果 / build resolution result
+        /// </summary>
         private static ResolveResultData BuildResult(ResolveContext context, int requestedResolveTypeId)
         {
             return new ResolveResultData
