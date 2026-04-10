@@ -100,6 +100,7 @@ namespace Aquila.AbilityEditor.Tools
             newData.Period = sourceData.Period;
             newData.Duration = sourceData.Duration;
             newData.Target = sourceData.Target;
+            newData.ResolveTypeID = sourceData.ResolveTypeID;
             newData.AffectedAttribute = sourceData.AffectedAttribute;
 
             if (sourceData.DeriveEffects != null)

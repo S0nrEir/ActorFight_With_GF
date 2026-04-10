@@ -49,6 +49,12 @@ namespace Aquila.AbilityEditor
         private int _effectId;
 
         /// <summary>
+        /// 结算类型ID（必须大于0）
+        /// </summary>
+        [SerializeField]
+        private int _resolveTypeID = 1;
+
+        /// <summary>
         /// 效果强度/层数
         /// </summary>
         [SerializeField]
@@ -153,6 +159,7 @@ namespace Aquila.AbilityEditor
         public EffectClipData()
         {
             _effectId = 0;
+            _resolveTypeID = 1;
             _stackCount = 1;
             _canStack = false;
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
@@ -160,10 +167,11 @@ namespace Aquila.AbilityEditor
             EndTime = StartTime;
         }
 
-        public EffectClipData( string clipName, float triggerTime, int effectId)
+        public EffectClipData(string clipName, float triggerTime, int effectId)
             : base(clipName, triggerTime, triggerTime, new Color(0.8f, 0.4f, 0.8f))
         {
             _effectId = effectId;
+            _resolveTypeID = 1;
             _stackCount = 1;
             _canStack = false;
         }
@@ -172,6 +180,12 @@ namespace Aquila.AbilityEditor
         {
             get => _effectId;
             set => _effectId = value;
+        }
+
+        public int ResolveTypeID
+        {
+            get => _resolveTypeID;
+            set => _resolveTypeID = value;
         }
 
         public int StackCount
@@ -263,6 +277,7 @@ namespace Aquila.AbilityEditor
             var clone = new EffectClipData();
             CopyBaseTo(clone);
             clone._effectId = _effectId;
+            clone._resolveTypeID = _resolveTypeID;
             clone._stackCount = _stackCount;
             clone._canStack = _canStack;
 
@@ -290,6 +305,12 @@ namespace Aquila.AbilityEditor
             if (_effectId <= 0)
             {
                 errorMessage = "Effect ID must be greater than 0";
+                return false;
+            }
+
+            if (_resolveTypeID <= 0)
+            {
+                errorMessage = "ResolveTypeID must be greater than 0";
                 return false;
             }
 

@@ -33,7 +33,8 @@ namespace Aquila.Fight
             int intParam1 = 0,
             int intParam2 = 0,
             int intParam3 = 0,
-            int intParam4 = 0)
+            int intParam4 = 0,
+            int resolveTypeID = -1)
         {
             _effectId = effectId;
             _stackLimit = stackLimit;
@@ -58,6 +59,7 @@ namespace Aquila.Fight
             _intParam2 = intParam2;
             _intParam3 = intParam3;
             _intParam4 = intParam4;
+            _resolveTypeID = resolveTypeID;
         }
 
         // Getter 方法
@@ -84,6 +86,7 @@ namespace Aquila.Fight
         public int GetIntParam2() => _intParam2;
         public int GetIntParam3() => _intParam3;
         public int GetIntParam4() => _intParam4;
+        public int GetResolveTypeID() => _resolveTypeID;
         
         
         // 基础字段
@@ -114,6 +117,7 @@ namespace Aquila.Fight
         private readonly int _intParam2;
         private readonly int _intParam3;
         private readonly int _intParam4;
+        private readonly int _resolveTypeID;
         
         // 数组（不可变）
         private readonly IReadOnlyList<int> _deriveEffects;

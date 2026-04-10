@@ -17,7 +17,7 @@ namespace Editor.AbilityEditor.Tools
     {
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "ABLT";
-        private const byte EXPECTED_VERSION = 0x01;
+        private const byte EXPECTED_VERSION = 0x02;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -120,6 +120,7 @@ namespace Editor.AbilityEditor.Tools
                                     ModifierType = effectClip.ModifierType,
                                     AffectedAttribute = effectClip.AffectedAttribute,
                                     Target = effectClip.Target,
+                                    ResolveTypeID = effectClip.ResolveTypeID,
                                     Duration = effectClip.Duration,
                                     Period = effectClip.Period,
                                     Policy = effectClip.Policy,
@@ -308,6 +309,7 @@ namespace Editor.AbilityEditor.Tools
                         ModifierType = (NumricModifierType)reader.ReadUInt16(),
                         AffectedAttribute = (actor_attribute)reader.ReadInt32(),
                         Target = reader.ReadInt32(),
+                        ResolveTypeID = reader.ReadInt32(),
                         Duration = reader.ReadSingle(),
                         Period = reader.ReadSingle(),
                         Policy = (DurationPolicy)reader.ReadUInt16(),
@@ -466,6 +468,9 @@ namespace Editor.AbilityEditor.Tools
                 
                 if (expectedEffect.Target != actualEffect.Target)
                     differences.Add($"{prefix} (EffectClip) Target | Expected: {expectedEffect.Target} | Actual: {actualEffect.Target}");
+
+                if (expectedEffect.ResolveTypeID != actualEffect.ResolveTypeID)
+                    differences.Add($"{prefix} (EffectClip) ResolveTypeID | Expected: {expectedEffect.ResolveTypeID} | Actual: {actualEffect.ResolveTypeID}");
                 
                 if (!FloatEquals(expectedEffect.Duration, actualEffect.Duration))
                     differences.Add($"{prefix} (EffectClip) Duration | Expected: {expectedEffect.Duration} | Actual: {actualEffect.Duration}");
@@ -694,6 +699,7 @@ namespace Editor.AbilityEditor.Tools
             public NumricModifierType ModifierType;
             public actor_attribute AffectedAttribute;
             public int Target;
+            public int ResolveTypeID;
             public float Duration;
             public float Period;
             public DurationPolicy Policy;

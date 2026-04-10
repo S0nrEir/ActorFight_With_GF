@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor.Tools
     {
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "EFFECT";
-        private const byte EXPECTED_VERSION = 0x01;
+        private const byte EXPECTED_VERSION = 0x02;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -95,7 +95,8 @@ namespace Editor.AbilityEditor.Tools
                 Period = data.Period,
                 Duration = data.Duration,
                 Target = data.Target,
-                EffectType = data.AffectedAttribute
+                EffectType = data.AffectedAttribute,
+                ResolveTypeID = data.ResolveTypeID
             };
 
             if (data.ExtensionParam != null)
@@ -221,6 +222,7 @@ namespace Editor.AbilityEditor.Tools
                     Period = reader.ReadSingle(),
                     Duration = reader.ReadSingle(),
                     Target = reader.ReadInt32(),
+                    ResolveTypeID = reader.ReadInt32(),
                     EffectType = (actor_attribute)reader.ReadInt32(),
                     Float1 = reader.ReadSingle(),
                     Float2 = reader.ReadSingle(),
@@ -282,6 +284,9 @@ namespace Editor.AbilityEditor.Tools
 
             if (expected.EffectType != actual.EffectType)
                 differences.Add($"Field: EffectType | Expected: {expected.EffectType} | Actual: {actual.EffectType}");
+
+            if (expected.ResolveTypeID != actual.ResolveTypeID)
+                differences.Add($"Field: ResolveTypeID | Expected: {expected.ResolveTypeID} | Actual: {actual.ResolveTypeID}");
 
             // Extension params
             if (!FloatEquals(expected.Float1, actual.Float1))
@@ -441,6 +446,7 @@ namespace Editor.AbilityEditor.Tools
             public float Duration;
             public int Target;
             public actor_attribute EffectType;
+            public int ResolveTypeID;
             public float Float1;
             public float Float2;
             public float Float3;

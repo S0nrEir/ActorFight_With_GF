@@ -86,6 +86,7 @@ namespace Editor.AbilityEditor.Tools
                     writer.WriteSingle(data.Period);
                     writer.WriteSingle(data.Duration);
                     writer.WriteInt32(data.Target);
+                    writer.WriteInt32(data.ResolveTypeID);
                     writer.WriteInt32((int)data.AffectedAttribute); // actor_attribute
 
                     // Write Extension Parameters
@@ -157,6 +158,7 @@ namespace Editor.AbilityEditor.Tools
                     writer.WriteSingle(data.Period);
                     writer.WriteSingle(data.Duration);
                     writer.WriteInt32(data.Target);
+                    writer.WriteInt32(data.ResolveTypeID);
                     writer.WriteInt32((int)data.AffectedAttribute); // actor_attribute
 
                     // Write Extension Parameters
@@ -216,6 +218,6 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "EFFECT";
-        private const byte VERSION = 0x01;
+        private const byte VERSION = 0x02;
     }
 }

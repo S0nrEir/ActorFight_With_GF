@@ -79,6 +79,7 @@ namespace Editor.AbilityEditor.Tools
                 float period = reader.ReadSingle();
                 float duration = reader.ReadSingle();
                 int target = reader.ReadInt32();
+                int resolveTypeID = reader.ReadInt32();
                 int effectType = reader.ReadInt32();
 
                 sb.AppendLine("[Basic Info]");
@@ -90,6 +91,7 @@ namespace Editor.AbilityEditor.Tools
                 sb.AppendLine($"  Period: {period}s");
                 sb.AppendLine($"  Duration: {duration}s");
                 sb.AppendLine($"  Target: {target}");
+                sb.AppendLine($"  ResolveTypeID: {resolveTypeID}");
                 sb.AppendLine($"  EffectType (AffectedAttribute): {effectType}");
 
                 // Extension Parameters

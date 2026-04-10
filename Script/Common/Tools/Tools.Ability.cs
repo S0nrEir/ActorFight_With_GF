@@ -198,6 +198,7 @@ namespace Aquila.Toolkit
                     float period = reader.ReadSingle();
                     float duration = reader.ReadSingle();
                     int target = reader.ReadInt32();
+                    int resolveTypeID = reader.ReadInt32();
                     var affectedAttribute = (actor_attribute)reader.ReadInt32();
                     float float1 = reader.ReadSingle();
                     float float2 = reader.ReadSingle();
@@ -241,7 +242,8 @@ namespace Aquila.Toolkit
                         intParam1: int1,
                         intParam2: int2,
                         intParam3: int3,
-                        intParam4: int4);
+                        intParam4: int4,
+                        resolveTypeID: resolveTypeID);
                 }
             }
 
@@ -327,6 +329,7 @@ namespace Aquila.Toolkit
                 var inlineModifier = (NumricModifierType)reader.ReadUInt16();
                 var inlineAttr = (actor_attribute)reader.ReadInt32();
                 int inlineTarget = reader.ReadInt32();
+                int inlineResolveTypeID = reader.ReadInt32();
                 float inlineDuration = reader.ReadSingle();
                 float inlinePeriod = reader.ReadSingle();
                 var inlinePolicy = (DurationPolicy)reader.ReadUInt16();
@@ -384,7 +387,8 @@ namespace Aquila.Toolkit
                         intParam1: tmpl.GetIntParam1(),
                         intParam2: tmpl.GetIntParam2(),
                         intParam3: tmpl.GetIntParam3(),
-                        intParam4: tmpl.GetIntParam4());
+                        intParam4: tmpl.GetIntParam4(),
+                        resolveTypeID: tmpl.GetResolveTypeID());
                 }
                 else
                 {
@@ -411,7 +415,8 @@ namespace Aquila.Toolkit
                         intParam1: i1,
                         intParam2: i2,
                         intParam3: i3,
-                        intParam4: i4);
+                        intParam4: i4,
+                        resolveTypeID: inlineResolveTypeID);
                 }
 
                 effectDataList.Add(effectData);
@@ -442,7 +447,7 @@ namespace Aquila.Toolkit
             private const string EFFECT_BIN_DIR = "Res/Config/Effect";
             private const string ABLT_MAGIC = "ABLT";
             private const string EFCT_MAGIC = "EFFECT";
-            private const byte BIN_VERSION = 0x01;
+            private const byte BIN_VERSION = 0x02;
         }//end class Ability
     }//end class Tools
 }

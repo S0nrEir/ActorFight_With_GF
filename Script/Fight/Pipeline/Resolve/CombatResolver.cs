@@ -28,9 +28,8 @@ namespace Aquila.Combat.Resolve
 
             var context = ReferencePool.Acquire<ResolveContext>();
             var phaseResult = ReferencePool.Acquire<PhaseExecutionResult>();
-            try
-            {
-                _phaseBuffer.Clear();
+            
+            _phaseBuffer.Clear();
                 _phaseProvider.TryGetPhases(request.ResolveTypeId, _phaseBuffer);
                 if (_phaseBuffer.Count <= 0)
                 {
@@ -121,14 +120,11 @@ namespace Aquila.Combat.Resolve
                 }
 
                 return BuildResult(context, request.ResolveTypeId);
-            }
-            finally
-            {
-                _phaseBuffer.Clear();
-                ReferencePool.Release(phaseResult);
-                ReferencePool.Release(context);
-                ReferencePool.Release(request);
-            }
+            
+            _phaseBuffer.Clear();
+            ReferencePool.Release(phaseResult);
+            ReferencePool.Release(context);
+            ReferencePool.Release(request);
         }
 
         /// <summary>

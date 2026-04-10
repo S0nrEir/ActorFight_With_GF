@@ -336,9 +336,9 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(6));
             byte version = reader.ReadByte();
-            if (magic != EFFECT_MAGIC)
+            if (magic != EFFECT_MAGIC || version != EFFECT_VERSION)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect header (magic={magic}, version={version}) in {filePath}");
                 return false;
             }
 
@@ -351,6 +351,7 @@ namespace Aquila.AbilityPool
             float period        = reader.ReadSingle();
             float duration      = reader.ReadSingle();
             int target          = reader.ReadInt32();
+            int resolveTypeId   = reader.ReadInt32();
             var affectedAttr    = (actor_attribute)reader.ReadInt32();   // EffectType actor_attribute 字段
 
             // Extension Params
@@ -398,7 +399,8 @@ namespace Aquila.AbilityPool
                 intParam1:         i1,
                 intParam2:         i2,
                 intParam3:         i3,
-                intParam4:         i4
+                intParam4:         i4,
+                resolveTypeID:    resolveTypeId
             );
             return true;
         }
@@ -415,9 +417,9 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
             byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC)
+            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, version={version}) in {filePath}");
                 return false;
             }
 
@@ -481,6 +483,7 @@ namespace Aquila.AbilityPool
             var modifierType    = (NumricModifierType)reader.ReadUInt16();
             var affectedAttr    = (actor_attribute)reader.ReadInt32();
             int target          = reader.ReadInt32();
+            int resolveTypeId   = reader.ReadInt32();
             float clipDuration  = reader.ReadSingle();
             float period        = reader.ReadSingle();
             var policy          = (DurationPolicy)reader.ReadUInt16();
@@ -534,7 +537,8 @@ namespace Aquila.AbilityPool
                 intParam1:         i1,
                 intParam2:         i2,
                 intParam3:         i3,
-                intParam4:         i4
+                intParam4:         i4,
+                resolveTypeID:    resolveTypeId
             );
         }
 
@@ -591,6 +595,8 @@ namespace Aquila.AbilityPool
 
         private const string EFFECT_MAGIC  = "EFFECT";
         private const string ABILITY_MAGIC = "ABLT";
+        private const byte EFFECT_VERSION  = 0x02;
+        private const byte ABILITY_VERSION = 0x02;
 
         private const int CLIP_TYPE_EFFECT = 1;
         private const int CLIP_TYPE_AUDIO  = 2;

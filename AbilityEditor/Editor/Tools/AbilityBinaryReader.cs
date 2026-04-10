@@ -171,6 +171,7 @@ namespace Editor.AbilityEditor.Tools
             ushort modifierType = reader.ReadUInt16();
             int affectedAttribute = reader.ReadInt32();
             int target = reader.ReadInt32();
+            int resolveTypeID = reader.ReadInt32();
             float duration = reader.ReadSingle();
             float period = reader.ReadSingle();
             ushort policy = reader.ReadUInt16();
@@ -180,6 +181,7 @@ namespace Editor.AbilityEditor.Tools
             sb.AppendLine($"{indent}ModifierType: {modifierType}");
             sb.AppendLine($"{indent}AffectedAttribute: {affectedAttribute}");
             sb.AppendLine($"{indent}Target: {target}");
+            sb.AppendLine($"{indent}ResolveTypeID: {resolveTypeID}");
             sb.AppendLine($"{indent}Duration: {duration}");
             sb.AppendLine($"{indent}Period: {period}");
             sb.AppendLine($"{indent}Policy: {policy}");

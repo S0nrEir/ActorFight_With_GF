@@ -141,6 +141,7 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteUInt16((ushort)clip.ModifierType);
             writer.WriteInt32((int)clip.AffectedAttribute);
             writer.WriteInt32(clip.Target);
+            writer.WriteInt32(clip.ResolveTypeID);
             writer.WriteSingle(clip.Duration);
             writer.WriteSingle(clip.Period);
             writer.WriteUInt16((ushort)clip.Policy);
@@ -202,6 +203,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x01;
+        private const byte VERSION = 0x02;
     }
 }
