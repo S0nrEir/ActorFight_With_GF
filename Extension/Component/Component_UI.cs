@@ -1,4 +1,4 @@
-using Aquial.UI;
+using Aquila.UI;
 using Aquila.Toolkit;
 using Aquila.UI;
 using GameFramework;

@@ -1,4 +1,4 @@
-using Aquial.UI;
+using Aquila.UI;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;

@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 
-using Aquial.UI;
+using Aquila.UI;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
