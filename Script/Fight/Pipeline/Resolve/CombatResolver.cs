@@ -131,6 +131,9 @@ namespace Aquila.Combat.Resolve
             }
         }
 
+        /// <summary>
+        /// 找到当前结算队列中指定类型的结算类型下标
+        /// </summary>
         private int FindPhaseIndex(ResolvePhaseType phase)
         {
             for (var i = 0; i < _phaseBuffer.Count; i++)
@@ -150,8 +153,6 @@ namespace Aquila.Combat.Resolve
                 Interrupted = context.IsInterrupted,
                 Aborted = context.IsAborted,
                 ResolveTypeId = requestedResolveTypeId > 0 ? requestedResolveTypeId : ResolvePhaseProvider.DefaultResolveTypeId,
-                // SourceMeta = context.SourceMeta,
-                // FinalDelta = context.FinalDelta,
                 LastPhase = context.LastPhase,
                 Reason = context.Reason,
             };
