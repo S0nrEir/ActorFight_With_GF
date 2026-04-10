@@ -159,7 +159,7 @@ namespace Aquila.AbilityEditor
         public EffectClipData()
         {
             _effectId = 0;
-            _resolveTypeID = 1;
+            _resolveTypeID = -1;
             _stackCount = 1;
             _canStack = false;
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
@@ -171,7 +171,7 @@ namespace Aquila.AbilityEditor
             : base(clipName, triggerTime, triggerTime, new Color(0.8f, 0.4f, 0.8f))
         {
             _effectId = effectId;
-            _resolveTypeID = 1;
+            _resolveTypeID = -1;
             _stackCount = 1;
             _canStack = false;
         }

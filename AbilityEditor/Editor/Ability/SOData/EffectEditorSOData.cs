@@ -48,7 +48,7 @@ namespace Aquila.AbilityEditor.Config
         public int Target;
 
         [Tooltip("Resolve type ID (<=0 uses default resolve type)")]
-        public int ResolveTypeID = 1;
+        public int ResolveTypeID = -1;
 
         [Tooltip("影响的数值类型")]
         public actor_attribute AffectedAttribute;
