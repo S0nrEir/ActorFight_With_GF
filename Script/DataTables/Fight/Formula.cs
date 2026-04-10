@@ -11,32 +11,32 @@ using System.Collections.Generic;
 namespace Cfg.Fight
 {
    
-public partial class CombatPhase
+public partial class Formula
 {
-    private readonly Dictionary<int, Fight.Table_CombatPhase> _dataMap;
-    private readonly List<Fight.Table_CombatPhase> _dataList;
+    private readonly Dictionary<int, Fight.Table_Formula> _dataMap;
+    private readonly List<Fight.Table_Formula> _dataList;
     
-    public CombatPhase(ByteBuf _buf)
+    public Formula(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, Fight.Table_CombatPhase>();
-        _dataList = new List<Fight.Table_CombatPhase>();
+        _dataMap = new Dictionary<int, Fight.Table_Formula>();
+        _dataList = new List<Fight.Table_Formula>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            Fight.Table_CombatPhase _v;
-            _v = Fight.Table_CombatPhase.DeserializeTable_CombatPhase(_buf);
+            Fight.Table_Formula _v;
+            _v = Fight.Table_Formula.DeserializeTable_Formula(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, Fight.Table_CombatPhase> DataMap => _dataMap;
-    public List<Fight.Table_CombatPhase> DataList => _dataList;
+    public Dictionary<int, Fight.Table_Formula> DataMap => _dataMap;
+    public List<Fight.Table_Formula> DataList => _dataList;
 
-    public Fight.Table_CombatPhase GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public Fight.Table_CombatPhase Get(int key) => _dataMap[key];
-    public Fight.Table_CombatPhase this[int key] => _dataMap[key];
+    public Fight.Table_Formula GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Fight.Table_Formula Get(int key) => _dataMap[key];
+    public Fight.Table_Formula this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

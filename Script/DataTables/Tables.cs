@@ -25,7 +25,8 @@ public partial class Tables
     public Fight.AbilityBase AbilityBase {get; }
     public Common.SoundEffectMap SoundEffectMap {get; }
     public Fight.CombatPhase CombatPhase {get; }
-    public Fight.FormulaSlot FormulaSlot {get; }
+    public Fight.Formula Formula {get; }
+    public Fight.CombatPhaseProvider CombatPhaseProvider {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
@@ -54,8 +55,10 @@ public partial class Tables
         tables.Add("Common.SoundEffectMap", SoundEffectMap);
         CombatPhase = new Fight.CombatPhase(loader("fight_combatphase")); 
         tables.Add("Fight.CombatPhase", CombatPhase);
-        FormulaSlot = new Fight.FormulaSlot(loader("fight_formulaslot")); 
-        tables.Add("Fight.FormulaSlot", FormulaSlot);
+        Formula = new Fight.Formula(loader("fight_formula")); 
+        tables.Add("Fight.Formula", Formula);
+        CombatPhaseProvider = new Fight.CombatPhaseProvider(loader("fight_combatphaseprovider")); 
+        tables.Add("Fight.CombatPhaseProvider", CombatPhaseProvider);
 
         PostInit();
         TbItem.Resolve(tables); 
@@ -70,7 +73,8 @@ public partial class Tables
         AbilityBase.Resolve(tables); 
         SoundEffectMap.Resolve(tables); 
         CombatPhase.Resolve(tables); 
-        FormulaSlot.Resolve(tables); 
+        Formula.Resolve(tables); 
+        CombatPhaseProvider.Resolve(tables); 
         PostResolve();
     }
 
@@ -88,7 +92,8 @@ public partial class Tables
         AbilityBase.TranslateText(translator); 
         SoundEffectMap.TranslateText(translator); 
         CombatPhase.TranslateText(translator); 
-        FormulaSlot.TranslateText(translator); 
+        Formula.TranslateText(translator); 
+        CombatPhaseProvider.TranslateText(translator); 
     }
     
     partial void PostInit();

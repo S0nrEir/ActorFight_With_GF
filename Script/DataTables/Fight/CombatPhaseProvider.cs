@@ -11,32 +11,32 @@ using System.Collections.Generic;
 namespace Cfg.Fight
 {
    
-public partial class FormulaSlot
+public partial class CombatPhaseProvider
 {
-    private readonly Dictionary<int, Fight.Table_FormulaSlot> _dataMap;
-    private readonly List<Fight.Table_FormulaSlot> _dataList;
+    private readonly Dictionary<int, Fight.Table_CombatPhaseProvider> _dataMap;
+    private readonly List<Fight.Table_CombatPhaseProvider> _dataList;
     
-    public FormulaSlot(ByteBuf _buf)
+    public CombatPhaseProvider(ByteBuf _buf)
     {
-        _dataMap = new Dictionary<int, Fight.Table_FormulaSlot>();
-        _dataList = new List<Fight.Table_FormulaSlot>();
+        _dataMap = new Dictionary<int, Fight.Table_CombatPhaseProvider>();
+        _dataList = new List<Fight.Table_CombatPhaseProvider>();
         
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
-            Fight.Table_FormulaSlot _v;
-            _v = Fight.Table_FormulaSlot.DeserializeTable_FormulaSlot(_buf);
+            Fight.Table_CombatPhaseProvider _v;
+            _v = Fight.Table_CombatPhaseProvider.DeserializeTable_CombatPhaseProvider(_buf);
             _dataList.Add(_v);
-            _dataMap.Add(_v.phase, _v);
+            _dataMap.Add(_v.id, _v);
         }
         PostInit();
     }
 
-    public Dictionary<int, Fight.Table_FormulaSlot> DataMap => _dataMap;
-    public List<Fight.Table_FormulaSlot> DataList => _dataList;
+    public Dictionary<int, Fight.Table_CombatPhaseProvider> DataMap => _dataMap;
+    public List<Fight.Table_CombatPhaseProvider> DataList => _dataList;
 
-    public Fight.Table_FormulaSlot GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-    public Fight.Table_FormulaSlot Get(int key) => _dataMap[key];
-    public Fight.Table_FormulaSlot this[int key] => _dataMap[key];
+    public Fight.Table_CombatPhaseProvider GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public Fight.Table_CombatPhaseProvider Get(int key) => _dataMap[key];
+    public Fight.Table_CombatPhaseProvider this[int key] => _dataMap[key];
 
     public void Resolve(Dictionary<string, object> _tables)
     {

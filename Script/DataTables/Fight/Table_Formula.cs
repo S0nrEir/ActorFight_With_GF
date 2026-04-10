@@ -13,30 +13,30 @@ using System.Collections.Generic;
 namespace Cfg.Fight
 {
 
-public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase 
+public sealed partial class Table_Formula :  Bright.Config.BeanBase 
 {
-    public Table_CombatPhase(ByteBuf _buf) 
+    public Table_Formula(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        PhaseType = (Enum.ResolvePhaseType)_buf.ReadInt();
+        Expression = _buf.ReadString();
         PostInit();
     }
 
-    public static Table_CombatPhase DeserializeTable_CombatPhase(ByteBuf _buf)
+    public static Table_Formula DeserializeTable_Formula(ByteBuf _buf)
     {
-        return new Fight.Table_CombatPhase(_buf);
+        return new Fight.Table_Formula(_buf);
     }
 
     /// <summary>
-    /// Combat phase ID / 结算阶段ID
+    /// Formula ID / 公式ID
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// Resolve phase type enum / 结算阶段类型枚举，对应 Pipeline/PhaseHandler 中各阶段的处理逻辑
+    /// Formula expression string, supports variables like ${ATK}, ${DEF}, ${Level} and math operators. Used by CombatResolver for damage/heal/shield calculation / 公式表达式字符串，支持 ${ATK}, ${DEF}, ${Level} 等变量和数学运算符，供结算器计算伤害/治疗/护盾时使用
     /// </summary>
-    public Enum.ResolvePhaseType PhaseType { get; private set; }
+    public string Expression { get; private set; }
 
-    public const int __ID__ = 1478348088;
+    public const int __ID__ = -1014326217;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
@@ -52,7 +52,7 @@ public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "PhaseType:" + PhaseType + ","
+        + "Expression:" + Expression + ","
         + "}";
     }
     

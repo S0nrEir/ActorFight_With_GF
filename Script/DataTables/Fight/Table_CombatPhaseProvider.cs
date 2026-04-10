@@ -13,30 +13,30 @@ using System.Collections.Generic;
 namespace Cfg.Fight
 {
 
-public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase 
+public sealed partial class Table_CombatPhaseProvider :  Bright.Config.BeanBase 
 {
-    public Table_CombatPhase(ByteBuf _buf) 
+    public Table_CombatPhaseProvider(ByteBuf _buf) 
     {
         id = _buf.ReadInt();
-        PhaseType = (Enum.ResolvePhaseType)_buf.ReadInt();
+        {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);PhaseIds = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); PhaseIds[i] = _e;}}
         PostInit();
     }
 
-    public static Table_CombatPhase DeserializeTable_CombatPhase(ByteBuf _buf)
+    public static Table_CombatPhaseProvider DeserializeTable_CombatPhaseProvider(ByteBuf _buf)
     {
-        return new Fight.Table_CombatPhase(_buf);
+        return new Fight.Table_CombatPhaseProvider(_buf);
     }
 
     /// <summary>
-    /// Combat phase ID / 结算阶段ID
+    /// Combat phase provider ID / 结算管线配置ID
     /// </summary>
     public int id { get; private set; }
     /// <summary>
-    /// Resolve phase type enum / 结算阶段类型枚举，对应 Pipeline/PhaseHandler 中各阶段的处理逻辑
+    /// Ordered list of CombatPhase IDs defining the resolve pipeline sequence / 结算阶段ID有序列表，定义结算管线的执行顺序
     /// </summary>
-    public Enum.ResolvePhaseType PhaseType { get; private set; }
+    public int[] PhaseIds { get; private set; }
 
-    public const int __ID__ = 1478348088;
+    public const int __ID__ = -268992695;
     public override int GetTypeId() => __ID__;
 
     public  void Resolve(Dictionary<string, object> _tables)
@@ -52,7 +52,7 @@ public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase
     {
         return "{ "
         + "id:" + id + ","
-        + "PhaseType:" + PhaseType + ","
+        + "PhaseIds:" + Bright.Common.StringUtil.CollectionToString(PhaseIds) + ","
         + "}";
     }
     
