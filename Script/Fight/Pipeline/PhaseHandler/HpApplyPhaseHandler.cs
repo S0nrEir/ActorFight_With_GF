@@ -4,7 +4,7 @@ using Cfg.Enum;
 namespace Aquila.Combat.Resolve
 {
     /// <summary>
-    /// 鐢熷懡鍐欏叆锛氬皢鏈€缁堝噣鍊煎悓姝ヨ嚦灞炴€х粍浠讹紝閫氳繃 Addon_BaseAttrNumric 鎵ц HP 鍔犲噺 / HP apply: writes final delta to attribute addon and triggers HP change signal.
+    /// 生命写入：将最终净值同步至属性组件，通过 Addon_BaseAttrNumric 执行 HP 加减 / HP apply: writes final delta to attribute addon and triggers HP change signal.
     /// </summary>
     internal sealed class HpApplyPhaseHandler : ResolvePhaseHandlerBase
     {

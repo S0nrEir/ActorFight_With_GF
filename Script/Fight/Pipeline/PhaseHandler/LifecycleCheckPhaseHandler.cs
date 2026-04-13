@@ -3,7 +3,7 @@ using Cfg.Enum;
 namespace Aquila.Combat.Resolve
 {
     /// <summary>
-    /// 鐢熷懡鍛ㄦ湡妫€鏌ワ細妫€鏌ョ洰鏍?HP 鏄惁褰掗浂锛岃Е鍙戞浜℃祦绋嬫垨娑堣€楀娲绘満浼?/ Lifecycle check: checks if target HP reached zero to trigger death or revive.
+    /// 生命周期检查：检查目标 HP 是否归零，触发死亡流程或消耗复活机会 / Lifecycle check: checks if target HP reached zero to trigger death or revive.
     /// </summary>
     internal sealed class LifecycleCheckPhaseHandler : ResolvePhaseHandlerBase
     {

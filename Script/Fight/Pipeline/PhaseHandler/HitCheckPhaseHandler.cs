@@ -3,7 +3,7 @@ using Cfg.Enum;
 namespace Aquila.Combat.Resolve
 {
     /// <summary>
-    /// 鍛戒腑瑁佸畾锛氬熀浜庡懡涓巼涓庨棯閬跨巼杩涜闅忔満鍒ゅ畾锛孧iss 鏃惰烦杩囨暟鍊奸樁娈?/ Hit check: roll against hit rate vs evasion; skip value phases on miss.
+    /// 命中裁定：基于命中率与闪避率进行随机判定，Miss 时跳过数值阶段 / Hit check: roll against hit rate vs evasion; skip value phases on miss.
     /// </summary>
     internal sealed class HitCheckPhaseHandler : ResolvePhaseHandlerBase
     {

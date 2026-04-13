@@ -3,7 +3,7 @@ using Cfg.Enum;
 namespace Aquila.Combat.Resolve
 {
     /// <summary>
-    /// 闃插尽淇锛氬簲鐢ㄥ彈鍑绘柟鐨勯槻寰″姏鍑忓厤銆佺櫨鍒嗘瘮鍑忎激 / Defense modifiers: applies defender damage reduction from defense and % reduction.
+    /// 防御修正：应用受击方的防御力减免、百分比减伤 / Defense modifiers: applies defender damage reduction from defense and % reduction.
     /// </summary>
     internal sealed class DefenseModsPhaseHandler : ResolvePhaseHandlerBase
     {
