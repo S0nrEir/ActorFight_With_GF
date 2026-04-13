@@ -149,7 +149,7 @@ namespace Aquila.Combat.Resolve
                         break;
 
                     case ResolveFlowSignalType.JumpTo:
-                        var jumpIndex = FindPhaseIndex(phaseResult.JumpToPhase, phases);
+                        var jumpIndex = FindPhaseIndex(phaseResult.JumpToPhase, phases, index);
                         if (jumpIndex < 0)
                         {
                             context.MarkInterrupted("resolve_jump_target_not_found");
@@ -177,9 +177,9 @@ namespace Aquila.Combat.Resolve
             return resultData;
         }
 
-        private static int FindPhaseIndex(ResolvePhaseType phase, List<ResolvePhaseDefinition> phases)
+        private static int FindPhaseIndex(ResolvePhaseType phase, List<ResolvePhaseDefinition> phases, int startIndex)
         {
-            for (var i = 0; i < phases.Count; i++)
+            for (var i = startIndex; i < phases.Count; i++)
             {
                 if (phases[i].Phase == phase)
                     return i;
