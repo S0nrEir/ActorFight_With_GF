@@ -1,4 +1,4 @@
-﻿using Aquila.Fight;
+using Aquila.Fight;
 using Aquila.Module;
 using Cfg.Enum;
 using GameFramework;
@@ -11,7 +11,6 @@ namespace Aquila.Combat.Resolve
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
             EffectSpec_Base effectSpec,
-            // EffectData effectData,
             int resolveTypeId)
         {
             var request = ReferencePool.Acquire<ResolveRequest>();
@@ -19,8 +18,9 @@ namespace Aquila.Combat.Resolve
             request.Target = target;
             request.EffectSpec = effectSpec;
             request.EffectData = effectSpec.Meta;
+            request.InputDelta = 0f;
             request.ResolveTypeId = resolveTypeId;
-            // request.SourceMeta = sourceMeta;
+            request.SourceType = ResolveSourceType.Unknown;
             return request;
         }
 
@@ -28,17 +28,19 @@ namespace Aquila.Combat.Resolve
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
             EffectSpec_Base effectSpec,
-            // EffectData effectData,
             float inputDelta,
             int resolveTypeId,
             ResolveSourceType sourceType)
         {
-            return Create(
+            var request = Create(
                 castor,
                 target,
                 effectSpec,
-                // effectData,
                 resolveTypeId);
+
+            request.InputDelta = inputDelta;
+            request.SourceType = sourceType;
+            return request;
         }
 
         public Module_ProxyActor.ActorInstance Castor { get; private set; }
@@ -47,8 +49,7 @@ namespace Aquila.Combat.Resolve
         public EffectData EffectData { get; private set; }
         public float InputDelta { get; private set; }
         public int ResolveTypeId { get; private set; }
-        // public ResolveSourceMeta SourceMeta { get; private set; }
-        // public ResolveSourceType SourceType => SourceMeta.SourceType;
+        public ResolveSourceType SourceType { get; private set; }
 
         public void Clear()
         {
@@ -58,7 +59,7 @@ namespace Aquila.Combat.Resolve
             EffectData = default;
             InputDelta = 0f;
             ResolveTypeId = 0;
-            // SourceMeta = default;
+            SourceType = ResolveSourceType.Unknown;
         }
     }
 }

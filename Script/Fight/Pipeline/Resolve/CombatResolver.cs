@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Cfg.Enum;
 using GameFramework;
 
@@ -6,7 +6,6 @@ namespace Aquila.Combat.Resolve
 {
     public sealed class CombatResolver
     {
-
         public CombatResolver(ResolvePhaseProvider phaseProvider, PhaseRegistry phaseRegistry)
         {
             _phaseProvider = phaseProvider;
@@ -23,142 +22,199 @@ namespace Aquila.Combat.Resolve
                     Interrupted = true,
                     Reason = "resolve_request_null",
                     ResolveTypeId = ResolvePhaseProvider.DefaultResolveTypeId,
-                    // SourceMeta = default,
+                    SourceType = ResolveSourceType.Unknown,
                 };
             }
 
+            _phaseBuffer.Clear();
+            _phaseProvider.TryGetPhases(request.ResolveTypeId, _phaseBuffer);
+
             var context = ReferencePool.Acquire<ResolveContext>();
-            var phaseResult = ReferencePool.Acquire<PhaseExecutionResult>();
-            
+            context.Setup(request);
+            context.ResetPhaseStates(_phaseBuffer);
+
+            var result = ResolveInternal(request, context, _phaseBuffer);
             _phaseBuffer.Clear();
+            return result;
+        }
+
+        public ResolveResultData Resolve(ResolveRequest request, ResolveContext context, List<ResolvePhaseDefinition> phaseDefinitions)
+        {
+            if (request == null)
+            {
+                return new ResolveResultData
+                {
+                    Success = false,
+                    Interrupted = true,
+                    Reason = "resolve_request_null",
+                    ResolveTypeId = ResolvePhaseProvider.DefaultResolveTypeId,
+                    SourceType = ResolveSourceType.Unknown,
+                };
+            }
+
+            var runtimeContext = context;
+            if (runtimeContext is null)
+            {
+                runtimeContext = ReferencePool.Acquire<ResolveContext>();
+                runtimeContext.Setup(request);
+            }
+
+            var phases = phaseDefinitions;
+            var usingInternalBuffer = false;
+            if (phases == null)
+            {
+                usingInternalBuffer = true;
+                _phaseBuffer.Clear();
                 _phaseProvider.TryGetPhases(request.ResolveTypeId, _phaseBuffer);
-                if (_phaseBuffer.Count <= 0)
+                phases = _phaseBuffer;
+            }
+
+            var result = ResolveInternal(request, runtimeContext, phases);
+            if (usingInternalBuffer)
+                _phaseBuffer.Clear();
+
+            return result;
+        }
+
+        private ResolveResultData ResolveInternal(ResolveRequest request, ResolveContext context, List<ResolvePhaseDefinition> phases)
+        {
+            var phaseResult = ReferencePool.Acquire<PhaseExecutionResult>();
+            ResolveResultData resultData;
+
+            if (phases == null || phases.Count <= 0)
+            {
+                context.MarkInterrupted("resolve_phase_empty");
+                resultData = BuildResult(context, request);
+                ReferencePool.Release(phaseResult);
+                ReferencePool.Release(context);
+                ReferencePool.Release(request);
+                return resultData;
+            }
+
+            var index = 0;
+            var stepCount = 0;
+            while (index < phases.Count)
+            {
+                stepCount++;
+                if (stepCount > MaxResolveStepCount)
                 {
-                    context.Setup(request);
-                    context.MarkInterrupted("resolve_phase_empty");
-                    return BuildResult(context, request.ResolveTypeId);
+                    context.MarkInterrupted("resolve_loop_guard");
+                    break;
                 }
 
-                context.Setup(request);
+                var currentPhase = phases[index];
+                context.LastPhase = currentPhase.Phase;
 
-                var index = 0;
-                var stepCount = 0;
-                while (index < _phaseBuffer.Count)
+                if ((currentPhase.Policy & ResolvePhasePolicy.Skip) != 0)
                 {
-                    stepCount++;
-                    if (stepCount > MaxResolveStepCount)
-                    {
-                        context.MarkInterrupted("resolve_loop_guard");
-                        break;
-                    }
+                    context.MarkSkipped(currentPhase.Phase);
+                    index++;
+                    continue;
+                }
 
-                    var phaseDef = _phaseBuffer[index];
-                    context.LastPhase = phaseDef.Phase;
+                if ((currentPhase.Policy & ResolvePhasePolicy.InterruptBeforeExecute) != 0)
+                {
+                    context.MarkInterrupted("resolve_interrupt_by_policy");
+                    break;
+                }
 
-                    if ((phaseDef.Policy & ResolvePhasePolicy.Skip) != 0)
-                    {
-                        context.MarkSkipped(phaseDef.Phase);
+                if (!_phaseRegistry.TryGetHandler(currentPhase.Phase, out var handler) || handler == null)
+                {
+                    context.MarkInterrupted("resolve_handler_missing");
+                    break;
+                }
+
+                phaseResult.SetContinue();
+                handler.Execute(context, currentPhase, phaseResult);
+
+                switch (phaseResult.SignalType)
+                {
+                    case ResolveFlowSignalType.Continue:
                         index++;
-                        continue;
-                    }
-
-                    if ((phaseDef.Policy & ResolvePhasePolicy.InterruptBeforeExecute) != 0)
-                    {
-                        context.MarkInterrupted("resolve_interrupt_by_policy");
                         break;
-                    }
 
-                    if (!_phaseRegistry.TryGetHandler(phaseDef.Phase, out var handler) || handler == null)
-                    {
-                        context.MarkInterrupted("resolve_handler_missing");
+                    case ResolveFlowSignalType.Skip:
+                        context.MarkSkipped(currentPhase.Phase);
+                        index++;
                         break;
-                    }
 
-                    phaseResult.SetContinue();
-                    handler.Execute(context, phaseDef, phaseResult);
+                    case ResolveFlowSignalType.Interrupt:
+                        context.MarkInterrupted(string.IsNullOrEmpty(phaseResult.Reason) ? "resolve_interrupted" : phaseResult.Reason);
+                        index = phases.Count;
+                        break;
 
-                    switch (phaseResult.SignalType)
-                    {
-                        case ResolveFlowSignalType.Continue:
-                            index++;
-                            break;
+                    case ResolveFlowSignalType.Abort:
+                        context.MarkAborted(string.IsNullOrEmpty(phaseResult.Reason) ? "resolve_aborted" : phaseResult.Reason);
+                        index = phases.Count;
+                        break;
 
-                        case ResolveFlowSignalType.Skip:
-                            context.MarkSkipped(phaseDef.Phase);
-                            index++;
-                            break;
+                    case ResolveFlowSignalType.JumpTo:
+                        var jumpIndex = FindPhaseIndex(phaseResult.JumpToPhase, phases);
+                        if (jumpIndex < 0)
+                        {
+                            context.MarkInterrupted("resolve_jump_target_not_found");
+                            index = phases.Count;
+                        }
+                        else
+                        {
+                            index = jumpIndex;
+                        }
+                        break;
 
-                        case ResolveFlowSignalType.Interrupt:
-                            context.MarkInterrupted(string.IsNullOrEmpty(phaseResult.Reason) ? "resolve_interrupted" : phaseResult.Reason);
-                            index = _phaseBuffer.Count;
-                            break;
-
-                        case ResolveFlowSignalType.Abort:
-                            context.MarkAborted(string.IsNullOrEmpty(phaseResult.Reason) ? "resolve_aborted" : phaseResult.Reason);
-                            index = _phaseBuffer.Count;
-                            break;
-
-                        case ResolveFlowSignalType.JumpTo:
-                            var jumpIndex = FindPhaseIndex(phaseResult.JumpToPhase);
-                            if (jumpIndex < 0)
-                            {
-                                context.MarkInterrupted("resolve_jump_target_not_found");
-                                index = _phaseBuffer.Count;
-                            }
-                            else
-                            {
-                                index = jumpIndex;
-                            }
-                            break;
-
-                        default:
-                            index++;
-                            break;
-                    }
-
-                    if (context.IsInterrupted || context.IsAborted)
+                    default:
+                        index++;
                         break;
                 }
 
-                return BuildResult(context, request.ResolveTypeId);
-            
-            _phaseBuffer.Clear();
+                if (context.IsInterrupted || context.IsAborted)
+                    break;
+            }
+
+            resultData = BuildResult(context, request);
             ReferencePool.Release(phaseResult);
             ReferencePool.Release(context);
             ReferencePool.Release(request);
+            return resultData;
         }
 
-        /// <summary>
-        /// 找到当前结算队列中指定类型的结算类型下标 / 
-        /// </summary>
-        private int FindPhaseIndex(ResolvePhaseType phase)
+        private static int FindPhaseIndex(ResolvePhaseType phase, List<ResolvePhaseDefinition> phases)
         {
-            for (var i = 0; i < _phaseBuffer.Count; i++)
+            for (var i = 0; i < phases.Count; i++)
             {
-                if (_phaseBuffer[i].Phase == phase)
+                if (phases[i].Phase == phase)
                     return i;
             }
 
             return -1;
         }
 
-        /// <summary>
-        /// 构建结算结果 / build resolution result
-        /// </summary>
-        private static ResolveResultData BuildResult(ResolveContext context, int requestedResolveTypeId)
+        private static ResolveResultData BuildResult(ResolveContext context, ResolveRequest request)
         {
+            var finalDelta = context != null ? context.FinalDelta : 0f;
+            var totalIncrease = context != null ? context.OffenseIncrease + context.CritIncrease : 0f;
+            var totalAbsorb = context != null ? context.ShieldAbsorb : 0f;
+            var totalReduction = context != null ? context.DefenseReduction + context.BlockReduction + context.ShieldAbsorb : 0f;
+
             return new ResolveResultData
             {
-                Success = !context.IsInterrupted && !context.IsAborted,
-                Interrupted = context.IsInterrupted,
-                Aborted = context.IsAborted,
-                ResolveTypeId = requestedResolveTypeId > 0 ? requestedResolveTypeId : ResolvePhaseProvider.DefaultResolveTypeId,
-                LastPhase = context.LastPhase,
-                Reason = context.Reason,
+                Success = context != null && !context.IsInterrupted && !context.IsAborted,
+                Interrupted = context != null && context.IsInterrupted,
+                Aborted = context != null && context.IsAborted,
+                ResolveTypeId = request != null && request.ResolveTypeId > 0
+                    ? request.ResolveTypeId
+                    : ResolvePhaseProvider.DefaultResolveTypeId,
+                SourceType = request != null ? request.SourceType : ResolveSourceType.Unknown,
+                InputDelta = request != null ? request.InputDelta : 0f,
+                FinalDelta = finalDelta,
+                TotalIncrease = totalIncrease,
+                TotalReduction = totalReduction,
+                TotalAbsorb = totalAbsorb,
+                AppliedDelta = context != null ? context.AppliedHpDelta : 0f,
+                LastPhase = context != null ? context.LastPhase : ResolvePhaseType.Validity,
+                Reason = context != null ? context.Reason : null,
             };
-            
         }
-        
+
         private const int MaxResolveStepCount = 64;
         private readonly ResolvePhaseProvider _phaseProvider;
         private readonly PhaseRegistry _phaseRegistry;

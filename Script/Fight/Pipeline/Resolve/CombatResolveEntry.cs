@@ -1,6 +1,8 @@
-﻿using Aquila.Fight;
+using System.Collections.Generic;
+using Aquila.Fight;
 using Aquila.Module;
 using Cfg.Enum;
+using GameFramework;
 
 namespace Aquila.Combat.Resolve
 {
@@ -18,39 +20,33 @@ namespace Aquila.Combat.Resolve
             EffectSpec_Base effectSpec,
             ResolveSourceType sourceType = ResolveSourceType.Unknown)
         {
-            var typeId = GetResolveTypeId(effectSpec.Meta);
-            // var sourceMeta = BuildSourceMeta(castor, target, effectSpec, sourceType);
-            var request = ResolveRequest.Create(castor, target, effectSpec, typeId);
-            return Resolver.Resolve(request);
+            return Resolve(castor, target, effectSpec, 0f, sourceType);
         }
 
-        private static readonly CombatResolver Resolver = new CombatResolver(new ResolvePhaseProvider(), new PhaseRegistry());
-        
-        // private static ResolveSourceMeta BuildSourceMeta(
-        //     Module_ProxyActor.ActorInstance castor,
-        //     Module_ProxyActor.ActorInstance target,
-        //     EffectSpec_Base effectSpec,
-        //     ResolveSourceType sourceType)
-        // {
-        //     var castorId = castor?.Actor?.ActorID ?? 0;
-        //     var targetId = target?.Actor?.ActorID ?? 0;
-        //
-        //     ResolveSourceMeta effectMeta = default;
-        //     var hasEffectMeta = effectSpec != null && effectSpec.TryGetResolveSourceMeta(out effectMeta);
-        //     var hasScopeMeta = ResolveSourceScope.TryGetCurrent(out var scopeMeta);
-        //
-        //     if (sourceType != ResolveSourceType.Unknown)
-        //     {
-        //         var explicitMeta = hasEffectMeta ? effectMeta : (hasScopeMeta ? scopeMeta : default);
-        //         explicitMeta.SourceType = sourceType;
-        //         if (sourceType == ResolveSourceType.EffectDirect && explicitMeta.AbilityId <= 0 && explicitMeta.TriggerIndex == 0)
-        //             explicitMeta.TriggerIndex = -1;
-        //         
-        //         return explicitMeta;
-        //     }
-        //
-        //     return ResolveSourceScope.CreateDirect(castorId, targetId);
-        // }
+        public static ResolveResultData Resolve(
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target,
+            EffectSpec_Base effectSpec,
+            float inputDelta,
+            ResolveSourceType sourceType = ResolveSourceType.Unknown)
+        {
+            var typeId = GetResolveTypeId(effectSpec.Meta);
+            var request = ResolveRequest.Create(castor, target, effectSpec, inputDelta, typeId, sourceType);
 
+            _phaseBuffer.Clear();
+            PhaseProvider.TryGetPhases(typeId, _phaseBuffer);
+
+            var context = ReferencePool.Acquire<ResolveContext>();
+            context.Setup(request);
+            context.ResetPhaseStates(_phaseBuffer);
+
+            var result = Resolver.Resolve(request, context, _phaseBuffer);
+            _phaseBuffer.Clear();
+            return result;
+        }
+
+        private static readonly ResolvePhaseProvider PhaseProvider = new ResolvePhaseProvider();
+        private static readonly CombatResolver Resolver = new CombatResolver(PhaseProvider, new PhaseRegistry());
+        private static readonly List<ResolvePhaseDefinition> _phaseBuffer = new List<ResolvePhaseDefinition>(16);
     }
 }

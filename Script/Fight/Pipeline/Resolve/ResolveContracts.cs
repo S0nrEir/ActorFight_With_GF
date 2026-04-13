@@ -1,4 +1,4 @@
-﻿using Cfg.Enum;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Combat.Resolve
@@ -28,13 +28,25 @@ namespace Aquila.Combat.Resolve
         // public ResolveFormulaSlotRef FormulaSlot;
     }
 
+    public struct ResolvePhaseIoState
+    {
+        public float Input;
+        public float Output;
+    }
+
     public struct ResolveResultData
     {
         public bool Success;
         public bool Interrupted;
         public bool Aborted;
         public int ResolveTypeId;
-        // public float FinalDelta;
+        public ResolveSourceType SourceType;
+        public float InputDelta;
+        public float FinalDelta;
+        public float TotalIncrease;
+        public float TotalReduction;
+        public float TotalAbsorb;
+        public float AppliedDelta;
         public ResolvePhaseType LastPhase;
         public string Reason;
     }
