@@ -3,22 +3,6 @@ using GameFramework;
 
 namespace Aquila.Combat.Resolve
 {
-    // public struct ResolveSourceMeta
-    // {
-    //     public ResolveSourceType SourceType;
-    //     public int AbilityId;
-    //     public int TriggerIndex;
-    //     public int CastorActorId;
-    //     public int TargetActorId;
-    // }
-
-    // public struct ResolveFormulaSlotRef
-    // {
-    //     public int PreFormulaId;
-    //     public int MainFormulaId;
-    //     public int PostFormulaId;
-    // }
-
     public struct ResolvePhaseDefinition
     {
         public int ResolveTypeId;
