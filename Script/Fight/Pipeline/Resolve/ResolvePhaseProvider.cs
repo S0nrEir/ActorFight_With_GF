@@ -2,31 +2,12 @@ using System;
 using System.Collections.Generic;
 using Cfg.Enum;
 using Cfg.Fight;
+using GameFramework;
 
 namespace Aquila.Combat.Resolve
 {
     public sealed class ResolvePhaseProvider
     {
-        public const int DefaultResolveTypeId = 1;
-
-        private static readonly ResolvePhaseType[] FallbackPhaseOrder =
-        {
-            ResolvePhaseType.Validity,
-            ResolvePhaseType.HitCheck,
-            ResolvePhaseType.BaseValue,
-            ResolvePhaseType.OffenseMods,
-            ResolvePhaseType.DefenseMods,
-            ResolvePhaseType.Crit,
-            ResolvePhaseType.Block,
-            ResolvePhaseType.Shield,
-            ResolvePhaseType.HpApply,
-            ResolvePhaseType.PostEffects,
-            ResolvePhaseType.LifecycleCheck,
-        };
-
-        private readonly Dictionary<int, List<ResolvePhaseDefinition>> _phaseByType = new Dictionary<int, List<ResolvePhaseDefinition>>(8);
-        private readonly List<ResolvePhaseDefinition> _defaultPhases = new List<ResolvePhaseDefinition>(16);
-        private bool _initialized;
 
         public bool TryGetPhases(int resolveTypeId, List<ResolvePhaseDefinition> output)
         {
@@ -36,8 +17,10 @@ namespace Aquila.Combat.Resolve
             output.Clear();
             EnsureInitialized();
 
-            var typeId = resolveTypeId > 0 ? resolveTypeId : DefaultResolveTypeId;
-            if (_phaseByType.TryGetValue(typeId, out var list) && list.Count > 0)
+            if (resolveTypeId < 0)
+                throw new GameFrameworkException($"ResolvePhase type {resolveTypeId} not found.");
+            
+            if (_phaseByType.TryGetValue(resolveTypeId, out var list) && list.Count > 0)
             {
                 output.AddRange(list);
                 return true;
@@ -57,8 +40,10 @@ namespace Aquila.Combat.Resolve
             _defaultPhases.Clear();
 
             // BuildFromTables();
-            if (_defaultPhases.Count == 0)
-                BuildFallbackDefaults();
+            // if (_defaultPhases.Count == 0)
+            //     BuildFallbackDefaults();
+            
+            //#todo:_phaseByType初始化缓存所有结算阶段
         }
         
         private void BuildFallbackDefaults()
@@ -72,7 +57,6 @@ namespace Aquila.Combat.Resolve
                     Phase = FallbackPhaseOrder[i],
                     PhaseOrder = sortOrder++,
                     Policy = ResolvePhasePolicy.None,
-                    // FormulaSlot = default,
                 });
             }
         }
@@ -85,5 +69,26 @@ namespace Aquila.Combat.Resolve
 
             return a.Phase.CompareTo(b.Phase);
         }
+        
+        public const int DefaultResolveTypeId = 1;
+        private readonly Dictionary<int, List<ResolvePhaseDefinition>> _phaseByType = new Dictionary<int, List<ResolvePhaseDefinition>>(8);
+        private readonly List<ResolvePhaseDefinition> _defaultPhases = new List<ResolvePhaseDefinition>(16);
+        
+        private static readonly ResolvePhaseType[] FallbackPhaseOrder =
+        {
+            ResolvePhaseType.Validity,
+            ResolvePhaseType.HitCheck,
+            ResolvePhaseType.BaseValue,
+            ResolvePhaseType.OffenseMods,
+            ResolvePhaseType.DefenseMods,
+            ResolvePhaseType.Crit,
+            ResolvePhaseType.Block,
+            ResolvePhaseType.Shield,
+            ResolvePhaseType.HpApply,
+            ResolvePhaseType.PostEffects,
+            ResolvePhaseType.LifecycleCheck,
+        };
+        
+        private bool _initialized;
     }
 }

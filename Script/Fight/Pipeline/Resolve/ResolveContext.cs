@@ -6,7 +6,10 @@ namespace Aquila.Combat.Resolve
 {
     public sealed class ResolveContext : IReference
     {
-        public void Setup(ResolveRequest request)
+        /// <summary>
+        /// 关联resolve request
+        /// </summary>
+        public void SetupResolveReq(ResolveRequest request)
         {
             Request = request;
             FinalDelta = request != null ? request.InputDelta : 0f;

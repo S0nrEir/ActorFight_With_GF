@@ -30,7 +30,7 @@ namespace Aquila.Combat.Resolve
             _phaseProvider.TryGetPhases(request.ResolveTypeId, _phaseBuffer);
 
             var context = ReferencePool.Acquire<ResolveContext>();
-            context.Setup(request);
+            context.SetupResolveReq(request);
             context.ResetPhaseStates(_phaseBuffer);
 
             var result = ResolveInternal(request, context, _phaseBuffer);
