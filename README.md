@@ -13,3 +13,4 @@ Unity GameFrameWork前端框架 [GameFramework](https://github.com/EllanJiang/Ga
 
 - [ ] 目标选择器effect
 - [ ] 管线化的战斗流程和伤害计算
+  - [ ] 不同类型的结算阶段，缓存起来
