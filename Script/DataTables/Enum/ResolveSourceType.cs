@@ -25,5 +25,13 @@ namespace Cfg.Enum
         /// Directly applied by effect / 由效果直接应用
         /// </summary>
         EffectDirect = 2,
+        /// <summary>
+        /// Poison damage type, damage over time / 毒性伤害类型，持续伤害
+        /// </summary>
+        PoisonDamage = 3,
+        /// <summary>
+        /// True damage that ignores armor / 真实伤害，无视护甲
+        /// </summary>
+        TrueDamage = 4,
     }
 }
