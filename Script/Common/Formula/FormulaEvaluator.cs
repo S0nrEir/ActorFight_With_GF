@@ -17,13 +17,13 @@ namespace Aquila.Formula
         {
             if (formula == null)
             {
-                return FormulaResult.Fail(FormulaErrorCodes.RuntimeError, "Compiled formula is null.");
+                return FormulaResult.Fail(FormulaErrorCodes.RuntimeGenericError);
             }
 
             var variableMap = variables ?? EmptyVariables.Instance;
-            if (!TryEvaluateNode(formula.Ast.Root, variableMap, out var value, out var errorCode, out var errorMessage))
+            if (!TryEvaluateNode(formula.Ast.Root, variableMap, out var value, out var errorCode))
             {
-                return FormulaResult.Fail(errorCode, errorMessage);
+                return FormulaResult.Fail(errorCode);
             }
 
             return FormulaResult.Ok(value);
@@ -36,12 +36,10 @@ namespace Aquila.Formula
             FormulaAstNode node,
             IReadOnlyDictionary<string, double> variables,
             out double value,
-            out string errorCode,
-            out string errorMessage)
+            out ushort errorCode)
         {
             value = 0d;
-            errorCode = null;
-            errorMessage = null;
+            errorCode = FormulaErrorCodes.RuntimeNone;
 
             switch (node)
             {
@@ -52,15 +50,14 @@ namespace Aquila.Formula
                 case FormulaVariableNode variableNode:
                     if (!variables.TryGetValue(variableNode.Name, out value))
                     {
-                        errorCode = FormulaErrorCodes.UnknownVariable;
-                        errorMessage = $"Variable '{variableNode.Name}' is not provided.";
+                        errorCode = FormulaErrorCodes.RuntimeUnknownVariable;
                         return false;
                     }
 
                     return true;
 
                 case FormulaUnaryNode unaryNode:
-                    if (!TryEvaluateNode(unaryNode.Operand, variables, out var unaryValue, out errorCode, out errorMessage))
+                    if (!TryEvaluateNode(unaryNode.Operand, variables, out var unaryValue, out errorCode))
                     {
                         return false;
                     }
@@ -69,12 +66,12 @@ namespace Aquila.Formula
                     return true;
 
                 case FormulaBinaryNode binaryNode:
-                    if (!TryEvaluateNode(binaryNode.Left, variables, out var leftValue, out errorCode, out errorMessage))
+                    if (!TryEvaluateNode(binaryNode.Left, variables, out var leftValue, out errorCode))
                     {
                         return false;
                     }
 
-                    if (!TryEvaluateNode(binaryNode.Right, variables, out var rightValue, out errorCode, out errorMessage))
+                    if (!TryEvaluateNode(binaryNode.Right, variables, out var rightValue, out errorCode))
                     {
                         return false;
                     }
@@ -93,32 +90,28 @@ namespace Aquila.Formula
                         case FormulaBinaryOperator.Divide:
                             if (Math.Abs(rightValue) <= ZeroEpsilon)
                             {
-                                errorCode = FormulaErrorCodes.DivideByZero;
-                                errorMessage = "Division by zero.";
+                                errorCode = FormulaErrorCodes.RuntimeDivideByZero;
                                 return false;
                             }
 
                             value = leftValue / rightValue;
                             return true;
                         default:
-                            errorCode = FormulaErrorCodes.RuntimeError;
-                            errorMessage = $"Unsupported binary operator '{binaryNode.Operator}'.";
+                            errorCode = FormulaErrorCodes.RuntimeGenericError;
                             return false;
                     }
 
                 case FormulaFunctionCallNode functionNode:
                     if (!FormulaBuiltInFunctions.TryGet(functionNode.FunctionName, out var definition))
                     {
-                        errorCode = FormulaErrorCodes.UnknownFunction;
-                        errorMessage = $"Unknown function '{functionNode.FunctionName}'.";
+                        errorCode = FormulaErrorCodes.RuntimeUnknownFunction;
                         return false;
                     }
 
                     int argCount = functionNode.Arguments.Count;
                     if (argCount < definition.MinArgCount || argCount > definition.MaxArgCount)
                     {
-                        errorCode = FormulaErrorCodes.ArgCountMismatch;
-                        errorMessage = $"Function '{functionNode.FunctionName}' argument count mismatch.";
+                        errorCode = FormulaErrorCodes.RuntimeArgCountMismatch;
                         return false;
                     }
 
@@ -126,7 +119,7 @@ namespace Aquila.Formula
                     var args = new double[argCount];
                     for (int i = 0; i < argCount; i++)
                     {
-                        if (!TryEvaluateNode(functionNode.Arguments[i], variables, out args[i], out errorCode, out errorMessage))
+                        if (!TryEvaluateNode(functionNode.Arguments[i], variables, out args[i], out errorCode))
                         {
                             return false;
                         }
@@ -136,8 +129,7 @@ namespace Aquila.Formula
                     return true;
 
                 default:
-                    errorCode = FormulaErrorCodes.RuntimeError;
-                    errorMessage = $"Unsupported AST node '{node.GetType().Name}'.";
+                    errorCode = FormulaErrorCodes.RuntimeGenericError;
                     return false;
             }
         }

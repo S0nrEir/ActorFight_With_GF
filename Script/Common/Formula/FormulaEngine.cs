@@ -7,11 +7,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaEngine : IFormulaEngine
     {
-        private readonly FormulaCompiler _compiler;
-        private readonly FormulaEvaluator _evaluator;
-        private readonly FormulaCache _cache;
-        private readonly int _version;
-
         /// <summary>
         /// 构造引擎并可选注入变量白名单 / Construct engine with optional variable allow-list.
         /// </summary>
@@ -57,6 +52,7 @@ namespace Aquila.Formula
                     continue;
                 }
 
+                //缓存所有的计算公式，ID就是表配置ID
                 if (_compiler.TryCompile(definition, _version, out var compiled, out var compileError))
                 {
                     _cache.Set(compiled);
@@ -77,12 +73,15 @@ namespace Aquila.Formula
         {
             if (!_cache.TryGetById(formulaId, out var compiled))
             {
-                return FormulaResult.Fail(
-                    FormulaErrorCodes.RuntimeError,
-                    $"Formula '{formulaId}' is not compiled or not enabled.");
+                return FormulaResult.Fail(FormulaErrorCodes.RuntimeGenericError);
             }
 
             return _evaluator.Evaluate(compiled, variables);
         }
+        
+        private readonly FormulaCompiler _compiler;
+        private readonly FormulaEvaluator _evaluator;
+        private readonly FormulaCache _cache;
+        private readonly int _version;
     }
 }

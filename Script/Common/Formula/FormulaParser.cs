@@ -33,9 +33,7 @@ namespace Aquila.Formula
 
             var parser = new FormulaParser(tokens, formulaId);
             if (!parser.TryParseExpression(out var root, out error))
-            {
                 return false;
-            }
 
             // 要求消费完所有 token / Require all tokens to be consumed.
             if (parser.Current.Type != FormulaTokenType.End)
@@ -49,7 +47,7 @@ namespace Aquila.Formula
         }
 
         /// <summary>
-        /// expression -> term ((+|-) term)* / Parse additive expression.
+        /// 解析表达式， expression -> term ((+|-) term)* / Parse additive expression.
         /// </summary>
         private bool TryParseExpression(out FormulaAstNode node, out FormulaCompileError error)
         {
@@ -78,6 +76,7 @@ namespace Aquila.Formula
 
         /// <summary>
         /// term -> factor ((*|/) factor)* / Parse multiplicative expression.
+        /// 解析乘除符号，组成二元节点
         /// </summary>
         private bool TryParseTerm(out FormulaAstNode node, out FormulaCompileError error)
         {
@@ -106,6 +105,7 @@ namespace Aquila.Formula
 
         /// <summary>
         /// factor -> (+|-) factor | primary / Parse unary expression.
+        /// 解析正负号，如果是符号。组成一元节点
         /// </summary>
         private bool TryParseFactor(out FormulaAstNode node, out FormulaCompileError error)
         {
@@ -120,7 +120,7 @@ namespace Aquila.Formula
 
                 node = new FormulaUnaryNode(FormulaUnaryOperator.Plus, operand, op.Position);
                 return true;
-            }
+            } 
 
             if (Match(FormulaTokenType.Minus))
             {
@@ -139,10 +139,11 @@ namespace Aquila.Formula
         }
 
         /// <summary>
-        /// primary -> number | identifier | call | '(' expression ')' / Parse primary expression.
+        /// 解析原子表达式，将表达式token转换为数字/标识符/函数调用节点， primary -> number | identifier | call | '(' expression ')' / Parse primary expression.
         /// </summary>
         private bool TryParsePrimary(out FormulaAstNode node, out FormulaCompileError error)
         {
+            //当前token匹配到数字，直接作为ast叶子number节点
             if (Match(FormulaTokenType.Number))
             {
                 var token = Previous;
@@ -150,16 +151,18 @@ namespace Aquila.Formula
                 error = null;
                 return true;
             }
-
+            
+            //匹配到标识符(price，Max)
             if (Match(FormulaTokenType.Identifier))
             {
                 var identifier = Previous;
-                // 标识符后接 '(' 视为函数调用 / Identifier followed by '(' is a function call.
+                // 标识符后接 左括号 视为函数调用 / Identifier followed by '(' is a function call.
                 if (Match(FormulaTokenType.LeftParen))
                 {
                     var args = new List<FormulaAstNode>();
                     if (!Match(FormulaTokenType.RightParen))
                     {
+                        //如果没有匹配到右括号，说明一直在函数调用这部分里，解析参数
                         while (true)
                         {
                             if (!TryParseExpression(out var arg, out error))
@@ -170,9 +173,7 @@ namespace Aquila.Formula
 
                             args.Add(arg);
                             if (Match(FormulaTokenType.Comma))
-                            {
                                 continue;
-                            }
 
                             break;
                         }
@@ -185,6 +186,7 @@ namespace Aquila.Formula
                     }
 
                     node = new FormulaFunctionCallNode(identifier.Text, args, identifier.Position);
+                    error = null;
                     return true;
                 }
 
@@ -196,14 +198,10 @@ namespace Aquila.Formula
             if (Match(FormulaTokenType.LeftParen))
             {
                 if (!TryParseExpression(out node, out error))
-                {
                     return false;
-                }
 
                 if (!Consume(FormulaTokenType.RightParen, "Missing ')' after expression.", out error))
-                {
                     return false;
-                }
 
                 return true;
             }

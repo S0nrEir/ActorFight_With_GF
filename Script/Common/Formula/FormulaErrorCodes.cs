@@ -22,5 +22,23 @@ namespace Aquila.Formula
 
         /// <summary>运行时错误 / Runtime error.</summary>
         public const string RuntimeError = "FORMULA_RUNTIME_ERROR";
+
+        /// <summary>运行时：无错误 / Runtime: no error.</summary>
+        public const ushort RuntimeNone = 0;
+
+        /// <summary>运行时：未知变量 / Runtime: unknown variable.</summary>
+        public const ushort RuntimeUnknownVariable = 1;
+
+        /// <summary>运行时：未知函数 / Runtime: unknown function.</summary>
+        public const ushort RuntimeUnknownFunction = 2;
+
+        /// <summary>运行时：参数数量不匹配 / Runtime: argument count mismatch.</summary>
+        public const ushort RuntimeArgCountMismatch = 3;
+
+        /// <summary>运行时：除零错误 / Runtime: divide-by-zero error.</summary>
+        public const ushort RuntimeDivideByZero = 4;
+
+        /// <summary>运行时：通用错误 / Runtime: generic runtime error.</summary>
+        public const ushort RuntimeGenericError = 5;
     }
 }

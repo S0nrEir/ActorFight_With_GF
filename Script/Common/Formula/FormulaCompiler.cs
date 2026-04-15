@@ -62,25 +62,17 @@ namespace Aquila.Formula
 
             string expression = definition.Expression ?? string.Empty;
             if (!FormulaTokenizer.TryTokenize(expression, definition.Id, out var tokens, out error))
-            {
                 return false;
-            }
 
             if (!FormulaParser.TryParse(tokens, definition.Id, out var ast, out error))
-            {
                 return false;
-            }
 
             if (!_validator.TryValidate(ast, definition.Id, out error))
-            {
                 return false;
-            }
 
             // 编译阶段执行常量折叠，减少运行时计算 / Do constant folding at compile time to reduce runtime cost.
             if (!TryFoldAst(ast, definition.Id, out var foldedAst, out error))
-            {
                 return false;
-            }
 
             string sourceHash = ComputeSourceHash(expression);
             compiled = new CompiledFormula(definition.Id, expression, sourceHash, version, foldedAst);
@@ -94,9 +86,7 @@ namespace Aquila.Formula
         {
             foldedAst = null;
             if (!TryFoldNode(ast.Root, formulaId, out var root, out error))
-            {
                 return false;
-            }
 
             foldedAst = new FormulaAst(root);
             return true;
@@ -112,16 +102,21 @@ namespace Aquila.Formula
             {
                 case FormulaNumberNode:
                 case FormulaVariableNode:
+                {
                     folded = node;
                     return true;
+                }
 
+                //一元节点，拿一元节点符号后面的操作数或表达式，然后根据符号对其进行运算，缓存起来
                 case FormulaUnaryNode unaryNode:
+                {
                     if (!TryFoldNode(unaryNode.Operand, formulaId, out var unaryOperand, out error))
                     {
                         folded = null;
                         return false;
                     }
-
+                    
+                    //检查一元节点的符号，取值
                     if (unaryOperand is FormulaNumberNode unaryNumber)
                     {
                         double value = unaryNode.Operator == FormulaUnaryOperator.Minus ? -unaryNumber.Value : unaryNumber.Value;
@@ -131,8 +126,11 @@ namespace Aquila.Formula
 
                     folded = new FormulaUnaryNode(unaryNode.Operator, unaryOperand, unaryNode.Position);
                     return true;
+                }//uynary node
 
+                //二元表达式节点，先拿左右的节点，如果左右都是数值字面量节点（常量数值节点），根据符号算一下然后缓存，然后用一个简单的一元表达式节点代替二元（因为已经算过了）
                 case FormulaBinaryNode binaryNode:
+                {
                     if (!TryFoldNode(binaryNode.Left, formulaId, out var left, out error))
                     {
                         folded = null;
@@ -159,8 +157,11 @@ namespace Aquila.Formula
 
                     folded = new FormulaBinaryNode(binaryNode.Operator, left, right, binaryNode.Position);
                     return true;
+                }//binary node
 
+                //函数调用表达式节点，就把括号里的参数都扫一遍。
                 case FormulaFunctionCallNode functionNode:
+                {
                     var args = new List<FormulaAstNode>(functionNode.Arguments.Count);
                     bool allConstant = true;
                     for (int i = 0; i < functionNode.Arguments.Count; i++)
@@ -172,13 +173,12 @@ namespace Aquila.Formula
                         }
 
                         if (!(argNode is FormulaNumberNode))
-                        {
                             allConstant = false;
-                        }
 
                         args.Add(argNode);
                     }
-
+                    
+                    //如果参数全部都是常量，就去函数表里找这个函数，计算结果然后作为一个数字节点缓存，否则就视为不能折叠
                     if (allConstant)
                     {
                         if (!FormulaBuiltInFunctions.TryGet(functionNode.FunctionName, out var functionDef))
@@ -194,9 +194,7 @@ namespace Aquila.Formula
 
                         var values = new List<double>(args.Count);
                         for (int i = 0; i < args.Count; i++)
-                        {
                             values.Add(((FormulaNumberNode)args[i]).Value);
-                        }
 
                         double value = functionDef.Evaluate(values);
                         folded = new FormulaNumberNode(value, functionNode.Position);
@@ -205,8 +203,10 @@ namespace Aquila.Formula
 
                     folded = new FormulaFunctionCallNode(functionNode.FunctionName, args, functionNode.Position);
                     return true;
+                }//case formula function call node
 
                 default:
+                {
                     folded = null;
                     error = new FormulaCompileError(
                         formulaId,
@@ -214,6 +214,7 @@ namespace Aquila.Formula
                         $"Unsupported AST node type '{node.GetType().Name}'.",
                         node.Position);
                     return false;
+                }
             }
         }
 
@@ -236,12 +237,15 @@ namespace Aquila.Formula
                 case FormulaBinaryOperator.Add:
                     value = left + right;
                     return true;
+                
                 case FormulaBinaryOperator.Subtract:
                     value = left - right;
                     return true;
+                
                 case FormulaBinaryOperator.Multiply:
                     value = left * right;
                     return true;
+                
                 case FormulaBinaryOperator.Divide:
                     if (Math.Abs(right) <= ZeroEpsilon)
                     {
@@ -252,9 +256,9 @@ namespace Aquila.Formula
                             position);
                         return false;
                     }
-
                     value = left / right;
                     return true;
+                
                 default:
                     error = new FormulaCompileError(
                         formulaId,

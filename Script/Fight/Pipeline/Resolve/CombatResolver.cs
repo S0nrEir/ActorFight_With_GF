@@ -56,7 +56,7 @@ namespace Aquila.Combat.Resolve
             if (runtimeContext is null)
             {
                 runtimeContext = ReferencePool.Acquire<ResolveContext>();
-                runtimeContext.Setup(request);
+                runtimeContext.SetupResolveReq(request);
             }
 
             var phases = phaseDefinitions;

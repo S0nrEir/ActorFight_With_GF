@@ -55,7 +55,7 @@ namespace Aquila.Formula
     }
 
     /// <summary>
-    /// 数值字面量节点 / Numeric literal node.
+    /// 数值常量节点 / Numeric literal node.
     /// </summary>
     public sealed class FormulaNumberNode : FormulaAstNode
     {
@@ -96,6 +96,9 @@ namespace Aquila.Formula
 
         public FormulaUnaryOperator Operator { get; }
 
+        /// <summary>
+        /// 一元运算节点的操作数或其对应的表达式（如果是复合的）
+        /// </summary>
         public FormulaAstNode Operand { get; }
     }
 
