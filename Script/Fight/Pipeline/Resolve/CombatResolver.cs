@@ -20,7 +20,6 @@ namespace Aquila.Combat.Resolve
                 {
                     Success = false,
                     Interrupted = true,
-                    Reason = "resolve_request_null",
                     ResolveTypeId = ResolvePhaseProvider.DefaultResolveTypeId,
                     SourceType = ResolveSourceType.Unknown,
                 };
@@ -46,7 +45,6 @@ namespace Aquila.Combat.Resolve
                 {
                     Success = false,
                     Interrupted = true,
-                    Reason = "resolve_request_null",
                     ResolveTypeId = ResolvePhaseProvider.DefaultResolveTypeId,
                     SourceType = ResolveSourceType.Unknown,
                 };
@@ -211,7 +209,6 @@ namespace Aquila.Combat.Resolve
                 TotalAbsorb = totalAbsorb,
                 AppliedDelta = context != null ? context.AppliedHpDelta : 0f,
                 LastPhase = context != null ? context.LastPhase : ResolvePhaseType.Validity,
-                Reason = context != null ? context.Reason : null,
             };
         }
 

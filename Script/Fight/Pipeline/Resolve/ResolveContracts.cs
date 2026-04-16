@@ -32,7 +32,6 @@ namespace Aquila.Combat.Resolve
         public float TotalAbsorb;
         public float AppliedDelta;
         public ResolvePhaseType LastPhase;
-        public string Reason;
     }
 
     public sealed class PhaseExecutionResult : IReference
