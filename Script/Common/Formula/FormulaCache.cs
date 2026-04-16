@@ -50,9 +50,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaCache
     {
-        private readonly Dictionary<FormulaCacheKey, CompiledFormula> _cacheByKey = new Dictionary<FormulaCacheKey, CompiledFormula>();
-        private readonly Dictionary<int, FormulaCacheKey> _latestKeyById = new Dictionary<int, FormulaCacheKey>();
-
         /// <summary>
         /// 写入或覆盖某公式的最新编译结果 / Set or replace latest compiled formula by ID.
         /// </summary>
@@ -100,5 +97,8 @@ namespace Aquila.Formula
             _cacheByKey.Remove(key);
             _latestKeyById.Remove(formulaId);
         }
+
+        private readonly Dictionary<FormulaCacheKey, CompiledFormula> _cacheByKey = new Dictionary<FormulaCacheKey, CompiledFormula>();
+        private readonly Dictionary<int, FormulaCacheKey> _latestKeyById = new Dictionary<int, FormulaCacheKey>();
     }
 }

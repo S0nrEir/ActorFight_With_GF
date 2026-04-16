@@ -35,9 +35,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaCompiler
     {
-        private const double ZeroEpsilon = 1e-12;
-        private readonly FormulaValidator _validator;
-
         /// <summary>
         /// 构造编译器 / Construct compiler.
         /// </summary>
@@ -281,5 +278,8 @@ namespace Aquila.Formula
                 return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
             }
         }
+
+        private const double ZeroEpsilon = 1e-12;
+        private readonly FormulaValidator _validator;
     }
 }

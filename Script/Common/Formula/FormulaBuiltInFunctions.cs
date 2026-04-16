@@ -43,6 +43,22 @@ namespace Aquila.Formula
     /// </summary>
     internal static class FormulaBuiltInFunctions
     {
+        /// <summary>
+        /// 按名称查找函数定义 / Try get function definition by name.
+        /// </summary>
+        public static bool TryGet(string name, out FormulaFunctionDefinition definition)
+        {
+            return Definitions.TryGetValue(name, out definition);
+        }
+
+        /// <summary>
+        /// 获取全部注册函数 / Get all registered functions.
+        /// </summary>
+        public static IReadOnlyDictionary<string, FormulaFunctionDefinition> GetAll()
+        {
+            return Definitions;
+        }
+
         // 仅注册 MVP 允许函数 / Register MVP allowed functions only.
         private static readonly IReadOnlyDictionary<string, FormulaFunctionDefinition> Definitions =
             new Dictionary<string, FormulaFunctionDefinition>(StringComparer.OrdinalIgnoreCase)
@@ -73,21 +89,5 @@ namespace Aquila.Formula
                     new FormulaFunctionDefinition("max", 2, int.MaxValue, args => args.Max())
                 }
             };
-
-        /// <summary>
-        /// 按名称查找函数定义 / Try get function definition by name.
-        /// </summary>
-        public static bool TryGet(string name, out FormulaFunctionDefinition definition)
-        {
-            return Definitions.TryGetValue(name, out definition);
-        }
-
-        /// <summary>
-        /// 获取全部注册函数 / Get all registered functions.
-        /// </summary>
-        public static IReadOnlyDictionary<string, FormulaFunctionDefinition> GetAll()
-        {
-            return Definitions;
-        }
     }
 }

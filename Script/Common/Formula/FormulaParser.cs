@@ -7,10 +7,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaParser
     {
-        private readonly IReadOnlyList<FormulaToken> _tokens;
-        private readonly int _formulaId;
-        private int _position;
-
         private FormulaParser(IReadOnlyList<FormulaToken> tokens, int formulaId)
         {
             _tokens = tokens;
@@ -263,5 +259,9 @@ namespace Aquila.Formula
         {
             return new FormulaCompileError(_formulaId, FormulaErrorCodes.SyntaxError, message, position);
         }
+
+        private readonly IReadOnlyList<FormulaToken> _tokens;
+        private readonly int _formulaId;
+        private int _position;
     }
 }

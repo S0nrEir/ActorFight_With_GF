@@ -8,8 +8,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaEvaluator
     {
-        private const double ZeroEpsilon = 1e-12;
-
         /// <summary>
         /// 执行已编译公式 / Evaluate compiled formula.
         /// </summary>
@@ -141,5 +139,7 @@ namespace Aquila.Formula
         {
             public static readonly IReadOnlyDictionary<string, double> Instance = new Dictionary<string, double>();
         }
+
+        private const double ZeroEpsilon = 1e-12;
     }
 }

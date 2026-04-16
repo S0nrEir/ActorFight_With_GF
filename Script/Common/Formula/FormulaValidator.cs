@@ -8,8 +8,6 @@ namespace Aquila.Formula
     /// </summary>
     public sealed class FormulaValidator
     {
-        private readonly ISet<string> _allowedVariables;
-
         /// <summary>
         /// 构造校验器，可选指定允许变量集合 / Construct validator with optional allowed variable set.
         /// </summary>
@@ -113,5 +111,7 @@ namespace Aquila.Formula
                     return false;
             }
         }
+
+        private readonly ISet<string> _allowedVariables;
     }
 }
