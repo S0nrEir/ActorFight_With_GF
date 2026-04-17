@@ -195,9 +195,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Curr_HP, 0f);
                 return true;
             };
@@ -206,9 +211,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Max_HP, 0f);
                 return true;
             };
@@ -217,9 +227,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Curr_MP, 0f);
                 return true;
             };
@@ -228,9 +243,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Max_MP, 0f);
                 return true;
             };
@@ -239,9 +259,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.ATK, 0f);
                 return true;
             };
@@ -250,9 +275,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.DEF, 0f);
                 return true;
             };
@@ -261,9 +291,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.SPD, 0f);
                 return true;
             };
@@ -272,9 +307,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.MVT, 0f);
                 return true;
             };
@@ -283,9 +323,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.STR, 0f);
                 return true;
             };
@@ -294,9 +339,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.AGI, 0f);
                 return true;
             };
@@ -305,9 +355,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Castor == null) return false;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.SPW, 0f);
                 return true;
             };
@@ -317,9 +372,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Curr_HP, 0f);
                 return true;
             };
@@ -328,9 +388,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Max_HP, 0f);
                 return true;
             };
@@ -339,9 +404,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Curr_MP, 0f);
                 return true;
             };
@@ -350,9 +420,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.Max_MP, 0f);
                 return true;
             };
@@ -361,9 +436,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.ATK, 0f);
                 return true;
             };
@@ -372,9 +452,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.DEF, 0f);
                 return true;
             };
@@ -383,9 +468,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.SPD, 0f);
                 return true;
             };
@@ -394,9 +484,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.MVT, 0f);
                 return true;
             };
@@ -405,9 +500,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.STR, 0f);
                 return true;
             };
@@ -416,9 +516,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.AGI, 0f);
                 return true;
             };
@@ -427,9 +532,14 @@ namespace Aquila.Formula
             {
                 value = 0d;
                 var resolveCtx = context as ResolveContext;
-                if (resolveCtx?.Request?.Target == null) return false;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
                 var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-                if (attr == null) return false;
+                if (attr == null)
+                    return false;
+
+
                 value = attr.GetCorrectionValue(actor_attribute.SPW, 0f);
                 return true;
             };
