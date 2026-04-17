@@ -20,17 +20,7 @@ namespace Aquila.Combat.Resolve
             LastPhase = ResolvePhaseType.Validity;
 
             _floatValues.Clear();
-            // _formulaValues.Clear();
             _skippedPhases.Clear();
-
-            // if (request?.FormulaContext == null)
-            //     return;
-
-            // foreach (var pair in request.FormulaContext)
-            // {
-            //     if (!string.IsNullOrEmpty(pair.Key))
-            //         _formulaValues[pair.Key] = pair.Value;
-            // }
         }
 
         public void ResetPhaseStates(List<ResolvePhaseDefinition> phases)
@@ -118,27 +108,6 @@ namespace Aquila.Combat.Resolve
             return _floatValues.TryGetValue(key, out value);
         }
 
-        // public void SetFormulaValue(string key, double value)
-        // {
-        //     if (string.IsNullOrEmpty(key))
-        //         return;
-        //
-        //     _formulaValues[key] = value;
-        // }
-        //
-        // public bool TryGetFormulaValue(string key, out double value)
-        // {
-        //     if (string.IsNullOrEmpty(key))
-        //     {
-        //         value = 0d;
-        //         return false;
-        //     }
-        //
-        //     return _formulaValues.TryGetValue(key, out value);
-        // }
-
-        // public IReadOnlyDictionary<string, double> FormulaContext => _formulaValues;
-
         public void MarkSkipped(ResolvePhaseType phase)
         {
             _skippedPhases.Add(phase);
@@ -191,12 +160,10 @@ namespace Aquila.Combat.Resolve
             LifecycleCheckIo = default;
 
             _floatValues.Clear();
-            // _formulaValues.Clear();
             _skippedPhases.Clear();
         }
 
         private readonly Dictionary<string, float> _floatValues = new Dictionary<string, float>(8);
-        // private readonly Dictionary<string, double> _formulaValues = new Dictionary<string, double>(8);
         private readonly HashSet<ResolvePhaseType> _skippedPhases = new HashSet<ResolvePhaseType>();
 
         public ResolveRequest Request { get; private set; }

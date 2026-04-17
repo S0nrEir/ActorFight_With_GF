@@ -1,4 +1,4 @@
-﻿using Aquila.Formula;
+using Aquila.Formula;
 using Aquila.Toolkit;
 using Cfg.Enum;
 
@@ -27,7 +27,7 @@ namespace Aquila.Combat.Resolve
                 return;
             }
 
-            if (!FormulaEngine.Instance.TryEvaluate(formulaId, context.FormulaContext, context, out var computed, out var reason))
+            if (!FormulaEngine.Instance.TryEvaluate(formulaId, null, context, out var computed, out var reason))
             {
                 Tools.Logger.Error($"[Resolve] Formula evaluate failed. formulaID={formulaId}, reason={reason}");
                 result.SetInterrupt("formula_evaluate_failed");
