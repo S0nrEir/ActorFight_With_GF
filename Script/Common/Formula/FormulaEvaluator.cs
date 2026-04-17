@@ -18,8 +18,7 @@ namespace Aquila.Formula
         /// </summary>
         internal FormulaResult Evaluate(
             CompiledFormula formula,
-            IReadOnlyDictionary<string, double> variables,
-            IFormulaIdentifierResolver identifierResolver = null,
+            Dictionary<string, FormulaIdentifierRedirector> identifierRedirectors,
             object context = null)
         {
             if (formula == null)
@@ -27,8 +26,7 @@ namespace Aquila.Formula
                 return FormulaResult.Fail(FormulaErrorCodes.RuntimeGenericError);
             }
 
-            var variableMap = variables ?? EmptyVariables.Instance;
-            if (!TryEvaluateNode(formula.Ast.Root, variableMap, identifierResolver, context, out var value, out var errorCode))
+            if (!TryEvaluateNode(formula.Ast.Root, identifierRedirectors, context, out var value, out var errorCode))
             {
                 return FormulaResult.Fail(errorCode);
             }
@@ -41,8 +39,7 @@ namespace Aquila.Formula
         /// </summary>
         private static bool TryEvaluateNode(
             FormulaAstNode node,
-            IReadOnlyDictionary<string, double> variables,
-            IFormulaIdentifierResolver identifierResolver,
+            Dictionary<string, FormulaIdentifierRedirector> identifierRedirectors,
             object context,
             out double value,
             out ushort errorCode)
@@ -57,17 +54,18 @@ namespace Aquila.Formula
                     return true;
 
                 case FormulaVariableNode variableNode:
-                    if (variables.TryGetValue(variableNode.Name, out value))
-                        return true;
+                    // if (variables.TryGetValue(variableNode.Name, out value))
+                    //     return true;
 
-                    if (identifierResolver != null && identifierResolver.TryResolveIdentifier(variableNode.Name, context, out value))
+                    // if (identifierRedirectors != null && identifierRedirectors.TryGetValue(variableNode.Name, context, out value))
+                     if(identifierRedirectors.TryGetValue(variableNode.Name, out var redirector) && redirector(context, out value))
                         return true;
 
                     errorCode = FormulaErrorCodes.RuntimeUnknownVariable;
                     return false;
 
                 case FormulaUnaryNode unaryNode:
-                    if (!TryEvaluateNode(unaryNode.Operand, variables, identifierResolver, context, out var unaryValue, out errorCode))
+                    if (!TryEvaluateNode(unaryNode.Operand, identifierRedirectors, context, out var unaryValue, out errorCode))
                     {
                         return false;
                     }
@@ -76,12 +74,12 @@ namespace Aquila.Formula
                     return true;
 
                 case FormulaBinaryNode binaryNode:
-                    if (!TryEvaluateNode(binaryNode.Left, variables, identifierResolver, context, out var leftValue, out errorCode))
+                    if (!TryEvaluateNode(binaryNode.Left, identifierRedirectors, context, out var leftValue, out errorCode))
                     {
                         return false;
                     }
 
-                    if (!TryEvaluateNode(binaryNode.Right, variables, identifierResolver, context, out var rightValue, out errorCode))
+                    if (!TryEvaluateNode(binaryNode.Right, identifierRedirectors, context, out var rightValue, out errorCode))
                     {
                         return false;
                     }
@@ -128,7 +126,7 @@ namespace Aquila.Formula
                     var args = new double[argCount];
                     for (int i = 0; i < argCount; i++)
                     {
-                        if (!TryEvaluateNode(functionNode.Arguments[i], variables, identifierResolver, context, out args[i], out errorCode))
+                        if (!TryEvaluateNode(functionNode.Arguments[i], identifierRedirectors, context, out args[i], out errorCode))
                         {
                             return false;
                         }

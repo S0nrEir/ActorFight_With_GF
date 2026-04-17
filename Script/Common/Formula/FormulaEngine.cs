@@ -13,7 +13,7 @@ namespace Aquila.Formula
     /// <summary>
     /// 公式引擎门面（编译+缓存+执行）/ Formula engine facade (compile + cache + evaluate).
     /// </summary>
-    public sealed class FormulaEngine : IFormulaEngine, IFormulaIdentifierResolver
+    public sealed class FormulaEngine : IFormulaEngine,IFormulaIdentifierResolver
     {
         /// <summary>
         /// 构造引擎并可选注入变量白名单 / Construct engine with optional variable allow-list.
@@ -87,28 +87,28 @@ namespace Aquila.Formula
         /// <summary>
         /// 执行指定公式 ID / Evaluate specified formula ID.
         /// </summary>
-        public FormulaResult Evaluate(int formulaId, IReadOnlyDictionary<string, double> variables)
-        {
-            return Evaluate(formulaId, variables, null);
-        }
+        // public FormulaResult Evaluate(int formulaId, IReadOnlyDictionary<string, double> variables)
+        // {
+        //     return Evaluate(formulaId, variables, null);
+        // }
 
         /// <summary>
         /// 执行指定公式 ID（携带 context 用于标识符重定向）.
         /// </summary>
-        public FormulaResult Evaluate(int formulaId, IReadOnlyDictionary<string, double> variables, object context)
+        public FormulaResult Evaluate(int formulaId,Dictionary<string, FormulaIdentifierRedirector> identifierRedirectors ,object context)
         {
             if (!_cache.TryGetById(formulaId, out var compiled))
             {
                 return FormulaResult.Fail(FormulaErrorCodes.RuntimeGenericError);
             }
 
-            return _evaluator.Evaluate(compiled, variables, this, context);
+            return _evaluator.Evaluate(compiled,identifierRedirectors, context);
         }
 
         /// <summary>
         /// TryEvaluate：包含初始化与失败原因。
         /// </summary>
-        public bool TryEvaluate(int formulaId, IReadOnlyDictionary<string, double> variables, object context, out float value, out string reason)
+        public bool TryEvaluate(int formulaId, object context, out float value, out string reason)
         {
             value = 0f;
 
@@ -117,7 +117,7 @@ namespace Aquila.Formula
                 reason = $"formula_id_invalid:{formulaId}";
                 return false;
             }
-            var result = Evaluate(formulaId, variables, context);
+            var result = Evaluate(formulaId,_identifierRedirectors, context);
             if (!result.Success || !result.Value.HasValue)
             {
                 reason = $"formula_eval_failed:{formulaId}:err={result.ErrorCode}";
