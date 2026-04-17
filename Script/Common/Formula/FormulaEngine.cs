@@ -129,21 +129,6 @@ namespace Aquila.Formula
             return true;
         }
 
-        public void SetIdentifierRedirectors(IReadOnlyDictionary<string, FormulaIdentifierRedirector> redirectors)
-        {
-            _identifierRedirectors.Clear();
-            if (redirectors == null)
-                return;
-
-            foreach (var pair in redirectors)
-            {
-                if (string.IsNullOrEmpty(pair.Key) || pair.Value == null)
-                    continue;
-
-                _identifierRedirectors[pair.Key] = pair.Value;
-            }
-        }
-
         public bool RegisterIdentifierRedirector(string identifier, FormulaIdentifierRedirector redirector)
         {
             if (string.IsNullOrEmpty(identifier) || redirector == null)
