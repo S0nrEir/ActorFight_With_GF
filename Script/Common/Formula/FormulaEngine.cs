@@ -139,11 +139,6 @@ namespace Aquila.Formula
             return true;
         }
 
-        public void ClearIdentifierRedirectors()
-        {
-            _identifierRedirectors.Clear();
-        }
-
         bool IFormulaIdentifierResolver.TryResolveIdentifier(string identifier, object context, out double value)
         {
             value = 0d;
