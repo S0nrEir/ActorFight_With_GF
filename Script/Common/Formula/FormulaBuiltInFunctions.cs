@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Aquila.Formula
 {
@@ -73,12 +74,7 @@ namespace Aquila.Formula
                         "clamp",
                         3,
                         3,
-                        args =>
-                        {
-                            double min = Math.Min(args[1], args[2]);
-                            double max = Math.Max(args[1], args[2]);
-                            return Math.Min(Math.Max(args[0], min), max);
-                        })
+                        args => Mathf.Clamp((float)args[0], (float)args[1], (float)args[2]))
                 },
                 {
                     "min",
@@ -87,6 +83,10 @@ namespace Aquila.Formula
                 {
                     "max",
                     new FormulaFunctionDefinition("max", 2, int.MaxValue, args => args.Max())
+                },
+                {
+                    "pow",
+                    new FormulaFunctionDefinition("pow", 2, int.MaxValue, args => Mathf.Pow((float)args[0], (float)args[1]))
                 }
             };
     }

@@ -564,6 +564,7 @@ namespace Aquila.Formula
                 return false;
             }
 
+            _identifierRedirectors = new Dictionary<string, FormulaIdentifierRedirector>(StringComparer.OrdinalIgnoreCase);
             if (!TryBuildRuntimeDefinitions(formulaList , out var definitions, out reason))
             {
                 _initializeFailureReason = reason;
@@ -590,14 +591,6 @@ namespace Aquila.Formula
             definitions = null;
             reason = null;
 
-            var formulaTable = GameEntry.LuBan?.Tables?.Formula;
-            if (formulaTable == null)
-            {
-                reason = "formula_table_missing";
-                return false;
-            }
-            
-            
             definitions = new List<FormulaDefinition>(formulaList != null ? formulaList.Count : 0);
             if (formulaList == null)
                 return true;
@@ -622,7 +615,7 @@ namespace Aquila.Formula
         private bool _isInitialized;
         private string _initializeFailureReason;
 
-        private readonly Dictionary<string, FormulaIdentifierRedirector> _identifierRedirectors;
+        private Dictionary<string, FormulaIdentifierRedirector> _identifierRedirectors;
         
         public static FormulaEngine Instance
         {
