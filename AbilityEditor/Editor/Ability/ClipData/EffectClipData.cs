@@ -55,6 +55,12 @@ namespace Aquila.AbilityEditor
         private int _resolveTypeID = 1;
 
         /// <summary>
+        /// 伤害结算公式ID（结算开启时必须大于0）
+        /// </summary>
+        [SerializeField]
+        private int _formulaID = -1;
+
+        /// <summary>
         /// 效果强度/层数
         /// </summary>
         [SerializeField]
@@ -160,6 +166,7 @@ namespace Aquila.AbilityEditor
         {
             _effectId = 0;
             _resolveTypeID = -1;
+            _formulaID = -1;
             _stackCount = 1;
             _canStack = false;
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
@@ -172,6 +179,7 @@ namespace Aquila.AbilityEditor
         {
             _effectId = effectId;
             _resolveTypeID = -1;
+            _formulaID = -1;
             _stackCount = 1;
             _canStack = false;
         }
@@ -186,6 +194,12 @@ namespace Aquila.AbilityEditor
         {
             get => _resolveTypeID;
             set => _resolveTypeID = value;
+        }
+
+        public int FormulaID
+        {
+            get => _formulaID;
+            set => _formulaID = value;
         }
 
         public int StackCount
@@ -278,6 +292,7 @@ namespace Aquila.AbilityEditor
             CopyBaseTo(clone);
             clone._effectId = _effectId;
             clone._resolveTypeID = _resolveTypeID;
+            clone._formulaID = _formulaID;
             clone._stackCount = _stackCount;
             clone._canStack = _canStack;
 
@@ -311,6 +326,12 @@ namespace Aquila.AbilityEditor
             if (_resolveTypeID <= 0)
             {
                 errorMessage = "ResolveTypeID must be greater than 0";
+                return false;
+            }
+            
+            if (_formulaID <= 0)
+            {
+                errorMessage = "FormulaID must be greater than 0 for damage effects";
                 return false;
             }
 

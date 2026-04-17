@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
@@ -130,6 +130,8 @@ namespace Editor.AbilityEditor.Tools
                     {
                         writer.WriteInt32(effectId);
                     }
+
+                    writer.WriteInt32(data.FormulaID);
                 }
             }
             
@@ -202,6 +204,8 @@ namespace Editor.AbilityEditor.Tools
                     {
                         writer.WriteInt32(effectId);
                     }
+
+                    writer.WriteInt32(data.FormulaID);
                 }
             }
             
@@ -218,6 +222,6 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "EFFECT";
-        private const byte VERSION = 0x02;
+        private const byte VERSION = 0x03;
     }
 }

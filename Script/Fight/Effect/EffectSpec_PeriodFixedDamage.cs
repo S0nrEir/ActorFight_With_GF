@@ -1,8 +1,8 @@
-using Aquila.Event;
+using Aquila.Combat.Resolve;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
-using UnityEngine;
+using Cfg.Enum;
 
 namespace Aquila.Fight
 {
@@ -17,27 +17,21 @@ namespace Aquila.Fight
             base.Init(data, castor, target);
             _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
-        
-        // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-        //     Module_ProxyActor.ActorInstance target = null )
-        // {
-        //     base.Init( meta ,castor,target );
-        //     _modifier.Setup( ModifierType, FloatParam1 );
-        // }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //get damage
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
-            if ( addon is null )
+            if (addon is null)
             {
-                Tools.Logger.Warning( "EffectSpec_PeriodFixedDamage.Apply()--->addon is null" );
+                Tools.Logger.Warning("EffectSpec_PeriodFixedDamage.Apply()--->addon is null");
                 return;
             }
 
-            var currHP = addon.GetCurrHPCorrection();
-            currHP = _modifier.Calc( currHP );
-            addon.SetCurrHP( currHP );
+            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, 0f, ResolveSourceType.PoisonDamage);
+            if (!resolveResult.Success)
+            {
+                Tools.Logger.Error($"[EffectSpec_Period_FixedDamage] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");
+            }
         }
     }
 }

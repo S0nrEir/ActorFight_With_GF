@@ -184,7 +184,7 @@ namespace Aquila.Toolkit
                     string magic = reader.ReadFixedString(6);
                     byte version = reader.ReadByte();
 
-                    if (magic != EFCT_MAGIC || version != BIN_VERSION)
+                    if (magic != EFCT_MAGIC || version != BIN_VERSION_3)
                     {
                         Logger.Warning($"Tools.Ability.ParseEffectBinary: invalid header (magic={magic}, version={version})");
                         return default;
@@ -219,6 +219,10 @@ namespace Aquila.Toolkit
                     for (int i = 0; i < awakeCount; i++)
                         awakeEffects[i] = reader.ReadInt32();
 
+                    int formulaID = -1;
+                    if (version >= BIN_VERSION_3 && !reader.IsEnd)
+                        formulaID = reader.ReadInt32();
+
                     return new EffectData(
                         effectId: id,
                         stackLimit: 0,
@@ -243,7 +247,8 @@ namespace Aquila.Toolkit
                         intParam2: int2,
                         intParam3: int3,
                         intParam4: int4,
-                        resolveTypeID: resolveTypeID);
+                        resolveTypeID: resolveTypeID,
+                        formulaID: formulaID);
                 }
             }
 
@@ -254,7 +259,7 @@ namespace Aquila.Toolkit
                     string magic = reader.ReadFixedString(4);
                     byte version = reader.ReadByte();
 
-                    if (magic != ABLT_MAGIC || version != BIN_VERSION)
+                    if (magic != ABLT_MAGIC || version != BIN_VERSION_3)
                     {
                         Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
                         return default;
@@ -352,17 +357,21 @@ namespace Aquila.Toolkit
                 var inlineAwakes = new int[awakeCount];
                 for (int i = 0; i < awakeCount; i++)
                     inlineAwakes[i] = reader.ReadInt32();
+                
+                int inlineFormulaID = reader.ReadInt32();
 
                 EffectData effectData;
                 if (effectTemplates.TryGetValue(effectId, out var tmpl))
                 {
                     var srcDerives = tmpl.GetDeriveEffects();
                     var dArr = new int[srcDerives.Count];
-                    for (int i = 0; i < srcDerives.Count; i++) dArr[i] = srcDerives[i];
+                    for (int i = 0; i < srcDerives.Count; i++)
+                        dArr[i] = srcDerives[i];
 
                     var srcAwakes = tmpl.GetAwakeEffects();
                     var aArr = new int[srcAwakes.Count];
-                    for (int i = 0; i < srcAwakes.Count; i++) aArr[i] = srcAwakes[i];
+                    for (int i = 0; i < srcAwakes.Count; i++)
+                        aArr[i] = srcAwakes[i];
 
                     effectData = new EffectData(
                         effectId: effectId,
@@ -388,7 +397,8 @@ namespace Aquila.Toolkit
                         intParam2: tmpl.GetIntParam2(),
                         intParam3: tmpl.GetIntParam3(),
                         intParam4: tmpl.GetIntParam4(),
-                        resolveTypeID: tmpl.GetResolveTypeID());
+                        resolveTypeID: tmpl.GetResolveTypeID(),
+                        formulaID: tmpl.GetFormulaID());
                 }
                 else
                 {
@@ -416,7 +426,8 @@ namespace Aquila.Toolkit
                         intParam2: i2,
                         intParam3: i3,
                         intParam4: i4,
-                        resolveTypeID: inlineResolveTypeID);
+                        resolveTypeID: inlineResolveTypeID,
+                        formulaID: inlineFormulaID);
                 }
 
                 effectDataList.Add(effectData);
@@ -447,7 +458,7 @@ namespace Aquila.Toolkit
             private const string EFFECT_BIN_DIR = "Res/Config/Effect";
             private const string ABLT_MAGIC = "ABLT";
             private const string EFCT_MAGIC = "EFFECT";
-            private const byte BIN_VERSION = 0x02;
+            private const byte BIN_VERSION_3 = 0x03;
         }//end class Ability
     }//end class Tools
 }

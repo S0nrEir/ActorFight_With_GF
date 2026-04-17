@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using UnityEditor;
 
@@ -68,6 +68,7 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
+                _currentVersion = version;
                 sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
 
                 // Basic Info
@@ -148,6 +149,7 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "EFFECT";
+        private static byte _currentVersion = 0x00;
         private const string CONTEXT_MENU_PATH = "Assets/EffectEditor/ReadBinaryEffectData";
     }
 }

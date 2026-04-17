@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Aquila.Fight;
 using Aquila.Module;
 using Cfg.Enum;
@@ -13,16 +14,27 @@ namespace Aquila.Combat.Resolve
             EffectSpec_Base effectSpec,
             int resolveTypeId)
         {
-            var request = ReferencePool.Acquire<ResolveRequest>();
-            request.Castor = castor;
-            request.Target = target;
-            request.EffectSpec = effectSpec;
-            request.EffectData = effectSpec.Meta;
-            request.InputDelta = 0f;
-            request.ResolveTypeId = resolveTypeId;
-            request.SourceType = ResolveSourceType.Unknown;
-            return request;
+            return Create(castor, target, effectSpec, 0f, resolveTypeId, ResolveSourceType.Unknown);
         }
+
+        // public static ResolveRequest Create(
+        //     Module_ProxyActor.ActorInstance castor,
+        //     Module_ProxyActor.ActorInstance target,
+        //     EffectSpec_Base effectSpec,
+        //     float inputDelta,
+        //     int resolveTypeId,
+        //     ResolveSourceType sourceType)
+        // {
+        //     var request = ReferencePool.Acquire<ResolveRequest>();
+        //     request.Castor = castor;
+        //     request.Target = target;
+        //     request.EffectSpec = effectSpec;
+        //     request.EffectData = effectSpec.Meta;
+        //     request.InputDelta = inputDelta;
+        //     request.ResolveTypeId = resolveTypeId;
+        //     request.SourceType = sourceType;
+        //     return request;
+        // }
 
         public static ResolveRequest Create(
             Module_ProxyActor.ActorInstance castor,
@@ -32,15 +44,7 @@ namespace Aquila.Combat.Resolve
             int resolveTypeId,
             ResolveSourceType sourceType)
         {
-            var request = Create(
-                castor,
-                target,
-                effectSpec,
-                resolveTypeId);
-
-            request.InputDelta = inputDelta;
-            request.SourceType = sourceType;
-            return request;
+            return Create(castor, target, effectSpec, inputDelta, resolveTypeId, sourceType);
         }
 
         public Module_ProxyActor.ActorInstance Castor { get; private set; }

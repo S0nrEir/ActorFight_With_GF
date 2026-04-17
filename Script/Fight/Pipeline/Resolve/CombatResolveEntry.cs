@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Aquila.Fight;
+using Aquila.Formula;
 using Aquila.Module;
 using Cfg.Enum;
 using GameFramework;
@@ -30,14 +31,15 @@ namespace Aquila.Combat.Resolve
             float inputDelta,
             ResolveSourceType sourceType = ResolveSourceType.Unknown)
         {
-            var typeId = GetResolveTypeId(effectSpec.Meta);
+            var meta = effectSpec.Meta;
+            var typeId = GetResolveTypeId(meta);
             var request = ResolveRequest.Create(castor, target, effectSpec, inputDelta, typeId, sourceType);
 
             _phaseBuffer.Clear();
             PhaseProvider.TryGetPhases(typeId, _phaseBuffer);
 
             var context = ReferencePool.Acquire<ResolveContext>();
-            context.Setup(request);
+            context.SetupResolveReq(request);
             context.ResetPhaseStates(_phaseBuffer);
 
             var result = Resolver.Resolve(request, context, _phaseBuffer);
@@ -45,6 +47,26 @@ namespace Aquila.Combat.Resolve
             return result;
         }
 
+        // public static bool TryEvaluateFormula(
+        //     int formulaId,
+        //     IReadOnlyDictionary<string, double> variables,
+        //     out float value,
+        //     out string reason)
+        // {
+        //     return FormulaEngine.Instance.TryEvaluate(formulaId, variables, null, out value, out reason);
+        // }
+
+        // public static void SetFormulaIdentifierRedirectors(IReadOnlyDictionary<string, FormulaIdentifierRedirector> redirectors)
+        // {
+        //     FormulaEngine.Instance.SetIdentifierRedirectors(redirectors);
+        // }
+        //
+        // public static bool RegisterFormulaIdentifierRedirector(string identifier, FormulaIdentifierRedirector redirector)
+        // {
+        //     return FormulaEngine.Instance.RegisterIdentifierRedirector(identifier, redirector);
+        // }
+
+        // private static readonly FormulaEngine _engine = new FormulaEngine();
         private static readonly ResolvePhaseProvider PhaseProvider = new ResolvePhaseProvider();
         private static readonly CombatResolver Resolver = new CombatResolver(PhaseProvider, new PhaseRegistry());
         private static readonly List<ResolvePhaseDefinition> _phaseBuffer = new List<ResolvePhaseDefinition>(16);

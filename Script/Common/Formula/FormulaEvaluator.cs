@@ -1,8 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Aquila.Formula
 {
+    internal interface IFormulaIdentifierResolver
+    {
+        bool TryResolveIdentifier(string identifier, object context, out double value);
+    }
+
     /// <summary>
     /// 公式运行时求值器 / Runtime formula evaluator.
     /// </summary>
@@ -11,7 +16,11 @@ namespace Aquila.Formula
         /// <summary>
         /// 执行已编译公式 / Evaluate compiled formula.
         /// </summary>
-        internal FormulaResult Evaluate(CompiledFormula formula, IReadOnlyDictionary<string, double> variables)
+        internal FormulaResult Evaluate(
+            CompiledFormula formula,
+            IReadOnlyDictionary<string, double> variables,
+            IFormulaIdentifierResolver identifierResolver = null,
+            object context = null)
         {
             if (formula == null)
             {
@@ -19,7 +28,7 @@ namespace Aquila.Formula
             }
 
             var variableMap = variables ?? EmptyVariables.Instance;
-            if (!TryEvaluateNode(formula.Ast.Root, variableMap, out var value, out var errorCode))
+            if (!TryEvaluateNode(formula.Ast.Root, variableMap, identifierResolver, context, out var value, out var errorCode))
             {
                 return FormulaResult.Fail(errorCode);
             }
@@ -33,6 +42,8 @@ namespace Aquila.Formula
         private static bool TryEvaluateNode(
             FormulaAstNode node,
             IReadOnlyDictionary<string, double> variables,
+            IFormulaIdentifierResolver identifierResolver,
+            object context,
             out double value,
             out ushort errorCode)
         {
@@ -46,16 +57,17 @@ namespace Aquila.Formula
                     return true;
 
                 case FormulaVariableNode variableNode:
-                    if (!variables.TryGetValue(variableNode.Name, out value))
-                    {
-                        errorCode = FormulaErrorCodes.RuntimeUnknownVariable;
-                        return false;
-                    }
+                    if (variables.TryGetValue(variableNode.Name, out value))
+                        return true;
 
-                    return true;
+                    if (identifierResolver != null && identifierResolver.TryResolveIdentifier(variableNode.Name, context, out value))
+                        return true;
+
+                    errorCode = FormulaErrorCodes.RuntimeUnknownVariable;
+                    return false;
 
                 case FormulaUnaryNode unaryNode:
-                    if (!TryEvaluateNode(unaryNode.Operand, variables, out var unaryValue, out errorCode))
+                    if (!TryEvaluateNode(unaryNode.Operand, variables, identifierResolver, context, out var unaryValue, out errorCode))
                     {
                         return false;
                     }
@@ -64,12 +76,12 @@ namespace Aquila.Formula
                     return true;
 
                 case FormulaBinaryNode binaryNode:
-                    if (!TryEvaluateNode(binaryNode.Left, variables, out var leftValue, out errorCode))
+                    if (!TryEvaluateNode(binaryNode.Left, variables, identifierResolver, context, out var leftValue, out errorCode))
                     {
                         return false;
                     }
 
-                    if (!TryEvaluateNode(binaryNode.Right, variables, out var rightValue, out errorCode))
+                    if (!TryEvaluateNode(binaryNode.Right, variables, identifierResolver, context, out var rightValue, out errorCode))
                     {
                         return false;
                     }
@@ -113,11 +125,10 @@ namespace Aquila.Formula
                         return false;
                     }
 
-                    // 先递归求参数，再调用白名单函数 / Evaluate args first, then call allow-listed function.
                     var args = new double[argCount];
                     for (int i = 0; i < argCount; i++)
                     {
-                        if (!TryEvaluateNode(functionNode.Arguments[i], variables, out args[i], out errorCode))
+                        if (!TryEvaluateNode(functionNode.Arguments[i], variables, identifierResolver, context, out args[i], out errorCode))
                         {
                             return false;
                         }

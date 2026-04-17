@@ -39,6 +39,7 @@ namespace Aquila.AbilityEditor
             _affectedAttribute = TargetClipData.AffectedAttribute;
             _target = TargetClipData.Target;
             _resolveTypeID = TargetClipData.ResolveTypeID;
+            _formulaID = TargetClipData.FormulaID;
             _duration = TargetClipData.Duration;
             _period = TargetClipData.Period;
             _policy = TargetClipData.Policy;
@@ -68,6 +69,7 @@ namespace Aquila.AbilityEditor
             TargetClipData.AffectedAttribute = _affectedAttribute;
             TargetClipData.Target = _target;
             TargetClipData.ResolveTypeID = _resolveTypeID;
+            TargetClipData.FormulaID = _formulaID;
             TargetClipData.Duration = _duration;
             TargetClipData.Period = _period;
             TargetClipData.Policy = _policy;
@@ -111,6 +113,9 @@ namespace Aquila.AbilityEditor
 
         [SerializeField]
         private int _resolveTypeID = -1;
+
+        [SerializeField]
+        private int _formulaID = -1;
 
         [SerializeField]
         private float _duration;
@@ -193,6 +198,7 @@ namespace Aquila.AbilityEditor
         private SerializedProperty _affectedAttributeProp;
         private SerializedProperty _targetProp;
         private SerializedProperty _resolveTypeIDProp;
+        private SerializedProperty _formulaIDProp;
         private SerializedProperty _durationProp;
         private SerializedProperty _periodProp;
         private SerializedProperty _policyProp;
@@ -221,6 +227,7 @@ namespace Aquila.AbilityEditor
             _affectedAttributeProp = serializedObject.FindProperty("_affectedAttribute");
             _targetProp = serializedObject.FindProperty("_target");
             _resolveTypeIDProp = serializedObject.FindProperty("_resolveTypeID");
+            _formulaIDProp = serializedObject.FindProperty("_formulaID");
             _durationProp = serializedObject.FindProperty("_duration");
             _periodProp = serializedObject.FindProperty("_period");
             _policyProp = serializedObject.FindProperty("_policy");
@@ -313,6 +320,7 @@ namespace Aquila.AbilityEditor
                 target = EditorGUILayout.IntPopup("目标类型 / Target", target, new[] { "Friendly", "Enemy" }, new[] { 0, 1 });
                 _targetProp.intValue = target;
                 EditorGUILayout.PropertyField(_resolveTypeIDProp, new GUIContent("Resolve Type ID", "<=0 uses default resolve type"));
+                EditorGUILayout.PropertyField(_formulaIDProp, new GUIContent("Formula ID", "damage resolve enabled 时必须>0"));
 
                 EditorGUI.indentLevel--;
                 EditorGUILayout.Space();

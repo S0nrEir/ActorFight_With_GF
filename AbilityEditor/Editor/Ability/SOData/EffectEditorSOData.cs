@@ -50,6 +50,9 @@ namespace Aquila.AbilityEditor.Config
         [Tooltip("Resolve type ID (<=0 uses default resolve type)")]
         public int ResolveTypeID = -1;
 
+        [Tooltip("Formula ID used in resolve pipeline (must be >0 when damage resolve is enabled)")]
+        public int FormulaID = -1;
+
         [Tooltip("影响的数值类型")]
         public actor_attribute AffectedAttribute;
 

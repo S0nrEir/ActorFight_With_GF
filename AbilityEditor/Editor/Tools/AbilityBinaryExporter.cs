@@ -169,6 +169,8 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteInt32(awakeEffects.Length);
             foreach (var effectId in awakeEffects)
                 writer.WriteInt32(effectId);
+
+            writer.WriteInt32(clip.FormulaID);
         }
 
         private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
@@ -203,6 +205,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x02;
+        private const byte VERSION = 0x03;
     }
 }

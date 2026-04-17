@@ -221,7 +221,8 @@ namespace Editor.AbilityEditor.Tools
                                 intParam2: standaloneEffect.Int2,
                                 intParam3: standaloneEffect.Int3,
                                 intParam4: standaloneEffect.Int4,
-                                resolveTypeID: standaloneEffect.ResolveTypeID);
+                                resolveTypeID: standaloneEffect.ResolveTypeID,
+                                formulaID: standaloneEffect.FormulaID);
                         }
                         else
                         {
@@ -249,7 +250,8 @@ namespace Editor.AbilityEditor.Tools
                                 intParam2: effectClip.IntParam2,
                                 intParam3: effectClip.IntParam3,
                                 intParam4: effectClip.IntParam4,
-                                resolveTypeID: effectClip.ResolveTypeID);
+                                resolveTypeID: effectClip.ResolveTypeID,
+                                formulaID: effectClip.FormulaID);
                         }
 
                         effectDataList.Add(effectData);
@@ -356,6 +358,9 @@ namespace Editor.AbilityEditor.Tools
 
                 if (ae.GetResolveTypeID() != ee.ResolveTypeID)
                     differences.Add($"{prefix} ResolveTypeID | Assembled: {ae.GetResolveTypeID()} | Editor: {ee.ResolveTypeID}");
+
+                if (ae.GetFormulaID() != ee.FormulaID)
+                    differences.Add($"{prefix} FormulaID | Assembled: {ae.GetFormulaID()} | Editor: {ee.FormulaID}");
 
                 if (!FloatEquals(ae.GetDuration(), ee.Duration))
                     differences.Add($"{prefix} Duration | Assembled: {ae.GetDuration()} | Editor: {ee.Duration}");
@@ -534,6 +539,9 @@ namespace Editor.AbilityEditor.Tools
             if (editor.ResolveTypeID != prod.ResolveTypeID)
                 differences.Add($"{prefix} ResolveTypeID | Editor: {editor.ResolveTypeID} | Production: {prod.ResolveTypeID}");
 
+            if (editor.FormulaID != prod.FormulaID)
+                differences.Add($"{prefix} FormulaID | Editor: {editor.FormulaID} | Production: {prod.FormulaID}");
+
             if (!FloatEquals(editor.Duration, prod.Duration))
                 differences.Add($"{prefix} Duration | Editor: {editor.Duration} | Production: {prod.Duration}");
 
@@ -613,6 +621,9 @@ namespace Editor.AbilityEditor.Tools
                 if (inlineEffect.ResolveTypeID != standaloneEffect.ResolveTypeID)
                     differences.Add($"{crossPrefix} ResolveTypeID | .ablt: {inlineEffect.ResolveTypeID} | .efct: {standaloneEffect.ResolveTypeID}");
 
+                if (inlineEffect.FormulaID != standaloneEffect.FormulaID)
+                    differences.Add($"{crossPrefix} FormulaID | .ablt: {inlineEffect.FormulaID} | .efct: {standaloneEffect.FormulaID}");
+
                 if (!FloatEquals(inlineEffect.Duration, standaloneEffect.Duration))
                     differences.Add($"{crossPrefix} Duration | .ablt: {inlineEffect.Duration} | .efct: {standaloneEffect.Duration}");
 
@@ -690,6 +701,9 @@ namespace Editor.AbilityEditor.Tools
 
                     if (editorEffect.ResolveTypeID != prodEffect.ResolveTypeID)
                         differences.Add($"{editorPrefix} ResolveTypeID | EditorSO: {editorEffect.ResolveTypeID} | .efct: {prodEffect.ResolveTypeID}");
+
+                    if (editorEffect.FormulaID != prodEffect.FormulaID)
+                        differences.Add($"{editorPrefix} FormulaID | EditorSO: {editorEffect.FormulaID} | .efct: {prodEffect.FormulaID}");
 
                     if (editorEffect.AffectedAttribute != prodEffect.EffectType)
                         differences.Add($"{editorPrefix} EffectType(Attribute) | EditorSO: {editorEffect.AffectedAttribute} | .efct: {prodEffect.EffectType}");
@@ -912,3 +926,4 @@ namespace Editor.AbilityEditor.Tools
         #endregion
     }
 }
+

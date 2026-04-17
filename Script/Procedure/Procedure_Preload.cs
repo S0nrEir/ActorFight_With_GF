@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Aquila.Config;
+using Aquila.Formula;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
@@ -65,6 +66,7 @@ namespace Aquila.Procedure
             PreloadInternalTable();
             PreloadInfoBoard();
             PreloadAbilityPool();
+            PreloadFormul();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -82,6 +84,11 @@ namespace Aquila.Procedure
         private void PreloadAbilityPool()
         {
             GameEntry.AbilityPool.Init();
+        }
+
+        private void PreloadFormul()
+        {
+            FormulaEngine.Init();
         }
 
         /// <summary>

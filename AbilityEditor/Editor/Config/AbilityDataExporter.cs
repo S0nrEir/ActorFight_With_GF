@@ -143,6 +143,7 @@ namespace Editor.AbilityEditor.Config
             effectData.AffectedAttribute = clip.AffectedAttribute;
             effectData.Target = clip.Target;
             effectData.ResolveTypeID = clip.ResolveTypeID;
+            effectData.FormulaID = clip.FormulaID;
             effectData.Duration = clip.Duration;
             effectData.Period = clip.Period;
             effectData.Policy = clip.Policy;

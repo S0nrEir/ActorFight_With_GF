@@ -68,6 +68,7 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
+                _currentVersion = version;
                 sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
 
                 // Basic Info
@@ -287,6 +288,7 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "ABLT";
+        private static byte _currentVersion = 0x02;
         private const string CONTEXT_MENU_PATH = "Assets/AbilityEditor/ReadBinaryAbilityData";
     }
 }

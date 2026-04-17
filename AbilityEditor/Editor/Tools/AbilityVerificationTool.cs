@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -17,7 +17,8 @@ namespace Editor.AbilityEditor.Tools
     {
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "ABLT";
-        private const byte EXPECTED_VERSION = 0x02;
+        // private const byte VERSION_2 = 0x02;
+        private const byte VERSION_3 = 0x03;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -121,6 +122,7 @@ namespace Editor.AbilityEditor.Tools
                                     AffectedAttribute = effectClip.AffectedAttribute,
                                     Target = effectClip.Target,
                                     ResolveTypeID = effectClip.ResolveTypeID,
+                                    FormulaID = effectClip.FormulaID,
                                     Duration = effectClip.Duration,
                                     Period = effectClip.Period,
                                     Policy = effectClip.Policy,
@@ -251,7 +253,8 @@ namespace Editor.AbilityEditor.Tools
 
                 if (magic != MAGIC)
                     throw new InvalidDataException($"Invalid magic: {magic}");
-                if (version != EXPECTED_VERSION)
+                
+                if (!IsSupportedVersion(version))
                     throw new InvalidDataException($"Unsupported version: {version}");
 
                 // Read Basic Info
@@ -339,6 +342,10 @@ namespace Editor.AbilityEditor.Tools
                     {
                         ((CachedEffectClipData)clip).AwakeEffects[i] = reader.ReadInt32();
                     }
+
+                    // ((CachedEffectClipData)clip).FormulaID = version >= VERSION_3
+                    //     ? reader.ReadInt32()
+                    //     : -1;
                     break;
 
                 case 2: // Audio
@@ -471,6 +478,9 @@ namespace Editor.AbilityEditor.Tools
 
                 if (expectedEffect.ResolveTypeID != actualEffect.ResolveTypeID)
                     differences.Add($"{prefix} (EffectClip) ResolveTypeID | Expected: {expectedEffect.ResolveTypeID} | Actual: {actualEffect.ResolveTypeID}");
+
+                if (expectedEffect.FormulaID != actualEffect.FormulaID)
+                    differences.Add($"{prefix} (EffectClip) FormulaID | Expected: {expectedEffect.FormulaID} | Actual: {actualEffect.FormulaID}");
                 
                 if (!FloatEquals(expectedEffect.Duration, actualEffect.Duration))
                     differences.Add($"{prefix} (EffectClip) Duration | Expected: {expectedEffect.Duration} | Actual: {actualEffect.Duration}");
@@ -700,6 +710,7 @@ namespace Editor.AbilityEditor.Tools
             public actor_attribute AffectedAttribute;
             public int Target;
             public int ResolveTypeID;
+            public int FormulaID;
             public float Duration;
             public float Period;
             public DurationPolicy Policy;
@@ -735,6 +746,13 @@ namespace Editor.AbilityEditor.Tools
             public bool FollowAttachPoint;
         }
 
+        private static bool IsSupportedVersion(byte version)
+        {
+            return version == VERSION_3;
+        }
+
         #endregion
     }
 }
+
+
