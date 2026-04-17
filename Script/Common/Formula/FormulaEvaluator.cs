@@ -21,10 +21,6 @@ namespace Aquila.Formula
             Dictionary<string, FormulaIdentifierRedirector> identifierRedirectors,
             object context = null)
         {
-            if (formula == null)
-            {
-                return FormulaResult.Fail(FormulaErrorCodes.RuntimeGenericError);
-            }
 
             if (!TryEvaluateNode(formula.Ast.Root, identifierRedirectors, context, out var value, out var errorCode))
             {
