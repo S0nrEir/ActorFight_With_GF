@@ -31,9 +31,6 @@ public sealed partial class Table_Formula :  Bright.Config.BeanBase
     /// Formula ID / 公式ID
     /// </summary>
     public int id { get; private set; }
-    /// <summary>
-    /// Formula expression string, supports variables like ${ATK}, ${DEF}, ${Level} and math operators. Used by CombatResolver for damage/heal/shield calculation / 公式表达式字符串，支持 ${ATK}, ${DEF}, ${Level} 等变量和数学运算符，供结算器计算伤害/治疗/护盾时使用
-    /// </summary>
     public string Expression { get; private set; }
 
     public const int __ID__ = -1014326217;
