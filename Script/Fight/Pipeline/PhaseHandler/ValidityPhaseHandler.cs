@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null || context.Request == null)
-            {
-                result.SetInterrupt("resolve_request_null");
-                return;
-            }
-
             context.ValidityIo.Input = context.FinalDelta;
             context.ValidityIo.Output = context.FinalDelta;
 

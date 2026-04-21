@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("shield_invalid_context");
-                return;
-            }
-
             context.ShieldIo.Input = context.FinalDelta;
             context.ShieldIo.Output = context.FinalDelta;
             context.ShieldAbsorb = context.ShieldIo.Input - context.ShieldIo.Output;

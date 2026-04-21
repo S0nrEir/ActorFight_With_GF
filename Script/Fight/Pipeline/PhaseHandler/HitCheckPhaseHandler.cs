@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("hit_check_invalid_context");
-                return;
-            }
-
             context.HitCheckIo.Input = context.FinalDelta;
             context.HitCheckIo.Output = context.FinalDelta;
             result.SetContinue();

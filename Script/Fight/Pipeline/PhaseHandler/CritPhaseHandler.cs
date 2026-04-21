@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("crit_invalid_context");
-                return;
-            }
-
             context.CritIo.Input  = context.FinalDelta;
             context.CritIo.Output = context.FinalDelta;
             context.CritIncrease  = context.CritIo.Output - context.CritIo.Input;

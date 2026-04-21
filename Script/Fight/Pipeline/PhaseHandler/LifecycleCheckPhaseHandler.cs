@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("lifecycle_check_invalid_context");
-                return;
-            }
-
             context.LifecycleCheckIo.Input = context.FinalDelta;
             context.LifecycleCheckIo.Output = context.FinalDelta;
             result.SetContinue();

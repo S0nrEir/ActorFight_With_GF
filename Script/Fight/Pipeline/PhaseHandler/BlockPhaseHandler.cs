@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("block_invalid_context");
-                return;
-            }
-
             context.BlockIo.Input  = context.FinalDelta;
             context.BlockIo.Output = context.FinalDelta;
             context.BlockReduction = context.BlockIo.Input - context.BlockIo.Output;

@@ -13,12 +13,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null || context.Request == null)
-            {
-                result.SetInterrupt("base_value_invalid_context");
-                return;
-            }
-
             var formulaId = context.Request.EffectData.GetFormulaID();
             if (formulaId <= 0)
             {

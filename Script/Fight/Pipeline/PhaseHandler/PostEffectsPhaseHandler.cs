@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("post_effects_invalid_context");
-                return;
-            }
-
             context.PostEffectsIo.Input = context.FinalDelta;
             context.PostEffectsIo.Output = context.FinalDelta;
             result.SetContinue();

@@ -11,12 +11,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null)
-            {
-                result.SetInterrupt("defense_mods_invalid_context");
-                return;
-            }
-
             context.DefenseModsIo.Input = context.FinalDelta;
             context.DefenseModsIo.Output = context.FinalDelta;
             context.DefenseReduction = context.DefenseModsIo.Input - context.DefenseModsIo.Output;

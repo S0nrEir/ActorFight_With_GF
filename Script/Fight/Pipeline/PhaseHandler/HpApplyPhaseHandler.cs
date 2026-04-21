@@ -12,12 +12,6 @@ namespace Aquila.Combat.Resolve
 
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
-            if (context == null || context.Request == null || context.Request.Target == null)
-            {
-                result.SetInterrupt("hp_apply_invalid_request");
-                return;
-            }
-
             context.HpApplyIo.Input = context.FinalDelta;
 
             var addon = context.Request.Target.GetAddon<Addon_BaseAttrNumric>();
