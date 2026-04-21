@@ -19,6 +19,7 @@ public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase
     {
         id = _buf.ReadInt();
         PhaseType = (Enum.ResolvePhaseType)_buf.ReadInt();
+        FormulaId = _buf.ReadInt();
         PostInit();
     }
 
@@ -35,6 +36,10 @@ public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase
     /// Resolve phase type enum / 结算阶段类型枚举，对应 Pipeline/PhaseHandler 中各阶段的处理逻辑
     /// </summary>
     public Enum.ResolvePhaseType PhaseType { get; private set; }
+    /// <summary>
+    /// Formula reference ID / 引用的公式ID
+    /// </summary>
+    public int FormulaId { get; private set; }
 
     public const int __ID__ = 1478348088;
     public override int GetTypeId() => __ID__;
@@ -53,6 +58,7 @@ public sealed partial class Table_CombatPhase :  Bright.Config.BeanBase
         return "{ "
         + "id:" + id + ","
         + "PhaseType:" + PhaseType + ","
+        + "FormulaId:" + FormulaId + ","
         + "}";
     }
     

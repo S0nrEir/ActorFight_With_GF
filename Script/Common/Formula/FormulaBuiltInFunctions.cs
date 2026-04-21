@@ -10,12 +10,18 @@ namespace Aquila.Formula
     /// </summary>
     internal sealed class FormulaFunctionDefinition
     {
-        public FormulaFunctionDefinition(string name, int minArgCount, int maxArgCount, Func<IReadOnlyList<double>, double> evaluate)
+        public FormulaFunctionDefinition(
+            string name,
+            int minArgCount,
+            int maxArgCount,
+            Func<IReadOnlyList<double>, double> evaluate,
+            bool allowConstantFolding = true)
         {
             Name = name;
             MinArgCount = minArgCount;
             MaxArgCount = maxArgCount;
             Evaluate = evaluate;
+            AllowConstantFolding = allowConstantFolding;
         }
 
         /// <summary>
@@ -37,6 +43,11 @@ namespace Aquila.Formula
         /// 函数执行委托 / Function execution delegate.
         /// </summary>
         public Func<IReadOnlyList<double>, double> Evaluate { get; }
+
+        /// <summary>
+        /// Whether this function can be constant-folded at compile time.
+        /// </summary>
+        public bool AllowConstantFolding { get; }
     }
 
     /// <summary>
@@ -87,7 +98,31 @@ namespace Aquila.Formula
                 {
                     "pow",
                     new FormulaFunctionDefinition("pow", 2, int.MaxValue, args => Mathf.Pow((float)args[0], (float)args[1]))
+                },
+                {
+                    "rnd",
+                    new FormulaFunctionDefinition("rnd", 0, 2, EvaluateRnd, allowConstantFolding: false)
                 }
             };
+
+        private static double EvaluateRnd(IReadOnlyList<double> args)
+        {
+            if (args == null || args.Count == 0)
+                return UnityEngine.Random.value;
+
+            if (args.Count == 1)
+            {
+                var upper = args[0];
+                var min = Math.Min(0d, upper);
+                var max = Math.Max(0d, upper);
+                return min + (max - min) * UnityEngine.Random.value;
+            }
+
+            var a = args[0];
+            var b = args[1];
+            var low = Math.Min(a, b);
+            var high = Math.Max(a, b);
+            return low + (high - low) * UnityEngine.Random.value;
+        }
     }
 }

@@ -32,6 +32,9 @@ namespace Aquila.Combat.Resolve
             if (handler == null)
                 return;
 
+            if (handler is ResolvePhaseHandlerBase phaseHandlerBase)
+                phaseHandlerBase.Initialize();
+
             _handlers[handler.PhaseType] = handler;
         }
     }

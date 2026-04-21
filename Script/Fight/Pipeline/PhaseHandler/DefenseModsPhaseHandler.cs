@@ -1,3 +1,4 @@
+using Aquila.Fight.Addon;
 using Cfg.Enum;
 
 namespace Aquila.Combat.Resolve
@@ -12,7 +13,13 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.DefenseModsIo.Input = context.FinalDelta;
-            context.DefenseModsIo.Output = context.FinalDelta;
+            // if (!TryEvaluatePhaseFormula(context, result, out var computed))
+            //     return;
+
+            var attrAddon = context.Request.Target.GetAddon<Addon_BaseAttrNumric>();
+            var def = attrAddon.GetCorrectionValue(actor_attribute.DEF, 0);
+            context.DefenseModsIo.Output = context.FinalDelta - def;
+            context.FinalDelta = context.DefenseModsIo.Output;
             context.DefenseReduction = context.DefenseModsIo.Input - context.DefenseModsIo.Output;
             result.SetContinue();
         }

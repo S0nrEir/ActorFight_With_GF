@@ -20,7 +20,7 @@ namespace Aquila.Fight
                 return;
             }
 
-            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, 0f, ResolveSourceType.EffectDirect);
+            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, Meta.GetFloatParam1(), ResolveSourceType.EffectDirect);
             if (!resolveResult.Success)
             {
                 Tools.Logger.Error($"[EffectSpec_Instant_PhyDamage] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");

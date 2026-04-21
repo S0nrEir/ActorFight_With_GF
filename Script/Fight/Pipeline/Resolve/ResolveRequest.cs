@@ -17,25 +17,6 @@ namespace Aquila.Combat.Resolve
             return Create(castor, target, effectSpec, 0f, resolveTypeId, ResolveSourceType.Unknown);
         }
 
-        // public static ResolveRequest Create(
-        //     Module_ProxyActor.ActorInstance castor,
-        //     Module_ProxyActor.ActorInstance target,
-        //     EffectSpec_Base effectSpec,
-        //     float inputDelta,
-        //     int resolveTypeId,
-        //     ResolveSourceType sourceType)
-        // {
-        //     var request = ReferencePool.Acquire<ResolveRequest>();
-        //     request.Castor = castor;
-        //     request.Target = target;
-        //     request.EffectSpec = effectSpec;
-        //     request.EffectData = effectSpec.Meta;
-        //     request.InputDelta = inputDelta;
-        //     request.ResolveTypeId = resolveTypeId;
-        //     request.SourceType = sourceType;
-        //     return request;
-        // }
-
         public static ResolveRequest Create(
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target,
@@ -44,8 +25,27 @@ namespace Aquila.Combat.Resolve
             int resolveTypeId,
             ResolveSourceType sourceType)
         {
-            return Create(castor, target, effectSpec, inputDelta, resolveTypeId, sourceType);
+            var request = ReferencePool.Acquire<ResolveRequest>();
+            request.Castor = castor;
+            request.Target = target;
+            request.EffectSpec = effectSpec;
+            request.EffectData = effectSpec.Meta;
+            request.InputDelta = inputDelta;
+            request.ResolveTypeId = resolveTypeId;
+            request.SourceType = sourceType;
+            return request;
         }
+
+        // public static ResolveRequest Create(
+        //     Module_ProxyActor.ActorInstance castor,
+        //     Module_ProxyActor.ActorInstance target,
+        //     EffectSpec_Base effectSpec,
+        //     float inputDelta,
+        //     int resolveTypeId,
+        //     ResolveSourceType sourceType)
+        // {
+        //     return Create(castor, target, effectSpec, inputDelta, resolveTypeId, sourceType);
+        // }
 
         public Module_ProxyActor.ActorInstance Castor { get; private set; }
         public Module_ProxyActor.ActorInstance Target { get; private set; }

@@ -12,7 +12,11 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.OffenseModsIo.Input = context.FinalDelta;
-            context.OffenseModsIo.Output = context.FinalDelta;
+            if (!TryEvaluatePhaseFormula(context, result, out var computed))
+                return;
+
+            context.OffenseModsIo.Output = computed;
+            context.FinalDelta = computed;
             context.OffenseIncrease = context.OffenseModsIo.Output - context.OffenseModsIo.Input;
             result.SetContinue();
         }

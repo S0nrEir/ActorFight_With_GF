@@ -86,6 +86,9 @@ namespace Aquila.Procedure
             GameEntry.AbilityPool.Init();
         }
 
+        /// <summary>
+        /// 初始化公式引擎
+        /// </summary>
         private void PreloadFormul()
         {
             FormulaEngine.Init();

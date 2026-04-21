@@ -12,14 +12,21 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.ValidityIo.Input = context.FinalDelta;
-            context.ValidityIo.Output = context.FinalDelta;
 
             if (context.Request.Target == null)
             {
                 result.SetInterrupt("resolve_target_null");
                 return;
             }
+            
+            if (context.Request.Castor is null)
+            {
+                result.SetInterrupt("resolve_castor_null");
+                return;
+            }
 
+            context.ValidityIo.Output = context.FinalDelta;
+            // context.FinalDelta = context.FinalDelta;
             result.SetContinue();
         }
     }

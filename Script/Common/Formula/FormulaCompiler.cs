@@ -189,13 +189,16 @@ namespace Aquila.Formula
                             return false;
                         }
 
-                        var values = new List<double>(args.Count);
-                        for (int i = 0; i < args.Count; i++)
-                            values.Add(((FormulaNumberNode)args[i]).Value);
+                        if (functionDef.AllowConstantFolding)
+                        {
+                            var values = new List<double>(args.Count);
+                            for (int i = 0; i < args.Count; i++)
+                                values.Add(((FormulaNumberNode)args[i]).Value);
 
-                        double value = functionDef.Evaluate(values);
-                        folded = new FormulaNumberNode(value, functionNode.Position);
-                        return true;
+                            double value = functionDef.Evaluate(values);
+                            folded = new FormulaNumberNode(value, functionNode.Position);
+                            return true;
+                        }
                     }
 
                     folded = new FormulaFunctionCallNode(functionNode.FunctionName, args, functionNode.Position);

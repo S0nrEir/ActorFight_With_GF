@@ -12,7 +12,11 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.LifecycleCheckIo.Input = context.FinalDelta;
-            context.LifecycleCheckIo.Output = context.FinalDelta;
+            if (!TryEvaluatePhaseFormula(context, result, out var computed))
+                return;
+
+            context.LifecycleCheckIo.Output = computed;
+            context.FinalDelta = computed;
             result.SetContinue();
         }
     }

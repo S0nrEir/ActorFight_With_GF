@@ -13,6 +13,11 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.HpApplyIo.Input = context.FinalDelta;
+            if (!TryEvaluatePhaseFormula(context, result, out var computed))
+                return;
+
+            context.HpApplyIo.Output = computed;
+            context.FinalDelta = computed;
 
             var addon = context.Request.Target.GetAddon<Addon_BaseAttrNumric>();
             if (addon == null)
@@ -22,10 +27,9 @@ namespace Aquila.Combat.Resolve
             }
 
             var currHp = addon.GetCurrHPCorrection();
-            var nextHp = currHp + context.FinalDelta;
+            var nextHp = currHp + computed;
             addon.SetCurrHP(nextHp);
-            context.AppliedHpDelta = context.FinalDelta;
-            context.HpApplyIo.Output = context.FinalDelta;
+            context.AppliedHpDelta = computed;
             context.HasApplied = true;
             result.SetContinue();
         }
