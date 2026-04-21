@@ -5,7 +5,7 @@ using Cfg.Enum;
 namespace Aquila.Combat.Resolve
 {
     /// <summary>
-    /// 鍩虹鍊硷細浠庨厤缃垨鏁堟灉鏁版嵁涓彁鍙栧師濮嬫暟鍊硷紝浣滀负鍚庣画淇鐨勫熀鏁? Base value: extracts raw value from config or effect data as the base for modifiers.
+    /// 基础值：从配置或效果数据中提取原始数值，作为后续修正的基数 / Base value: extracts raw value from config or effect data as the base for modifiers.
     /// </summary>
     internal sealed class BaseValuePhaseHandler : ResolvePhaseHandlerBase
     {
