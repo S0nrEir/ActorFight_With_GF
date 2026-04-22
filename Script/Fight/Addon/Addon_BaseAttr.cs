@@ -173,10 +173,7 @@ namespace Aquila.Fight.Addon
         /// 设置基础属性
         /// </summary>
         private void SetBaseAttr( Table_RoleMeta meta )
-        {
-            //现在是写死的，很蛋疼
-            var proxy_module = GameEntry.Module.GetModule<Module_ProxyActor>();
-            
+        {   
             //max hp & curr hp
             var res = SetBaseValue( actor_attribute.Curr_HP, meta.base_attr_value.max_hp );
             SetBaseValue(actor_attribute.Max_HP, meta.hp_factor * meta.base_attr_value.max_hp);

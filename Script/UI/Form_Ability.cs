@@ -43,12 +43,7 @@ namespace Aquila.UI
         /// </summary
         private void OnUseAbility( object sender, GameEventArgs arg )
         {
-            if (!(arg is EventArg_OnUseAblity))
-                return;
             
-            var result = (arg as EventArg_OnUseAblity)._resultParam;
-            if ( !result._succ )
-                Tools.Logger.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
         }
 
         /// <summary>
