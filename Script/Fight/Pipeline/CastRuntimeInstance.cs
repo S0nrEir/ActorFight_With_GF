@@ -130,10 +130,10 @@ namespace Aquila.Combat
                 var targetActorId = Targets[i];
                 var target = actorMgr.Get(targetActorId);
                 bool succ;
-                using (ResolveSourceScope.EnterPipeline(CastCmd._abilityID, triggerIndex, CastCmd._castorInstanceId, targetActorId))
-                {
+                // using (ResolveSourceScope.EnterPipeline(CastCmd._abilityID, triggerIndex, CastCmd._castorInstanceId, targetActorId))
+                // {
                     succ = abilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, target);
-                }
+                // }
 
                 GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
             }

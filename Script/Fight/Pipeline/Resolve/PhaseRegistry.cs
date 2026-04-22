@@ -14,6 +14,7 @@ namespace Aquila.Combat.Resolve
             Register(new BaseValuePhaseHandler());
             Register(new OffenseModsPhaseHandler());
             Register(new DefenseModsPhaseHandler());
+            Register(new CritCheckPhaseHandler());
             Register(new CritPhaseHandler());
             Register(new BlockPhaseHandler());
             Register(new ShieldPhaseHandler());

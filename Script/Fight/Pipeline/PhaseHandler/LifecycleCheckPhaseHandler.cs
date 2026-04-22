@@ -1,3 +1,5 @@
+using Aquila.Fight.Addon;
+using Aquila.Numric;
 using Cfg.Enum;
 
 namespace Aquila.Combat.Resolve
@@ -12,11 +14,16 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.LifecycleCheckIo.Input = context.FinalDelta;
-            if (!TryEvaluatePhaseFormula(context, result, out var computed))
-                return;
+            // if (!TryEvaluatePhaseFormula(context, result, out var computed))
+            //     return;
 
-            context.LifecycleCheckIo.Output = computed;
-            context.FinalDelta = computed;
+            context.LifecycleCheckIo.Output = context.FinalDelta;
+            var currHp = context.Request.Castor.GetAddon<Addon_BaseAttrNumric>().GetCorrectionValue(actor_attribute.Curr_HP, 0);
+            if (currHp <= 0)
+            {
+                ///...
+            }
+
             result.SetContinue();
         }
     }

@@ -12,11 +12,12 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.ShieldIo.Input = context.FinalDelta;
-            if (!TryEvaluatePhaseFormula(context, result, out var computed))
-                return;
+            context.ShieldIo.Output = context.FinalDelta;
+            // if (!TryEvaluatePhaseFormula(context, result, out var computed))
+            //     return;
 
-            context.ShieldIo.Output = computed;
-            context.FinalDelta = computed;
+            // context.ShieldIo.Output = computed;
+            // context.FinalDelta = computed;
             context.ShieldAbsorb = context.ShieldIo.Input - context.ShieldIo.Output;
             result.SetContinue();
         }

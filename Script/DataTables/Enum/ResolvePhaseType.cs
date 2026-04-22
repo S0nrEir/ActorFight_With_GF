@@ -57,5 +57,9 @@ namespace Cfg.Enum
         /// Check HP zero to trigger death or revive / 检查HP归零触发死亡或复活
         /// </summary>
         LifecycleCheck = 10,
+        /// <summary>
+        /// Check crit trigger by formula and set crit flag / 通过公式判定是否暴击并写入标记
+        /// </summary>
+        CritCheck = 11,
     }
 }

@@ -81,6 +81,7 @@ namespace Aquila.Combat.Resolve
             ResolvePhaseType.BaseValue,
             ResolvePhaseType.OffenseMods,
             ResolvePhaseType.DefenseMods,
+            ResolvePhaseType.CritCheck,
             ResolvePhaseType.Crit,
             ResolvePhaseType.Block,
             ResolvePhaseType.Shield,

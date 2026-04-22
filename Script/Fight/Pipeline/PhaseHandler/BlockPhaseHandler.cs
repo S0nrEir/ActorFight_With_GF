@@ -15,8 +15,8 @@ namespace Aquila.Combat.Resolve
             if (!TryEvaluatePhaseFormula(context, result, out var computed))
                 return;
 
-            context.BlockIo.Output = computed;
-            context.FinalDelta = computed;
+            context.FinalDelta = context.FinalDelta - computed;
+            context.BlockIo.Output = context.FinalDelta;
             context.BlockReduction = context.BlockIo.Input - context.BlockIo.Output;
             result.SetContinue();
         }

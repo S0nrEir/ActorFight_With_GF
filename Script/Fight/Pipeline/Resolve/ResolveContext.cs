@@ -1,9 +1,17 @@
 using System.Collections.Generic;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Combat.Resolve
 {
+    [System.Flags]
+    public enum ResolvePhaseFlags : uint
+    {
+        None = 0,
+        CritTriggered = 1 << 0,
+    }
+
     public sealed class ResolveContext : IReference
     {
         /// <summary>
@@ -18,6 +26,7 @@ namespace Aquila.Combat.Resolve
             IsAborted = false;
             Reason = null;
             LastPhase = ResolvePhaseType.Validity;
+            _phaseFlags = ResolvePhaseFlags.None;
 
             _floatValues.Clear();
             _skippedPhases.Clear();
@@ -57,6 +66,11 @@ namespace Aquila.Combat.Resolve
                 case ResolvePhaseType.DefenseMods:
                     DefenseModsIo = default;
                     DefenseReduction = 0f;
+                    break;
+
+                case ResolvePhaseType.CritCheck:
+                    CritCheckIo = default;
+                    ClearPhaseFlag(ResolvePhaseFlags.CritTriggered);
                     break;
 
                 case ResolvePhaseType.Crit:
@@ -118,6 +132,21 @@ namespace Aquila.Combat.Resolve
             return _skippedPhases.Contains(phase);
         }
 
+        public void SetPhaseFlag(ResolvePhaseFlags flag)
+        {
+            Tools.SetBitValue_i64((int)_phaseFlags, (ushort)flag, true);
+        }
+
+        public void ClearPhaseFlag(ResolvePhaseFlags flag)
+        {
+            _phaseFlags &= ~flag;
+        }
+
+        public bool HasPhaseFlag(ResolvePhaseFlags flag)
+        {
+            return Tools.GetBitValue_i64((int)_phaseFlags, (ushort)flag);
+        }
+
         public void MarkInterrupted(string reason)
         {
             IsInterrupted = true;
@@ -139,6 +168,7 @@ namespace Aquila.Combat.Resolve
             IsAborted = false;
             Reason = null;
             LastPhase = ResolvePhaseType.Validity;
+            _phaseFlags = ResolvePhaseFlags.None;
 
             ValidityIo = default;
             HitCheckIo = default;
@@ -148,6 +178,7 @@ namespace Aquila.Combat.Resolve
             OffenseIncrease = 0f;
             DefenseModsIo = default;
             DefenseReduction = 0f;
+            _CritIo = default;
             CritIo = default;
             CritIncrease = 0f;
             BlockIo = default;
@@ -165,6 +196,7 @@ namespace Aquila.Combat.Resolve
 
         private readonly Dictionary<string, float> _floatValues = new Dictionary<string, float>(8);
         private readonly HashSet<ResolvePhaseType> _skippedPhases = new HashSet<ResolvePhaseType>();
+        private ResolvePhaseFlags _phaseFlags;
 
         public ResolveRequest Request { get; private set; }
         public float FinalDelta { get; set; }
@@ -185,6 +217,8 @@ namespace Aquila.Combat.Resolve
 
         public ResolvePhaseIoState DefenseModsIo;
         public float DefenseReduction;
+
+        public ResolvePhaseIoState _CritIo;
 
         public ResolvePhaseIoState CritIo;
         public float CritIncrease;

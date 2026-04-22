@@ -12,8 +12,6 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.BaseValueIo.Input = context.FinalDelta;
-            // if (!TryEvaluatePhaseFormula(context, result, out var computed))
-            //     return;
             context.BaseValueAmount = context.FinalDelta;
             context.FinalDelta = context.FinalDelta;
             context.BaseValueIo.Output = context.FinalDelta;
