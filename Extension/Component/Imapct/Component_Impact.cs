@@ -138,6 +138,9 @@ namespace Aquila.Fight.Impact
         /// </summary>
         public void Attach( EffectSpec_Base newEffect, int castorActorID, int targetActorID )
         {
+            var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
+            var castor = actorMgr?.Get(castorActorID);
+            var target = actorMgr?.Get(targetActorID);
             var existEffect = GetEffectByID( targetActorID, newEffect.GetType() );
             //已经有了，叠加层数
             //#todo:effect现在分为多种类型：叠层；互相独立；覆盖
@@ -154,7 +157,6 @@ namespace Aquila.Fight.Impact
                 if ( impactData._stackCount < impactData._stackLimit )
                     impactData._stackCount++;
 
-                newEffect.OnEffectEnd();
                 ReferencePool.Release( newEffect );
                 // GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect );
             }
@@ -167,8 +169,7 @@ namespace Aquila.Fight.Impact
                 if ( _allEffectDic.ContainsKey( effectHashCode ) )
                 {
                     Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->already have key:{effectHashCode}</color>" );
-                    //ReferencePool.Release( newEffect );
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect );
+                    ReferencePool.Release( newEffect );
                     return;
                 }
 
@@ -180,46 +181,24 @@ namespace Aquila.Fight.Impact
                 AddMapIndex( targetActorID, impactData._effectHash );
 
                 if ( impactData._effectOnAwake )
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyAwakeEffect
-                        ( 
-                            impactData._castorActorID, 
-                            impactData._targetActorID, 
-                            newEffect 
-                        );
+                    newEffect.OnEffectAwake(castor, target);
 
                 var awakeEffects = newEffect.Meta.GetAwakeEffects();
                 // 唤起携带的 AwakeEffects（依次触发每个子 effect 的 Awake 逻辑）
                 if ( awakeEffects.Count != 0 )
                 {
-                    var proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
-                    var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
-                    var castor = actorMgr.Get( impactData._castorActorID );
-                    var target = actorMgr.Get( impactData._targetActorID );
-
-                    if ( castor is null || target is null )
+                    foreach ( var awakeEffectID in awakeEffects )
                     {
-                        Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->castor or target is null when trigger awake effects, castor:{impactData._castorActorID}, target:{impactData._targetActorID}</color>" );
-                    }
-                    else
-                    {
-                        foreach ( var awakeEffectID in awakeEffects )
+                        if ( !GameEntry.AbilityPool.TryGetEffect( awakeEffectID, out var awakeEffectData ) )
                         {
-                            if ( !GameEntry.AbilityPool.TryGetEffect( awakeEffectID, out var awakeEffectData ) )
-                            {
-                                Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect not found, id:{awakeEffectID}</color>" );
-                                continue;
-                            }
-
-                            var awakeEffect = Tools.Ability.CreateEffectSpecByReferencePool( awakeEffectData, castor, target );
-                            if ( awakeEffect is null )
-                            {
-                                Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect create failed, id:{awakeEffectID}</color>" );
-                                continue;
-                            }
-
-                            proxyActor.ApplyAwakeEffect( castor, target, awakeEffect );
-                            proxyActor.InvalidEffect( castor, target, awakeEffect );
+                            Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect not found, id:{awakeEffectID}</color>" );
+                            continue;
                         }
+
+                        var awakeEffect = Tools.Ability.CreateEffectSpecByReferencePool( awakeEffectData, castor, target );
+                        
+                        awakeEffect.OnEffectAwake(castor, target);
+                        ReferencePool.Release(awakeEffect);
                     }
                 }
             }
@@ -250,6 +229,7 @@ namespace Aquila.Fight.Impact
         private void ImpactDataSystem()
         {
             EffectSpec_Base tempEffect = null;
+            var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             foreach ( var entity in _curr )
             {
                 //get
@@ -274,11 +254,10 @@ namespace Aquila.Fight.Impact
                     }
                     
                     //设置叠层
-                    if(tempEffect.StackCount != impactData._stackCount)
-                        tempEffect.StackCount = impactData._stackCount;
-                    
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( impactData._castorActorID, impactData._targetActorID, tempEffect );
-
+                    tempEffect.StackCount = impactData._stackCount;
+                    var castor = actorMgr.Get( impactData._castorActorID );
+                    var target = actorMgr.Get( impactData._targetActorID );
+                    tempEffect.Apply(castor, target);
                     impactData._interval = 0f;
                 }
                 //仍然有效的impact添加进去
@@ -307,7 +286,16 @@ namespace Aquila.Fight.Impact
         {
             var impactData = _pool.Get(entity);
             var effect = GetEffect(impactData._effectHash);
-            GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect(impactData._castorActorID,impactData._targetActorID,effect,true);
+            var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
+            if (effect != null)
+            {
+                var castor = actorMgr?.Get(impactData._castorActorID);
+                var target = actorMgr?.Get(impactData._targetActorID);
+                if (castor != null && target != null)
+                    effect.OnEffectEnd(castor, target);
+
+                ReferencePool.Release(effect);
+            }
 
             RemoveEffect(impactData._effectHash);
             RemoveMapIndex(impactData._targetActorID, impactData._effectHash);

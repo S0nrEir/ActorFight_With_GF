@@ -69,7 +69,7 @@ namespace Aquila.Combat.Resolve
                     break;
 
                 case ResolvePhaseType.CritCheck:
-                    CritCheckIo = default;
+                    _CritIo = default;
                     ClearPhaseFlag(ResolvePhaseFlags.CritTriggered);
                     break;
 
@@ -134,7 +134,7 @@ namespace Aquila.Combat.Resolve
 
         public void SetPhaseFlag(ResolvePhaseFlags flag)
         {
-            Tools.SetBitValue_i64((int)_phaseFlags, (ushort)flag, true);
+            _phaseFlags |= flag;
         }
 
         public void ClearPhaseFlag(ResolvePhaseFlags flag)
@@ -144,7 +144,7 @@ namespace Aquila.Combat.Resolve
 
         public bool HasPhaseFlag(ResolvePhaseFlags flag)
         {
-            return Tools.GetBitValue_i64((int)_phaseFlags, (ushort)flag);
+            return (_phaseFlags & flag) != 0;
         }
 
         public void MarkInterrupted(string reason)

@@ -1,3 +1,4 @@
+using Aquila.Combat;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
@@ -37,11 +38,13 @@ namespace Aquila.Fight.FSM
         public override void OnUpdate(float deltaTime)
         {
             _passedTime += deltaTime;
-            if (deltaTime >= _abilityData.GetTimelineDuration())
+            if (_passedTime >= _abilityData.GetTimelineDuration())
             {
-                var module = GameEntry.Module.GetModule<Module_ProxyActor>();
-                //法球类型的触发直接用第一个effect
-                module.AffectAbility(0,_castorID,_targetID,_abilityData.GetId(),_position);
+                var module = GameEntry.Module.GetModule<Module_Combat>();
+                var castResult = module.RequestCast(CastCmd.CreateWithSingleTarget(_castorID, _targetID, _abilityData.GetId()));
+                if (!castResult.Accepted)
+                    Tools.Logger.Warning($"<color=yellow>ActorState_Orb_Ability.OnUpdate()--->RequestCast rejected, castor:{_castorID}, target:{_targetID}, ability:{_abilityData.GetId()}, code:{castResult.PrimaryCode}</color>");
+
                 Clear();
                 //触发完直接隐藏
                 GameEntry.Entity.HideEntity(_castorID);

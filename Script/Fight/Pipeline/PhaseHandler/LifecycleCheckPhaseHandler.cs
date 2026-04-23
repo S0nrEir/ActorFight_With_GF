@@ -27,4 +27,5 @@ namespace Aquila.Combat.Resolve
             result.SetContinue();
         }
     }
+
 }
