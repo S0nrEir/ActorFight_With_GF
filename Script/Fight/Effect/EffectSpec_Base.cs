@@ -151,8 +151,10 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
+                    newEffect.Apply(castor,target);
+                    ReferencePool.Release( newEffect );
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
         }

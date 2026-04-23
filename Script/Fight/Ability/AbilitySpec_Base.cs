@@ -151,6 +151,9 @@ namespace Aquila.Fight
             }
             else
             {
+                //apply
+                tempEffect.Apply(_owner,target);
+                ReferencePool.Release(tempEffect);
             }
             
             if ( !OnAfterAbility() )
@@ -178,7 +181,7 @@ namespace Aquila.Fight
 
         /// <summary>
         /// 是否可以使用技能
-        /// </summary>
+        /// </summary>wwww
         public virtual int CanUseAbility()
         {
             if ( !CostOK() )

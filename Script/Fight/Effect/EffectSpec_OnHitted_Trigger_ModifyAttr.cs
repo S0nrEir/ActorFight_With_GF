@@ -10,7 +10,7 @@ namespace  Aquila.Fight
     /// <summary>
     /// 受击触发修改属性effect
     /// </summary>
-    public class EffectSpec_OnHitted_Trigger_ModifyAttr : EffectSpec_Base,IHitted_Trigger_Effect
+    public class EffectSpec_OnHitted_Trigger_ModifyAttr : EffectSpec_Base/*,IHitted_Trigger_Effect*/
     {
         public bool CanApplyEffect(HittedTriggerEffectParam param)
         {
@@ -92,16 +92,17 @@ namespace  Aquila.Fight
         /// </summary>
         private void OnHitted(int eventType, object param)
         {
-            var hitParam = param as OnActorHittedParam;
-            if (hitParam is null)
-                return;
-
-            var canApplyParam = ReferencePool.Acquire<HittedTriggerEffectParam>();
-            canApplyParam._effectedValue += hitParam._dealedDamage;
-            canApplyParam._castor         = hitParam._castor;
-            canApplyParam._target         = hitParam._target;
-            if(CanApplyEffect(canApplyParam))
-                GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect(hitParam._castor,hitParam._target,this);
+            //#todo这块的逻辑被注释掉了，因为不打算要ihitted接口了，后面处理下
+            // var hitParam = param as OnActorHittedParam;
+            // if (hitParam is null)
+            //     return;
+            //
+            // var canApplyParam = ReferencePool.Acquire<HittedTriggerEffectParam>();
+            // canApplyParam._effectedValue += hitParam._dealedDamage;
+            // canApplyParam._castor         = hitParam._castor;
+            // canApplyParam._target         = hitParam._target;
+            // if(CanApplyEffect(canApplyParam))
+            //     GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect(hitParam._castor,hitParam._target,this);
         }
         
         /// <summary>

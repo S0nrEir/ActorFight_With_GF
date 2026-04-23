@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -153,8 +154,9 @@ namespace Aquila.Fight.Impact
                 if ( impactData._stackCount < impactData._stackLimit )
                     impactData._stackCount++;
 
-                //ReferencePool.Release( newEffect );
-                GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect );
+                newEffect.OnEffectEnd();
+                ReferencePool.Release( newEffect );
+                // GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castorActorID, targetActorID, newEffect );
             }
             //没有，添加新的
             else

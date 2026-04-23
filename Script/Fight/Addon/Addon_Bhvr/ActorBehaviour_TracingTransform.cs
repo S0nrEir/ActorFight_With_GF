@@ -1,3 +1,4 @@
+using Aquila.Combat;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -66,9 +67,10 @@ namespace Aquila.Fight
                     //     param.Position = _targetTransform.position;
                     //     fsm.SwitchTo((int)ActorStateTypeEnum.ABILITY_STATE,param,null);
                     // }
-                    var module = GameEntry.Module.GetModule<Module_ProxyActor>();
+                    GameEntry.Module.GetModule<Module_Combat>().RequestCast(
+                        CastCmd.CreateWithSingleTarget(_instance.Actor.ActorID, _targetActorID, _onHitabilityID));
                     //#todo:投射物默认启用第一个trigger，有需要再改
-                    module.AffectAbility( 0,_instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
+                    // module.AffectAbility( 0,_instance.Actor.ActorID, _targetActorID, _onHitabilityID, GameEntry.GlobalVar.InvalidPosition );
                 }
                 // GameEntry.Entity.HideEntity( _instance.Actor.ActorID );
                 return;
