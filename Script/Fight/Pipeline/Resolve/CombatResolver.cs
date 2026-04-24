@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
 
@@ -82,6 +83,7 @@ namespace Aquila.Combat.Resolve
             if (phases == null || phases.Count <= 0)
             {
                 context.MarkInterrupted("resolve_phase_empty");
+                Tools.Logger.Warning("resolve_phase_empty");
                 resultData = BuildResult(context, request);
                 ReferencePool.Release(phaseResult);
                 ReferencePool.Release(context);

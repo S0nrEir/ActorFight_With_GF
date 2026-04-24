@@ -20,6 +20,7 @@ namespace Aquila.AbilityEditor
             EffectType.Period_DerivingStack,
             EffectType.Period_ActorTag,
             EffectType.Period_WindUp,
+            EffectType.OnHitted_Trigger_ModifyAttr
             
             
         };

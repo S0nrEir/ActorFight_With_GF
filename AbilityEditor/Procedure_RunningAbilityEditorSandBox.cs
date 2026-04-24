@@ -58,11 +58,7 @@ namespace Aquila.Procedure
             if (GameEntry.AbilityEditorSandBox.TryGetSandBoxAbility(out var abilityData))
             {
                 sandBoxAbilityId = abilityData.GetId();
-                var abilityAddon = _playerInstance.GetAddon<Addon_Ability>();
-                if (abilityAddon != null)
-                    abilityAddon.GiveAbility(abilityData);
-                else
-                    Tools.Logger.Error("[RunningAbilityEditorSandBox] player has no Addon_Ability");
+                _playerInstance.GetAddon<Addon_Ability>().GiveAbility(abilityData);
             }
             else
             {
@@ -78,7 +74,7 @@ namespace Aquila.Procedure
                 _dummyInstance.Actor.SetRotation( new Vector3( 0f, 98.6860046f, 0f ) );
             }
 
-            GameEntry.UI.OpenForm(FormIdEnum.AbilitySandBoxForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param
+            GameEntry.UI.OpenForm(FormIdEnum.AbilityEditorTestForm, new Form_AbilitySandBox.AbilitySandBoxForm_Param
             {
                 _playerID = playerEntityId,
                 _dummyID = dummyEntityId,

@@ -16,54 +16,58 @@ namespace Cfg.Enum
         /// <summary>
         /// Check target alive, distance and flags; interrupts resolve if invalid / 检查目标存活状态、距离限制及特殊标记，无效时终止结算
         /// </summary>
-        Validity = 0,
+        Validity = 1,
         /// <summary>
         /// Roll hit rate vs evasion; skip value phases on miss / 基于命中率与闪避率随机判定，Miss时跳过数值阶段
         /// </summary>
-        HitCheck = 1,
+        HitCheck = 2,
         /// <summary>
         /// Extract raw value from config as modifier base / 从配置提取原始数值作为修正基数
         /// </summary>
-        BaseValue = 2,
+        BaseValue = 3,
         /// <summary>
         /// Apply attacker damage % buffs and attribute conversions / 应用攻击方百分比增伤、属性转化等加成
         /// </summary>
-        OffenseMods = 3,
+        OffenseMods = 4,
         /// <summary>
         /// Apply defender defense and % reduction / 应用受击方防御力减免、百分比减伤
         /// </summary>
-        DefenseMods = 4,
+        DefenseMods = 5,
         /// <summary>
         /// Determine crit trigger and calculate crit multiplier / 判定暴击触发并计算暴击倍率
         /// </summary>
-        Crit = 5,
+        Crit = 6,
         /// <summary>
         /// Determine block trigger and calculate blocked damage / 判定格挡触发并计算格挡减免值
         /// </summary>
-        Block = 6,
+        Block = 7,
         /// <summary>
         /// Absorb remaining damage by shield priority / 按优先级序列计算护盾扣除
         /// </summary>
-        Shield = 7,
+        Shield = 8,
         /// <summary>
         /// Write final delta to attribute addon / 将最终净值同步至属性组件
         /// </summary>
-        HpApply = 8,
+        HpApply = 9,
         /// <summary>
         /// Process lifesteal, reflect, trigger-based effects / 处理吸血、反伤、触发类次生效果
         /// </summary>
-        PostEffects = 9,
+        PostEffects = 10,
         /// <summary>
         /// Check HP zero to trigger death or revive / 检查HP归零触发死亡或复活
         /// </summary>
-        LifecycleCheck = 10,
+        LifecycleCheck = 11,
         /// <summary>
         /// Check crit trigger by formula and set crit flag / 通过公式判定是否暴击并写入标记
         /// </summary>
-        CritCheck = 11,
+        CritCheck = 12,
         /// <summary>
         /// Write mp cost delta to attribute addo / 将MP消耗净值同步至属性组件
         /// </summary>
-        MpApply = 12,
+        MpApply = 13,
+        /// <summary>
+        /// 无业务意义，仅表示终止
+        /// </summary>
+        Max = 14,
     }
 }

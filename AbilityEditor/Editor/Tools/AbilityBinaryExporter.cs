@@ -2,6 +2,7 @@ using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
 using UnityEditor;
+using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -25,6 +26,10 @@ namespace Editor.AbilityEditor.Tools
             int successCount = 0;
             int failCount = 0;
 
+            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"));
+            foreach (var file in files)
+                File.Delete(file);
+            
             foreach (string guid in assetGuids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
