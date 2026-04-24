@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
@@ -76,6 +77,11 @@ namespace Aquila.Fight.Addon
             return spec.UseAbility(triggerIndex, target );
         }
 
+        public void CastComplete(int abilityID)
+        {
+            OnCastComplete?.Invoke(abilityID);
+        }
+
         public override void OnUpdate( float deltaTime, float realElapsed )
         {
             if ( !_initFlag )
@@ -118,7 +124,7 @@ namespace Aquila.Fight.Addon
 
         /// <summary>
         /// 当使用技能
-        /// </summary>
+        /// </summary>a'c't
         private void OnUseAbility( int addonType, object param )
         {
             if ( param is AddonParam_OnUseAbility temp )
@@ -214,6 +220,7 @@ namespace Aquila.Fight.Addon
 
             _specArr = null;
             _specMap = null;
+            OnCastComplete = null;
             _initFlag = false;
             base.Dispose();
         }
@@ -232,5 +239,7 @@ namespace Aquila.Fight.Addon
         /// 初始化标记
         /// </summary>
         private bool _initFlag;
+
+        public event Action<int> OnCastComplete;
     }
 }

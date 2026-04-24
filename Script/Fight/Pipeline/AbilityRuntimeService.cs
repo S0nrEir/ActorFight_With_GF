@@ -107,6 +107,7 @@ namespace Aquila.Combat
                 var castRuntimeInstance = kv.Value;
                 if (castRuntimeInstance.IsInterrupted || castRuntimeInstance.IsCompleted)
                 {
+                    castRuntimeInstance.NotifyCastComplete();
                     _toRemoveCasterIds.Add(kv.Key);
                     continue;
                 }
@@ -114,6 +115,7 @@ namespace Aquila.Combat
                 if (!TryRefreshTarget(castRuntimeInstance))
                 {
                     castRuntimeInstance.StateMachine.Interrupt(CastInterruptReason.TargetLost);
+//                    castRuntimeInstance.NotifyCastComplete();
                     _toRemoveCasterIds.Add(kv.Key);
                     continue;
                 }
@@ -134,7 +136,10 @@ namespace Aquila.Combat
                 }
 
                 if (castRuntimeInstance.IsInterrupted || castRuntimeInstance.IsCompleted)
+                {
+                    castRuntimeInstance.NotifyCastComplete();
                     _toRemoveCasterIds.Add(kv.Key);
+                }
             }
 
             for (var i = 0; i < _toRemoveCasterIds.Count; i++)

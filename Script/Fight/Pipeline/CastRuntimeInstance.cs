@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Aquila.Combat.Resolve;
 using Aquila.Event;
@@ -86,6 +85,7 @@ namespace Aquila.Combat
             IsCompleted = false;
             IsInterrupted = false;
             InterruptReason = CastInterruptReason.None;
+            _completionNotified = false;
         }
 
         public void RefreshTargets(int[] targets)
@@ -148,6 +148,15 @@ namespace Aquila.Combat
         public void MarkCompleted()
         {
             IsCompleted = true;
+        }
+
+        public void NotifyCastComplete()
+        {
+            if (_completionNotified)
+                return;
+
+            _completionNotified = true;
+            Castor?.GetAddon<Addon_Ability>().CastComplete(CastCmd?._abilityID ?? -1);
         }
 
         /// <summary>
@@ -215,5 +224,6 @@ namespace Aquila.Combat
         public bool IsCompleted { get; private set; }
         public bool IsInterrupted { get; private set; }
         public CastInterruptReason InterruptReason { get; private set; }
+        private bool _completionNotified;
     }
 }

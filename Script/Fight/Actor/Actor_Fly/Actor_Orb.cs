@@ -22,7 +22,8 @@ namespace Aquila.Fight.Actor
             //替换追踪组件为目标点组件
             _behaviourAddon.RemoveBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM );
             var bhvr = _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.TARGETING_POSITION ) as ActorBehaviour_TargetingPosition;
-            bhvr._onHitAbilityID = DefaultOnHitAbilityID();
+            _onHitAbilityID = DefaultOnHitAbilityID();
+            bhvr._onHitAbilityID = _onHitAbilityID;
             bhvr._radius = 1f;
             bhvr.GetReady( position );
         }
@@ -42,7 +43,8 @@ namespace Aquila.Fight.Actor
             //替换追踪组件为目标点组件
             _behaviourAddon.RemoveBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM );
             var bhvr = _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.TARGETING_POSITION ) as ActorBehaviour_TargetingPosition;
-            bhvr._onHitAbilityID = onHitAbilityID;
+            _onHitAbilityID = onHitAbilityID;
+            bhvr._onHitAbilityID = _onHitAbilityID;
             bhvr._radius = 1f;
             bhvr.GetReady( target );
         }
@@ -64,7 +66,8 @@ namespace Aquila.Fight.Actor
             {
                 //#todo这里改成配表，为了测试暂时写死的
                 bhvr._radius = 1f;
-                bhvr._onHitabilityID = onHitAbilityID;
+                _onHitAbilityID = onHitAbilityID;
+                bhvr._onHitabilityID = _onHitAbilityID;
                 bhvr._targetActorID = _targetActorID;
                 bhvr.GetReady( targetTransform/*, _targetActorID, onHitAbilityID*/ );
             }
@@ -99,20 +102,21 @@ namespace Aquila.Fight.Actor
         {
             base.AddAddon();
             _behaviourAddon = AddAddon<Addon_Behaviour>();
-            //法球的触发是通过fsm调用技能组件实现的所以要加上这两个组件
-            AddAddon<Addon_Ability>();
-            //AddAddon<Addon_FSM_Orb>();
+            _abilityAddon = AddAddon<Addon_Ability>();
         }
-
+    
         protected override void InitAddons( Module_ProxyActor.ActorInstance instance )
         {
             base.InitAddons( instance );
+            _abilityAddon.OnCastComplete += OnCastComplete;
             _behaviourAddon.AddBehaviour( ActorBehaviourTypeEnum.TRACING_TRANSFORM );
         }
 
         protected override void OnInitActor( object userData )
         {
             base.OnInitActor( userData );
+            _hideRequested = false;
+            _onHitAbilityID = -1;
             
             if ( userData is Actor_Orb_EntityData data )
                 _targetActorID = data._targetActorID;
@@ -124,6 +128,7 @@ namespace Aquila.Fight.Actor
 
         protected override void OnHide(bool isShutdown, object userData)
         {
+            _abilityAddon.OnCastComplete -= OnCastComplete;
             GameEntry.Event.Unsubscribe(EventArg_OnActorDie.EventID,OnActorDie);
             base.OnHide(isShutdown, userData);
         }
@@ -131,6 +136,9 @@ namespace Aquila.Fight.Actor
         protected override void OnRecycle()
         {
             _behaviourAddon = null;
+            _abilityAddon = null;
+            _onHitAbilityID = -1;
+            _hideRequested = false;
             base.OnRecycle();
         }
 
@@ -143,15 +151,38 @@ namespace Aquila.Fight.Actor
         /// </summary>
         private Addon_Behaviour _behaviourAddon;
 
+        private Addon_Ability _abilityAddon;
+
         /// <summary>
         /// 目标actorID
         /// </summary>
         private int _targetActorID = -1;
+
+        private int _onHitAbilityID = -1;
+
+        private bool _hideRequested;
         
         /// <summary>
         /// 当前的目标位置
         /// </summary>
         private Vector3 _currTargetPosition = Vector3.zero;
+
+        private void OnCastComplete(int abilityID)
+        {
+            if (_onHitAbilityID > 0 && abilityID != _onHitAbilityID)
+                return;
+
+            HideSelf();
+        }
+
+        private void HideSelf()
+        {
+            if (_hideRequested)
+                return;
+
+            _hideRequested = true;
+            GameEntry.Entity.HideEntity(ActorID);
+        }
     }
 
     public class Actor_Orb_EntityData : Actor_Base_EntityData
