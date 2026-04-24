@@ -86,6 +86,7 @@ namespace Aquila.Combat.Resolve
             ResolvePhaseType.Block,
             ResolvePhaseType.Shield,
             ResolvePhaseType.HpApply,
+            ResolvePhaseType.MpApply,
             ResolvePhaseType.PostEffects,
             ResolvePhaseType.LifecycleCheck,
         };

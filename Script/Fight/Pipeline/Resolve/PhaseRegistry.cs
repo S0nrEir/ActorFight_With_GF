@@ -19,6 +19,7 @@ namespace Aquila.Combat.Resolve
             Register(new BlockPhaseHandler());
             Register(new ShieldPhaseHandler());
             Register(new HpApplyPhaseHandler());
+            Register(new MpApplyPhaseHandler());
             Register(new PostEffectsPhaseHandler());
             Register(new LifecycleCheckPhaseHandler());
         }

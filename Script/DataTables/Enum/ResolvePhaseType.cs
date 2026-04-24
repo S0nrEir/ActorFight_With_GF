@@ -61,5 +61,9 @@ namespace Cfg.Enum
         /// Check crit trigger by formula and set crit flag / 通过公式判定是否暴击并写入标记
         /// </summary>
         CritCheck = 11,
+        /// <summary>
+        /// Write mp cost delta to attribute addo / 将MP消耗净值同步至属性组件
+        /// </summary>
+        MpApply = 12,
     }
 }

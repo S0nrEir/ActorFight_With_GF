@@ -7,7 +7,6 @@ using GameFramework.Procedure;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Toolkit
 {
@@ -369,62 +368,62 @@ namespace Aquila.Toolkit
 
             public static void Info(object message)
             {
-                Log.Info(FormatWithLevelColor(message, InfoColor));
+                Debug.Log(FormatWithLevelColor(message, InfoColor));
             }
 
             public static void Info(string message)
             {
-                Log.Info(FormatWithLevelColor(message, InfoColor));
+                Debug.Log(FormatWithLevelColor(message, InfoColor));
             }
 
             public static void Info(string format, params object[] args)
             {
-                Log.Info(FormatWithLevelColor(FormatMessage(format, args), InfoColor));
+                Debug.Log(FormatWithLevelColor(FormatMessage(format, args), InfoColor));
             }
 
             public static void Warning(object message)
             {
-                Log.Warning(FormatWithLevelColor(message, WarningColor));
+                Debug.LogWarning(FormatWithLevelColor(message, WarningColor));
             }
 
             public static void Warning(string message)
             {
-                Log.Warning(FormatWithLevelColor(message, WarningColor));
+                Debug.LogWarning(FormatWithLevelColor(message, WarningColor));
             }
 
             public static void Warning(string format, params object[] args)
             {
-                Log.Warning(FormatWithLevelColor(FormatMessage(format, args), WarningColor));
+                Debug.LogWarning(FormatWithLevelColor(FormatMessage(format, args), WarningColor));
             }
 
             public static void Error(object message)
             {
-                Log.Error(FormatWithLevelColor(message, ErrorColor));
+                Debug.LogError(FormatWithLevelColor(message, ErrorColor));
             }
 
             public static void Error(string message)
             {
-                Log.Error(FormatWithLevelColor(message, ErrorColor));
+                Debug.LogError(FormatWithLevelColor(message, ErrorColor));
             }
 
             public static void Error(string format, params object[] args)
             {
-                Log.Error(FormatWithLevelColor(FormatMessage(format, args), ErrorColor));
+                Debug.LogError(FormatWithLevelColor(FormatMessage(format, args), ErrorColor));
             }
 
             public static void Fatal(object message)
             {
-                Log.Fatal(FormatWithLevelColor(message, FatalColor));
+                Debug.LogError(FormatWithLevelColor(message, FatalColor));
             }
 
             public static void Fatal(string message)
             {
-                Log.Fatal(FormatWithLevelColor(message, FatalColor));
+                Debug.LogError(FormatWithLevelColor(message, FatalColor));
             }
 
             public static void Fatal(string format, params object[] args)
             {
-                Log.Fatal(FormatWithLevelColor(FormatMessage(format, args), FatalColor));
+                Debug.LogError(FormatWithLevelColor(FormatMessage(format, args), FatalColor));
             }
 
             private static string FormatMessage(string format, params object[] args)

@@ -93,6 +93,11 @@ namespace Aquila.Combat.Resolve
                     AppliedHpDelta = 0f;
                     break;
 
+                case ResolvePhaseType.MpApply:
+                    MpApplyIo = default;
+                    AppliedMpDelta = 0f;
+                    break;
+
                 case ResolvePhaseType.PostEffects:
                     PostEffectsIo = default;
                     break;
@@ -187,6 +192,8 @@ namespace Aquila.Combat.Resolve
             ShieldAbsorb = 0f;
             HpApplyIo = default;
             AppliedHpDelta = 0f;
+            MpApplyIo = default;
+            AppliedMpDelta = 0f;
             PostEffectsIo = default;
             LifecycleCheckIo = default;
 
@@ -231,6 +238,9 @@ namespace Aquila.Combat.Resolve
 
         public ResolvePhaseIoState HpApplyIo;
         public float AppliedHpDelta;
+
+        public ResolvePhaseIoState MpApplyIo;
+        public float AppliedMpDelta;
 
         public ResolvePhaseIoState PostEffectsIo;
         public ResolvePhaseIoState LifecycleCheckIo;

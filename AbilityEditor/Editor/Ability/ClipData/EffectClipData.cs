@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cfg.Enum;
 using UnityEngine;
 
@@ -11,6 +12,18 @@ namespace Aquila.AbilityEditor
     [Serializable]
     public class EffectClipData : TimelineClipData
     {
+        private static readonly HashSet<EffectType> ExportValidationSkipEffectTypes = new HashSet<EffectType>
+        {
+            // EffectType.Instant_Cost,
+            EffectType.Period_CoolDown,
+            EffectType.Instant_Summon_Projectile,
+            EffectType.Period_DerivingStack,
+            EffectType.Period_ActorTag,
+            EffectType.Period_WindUp,
+            
+            
+        };
+
         /// <summary>
         /// Effect扩展参数（嵌套类）
         /// </summary>
@@ -323,17 +336,17 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
-            if (_resolveTypeID <= 0)
+            if (!ShouldSkipResolveAndFormulaValidation() && _resolveTypeID <= 0)
             {
                 errorMessage = "ResolveTypeID must be greater than 0";
                 return false;
             }
             
-            if (_formulaID <= 0)
-            {
-                errorMessage = "FormulaID must be greater than 0 for damage effects";
-                return false;
-            }
+            // if (!ShouldSkipResolveAndFormulaValidation() && _formulaID <= 0)
+            // {
+            //     errorMessage = "FormulaID must be greater than 0 for damage effects";
+            //     return false;
+            // }
 
             if (_stackCount < 1)
             {
@@ -357,6 +370,11 @@ namespace Aquila.AbilityEditor
 
             errorMessage = string.Empty;
             return true;
+        }
+
+        public bool ShouldSkipResolveAndFormulaValidation()
+        {
+            return ExportValidationSkipEffectTypes.Contains(_effectType);
         }
 
         public override string GetDisplayInfo()
