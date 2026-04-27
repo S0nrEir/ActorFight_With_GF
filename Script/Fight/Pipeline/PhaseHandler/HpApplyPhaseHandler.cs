@@ -27,7 +27,8 @@ namespace Aquila.Combat.Resolve
             }
 
             var currHp = addon.GetCurrHPCorrection();
-            var hpToSet = currHp - context.FinalDelta;
+            var finalDelta = context.FinalDelta < 1f ? 1f : context.FinalDelta;
+            var hpToSet = currHp - finalDelta;
             var succAndVal = addon.SetCurrHP(hpToSet);
             if (!succAndVal.setSucc)
             {
@@ -35,7 +36,7 @@ namespace Aquila.Combat.Resolve
                 return;
             }
             
-            context.HpApplyIo.Output = context.FinalDelta;
+            context.HpApplyIo.Output = finalDelta;
             context.AppliedHpDelta = hpToSet;
             context.HasApplied = true;
             result.SetContinue();

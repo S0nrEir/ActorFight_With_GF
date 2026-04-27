@@ -43,10 +43,65 @@ namespace Editor.AbilityEditor.Config
                 abilityData = CreateAbilityData(config, tracks);
                 AssetDatabase.CreateAsset(abilityData, assetPath);
             }
+
+            ExportEffectAssetsFromTracks(tracks);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             string action = isOverwrite ? "已覆盖" : "已创建";
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataExporter] {action}配置资产: {assetPath}");
+        }
+
+        /// <summary>
+        /// 将 tracks 中所有 EffectClipData 导出为 EffectEditorSOData 资产到 EFFECT_ASSET_BASE_PATH
+        /// </summary>
+        private static void ExportEffectAssetsFromTracks(List<TimelineTrackItem> tracks)
+        {
+            if (tracks == null)
+                return;
+
+            EnsureDirectoryExists(Misc.EFFECT_ASSET_BASE_PATH);
+            var exportedIds = new HashSet<int>();
+
+            foreach (var track in tracks)
+            {
+                if (track?.Clips == null)
+                    continue;
+
+                foreach (var clip in track.Clips)
+                {
+                    if (clip is EffectClipData effectClip && effectClip.EffectId > 0)
+                        ExportEffectClipAsAsset(effectClip, exportedIds);
+
+                    // 预留：其他类型 clip 的导出扩展点（如 AudioClipData）
+                }
+            }
+
+            if (exportedIds.Count > 0)
+                Aquila.Toolkit.Tools.Logger.Info($"[AbilityDataExporter] 已导出 {exportedIds.Count} 个 Effect 资产到 {Misc.EFFECT_ASSET_BASE_PATH}");
+        }
+
+        /// <summary>
+        /// 将单个 EffectClipData 导出/覆盖为 EffectEditorSOData 资产，资产名为 Effect ID
+        /// </summary>
+        private static void ExportEffectClipAsAsset(EffectClipData clip, HashSet<int> exportedIds)
+        {
+            if (exportedIds.Contains(clip.EffectId))
+                return;
+
+            exportedIds.Add(clip.EffectId);
+            string assetPath = $"{Misc.EFFECT_ASSET_BASE_PATH}/{clip.EffectId}.asset";
+            var existing = AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
+            if (existing != null)
+            {
+                CreateEffectDataFromClip(clip, existing);
+                EditorUtility.SetDirty(existing);
+            }
+            else
+            {
+                var effectData = ScriptableObject.CreateInstance<EffectEditorSOData>();
+                CreateEffectDataFromClip(clip, effectData);
+                AssetDatabase.CreateAsset(effectData, assetPath);
+            }
         }
 
         /// <summary>

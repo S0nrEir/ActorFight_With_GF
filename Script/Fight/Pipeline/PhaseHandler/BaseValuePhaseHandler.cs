@@ -13,7 +13,7 @@ namespace Aquila.Combat.Resolve
         {
             context.BaseValueIo.Input = context.FinalDelta;
             context.BaseValueAmount = context.FinalDelta;
-            context.FinalDelta = context.FinalDelta;
+            //context.FinalDelta = context.FinalDelta;
             context.BaseValueIo.Output = context.FinalDelta;
             result.SetContinue();
         }

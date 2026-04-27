@@ -134,6 +134,7 @@ namespace Aquila.Combat.Resolve
             ResolvePhaseType.MpApply,
             ResolvePhaseType.PostEffects,
             ResolvePhaseType.LifecycleCheck,
+            ResolvePhaseType.ResolveEnd,
         };
 
         private bool _initialized;

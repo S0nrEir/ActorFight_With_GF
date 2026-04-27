@@ -105,6 +105,10 @@ namespace Aquila.Combat.Resolve
                 case ResolvePhaseType.LifecycleCheck:
                     LifecycleCheckIo = default;
                     break;
+
+                case ResolvePhaseType.ResolveEnd:
+                    ResolveEndIo = default;
+                    break;
             }
         }
 
@@ -196,6 +200,7 @@ namespace Aquila.Combat.Resolve
             AppliedMpDelta = 0f;
             PostEffectsIo = default;
             LifecycleCheckIo = default;
+            ResolveEndIo = default;
 
             _floatValues.Clear();
             _skippedPhases.Clear();
@@ -244,5 +249,6 @@ namespace Aquila.Combat.Resolve
 
         public ResolvePhaseIoState PostEffectsIo;
         public ResolvePhaseIoState LifecycleCheckIo;
+        public ResolvePhaseIoState ResolveEndIo;
     }
 }

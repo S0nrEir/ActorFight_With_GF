@@ -66,8 +66,12 @@ namespace Cfg.Enum
         /// </summary>
         MpApply = 13,
         /// <summary>
+        /// Mark the resolve pipeline finished / 标记整个结算流程结束
+        /// </summary>
+        ResolveEnd = 14,
+        /// <summary>
         /// 无业务意义，仅表示终止
         /// </summary>
-        Max = 14,
+        Max = 15,
     }
 }

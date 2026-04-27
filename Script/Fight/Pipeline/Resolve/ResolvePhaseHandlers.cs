@@ -1,7 +1,24 @@
+using Aquila.Fight.Addon;
+using Cfg.Enum;
+
 namespace Aquila.Combat.Resolve
 {
-    // 占位入口：项目文件已引用该文件名，具体 Handler 实现见 PhaseRegistry.cs。
     internal static class ResolvePhaseHandlers
     {
+    }
+
+    internal sealed class ResolveEndPhaseHandler : ResolvePhaseHandlerBase
+    {
+        public override ResolvePhaseType PhaseType => ResolvePhaseType.ResolveEnd;
+
+        public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
+        {
+            context.ResolveEndIo.Input = context.FinalDelta;
+            context.ResolveEndIo.Output = context.FinalDelta;
+            var target = context.Request.Target;
+            target.GetAddon<Addon_HP>().Refresh();
+            GameEntry.InfoBoard.ShowDamageNumber( context.FinalDelta.ToString(), target.Actor.CachedTransform.position );
+            result.SetContinue();
+        }
     }
 }
