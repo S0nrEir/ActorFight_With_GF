@@ -1,5 +1,6 @@
 using Aquila.Fight.Addon;
 using Cfg.Enum;
+using UnityEngine;
 
 namespace Aquila.Combat.Resolve
 {
@@ -27,8 +28,8 @@ namespace Aquila.Combat.Resolve
             }
 
             var currHp = addon.GetCurrHPCorrection();
-            var finalDelta = context.FinalDelta < 1f ? 1f : context.FinalDelta;
-            var hpToSet = currHp - finalDelta;
+            var finalDelta = context.FinalDelta < 1f ? 1f : Mathf.FloorToInt(context.FinalDelta);
+            var hpToSet = (currHp - finalDelta);
             var succAndVal = addon.SetCurrHP(hpToSet);
             if (!succAndVal.setSucc)
             {
@@ -39,6 +40,7 @@ namespace Aquila.Combat.Resolve
             context.HpApplyIo.Output = finalDelta;
             context.AppliedHpDelta = hpToSet;
             context.HasApplied = true;
+            context.FinalDelta = finalDelta;
             result.SetContinue();
         }
     }

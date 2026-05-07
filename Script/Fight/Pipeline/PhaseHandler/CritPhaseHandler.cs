@@ -43,8 +43,8 @@ namespace Aquila.Combat.Resolve
             if (!TryEvaluatePhaseFormula(context, result, out var computed))
                 return;
 
-            context.CritIo.Output = computed;
-            context.FinalDelta = computed;
+            context.FinalDelta = computed + context.FinalDelta;
+            context.CritIo.Output = context.FinalDelta;
             context.CritIncrease  = context.CritIo.Output - context.CritIo.Input;
             result.SetContinue();
         }
