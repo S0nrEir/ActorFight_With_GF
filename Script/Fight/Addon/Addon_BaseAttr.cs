@@ -96,7 +96,7 @@ namespace Aquila.Fight.Addon
         public float GetCurrMPCorrection()
         {
             // return _currMP.CorrectionValue;
-            return _numricArr[(int)actor_attribute.Max_MP].CorrectionValue;
+            return _numricArr[(int)actor_attribute.Curr_MP].CorrectionValue;
         }
 
         /// <summary>

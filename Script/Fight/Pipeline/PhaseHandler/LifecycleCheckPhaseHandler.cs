@@ -1,3 +1,5 @@
+using Aquila.Event;
+using Aquila.Fight;
 using Aquila.Fight.Addon;
 using Aquila.Numric;
 using Cfg.Enum;
@@ -18,12 +20,12 @@ namespace Aquila.Combat.Resolve
             //     return;
 
             context.LifecycleCheckIo.Output = context.FinalDelta;
-            var currHp = context.Request.Castor.GetAddon<Addon_BaseAttrNumric>().GetCorrectionValue(actor_attribute.Curr_HP, 0);
-            if (currHp <= 0)
-            {
-                ///...
-            }
+            var target = context.Request.Target;
+            var currHp = target.GetAddon<Addon_BaseAttrNumric>().GetCorrectionValue(actor_attribute.Curr_HP, 0);
+            if (currHp <= 0 && target is IDieBehavior)
+                (target as IDieBehavior).Die();
 
+            target.GetAddon<Addon_HP>()?.Refresh();
             result.SetContinue();
         }
     }

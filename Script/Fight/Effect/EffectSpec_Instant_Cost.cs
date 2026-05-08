@@ -1,6 +1,9 @@
 using Aquila.Event;
+using Aquila.Combat.Resolve;
 using Aquila.Fight.Addon;
 using Aquila.Module;
+using Aquila.Toolkit;
+using Cfg.Enum;
 
 namespace Aquila.Fight
 {
@@ -11,13 +14,21 @@ namespace Aquila.Fight
     {
         public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            var attr_addon = target.GetAddon<Addon_BaseAttrNumric>();
-            if(attr_addon is null)
+            base.Apply(castor, target);
+
+            var attrAddon = castor.GetAddon<Addon_BaseAttrNumric>();
+            var currMp = attrAddon.GetCurrMPCorrection();
+            var remainMp = Calc(currMp);
+            var mpCost = currMp - remainMp;
+            if (mpCost <= 0f)
                 return;
-             
-            var curr_value = attr_addon.GetCurrMPCorrection();
-            curr_value += _effectData.GetFloatParam1();
-            attr_addon.SetCurrMP(curr_value);
+
+            var resolveTarget = castor;
+            var resolveResult = CombatResolveEntry.Resolve(castor, resolveTarget, this, mpCost, ResolveSourceType.EffectDirect);
+            if (!resolveResult.Success)
+            {
+                Tools.Logger.Error($"[EffectSpec_Instant_Cost] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");
+            }
         }
 
         /// <summary>

@@ -3,11 +3,12 @@ using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
+using UnityEngine;
 
 namespace Aquila.Fight
 {
     /// <summary>
-    /// 周期性固定伤害
+    /// 周期性固定神圣伤害,无视护甲
     /// </summary>
     public class EffectSpec_Period_FixedDamage : EffectSpec_Base
     {
@@ -27,7 +28,8 @@ namespace Aquila.Fight
                 return;
             }
 
-            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, 0f, ResolveSourceType.PoisonDamage);
+            var inputDelta = Mathf.Abs(Meta.GetFloatParam1());
+            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, inputDelta, ResolveSourceType.PoisonDamage);
             if (!resolveResult.Success)
             {
                 Tools.Logger.Error($"[EffectSpec_Period_FixedDamage] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");
