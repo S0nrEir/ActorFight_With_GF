@@ -132,6 +132,7 @@ namespace Aquila.Combat.Resolve
             ResolvePhaseType.Shield,
             ResolvePhaseType.HpApply,
             ResolvePhaseType.MpApply,
+            ResolvePhaseType.MpResolveEnd,
             ResolvePhaseType.PostEffects,
             ResolvePhaseType.LifecycleCheck,
             ResolvePhaseType.ResolveEnd,

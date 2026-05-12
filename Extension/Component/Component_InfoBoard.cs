@@ -38,6 +38,28 @@ namespace Aquila.Extension
         }
 
         /// <summary>
+        /// 鏄剧ずMP鍙樺寲鏁板瓧瀹炰緥
+        /// </summary>
+        public void ShowMpNumber( string num, Vector3 worldPos )
+        {
+            var obj = GenObject<Object_DamageNumber>( typeof( Object_DamageNumber ).Name );
+            if ( obj is null )
+            {
+                var go = Instantiate( _dmg_number_prefab );
+                InitTransform( go.transform );
+                var pool = GameEntry.ObjectPool.GetObjectPool<Object_DamageNumber>( typeof( Object_DamageNumber ).Name );
+                pool.Register( Object_DamageNumber.Gen( go ), false );
+                obj = pool.Spawn();
+            }
+
+            obj.Setup( obj.Target as GameObject );
+            var rect_pos = WorldPos2BoardRectPos( worldPos, GameEntry.CameraHub.GetWorldCamera() );
+            obj.SetPos( rect_pos );
+            obj.SetNumber( num, new Color( 0.35f, 0.65f, 1f ) );
+            _damage_number_spawn_dic.Add( obj.GetHashCode(), obj );
+        }
+
+        /// <summary>
         /// 获取一个hpbar，获取不到返回null
         /// </summary>
         public Object_HPBar GenHPBar()

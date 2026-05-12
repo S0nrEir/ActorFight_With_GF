@@ -23,6 +23,7 @@ namespace Aquila.Combat.Resolve
             Register(new PostEffectsPhaseHandler());
             Register(new LifecycleCheckPhaseHandler());
             Register(new ResolveEndPhaseHandler());
+            Register(new MpResolveEndPhaseHandler());
         }
 
         public bool TryGetHandler(ResolvePhaseType phase, out IResolvePhaseHandler handler)

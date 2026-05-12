@@ -1,4 +1,3 @@
-using Aquila.Event;
 using Aquila.Combat.Resolve;
 using Aquila.Fight.Addon;
 using Aquila.Module;
@@ -12,7 +11,7 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Instant_Cost : EffectSpec_Base
     {
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
             base.Apply(castor, target);
 
@@ -38,20 +37,12 @@ namespace Aquila.Fight
         {
             return _modifier.Calc(valToModify);
         }
-        
+
         public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
         {
             base.Init(data, castor, target);
             _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
-        
-        // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-        //     Module_ProxyActor.ActorInstance target = null)
-        // {
-        //     base.Init(meta, castor, target);
-        //     _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
-        // }
     }
-   
 }
