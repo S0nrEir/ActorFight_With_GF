@@ -121,6 +121,9 @@ namespace Aquila.Module
                 case CastRejectCode.CostNotEnough:
                     return CastRejectFlags.CostNotEnough;
 
+                case CastRejectCode.AbilityInactive:
+                    return CastRejectFlags.AbilityInactive;
+
                 case CastRejectCode.UnsupportedTargetType:
                     return CastRejectFlags.UnsupportedTargetType;
 
@@ -158,6 +161,9 @@ namespace Aquila.Module
             if ((flags & CastRejectFlags.CostNotEnough) != 0)
                 return CastRejectCode.CostNotEnough;
 
+            if ((flags & CastRejectFlags.AbilityInactive) != 0)
+                return CastRejectCode.AbilityInactive;
+
             if ((flags & CastRejectFlags.UnsupportedTargetType) != 0)
                 return CastRejectCode.UnsupportedTargetType;
 
@@ -178,6 +184,8 @@ namespace Aquila.Module
                     return CastRejectCode.CooldownNotReady;
                 case 3:
                     return CastRejectCode.AbilitySpecMissing;
+                case 4:
+                    return CastRejectCode.AbilityInactive;
             }
 
             if (Enum.IsDefined(typeof(CastRejectCode), rawCanUseCode))

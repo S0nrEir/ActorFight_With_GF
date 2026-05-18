@@ -15,6 +15,11 @@ namespace Aquila.Fight
     /// </summary>
     public /*abstract*/ class AbilitySpecBase : IReference
     {
+        public void SetActive(bool active)
+        {
+            Active = active;
+        }
+
         /// <summary>
         /// 扣除技能消耗
         /// </summary>
@@ -122,6 +127,9 @@ namespace Aquila.Fight
         /// </summary>
         public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target )
         {
+            if (!Active)
+                return false;
+
             // if ( !OnPreAbility() )
             //     return false;
 
@@ -184,6 +192,9 @@ namespace Aquila.Fight
         /// </summary>wwww
         public virtual int CanUseAbility()
         {
+            if (!Active)
+                return (int)CastRejectCode.AbilityInactive;
+
             if ( !CostOK() )
                 return ( int ) CastRejectCode.CostNotEnough;
 
@@ -201,6 +212,7 @@ namespace Aquila.Fight
             Meta          = null;
             _data         = default;
             // 清理 CD 和 Cost
+            Active        = true;
             _costEffect?.Clear();
             _cdEffect?.Clear();
             // _tagContainer = null;
@@ -214,7 +226,7 @@ namespace Aquila.Fight
         /// 刷帧处理 CD
         /// </summary>
         public virtual void OnUpdate( float delta_time )
-        {
+        { 
             _cdEffect._remain -= delta_time;
         }
 
@@ -277,7 +289,7 @@ namespace Aquila.Fight
         /// </summary>
         private EffectSpec_Period_CoolDown _cdEffect;
 
-        /// <summary>
+        /// <summary>  
         /// 技能消耗
         /// </summary>
         private EffectSpec_Instant_Cost _costEffect;
@@ -287,6 +299,8 @@ namespace Aquila.Fight
         /// </summary>
         public Module_ProxyActor.ActorInstance _owner;
 
+        public bool Active { get; private set; } = true;
+        
         public AbilitySpecBase()
         {
             // _tagContainer = new TagContainer( OnTagChange );

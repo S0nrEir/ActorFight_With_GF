@@ -54,6 +54,10 @@ namespace Cfg.Enum
         /// </summary>
         CostNotEnough = 1201,
         /// <summary>
+        /// ability is inactive
+        /// </summary>
+        AbilityInactive = 1202,
+        /// <summary>
         /// target type not supported
         /// </summary>
         UnsupportedTargetType = 1300,

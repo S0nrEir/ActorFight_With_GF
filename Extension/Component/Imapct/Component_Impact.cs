@@ -183,24 +183,24 @@ namespace Aquila.Fight.Impact
                 if ( impactData._effectOnAwake )
                     newEffect.OnEffectAwake(castor, target);
 
-                var awakeEffects = newEffect.Meta.GetAwakeEffects();
-                // 唤起携带的 AwakeEffects（依次触发每个子 effect 的 Awake 逻辑）
-                if ( awakeEffects.Count != 0 )
-                {
-                    foreach ( var awakeEffectID in awakeEffects )
-                    {
-                        if ( !GameEntry.AbilityPool.TryGetEffect( awakeEffectID, out var awakeEffectData ) )
-                        {
-                            Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect not found, id:{awakeEffectID}</color>" );
-                            continue;
-                        }
-
-                        var awakeEffect = Tools.Ability.CreateEffectSpecByReferencePool( awakeEffectData, castor, target );
-                        
-                        awakeEffect.OnEffectAwake(castor, target);
-                        ReferencePool.Release(awakeEffect);
-                    }
-                }
+                // var awakeEffects = newEffect.Meta.GetAwakeEffects();
+                // // 唤起携带的 AwakeEffects（依次触发每个子 effect 的 Awake 逻辑）
+                // if ( awakeEffects.Count != 0 )
+                // {
+                //     foreach ( var awakeEffectID in awakeEffects )
+                //     {
+                //         if ( !GameEntry.AbilityPool.TryGetEffect( awakeEffectID, out var awakeEffectData ) )
+                //         {
+                //             Tools.Logger.Warning( $"<color=yellow>Component_Impact.Attach()--->awake effect not found, id:{awakeEffectID}</color>" );
+                //             continue;
+                //         }
+                //
+                //         var awakeEffect = Tools.Ability.CreateEffectSpecByReferencePool( awakeEffectData, castor, target );
+                //         
+                //         awakeEffect.OnEffectAwake(castor, target);
+                //         ReferencePool.Release(awakeEffect);
+                //     }
+                // }
             }
         }
 

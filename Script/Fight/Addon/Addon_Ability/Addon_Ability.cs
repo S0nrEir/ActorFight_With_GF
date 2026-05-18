@@ -13,6 +13,21 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_Ability : Addon_Base
     {
+        /// <summary>
+        /// 激活或取消激活一个技能 / 
+        /// </summary>
+        public void ActiveAbility(int abilityID,bool isActive)
+        {
+            var spec = GetAbilitySpec( abilityID );
+            if ( spec is null )
+            {
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.ActiveAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return;
+            }
+
+            spec.SetActive( isActive );
+        }
+
         //----------------------pub----------------------
         /// <summary>
         /// 给与addon某个技能 / Give a ability to an addon
@@ -73,7 +88,13 @@ namespace Aquila.Fight.Addon
                 Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 return false;
             }
-        
+
+            if ( !spec.Active )
+            {
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability inactive, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return false;
+            }
+
             return spec.UseAbility(triggerIndex, target );
         }
 

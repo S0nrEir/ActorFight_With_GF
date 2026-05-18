@@ -37,6 +37,9 @@ namespace Aquila.Toolkit
                 if ( flags.HasFlag( CastRejectFlags.CooldownNotReady ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
 
+                if ( flags.HasFlag( CastRejectFlags.AbilityInactive ) )
+                    return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
+
                 if ( flags.HasFlag( CastRejectFlags.MissingAbilityAddon ) || flags.HasFlag( CastRejectFlags.AbilitySpecMissing ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NoMeta;
 
@@ -58,6 +61,8 @@ namespace Aquila.Toolkit
                     case CastRejectCode.CostNotEnough:
                         return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotEnoughMana;
                     case CastRejectCode.CooldownNotReady:
+                        return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
+                    case CastRejectCode.AbilityInactive:
                         return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
                     case CastRejectCode.MissingAbilityAddon:
                     case CastRejectCode.AbilitySpecMissing:
@@ -175,4 +180,3 @@ namespace Aquila.Toolkit
         }
     }
 }
-
