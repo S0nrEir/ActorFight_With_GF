@@ -204,13 +204,10 @@ namespace Aquila.Module
 
         private void EnqueueCast(CastCmd cmd)
         {
-            if (!_pendingCastByCaster.TryGetValue(cmd._castorInstanceId, out var queue))
-            {
-                queue = new Queue<CastCmd>();
-                _pendingCastByCaster.Add(cmd._castorInstanceId, queue);
-            }
+            if (_pendingCastByCaster.TryGetValue(cmd._castorInstanceId, out var pendingCmd) && pendingCmd != null)
+                ReferencePool.Release(pendingCmd);
 
-            queue.Enqueue(cmd);
+            _pendingCastByCaster[cmd._castorInstanceId] = cmd;
         }
 
         private void DrivePendingQueue()
@@ -228,25 +225,17 @@ namespace Aquila.Module
                 if (_abilityRuntimeService.IsCasting(castorActorId))
                     continue;
 
-                if (!_pendingCastByCaster.TryGetValue(castorActorId, out var queue) || queue.Count <= 0)
+                if (!_pendingCastByCaster.TryGetValue(castorActorId, out var cmd) || cmd == null)
                     continue;
 
-                while (queue.Count > 0 && !_abilityRuntimeService.IsCasting(castorActorId))
+                if (_abilityRuntimeService.TryStartCast(cmd, out _, out _))
                 {
-                    var cmd = queue.Peek();
-                    if (_abilityRuntimeService.TryStartCast(cmd, out _, out _))
-                    {
-                        queue.Dequeue();
-                        break;
-                    }
-
-                    queue.Dequeue(); 
-                    if (cmd != null)
-                        ReferencePool.Release(cmd);
+                    _pendingCastByCaster.Remove(castorActorId);
+                    continue;
                 }
 
-                if (queue.Count <= 0)
-                    _pendingCastByCaster.Remove(castorActorId);
+                _pendingCastByCaster.Remove(castorActorId);
+                ReferencePool.Release(cmd);
             }
 
             _tempCasterIds.Clear();
@@ -256,13 +245,8 @@ namespace Aquila.Module
         {
             foreach (var kv in _pendingCastByCaster)
             {
-                var queue = kv.Value;
-                while (queue.Count > 0)
-                {
-                    var cmd = queue.Dequeue();
-                    if (cmd != null)
-                        ReferencePool.Release(cmd);
-                }
+                if (kv.Value != null)
+                    ReferencePool.Release(kv.Value);
             }
 
             _pendingCastByCaster.Clear();
@@ -295,7 +279,7 @@ namespace Aquila.Module
         }
 
         private AbilityRuntimeService _abilityRuntimeService;
-        private readonly Dictionary<int, Queue<CastCmd>> _pendingCastByCaster = new Dictionary<int, Queue<CastCmd>>(16);
+        private readonly Dictionary<int, CastCmd> _pendingCastByCaster = new Dictionary<int, CastCmd>(16);
         private readonly List<int> _tempCasterIds = new List<int>(16);
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.Playables;
 namespace Aquila.Fight.FSM
 {
     /// <summary>
-    /// 使用技能状态：进入后播放技能 Timeline，时长到达后停止并退出到待机状态。
+    /// 使用技能状态：进入后播放技能 Timeline，时长到达后停止并退出到待机状态。仅仅作为表现
     /// </summary>
     public class ActorState_HeroAbility : ActorState_Base
     {
