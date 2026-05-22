@@ -11,6 +11,7 @@ namespace Aquila.ObjectPool
             _selector = selector;
         }
 
+        //#todo:引入输入系统后改一下这里，不要在刷帧检查输入了
         private void Update()
         {
             if (_selector == null)
