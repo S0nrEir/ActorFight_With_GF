@@ -33,16 +33,18 @@ namespace Aquila.ObjectPool
             DrawCircle(_abilityData.GetSelectRadius());
         }
 
-        protected override void OnTick()
+        protected override void OnConfirm()
         {
-            if (TryGetMouseGroundPoint(out var groundPoint))
-                _targetGameObject.transform.position = groundPoint;
-
-            if (!UnityEngine.Input.GetMouseButtonDown(0))
+            if (!TryGetMouseGroundPoint(out var groundPoint))
+            {
+                Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+                ReleaseSelf();
                 return;
+            }
 
+            _targetGameObject.transform.position = groundPoint;
             var radius = _abilityData.GetSelectRadius();
-            CollectLegalTargetsInCircle(_targetGameObject.transform.position, radius, _targetIds);
+            CollectLegalTargetsInCircle(groundPoint, radius, _targetIds);
             if (_targetIds.Count <= 0)
             {
                 Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));

@@ -13,7 +13,17 @@ namespace Aquila.ObjectPool
 
         private void Update()
         {
-            _selector?.Tick();
+            if (_selector == null)
+                return;
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape) || UnityEngine.Input.GetMouseButtonDown(1))
+            {
+                _selector.CancelSelection();
+                return;
+            }
+
+            if (UnityEngine.Input.GetMouseButtonDown(0))
+                _selector.ConfirmSelection();
         }
 
         private Object_AbilitySelectorBase _selector;

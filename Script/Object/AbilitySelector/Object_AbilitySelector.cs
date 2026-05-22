@@ -35,15 +35,6 @@ namespace Aquila.ObjectPool
             return true;
         }
 
-        public override void Setup(GameObject go)
-        {
-            _driver = go.GetComponent<AbilitySelectorDriver>();
-            if (_driver == null)
-                _driver = go.AddComponent<AbilitySelectorDriver>();
-
-            _driver.Setup(this);
-        }
-
         public void Begin(int castorId, int abilityId, AbilityData abilityData)
         {
             _castorId = castorId;
@@ -52,25 +43,36 @@ namespace Aquila.ObjectPool
             OnBegin();
         }
 
-        public void Tick()
+        public void ConfirmSelection()
         {
             if (_isReleased)
                 return;
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape) || UnityEngine.Input.GetMouseButtonDown(1))
-            {
-                Cancel();
-                return;
-            }
+            OnConfirm();
+        }
 
-            OnTick();
+        public void CancelSelection()
+        {
+            Cancel();
         }
 
         protected virtual void OnBegin()
         {
         }
 
-        protected abstract void OnTick();
+        public override void Setup(GameObject go)
+        {
+            _driver = Tools.GetComponent<AbilitySelectorDriver>(go);
+            if (_driver == null)
+            {
+                Tools.Logger.Warning($"<color=yellow>Ability selector setup failed, AbilitySelectorDriver component not found in {go.name}.</color>");
+                return;
+            }
+
+            _driver.Setup(this);
+        }
+        
+        protected abstract void OnConfirm();
 
         protected bool IsLegalTarget(Module_ProxyActor.ActorInstance target)
         {

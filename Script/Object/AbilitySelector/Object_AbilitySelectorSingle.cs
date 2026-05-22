@@ -10,11 +10,8 @@ namespace Aquila.ObjectPool
 {
     public class Object_AbilitySelectorSingle : Object_AbilitySelectorBase
     {
-        protected override void OnTick()
+        protected override void OnConfirm()
         {
-            if (!UnityEngine.Input.GetMouseButtonDown(0))
-                return;
-
             if (!TryPickActor(out var actor) || !IsLegalTarget(actor))
             {
                 Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
