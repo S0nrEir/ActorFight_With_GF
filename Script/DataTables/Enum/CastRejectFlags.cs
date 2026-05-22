@@ -57,10 +57,10 @@ namespace Cfg.Enum
         /// <summary>
         /// ability is inactive
         /// </summary>
-        AbilityInactive = 1024,
+        AbilityInactive = 512,
         /// <summary>
         /// target type not supported
         /// </summary>
-        UnsupportedTargetType = 512,
+        UnsupportedTargetType = 1024,
     }
 }

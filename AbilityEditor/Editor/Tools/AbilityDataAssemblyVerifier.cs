@@ -264,6 +264,8 @@ namespace Editor.AbilityEditor.Tools
                 costEffectID: prodAbility.CostEffectID,
                 coolDownEffectID: prodAbility.CoolDownEffectID,
                 targetType: prodAbility.TargetType,
+                selectType: prodAbility.SelectType,
+                selectRadius: prodAbility.SelectRadius,
                 timelineID: prodAbility.TimelineID,
                 timelineDuration: prodAbility.TimelineDuration,
                 effects: effectDataList.ToArray());
@@ -292,6 +294,12 @@ namespace Editor.AbilityEditor.Tools
 
             if (assembled.GetTargetType() != editor.TargetType)
                 differences.Add($"[AbilityData] TargetType | Assembled: {assembled.GetTargetType()} | Editor: {editor.TargetType}");
+
+            if (assembled.GetSelectType() != editor.SelectType)
+                differences.Add($"[AbilityData] SelectType | Assembled: {assembled.GetSelectType()} | Editor: {editor.SelectType}");
+
+            if (!FloatEquals(assembled.GetSelectRadius(), editor.SelectRadius))
+                differences.Add($"[AbilityData] SelectRadius | Assembled: {assembled.GetSelectRadius()} | Editor: {editor.SelectRadius}");
 
             if (assembled.GetTimelineID() != editor.TimelineID)
                 differences.Add($"[AbilityData] TimelineID | Assembled: {assembled.GetTimelineID()} | Editor: {editor.TimelineID}");

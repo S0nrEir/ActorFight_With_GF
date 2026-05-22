@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Aquila.AbilityEditor;
+using Aquila.Fight;
 using Cfg.Enum;
 using UnityEngine.UIElements;
 
@@ -46,6 +47,8 @@ namespace Editor.AbilityEditor.Config
                 CostEffectID = metadata.CostEffectID,
                 CoolDownEffectID = metadata.CoolDownEffectID,
                 TargetType = metadata.TargetType,
+                SelectType = metadata.SelectType,
+                SelectRadius = metadata.SelectRadius,
                 TimelineID = metadata.TimelineID,
                 TimelineAssetPath = metadata.TimelineAssetPath,
                 TimelineDuration = metadata.TimelineDuration,
@@ -105,6 +108,8 @@ namespace Editor.AbilityEditor.Config
                 CostEffectID = sourceData.CostEffectID,
                 CoolDownEffectID = sourceData.CoolDownEffectID,
                 TargetType = sourceData.TargetType,
+                SelectType = sourceData.SelectType,
+                SelectRadius = sourceData.SelectRadius,
                 TimelineID = sourceData.TimelineID,
                 TimelineAssetPath = sourceData.TimelineAssetPath ?? string.Empty,
                 TimelineDuration = sourceData.TimelineDuration
@@ -112,6 +117,9 @@ namespace Editor.AbilityEditor.Config
 
             // Generate triggers
             var triggers = GenerateTriggers(clipCollections.Effects);
+
+            if (metadata.SelectType == AbilitySelectType.Circle && metadata.SelectRadius <= 0f)
+                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle");
 
             // Validate
             AbilityConfigValidator.ValidateAll(
@@ -133,6 +141,8 @@ namespace Editor.AbilityEditor.Config
                 CostEffectID = metadata.CostEffectID,
                 CoolDownEffectID = metadata.CoolDownEffectID,
                 TargetType = metadata.TargetType,
+                SelectType = metadata.SelectType,
+                SelectRadius = metadata.SelectRadius,
                 TimelineID = metadata.TimelineID,
                 TimelineAssetPath = metadata.TimelineAssetPath,
                 TimelineDuration = metadata.TimelineDuration,
@@ -159,6 +169,8 @@ namespace Editor.AbilityEditor.Config
             public int CostEffectID;
             public int CoolDownEffectID;
             public AbilityTargetType TargetType;
+            public AbilitySelectType SelectType;
+            public float SelectRadius;
             public int TimelineID;
             public string TimelineAssetPath;
             public float TimelineDuration;
@@ -229,6 +241,23 @@ namespace Editor.AbilityEditor.Config
             {
                 metadata.TargetType = targetType;
             }
+
+            var selectTypeField = editorType.GetField("_selectTypeDropdown",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var selectTypeDropdown = selectTypeField?.GetValue(editor) as DropdownField;
+            metadata.SelectType = AbilitySelectType.Single;
+            if (selectTypeDropdown != null && Enum.TryParse<AbilitySelectType>(selectTypeDropdown.value, out var selectType))
+                metadata.SelectType = selectType;
+
+            var selectRadiusField = editorType.GetField("_selectRadiusTextField",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            var selectRadiusTextField = selectRadiusField?.GetValue(editor) as TextField;
+            metadata.SelectRadius = 0f;
+            if (selectRadiusTextField != null && float.TryParse(selectRadiusTextField.value, out float selectRadius))
+                metadata.SelectRadius = selectRadius;
+
+            if (metadata.SelectType == AbilitySelectType.Circle && metadata.SelectRadius <= 0f)
+                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle");
 
             // Parse Duration
             var durationField = editorType.GetField("_durationTextField",

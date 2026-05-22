@@ -241,6 +241,8 @@ namespace Editor.AbilityEditor.Config
             abilityData.CostEffectID = config.CostEffectID;
             abilityData.CoolDownEffectID = config.CoolDownEffectID;
             abilityData.TargetType = config.TargetType;
+            abilityData.SelectType = config.SelectType;
+            abilityData.SelectRadius = config.SelectRadius;
             abilityData.TimelineID = config.TimelineID;
             abilityData.TimelineAssetPath = config.TimelineAssetPath;
             abilityData.TimelineDuration = config.TimelineDuration;

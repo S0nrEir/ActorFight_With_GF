@@ -259,7 +259,7 @@ namespace Aquila.Toolkit
                     string magic = reader.ReadFixedString(4);
                     byte version = reader.ReadByte();
 
-                    if (magic != ABLT_MAGIC || version != BIN_VERSION_3)
+                    if (magic != ABLT_MAGIC || version != BIN_VERSION_4)
                     {
                         Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
                         return default;
@@ -269,6 +269,8 @@ namespace Aquila.Toolkit
                     int costEffectID = reader.ReadInt32();
                     int coolDownEffectID = reader.ReadInt32();
                     var targetType = (AbilityTargetType)reader.ReadInt32();
+                    var selectType = (AbilitySelectType)reader.ReadInt32();
+                    float selectRadius = reader.ReadSingle();
                     int timelineID = reader.ReadInt32();
                     float timelineDuration = reader.ReadSingle();
 
@@ -310,6 +312,8 @@ namespace Aquila.Toolkit
                         costEffectID: costEffectID,
                         coolDownEffectID: coolDownEffectID,
                         targetType: targetType,
+                        selectType: selectType,
+                        selectRadius: selectRadius,
                         timelineID: timelineID,
                         timelineDuration: timelineDuration,
                         effects: effectDataList.ToArray());
@@ -459,6 +463,7 @@ namespace Aquila.Toolkit
             private const string ABLT_MAGIC = "ABLT";
             private const string EFCT_MAGIC = "EFFECT";
             private const byte BIN_VERSION_3 = 0x03;
+            private const byte BIN_VERSION_4 = 0x04;
         }//end class Ability
     }//end class Tools
 }

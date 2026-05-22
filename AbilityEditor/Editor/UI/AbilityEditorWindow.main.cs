@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Aquila.AbilityEditor;
+using Aquila.Fight;
 using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -331,6 +332,12 @@ namespace Editor.AbilityEditor
                 if (_targetTypeDropdown != null && Enum.TryParse<AbilityTargetType>(_targetTypeDropdown.value, out var targetType))
                     _currentAbilityData.TargetType = targetType;
 
+                if (_selectTypeDropdown != null && Enum.TryParse<AbilitySelectType>(_selectTypeDropdown.value, out var selectType))
+                    _currentAbilityData.SelectType = selectType;
+
+                if (_selectRadiusTextField != null && float.TryParse(_selectRadiusTextField.value, out var selectRadius))
+                    _currentAbilityData.SelectRadius = selectRadius;
+
                 // 同步 Timeline 时长
                 _currentAbilityData.TimelineDuration = _timelineDuration;
 
@@ -521,6 +528,8 @@ namespace Editor.AbilityEditor
         private TextField _timelineIDTextField;
         private TextField _timelineAssetPathTxtField;
         private DropdownField _targetTypeDropdown;
+        private DropdownField _selectTypeDropdown;
+        private TextField _selectRadiusTextField;
         private TextField _durationTextField;
         private bool _isGenSandBoxAblt = true;
         private VisualTreeAsset _abilityTreeAsset;

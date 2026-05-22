@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
+using Aquila.Fight;
 using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace Editor.AbilityEditor.Tools
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "ABLT";
         // private const byte VERSION_2 = 0x02;
-        private const byte VERSION_3 = 0x03;
+        private const byte VERSION_4 = 0x04;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -90,6 +91,8 @@ namespace Editor.AbilityEditor.Tools
                 CostEffectID = data.CostEffectID,
                 CoolDownEffectID = data.CoolDownEffectID,
                 TargetType = data.TargetType,
+                SelectType = data.SelectType,
+                SelectRadius = data.SelectRadius,
                 TimelineID = data.TimelineID,
                 TimelineDuration = data.TimelineDuration,
                 Tracks = new List<CachedTrackData>()
@@ -264,6 +267,8 @@ namespace Editor.AbilityEditor.Tools
                     CostEffectID = reader.ReadInt32(),
                     CoolDownEffectID = reader.ReadInt32(),
                     TargetType = (AbilityTargetType)reader.ReadInt32(),
+                    SelectType = (AbilitySelectType)reader.ReadInt32(),
+                    SelectRadius = reader.ReadSingle(),
                     TimelineID = reader.ReadInt32(),
                     TimelineDuration = reader.ReadSingle(),
                     Tracks = new List<CachedTrackData>()
@@ -400,6 +405,12 @@ namespace Editor.AbilityEditor.Tools
             
             if (expected.TargetType != actual.TargetType)
                 differences.Add($"Field: TargetType | Expected: {expected.TargetType} | Actual: {actual.TargetType}");
+
+            if (expected.SelectType != actual.SelectType)
+                differences.Add($"Field: SelectType | Expected: {expected.SelectType} | Actual: {actual.SelectType}");
+
+            if (!FloatEquals(expected.SelectRadius, actual.SelectRadius))
+                differences.Add($"Field: SelectRadius | Expected: {expected.SelectRadius} | Actual: {actual.SelectRadius}");
             
             if (expected.TimelineID != actual.TimelineID)
                 differences.Add($"Field: TimelineID | Expected: {expected.TimelineID} | Actual: {actual.TimelineID}");
@@ -683,6 +694,8 @@ namespace Editor.AbilityEditor.Tools
             public int CostEffectID;
             public int CoolDownEffectID;
             public AbilityTargetType TargetType;
+            public AbilitySelectType SelectType;
+            public float SelectRadius;
             public int TimelineID;
             public float TimelineDuration;
             public List<CachedTrackData> Tracks;
@@ -748,7 +761,7 @@ namespace Editor.AbilityEditor.Tools
 
         private static bool IsSupportedVersion(byte version)
         {
-            return version == VERSION_3;
+            return version == VERSION_4;
         }
 
         #endregion

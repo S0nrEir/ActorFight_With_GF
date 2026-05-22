@@ -1,8 +1,8 @@
 #if UNITY_EDITOR
 
-using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
+using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -97,15 +97,7 @@ namespace Aquila.AbilityEditor
                 return;
             }
 
-            // 释放技能：player 对 dummy 释放
-            // _proxyActor.Ability2SingleTarget( _playerID, _dummyID, _abilityID, GameEntry.GlobalVar.InvalidPosition );
-            
-            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithSingleTarget(_playerID,_dummyID,_abilityID));
-            if (!requestResult.Accepted)
-            {
-                Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags));
-                return;
-            }
+            Object_AbilitySelectorBase.StartSelection(_playerID, _abilityID);
         }
 
         /// <summary>

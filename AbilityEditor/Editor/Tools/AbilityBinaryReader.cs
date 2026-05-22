@@ -76,6 +76,8 @@ namespace Editor.AbilityEditor.Tools
                 int costEffectId = reader.ReadInt32();
                 int coolDownEffectId = reader.ReadInt32();
                 int targetType = reader.ReadInt32();
+                int selectType = reader.ReadInt32();
+                float selectRadius = reader.ReadSingle();
                 int timelineId = reader.ReadInt32();
                 float timelineDuration = reader.ReadSingle();
 
@@ -84,6 +86,8 @@ namespace Editor.AbilityEditor.Tools
                 sb.AppendLine($"  CostEffectID: {costEffectId}");
                 sb.AppendLine($"  CoolDownEffectID: {coolDownEffectId}");
                 sb.AppendLine($"  TargetType: {targetType}");
+                sb.AppendLine($"  SelectType: {selectType}");
+                sb.AppendLine($"  SelectRadius: {selectRadius}");
                 sb.AppendLine($"  TimelineID: {timelineId}");
                 sb.AppendLine($"  TimelineDuration: {timelineDuration}s");
 

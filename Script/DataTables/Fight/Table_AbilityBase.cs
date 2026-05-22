@@ -22,6 +22,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         desc = _buf.ReadString();
         CostEffectID = _buf.ReadInt();
         CoolDownEffectID = _buf.ReadInt();
+        AbilitySelectType = (Enum.AbilitySelectType)_buf.ReadInt();
+        SelectRadius = _buf.ReadFloat();
         Timeline = _buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);Triggers = new Bean.AbilityTriggers[n];for(var i = 0 ; i < n ; i++) { Bean.AbilityTriggers _e;_e = Bean.AbilityTriggers.DeserializeAbilityTriggers(_buf); Triggers[i] = _e;}}
         PostInit();
@@ -53,6 +55,14 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
     /// </summary>
     public int CoolDownEffectID { get; private set; }
     /// <summary>
+    /// 选择器类型
+    /// </summary>
+    public Enum.AbilitySelectType AbilitySelectType { get; private set; }
+    /// <summary>
+    /// 选择器半径
+    /// </summary>
+    public float SelectRadius { get; private set; }
+    /// <summary>
     /// 技能表现timeline
     /// </summary>
     public int Timeline { get; private set; }
@@ -83,6 +93,8 @@ public sealed partial class Table_AbilityBase :  Bright.Config.BeanBase
         + "desc:" + desc + ","
         + "CostEffectID:" + CostEffectID + ","
         + "CoolDownEffectID:" + CoolDownEffectID + ","
+        + "AbilitySelectType:" + AbilitySelectType + ","
+        + "SelectRadius:" + SelectRadius + ","
         + "Timeline:" + Timeline + ","
         + "Triggers:" + Bright.Common.StringUtil.CollectionToString(Triggers) + ","
         + "}";

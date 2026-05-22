@@ -254,7 +254,7 @@ namespace Aquila.AbilityEditor
             set => _target = value;
         }
 
-        public float Duration
+        public new float Duration
         {
             get => _duration;
             set => _duration = value;

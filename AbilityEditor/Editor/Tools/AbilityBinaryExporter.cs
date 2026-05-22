@@ -75,6 +75,8 @@ namespace Editor.AbilityEditor.Tools
                     writer.WriteInt32(data.CostEffectID);
                     writer.WriteInt32(data.CoolDownEffectID);
                     writer.WriteInt32((int)data.TargetType);
+                    writer.WriteInt32((int)data.SelectType);
+                    writer.WriteSingle(data.SelectRadius);
                     writer.WriteInt32(data.TimelineID);
                     writer.WriteSingle(data.TimelineDuration);
 
@@ -210,6 +212,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x03;
+        private const byte VERSION = 0x04;
     }
 }

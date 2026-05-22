@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
+using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -69,12 +70,14 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
-            if (!requestResult.Accepted)
-            {
-                var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
-                Tools.Logger.Info(errorMsg);
-            }
+            
+            // var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
+            // if (!requestResult.Accepted)
+            // {
+            //     var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
+            //     Tools.Logger.Info(errorMsg);
+            // }
+            Object_AbilitySelectorBase.StartSelection(_actorID, abilityID);
         }
         
         /// <summary>

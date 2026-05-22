@@ -28,6 +28,14 @@
                     <ui:Label text="TargetType" name="TargetTypeTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px; height: 18px;" />
                     <ui:DropdownField name="TargetTypeDropdown" style="flex-grow: 1; width: 174px;" />
                 </ui:VisualElement>
+                <ui:VisualElement name="SelectType" style="flex-direction: row; align-items: center; height: 20px;">
+                    <ui:Label text="SelectType" name="SelectTypeTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px; height: 18px;" />
+                    <ui:DropdownField name="SelectTypeDropdown" style="flex-grow: 1; width: 174px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="SelectRadius" style="flex-direction: row; align-items: center;">
+                    <ui:Label text="SelectRadius" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="SelectRadiusTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 174px; border-right-width: 0;" />
+                </ui:VisualElement>
                 <ui:VisualElement name="TimelineID" style="flex-direction: row; align-items: center;">
                     <ui:Label text="TimelineID" name="TimelineIDTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px;" />
                     <ui:TextField picking-mode="Ignore" name="TimelineIDTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 174px; border-right-width: 0;" />

@@ -420,7 +420,7 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
             byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_3)
+            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_4)
             {
                 Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, version={version}) in {filePath}");
                 return false;
@@ -431,6 +431,8 @@ namespace Aquila.AbilityPool
             int costEffectId = reader.ReadInt32();
             int coolDownId = reader.ReadInt32();
             var targetType = (AbilityTargetType)reader.ReadInt32();
+            var selectType = (AbilitySelectType)reader.ReadInt32();
+            float selectRadius = reader.ReadSingle();
             int timelineId = reader.ReadInt32();
             float duration = reader.ReadSingle();
 
@@ -466,6 +468,8 @@ namespace Aquila.AbilityPool
                 costEffectId,
                 coolDownId,
                 targetType,
+                selectType,
+                selectRadius,
                 timelineId,
                 duration,
                 effectList.ToArray()
@@ -604,7 +608,7 @@ namespace Aquila.AbilityPool
         
         //#todo 删掉effect version和ability version
         private const byte EFFECT_VERSION_3  = 0x03;
-        private const byte ABILITY_VERSION_3 = 0x03;
+        private const byte ABILITY_VERSION_4 = 0x04;
 
         private const int CLIP_TYPE_EFFECT = 1;
         private const int CLIP_TYPE_AUDIO  = 2;
@@ -771,7 +775,9 @@ namespace Aquila.AbilityPool
         private static readonly object _initLock = new object();
         private static bool _initialized;
     }
-        
+
+    public GameObject AbilitySelectorSingle = null;
+    public GameObject AbilitySelectorCircle = null;
     }
     
 }
