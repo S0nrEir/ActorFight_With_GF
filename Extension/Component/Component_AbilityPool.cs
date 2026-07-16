@@ -42,13 +42,16 @@ namespace Aquila.AbilityPool
             return _abilityPool.TryGetValue(abilityId, out data);
         }
 
-        public AbilityData GetAbility(int abilityId)
+        public bool GetAbility(int abilityId,out AbilityData abilityData)
         {
-            if (_abilityPool.TryGetValue(abilityId, out var data))
-                return data;
+            abilityData = default;
+            if (_abilityPool.TryGetValue(abilityId, out abilityData))
+            {
+                return true;
+            }
 
             Tools.Logger.Warning($"[AbilityPool] Ability not found: {abilityId}");
-            return default;
+            return false;
         }
 
         public bool HasAbility(int abilityId)
@@ -333,32 +336,33 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(6));
             byte version = reader.ReadByte();
-            if (magic != EFFECT_MAGIC)
+            if (magic != EFFECT_MAGIC || version != EFFECT_VERSION_3)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect header (magic={magic}, version={version}) in {filePath}");
                 return false;
             }
 
             // Basic Info（顺序与 EffectBinaryExporter.ExportEffect 一致）
-            int id              = reader.ReadInt32();
-            var effectType      = (EffectType)reader.ReadInt32();         // Type EffectType 枚举（effect 类型
-            var modifierType    = (NumricModifierType)reader.ReadUInt16();
-            bool effectOnAwake  = reader.ReadBoolean();
-            var policy          = (DurationPolicy)reader.ReadUInt16();
-            float period        = reader.ReadSingle();
-            float duration      = reader.ReadSingle();
-            int target          = reader.ReadInt32();
-            var affectedAttr    = (actor_attribute)reader.ReadInt32();   // EffectType actor_attribute 字段
+            int id = reader.ReadInt32();
+            var effectType = (EffectType)reader.ReadInt32();
+            var modifierType = (NumricModifierType)reader.ReadUInt16();
+            bool effectOnAwake = reader.ReadBoolean();
+            var policy = (DurationPolicy)reader.ReadUInt16();
+            float period = reader.ReadSingle();
+            float duration = reader.ReadSingle();
+            int target = reader.ReadInt32();
+            int resolveTypeId = reader.ReadInt32();
+            var affectedAttr = (actor_attribute)reader.ReadInt32();
 
             // Extension Params
             float f1 = reader.ReadSingle();
             float f2 = reader.ReadSingle();
             float f3 = reader.ReadSingle();
             float f4 = reader.ReadSingle();
-            int i1   = reader.ReadInt32();
-            int i2   = reader.ReadInt32();
-            int i3   = reader.ReadInt32();
-            int i4   = reader.ReadInt32();
+            int i1 = reader.ReadInt32();
+            int i2 = reader.ReadInt32();
+            int i3 = reader.ReadInt32();
+            int i4 = reader.ReadInt32();
 
             // Derive Effects
             int deriveCount = reader.ReadInt32();
@@ -371,31 +375,35 @@ namespace Aquila.AbilityPool
             int[] awakeEffects = new int[awakeCount];
             for (int i = 0; i < awakeCount; i++)
                 awakeEffects[i] = reader.ReadInt32();
+            
+            int formulaID = reader.ReadInt32();
 
             data = new EffectData(
-                effectId:          id,
-                stackLimit:        1,
-                canStack:          false,
-                startTime:         0f,
-                endTime:           0f,
-                effectType:        effectType,
-                modifierType:      modifierType,
+                effectId: id,
+                stackLimit: 1,
+                canStack: false,
+                startTime: 0f,
+                endTime: 0f,
+                effectType: effectType,
+                modifierType: modifierType,
                 affectedAttribute: affectedAttr,
-                target:            target,
-                duration:          duration,
-                period:            period,
-                policy:            policy,
-                effectOnAwake:     effectOnAwake,
-                deriveEffects:     deriveEffects,
-                awakeEffects:      awakeEffects,
-                floatParam1:       f1,
-                floatParam2:       f2,
-                floatParam3:       f3,
-                floatParam4:       f4,
-                intParam1:         i1,
-                intParam2:         i2,
-                intParam3:         i3,
-                intParam4:         i4
+                target: target,
+                duration: duration,
+                period: period,
+                policy: policy,
+                effectOnAwake: effectOnAwake,
+                deriveEffects: deriveEffects,
+                awakeEffects: awakeEffects,
+                floatParam1: f1,
+                floatParam2: f2,
+                floatParam3: f3,
+                floatParam4: f4,
+                intParam1: i1,
+                intParam2: i2,
+                intParam3: i3,
+                intParam4: i4,
+                resolveTypeID: resolveTypeId,
+                formulaID: formulaID
             );
             return true;
         }
@@ -412,20 +420,22 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
             byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC)
+            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_4)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, version={version}) in {filePath}");
                 return false;
             }
 
             // Basic Info
-            int abilityId       = reader.ReadInt32();
-            int costEffectId    = reader.ReadInt32();
-            int coolDownId      = reader.ReadInt32();
-            var targetType      = (AbilityTargetType)reader.ReadInt32();
-            int timelineId      = reader.ReadInt32();
-            float duration      = reader.ReadSingle();
-            
+            int abilityId = reader.ReadInt32();
+            int costEffectId = reader.ReadInt32();
+            int coolDownId = reader.ReadInt32();
+            var targetType = (AbilityTargetType)reader.ReadInt32();
+            var selectType = (AbilitySelectType)reader.ReadInt32();
+            float selectRadius = reader.ReadSingle();
+            int timelineId = reader.ReadInt32();
+            float duration = reader.ReadSingle();
+
             // Tracks → collect all EffectClipData
             var effectList = new List<EffectData>();
             int trackCount = reader.ReadInt32();
@@ -435,13 +445,13 @@ namespace Aquila.AbilityPool
                 int clipCount = reader.ReadInt32();
                 for (int c = 0; c < clipCount; c++)
                 {
-                    int clipType    = reader.ReadInt32();
+                    int clipType = reader.ReadInt32();
                     float startTime = reader.ReadSingle();
-                    float endTime   = reader.ReadSingle();
+                    float endTime = reader.ReadSingle();
 
                     if (clipType == CLIP_TYPE_EFFECT)
                     {
-                        var effectData = ReadEffectClip(reader, startTime, endTime);
+                        var effectData = ReadEffectClip(reader, startTime, endTime, version);
                         if (effectData.HasValue)
                             effectList.Add(effectData.Value);
                     }
@@ -458,6 +468,8 @@ namespace Aquila.AbilityPool
                 costEffectId,
                 coolDownId,
                 targetType,
+                selectType,
+                selectRadius,
                 timelineId,
                 duration,
                 effectList.ToArray()
@@ -468,29 +480,30 @@ namespace Aquila.AbilityPool
         /// <summary>
         /// 读取 Effect Clip 字段（顺序与 AbilityBinaryExporter.WriteEffectClip 一致）
         /// </summary>
-        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime)
+        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime, byte version)
         {
-            int effectId        = reader.ReadInt32();
-            int stackLimit      = reader.ReadInt32();
-            bool canStack       = reader.ReadBoolean();
+            int effectId = reader.ReadInt32();
+            int stackLimit = reader.ReadInt32();
+            bool canStack = reader.ReadBoolean();
 
-            var effectType      = (EffectType)reader.ReadInt32();
-            var modifierType    = (NumricModifierType)reader.ReadUInt16();
-            var affectedAttr    = (actor_attribute)reader.ReadInt32();
-            int target          = reader.ReadInt32();
-            float clipDuration  = reader.ReadSingle();
-            float period        = reader.ReadSingle();
-            var policy          = (DurationPolicy)reader.ReadUInt16();
-            bool effectOnAwake  = reader.ReadBoolean();
+            var effectType = (EffectType)reader.ReadInt32();
+            var modifierType = (NumricModifierType)reader.ReadUInt16();
+            var affectedAttr = (actor_attribute)reader.ReadInt32();
+            int target = reader.ReadInt32();
+            int resolveTypeId = reader.ReadInt32();
+            float clipDuration = reader.ReadSingle();
+            float period = reader.ReadSingle();
+            var policy = (DurationPolicy)reader.ReadUInt16();
+            bool effectOnAwake = reader.ReadBoolean();
 
             float f1 = reader.ReadSingle();
             float f2 = reader.ReadSingle();
             float f3 = reader.ReadSingle();
             float f4 = reader.ReadSingle();
-            int i1   = reader.ReadInt32();
-            int i2   = reader.ReadInt32();
-            int i3   = reader.ReadInt32();
-            int i4   = reader.ReadInt32();
+            int i1 = reader.ReadInt32();
+            int i2 = reader.ReadInt32();
+            int i3 = reader.ReadInt32();
+            int i4 = reader.ReadInt32();
 
             int deriveCount = reader.ReadInt32();
             int[] deriveEffects = new int[deriveCount];
@@ -501,6 +514,8 @@ namespace Aquila.AbilityPool
             int[] awakeEffects = new int[awakeCount];
             for (int i = 0; i < awakeCount; i++)
                 awakeEffects[i] = reader.ReadInt32();
+            
+            int formulaID = reader.ReadInt32();
 
             if (effectId <= 0)
             {
@@ -509,29 +524,31 @@ namespace Aquila.AbilityPool
             }
 
             return new EffectData(
-                effectId:          effectId,
-                stackLimit:        stackLimit,
-                canStack:          canStack,
-                startTime:         startTime,
-                endTime:           endTime,
-                effectType:        effectType,
-                modifierType:      modifierType,
+                effectId: effectId,
+                stackLimit: stackLimit,
+                canStack: canStack,
+                startTime: startTime,
+                endTime: endTime,
+                effectType: effectType,
+                modifierType: modifierType,
                 affectedAttribute: affectedAttr,
-                target:            target,
-                duration:          clipDuration,
-                period:            period,
-                policy:            policy,
-                effectOnAwake:     effectOnAwake,
-                deriveEffects:     deriveEffects,
-                awakeEffects:      awakeEffects,
-                floatParam1:       f1,
-                floatParam2:       f2,
-                floatParam3:       f3,
-                floatParam4:       f4,
-                intParam1:         i1,
-                intParam2:         i2,
-                intParam3:         i3,
-                intParam4:         i4
+                target: target,
+                duration: clipDuration,
+                period: period,
+                policy: policy,
+                effectOnAwake: effectOnAwake,
+                deriveEffects: deriveEffects,
+                awakeEffects: awakeEffects,
+                floatParam1: f1,
+                floatParam2: f2,
+                floatParam3: f3,
+                floatParam4: f4,
+                intParam1: i1,
+                intParam2: i2,
+                intParam3: i3,
+                intParam4: i4,
+                resolveTypeID: resolveTypeId,
+                formulaID: formulaID
             );
         }
 
@@ -588,6 +605,10 @@ namespace Aquila.AbilityPool
 
         private const string EFFECT_MAGIC  = "EFFECT";
         private const string ABILITY_MAGIC = "ABLT";
+        
+        //#todo 删掉effect version和ability version
+        private const byte EFFECT_VERSION_3  = 0x03;
+        private const byte ABILITY_VERSION_4 = 0x04;
 
         private const int CLIP_TYPE_EFFECT = 1;
         private const int CLIP_TYPE_AUDIO  = 2;
@@ -754,9 +775,10 @@ namespace Aquila.AbilityPool
         private static readonly object _initLock = new object();
         private static bool _initialized;
     }
-        
-    }
 
+    public GameObject AbilitySelectorSingle = null;
+    public GameObject AbilitySelectorCircle = null;
+    }
     
 }
 

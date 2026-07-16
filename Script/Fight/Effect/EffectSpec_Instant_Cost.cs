@@ -1,6 +1,8 @@
-using Aquila.Event;
+using Aquila.Combat.Resolve;
 using Aquila.Fight.Addon;
 using Aquila.Module;
+using Aquila.Toolkit;
+using Cfg.Enum;
 
 namespace Aquila.Fight
 {
@@ -9,15 +11,23 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Instant_Cost : EffectSpec_Base
     {
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            var attr_addon = target.GetAddon<Addon_BaseAttrNumric>();
-            if(attr_addon is null)
+            base.Apply(castor, target);
+
+            var attrAddon = castor.GetAddon<Addon_BaseAttrNumric>();
+            var currMp = attrAddon.GetCurrMPCorrection();
+            var remainMp = Calc(currMp);
+            var mpCost = currMp - remainMp;
+            if (mpCost <= 0f)
                 return;
-             
-            var curr_value = attr_addon.GetCurrMPCorrection();
-            curr_value += _effectData.GetFloatParam1();
-            attr_addon.SetCurrMP(curr_value);
+
+            var resolveTarget = castor;
+            var resolveResult = CombatResolveEntry.Resolve(castor, resolveTarget, this, mpCost, ResolveSourceType.EffectDirect);
+            if (!resolveResult.Success)
+            {
+                Tools.Logger.Error($"[EffectSpec_Instant_Cost] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");
+            }
         }
 
         /// <summary>
@@ -27,20 +37,12 @@ namespace Aquila.Fight
         {
             return _modifier.Calc(valToModify);
         }
-        
+
         public override void Init(EffectData data, Module_ProxyActor.ActorInstance castor = null,
             Module_ProxyActor.ActorInstance target = null)
         {
             base.Init(data, castor, target);
             _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
-        
-        // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-        //     Module_ProxyActor.ActorInstance target = null)
-        // {
-        //     base.Init(meta, castor, target);
-        //     _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
-        // }
     }
-   
 }

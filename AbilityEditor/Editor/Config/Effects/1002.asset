@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: "\u7269\u7406\u4F24\u5BB3\u6D4B\u8BD5"
   Type: 3
   ExtensionParam:
-    float_1: -10
+    float_1: 10
     float_2: -1
     float_3: -1
     float_4: -1
@@ -30,6 +30,8 @@ MonoBehaviour:
   Period: 0
   Duration: -1
   Target: 1
-  EffectType: 0
+  ResolveTypeID: 1
+  FormulaID: 1
+  AffectedAttribute: 0
   DeriveEffects: 
   AwakeEffects: 

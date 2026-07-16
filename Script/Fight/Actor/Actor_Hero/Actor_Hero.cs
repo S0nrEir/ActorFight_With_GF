@@ -1,8 +1,10 @@
+using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
+using GameFramework.Event;
 
 namespace Aquila.Fight.Actor
 {
@@ -60,13 +62,20 @@ namespace Aquila.Fight.Actor
         protected override void OnShow( object userData )
         {
             base.OnShow( userData );
+            // GameEntry.Event.Subscribe(EventArg_OnActorDie.EventID,OnActorDie);
         }
+
 
         protected override void OnHide( bool isShutdown, object userData )
         {
             base.OnHide( isShutdown, userData );
+            // GameEntry.Event.Unsubscribe(EventArg_OnActorDie.EventID,OnActorDie);
         }
 
+        private void OnActorDie(object sender, GameEventArgs e)
+        {
+        }
+        
         protected override void OnTagChange( long tag, long changedTag, bool isADD )
         {
             Tools.Logger.Info( $"<color=green>tag changed!,tag:{tag},changedTag:{changedTag},is add:{isADD}</color>" );

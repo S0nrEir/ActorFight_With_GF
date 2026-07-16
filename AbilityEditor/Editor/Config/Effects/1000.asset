@@ -30,6 +30,8 @@ MonoBehaviour:
   Period: 0
   Duration: -1
   Target: 0
+  ResolveTypeID: 3
+  FormulaID: 0
   AffectedAttribute: 2
   DeriveEffects: 
   AwakeEffects: 

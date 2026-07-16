@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Aquila.AbilityEditor;
+using Aquila.Fight;
 using Cfg.Enum;
 using Editor.AbilityEditor.Config;
 using UnityEditor;
@@ -35,6 +36,8 @@ namespace Editor.AbilityEditor
                 _timelineIDTextField       = tempPanel.Q<TextField>( "TimelineIDTxtField" );
                 _timelineAssetPathTxtField = tempPanel.Q<TextField>( "TimelineAssetPathTxtField");
                 _targetTypeDropdown        = tempPanel.Q<DropdownField>( "TargetTypeDropdown" );
+                _selectTypeDropdown        = tempPanel.Q<DropdownField>( "SelectTypeDropdown" );
+                _selectRadiusTextField     = tempPanel.Q<TextField>( "SelectRadiusTxtField" );
                 _durationTextField         = tempPanel.Q<TextField>( "DurationTxtField" );
             }
 
@@ -89,6 +92,8 @@ namespace Editor.AbilityEditor
                 _timelineIDTextField == null ||
                 _timelineAssetPathTxtField == null ||
                 _targetTypeDropdown == null ||
+                _selectTypeDropdown == null ||
+                _selectRadiusTextField == null ||
                 _trackPanel == null )
             {
                 Aquila.Toolkit.Tools.Logger.Error( "faild to get ui controls,can not init editor window." );
@@ -106,6 +111,20 @@ namespace Editor.AbilityEditor
                 if ( enumChoices.Count > 0 )
                     _targetTypeDropdown.value = enumChoices[0];
             }
+
+            if ( _selectTypeDropdown != null )
+            {
+                List<string> enumChoices = new List<string>();
+                Array enumValues = Enum.GetValues( typeof( AbilitySelectType ) );
+                foreach ( AbilitySelectType enumValue in enumValues )
+                    enumChoices.Add( enumValue.ToString() );
+
+                _selectTypeDropdown.choices = enumChoices;
+                _selectTypeDropdown.value = AbilitySelectType.Single.ToString();
+            }
+
+            if (_selectRadiusTextField != null)
+                _selectRadiusTextField.value = "0";
 
             // 设置 TimelineTrackPanel 样式，禁用竖向滚动
             if ( _timelineTrackPanel != null )
@@ -470,6 +489,8 @@ namespace Editor.AbilityEditor
             _timelineIDTextField.value       = data.TimelineID.ToString();
             _timelineAssetPathTxtField.value = data.TimelineAssetPath ?? string.Empty;
             _targetTypeDropdown.value        = data.TargetType.ToString();
+            _selectTypeDropdown.value        = data.SelectType.ToString();
+            _selectRadiusTextField.value     = data.SelectRadius.ToString("F2");
         }
 
         /// <summary>

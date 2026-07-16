@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using GameFramework;
 
 namespace Aquila.Fight.Addon
@@ -11,6 +13,21 @@ namespace Aquila.Fight.Addon
     /// </summary>
     public class Addon_Ability : Addon_Base
     {
+        /// <summary>
+        /// 激活或取消激活一个技能 / 
+        /// </summary>
+        public void ActiveAbility(int abilityID,bool isActive)
+        {
+            var spec = GetAbilitySpec( abilityID );
+            if ( spec is null )
+            {
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.ActiveAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return;
+            }
+
+            spec.SetActive( isActive );
+        }
+
         //----------------------pub----------------------
         /// <summary>
         /// 给与addon某个技能 / Give a ability to an addon
@@ -63,18 +80,27 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target )
         {
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
-            {
+            {           
                 Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
-                result._stateDescription = Tools.SetBitValue( result._stateDescription,
-                    ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
                 return false;
             }
 
-            return spec.UseAbility(triggerIndex, target, result );
+            if ( !spec.Active )
+            {
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability inactive, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                return false;
+            }
+
+            return spec.UseAbility(triggerIndex, target );
+        }
+
+        public void CastComplete(int abilityID)
+        {
+            OnCastComplete?.Invoke(abilityID);
         }
 
         public override void OnUpdate( float deltaTime, float realElapsed )
@@ -93,7 +119,7 @@ namespace Aquila.Fight.Addon
         {
             var spec = GetAbilitySpec( metaID );
             if ( spec is null )
-                return ( int ) AbilityUseResultTypeEnum.NONE_PARAM;
+                return ( int ) CastRejectCode.AbilitySpecMissing;
 
             return spec.CanUseAbility();
         }
@@ -119,7 +145,7 @@ namespace Aquila.Fight.Addon
 
         /// <summary>
         /// 当使用技能
-        /// </summary>
+        /// </summary>a'c't
         private void OnUseAbility( int addonType, object param )
         {
             if ( param is AddonParam_OnUseAbility temp )
@@ -215,6 +241,7 @@ namespace Aquila.Fight.Addon
 
             _specArr = null;
             _specMap = null;
+            OnCastComplete = null;
             _initFlag = false;
             base.Dispose();
         }
@@ -233,5 +260,7 @@ namespace Aquila.Fight.Addon
         /// 初始化标记
         /// </summary>
         private bool _initFlag;
+
+        public event Action<int> OnCastComplete;
     }
 }

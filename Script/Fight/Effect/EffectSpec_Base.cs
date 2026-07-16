@@ -151,8 +151,10 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
+                    newEffect.Apply(castor,target);
+                    ReferencePool.Release( newEffect );
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
         }
@@ -168,7 +170,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 将effect施加到actor上
         /// </summary>
-        public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public virtual void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
         }
 

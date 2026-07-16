@@ -10,9 +10,9 @@ namespace Aquila.Fight
     /// </summary>
     public class EffectSpec_Instant_Summon_Projectile : EffectSpec_Base
     {
-        public override async void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override async void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            base.Apply( castor, target, result );
+            base.Apply( castor, target );
             if ( _effectData.GetIntParam1() < 0 )
             {
                 Tools.Logger.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->IntParam1 < 0, effectId:{_effectData.GetEffectId()}</color>" );
@@ -22,22 +22,21 @@ namespace Aquila.Fight
             var roleMetaID = _effectData.GetIntParam1();
             EntityData entityData;
             var entityID = ActorIDPool.Gen();
-            //按照位置生成召唤物
-            if ( Tools.GetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION ) )
+            //无目标时按位置召唤，有目标时按目标召唤
+            if ( target?.Actor == null )
             {
                 entityData = new Actor_Bullet_EntityData( entityID );
             }
-            //按照目标生成召唤物
             else
             {
                 entityData = new Actor_Orb_EntityData( entityID )
                 {
-                    _targetActorID = result._targetActorID,
+                    _targetActorID = target.Actor.ActorID,
                     _callerID      = castor.Actor.ActorID,
                     _roleMetaID    = roleMetaID,
                 };
             }
-            
+
             await GameEntry.Module.GetModule<Module_Actor_Fac>().ShowActorAsync( entityID, roleMetaID, entityData, entityID.ToString() );
         }
 

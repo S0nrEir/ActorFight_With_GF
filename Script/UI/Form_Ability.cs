@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
+using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -42,12 +44,7 @@ namespace Aquila.UI
         /// </summary
         private void OnUseAbility( object sender, GameEventArgs arg )
         {
-            if (!(arg is EventArg_OnUseAblity))
-                return;
             
-            var result = (arg as EventArg_OnUseAblity)._resultParam;
-            if ( !result._succ )
-                Tools.Logger.Info( $"<color=white>{Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
         }
 
         /// <summary>
@@ -55,10 +52,11 @@ namespace Aquila.UI
         /// </summary>
         private void OnHostileTestIconItemClicked(int abilityID)
         {
-            var selfID = _enemyActorIdArr[0];
-            var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
+            // var selfID = _enemyActorIdArr[0];
+            // var abilityMeta = GameEntry.LuBan.Tables.Ability.Get(abilityID);
             //_actorProxy.Ability2SingleTarget( selfID, selfID , abilityID ,GameEntry.GlobalVar.InvalidPosition);
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( selfID, selfID, abilityID, GameEntry.GlobalVar.InvalidPosition );
+            // GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( selfID, selfID, abilityID, GameEntry.GlobalVar.InvalidPosition );
+            //var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.Create(_actorID,_enemyActorIdArr[0],abilityID));
         }
 
         /// <summary>
@@ -72,11 +70,14 @@ namespace Aquila.UI
             //_abilityIdArr[3]:1003
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
-            var castorID = _actorID;
-            //一些特殊技能的测试
-            var targetID = abilityID == 1006 ? _actorID : _enemyActorIdArr[0];
-
-            GameEntry.Module.GetModule<Module_ProxyActor>().Ability2SingleTarget( castorID, targetID, abilityID ,GameEntry.GlobalVar.InvalidPosition);
+            
+            // var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
+            // if (!requestResult.Accepted)
+            // {
+            //     var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
+            //     Tools.Logger.Info(errorMsg);
+            // }
+            Object_AbilitySelectorBase.StartSelection(_actorID, abilityID);
         }
         
         /// <summary>

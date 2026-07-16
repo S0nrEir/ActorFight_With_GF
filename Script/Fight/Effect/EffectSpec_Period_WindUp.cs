@@ -22,7 +22,7 @@ namespace Aquila.Fight
             GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(_effectData.GetDuration(),target.Actor.ActorID));
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
             OnEffectAwake( castor, target );
         }

@@ -3,6 +3,7 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Bean;
 using Cfg.Enum;
+using GameFramework;
 
 namespace Aquila.Fight
 {
@@ -16,9 +17,9 @@ namespace Aquila.Fight
             base.OnEffectAwake( castor, target );
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
         {
-            base.Apply( castor, target, result );
+            base.Apply( castor, target );
             EffectSpec_Base newEffect = null;
             foreach ( var effectID in _effectData.GetDeriveEffects() )
             {
@@ -55,8 +56,10 @@ namespace Aquila.Fight
                     if ( newEffect is ICustomizableEffect )
                         ( newEffect as ICustomizableEffect ).SetModifier( this );
 
-                    GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
-                    GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
+                    newEffect.Apply(castor,target);
+                    ReferencePool.Release(newEffect);
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().ApplyEffect( castor, target, newEffect );
+                    // GameEntry.Module.GetModule<Module_ProxyActor>().InvalidEffect( castor, target, newEffect );
                 }
             }
         }

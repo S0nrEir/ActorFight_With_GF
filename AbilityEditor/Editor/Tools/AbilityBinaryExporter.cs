@@ -2,6 +2,7 @@ using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
 using UnityEditor;
+using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -25,6 +26,10 @@ namespace Editor.AbilityEditor.Tools
             int successCount = 0;
             int failCount = 0;
 
+            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"));
+            foreach (var file in files)
+                File.Delete(file);
+            
             foreach (string guid in assetGuids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -70,6 +75,8 @@ namespace Editor.AbilityEditor.Tools
                     writer.WriteInt32(data.CostEffectID);
                     writer.WriteInt32(data.CoolDownEffectID);
                     writer.WriteInt32((int)data.TargetType);
+                    writer.WriteInt32((int)data.SelectType);
+                    writer.WriteSingle(data.SelectRadius);
                     writer.WriteInt32(data.TimelineID);
                     writer.WriteSingle(data.TimelineDuration);
 
@@ -141,6 +148,7 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteUInt16((ushort)clip.ModifierType);
             writer.WriteInt32((int)clip.AffectedAttribute);
             writer.WriteInt32(clip.Target);
+            writer.WriteInt32(clip.ResolveTypeID);
             writer.WriteSingle(clip.Duration);
             writer.WriteSingle(clip.Period);
             writer.WriteUInt16((ushort)clip.Policy);
@@ -168,6 +176,8 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteInt32(awakeEffects.Length);
             foreach (var effectId in awakeEffects)
                 writer.WriteInt32(effectId);
+
+            writer.WriteInt32(clip.FormulaID);
         }
 
         private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
@@ -202,6 +212,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x01;
+        private const byte VERSION = 0x04;
     }
 }

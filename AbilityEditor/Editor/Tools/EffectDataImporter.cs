@@ -142,6 +142,8 @@ namespace Aquila.AbilityEditor.Tools
                     effectData.Period = effectJson.Period;
                     effectData.Duration = effectJson.Duration;
                     effectData.Target = effectJson.Target;
+                    effectData.ResolveTypeID = effectJson.ResolveTypeID;
+                    effectData.FormulaID = effectJson.FormulaID > 0 ? effectJson.FormulaID : effectJson.formulaID;
                     effectData.AffectedAttribute = (actor_attribute)effectJson.EffectType;
                     effectData.DeriveEffects = effectJson.DeriveEffects ?? new int[0];
                     effectData.AwakeEffects = effectJson.AwakeEffects ?? new int[0];
@@ -209,6 +211,9 @@ namespace Aquila.AbilityEditor.Tools
             public float Period;
             public float Duration;
             public int Target;
+            public int ResolveTypeID = -1;
+            public int FormulaID = -1;
+            public int formulaID = -1;
             public int EffectType;
             public int[] DeriveEffects;
             public int[] AwakeEffects;

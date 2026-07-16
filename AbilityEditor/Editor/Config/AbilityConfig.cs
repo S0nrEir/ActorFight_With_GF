@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Aquila.AbilityEditor;
+using Aquila.Fight;
 using Cfg.Enum;
 
 namespace Editor.AbilityEditor.Config
@@ -82,6 +83,16 @@ namespace Editor.AbilityEditor.Config
         /// Target type
         /// </summary>
         public AbilityTargetType TargetType { get; set; }
+
+        /// <summary>
+        /// Selector type
+        /// </summary>
+        public AbilitySelectType SelectType { get; set; } = AbilitySelectType.Single;
+
+        /// <summary>
+        /// Selector radius
+        /// </summary>
+        public float SelectRadius { get; set; }
 
         /// <summary>
         /// Timeline ID

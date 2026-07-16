@@ -1,4 +1,4 @@
-using Aquial.UI;
+using Aquila.UI;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
@@ -111,14 +111,12 @@ namespace Aquila.Procedure
         {
             base.OnEnter( procedureOwner );
             _owner = procedureOwner;
-            GameEntry.Module.GetModule<Module_ProxyActor>().Open(null);
             FightOnEnter();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
         {
             GameEntry.UI.CloseAll();
-            GameEntry.Module.GetModule<Module_ProxyActor>().Close();
             _owner = null;
             base.OnLeave( procedureOwner, isShutdown );
         }

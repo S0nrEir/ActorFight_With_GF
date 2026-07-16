@@ -14,6 +14,8 @@ namespace Aquila.Fight
         private readonly int _costEffectID;
         private readonly int _coolDownEffectID;
         private readonly AbilityTargetType _targetType;
+        private readonly AbilitySelectType _selectType;
+        private readonly float _selectRadius;
         private readonly int _timelineID;
         private readonly float _timelineDuration;
         private readonly IReadOnlyList<EffectData> _effects;
@@ -25,6 +27,8 @@ namespace Aquila.Fight
             int costEffectID,
             int coolDownEffectID,
             AbilityTargetType targetType,
+            AbilitySelectType selectType,
+            float selectRadius,
             int timelineID,
             float timelineDuration,
             EffectData[] effects)
@@ -35,6 +39,8 @@ namespace Aquila.Fight
             _costEffectID = costEffectID;
             _coolDownEffectID = coolDownEffectID;
             _targetType = targetType;
+            _selectType = selectType;
+            _selectRadius = selectRadius;
             _timelineID = timelineID;
             _timelineDuration = timelineDuration;
             _effects = effects?.ToArray() ?? Array.Empty<EffectData>();
@@ -47,6 +53,8 @@ namespace Aquila.Fight
         public int GetCostEffectID() => _costEffectID;
         public int GetCoolDownEffectID() => _coolDownEffectID;
         public AbilityTargetType GetTargetType() => _targetType;
+        public AbilitySelectType GetSelectType() => _selectType;
+        public float GetSelectRadius() => _selectRadius;
         public int GetTimelineID() => _timelineID;
         public float GetTimelineDuration() => _timelineDuration;
         public IReadOnlyList<EffectData> GetEffects() => _effects;

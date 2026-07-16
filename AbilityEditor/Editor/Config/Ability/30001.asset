@@ -40,9 +40,11 @@ MonoBehaviour:
         _clipColor: {r: 0.8, g: 0.4, b: 0.8, a: 1}
         _isEnabled: 1
         _effectId: 1000
+        _resolveTypeID: 1
+        _formulaID: 1
         _stackCount: 1
         _canStack: 0
-        _effectType: 0
+        _effectType: 3
         _modifierType: 1
         _affectedAttribute: 2
         _target: 0
