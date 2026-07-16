@@ -1,7 +1,8 @@
-using Aquila.AbilityEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Aquila.AbilityEditor;
+using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,13 +25,13 @@ namespace Editor.AbilityEditor
             _abilityTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>( Misc.UXML_FILE_PATH );
             if ( _abilityTreeAsset is null )
             {
-                Debug.LogError( $"AbilityEditorWindow.cs ---> CreateGUI() ---> _abilityTreeAsset is null" );
+                Aquila.Toolkit.Tools.Logger.Error( "AbilityEditorWindow.cs ---> CreateGUI() ---> _abilityTreeAsset is null" );
                 return;
             }
 
             if ( _abilityTreeAsset == null )
             {
-                Debug.LogError( "AbilityEditorWindow.cs --> CreateGUI() --> abilityTreeAsset is null" );
+                Aquila.Toolkit.Tools.Logger.Error( "AbilityEditorWindow.cs --> CreateGUI() --> abilityTreeAsset is null" );
                 return;
             }
 
@@ -110,7 +111,7 @@ namespace Editor.AbilityEditor
         {
             if ( _trackPanel == null )
             {
-                Debug.LogError( "RegisterTrackPanelContextMenu: _trackPanel is null!" );
+                Aquila.Toolkit.Tools.Logger.Error( "RegisterTrackPanelContextMenu: _trackPanel is null!" );
                 return;
             }
             _trackPanel.AddManipulator( new ContextualMenuManipulator( evt =>
@@ -187,7 +188,7 @@ namespace Editor.AbilityEditor
             }
             catch(Exception exp)
             {
-                Debug.LogError($"{exp.ToString()}");
+                Aquila.Toolkit.Tools.Logger.Error($"{exp}");
                 return null;
             }
             return null;
@@ -200,7 +201,7 @@ namespace Editor.AbilityEditor
         {
             if ( trackElementToDelete == null )
             {
-                Debug.LogWarning( "DeleteTrackAtPosition: no track under mouse position." );
+                Aquila.Toolkit.Tools.Logger.Warning( "DeleteTrackAtPosition: no track under mouse position." );
                 return;
             }
 
@@ -217,14 +218,14 @@ namespace Editor.AbilityEditor
                 _selectedTrackItem = null;
             }
 
-            Debug.Log( $"DeleteTrackAtPosition: deleted track '{trackToDelete?.Name ?? "<unknown>"}'" );
+            Aquila.Toolkit.Tools.Logger.Info( $"DeleteTrackAtPosition: deleted track '{trackToDelete?.Name ?? "<unknown>"}'" );
 
             // 检查 duration 是否有效
             if ( _durationTextField != null &&
                 float.TryParse( _durationTextField.value, out float duration ) &&
                 duration > 0 )
             {
-                Debug.Log( "DeleteTrackAtPosition: Regenerating timeline track items..." );
+                Aquila.Toolkit.Tools.Logger.Info( "DeleteTrackAtPosition: Regenerating timeline track items..." );
                 DrawTimelineTrackItems();
             }
         }
@@ -237,8 +238,7 @@ namespace Editor.AbilityEditor
             var newTrackItem = new TimelineTrackItem
                 (
                     $"Track_{_timelineTrackItems.Count + 1}",
-                    Misc.GetTrackColor( _timelineTrackItems.Count ),
-                    true
+                    Misc.GetTrackColor( _timelineTrackItems.Count )
                 );
             _timelineTrackItems.Add( newTrackItem );
             DrawTrackItemElement( newTrackItem );
@@ -250,7 +250,7 @@ namespace Editor.AbilityEditor
                     float.TryParse(_durationTextField.value, out float duration) &&
                     duration > 0)
                 {
-                    Debug.Log("AddNewTrack: Regenerating timeline track items...");
+                    Aquila.Toolkit.Tools.Logger.Info("AddNewTrack: Regenerating timeline track items...");
                     DrawTimelineTrackItems();
                 }
             }
@@ -282,7 +282,7 @@ namespace Editor.AbilityEditor
             if ( data is null )
                 return;
 
-            Debug.Log( $"load ability data : {data.name} (ID: {data.Id})" );
+            Aquila.Toolkit.Tools.Logger.Info( $"load ability data : {data.name} (ID: {data.Id})" );
 
             // 更新 UI 显示
             var label = _root.Q<Label>( "currentDataLabel" );
@@ -303,7 +303,7 @@ namespace Editor.AbilityEditor
         {
             if (_currentAbilityData == null)
             {
-                Debug.LogError("Cannot save: No AbilityData loaded");
+                Aquila.Toolkit.Tools.Logger.Error("Cannot save: No AbilityData loaded");
                 return false;
             }
 
@@ -328,7 +328,7 @@ namespace Editor.AbilityEditor
                 if (_timelineAssetPathTxtField != null)
                     _currentAbilityData.TimelineAssetPath = _timelineAssetPathTxtField.value;
 
-                if (_targetTypeDropdown != null && System.Enum.TryParse<Cfg.Enum.AbilityTargetType>(_targetTypeDropdown.value, out var targetType))
+                if (_targetTypeDropdown != null && Enum.TryParse<AbilityTargetType>(_targetTypeDropdown.value, out var targetType))
                     _currentAbilityData.TargetType = targetType;
 
                 // 同步 Timeline 时长
@@ -353,18 +353,18 @@ namespace Editor.AbilityEditor
 
                 // 验证数据
                 if (!_currentAbilityData.Validate(out string error))
-                    Debug.LogWarning($"Validation warning: {error}. Saved anyway.");
+                    Aquila.Toolkit.Tools.Logger.Warning($"Validation warning: {error}. Saved anyway.");
 
                 // 标记为脏并保存
-                UnityEditor.EditorUtility.SetDirty(_currentAbilityData);
-                UnityEditor.AssetDatabase.SaveAssets();
+                EditorUtility.SetDirty(_currentAbilityData);
+                AssetDatabase.SaveAssets();
 
-                Debug.Log($"Saved AbilityData: {_currentAbilityData.name} ({tracks.Count} tracks)");
+                Aquila.Toolkit.Tools.Logger.Info($"Saved AbilityData: {_currentAbilityData.name} ({tracks.Count} tracks)");
                 return true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Debug.LogError($"Failed to save AbilityData: {ex.Message}\n{ex.StackTrace}");
+                Aquila.Toolkit.Tools.Logger.Error($"Failed to save AbilityData: {ex.Message}\n{ex.StackTrace}");
                 return false;
             }
         }
@@ -380,7 +380,7 @@ namespace Editor.AbilityEditor
             // 检查是否有 Tracks 数据
             if (data.Tracks == null || data.Tracks.Count == 0)
             {
-                Debug.Log($"AbilityData '{data.name}' has no tracks. Timeline is empty.");
+                Aquila.Toolkit.Tools.Logger.Info($"AbilityData '{data.name}' has no tracks. Timeline is empty.");
                 return;
             }
 
@@ -414,11 +414,11 @@ namespace Editor.AbilityEditor
                     // 创建 Track UI 元素
                     DrawTrackItemElement(trackItem);
 
-                    Debug.Log($"Loaded track: {trackItem.Name} with {trackItem.Clips.Count} clips");
+                    Aquila.Toolkit.Tools.Logger.Info($"Loaded track: {trackItem.Name} with {trackItem.Clips.Count} clips");
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Debug.LogError($"Failed to load track '{serializedTrack.TrackName}': {ex.Message}");
+                    Aquila.Toolkit.Tools.Logger.Error($"Failed to load track '{serializedTrack.TrackName}': {ex.Message}");
                 }
             }
 
@@ -427,11 +427,11 @@ namespace Editor.AbilityEditor
                 float.TryParse(_durationTextField.value, out float duration) &&
                 duration > 0)
             {
-                Debug.Log($"LoadTracksFromAbilityData: Regenerating timeline with {data.Tracks.Count} tracks...");
+                Aquila.Toolkit.Tools.Logger.Info($"LoadTracksFromAbilityData: Regenerating timeline with {data.Tracks.Count} tracks...");
                 DrawTimelineTrackItems();
             }
 
-            Debug.Log($"Loaded {data.Tracks.Count} tracks from AbilityData");
+            Aquila.Toolkit.Tools.Logger.Info($"Loaded {data.Tracks.Count} tracks from AbilityData");
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace Editor.AbilityEditor
             _selectedTrackElement = null;
             _selectedTrackItem = null;
 
-            Debug.Log("ClearAllTracks: Cleared all tracks and UI elements");
+            Aquila.Toolkit.Tools.Logger.Info("ClearAllTracks: Cleared all tracks and UI elements");
         }
 
         /// <summary>
@@ -507,8 +507,8 @@ namespace Editor.AbilityEditor
         private VisualElement _timelineScrubber; // 时间轴拖动线（延伸到 TimelineTrackPanel 容器内）
         private ScrollView _timelineScrollView; // 时间轴滚动视图（从 UXML 中获取）
         private VisualElement _timelineContainer; // 时间轴容器（从 UXML 中获取）
-        private bool _isDraggingScrubber = false;
-        private float _scrubberTime = 0f; // 当前时间轴位置（秒）
+        private bool _isDraggingScrubber;
+        private float _scrubberTime; // 当前时间轴位置（秒）
         private float _pixelsPerSecond = 100f; // 像素每秒比例
         private float _timelineDuration = 5f; // 时间轴总时长
         private const float _scaleInterval = 0.1f; // 刻度间隔（秒）
@@ -537,6 +537,6 @@ namespace Editor.AbilityEditor
         private VisualElement _timelineTrackPanel;
 
         // Track Inspector Proxy
-        private Aquila.AbilityEditor.TrackInspectorProxy _trackInspectorProxy;
+        private TrackInspectorProxy _trackInspectorProxy;
     }
 }

@@ -2,9 +2,7 @@ using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -17,7 +15,7 @@ namespace Aquila.Fight
             Module_ProxyActor.ActorInstance target = null)
         {
             base.Init(data, castor, target);
-            _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
+            _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
         
         // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
@@ -33,7 +31,7 @@ namespace Aquila.Fight
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
             if ( addon is null )
             {
-                Log.Warning( $"EffectSpec_PeriodFixedDamage.Apply()--->addon is null" );
+                Tools.Logger.Warning( "EffectSpec_PeriodFixedDamage.Apply()--->addon is null" );
                 return;
             }
 

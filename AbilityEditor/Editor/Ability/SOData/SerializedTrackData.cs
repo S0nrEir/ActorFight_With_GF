@@ -9,7 +9,7 @@ namespace Aquila.AbilityEditor
     /// 用于将 TimelineTrackItem（运行时对象）序列化到 AbilityData（ScriptableObject）
     /// </summary>
     [Serializable]
-    public class SerializedTrackData : UnityEngine.ISerializationCallbackReceiver
+    public class SerializedTrackData : ISerializationCallbackReceiver
     {
         /// <summary>
         /// 轨道名称

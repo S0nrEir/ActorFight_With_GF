@@ -1,4 +1,5 @@
 using System;
+using Cfg.Enum;
 using UnityEngine;
 
 namespace Aquila.AbilityEditor
@@ -29,14 +30,14 @@ namespace Aquila.AbilityEditor
             {
                 return new EffectExtensionParam
                 {
-                    FloatParam_1 = this.FloatParam_1,
-                    FloatParam_2 = this.FloatParam_2,
-                    FloatParam_3 = this.FloatParam_3,
-                    FloatParam_4 = this.FloatParam_4,
-                    IntParam_1 = this.IntParam_1,
-                    IntParam_2 = this.IntParam_2,
-                    IntParam_3 = this.IntParam_3,
-                    IntParam_4 = this.IntParam_4
+                    FloatParam_1 = FloatParam_1,
+                    FloatParam_2 = FloatParam_2,
+                    FloatParam_3 = FloatParam_3,
+                    FloatParam_4 = FloatParam_4,
+                    IntParam_1 = IntParam_1,
+                    IntParam_2 = IntParam_2,
+                    IntParam_3 = IntParam_3,
+                    IntParam_4 = IntParam_4
                 };
             }
         }
@@ -65,25 +66,25 @@ namespace Aquila.AbilityEditor
         /// Effect类型
         /// </summary>
         [SerializeField]
-        private Cfg.Enum.EffectType _effectType = Cfg.Enum.EffectType.Instant_Cost;
+        private EffectType _effectType = EffectType.Instant_Cost;
 
         /// <summary>
         /// 数值修改器类型
         /// </summary>
         [SerializeField]
-        private Cfg.Enum.NumricModifierType _modifierType = Cfg.Enum.NumricModifierType.None;
+        private NumricModifierType _modifierType = NumricModifierType.None;
 
         /// <summary>
         /// 影响的属性类型
         /// </summary>
         [SerializeField]
-        private Cfg.Enum.actor_attribute _affectedAttribute = Cfg.Enum.actor_attribute.Curr_HP;
+        private actor_attribute _affectedAttribute = actor_attribute.Curr_HP;
 
         /// <summary>
         /// 目标类型（0=我方，1=敌方）
         /// </summary>
         [SerializeField]
-        private int _target = 0;
+        private int _target;
 
         /// <summary>
         /// 持续时间（秒），-1表示瞬时
@@ -95,13 +96,13 @@ namespace Aquila.AbilityEditor
         /// 生效周期（秒）
         /// </summary>
         [SerializeField]
-        private float _period = 0f;
+        private float _period;
 
         /// <summary>
         /// 生效策略
         /// </summary>
         [SerializeField]
-        private Cfg.Enum.DurationPolicy _policy = Cfg.Enum.DurationPolicy.Instant;
+        private DurationPolicy _policy = DurationPolicy.Instant;
 
         /// <summary>
         /// 是否立即生效
@@ -149,7 +150,7 @@ namespace Aquila.AbilityEditor
             }
         }
 
-        public EffectClipData() : base()
+        public EffectClipData()
         {
             _effectId = 0;
             _stackCount = 1;
@@ -187,19 +188,19 @@ namespace Aquila.AbilityEditor
 
         #region Effect配置属性
 
-        public Cfg.Enum.EffectType EffectType
+        public EffectType EffectType
         {
             get => _effectType;
             set => _effectType = value;
         }
 
-        public Cfg.Enum.NumricModifierType ModifierType
+        public NumricModifierType ModifierType
         {
             get => _modifierType;
             set => _modifierType = value;
         }
 
-        public Cfg.Enum.actor_attribute AffectedAttribute
+        public actor_attribute AffectedAttribute
         {
             get => _affectedAttribute;
             set => _affectedAttribute = value;
@@ -223,7 +224,7 @@ namespace Aquila.AbilityEditor
             set => _period = value;
         }
 
-        public Cfg.Enum.DurationPolicy Policy
+        public DurationPolicy Policy
         {
             get => _policy;
             set => _policy = value;

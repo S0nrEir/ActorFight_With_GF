@@ -1,3 +1,4 @@
+using Aquila.Toolkit;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -15,8 +16,7 @@ namespace Aquila.Fight.Addon
             var sprite_go = Actor.transform.Find( "Sprite" );
             if ( sprite_go == null )
             {
-                Log.Warning( "sprite_go == null", LogColorTypeEnum.Red );
-                return;
+                Tools.Logger.Warning( "sprite_go == null", LogColorTypeEnum.Red );
             }
         }
 

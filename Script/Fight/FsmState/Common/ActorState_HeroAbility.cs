@@ -5,7 +5,6 @@ using Aquila.Toolkit;
 using Cfg.Fight;
 using GameFramework;
 using UnityEngine.Playables;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.FSM
 {
@@ -22,7 +21,7 @@ namespace Aquila.Fight.FSM
             int state = 0;
             if ( param is null || param is not AbilityResult_Use )
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
+                Tools.Logger.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->param is null || param.Length == 0</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
                 return false;
             }
@@ -30,14 +29,14 @@ namespace Aquila.Fight.FSM
             
             if (!GameEntry.AbilityPool.TryGetAbility(result._abilityID, out _abilityData))
             {
-                Log.Warning($"<color=yellow>HeroStateAddon.IsAbilityDataValid()--->Ability {result._abilityID} not found in pool</color>");
+                Tools.Logger.Warning($"<color=yellow>HeroStateAddon.IsAbilityDataValid()--->Ability {result._abilityID} not found in pool</color>");
                 state = Tools.SetBitValue(state, (int)AbilityUseResultTypeEnum.NONE_ABILITY_META, true);
             }
 
             _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.Get( _abilityData.GetTimelineID() );
             if ( _timelineMeta is null )
             {
-                Log.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );
+                Tools.Logger.Warning( "<color=yellow>HeroStateAddon.IsAbilityDataValid()--->timeline meta is null</color>" );
                 state = Tools.SetBitValue( state, ( int ) AbilityUseResultTypeEnum.NONE_TIMELINE_META, true );
             }
             // 检查 CD 与消耗
@@ -127,7 +126,7 @@ namespace Aquila.Fight.FSM
             }
             // 技能消耗
             // 技能释放时先扣消耗并开始计算 CD，不等待 timeline 结束
-            _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility() { _abilityID = _abilityData.GetId() } );
+            _fsm.ActorInstance().Actor.Notify( ( int ) AddonEventTypeEnum.USE_ABILITY, new AddonParam_OnUseAbility { _abilityID = _abilityData.GetId() } );
             _time = 0f;
             _abilityFinishFlag = false;
             _currTriggerIndex = 0;
@@ -169,7 +168,7 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 施法结果
         /// </summary>
-        private AbilityResult_Use _result = null;
+        private AbilityResult_Use _result;
 
         /// <summary>
         /// 技能数据
@@ -179,17 +178,17 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 技能 Timeline 配置
         /// </summary>
-        private Table_AbilityTimeline _timelineMeta = null;
+        private Table_AbilityTimeline _timelineMeta;
 
         /// <summary>
         /// 技能完成标记
         /// </summary>
-        private bool _abilityFinishFlag = false;
+        private bool _abilityFinishFlag;
 
         /// <summary>
         /// 进入该状态后的累计时间
         /// </summary>
-        private float _time = 0f;
+        private float _time;
 
         /// <summary>
         /// 当前触发到的效果索引
@@ -199,6 +198,6 @@ namespace Aquila.Fight.FSM
         /// <summary>
         /// 单次施法的 OnUse 事件触发标记
         /// </summary>
-        private bool _onUseEventFired = false;
+        private bool _onUseEventFired;
     }
 }

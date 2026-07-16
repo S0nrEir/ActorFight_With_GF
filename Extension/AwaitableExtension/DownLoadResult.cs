@@ -1,4 +1,3 @@
-using System;
 using GameFramework;
 
 namespace UGFExtensions.Await

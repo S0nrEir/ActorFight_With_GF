@@ -2,11 +2,8 @@ using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace  Aquila.Fight
 {
@@ -19,7 +16,7 @@ namespace  Aquila.Fight
         {
             _cumulation += param._effectedValue;
             var canApply = false;
-            switch ((Cfg.Enum.effect_mod_attr_condition)_effectData.GetIntParam1())
+            switch ((effect_mod_attr_condition)_effectData.GetIntParam1())
             {
                 //按百分比，要拿出基数计算一下
                 case effect_mod_attr_condition.Percentage:
@@ -31,7 +28,7 @@ namespace  Aquila.Fight
                     if (attrType >= (int)actor_attribute.Max ||
                         attrType < 0)
                     {
-                        Log.Error("<color=red>attrType >= (int)actor_attribute.Max || attrType < 0</color>");
+                        Tools.Logger.Error("<color=red>attrType >= (int)actor_attribute.Max || attrType < 0</color>");
                         return false;
                     }
 
@@ -110,15 +107,11 @@ namespace  Aquila.Fight
         /// <summary>
         /// 累计值
         /// </summary>
-        private float _cumulation = 0f;
+        private float _cumulation;
     }
     
     public class EffectSpec_OnHitted_Trigger_ModifyAttrParam : IReference
     {
-        public EffectSpec_OnHitted_Trigger_ModifyAttrParam()
-        {
-        }
-
         public void Clear()
         {
             _changedAttr = actor_attribute.Invalid;
@@ -128,7 +121,7 @@ namespace  Aquila.Fight
         /// <summary>
         /// 发生变更之前的脏值
         /// </summary>
-        public float _dirtyCorrectionValue = 0f;
+        public float _dirtyCorrectionValue;
         
         /// <summary>改变的属性 </summary>
         public actor_attribute _changedAttr = actor_attribute.Invalid;
@@ -136,10 +129,6 @@ namespace  Aquila.Fight
     
     public class OnActorHittedParam : IReference
     {
-        public OnActorHittedParam()
-        {
-        }
-        
         public void Clear()
         {
             _castor = null;

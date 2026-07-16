@@ -1,7 +1,6 @@
-using Aquila.Fight.Actor;
-using Aquila.Toolkit;
 using System.Collections.Generic;
 using Aquila.Module;
+using Aquila.Toolkit;
 using UnityEngine;
 
 namespace Aquila.Fight.Addon
@@ -81,7 +80,7 @@ namespace Aquila.Fight.Addon
             var nextPos = Vector3.zero;
             nextPos.x = _pathList[_pathIndex].x;
             nextPos.z = _pathList[_pathIndex].y;
-            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z, 0f );//修改layer
+            nextPos.y = Tools.Fight.TerrainPositionY(string.Empty, nextPos.x, nextPos.z );//修改layer
             var actorPos = Actor.CachedTransform.position;
 
             Rotate( _pathList[_pathIndex] );
@@ -110,11 +109,11 @@ namespace Aquila.Fight.Addon
             Vector3 next_pos = Vector3.zero;
             next_pos.x = _pathList[_pathIndex + 1].x;
             next_pos.z = _pathList[_pathIndex + 1].y;
-            next_pos.y = Tools.Fight.TerrainPositionY(string.Empty, next_pos.x, next_pos.z, 0f );//修改layer
+            next_pos.y = Tools.Fight.TerrainPositionY(string.Empty, next_pos.x, next_pos.z );//修改layer
 
             _cachedTargetPos.x = _pathList[_pathIndex].x;
             _cachedTargetPos.z = _pathList[_pathIndex].y;
-            _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z, 0f );//修改layer
+            _cachedTargetPos.y = Tools.Fight.TerrainPositionY(string.Empty, _cachedTargetPos.x, _cachedTargetPos.z );//修改layer
 
             var dis = Vector3.Distance( Actor.CachedTransform.position, next_pos );
             if (dis <= 0.1f)
@@ -141,7 +140,7 @@ namespace Aquila.Fight.Addon
         public void MoveTo ( Vector3 start, Vector3 target, float elapsedSeconds )
         {
             //Rotate( target );
-            //Log.Info( $"ActorID:{Actor.ActorID},pos:{Actor.CachedTransform.position}" );
+            //Aquila.Toolkit.Tools.Logger.Info( $"ActorID:{Actor.ActorID},pos:{Actor.CachedTransform.position}" );
             Actor.SetWorldPosition( Actor.CachedTransform.position + ( target - start ).normalized * _speed * elapsedSeconds );
 
             Actor.CachedTransform.rotation = Quaternion.Slerp
@@ -191,7 +190,7 @@ namespace Aquila.Fight.Addon
 
             if (_controller == null)
             {
-                //Debug.LogError( "_controller == null" );
+                //Aquila.Toolkit.Tools.Logger.Error( "_controller == null" );
                 _controller = Actor.gameObject.AddComponent<CharacterController>();
             }
         }
@@ -278,17 +277,17 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// controller
         /// </summary>
-        private CharacterController _controller = null;
+        private CharacterController _controller;
 
         /// <summary>
         /// 从寻路获取的路点信息集合，以此为据进行移动处理
         /// </summary>
-        private List<Vector2> _pathList = null;
+        private List<Vector2> _pathList;
 
         /// <summary>
         /// 路点信息索引下标
         /// </summary>
-        private int _pathIndex = 0;
+        private int _pathIndex;
 
         /// <summary>
         /// 目标位置

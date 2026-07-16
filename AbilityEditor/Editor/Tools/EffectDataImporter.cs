@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Aquila.AbilityEditor.Config;
+using Cfg.Enum;
 using UnityEditor;
 using UnityEngine;
-using Aquila.AbilityEditor.Config;
-using Debug = UnityEngine.Debug;
 
 namespace Aquila.AbilityEditor.Tools
 {
@@ -24,17 +24,17 @@ namespace Aquila.AbilityEditor.Tools
         {
             try
             {
-                Debug.Log("Step 1: Running Python script to generate JSON...");
+                Toolkit.Tools.Logger.Info("Step 1: Running Python script to generate JSON...");
                 if (!RunPythonScript())
                 {
-                    Debug.LogError("Failed to run Python script!");
+                    Toolkit.Tools.Logger.Error("Failed to run Python script!");
                     return;
                 }
 
-                Debug.Log("Step 2: Reading JSON file...");
+                Toolkit.Tools.Logger.Info("Step 2: Reading JSON file...");
                 if (!File.Exists(TEMP_JSON_PATH))
                 {
-                    Debug.LogError($"JSON file not found: {TEMP_JSON_PATH}");
+                    Toolkit.Tools.Logger.Error($"JSON file not found: {TEMP_JSON_PATH}");
                     return;
                 }
 
@@ -43,18 +43,18 @@ namespace Aquila.AbilityEditor.Tools
 
                 if (effectList == null || effectList.effects == null)
                 {
-                    Debug.LogError("Failed to parse JSON!");
+                    Toolkit.Tools.Logger.Error("Failed to parse JSON!");
                     return;
                 }
 
-                Debug.Log($"Step 3: Creating ScriptableObject assets for {effectList.effects.Count} effects...");
+                Toolkit.Tools.Logger.Info($"Step 3: Creating ScriptableObject assets for {effectList.effects.Count} effects...");
                 CreateEffectAssets(effectList.effects);
 
-                Debug.Log("<color=green>Import completed successfully!</color>");
+                Toolkit.Tools.Logger.Info("<color=green>Import completed successfully!</color>");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Import failed: {ex.Message}\n{ex.StackTrace}");
+                Toolkit.Tools.Logger.Error($"Import failed: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -78,7 +78,7 @@ namespace Aquila.AbilityEditor.Tools
                 {
                     if (process == null)
                     {
-                        Debug.LogError("Failed to start Python process!");
+                        Toolkit.Tools.Logger.Error("Failed to start Python process!");
                         return false;
                     }
 
@@ -88,14 +88,14 @@ namespace Aquila.AbilityEditor.Tools
                     process.WaitForExit();
 
                     if (!string.IsNullOrEmpty(output))
-                        Debug.Log($"Python output:\n{output}");
+                        Toolkit.Tools.Logger.Info($"Python output:\n{output}");
 
                     if (!string.IsNullOrEmpty(error))
-                        Debug.LogWarning($"Python stderr:\n{error}");
+                        Toolkit.Tools.Logger.Warning($"Python stderr:\n{error}");
 
                     if (process.ExitCode != 0)
                     {
-                        Debug.LogError($"Python script exited with code {process.ExitCode}");
+                        Toolkit.Tools.Logger.Error($"Python script exited with code {process.ExitCode}");
                         return false;
                     }
 
@@ -104,7 +104,7 @@ namespace Aquila.AbilityEditor.Tools
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Failed to run Python script: {ex.Message}");
+                Toolkit.Tools.Logger.Error($"Failed to run Python script: {ex.Message}");
                 return false;
             }
         }
@@ -114,7 +114,7 @@ namespace Aquila.AbilityEditor.Tools
             // if (!Directory.Exists(OUTPUT_DIR))
             // {
             //     Directory.CreateDirectory(OUTPUT_DIR);
-            //     Debug.Log($"Created directory: {OUTPUT_DIR}");
+            //     Aquila.Toolkit.Tools.Logger.Info($"Created directory: {OUTPUT_DIR}");
             // }
 
             int successCount = 0;
@@ -135,14 +135,14 @@ namespace Aquila.AbilityEditor.Tools
                     // 复制数据
                     effectData.id = effectJson.id;
                     effectData.Description = effectJson.Description ?? "";
-                    effectData.Type = (Cfg.Enum.EffectType)effectJson.Type;
-                    effectData.ModifierType = (Cfg.Enum.NumricModifierType)effectJson.ModifierType;
+                    effectData.Type = (EffectType)effectJson.Type;
+                    effectData.ModifierType = (NumricModifierType)effectJson.ModifierType;
                     effectData.EffectOnAwake = effectJson.EffectOnAwake;
-                    effectData.Policy = (Cfg.Enum.DurationPolicy)effectJson.Policy;
+                    effectData.Policy = (DurationPolicy)effectJson.Policy;
                     effectData.Period = effectJson.Period;
                     effectData.Duration = effectJson.Duration;
                     effectData.Target = effectJson.Target;
-                    effectData.AffectedAttribute = (Cfg.Enum.actor_attribute)effectJson.EffectType;
+                    effectData.AffectedAttribute = (actor_attribute)effectJson.EffectType;
                     effectData.DeriveEffects = effectJson.DeriveEffects ?? new int[0];
                     effectData.AwakeEffects = effectJson.AwakeEffects ?? new int[0];
 
@@ -166,19 +166,19 @@ namespace Aquila.AbilityEditor.Tools
                     if (isNewAsset)
                     {
                         AssetDatabase.CreateAsset(effectData, assetPath);
-                        Debug.Log($"Created: {assetPath}");
+                        Toolkit.Tools.Logger.Info($"Created: {assetPath}");
                     }
                     else
                     {
                         EditorUtility.SetDirty(effectData);
-                        Debug.Log($"Updated: {assetPath}");
+                        Toolkit.Tools.Logger.Info($"Updated: {assetPath}");
                     }
 
                     successCount++;
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Failed to create asset for Effect ID {effectJson.id}: {ex.Message}");
+                    Toolkit.Tools.Logger.Error($"Failed to create asset for Effect ID {effectJson.id}: {ex.Message}");
                     failCount++;
                 }
             }
@@ -186,8 +186,8 @@ namespace Aquila.AbilityEditor.Tools
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Debug.Log($"<color=cyan>Asset Creation Summary:</color> Success: {successCount}, Failed: {failCount}");
-            Debug.Log($"Assets saved to: {Misc.NEW_EFFECT_DATA_PATH}");
+            Toolkit.Tools.Logger.Info($"<color=cyan>Asset Creation Summary:</color> Success: {successCount}, Failed: {failCount}");
+            Toolkit.Tools.Logger.Info($"Assets saved to: {Misc.NEW_EFFECT_DATA_PATH}");
         }
 
         [Serializable]

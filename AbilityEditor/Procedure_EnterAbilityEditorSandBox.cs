@@ -1,19 +1,18 @@
 #if UNITY_EDITOR
 
-using GameFramework.Fsm;
-using GameFramework.Procedure;
-using UnityEngine;
+using System.IO;
+using Aquila.Config;
+using Aquila.Event;
+using Aquila.Fight;
 using Aquila.Fight.Actor;
 using Aquila.Module;
-using GameFramework;
-using Aquila.AbilityEditor;
-using Aquila.Config;
-using Aquila.Fight;
-using Aquila.Event;
 using Aquila.Toolkit;
-using GameFramework.Resource;
+using GameFramework;
 using GameFramework.Event;
+using GameFramework.Fsm;
+using GameFramework.Procedure;
 using UGFExtensions;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.Procedure
@@ -84,11 +83,11 @@ namespace Aquila.Procedure
         {
             var playerVar = ReferencePool.Acquire<VarInt32>();
             playerVar.Value = _playerEntityID;
-            owner.SetData<VarInt32>(KEY_PLAYER_ENTITY_ID, playerVar);
+            owner.SetData(KEY_PLAYER_ENTITY_ID, playerVar);
 
             var dummyVar = ReferencePool.Acquire<VarInt32>();
             dummyVar.Value = _dummyEntityID;
-            owner.SetData<VarInt32>(KEY_DUMMY_ENTITY_ID, dummyVar);
+            owner.SetData(KEY_DUMMY_ENTITY_ID, dummyVar);
         }
 
         /// <summary>
@@ -141,10 +140,10 @@ namespace Aquila.Procedure
         private bool LoadSandBoxAbility(out AbilityData abilityData)
         {
             abilityData = default;
-            string sandBoxDir = System.IO.Path.GetFullPath(SANDBOX_ABILITY_PATH);
+            string sandBoxDir = Path.GetFullPath(SANDBOX_ABILITY_PATH);
             if (!GameEntry.AbilityPool.LoadSandBoxAbility(sandBoxDir, out var tempAbilityData))
             {
-                UnityGameFramework.Runtime.Log.Error("[EnterSandBox] LoadSandBoxAbility failed");
+                Tools.Logger.Error("[EnterSandBox] LoadSandBoxAbility failed");
                 return false;
             }
 
@@ -182,11 +181,11 @@ namespace Aquila.Procedure
             _owner          = null;
         }
 
-        private IFsm<IProcedureManager> _owner = null;
+        private IFsm<IProcedureManager> _owner;
         private const int ALL_LOAD_FLAG = 0b1111;
         private const int INFOBOARD_LOAD_FLAG = 0b1100;
-        private int _loadFinishSign = 0b0000;
-        private bool _actorCreationStarted = false;
+        private int _loadFinishSign;
+        private bool _actorCreationStarted;
         private int _playerEntityID = -1;
         private int _dummyEntityID  = -1;
         

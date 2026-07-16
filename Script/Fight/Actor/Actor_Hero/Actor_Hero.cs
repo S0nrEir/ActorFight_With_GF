@@ -1,8 +1,8 @@
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Actor
 {
@@ -69,14 +69,14 @@ namespace Aquila.Fight.Actor
 
         protected override void OnTagChange( long tag, long changedTag, bool isADD )
         {
-            Log.Info( $"<color=green>tag changed!,tag:{tag},changedTag:{changedTag},is add:{isADD}</color>" );
+            Tools.Logger.Info( $"<color=green>tag changed!,tag:{tag},changedTag:{changedTag},is add:{isADD}</color>" );
         }
 
         //----------------addon----------------
         /// <summary>
         /// 状态机组件
         /// </summary>
-        private Addon_FSM _fsmAddon { get; set; } = null;
+        private Addon_FSM _fsmAddon { get; set; }
 
         /// <summary>
         /// 移动组件
@@ -86,27 +86,27 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 基础属性数值组件
         /// </summary>
-        private Addon_BaseAttrNumric _baseAttrAddon { get; set; } = null;
+        private Addon_BaseAttrNumric _baseAttrAddon { get; set; }
 
         /// <summary>
         /// 技能组件
         /// </summary>
-        private Addon_Ability _abilityAddon = null;
+        private Addon_Ability _abilityAddon;
 
         /// <summary>
         /// 血条显示组件
         /// </summary>
-        private Addon_HP _hpAddon = null;
+        private Addon_HP _hpAddon;
 
         /// <summary>
         /// timeline组件
         /// </summary>
-        private Addon_Timeline _timelineAddon = null;
+        private Addon_Timeline _timelineAddon;
 
         /// <summary>
         /// 行为组件
         /// </summary>
-        private Addon_Behaviour _behaviourAddon = null;
+        private Addon_Behaviour _behaviourAddon;
     }
 
     public class HeroActorEntityData : Actor_Base_EntityData

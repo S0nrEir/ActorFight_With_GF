@@ -1,7 +1,6 @@
 using Aquila.Event;
 using Aquila.Fight.Addon;
 using Aquila.Module;
-using Cfg.Common;
 
 namespace Aquila.Fight
 {
@@ -33,7 +32,7 @@ namespace Aquila.Fight
             Module_ProxyActor.ActorInstance target = null)
         {
             base.Init(data, castor, target);
-            _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
+            _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
         
         // public override void Init(Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
@@ -42,11 +41,6 @@ namespace Aquila.Fight
         //     base.Init(meta, castor, target);
         //     _modifier.Setup(ModifierType, _effectData.GetFloatParam1());
         // }
-
-        public EffectSpec_Instant_Cost()
-        {
-
-        }
     }
    
 }

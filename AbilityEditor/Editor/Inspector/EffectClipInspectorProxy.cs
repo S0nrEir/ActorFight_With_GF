@@ -1,5 +1,6 @@
-using UnityEngine;
+using Cfg.Enum;
 using UnityEditor;
+using UnityEngine;
 
 namespace Aquila.AbilityEditor
 {
@@ -95,13 +96,13 @@ namespace Aquila.AbilityEditor
 
         [Header("Effect配置")]
         [SerializeField]
-        private Cfg.Enum.EffectType _effectType;
+        private EffectType _effectType;
 
         [SerializeField]
-        private Cfg.Enum.NumricModifierType _modifierType;
+        private NumricModifierType _modifierType;
 
         [SerializeField]
-        private Cfg.Enum.actor_attribute _affectedAttribute;
+        private actor_attribute _affectedAttribute;
 
         [SerializeField]
         private int _target;
@@ -113,7 +114,7 @@ namespace Aquila.AbilityEditor
         private float _period;
 
         [SerializeField]
-        private Cfg.Enum.DurationPolicy _policy;
+        private DurationPolicy _policy;
 
         [SerializeField]
         private bool _effectOnAwake;
@@ -196,9 +197,9 @@ namespace Aquila.AbilityEditor
 
         // Foldout状态
         private bool _basicConfigFoldout = true;
-        private bool _timeParamsFoldout = false;
-        private bool _extensionParamsFoldout = false;
-        private bool _deriveEffectsFoldout = false;
+        private bool _timeParamsFoldout;
+        private bool _extensionParamsFoldout;
+        private bool _deriveEffectsFoldout;
 
         private void OnEnable()
         {
@@ -302,7 +303,7 @@ namespace Aquila.AbilityEditor
 
                 // 目标类型使用自定义显示
                 int target = _targetProp.intValue;
-                target = EditorGUILayout.IntPopup("目标类型 / Target", target, new string[] { "Friendly", "Enemy" }, new int[] { 0, 1 });
+                target = EditorGUILayout.IntPopup("目标类型 / Target", target, new[] { "Friendly", "Enemy" }, new[] { 0, 1 });
                 _targetProp.intValue = target;
 
                 EditorGUI.indentLevel--;

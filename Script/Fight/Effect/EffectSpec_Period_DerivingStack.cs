@@ -1,10 +1,8 @@
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.Toolkit;
-using Cfg.Common;
-using Cfg.Enum;
 using Cfg.Bean;
-using UnityGameFramework.Runtime;
+using Cfg.Enum;
 
 namespace Aquila.Fight
 {
@@ -30,12 +28,12 @@ namespace Aquila.Fight
                 }
                 else
                 {
-                    Log.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply --> faild to get deriveEffect,id:{effectID}</color>");
+                    Tools.Logger.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply --> faild to get deriveEffect,id:{effectID}</color>");
                     // 回退到 LuBan
                     // var tempMeta = GameEntry.LuBan.Tables.Effect.Get(effectID);
                     // if (tempMeta == null)
                     // {
-                    //     Log.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply()--->effect not found, id:{effectID}</color>");
+                    //     Aquila.Toolkit.Tools.Logger.Warning($"<color=yellow>EffectSpec_Period_DerivingStack.Apply()--->effect not found, id:{effectID}</color>");
                     //     continue;
                     // }
                     // newEffect = Tools.Ability.CreateEffectSpecByReferencePool(tempMeta, castor, target);
@@ -43,7 +41,7 @@ namespace Aquila.Fight
                 
                 if ( newEffect is null )
                 {
-                    Log.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null, effectID:{effectID}</color>" );
+                    Tools.Logger.Warning( $"<color=yellow>EffectSpec_Period_Deriving.Apply()--->newEffect is null, effectID:{effectID}</color>" );
                     continue;
                 }
 

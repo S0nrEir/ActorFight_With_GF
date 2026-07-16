@@ -1,4 +1,4 @@
-using UnityEngine;
+using Aquila.Toolkit;
 using UnityGameFramework.Runtime;
 
 namespace Aquila.UI
@@ -8,7 +8,7 @@ namespace Aquila.UI
         protected override void OnOpen( object userData )
         {
             base.OnOpen( userData );
-            Debug.Log( "11111" );
+            Tools.Logger.Info( "11111" );
         }
     }
 

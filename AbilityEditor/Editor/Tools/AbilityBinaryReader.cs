@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -24,7 +22,7 @@ namespace Editor.AbilityEditor.Tools
 
             if (!File.Exists(fullPath))
             {
-                Debug.LogError($"[AbilityBinaryReader] File not found: {fullPath}");
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryReader] File not found: {fullPath}");
                 return;
             }
 
@@ -66,7 +64,7 @@ namespace Editor.AbilityEditor.Tools
 
                 if (magic != MAGIC)
                 {
-                    Debug.LogError($"[AbilityBinaryReader] Invalid magic: {magic}, expected: {MAGIC}");
+                    Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryReader] Invalid magic: {magic}, expected: {MAGIC}");
                     return;
                 }
 
@@ -80,7 +78,7 @@ namespace Editor.AbilityEditor.Tools
                 int timelineId = reader.ReadInt32();
                 float timelineDuration = reader.ReadSingle();
 
-                sb.AppendLine($"[Basic Info]");
+                sb.AppendLine("[Basic Info]");
                 sb.AppendLine($"  AbilityID: {abilityId}");
                 sb.AppendLine($"  CostEffectID: {costEffectId}");
                 sb.AppendLine($"  CoolDownEffectID: {coolDownEffectId}");
@@ -99,7 +97,7 @@ namespace Editor.AbilityEditor.Tools
                 }
 
                 sb.AppendLine("========== End ==========");
-                Debug.Log(sb.ToString());
+                Aquila.Toolkit.Tools.Logger.Info(sb.ToString());
             }
         }
 
@@ -228,13 +226,13 @@ namespace Editor.AbilityEditor.Tools
 
         private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)
         {
-            string audioPath = ReadString(reader);
+            int audioId = reader.ReadInt32();
             float volume = reader.ReadSingle();
             bool loop = reader.ReadBoolean();
             float fadeIn = reader.ReadSingle();
             float fadeOut = reader.ReadSingle();
 
-            sb.AppendLine($"{indent}AudioPath: {audioPath}");
+            sb.AppendLine($"{indent}AudioId: {audioId}");
             sb.AppendLine($"{indent}Volume: {volume:F2}");
             sb.AppendLine($"{indent}Loop: {loop}");
             sb.AppendLine($"{indent}FadeIn: {fadeIn:F2}s, FadeOut: {fadeOut:F2}s");

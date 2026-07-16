@@ -49,6 +49,6 @@ namespace Aquila.ObjectPool
         /// <summary>
         /// target game object
         /// </summary>
-        protected GameObject _targetGameObject = null;
+        protected GameObject _targetGameObject;
     }
 }

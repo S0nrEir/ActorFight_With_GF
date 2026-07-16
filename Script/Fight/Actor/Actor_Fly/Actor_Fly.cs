@@ -73,8 +73,8 @@ namespace Aquila.Fight.Actor
         #endregion
 
         //子弹只有一种状态，不用加fsm
-        protected Addon_Move _moveAddon = null;
-        protected Addon_ColliderTrigger _triggerAddon = null;
+        protected Addon_Move _moveAddon;
+        protected Addon_ColliderTrigger _triggerAddon;
 
         /// <summary>
         /// 目标actorID

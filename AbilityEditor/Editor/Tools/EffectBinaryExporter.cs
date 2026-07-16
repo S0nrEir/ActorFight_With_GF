@@ -1,10 +1,9 @@
+﻿using System;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
-using Aquila.Toolkit;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -19,7 +18,7 @@ namespace Editor.AbilityEditor.Tools
         {
             if (!Directory.Exists(Misc.EFFECT_ASSET_BASE_PATH))
             {
-                Debug.LogError($"[EffectBinaryExporter] Source path not found: {Misc.EFFECT_ASSET_BASE_PATH}");
+                Aquila.Toolkit.Tools.Logger.Error($"[EffectBinaryExporter] Source path not found: {Misc.EFFECT_ASSET_BASE_PATH}");
                 return;
             }
 
@@ -34,7 +33,7 @@ namespace Editor.AbilityEditor.Tools
                 var effectData = AssetDatabase.LoadAssetAtPath<EffectEditorSOData>(assetPath);
                 if (effectData == null)
                 {
-                    Debug.LogWarning($"[EffectBinaryExporter] Failed to load: {assetPath}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[EffectBinaryExporter] Failed to load: {assetPath}");
                     failCount++;
                     continue;
                 }
@@ -42,7 +41,7 @@ namespace Editor.AbilityEditor.Tools
                 // 基础验证
                 if (effectData.id <= 0)
                 {
-                    Debug.LogWarning($"[EffectBinaryExporter] Invalid ID for {assetPath}: {effectData.id}");
+                    Aquila.Toolkit.Tools.Logger.Warning($"[EffectBinaryExporter] Invalid ID for {assetPath}: {effectData.id}");
                     failCount++;
                     continue;
                 }
@@ -54,15 +53,15 @@ namespace Editor.AbilityEditor.Tools
                     ExportEffect(effectData, outputFile);
                     successCount++;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Debug.LogError($"[EffectBinaryExporter] Failed to export {assetPath}: {ex.Message}");
+                    Aquila.Toolkit.Tools.Logger.Error($"[EffectBinaryExporter] Failed to export {assetPath}: {ex.Message}");
                     failCount++;
                 }
             }
 
             AssetDatabase.Refresh();
-            Debug.Log($"[EffectBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
+            Aquila.Toolkit.Tools.Logger.Info($"[EffectBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
         }
 
         /// <summary>
@@ -133,7 +132,7 @@ namespace Editor.AbilityEditor.Tools
                 }
             }
             
-            Debug.Log($"[EffectBinaryExporter] Exported: {outputPath}");
+            Aquila.Toolkit.Tools.Logger.Info($"[EffectBinaryExporter] Exported: {outputPath}");
         }
 
         /// <summary>
@@ -204,7 +203,7 @@ namespace Editor.AbilityEditor.Tools
                 }
             }
             
-            Debug.Log($"[EffectBinaryExporter] Exported: {outputPath}");
+            Aquila.Toolkit.Tools.Logger.Info($"[EffectBinaryExporter] Exported: {outputPath}");
         }
         
         private static void EnsureDirectoryExists(string path)

@@ -1,6 +1,5 @@
 using Aquila.Config;
 using Aquila.Fight.Actor;
-using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using UnityGameFramework.Runtime;
 
@@ -42,7 +41,7 @@ namespace Aquila.Fight
         /// </summary>
         private void OnTimesUp()
         {
-            //Log.Info( $"<color=white>OnTimesUp--->{Entity.EntityAssetName}</color>" );
+            //Aquila.Toolkit.Tools.Logger.Info( $"<color=white>OnTimesUp--->{Entity.EntityAssetName}</color>" );
             //_actor.Trigger( ActorEventEnum.EFFECT_TIMES_UP, this );
             //TimesUpFlag = true;
         }
@@ -83,7 +82,7 @@ namespace Aquila.Fight
 
         private void OnDestroy()
         {
-            Log.Info( $"<color=yellow>ActorEffect--->OnDestroy()</color>" );
+            Tools.Logger.Info( "<color=yellow>ActorEffect--->OnDestroy()</color>" );
         }
 
         protected override void OnHide( bool isShutdown, object userData )
@@ -103,7 +102,7 @@ namespace Aquila.Fight
         /// <summary>
         /// 时间标记
         /// </summary>
-        public bool TimesUpFlag = false;
+        public bool TimesUpFlag;
 
         /// <summary>
         /// 经过时间
@@ -123,12 +122,12 @@ namespace Aquila.Fight
         /// <summary>
         /// 被持有的actor
         /// </summary>
-        private Actor_Base _actor = null;
+        private Actor_Base _actor;
 
         /// <summary>
         /// 永久显示
         /// </summary>
-        public bool IsForever = false;
+        public bool IsForever;
 
         // private ActorEffectInspector _inspector = null;
     }

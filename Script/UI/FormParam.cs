@@ -1,7 +1,4 @@
 using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aquila.UI
 {
@@ -24,7 +21,7 @@ namespace Aquila.UI
         /// <summary>
         /// 自定义数据
         /// </summary>
-        public object _userData = null;
+        public object _userData;
     }
 
 }

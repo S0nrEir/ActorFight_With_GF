@@ -1,4 +1,4 @@
-﻿//using Aquila.Config;
+//using Aquila.Config;
 //using Aquila.Fight;
 //using Aquila.Fight.Actor;
 //using Aquila.Fight.Addon;
@@ -183,12 +183,12 @@
 //            transform.Translate( needDirection * speed * Time.fixedDeltaTime, Space.World );
 //            //y轴位移
 //            transform.Translate( Vector3.up * verticalSpeed * Time.fixedDeltaTime, Space.World );
-//            Debug.Log( $"<color=white>{verticalSpeed}</color>" );
+//            Aquila.Toolkit.Tools.Logger.Info( $"<color=white>{verticalSpeed}</color>" );
 //            //当verticalSpeed为正数时，距离一直向上，为负数时，向下,实际上就是一直给向上的力（y轴方向上的位移偏移），并在这个过程中不断衰减它，
-//            //Debug.Log( $"{transform.position.y}" );
+//            //Aquila.Toolkit.Tools.Logger.Info( $"{transform.position.y}" );
 //            if (verticalSpeed <= 0 && !flag)
 //            {
-//                Debug.Log( $"<color=orange>{transform.position.y}</color>" );
+//                Aquila.Toolkit.Tools.Logger.Info( $"<color=orange>{transform.position.y}</color>" );
 //                flag = true;
 //            }
 //        }
@@ -215,14 +215,14 @@
 //            var roleBaseMeta = TableManager.GetRoleBaseAttrByID( 58, 0 );
 //            if (roleBaseMeta is null)
 //            {
-//                Debug.LogError( "roleBaseMeta is null,id:" + 0 );
+//                Aquila.Toolkit.Tools.Logger.Error( "roleBaseMeta is null,id:" + 0 );
 //                return;
 //            }
 
 //            var modelMeta = TableManager.GetCharModelByID( roleBaseMeta.CharModelID, 0 );
 //            if (modelMeta is null)
 //            {
-//                Debug.LogError( "modelMeta is null,id:" + roleBaseMeta.CharModelID );
+//                Aquila.Toolkit.Tools.Logger.Error( "modelMeta is null,id:" + roleBaseMeta.CharModelID );
 //                return;
 //            }
 
@@ -256,14 +256,14 @@
 //            var roleBaseMeta = TableManager.GetRoleBaseAttrByID( 0, 0 );
 //            if (roleBaseMeta is null)
 //            {
-//                Debug.LogError( "roleBaseMeta is null,id:" + 0 );
+//                Aquila.Toolkit.Tools.Logger.Error( "roleBaseMeta is null,id:" + 0 );
 //                return;
 //            }
 
 //            var modelMeta = TableManager.GetCharModelByID( roleBaseMeta.CharModelID, 0 );
 //            if (modelMeta is null)
 //            {
-//                Debug.LogError( "modelMeta is null,id:" + roleBaseMeta.CharModelID );
+//                Aquila.Toolkit.Tools.Logger.Error( "modelMeta is null,id:" + roleBaseMeta.CharModelID );
 //                return;
 //            }
 

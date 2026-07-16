@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -431,12 +431,12 @@ namespace Aquila.AbilityEditor
         private void DuplicateClip()
         {
             // 这里需要通过事件通知外部进行复制操作
-            Debug.Log($"Duplicate clip: {_clipData.ClipName}");
+            Toolkit.Tools.Logger.Info($"Duplicate clip: {_clipData.ClipName}");
         }
 
         private void ShowProperties()
         {
-            Debug.Log($"Show properties for clip: {_clipData.GetDisplayInfo()}");
+            Toolkit.Tools.Logger.Info($"Show properties for clip: {_clipData.GetDisplayInfo()}");
         }
 
         #endregion

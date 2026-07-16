@@ -1,3 +1,5 @@
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -36,14 +38,14 @@ namespace Editor.AbilityEditor.Tools
                 EditorUtility.ClearProgressBar();
                 ShowResult(exportResult, assemblyResult, logPath);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 EditorUtility.ClearProgressBar();
                 EditorUtility.DisplayDialog(
                     "Verification Error",
                     $"An error occurred during verification:\n\n{ex.Message}",
                     "OK");
-                Debug.LogError($"[AbilityVerificationMenu] Verification failed: {ex.Message}\n{ex.StackTrace}");
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityVerificationMenu] Verification failed: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -60,7 +62,7 @@ namespace Editor.AbilityEditor.Tools
                     "Verification Successful",
                     $"Phase 1 - Export Round-Trip: All {exportResult.SuccessfulAbilities.Count} abilities verified.\n" +
                     $"Phase 2 - Assembly: All {assemblyResult.SuccessfulAbilities.Count} abilities assembled and cross-verified.\n\n" +
-                    $"All data is consistent.",
+                    "All data is consistent.",
                     "OK");
             }
             else
@@ -84,7 +86,7 @@ namespace Editor.AbilityEditor.Tools
                     }
                 }
 
-                message += $"\n=== Phase 2: Assembly Verification ===\n" +
+                message += "\n=== Phase 2: Assembly Verification ===\n" +
                           $"Total: {assemblyResult.TotalAbilities} | " +
                           $"OK: {assemblyResult.SuccessfulAbilities.Count} | " +
                           $"Failed: {assemblyResult.Failures.Count}\n";
@@ -114,7 +116,7 @@ namespace Editor.AbilityEditor.Tools
         {
             if (File.Exists(logPath))
             {
-                System.Diagnostics.Process.Start(logPath);
+                Process.Start(logPath);
             }
             else
             {
@@ -132,7 +134,7 @@ namespace Editor.AbilityEditor.Tools
             string logPath = GetLogPath();
             if (File.Exists(logPath))
             {
-                System.Diagnostics.Process.Start(logPath);
+                Process.Start(logPath);
             }
             else
             {

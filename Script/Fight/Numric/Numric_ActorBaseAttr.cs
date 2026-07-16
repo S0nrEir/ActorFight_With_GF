@@ -157,10 +157,6 @@ namespace Aquila.Numric
             _buff_correction  ??= new GameFrameworkLinkedList<Numric_Modifier>();
         }
 
-        public Numric_ActorBaseAttr() : base()
-        {
-        }
-
         //question:改成LinkedRange?
         //不合适，暂时用linkedList，有问题再说
         
@@ -181,6 +177,6 @@ namespace Aquila.Numric
         /// <summary>
         /// 修正计算的最终值
         /// </summary>
-        private float _total = 0f;
+        private float _total;
     }
 }

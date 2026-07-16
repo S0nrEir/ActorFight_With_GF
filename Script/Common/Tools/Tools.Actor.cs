@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
+using Aquila.Config;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Cfg.Enum;
-using System;
-using System.Collections.Generic;
 
 namespace Aquila.Toolkit
 {
@@ -23,14 +24,14 @@ namespace Aquila.Toolkit
                 {
                     case RoleType.Hero:
                         result.actorType = typeof( Actor_Hero );
-                        result.group = Config.GameConfig.Entity.GROUP_HERO_ACTOR;
-                        result.priority = Config.GameConfig.Entity.PRIORITY_ACTOR;
+                        result.group = GameConfig.Entity.GROUP_HERO_ACTOR;
+                        result.priority = GameConfig.Entity.PRIORITY_ACTOR;
                         break;
 
                     case RoleType.Orb:
                         result.actorType = typeof( Actor_Orb );
-                        result.group = Config.GameConfig.Entity.GROUP_PROJECTILE;
-                        result.priority = Config.GameConfig.Entity.PRIORITY_ACTOR;
+                        result.group = GameConfig.Entity.GROUP_PROJECTILE;
+                        result.priority = GameConfig.Entity.PRIORITY_ACTOR;
                         break;
 
                     default:
@@ -70,7 +71,7 @@ namespace Aquila.Toolkit
             /// </summary>
             public static string DefaultOrbAssetPath()
             {
-                return $"Assets/Res/Prefab/Character/TestOrb_001.prefab";
+                return "Assets/Res/Prefab/Character/TestOrb_001.prefab";
             }
 
             /// <summary>

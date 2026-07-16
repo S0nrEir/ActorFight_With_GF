@@ -25,11 +25,11 @@ MonoBehaviour:
     int_3: -1
     int_4: -1
   ModifierType: 1
-  EffectOnAwake: 0
+  EffectOnAwake: 1
   Policy: 2
   Period: 1
   Duration: 3
   Target: 1
-  EffectType: 0
+  AffectedAttribute: 0
   DeriveEffects: 
   AwakeEffects: 

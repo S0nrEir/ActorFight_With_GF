@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Toolkit
 {
@@ -17,7 +16,7 @@ namespace Aquila.Toolkit
             {
                 if ( string.IsNullOrEmpty( asset_path ) )
                 {
-                    Log.Warning( "asset path is null" );
+                    Logger.Warning( "asset path is null" );
                     return string.Empty;
                 }
                 var temp = asset_path.Split( '/' );
@@ -33,7 +32,7 @@ namespace Aquila.Toolkit
             public static string GetChunkName(string asset_path)
             {
                 if ( string.IsNullOrEmpty( asset_path ) )
-                    return $"empty_chunk_name";
+                    return "empty_chunk_name";
 
                 var arr = asset_path.Split('/' );
                 return arr[arr.Length - 1];

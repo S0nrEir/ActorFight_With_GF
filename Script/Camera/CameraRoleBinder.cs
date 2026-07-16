@@ -102,11 +102,11 @@ namespace Aquila.CameraSystem
         }
         
         [SerializeField] private CameraRole _role = CameraRole.Custom;
-        [SerializeField] private int _priority = 0;
+        [SerializeField] private int _priority;
         [SerializeField] private bool _autoRegister = true;
         
         public CameraRole Role => _role;
         public int Priority => _priority;
-        private bool _registered = false;
+        private bool _registered;
     }
 }

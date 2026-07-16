@@ -1,11 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GameFramework;
-using Aquila.Module;
-using Aquila;
-using UnityGameFramework.Runtime;
 using Aquila.Extension;
+using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -42,6 +36,6 @@ namespace Aquila.Module
         /// <summary>
         /// ui组件缓存
         /// </summary>
-        private UIComponent _cached_UI_Component = null;
+        private UIComponent _cached_UI_Component;
     }
 }

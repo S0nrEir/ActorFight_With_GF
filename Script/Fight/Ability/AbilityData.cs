@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cfg.Enum;
@@ -36,7 +37,7 @@ namespace Aquila.Fight
             _targetType = targetType;
             _timelineID = timelineID;
             _timelineDuration = timelineDuration;
-            _effects = effects?.ToArray() ?? System.Array.Empty<EffectData>();
+            _effects = effects?.ToArray() ?? Array.Empty<EffectData>();
             // _audios = audios?.ToArray() ?? System.Array.Empty<AudioData>();
             // _vfxs = vfxs?.ToArray() ?? System.Array.Empty<VFXData>();
         }

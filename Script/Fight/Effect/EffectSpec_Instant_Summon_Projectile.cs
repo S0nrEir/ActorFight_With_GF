@@ -2,7 +2,6 @@ using Aquila.Event;
 using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -16,7 +15,7 @@ namespace Aquila.Fight
             base.Apply( castor, target, result );
             if ( _effectData.GetIntParam1() < 0 )
             {
-                Log.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->IntParam1 < 0, effectId:{_effectData.GetEffectId()}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>EffectSpec_Instant_Summon.Apply--->IntParam1 < 0, effectId:{_effectData.GetEffectId()}</color>" );
                 return;
             }
 
@@ -26,10 +25,7 @@ namespace Aquila.Fight
             //按照位置生成召唤物
             if ( Tools.GetBitValue( result._stateDescription, ( int ) AbilityHitResultTypeEnum.CONTAINS_POSITION ) )
             {
-                entityData = new Actor_Bullet_EntityData( entityID )
-                {
-                    
-                };
+                entityData = new Actor_Bullet_EntityData( entityID );
             }
             //按照目标生成召唤物
             else

@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Aquila.Extension;
 using Aquila.Fight.Addon;
+using Aquila.Toolkit;
 using GameFramework;
-using System.Collections.Generic;
-using UnityGameFramework.Runtime;
 using static Aquila.Fight.Addon.Addon_Base;
 
 namespace Aquila.Module
@@ -10,7 +10,7 @@ namespace Aquila.Module
     /// <summary>
     /// actor代理的逻辑类，轮询处理所有actor的update
     /// </summary>
-    public partial class Module_AddonSystem : GameFrameworkModuleBase, IUpdate
+    public class Module_AddonSystem : GameFrameworkModuleBase, IUpdate
     {
         /// <summary>
         /// 添加组件到轮询系统中
@@ -19,7 +19,7 @@ namespace Aquila.Module
         {
             if ( _existAddon.Contains( addon.GetHashCode() ) )
             {
-                Log.Warning( $"Module_ProxyActor.System.Add()--->_existAddon.Contains( hashCode )" );
+                Tools.Logger.Warning( "Module_ProxyActor.System.Add()--->_existAddon.Contains( hashCode )" );
                 return;
             }
 
@@ -201,15 +201,15 @@ namespace Aquila.Module
             /// <summary>
             /// addon列表
             /// </summary>
-            private List<Addon_Base> _curr = null;
-            private List<Addon_Base> _next = null;
-            private List<Addon_Base> _temp = null;
+            private List<Addon_Base> _curr;
+            private List<Addon_Base> _next;
+            private List<Addon_Base> _temp;
 
             //todo:考虑是否不用hashset保存，是否有更好的剔除思路，如果不用的话，考虑使用addon的释放标记
             /// <summary>
             /// 要移除的组件
             /// </summary>
-            private HashSet<Addon_Base> _toRemove = null;
+            private HashSet<Addon_Base> _toRemove;
         }
     }
 }

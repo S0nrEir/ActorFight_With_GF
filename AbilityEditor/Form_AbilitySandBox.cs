@@ -5,7 +5,6 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
-using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
@@ -39,14 +38,16 @@ namespace Aquila.AbilityEditor
             _actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             _proxyActor = GameEntry.Module.GetModule<Module_ProxyActor>();
 
-            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/Button" );
+            _abilityButton = Tools.GetComponent<Button>( gameObject, "AbilityButton/AbilityIcon" );
             _abilityButton.onClick.AddListener( OnAbilityButtonClicked );
             
             _cdTxt = Tools.GetComponent<Text>( gameObject, "AbilityButton/Text" );
-            _cdImg = Tools.GetComponent<Image>( gameObject, "AbilityButton/Image" );
+            _cdImg = Tools.GetComponent<Image>( gameObject, "AbilityButton/CD" );
             _abilityIdText = Tools.GetComponent<Text>( gameObject, "AbilityButton/AbilityIdText" );
             
             _abilityIdText.text = _abilityID.ToString();
+            Tools.SetActive( _cdTxt.gameObject, false );
+            Tools.SetActive( _abilityIdText.gameObject, true );
 
             GameEntry.Event.Subscribe( EventArg_OnUseAblity.EventID, OnUseAbility );
             GameEntry.Event.Subscribe( EventArg_OnHitAbility.EventID, OnAbilityHit );
@@ -91,7 +92,7 @@ namespace Aquila.AbilityEditor
         {
             if ( _proxyActor == null || _playerID == -1 || _dummyID == -1 || _abilityID == -1 )
             {
-                Log.Warning( "<color=yellow>Form_AbilitySandBox: 参数无效，无法释放技能</color>" );
+                Tools.Logger.Warning( "<color=yellow>Form_AbilitySandBox: 参数无效，无法释放技能</color>" );
                 return;
             }
 
@@ -114,7 +115,10 @@ namespace Aquila.AbilityEditor
             //Tools.SetActive( _cdImg.gameObject, percent > 0 );
             //Tools.SetActive( _cdTxt.gameObject, percent > 0 );
 
-            if ( percent > 0 )
+            var isOnCD = percent > 0.0001;
+            Tools.SetActive( _cdTxt.gameObject, isOnCD );
+            Tools.SetActive( _abilityIdText.gameObject, !isOnCD );
+            if ( isOnCD )
             {
                 _cdImg.fillAmount = percent;
                 _cdTxt.text = cd.remain.ToString( "F1" );
@@ -132,7 +136,7 @@ namespace Aquila.AbilityEditor
             var result = (arg as EventArg_OnUseAblity)._resultParam;
             if ( !result._succ )
             {
-                Log.Info( $"<color=white>技能使用失败: {Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
+                Tools.Logger.Info( $"<color=white>技能使用失败: {Tools.Fight.UsingAbilityFaildDescription_l10n( result._stateDescription )}</color>" );
             }
         }
 
@@ -156,12 +160,12 @@ namespace Aquila.AbilityEditor
         private int _playerID = -1;
         private int _dummyID = -1;
         private int _abilityID = -1;
-        private Module_ActorMgr _actorMgr = null;
-        private Module_ProxyActor _proxyActor = null;
-        private Button _abilityButton = null;
-        private Text _cdTxt = null;
-        private Image _cdImg = null;
-        private Text _abilityIdText = null;
+        private Module_ActorMgr _actorMgr;
+        private Module_ProxyActor _proxyActor;
+        private Button _abilityButton;
+        private Text _cdTxt;
+        private Image _cdImg;
+        private Text _abilityIdText;
 
         /// <summary>
         /// 沙盒界面参数类

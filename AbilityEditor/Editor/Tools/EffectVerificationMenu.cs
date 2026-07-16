@@ -1,3 +1,5 @@
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -42,14 +44,14 @@ namespace Editor.AbilityEditor.Tools
                 // 显示结果
                 ShowResult(result, logPath);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 EditorUtility.ClearProgressBar();
                 EditorUtility.DisplayDialog(
                     "Verification Error",
                     $"An error occurred during verification:\n\n{ex.Message}",
                     "OK");
-                Debug.LogError($"[EffectVerificationMenu] Verification failed: {ex.Message}\n{ex.StackTrace}");
+                Aquila.Toolkit.Tools.Logger.Error($"[EffectVerificationMenu] Verification failed: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -60,12 +62,12 @@ namespace Editor.AbilityEditor.Tools
                 EditorUtility.DisplayDialog(
                     "Verification Successful",
                     $"All {result.SuccessfulEffects.Count} effects verified successfully!\n\n" +
-                    $"All exported binary files match the original configurations.",
+                    "All exported binary files match the original configurations.",
                     "OK");
             }
             else
             {
-                string message = $"Verification completed with issues:\n\n" +
+                string message = "Verification completed with issues:\n\n" +
                                 $"Total Effects: {result.TotalEffects}\n" +
                                 $"Successful: {result.SuccessfulEffects.Count}\n" +
                                 $"Failed: {result.Failures.Count}\n\n";
@@ -104,7 +106,7 @@ namespace Editor.AbilityEditor.Tools
         {
             if (File.Exists(logPath))
             {
-                System.Diagnostics.Process.Start(logPath);
+                Process.Start(logPath);
             }
             else
             {
@@ -123,7 +125,7 @@ namespace Editor.AbilityEditor.Tools
 
             if (File.Exists(logPath))
             {
-                System.Diagnostics.Process.Start(logPath);
+                Process.Start(logPath);
             }
             else
             {

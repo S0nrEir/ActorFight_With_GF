@@ -206,8 +206,7 @@ namespace Aquila.Toolkit
                     return;
                 
                 _disposed = true;
-                if (_ownsStream != null)
-                    _stream.Dispose();
+                _stream?.Dispose();
                 
                 _stream = null;
             }

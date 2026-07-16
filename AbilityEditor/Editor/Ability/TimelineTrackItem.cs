@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -50,18 +48,18 @@ namespace Aquila.AbilityEditor
         {
             if (clip == null)
             {
-                Debug.LogWarning("TimelineTrackItem.AddClip: clip is null");
+                Toolkit.Tools.Logger.Warning("TimelineTrackItem.AddClip: clip is null");
                 return false;
             }
 
             if (_clips.Contains(clip))
             {
-                Debug.LogWarning($"TimelineTrackItem.AddClip: clip '{clip.ClipName}' already exists in track '{Name}'");
+                Toolkit.Tools.Logger.Warning($"TimelineTrackItem.AddClip: clip '{clip.ClipName}' already exists in track '{Name}'");
                 return false;
             }
 
             _clips.Add(clip);
-            Debug.Log($"TimelineTrackItem.AddClip: Added clip '{clip.ClipName}' to track '{Name}'");
+            Toolkit.Tools.Logger.Info($"TimelineTrackItem.AddClip: Added clip '{clip.ClipName}' to track '{Name}'");
             return true;
         }
 
@@ -75,7 +73,7 @@ namespace Aquila.AbilityEditor
 
             bool removed = _clips.Remove(clip);
             if (removed)
-                Debug.Log($"TimelineTrackItem.RemoveClip: Removed clip '{clip.ClipName}' from track '{Name}'");
+                Toolkit.Tools.Logger.Info($"TimelineTrackItem.RemoveClip: Removed clip '{clip.ClipName}' from track '{Name}'");
 
             return removed;
         }
@@ -95,7 +93,7 @@ namespace Aquila.AbilityEditor
         public void ClearClips()
         {
             _clips.Clear();
-            Debug.Log($"TimelineTrackItem.ClearClips: Cleared all clips from track '{Name}'");
+            Toolkit.Tools.Logger.Info($"TimelineTrackItem.ClearClips: Cleared all clips from track '{Name}'");
         }
 
         /// <summary>

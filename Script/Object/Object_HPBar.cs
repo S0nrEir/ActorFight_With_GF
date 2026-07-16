@@ -2,7 +2,6 @@ using Aquila.Item;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.ObjectPool
 {
@@ -23,7 +22,7 @@ namespace Aquila.ObjectPool
         {
             if (_hpBarItem._hp_slider == null)
             {
-                Log.Warning("<color=yellow>Object_HPBar.SetValue()--->_hp_slider == null</color>");
+                Tools.Logger.Warning("<color=yellow>Object_HPBar.SetValue()--->_hp_slider == null</color>");
                 return;
             }
 
@@ -35,7 +34,7 @@ namespace Aquila.ObjectPool
         {
             _hpBarItem = Tools.GetComponent<Item_HPBar>(go.transform);
             if (_hpBarItem == null)
-                Log.Warning("<color=yellow>_hpBarItem == null</color>");
+                Tools.Logger.Warning("<color=yellow>_hpBarItem == null</color>");
         }
 
         /// <summary>
@@ -72,6 +71,6 @@ namespace Aquila.ObjectPool
             return obj;
         }
 
-        private Item_HPBar _hpBarItem = null;
+        private Item_HPBar _hpBarItem;
     }
 }

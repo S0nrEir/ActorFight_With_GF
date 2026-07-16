@@ -1,9 +1,4 @@
-﻿using GameFramework.Fsm;
-using GameFramework.Procedure;
-using GameFramework.Resource;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
+﻿using GameFramework.Procedure;
 
 namespace Aquila.Procedure
 {
@@ -20,7 +15,7 @@ namespace Aquila.Procedure
         //               1f,
         //               () =>
         //               {
-        //                   Debug.Log( $"testing...{counter++}" );
+        //                   Aquila.Toolkit.Tools.Logger.Info( $"testing...{counter++}" );
         //               }
         //           ) );
         //}

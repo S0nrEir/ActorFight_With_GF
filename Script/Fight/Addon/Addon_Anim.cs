@@ -1,8 +1,6 @@
-using Aquila.Fight.Actor;
 using Aquila.Module;
 using Aquila.Toolkit;
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace Aquila.Fight.Addon
 {
@@ -25,7 +23,7 @@ namespace Aquila.Fight.Addon
             _animator = Tools.GetComponent<Animator>( Actor.gameObject );
 
             if ( _animator == null )
-                Debug.LogError( "<color=red>faild to get animator</color>" );
+                Tools.Logger.Error( "<color=red>faild to get animator</color>" );
         }
 
         public override void Dispose ()
@@ -45,10 +43,10 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool Play (string clipName)
         {
-            //Debug.Log( $"<color=white>Actor{Actor.ActorID}.Play()---->clipName:{clipName}</color>" );
+            //Aquila.Toolkit.Tools.Logger.Info( $"<color=white>Actor{Actor.ActorID}.Play()---->clipName:{clipName}</color>" );
             if (string.IsNullOrEmpty( clipName ))
             {
-                Debug.LogError( "string.IsNullOrEmpty( clipName )" );
+                Tools.Logger.Error( "string.IsNullOrEmpty( clipName )" );
                 return false;
             }
 
@@ -74,7 +72,7 @@ namespace Aquila.Fight.Addon
             //
             // //给的clipName不匹配任何已指定的clipName
             // if (!succFlag)
-            //     Debug.LogError( $"clip {clipName} dosent match any exist clipArr" );
+            //     Aquila.Toolkit.Tools.Logger.Error( $"clip {clipName} dosent match any exist clipArr" );
             // else
             //     CurrClipName = clipName;
             //
@@ -94,8 +92,7 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 动画片段名称，要求名称统一
         /// </summary>
-        private static readonly int[] AnimClipNameArr = new int[]
-        {
+        private static readonly int[] AnimClipNameArr = {
             Animator.StringToHash("Idle"),//待机
             Animator.StringToHash("Ability"),//技能
             Animator.StringToHash("Walk"),//行走

@@ -1,9 +1,12 @@
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.Fight;
+using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
+using GameFramework;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -15,17 +18,23 @@ namespace Aquila.AbilityPool
     public class Component_AbilityPool : GameFrameworkComponent
     {
         //----------------------- pub -----------------------
-        
-        
         public void Init()
         {
+            if (_initialized)
+            {
+                Tools.Logger.Info("[AbilityPool] Init skipped. Already initialized.");
+                return;
+            }
+
+            EffectSpecFactory.EnsureInitialized();
             _abilityPool = new Dictionary<int, AbilityData>(_defaultCapacity);
             _effectPool  = new Dictionary<int, EffectData>(_defaultCapacity);
 
             LoadAllEffects();
             LoadAllAbilities();
 
-            Log.Info($"[AbilityPool] Init complete. Abilities={_abilityPool.Count}, Effects={_effectPool.Count}");
+            _initialized = true;
+            Tools.Logger.Info($"[AbilityPool] Init complete. Abilities={_abilityPool.Count}, Effects={_effectPool.Count}");
         }
 
         public bool TryGetAbility(int abilityId, out AbilityData data)
@@ -38,7 +47,7 @@ namespace Aquila.AbilityPool
             if (_abilityPool.TryGetValue(abilityId, out var data))
                 return data;
 
-            Log.Warning($"[AbilityPool] Ability not found: {abilityId}");
+            Tools.Logger.Warning($"[AbilityPool] Ability not found: {abilityId}");
             return default;
         }
 
@@ -48,7 +57,7 @@ namespace Aquila.AbilityPool
         }
 
         /// <summary>
-        /// <para>传入角色 MetaID，查 LuBan 角色表拿到该角色的所有技能 ID，从技能池中返回对应的 AbilityData 数组。AbilityData 是 readonly struct，返回的是值拷贝，修改不影响池内数据。</para>
+        /// <para>传入角色 MetaID，查 LuBan 角色表拿到该角色的所有技能ID，从技能池中返回对应的 AbilityData 数组。AbilityData 是 readonly struct，返回的是值拷贝，修改不影响池内数据。</para>
         /// <para>Pass in the character MetaID, query the LuBan character table to get all skill IDs for that character,and return the corresponding AbilityData array from the skill pool.AbilityData is a readonly struct, so a value copy is returned, and modifications do not affect the data in the pool.</para>
         /// </summary>
         public AbilityData[] GetAbilities(int roleMetaId)
@@ -56,11 +65,11 @@ namespace Aquila.AbilityPool
             var roleMeta = GameEntry.LuBan.Tables.RoleMeta.Get(roleMetaId);
             if (roleMeta == null)
             {
-                Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
-                return System.Array.Empty<AbilityData>();
+                Tools.Logger.Warning($"[AbilityPool] GetAbilitiesByRoleId: RoleMeta not found for id={roleMetaId}");
+                return Array.Empty<AbilityData>();
             }
             if (roleMeta.AbilityBaseID == null || roleMeta.AbilityBaseID.Length <= 0)
-                return System.Array.Empty<AbilityData>();
+                return Array.Empty<AbilityData>();
 
             var result = new AbilityData[roleMeta.AbilityBaseID.Length];
             var count = 0;
@@ -72,15 +81,15 @@ namespace Aquila.AbilityPool
                 }
                 else
                 {
-                    Log.Warning($"[AbilityPool] GetAbilitiesByRoleId: ability id={id} not found in pool (roleMetaId={roleMetaId})");
-                    return System.Array.Empty<AbilityData>();
+                    Tools.Logger.Warning($"[AbilityPool] GetAbilitiesByRoleId: ability id={id} not found in pool (roleMetaId={roleMetaId})");
+                    return Array.Empty<AbilityData>();
                 }
             }
 
             if (count < result.Length)
             {
                 var trimmed = new AbilityData[count];
-                System.Array.Copy(result, trimmed, count);
+                Array.Copy(result, trimmed, count);
                 return trimmed;
             }
 
@@ -102,8 +111,21 @@ namespace Aquila.AbilityPool
             if (_effectPool.TryGetValue(effectId, out var data))
                 return data;
 
-            Log.Warning($"[AbilityPool] Effect not found: {effectId}");
+            Tools.Logger.Warning($"[AbilityPool] Effect not found: {effectId}");
             return default;
+        }
+
+        public EffectSpec_Base CreateEffectSpecByReferencePool(
+            EffectData data,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target)
+        {
+            return EffectSpecFactory.CreateEffectSpecByReferencePool(data, castor, target);
+        }
+
+        public T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
+        {
+            return EffectSpecFactory.CreateEffectSpecByReferencePool<T>();
         }
 
         /// <summary>
@@ -114,13 +136,13 @@ namespace Aquila.AbilityPool
         {
             if (string.IsNullOrEmpty(abltFilePath))
             {
-                Log.Error("[AbilityPool] LoadAbilityFromPath: abltFilePath is null or empty");
+                Tools.Logger.Error("[AbilityPool] LoadAbilityFromPath: abltFilePath is null or empty");
                 return;
             }
 
             if (!File.Exists(abltFilePath))
             {
-                Log.Error($"[AbilityPool] LoadAbilityFromPath: file not found: {abltFilePath}");
+                Tools.Logger.Error($"[AbilityPool] LoadAbilityFromPath: file not found: {abltFilePath}");
                 return;
             }
 
@@ -131,7 +153,7 @@ namespace Aquila.AbilityPool
                 {
                     if (string.IsNullOrEmpty(efctPath) || !File.Exists(efctPath))
                     {
-                        Log.Warning($"[AbilityPool] LoadAbilityFromPath: effect file not found: {efctPath}");
+                        Tools.Logger.Warning($"[AbilityPool] LoadAbilityFromPath: effect file not found: {efctPath}");
                         continue;
                     }
 
@@ -140,9 +162,9 @@ namespace Aquila.AbilityPool
                         if (TryReadEffect(efctPath, out var effectData))
                             _effectPool[effectData.GetEffectId()] = effectData;
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
-                        Log.Error($"[AbilityPool] LoadAbilityFromPath: failed to read effect {efctPath}: {ex.Message}");
+                        Tools.Logger.Error($"[AbilityPool] LoadAbilityFromPath: failed to read effect {efctPath}: {ex.Message}");
                     }
                 }
             }
@@ -151,14 +173,14 @@ namespace Aquila.AbilityPool
                 return;
 
             if (_abilityPool.ContainsKey(abilityData.GetId()))
-                Log.Warning($"[AbilityPool] LoadAbilityFromPath: overwriting existing ability {abilityData.GetId()}");
+                Tools.Logger.Warning($"[AbilityPool] LoadAbilityFromPath: overwriting existing ability {abilityData.GetId()}");
 
             _abilityPool[abilityData.GetId()] = abilityData;
-            Log.Info($"[AbilityPool] Loaded ability {abilityData.GetId()} from {abltFilePath}");
+            Tools.Logger.Info($"[AbilityPool] Loaded ability {abilityData.GetId()} from {abltFilePath}");
         }
 
         /// <summary>
-        /// 从沙盒目录加载 .ablt 和同目录 .efct 文件，校验后组装 AbilityData 写入池，并返回组装结果
+        /// 从沙盒目录加.ablt 和同目录 .efct 文件，校验后组装 AbilityData 写入池，并返回组装结
         /// </summary>
         public bool LoadSandBoxAbility(string sandBoxDir, out AbilityData abilityData)
         {
@@ -167,13 +189,13 @@ namespace Aquila.AbilityPool
             string abltPath = Path.Combine(sandBoxDir, "sand_box.ablt");
             if (!File.Exists(abltPath))
             {
-                Log.Error($"[AbilityPool] LoadSandBoxAbility: .ablt not found: {abltPath}");
+                Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: .ablt not found: {abltPath}");
                 return false;
             }
 
             if (!TryReadAbility(abltPath, out var rawAbility))
             {
-                Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read ability: {abltPath}");
+                Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: failed to read ability: {abltPath}");
                 return false;
             }
 
@@ -195,7 +217,7 @@ namespace Aquila.AbilityPool
                 }
             }
 
-            // 扫描沙盒目录下所有 .efct 文件，文件名即 effectID
+            // 扫描沙盒目录下所有.efct 文件，文件名effectID
             string[] efctFiles = Directory.GetFiles(sandBoxDir, "*.efct");
             var availableEffectIds = new HashSet<int>();
             var efctPathMap = new Dictionary<int, string>();
@@ -209,7 +231,7 @@ namespace Aquila.AbilityPool
                 }
                 else
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: invalid .efct filename (not an int): {efctPath}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: invalid .efct filename (not an int): {efctPath}");
                     return false;
                 }
             }
@@ -219,7 +241,7 @@ namespace Aquila.AbilityPool
             {
                 if (!availableEffectIds.Contains(id))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: required effect {id} not found in sandbox dir");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: required effect {id} not found in sandbox dir");
                     return false;
                 }
             }
@@ -227,7 +249,7 @@ namespace Aquila.AbilityPool
             {
                 if (!requiredEffectIds.Contains(id))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: extra .efct file {id} not referenced by ability");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: extra .efct file {id} not referenced by ability");
                     return false;
                 }
             }
@@ -237,12 +259,12 @@ namespace Aquila.AbilityPool
             {
                 if (!TryReadEffect(kvp.Value, out var effectData))
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: failed to read effect: {kvp.Value}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: failed to read effect: {kvp.Value}");
                     return false;
                 }
                 if (effectData.GetEffectId() != kvp.Key)
                 {
-                    Log.Error($"[AbilityPool] LoadSandBoxAbility: effect file {kvp.Value} contains id={effectData.GetEffectId()}, expected {kvp.Key}");
+                    Tools.Logger.Error($"[AbilityPool] LoadSandBoxAbility: effect file {kvp.Value} contains id={effectData.GetEffectId()}, expected {kvp.Key}");
                     return false;
                 }
                 _effectPool[effectData.GetEffectId()] = effectData;
@@ -250,7 +272,7 @@ namespace Aquila.AbilityPool
 
             _abilityPool[rawAbility.GetId()] = rawAbility;
             abilityData = rawAbility;
-            Log.Info($"[AbilityPool] LoadSandBoxAbility: loaded ability {rawAbility.GetId()} with {requiredEffectIds.Count} effects");
+            Tools.Logger.Info($"[AbilityPool] LoadSandBoxAbility: loaded ability {rawAbility.GetId()} with {requiredEffectIds.Count} effects");
             return true;
         }
         
@@ -263,7 +285,7 @@ namespace Aquila.AbilityPool
             string fullDir = Path.Combine(Application.dataPath, EFFECT_DIR);
             if (!Directory.Exists(fullDir))
             {
-                Log.Warning($"[AbilityPool] Effect directory not found: {fullDir}");
+                Tools.Logger.Warning($"[AbilityPool] Effect directory not found: {fullDir}");
                 return;
             }
 
@@ -285,7 +307,7 @@ namespace Aquila.AbilityPool
             string fullDir = Path.Combine(Application.dataPath, ABILITY_DIR);
             if (!Directory.Exists(fullDir))
             {
-                Log.Warning($"[AbilityPool] Ability directory not found: {fullDir}");
+                Tools.Logger.Warning($"[AbilityPool] Ability directory not found: {fullDir}");
                 return;
             }
 
@@ -313,20 +335,20 @@ namespace Aquila.AbilityPool
             byte version = reader.ReadByte();
             if (magic != EFFECT_MAGIC)
             {
-                Log.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect magic '{magic}' in {filePath}");
                 return false;
             }
 
             // Basic Info（顺序与 EffectBinaryExporter.ExportEffect 一致）
             int id              = reader.ReadInt32();
-            var effectType      = (EffectType)reader.ReadInt32();         // Type → EffectType 枚举（effect 类型）
+            var effectType      = (EffectType)reader.ReadInt32();         // Type EffectType 枚举（effect 类型
             var modifierType    = (NumricModifierType)reader.ReadUInt16();
             bool effectOnAwake  = reader.ReadBoolean();
             var policy          = (DurationPolicy)reader.ReadUInt16();
             float period        = reader.ReadSingle();
             float duration      = reader.ReadSingle();
             int target          = reader.ReadInt32();
-            var affectedAttr    = (actor_attribute)reader.ReadInt32();   // EffectType → actor_attribute 字段
+            var affectedAttr    = (actor_attribute)reader.ReadInt32();   // EffectType actor_attribute 字段
 
             // Extension Params
             float f1 = reader.ReadSingle();
@@ -392,7 +414,7 @@ namespace Aquila.AbilityPool
             byte version = reader.ReadByte();
             if (magic != ABILITY_MAGIC)
             {
-                Log.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability magic '{magic}' in {filePath}");
                 return false;
             }
 
@@ -403,7 +425,7 @@ namespace Aquila.AbilityPool
             var targetType      = (AbilityTargetType)reader.ReadInt32();
             int timelineId      = reader.ReadInt32();
             float duration      = reader.ReadSingle();
-
+            
             // Tracks → collect all EffectClipData
             var effectList = new List<EffectData>();
             int trackCount = reader.ReadInt32();
@@ -482,7 +504,7 @@ namespace Aquila.AbilityPool
 
             if (effectId <= 0)
             {
-                Log.Warning($"[AbilityPool] Skipping effect clip with invalid ID: {effectId}");
+                Tools.Logger.Warning($"[AbilityPool] Skipping effect clip with invalid ID: {effectId}");
                 return null;
             }
 
@@ -520,7 +542,7 @@ namespace Aquila.AbilityPool
         {
             if (clipType == CLIP_TYPE_AUDIO)
             {
-                ReadString(reader);     // AudioPath
+                reader.ReadInt32();     // AudioId
                 reader.ReadSingle();    // Volume
                 reader.ReadBoolean();   // Loop
                 reader.ReadSingle();    // FadeIn
@@ -548,6 +570,7 @@ namespace Aquila.AbilityPool
 
         //----------------------- fields -----------------------
 
+        private bool _initialized;
         private Dictionary<int, AbilityData> _abilityPool;
         private Dictionary<int, EffectData>  _effectPool;
 
@@ -569,5 +592,171 @@ namespace Aquila.AbilityPool
         private const int CLIP_TYPE_EFFECT = 1;
         private const int CLIP_TYPE_AUDIO  = 2;
         private const int CLIP_TYPE_VFX    = 3;
+        
+    /// <summary>
+    /// EffectSpec 统一初始化注册校验实现
+    /// </summary>
+    private class EffectSpecFactory
+    {
+        public static void Initialize()
+        {
+            lock (_initLock)
+            {
+                if (_initialized)
+                {
+                    return;
+                }
+
+                BuildRegistrationMap();
+                ValidateRegistrationMap();
+                _initialized = true;
+
+                Tools.Logger.Info($"[EffectSpecFactory] Initialize complete. Registered={_effectSpecTypeByEffectType.Count}");
+            }
+        }
+
+        public static void EnsureInitialized()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            Initialize();
+        }
+
+        public static EffectSpec_Base CreateEffectSpecByReferencePool(
+            EffectData data,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target)
+        {
+            EnsureInitialized();
+
+            var effectType = data.GetEffectType();
+            if (!_effectSpecTypeByEffectType.TryGetValue(effectType, out var specType))
+            {
+                Tools.Logger.Warning($"[EffectSpecFactory] No EffectSpec registered for EffectType={effectType}, EffectID={data.GetEffectId()}.");
+                return null;
+            }
+
+            var effect = ReferencePool.Acquire(specType) as EffectSpec_Base;
+            if (effect == null)
+            {
+                var message = $"[EffectSpecFactory] Acquire failed. EffectType={effectType}, SpecType={specType.FullName}.";
+                Tools.Logger.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            effect.Init(data, castor, target);
+            return effect;
+        }
+
+        public static T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
+        {
+            EnsureInitialized();
+
+            var specType = typeof(T);
+            if (!_effectTypeByEffectSpecType.ContainsKey(specType))
+            {
+                Tools.Logger.Warning($"[EffectSpecFactory] EffectSpec type is not registered: {specType.FullName}.");
+                return null;
+            }
+
+            return ReferencePool.Acquire(specType) as T;
+        }
+
+        private static void BuildRegistrationMap()
+        {
+            _effectSpecTypeByEffectType.Clear();
+            _effectTypeByEffectSpecType.Clear();
+
+            Register<EffectSpec_Period_CoolDown>(EffectType.Period_CoolDown);
+            Register<EffectSpec_Instant_Cost>(EffectType.Instant_Cost);
+            Register<EffectSpec_Instant_PhyDamage>(EffectType.Instant_PhyDamage);
+            Register<EffectSpec_Instant_Summon_Projectile>(EffectType.Instant_Summon_Projectile);
+            Register<EffectSpec_Period_FixedDamage>(EffectType.Period_FixedDamage);
+            Register<EffectSpec_Instant_PercentageRemoveHealth>(EffectType.Instant_PercentageRemoveHealth);
+            Register<EffectSpec_Period_DerivingStack>(EffectType.Period_DerivingStack);
+            Register<EffectSpec_Period_ActorTag>(EffectType.Period_ActorTag);
+            Register<EffectSpec_Period_AbilityTag>(EffectType.Period_AbilityTag);
+            Register<EffectSpec_Period_WindUp>(EffectType.Period_WindUp);
+            Register<EffectSpec_OnHitted_Trigger_ModifyAttr>(EffectType.OnHitted_Trigger_ModifyAttr);
+        }
+
+        private static void Register<T>(EffectType effectType) where T : EffectSpec_Base
+        {
+            var specType = typeof(T);
+
+            if (!typeof(EffectSpec_Base).IsAssignableFrom(specType))
+            {
+                var message = $"[EffectSpecFactory] Invalid registration. {specType.FullName} is not EffectSpec_Base.";
+                Tools.Logger.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            if (_effectSpecTypeByEffectType.ContainsKey(effectType))
+            {
+                var message = $"[EffectSpecFactory] Duplicate EffectType registration: {effectType}.";
+                Tools.Logger.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            if (_effectTypeByEffectSpecType.ContainsKey(specType))
+            {
+                var message = $"[EffectSpecFactory] Duplicate EffectSpec type registration: {specType.FullName}.";
+                Tools.Logger.Error(message);
+                throw new InvalidOperationException(message);
+            }
+
+            _effectSpecTypeByEffectType.Add(effectType, specType);
+            _effectTypeByEffectSpecType.Add(specType, effectType);
+        }
+
+        private static void ValidateRegistrationMap()
+        {
+            var missing = new List<EffectType>();
+            foreach (EffectType effectType in Enum.GetValues(typeof(EffectType)))
+            {
+                if (effectType == EffectType.Invalid)
+                {
+                    continue;
+                }
+
+                if (!_effectSpecTypeByEffectType.TryGetValue(effectType, out var specType))
+                {
+                    missing.Add(effectType);
+                    continue;
+                }
+
+                if (specType == null || !typeof(EffectSpec_Base).IsAssignableFrom(specType))
+                {
+                    var message = $"[EffectSpecFactory] Invalid mapped type for {effectType}.";
+                    Tools.Logger.Error(message);
+                    throw new InvalidOperationException(message);
+                }
+            }
+
+            if (missing.Count > 0)
+            {
+                var message =
+                    $"[EffectSpecFactory] Registration incomplete. Missing EffectType: {string.Join(", ", missing)}";
+                Tools.Logger.Error(message);
+                throw new InvalidOperationException(message);
+            }
+        }
+
+        private static readonly Dictionary<EffectType, Type> _effectSpecTypeByEffectType =
+            new Dictionary<EffectType, Type>(16);
+
+        private static readonly Dictionary<Type, EffectType> _effectTypeByEffectSpecType =
+            new Dictionary<Type, EffectType>(16);
+
+        private static readonly object _initLock = new object();
+        private static bool _initialized;
     }
+        
+    }
+
+    
 }
+

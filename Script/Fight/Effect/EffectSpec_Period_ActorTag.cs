@@ -1,8 +1,6 @@
-using Aquila.Event;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight
 {
@@ -20,12 +18,12 @@ namespace Aquila.Fight
             target.Actor.AddTag( mainType,(ushort)tagToAdd ,
                 (currTag, tagToRemove, isAdd) =>
                 {
-                    Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                    Tools.Logger.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
                 });
             target.Actor.AddTag(mainType,(ushort)tagToAdd, (currTag, tagToRemove, isAdd) =>
             {
-                Log.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
-                Log.Info($"<color=green>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                Tools.Logger.Info($"<color=white>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
+                Tools.Logger.Info($"<color=green>add tag , main type:{mainType} , sub type:{tagToAdd}</color>");
             });
         }
 
@@ -38,7 +36,7 @@ namespace Aquila.Fight
             target.Actor.RemoveTag( mainType,tagToRemove ,
                 (currTag, tagToRemove, isAdd) =>
                 {
-                    Log.Info($"<color=white>remove tag , main type:{mainType} , sub type:{tagToRemove}</color>");
+                    Tools.Logger.Info($"<color=white>remove tag , main type:{mainType} , sub type:{tagToRemove}</color>");
                 });
         }
     }

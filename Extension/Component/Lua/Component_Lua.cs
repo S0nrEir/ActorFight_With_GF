@@ -1,10 +1,10 @@
+﻿using System.Collections.Generic;
+using System.IO;
 using Aquila.Toolkit;
+using Cfg.Common;
 using Cfg.Enum;
 using GameFramework;
 using GameFramework.Resource;
-using System.Collections.Generic;
-using System.IO;
-using Cfg.Common;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using XLua;
@@ -20,12 +20,12 @@ namespace Aquila.Extension
         /// <summary>
         /// 由脚本开启一个定时回调
         /// </summary>
-        [XLua.LuaCallCSharp]
+        [LuaCallCSharp]
         public void Tick( int id, float internal_ )
         {
             if ( !_script_running_dic.TryGetValue( id, out var data ) )
             {
-                Log.Warning( $"!_script_running_dic.TryGetValue( {id} )" );
+                Tools.Logger.Warning( $"!_script_running_dic.TryGetValue( {id} )" );
                 return;
             }
             //关联timer
@@ -46,14 +46,14 @@ namespace Aquila.Extension
         {
             if ( meta is null )
             {
-                Log.Error( "Compoent_Lua--->Load faild! meta is null" );
+                Tools.Logger.Error( "Compoent_Lua--->Load faild! meta is null" );
                 return;
             }
 
             //已经正在运行的实例
             if ( _script_running_dic.ContainsKey( id ) )
             {
-                Log.Warning( $"_script_running_dic.ContainsKey:{id}" );
+                Tools.Logger.Warning( $"_script_running_dic.ContainsKey:{id}" );
                 return;
             }
 
@@ -137,18 +137,18 @@ namespace Aquila.Extension
         {
             if ( _lua_env is null )
             {
-                Log.Error( "lua_end is null!" );
+                Tools.Logger.Error( "lua_end is null!" );
                 return null;
             }
 
             if ( bytes is null || bytes.Length == 0 )
             {
-                Log.Error( "lua bytes is null!" );
+                Tools.Logger.Error( "lua bytes is null!" );
                 return null;
             }
 
             var result = _lua_env.DoString( bytes, data.Chunk_Name, data.Lua_Table );
-            Debug.Log( $"<color=white>DoString:{data.Script_Name}</color>" );
+            Tools.Logger.Info( $"<color=white>DoString:{data.Script_Name}</color>" );
 
             //do start
             //包含start，先设置start
@@ -173,13 +173,13 @@ namespace Aquila.Extension
         {
             if ( _lua_env is null )
             {
-                Log.Error( "lua env is null" );
+                Tools.Logger.Error( "lua env is null" );
                 return null;
             }
 
             if ( _meta_table is null )
             {
-                Log.Error( "lua meta table is null" );
+                Tools.Logger.Error( "lua meta table is null" );
                 return null;
             }
 
@@ -204,9 +204,9 @@ namespace Aquila.Extension
         /// </summary>
         private void EditorModeLoad( Script_Running_Data data )
         {
-            if ( !File.Exists( @data.Asset_Path ) )
+            if ( !File.Exists( data.Asset_Path ) )
             {
-                Log.Warning( $"lua asset doesnt exist,name:{data.Asset_Path}" );
+                Tools.Logger.Warning( $"lua asset doesnt exist,name:{data.Asset_Path}" );
                 return;
             }
 
@@ -232,7 +232,7 @@ namespace Aquila.Extension
         {
             if ( data is null || data._script_meta is null )
             {
-                Log.Warning( "Running Cache--->Data is null || meta is null" );
+                Tools.Logger.Warning( "Running Cache--->Data is null || meta is null" );
                 return false;
             }
 
@@ -289,14 +289,14 @@ namespace Aquila.Extension
             var data = userData as Script_Running_Data;
             if ( data is null )
             {
-                Log.Warning( $"cast script info faild" );
+                Tools.Logger.Warning( "cast script info faild" );
                 return;
             }
 
             var text_asset = asset as TextAsset;
             if ( text_asset is null )
             {
-                Log.Warning( $"cast text asset {asset_name} faild" );
+                Tools.Logger.Warning( $"cast text asset {asset_name} faild" );
                 return;
             }
 
@@ -311,14 +311,14 @@ namespace Aquila.Extension
         /// </summary>
         private void OnScriptLoadFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
         {
-            Log.Error( errorMessage );
+            Tools.Logger.Error( errorMessage );
         }
 
         private byte[] ScriptLoader( ref string script_name )
         {
             if ( !_script_cache_dic.TryGetValue( script_name.GetHashCode(), out var bytes ) )
             {
-                Log.Warning( "Can not find lua script '{0}'.", script_name );
+                Tools.Logger.Warning( "Can not find lua script '{0}'.", script_name );
                 return null;
             }
 
@@ -334,7 +334,7 @@ namespace Aquila.Extension
             {
                 if ( !_script_running_dic.TryGetValue( script_id, out var data ) )
                 {
-                    Log.Warning($"faild to get script data with id:{script_id}");
+                    Tools.Logger.Warning($"faild to get script data with id:{script_id}");
                     continue;
                 }
 
@@ -372,34 +372,34 @@ namespace Aquila.Extension
         /// <summary>
         /// 脚本加载回调
         /// </summary>
-        private LoadAssetCallbacks _load_asset_callbacks = null;
+        private LoadAssetCallbacks _load_asset_callbacks;
 
         /// <summary>
         /// 脚本缓存
         /// </summary>
-        private Dictionary<int, byte[]> _script_cache_dic = null;
+        private Dictionary<int, byte[]> _script_cache_dic;
 
         /// <summary>
         /// 脚本运行时实例集合,key = 脚本配置表id
         /// </summary>
-        private Dictionary<int, Script_Running_Data> _script_running_dic = null;
+        private Dictionary<int, Script_Running_Data> _script_running_dic;
 
         /// <summary>
         /// 需要刷帧的脚本集合
         /// </summary>
-        private HashSet<int> _update_script_set = null;
+        private HashSet<int> _update_script_set;
 
         /// <summary>
         /// lua环境
         /// </summary>
-        private static LuaEnv _lua_env = null;
+        private static LuaEnv _lua_env;
 
         /// <summary>
         /// 全局元表
         /// </summary>
-        private static LuaTable _meta_table = null;
+        private static LuaTable _meta_table;
 
-        private static float _gc_timer = 0f;
+        private static float _gc_timer;
 
         /// <summary>
         /// luaGC时长

@@ -22,17 +22,17 @@ namespace  Aquila.Event
         /// <summary>
         /// 读条时长
         /// </summary>
-        public float _totalTime = 0f;
+        public float _totalTime;
 
         /// <summary>
         /// 施加的目标ActorID
         /// </summary>
-        public int _targetActorID = 0;
+        public int _targetActorID;
 
         /// <summary>
         /// 开始标记
         /// </summary>
-        public bool _isStart = false;
+        public bool _isStart;
         
         /// <summary>
         /// 创建开始标记的事件参数实例

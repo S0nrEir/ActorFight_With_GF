@@ -1,8 +1,6 @@
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor.Tools
 {
@@ -24,7 +22,7 @@ namespace Editor.AbilityEditor.Tools
 
             if (!File.Exists(fullPath))
             {
-                Debug.LogError($"[EffectBinaryReader] File not found: {fullPath}");
+                Aquila.Toolkit.Tools.Logger.Error($"[EffectBinaryReader] File not found: {fullPath}");
                 return;
             }
 
@@ -66,7 +64,7 @@ namespace Editor.AbilityEditor.Tools
 
                 if (magic != MAGIC)
                 {
-                    Debug.LogError($"[EffectBinaryReader] Invalid magic: {magic}, expected: {MAGIC}");
+                    Aquila.Toolkit.Tools.Logger.Error($"[EffectBinaryReader] Invalid magic: {magic}, expected: {MAGIC}");
                     return;
                 }
 
@@ -83,7 +81,7 @@ namespace Editor.AbilityEditor.Tools
                 int target = reader.ReadInt32();
                 int effectType = reader.ReadInt32();
 
-                sb.AppendLine($"[Basic Info]");
+                sb.AppendLine("[Basic Info]");
                 sb.AppendLine($"  ID: {id}");
                 sb.AppendLine($"  Type: {type}");
                 sb.AppendLine($"  ModifierType: {modifierType}");
@@ -104,7 +102,7 @@ namespace Editor.AbilityEditor.Tools
                 int int3 = reader.ReadInt32();
                 int int4 = reader.ReadInt32();
 
-                sb.AppendLine($"[Extension Parameters]");
+                sb.AppendLine("[Extension Parameters]");
                 sb.AppendLine($"  Float: ({float1}, {float2}, {float3}, {float4})");
                 sb.AppendLine($"  Int: ({int1}, {int2}, {int3}, {int4})");
 
@@ -122,7 +120,7 @@ namespace Editor.AbilityEditor.Tools
                 }
                 else
                 {
-                    sb.AppendLine($"[Derive Effects] Count: 0");
+                    sb.AppendLine("[Derive Effects] Count: 0");
                 }
 
                 // Awake Effects
@@ -139,11 +137,11 @@ namespace Editor.AbilityEditor.Tools
                 }
                 else
                 {
-                    sb.AppendLine($"[Awake Effects] Count: 0");
+                    sb.AppendLine("[Awake Effects] Count: 0");
                 }
 
                 sb.AppendLine("========== End ==========");
-                Debug.Log(sb.ToString());
+                Aquila.Toolkit.Tools.Logger.Info(sb.ToString());
             }
         }
 

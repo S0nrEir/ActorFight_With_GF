@@ -19,11 +19,7 @@ namespace Aquila.Timeline
             base.OnBehaviourPlay(playable, info);
             var asset = _asset as PlayableAsset_Audio;
             if (asset != null)
-                _soundID = GameEntry.Sound.PlaySound
-                    (
-                        asset._audioPath,
-                        "Effect"
-                    );
+                _soundID = GameEntry.Sound.PlaySound ( asset._audioPath, "Effect" );
         }
 
         public override void OnGraphStop(Playable playable)

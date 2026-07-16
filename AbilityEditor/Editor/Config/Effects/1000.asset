@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1000
   Description: "\u8017\u84DD\u6D4B\u8BD5"
-  Type: 0
+  Type: 2
   ExtensionParam:
     float_1: -10
     float_2: -1
@@ -30,6 +30,6 @@ MonoBehaviour:
   Period: 0
   Duration: -1
   Target: 0
-  EffectType: 2
+  AffectedAttribute: 2
   DeriveEffects: 
   AwakeEffects: 

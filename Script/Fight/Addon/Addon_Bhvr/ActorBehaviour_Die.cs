@@ -1,6 +1,5 @@
-using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
-using UnityGameFramework.Runtime;
+using Aquila.Toolkit;
 using static Aquila.Module.Module_ProxyActor;
 
 namespace Aquila.Fight
@@ -15,7 +14,7 @@ namespace Aquila.Fight
             var addon = _instance.GetAddon<Addon_FSM_Hero>();
             if ( addon is null )
             {
-                Log.Warning( $"fsm addon is null" );
+                Tools.Logger.Warning( "fsm addon is null" );
                 return;
             }
             //找到所有可以取消的addon

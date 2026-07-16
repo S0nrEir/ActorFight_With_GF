@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using UnityGameFramework.Runtime;
 
@@ -28,7 +27,7 @@ namespace Aquila.Extension
 
         //private void Update()
         //{
-        //    UnityEngine.Debug.Log( $"result:{_result}" );
+        //    Aquila.Toolkit.Tools.Logger.Info( $"result:{_result}" );
         //}
 
         //private async void Start()
@@ -101,7 +100,7 @@ namespace Aquila.Extension
         /// <summary>
         /// 异步结果
         /// </summary>
-        private T _result = default;
+        private T _result;
 
         /// <summary>
         /// 异步结果

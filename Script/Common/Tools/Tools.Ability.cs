@@ -1,11 +1,9 @@
-using Aquila.Fight;
-using Cfg.Common;
-using Cfg.Enum;
-using GameFramework;
-using System;
 using System.Collections.Generic;
+using System.IO;
+using Aquila.Fight;
 using Aquila.Module;
-using UnityGameFramework.Runtime;
+using Cfg.Enum;
+using UnityEngine;
 
 namespace Aquila.Toolkit
 {
@@ -41,34 +39,10 @@ namespace Aquila.Toolkit
             /// <summary>
             /// 初始化effect生成器
             /// </summary>
-            public static void InitEffectSpecGenerator()
-            {
-                if ( _generatorInitFlag )                 
-                {
-                    Log.Warning( $"<color=yellow>Tools.Ability.InitEffectSpecGenerator()--->_generatorInitFlag is true</color>" );
-                    return;
-                }
-
-                var enumFields = typeof( EffectType ).GetFields();
-                var len = enumFields.Length;
-                _effectTypeDic = new Dictionary<int, Type>( len );
-                object fieldInst = null;
-                EffectType tempEnum = EffectType.Period_CoolDown;
-                string typeName = string.Empty;
-                //从1开始：system.int32跳过
-                for ( var i = 1; i < len; i++ )
-                {
-                    var field = enumFields[i];
-                    if ( !field.FieldType.IsEnum )
-                        continue;
-
-                    tempEnum = ( EffectType ) field.GetValue( fieldInst );
-                    typeName = $"Aquila.Fight.EffectSpec_{field.Name}";
-                    _effectTypeDic.Add( ( int ) tempEnum, Type.GetType( typeName ) );
-                }
-
-                _generatorInitFlag = true;
-            }
+            // public static void InitEffectSpecGenerator()
+            // {
+            //     EffectSpecFactory.EnsureInitialized();
+            // }
 
             /// <summary>
             /// 根据配表类型获取对应的effect逻辑实例，拿不到返回null
@@ -79,14 +53,14 @@ namespace Aquila.Toolkit
             //
             //     if (!_effectTypeDic.TryGetValue(type, out var effectType))
             //     {
-            //         Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->!_effectTypeDic.ContainsKey( ( int ) meta.Type ),key{meta.Type}" );
+            //         Aquila.Toolkit.Tools.Logger.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->!_effectTypeDic.ContainsKey( ( int ) meta.Type ),key{meta.Type}" );
             //         return null;
             //     }
             //
             //     var effect = ReferencePool.Acquire(effectType) as EffectSpec_Base;
             //     if (effect is null)
             //     {
-            //         Log.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
+            //         Aquila.Toolkit.Tools.Logger.Warning( $"Tools.Ability.CreateEffectSpecByReferencePool()--->effect is null" );
             //         return null;
             //     }
             //
@@ -99,23 +73,13 @@ namespace Aquila.Toolkit
             /// </summary>
             public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
-                var type = (int)data.GetEffectType();
-
-                if (!_effectTypeDic.TryGetValue(type, out var effectType))
+                if (GameEntry.AbilityPool == null)
                 {
-                    Log.Warning($"Tools.Ability.CreateEffectSpecByReferencePool()--->Unknown effect type: {data.GetEffectType()}");
+                    Logger.Error("Tools.Ability.CreateEffectSpecByReferencePool()--->GameEntry.AbilityPool is null");
                     return null;
                 }
 
-                var effect = ReferencePool.Acquire(effectType) as EffectSpec_Base;
-                if (effect == null)
-                {
-                    Log.Warning("Tools.Ability.CreateEffectSpecByReferencePool()--->Failed to acquire effect from pool");
-                    return null;
-                }
-
-                effect.Init(data, castor, target);
-                return effect;
+                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool(data, castor, target);
             }
                 #region nouse
 
@@ -161,16 +125,13 @@ namespace Aquila.Toolkit
             /// </summary>
             public static T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
             {
-                foreach (var type in _effectTypeDic.Values)
+                if (GameEntry.AbilityPool == null)
                 {
-                    if (type == typeof(T))
-                    {
-                        var effect = ReferencePool.Acquire(type);
-                        return effect as T;
-                    }
+                    Logger.Error("Tools.Ability.CreateEffectSpecByReferencePool<T>()--->GameEntry.AbilityPool is null");
+                    return null;
                 }
 
-                return null;
+                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool<T>();
             }
 
             /// <summary>
@@ -182,16 +143,6 @@ namespace Aquila.Toolkit
             //     return CreateEffectSpecByReferencePool(meta,castor,target) as T;
             // }
 
-            /// <summary>
-            /// 初始化标记
-            /// </summary>
-            private static bool _generatorInitFlag = false;
-
-            /// <summary>
-            /// effect类型集合，存储所有effect的类型，方便生成
-            /// </summary>
-            private static Dictionary<int, Type> _effectTypeDic = null;
-
             #region Binary Loading
 #if UNITY_EDITOR
             /// <summary>
@@ -201,24 +152,24 @@ namespace Aquila.Toolkit
             {
                 var effectTemplates = new Dictionary<int, EffectData>();
                 var result = new Dictionary<int, AbilityData>();
-                string effectDir = System.IO.Path.Combine(UnityEngine.Application.dataPath, EFFECT_BIN_DIR);
-                string abilityDir = System.IO.Path.Combine(UnityEngine.Application.dataPath, ABILITY_BIN_DIR);
+                string effectDir = System.IO.Path.Combine(Application.dataPath, EFFECT_BIN_DIR);
+                string abilityDir = System.IO.Path.Combine(Application.dataPath, ABILITY_BIN_DIR);
 
-                if (System.IO.Directory.Exists(effectDir))
+                if (Directory.Exists(effectDir))
                 {
-                    foreach (var file in System.IO.Directory.GetFiles(effectDir, "*.efct"))
+                    foreach (var file in Directory.GetFiles(effectDir, "*.efct"))
                     {
-                        var effectData = ParseEffectBinary(System.IO.File.ReadAllBytes(file));
+                        var effectData = ParseEffectBinary(File.ReadAllBytes(file));
                         if (effectData.GetEffectId() != 0)
                             effectTemplates[effectData.GetEffectId()] = effectData;
                     }
                 }
 
-                if (System.IO.Directory.Exists(abilityDir))
+                if (Directory.Exists(abilityDir))
                 {
-                    foreach (var file in System.IO.Directory.GetFiles(abilityDir, "*.ablt"))
+                    foreach (var file in Directory.GetFiles(abilityDir, "*.ablt"))
                     {
-                        var abilityData = ParseAbilityBinary(System.IO.File.ReadAllBytes(file), effectTemplates);
+                        var abilityData = ParseAbilityBinary(File.ReadAllBytes(file), effectTemplates);
                         if (abilityData.GetId() != 0)
                             result[abilityData.GetId()] = abilityData;
                     }
@@ -235,7 +186,7 @@ namespace Aquila.Toolkit
 
                     if (magic != EFCT_MAGIC || version != BIN_VERSION)
                     {
-                        Log.Warning($"Tools.Ability.ParseEffectBinary: invalid header (magic={magic}, version={version})");
+                        Logger.Warning($"Tools.Ability.ParseEffectBinary: invalid header (magic={magic}, version={version})");
                         return default;
                     }
 
@@ -303,7 +254,7 @@ namespace Aquila.Toolkit
 
                     if (magic != ABLT_MAGIC || version != BIN_VERSION)
                     {
-                        Log.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
+                        Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
                         return default;
                     }
 
@@ -341,7 +292,7 @@ namespace Aquila.Toolkit
                                     break;
                                 
                                 default:
-                                    Log.Warning($"Tools.Ability.ParseAbilityBinary: unknown clip type {clipType} in ability {id}");
+                                    Logger.Warning($"Tools.Ability.ParseAbilityBinary: unknown clip type {clipType} in ability {id}");
                                     break;
                             }
                         }
@@ -495,3 +446,4 @@ namespace Aquila.Toolkit
         }//end class Ability
     }//end class Tools
 }
+

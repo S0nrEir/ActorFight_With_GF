@@ -1,11 +1,8 @@
+using System.Collections.Generic;
 using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Toolkit;
 using GameFramework;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
@@ -27,7 +24,7 @@ namespace Aquila.Module
                 var code = addon.GetType().GetHashCode();
                 if (_addons.ContainsKey(code.GetHashCode()))
                 {
-                    Log.Warning( $"<color=yellow>Module_ProxyActor.AddAddon()--->actor {Actor.ActorID} has same addon,type:{addon.AddonType}</color>" );
+                    Tools.Logger.Warning( $"<color=yellow>Module_ProxyActor.AddAddon()--->actor {Actor.ActorID} has same addon,type:{addon.AddonType}</color>" );
                     return false;
                 }
 
@@ -39,10 +36,6 @@ namespace Aquila.Module
             {
                 _actor = actor;
                 _addons = new Dictionary<int, Addon_Base>();
-            }
-
-            public ActorInstance()
-            {
             }
 
             /// <summary>
@@ -83,12 +76,12 @@ namespace Aquila.Module
             /// <summary>
             /// 持有的Actor
             /// </summary>
-            private Actor_Base _actor = null;
+            private Actor_Base _actor;
 
             /// <summary>
             /// actor持有的addon集合
             /// </summary>
-            private Dictionary<int, Addon_Base> _addons = null;
+            private Dictionary<int, Addon_Base> _addons;
 
             public void Clear()
             {

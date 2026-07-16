@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Aquila.Fight.Addon
 {
     public abstract partial class Addon_Base

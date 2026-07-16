@@ -1,16 +1,15 @@
+using System.Collections.Generic;
 using Aquila.Event;
 using Aquila.Module;
-using System.Collections.Generic;
-using Cfg.Fight;
+using Aquila.Toolkit;
 using GameFramework;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Fight.Addon
 {
     /// <summary>
     /// 技能组件
     /// </summary>
-    public partial class Addon_Ability : Addon_Base
+    public class Addon_Ability : Addon_Base
     {
         //----------------------pub----------------------
         /// <summary>
@@ -26,7 +25,7 @@ namespace Aquila.Fight.Addon
             var spec = AbilitySpecBase.Gen(data, _actorInstance);
             if (_specMap.ContainsKey(spec.AbilityId))
             {
-                Log.Warning($"<color=yellow>Addon_Ability.SetupWithAbilityData()--->duplicate ability id:{spec.AbilityId}</color>");
+                Tools.Logger.Warning($"<color=yellow>Addon_Ability.SetupWithAbilityData()--->duplicate ability id:{spec.AbilityId}</color>");
                 return;
             }
 
@@ -54,7 +53,7 @@ namespace Aquila.Fight.Addon
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
             {
-                Log.Warning( $"<color=yellow>Addon_Ability.CoolDown()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.CoolDown()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 return (0f, 0f);
             }
 
@@ -69,8 +68,8 @@ namespace Aquila.Fight.Addon
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
             {
-                Log.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
-                result._stateDescription = Aquila.Toolkit.Tools.SetBitValue( result._stateDescription,
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.UseAbility()--->ability spec not found, abilityID:{abilityID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                result._stateDescription = Tools.SetBitValue( result._stateDescription,
                     ( int ) AbilityHitResultTypeEnum.NONE_SPEC, true );
                 return false;
             }
@@ -107,14 +106,14 @@ namespace Aquila.Fight.Addon
         {
             if ( _specMap is null || _specMap.Count == 0 )
             {
-                Log.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->_specMap is null or empty, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                Tools.Logger.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->_specMap is null or empty, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                 return null;
             }
 
             if ( _specMap.TryGetValue( metaID, out var spec ) )
                 return spec;
 
-            Log.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->ability spec not found, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}, specCount:{_specMap.Count}</color>" );
+            Tools.Logger.Warning( $"<color=yellow>Addon_Ability.GetAbilitySpec()--->ability spec not found, abilityID:{metaID}, actorID:{_actorInstance?.Actor?.ActorID}, specCount:{_specMap.Count}</color>" );
             return null;
         }
 
@@ -144,7 +143,7 @@ namespace Aquila.Fight.Addon
 
                 if ( _specMap.ContainsKey( spec.AbilityId ) )
                 {
-                    Log.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    Tools.Logger.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                     continue;
                 }
 
@@ -164,7 +163,7 @@ namespace Aquila.Fight.Addon
             var abilities = GameEntry.AbilityPool.GetAbilities(_actorInstance.Actor.RoleMetaID);
             if (abilities == null || abilities.Length == 0)
             {
-                Log.Warning("<color=yellow>Addon_Ability.InitSpec()--->no abilities found</color>");
+                Tools.Logger.Warning("<color=yellow>Addon_Ability.InitSpec()--->no abilities found</color>");
                 return false;
             }
             _specArr = new AbilitySpecBase[abilities.Length];
@@ -176,7 +175,7 @@ namespace Aquila.Fight.Addon
 
                 if ( _specMap.ContainsKey( spec.AbilityId ) )
                 {
-                    Log.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
+                    Tools.Logger.Warning( $"<color=yellow>Addon_Ability.InitSpec()--->duplicate ability id:{spec.AbilityId}, actorID:{_actorInstance?.Actor?.ActorID}</color>" );
                     continue;
                 }
 
@@ -223,16 +222,16 @@ namespace Aquila.Fight.Addon
         /// <summary>
         /// 持有的技能
         /// </summary>
-        private AbilitySpecBase[] _specArr = null;
+        private AbilitySpecBase[] _specArr;
 
         /// <summary>
         /// 技能ID到逻辑实例的索引
         /// </summary>
-        private Dictionary<int, AbilitySpecBase> _specMap = null;
+        private Dictionary<int, AbilitySpecBase> _specMap;
 
         /// <summary>
         /// 初始化标记
         /// </summary>
-        private bool _initFlag = false;
+        private bool _initFlag;
     }
 }

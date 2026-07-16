@@ -1,20 +1,17 @@
-using Aquila.Config;
 using Aquila.Extension;
-using GameFramework;
-using System.Collections.Generic;
+using Aquila.Toolkit;
 using Cfg.Common;
+using GameFramework;
 using GameFramework.Resource;
-using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
-using UnityGameFramework.Runtime;
 
 namespace Aquila.Module
 {
     /// <summary>
     /// 输入模块，管理输入
     /// </summary>
-    public partial class Module_Input : GameFrameworkModuleBase, IUpdate
+    public class Module_Input : GameFrameworkModuleBase, IUpdate
     {
         
         private void OnFireActionPerformed( InputAction.CallbackContext ctx )
@@ -42,7 +39,7 @@ namespace Aquila.Module
                         var action_asset = ( asset as InputActionAsset );
                         if ( action_asset is null || action_asset.actionMaps.Count == 0 )
                         {
-                            Debug.LogError( $"action_asset is null || action_asset.actionMaps.Count == 0" );
+                            Tools.Logger.Error( "action_asset is null || action_asset.actionMaps.Count == 0" );
                             return;
                         }
                         var map = action_asset.FindActionMap( "gameplay", true );
@@ -64,7 +61,7 @@ namespace Aquila.Module
         {
         }
         
-        private InputAction _fireAction = null;
+        private InputAction _fireAction;
     }
 
     /// <summary>
@@ -72,9 +69,9 @@ namespace Aquila.Module
     /// </summary>
     public class Fight_Param : IReference
     {
-        public int x_width = 0;
-        public int z_width = 0;
-        public Table_Scripts _sceneScriptMeta = null;
+        public int x_width;
+        public int z_width;
+        public Table_Scripts _sceneScriptMeta;
 
         /// <summary>
         /// 检查字段有效性

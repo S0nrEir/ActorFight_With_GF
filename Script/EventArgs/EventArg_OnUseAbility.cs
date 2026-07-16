@@ -1,5 +1,6 @@
 using GameFramework;
 using GameFramework.Event;
+
 namespace Aquila.Event
 {
     public class EventArg_OnUseAblity : GameEventArgs
@@ -22,6 +23,6 @@ namespace Aquila.Event
         /// <summary>
         /// 参数
         /// </summary>
-        public AbilityResult_Use _resultParam = null;
+        public AbilityResult_Use _resultParam;
     }
 }

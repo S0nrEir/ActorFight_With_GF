@@ -1,16 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Aquila.Input
 {
     public abstract class InputProxy_Base
     {
-        
-        public InputProxy_Base()
-        {
-        }
-
         /// <summary>
         /// 释放当前代理持有的相关资源
         /// </summary>

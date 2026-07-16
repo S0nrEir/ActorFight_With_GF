@@ -48,7 +48,7 @@ namespace Aquila.AbilityEditor
 
         public override TimelineClipType ClipType => TimelineClipType.VFX;
 
-        public VFXClipData() : base()
+        public VFXClipData()
         {
             _vfxPath = string.Empty;
             _attachPoint = string.Empty;

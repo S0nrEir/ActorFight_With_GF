@@ -1,5 +1,5 @@
-using Aquila.Toolkit;
 using System;
+using Aquila.Toolkit;
 
 namespace Aquila.GameTag
 {
