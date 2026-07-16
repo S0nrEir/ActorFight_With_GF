@@ -15,22 +15,6 @@ namespace  Aquila.Extension
         /// 表示无效的位置
         /// </summary>
         public readonly Vector3 InvalidPosition = new Vector3( 999f, 999f, 999f );
-
-        /// <summary>
-        /// 无效的GUID
-        /// </summary>
-        public const UInt64 InvalidGUID = 0xFFFFFFFFFFFFFFFFul;
-
-        /// <summary>
-        /// 无效ID
-        /// </summary>
-        public const int InvalidID = -1;
-
-        //--------------override--------------
-        protected override void Awake()
-        {
-            base.Awake();
-        }
     }
 
 }

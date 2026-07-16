@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Aquila.Fight;
 using Cfg.Enum;
 using UnityEngine;
 
@@ -37,6 +38,16 @@ namespace Aquila.AbilityEditor
         /// 目标类型，使用已存在的枚举 Cfg.Enum.AbilityTargetType
         /// </summary>
         public AbilityTargetType TargetType;
+
+        /// <summary>
+        /// 技能选择器类型
+        /// </summary>
+        public AbilitySelectType SelectType = AbilitySelectType.Single;
+
+        /// <summary>
+        /// 技能选择半径
+        /// </summary>
+        public float SelectRadius;
         
         /// <summary>
         /// 携带的effect集合（逗号分隔的ID列表）,由timeline编辑器生成
@@ -123,6 +134,12 @@ namespace Aquila.AbilityEditor
             if (TimelineDuration <= 0)
             {
                 error = "Timeline duration must be greater than 0";
+                return false;
+            }
+
+            if (SelectType == AbilitySelectType.Circle && SelectRadius <= 0f)
+            {
+                error = "Select radius must be greater than 0 when select type is Circle";
                 return false;
             }
 

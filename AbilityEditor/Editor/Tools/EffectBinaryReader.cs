@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using UnityEditor;
 
@@ -68,6 +68,7 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
+                _currentVersion = version;
                 sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
 
                 // Basic Info
@@ -79,6 +80,7 @@ namespace Editor.AbilityEditor.Tools
                 float period = reader.ReadSingle();
                 float duration = reader.ReadSingle();
                 int target = reader.ReadInt32();
+                int resolveTypeID = reader.ReadInt32();
                 int effectType = reader.ReadInt32();
 
                 sb.AppendLine("[Basic Info]");
@@ -90,6 +92,7 @@ namespace Editor.AbilityEditor.Tools
                 sb.AppendLine($"  Period: {period}s");
                 sb.AppendLine($"  Duration: {duration}s");
                 sb.AppendLine($"  Target: {target}");
+                sb.AppendLine($"  ResolveTypeID: {resolveTypeID}");
                 sb.AppendLine($"  EffectType (AffectedAttribute): {effectType}");
 
                 // Extension Parameters
@@ -146,6 +149,7 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "EFFECT";
+        private static byte _currentVersion = 0x00;
         private const string CONTEXT_MENU_PATH = "Assets/EffectEditor/ReadBinaryEffectData";
     }
 }

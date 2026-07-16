@@ -163,7 +163,7 @@ namespace Aquila.Fight.Actor
         /// <summary>
         /// 设置actor的Tag
         /// </summary>
-        private void SetTag( string tag )
+        private void SetObjectTag( string tag )
         {
             gameObject.tag = tag;
         }

@@ -68,6 +68,7 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
+                _currentVersion = version;
                 sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
 
                 // Basic Info
@@ -75,6 +76,8 @@ namespace Editor.AbilityEditor.Tools
                 int costEffectId = reader.ReadInt32();
                 int coolDownEffectId = reader.ReadInt32();
                 int targetType = reader.ReadInt32();
+                int selectType = reader.ReadInt32();
+                float selectRadius = reader.ReadSingle();
                 int timelineId = reader.ReadInt32();
                 float timelineDuration = reader.ReadSingle();
 
@@ -83,6 +86,8 @@ namespace Editor.AbilityEditor.Tools
                 sb.AppendLine($"  CostEffectID: {costEffectId}");
                 sb.AppendLine($"  CoolDownEffectID: {coolDownEffectId}");
                 sb.AppendLine($"  TargetType: {targetType}");
+                sb.AppendLine($"  SelectType: {selectType}");
+                sb.AppendLine($"  SelectRadius: {selectRadius}");
                 sb.AppendLine($"  TimelineID: {timelineId}");
                 sb.AppendLine($"  TimelineDuration: {timelineDuration}s");
 
@@ -171,6 +176,7 @@ namespace Editor.AbilityEditor.Tools
             ushort modifierType = reader.ReadUInt16();
             int affectedAttribute = reader.ReadInt32();
             int target = reader.ReadInt32();
+            int resolveTypeID = reader.ReadInt32();
             float duration = reader.ReadSingle();
             float period = reader.ReadSingle();
             ushort policy = reader.ReadUInt16();
@@ -180,6 +186,7 @@ namespace Editor.AbilityEditor.Tools
             sb.AppendLine($"{indent}ModifierType: {modifierType}");
             sb.AppendLine($"{indent}AffectedAttribute: {affectedAttribute}");
             sb.AppendLine($"{indent}Target: {target}");
+            sb.AppendLine($"{indent}ResolveTypeID: {resolveTypeID}");
             sb.AppendLine($"{indent}Duration: {duration}");
             sb.AppendLine($"{indent}Period: {period}");
             sb.AppendLine($"{indent}Policy: {policy}");
@@ -285,6 +292,7 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "ABLT";
+        private static byte _currentVersion = 0x02;
         private const string CONTEXT_MENU_PATH = "Assets/AbilityEditor/ReadBinaryAbilityData";
     }
 }

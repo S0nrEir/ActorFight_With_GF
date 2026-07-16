@@ -1,3 +1,4 @@
+using Aquila.Fight;
 using GameFramework;
 using GameFramework.Event;
 
@@ -16,13 +17,12 @@ namespace Aquila.Event
         public static EventArg_OnUseAblity Create(AbilityResult_Use resultParam)
         {
             var arg = ReferencePool.Acquire<EventArg_OnUseAblity>();
-            arg._resultParam = resultParam;
             return arg;
         }
 
         /// <summary>
         /// 参数
         /// </summary>
-        public AbilityResult_Use _resultParam;
+        public AbilityResult_Use resultParam;
     }
 }

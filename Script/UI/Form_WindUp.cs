@@ -1,4 +1,4 @@
-using Aquial.UI;
+using Aquila.UI;
 using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;

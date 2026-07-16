@@ -33,7 +33,9 @@ namespace Aquila.Fight
             int intParam1 = 0,
             int intParam2 = 0,
             int intParam3 = 0,
-            int intParam4 = 0)
+            int intParam4 = 0,
+            int resolveTypeID = -1,
+            int formulaID = -1)
         {
             _effectId = effectId;
             _stackLimit = stackLimit;
@@ -58,6 +60,8 @@ namespace Aquila.Fight
             _intParam2 = intParam2;
             _intParam3 = intParam3;
             _intParam4 = intParam4;
+            _resolveTypeID = resolveTypeID;
+            _formulaID = formulaID;
         }
 
         // Getter 方法
@@ -84,17 +88,18 @@ namespace Aquila.Fight
         public int GetIntParam2() => _intParam2;
         public int GetIntParam3() => _intParam3;
         public int GetIntParam4() => _intParam4;
-        
-        
+        public int GetResolveTypeID() => _resolveTypeID;
+        public int GetFormulaID() => _formulaID;
+
         // 基础字段
         private readonly int _effectId;
         private readonly int _stackLimit;
         private readonly bool _canStack;
-        
+
         // 时间字段
         private readonly float _startTime;
         private readonly float _endTime;
-        
+
         // Effect 配置
         private readonly EffectType _effectType;
         private readonly NumricModifierType _modifierType;
@@ -104,7 +109,7 @@ namespace Aquila.Fight
         private readonly float _period;
         private readonly DurationPolicy _policy;
         private readonly bool _effectOnAwake;
-        
+
         // 扩展参数
         private readonly float _floatParam1;
         private readonly float _floatParam2;
@@ -114,7 +119,9 @@ namespace Aquila.Fight
         private readonly int _intParam2;
         private readonly int _intParam3;
         private readonly int _intParam4;
-        
+        private readonly int _resolveTypeID;
+        private readonly int _formulaID;
+
         // 数组（不可变）
         private readonly IReadOnlyList<int> _deriveEffects;
         private readonly IReadOnlyList<int> _awakeEffects;

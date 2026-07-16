@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement style="border-left-color: rgb(0, 255, 115); border-right-color: rgb(0, 255, 115); border-top-color: rgb(0, 255, 115); border-bottom-color: rgb(0, 255, 115); justify-content: space-between; flex-direction: column; align-items: stretch;">
-        <ui:VisualElement name="HeaderMenu" style="height: 23px; flex-direction: row; align-items: stretch; width: 919px;">
-            <ui:Button text="NewTrack" display-tooltip-when-elided="true" name="AddNewTrackBtn" style="white-space: nowrap; -unity-text-align: upper-left;" />
-            <ui:Toggle label="GenTempDataWhenSave" name="GenerateTempDataToggle" style="margin-left: 10px; flex-direction: row-reverse;" />
+        <ui:VisualElement name="HeaderMenu" style="min-height: 28px; flex-direction: row; align-items: center; width: auto; flex-shrink: 0; padding-left: 4px; padding-right: 4px; overflow: visible;">
+            <ui:Button text="NewTrack" display-tooltip-when-elided="true" name="AddNewTrackBtn" style="min-height: 22px; min-width: 88px; flex-shrink: 0; white-space: nowrap; -unity-text-align: middle-left;" />
+            <ui:Toggle label="GenTempDataWhenSave" name="GenerateTempDataToggle" style="margin-left: 10px; min-height: 22px; flex-shrink: 0; align-items: center; flex-direction: row-reverse;" />
         </ui:VisualElement>
         <ui:VisualElement name="HeaderMenu" style="height: 120px; flex-direction: row; align-items: stretch; width: 919px; border-left-color: rgb(113, 113, 113); border-bottom-color: rgb(113, 113, 113); border-right-color: rgb(113, 113, 113); border-top-color: rgb(113, 113, 113); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0;">
             <ui:VisualElement name="BaseArea_1" style="flex-direction: column; align-items: flex-start; width: 298px;">
@@ -27,6 +27,14 @@
                 <ui:VisualElement name="TargetType" style="flex-direction: row; align-items: center; height: 20px;">
                     <ui:Label text="TargetType" name="TargetTypeTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px; height: 18px;" />
                     <ui:DropdownField name="TargetTypeDropdown" style="flex-grow: 1; width: 174px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="SelectType" style="flex-direction: row; align-items: center; height: 20px;">
+                    <ui:Label text="SelectType" name="SelectTypeTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px; height: 18px;" />
+                    <ui:DropdownField name="SelectTypeDropdown" style="flex-grow: 1; width: 174px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="SelectRadius" style="flex-direction: row; align-items: center;">
+                    <ui:Label text="SelectRadius" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px;" />
+                    <ui:TextField picking-mode="Ignore" name="SelectRadiusTxtField" style="flex-grow: 1; -unity-text-align: upper-left; width: 174px; border-right-width: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="TimelineID" style="flex-direction: row; align-items: center;">
                     <ui:Label text="TimelineID" name="TimelineIDTXT" style="width: 88px; -unity-text-align: middle-left; margin-right: 20px;" />

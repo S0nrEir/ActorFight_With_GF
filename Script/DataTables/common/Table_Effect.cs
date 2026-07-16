@@ -29,6 +29,8 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         EffectType = (Enum.actor_attribute)_buf.ReadInt();
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);DeriveEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); DeriveEffects[i] = _e;}}
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AwakeEffects = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AwakeEffects[i] = _e;}}
+        ResolveTypeID = _buf.ReadInt();
+        formulaID = _buf.ReadInt();
         PostInit();
     }
 
@@ -85,6 +87,14 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
     /// effect被唤起时派生一次的effect
     /// </summary>
     public int[] AwakeEffects { get; private set; }
+    /// <summary>
+    /// 结算类型
+    /// </summary>
+    public int ResolveTypeID { get; private set; }
+    /// <summary>
+    /// 关联 Formula.xlsx 的 id，必须&gt;0；无效或缺失引用视为错误
+    /// </summary>
+    public int formulaID { get; private set; }
 
     public const int __ID__ = 1812133477;
     public override int GetTypeId() => __ID__;
@@ -115,6 +125,8 @@ public sealed partial class Table_Effect :  Bright.Config.BeanBase
         + "EffectType:" + EffectType + ","
         + "DeriveEffects:" + Bright.Common.StringUtil.CollectionToString(DeriveEffects) + ","
         + "AwakeEffects:" + Bright.Common.StringUtil.CollectionToString(AwakeEffects) + ","
+        + "ResolveTypeID:" + ResolveTypeID + ","
+        + "formulaID:" + formulaID + ","
         + "}";
     }
     

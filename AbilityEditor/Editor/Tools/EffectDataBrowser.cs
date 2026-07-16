@@ -1,4 +1,4 @@
-﻿using Aquila.AbilityEditor.Config;
+using Aquila.AbilityEditor.Config;
 using UnityEditor;
 using UnityEngine;
 
@@ -100,6 +100,8 @@ namespace Aquila.AbilityEditor.Tools
             newData.Period = sourceData.Period;
             newData.Duration = sourceData.Duration;
             newData.Target = sourceData.Target;
+            newData.ResolveTypeID = sourceData.ResolveTypeID;
+            newData.FormulaID = sourceData.FormulaID;
             newData.AffectedAttribute = sourceData.AffectedAttribute;
 
             if (sourceData.DeriveEffects != null)

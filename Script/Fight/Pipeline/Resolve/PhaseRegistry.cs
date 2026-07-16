@@ -1,0 +1,45 @@
+using System.Collections.Generic;
+using Cfg.Enum;
+
+namespace Aquila.Combat.Resolve
+{
+    public sealed class PhaseRegistry
+    {
+        private readonly Dictionary<ResolvePhaseType, IResolvePhaseHandler> _handlers = new Dictionary<ResolvePhaseType, IResolvePhaseHandler>(16);
+
+        public PhaseRegistry()
+        {
+            Register(new ValidityPhaseHandler());
+            Register(new HitCheckPhaseHandler());
+            Register(new BaseValuePhaseHandler());
+            Register(new OffenseModsPhaseHandler());
+            Register(new DefenseModsPhaseHandler());
+            Register(new CritCheckPhaseHandler());
+            Register(new CritPhaseHandler());
+            Register(new BlockPhaseHandler());
+            Register(new ShieldPhaseHandler());
+            Register(new HpApplyPhaseHandler());
+            Register(new MpApplyPhaseHandler());
+            Register(new PostEffectsPhaseHandler());
+            Register(new LifecycleCheckPhaseHandler());
+            Register(new ResolveEndPhaseHandler());
+            Register(new MpResolveEndPhaseHandler());
+        }
+
+        public bool TryGetHandler(ResolvePhaseType phase, out IResolvePhaseHandler handler)
+        {
+            return _handlers.TryGetValue(phase, out handler);
+        }
+
+        private void Register(IResolvePhaseHandler handler)
+        {
+            if (handler == null)
+                return;
+
+            if (handler is ResolvePhaseHandlerBase phaseHandlerBase)
+                phaseHandlerBase.Initialize();
+
+            _handlers[handler.PhaseType] = handler;
+        }
+    }
+}

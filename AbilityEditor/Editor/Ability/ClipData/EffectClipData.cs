@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cfg.Enum;
 using UnityEngine;
 
@@ -11,6 +12,19 @@ namespace Aquila.AbilityEditor
     [Serializable]
     public class EffectClipData : TimelineClipData
     {
+        private static readonly HashSet<EffectType> ExportValidationSkipEffectTypes = new HashSet<EffectType>
+        {
+            // EffectType.Instant_Cost,
+            EffectType.Period_CoolDown,
+            EffectType.Instant_Summon_Projectile,
+            EffectType.Period_DerivingStack,
+            EffectType.Period_ActorTag,
+            EffectType.Period_WindUp,
+            EffectType.OnHitted_Trigger_ModifyAttr
+            
+            
+        };
+
         /// <summary>
         /// Effect扩展参数（嵌套类）
         /// </summary>
@@ -47,6 +61,18 @@ namespace Aquila.AbilityEditor
         /// </summary>
         [SerializeField]
         private int _effectId;
+
+        /// <summary>
+        /// 结算类型ID（必须大于0）
+        /// </summary>
+        [SerializeField]
+        private int _resolveTypeID = 1;
+
+        /// <summary>
+        /// 伤害结算公式ID（结算开启时必须大于0）
+        /// </summary>
+        [SerializeField]
+        private int _formulaID = -1;
 
         /// <summary>
         /// 效果强度/层数
@@ -153,6 +179,8 @@ namespace Aquila.AbilityEditor
         public EffectClipData()
         {
             _effectId = 0;
+            _resolveTypeID = -1;
+            _formulaID = -1;
             _stackCount = 1;
             _canStack = false;
             ClipColor = new Color(0.8f, 0.4f, 0.8f); // 紫色
@@ -160,10 +188,12 @@ namespace Aquila.AbilityEditor
             EndTime = StartTime;
         }
 
-        public EffectClipData( string clipName, float triggerTime, int effectId)
+        public EffectClipData(string clipName, float triggerTime, int effectId)
             : base(clipName, triggerTime, triggerTime, new Color(0.8f, 0.4f, 0.8f))
         {
             _effectId = effectId;
+            _resolveTypeID = -1;
+            _formulaID = -1;
             _stackCount = 1;
             _canStack = false;
         }
@@ -172,6 +202,18 @@ namespace Aquila.AbilityEditor
         {
             get => _effectId;
             set => _effectId = value;
+        }
+
+        public int ResolveTypeID
+        {
+            get => _resolveTypeID;
+            set => _resolveTypeID = value;
+        }
+
+        public int FormulaID
+        {
+            get => _formulaID;
+            set => _formulaID = value;
         }
 
         public int StackCount
@@ -212,7 +254,7 @@ namespace Aquila.AbilityEditor
             set => _target = value;
         }
 
-        public float Duration
+        public new float Duration
         {
             get => _duration;
             set => _duration = value;
@@ -263,6 +305,8 @@ namespace Aquila.AbilityEditor
             var clone = new EffectClipData();
             CopyBaseTo(clone);
             clone._effectId = _effectId;
+            clone._resolveTypeID = _resolveTypeID;
+            clone._formulaID = _formulaID;
             clone._stackCount = _stackCount;
             clone._canStack = _canStack;
 
@@ -293,6 +337,18 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
+            if (!ShouldSkipResolveAndFormulaValidation() && _resolveTypeID <= 0)
+            {
+                errorMessage = "ResolveTypeID must be greater than 0";
+                return false;
+            }
+            
+            // if (!ShouldSkipResolveAndFormulaValidation() && _formulaID <= 0)
+            // {
+            //     errorMessage = "FormulaID must be greater than 0 for damage effects";
+            //     return false;
+            // }
+
             if (_stackCount < 1)
             {
                 errorMessage = "Stack count must be at least 1";
@@ -315,6 +371,11 @@ namespace Aquila.AbilityEditor
 
             errorMessage = string.Empty;
             return true;
+        }
+
+        public bool ShouldSkipResolveAndFormulaValidation()
+        {
+            return ExportValidationSkipEffectTypes.Contains(_effectType);
         }
 
         public override string GetDisplayInfo()

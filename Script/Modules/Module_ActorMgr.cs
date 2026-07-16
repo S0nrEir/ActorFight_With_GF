@@ -180,6 +180,14 @@ namespace Aquila.Module
             return actor_instance;
         }
 
+        /// <summary>
+        /// 遍历当前存活的 Actor 实例
+        /// </summary>
+        public IEnumerable<ActorInstance> AllActorInstances()
+        {
+            return _actorIDToInstance.Values;
+        }
+
         #region override
         public override void EnsureInit()
         {

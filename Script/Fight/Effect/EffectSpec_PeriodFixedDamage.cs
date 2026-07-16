@@ -1,13 +1,14 @@
-using Aquila.Event;
+using Aquila.Combat.Resolve;
 using Aquila.Fight.Addon;
 using Aquila.Module;
 using Aquila.Toolkit;
+using Cfg.Enum;
 using UnityEngine;
 
 namespace Aquila.Fight
 {
     /// <summary>
-    /// 周期性固定伤害
+    /// 周期性固定神圣伤害,无视护甲
     /// </summary>
     public class EffectSpec_Period_FixedDamage : EffectSpec_Base
     {
@@ -17,28 +18,22 @@ namespace Aquila.Fight
             base.Init(data, castor, target);
             _modifier.Setup(Meta.GetModifierType(), _effectData.GetFloatParam1());
         }
-        
-        // public override void Init( Table_Effect meta, Module_ProxyActor.ActorInstance castor = null,
-        //     Module_ProxyActor.ActorInstance target = null )
-        // {
-        //     base.Init( meta ,castor,target );
-        //     _modifier.Setup( ModifierType, FloatParam1 );
-        // }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target, AbilityResult_Hit result )
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //get damage
             var addon = target.GetAddon<Addon_BaseAttrNumric>();
-            if ( addon is null )
+            if (addon is null)
             {
-                Tools.Logger.Warning( "EffectSpec_PeriodFixedDamage.Apply()--->addon is null" );
+                Tools.Logger.Warning("EffectSpec_PeriodFixedDamage.Apply()--->addon is null");
                 return;
             }
 
-            var currHP = addon.GetCurrHPCorrection();
-            currHP = _modifier.Calc( currHP );
-            addon.SetCurrHP( currHP );
-            result._dealedDamage = Tools.Fight.AddDealedDamage( result._dealedDamage, ( int ) Mathf.Abs( _modifier.ValueFac() ) );
+            var inputDelta = Mathf.Abs(Meta.GetFloatParam1());
+            var resolveResult = CombatResolveEntry.Resolve(castor, target, this, inputDelta, ResolveSourceType.PoisonDamage);
+            if (!resolveResult.Success)
+            {
+                Tools.Logger.Error($"[EffectSpec_Period_FixedDamage] Resolve failed. Interrupted={resolveResult.Interrupted}, Aborted={resolveResult.Aborted}");
+            }
         }
     }
 }

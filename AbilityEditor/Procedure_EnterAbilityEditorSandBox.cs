@@ -5,6 +5,7 @@ using Aquila.Config;
 using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Actor;
+using Aquila.Formula;
 using Aquila.Module;
 using Aquila.Toolkit;
 using GameFramework;
@@ -163,6 +164,7 @@ namespace Aquila.Procedure
             GameEntry.LuBan.LoadDataTable();
             GameEntry.AbilityPool.Init();
             PreloadInternalTable();
+            FormulaEngine.Init();
             
             // 先加载InfoBoard项目，等待完成后再创建Actor
             GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
