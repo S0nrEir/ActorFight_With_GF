@@ -259,9 +259,9 @@ namespace Aquila.Toolkit
                     string magic = reader.ReadFixedString(4);
                     byte version = reader.ReadByte();
 
-                    if (magic != ABLT_MAGIC || version != BIN_VERSION_4)
+                    if (magic != ABLT_MAGIC || version != ABLT_VERSION_5)
                     {
-                        Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, version={version})");
+                        Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, actualVersion={version}, expectedVersion={ABLT_VERSION_5})");
                         return default;
                     }
 
@@ -307,6 +307,9 @@ namespace Aquila.Toolkit
                         }
                     }
 
+                    var montageEvents = ReadMontageEvents(reader);
+                    var cueBindings = ReadCueBindings(reader);
+
                     return new AbilityData(
                         id: id,
                         costEffectID: costEffectID,
@@ -316,7 +319,9 @@ namespace Aquila.Toolkit
                         selectRadius: selectRadius,
                         timelineID: timelineID,
                         timelineDuration: timelineDuration,
-                        effects: effectDataList.ToArray());
+                        effects: effectDataList.ToArray(),
+                        montageEvents: montageEvents,
+                        cueBindings: cueBindings);
                 }
             }
 
@@ -439,7 +444,7 @@ namespace Aquila.Toolkit
 
             private static void SkipAudioClip(ByteReader reader)
             {
-                reader.ReadString();
+                reader.ReadInt32();
                 reader.ReadSingle();
                 reader.ReadBoolean();
                 reader.ReadSingle();
@@ -456,6 +461,47 @@ namespace Aquila.Toolkit
                 reader.ReadBoolean();
             }
 
+            private static MontageEventData[] ReadMontageEvents(ByteReader reader)
+            {
+                var count = reader.ReadInt32();
+                var events = new MontageEventData[count];
+                for (var i = 0; i < count; i++)
+                {
+                    events[i] = new MontageEventData(
+                        reader.ReadSingle(),
+                        reader.ReadInt32(),
+                        reader.ReadString(),
+                        reader.ReadString());
+                }
+
+                return events;
+            }
+
+            private static AbilityCueBindingData[] ReadCueBindings(ByteReader reader)
+            {
+                var count = reader.ReadInt32();
+                var bindings = new AbilityCueBindingData[count];
+                for (var i = 0; i < count; i++)
+                {
+                    var eventTag = reader.ReadString();
+                    var cueTag = reader.ReadString();
+                    var eventType = (GameplayCueEventType)reader.ReadByte();
+                    var targetPolicy = (GameplayCueTargetPolicy)reader.ReadByte();
+                    var locationPolicy = (GameplayCueLocationPolicy)reader.ReadByte();
+                    var magnitude = reader.ReadSingle();
+                    bindings[i] = new AbilityCueBindingData(
+                        eventTag,
+                        cueTag,
+                        targetPolicy,
+                        locationPolicy,
+                        magnitude,
+                        reader.ReadVector3(),
+                        eventType);
+                }
+
+                return bindings;
+            }
+
             #endregion
 
             private const string ABILITY_BIN_DIR = "Res/Config/Ability";
@@ -464,6 +510,7 @@ namespace Aquila.Toolkit
             private const string EFCT_MAGIC = "EFFECT";
             // private const byte BIN_VERSION_3 = 0x03;
             private const byte BIN_VERSION_4 = 0x04;
+            private const byte ABLT_VERSION_5 = 0x05;
         }//end class Ability
     }//end class Tools
 }

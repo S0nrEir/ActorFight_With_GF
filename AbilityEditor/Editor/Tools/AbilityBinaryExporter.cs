@@ -26,7 +26,7 @@ namespace Editor.AbilityEditor.Tools
             int successCount = 0;
             int failCount = 0;
 
-            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"));
+            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"), "*.ablt");
             foreach (var file in files)
                 File.Delete(file);
             
@@ -89,6 +89,9 @@ namespace Editor.AbilityEditor.Tools
                         foreach (var track in tracks)
                             WriteTrack(writer, track);
                     }
+
+                    WriteMontageEvents(writer, data.MontageEvents);
+                    WriteCueBindings(writer, data.CueBindings);
                 }
             }
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Exported: {outputPath}");
@@ -202,6 +205,45 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteBoolean(clip.FollowAttachPoint);
         }
 
+        private static void WriteMontageEvents(
+            Aquila.Toolkit.Tools.ByteWriter writer,
+            System.Collections.Generic.IReadOnlyList<Aquila.Fight.MontageEventData> events)
+        {
+            writer.WriteInt32(events?.Count ?? 0);
+            if (events == null)
+                return;
+
+            for (var i = 0; i < events.Count; i++)
+            {
+                var marker = events[i];
+                writer.WriteSingle(marker.Time);
+                writer.WriteInt32(marker.Sequence);
+                writer.WriteString(marker.MarkerId);
+                writer.WriteString(marker.EventTag);
+            }
+        }
+
+        private static void WriteCueBindings(
+            Aquila.Toolkit.Tools.ByteWriter writer,
+            System.Collections.Generic.IReadOnlyList<Aquila.Fight.AbilityCueBindingData> bindings)
+        {
+            writer.WriteInt32(bindings?.Count ?? 0);
+            if (bindings == null)
+                return;
+
+            for (var i = 0; i < bindings.Count; i++)
+            {
+                var binding = bindings[i];
+                writer.WriteString(binding.EventTag);
+                writer.WriteString(binding.CueTag);
+                writer.WriteByte((byte)binding.EventType);
+                writer.WriteByte((byte)binding.TargetPolicy);
+                writer.WriteByte((byte)binding.LocationPolicy);
+                writer.WriteSingle(binding.Magnitude);
+                writer.WriteVector3(binding.LocationOffset);
+            }
+        }
+
         private static void EnsureDirectoryExists(string path)
         {
             if (!Directory.Exists(path))
@@ -212,6 +254,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x04;
+        private const byte VERSION = 0x05;
     }
 }

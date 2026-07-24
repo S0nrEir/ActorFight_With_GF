@@ -4,8 +4,10 @@ using Aquila.Event;
 using Aquila.Fight;
 using Aquila.Fight.Addon;
 using Aquila.Module;
+using Aquila.Toolkit;
 using GameFramework;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Aquila.Combat
 {
@@ -18,11 +20,10 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            List<int> targets)
+            List<int> targets,
+            long activationId = 0)
         {
-            var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
-            runtime.Initialize(castCmd, abilityData, castor, targets.ToArray());
-            return runtime;
+            return CreateInternal(castCmd, abilityData, castor, targets.ToArray(), activationId);
         }
         
         /// <summary>
@@ -32,20 +33,46 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            int[] targets)
+            int[] targets,
+            long activationId = 0)
         {
-            var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
-            runtime.Initialize(castCmd, abilityData, castor, targets);
-            return runtime;
+            return CreateInternal(castCmd, abilityData, castor, targets, activationId);
         }
         
         public static CastRuntimeInstance Create(
             CastCmd castCmd,
             AbilityData abilityData,
-            Module_ProxyActor.ActorInstance castor)
+            Module_ProxyActor.ActorInstance castor,
+            long activationId = 0)
         {
+            return CreateInternal(castCmd, abilityData, castor, castCmd._targetInstanceIdArr, activationId);
+        }
+
+        private static CastRuntimeInstance CreateInternal(
+            CastCmd castCmd,
+            AbilityData abilityData,
+            Module_ProxyActor.ActorInstance castor,
+            int[] targets,
+            long activationId)
+        {
+            var timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.GetOrDefault(abilityData.GetTimelineID());
+            if (timelineMeta == null)
+                throw new GameFrameworkException($"CastRuntimeInstance timeline not found, timelineID={abilityData.GetTimelineID()}.");
+
+            if (string.IsNullOrEmpty(timelineMeta.AssetPath))
+                throw new GameFrameworkException($"CastRuntimeInstance timeline path is empty, timelineID={timelineMeta.id}.");
+
+            if (GameEntry.Timeline == null)
+                throw new GameFrameworkException("CastRuntimeInstance Timeline component not found.");
+
+            var director = Tools.GetComponent<PlayableDirector>(castor.Actor.transform);
+            if (director == null)
+                throw new GameFrameworkException($"CastRuntimeInstance PlayableDirector not found, actorID={castor.Actor.ActorID}.");
+
             var runtime = ReferencePool.Acquire<CastRuntimeInstance>();
-            runtime.Initialize(castCmd, abilityData, castor, castCmd._targetInstanceIdArr);
+            runtime.Initialize(castCmd, abilityData, castor, targets, activationId);
+            runtime._presentationAssetPath = timelineMeta.AssetPath;
+            runtime._presentationDirector = director;
             return runtime;
         }
 
@@ -54,6 +81,13 @@ namespace Aquila.Combat
         /// </summary>
         public void Clear()
         {
+            if (Montage != null)
+            {
+                Montage.GameplayEvent -= OnMontageGameplayEvent;
+                ReferencePool.Release(Montage);
+                Montage = null;
+            }
+
             if (StateMachine != null)
             {
                 ReferencePool.Release(StateMachine);
@@ -85,7 +119,15 @@ namespace Aquila.Combat
             IsCompleted = false;
             IsInterrupted = false;
             InterruptReason = CastInterruptReason.None;
+            ActivationId = 0;
             _completionNotified = false;
+            _presentationAssetPath = null;
+            _presentationDirector = null;
+        }
+
+        public void StartPresentation()
+        {
+            Montage.Play(_presentationAssetPath, _presentationDirector);
         }
 
         public void RefreshTargets(int[] targets)
@@ -98,9 +140,11 @@ namespace Aquila.Combat
             if (IsCompleted || IsInterrupted)
                 return;
 
+            var previousElapsed = Elapsed;
             if (elapsed > 0f)
                 Elapsed += elapsed;
 
+            Montage.Advance(previousElapsed, Elapsed);
             StateMachine.FixedUpdate();
         }
 
@@ -143,11 +187,13 @@ namespace Aquila.Combat
         {
             IsInterrupted = true;
             InterruptReason = reason;
+            Montage.Stop();
         }
 
         public void MarkCompleted()
         {
             IsCompleted = true;
+            Montage.Stop();
         }
 
         public void NotifyCastComplete()
@@ -166,12 +212,14 @@ namespace Aquila.Combat
             CastCmd castCmd,
             AbilityData abilityData,
             Module_ProxyActor.ActorInstance castor,
-            int[] targets)
+            int[] targets,
+            long activationId)
         {
             CastCmd = castCmd;
             AbilityData = abilityData;
             Castor = castor;
             Targets = targets;
+            ActivationId = activationId;
             Elapsed = 0f;
             IsCompleted = false;
             IsInterrupted = false;
@@ -208,6 +256,18 @@ namespace Aquila.Combat
 
             TriggerScheduler = TriggerScheduler.Create(abilityData);
             StateMachine = CastStateMachine.Create(this);
+            Montage = AbilityMontage.Create(
+                abilityData.GetMontageEvents(),
+                abilityData.GetId(),
+                activationId,
+                castor.Actor.ActorID,
+                targets);
+            Montage.GameplayEvent += OnMontageGameplayEvent;
+        }
+
+        private void OnMontageGameplayEvent(MontageGameplayEvent gameplayEvent)
+        {
+            Castor.GetAddon<Addon_Ability>().HandleGameplayEvent(gameplayEvent);
         }
 
         public CastCmd CastCmd { get; private set; }
@@ -216,6 +276,8 @@ namespace Aquila.Combat
         public int[] Targets { get; private set; }
         public TriggerScheduler TriggerScheduler { get; private set; }
         public CastStateMachine StateMachine { get; private set; }
+        public AbilityMontage Montage { get; private set; }
+        public long ActivationId { get; private set; }
         public float Elapsed { get; private set; }
         public float PreCastEndTime { get; private set; }
         public float ChannelEndTime { get; private set; }
@@ -225,5 +287,7 @@ namespace Aquila.Combat
         public bool IsInterrupted { get; private set; }
         public CastInterruptReason InterruptReason { get; private set; }
         private bool _completionNotified;
+        private string _presentationAssetPath;
+        private PlayableDirector _presentationDirector;
     }
 }

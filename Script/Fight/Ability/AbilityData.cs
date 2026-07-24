@@ -19,6 +19,8 @@ namespace Aquila.Fight
         private readonly int _timelineID;
         private readonly float _timelineDuration;
         private readonly IReadOnlyList<EffectData> _effects;
+        private readonly IReadOnlyList<MontageEventData> _montageEvents;
+        private readonly IReadOnlyList<AbilityCueBindingData> _cueBindings;
         // private readonly IReadOnlyList<AudioData> _audios;
         // private readonly IReadOnlyList<VFXData> _vfxs;
 
@@ -31,7 +33,9 @@ namespace Aquila.Fight
             float selectRadius,
             int timelineID,
             float timelineDuration,
-            EffectData[] effects)
+            EffectData[] effects,
+            MontageEventData[] montageEvents = null,
+            AbilityCueBindingData[] cueBindings = null)
             // AudioData[] audios,
             // VFXData[] vfxs)
         {
@@ -44,6 +48,8 @@ namespace Aquila.Fight
             _timelineID = timelineID;
             _timelineDuration = timelineDuration;
             _effects = effects?.ToArray() ?? Array.Empty<EffectData>();
+            _montageEvents = montageEvents?.ToArray() ?? Array.Empty<MontageEventData>();
+            _cueBindings = cueBindings?.ToArray() ?? Array.Empty<AbilityCueBindingData>();
             // _audios = audios?.ToArray() ?? System.Array.Empty<AudioData>();
             // _vfxs = vfxs?.ToArray() ?? System.Array.Empty<VFXData>();
         }
@@ -58,6 +64,8 @@ namespace Aquila.Fight
         public int GetTimelineID() => _timelineID;
         public float GetTimelineDuration() => _timelineDuration;
         public IReadOnlyList<EffectData> GetEffects() => _effects;
+        public IReadOnlyList<MontageEventData> GetMontageEvents() => _montageEvents;
+        public IReadOnlyList<AbilityCueBindingData> GetCueBindings() => _cueBindings;
         // public IReadOnlyList<AudioData> GetAudios() => _audios;
         // public IReadOnlyList<VFXData> GetVFXs() => _vfxs;
     }

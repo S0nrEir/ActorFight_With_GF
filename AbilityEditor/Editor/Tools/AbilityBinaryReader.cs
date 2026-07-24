@@ -68,6 +68,13 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
+
+                if (version != VERSION)
+                {
+                    Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryReader] Unsupported version: actual={version}, expected={VERSION}");
+                    return;
+                }
+
                 _currentVersion = version;
                 sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
 
@@ -100,6 +107,9 @@ namespace Editor.AbilityEditor.Tools
                     sb.AppendLine($"  Track[{t}]:");
                     ReadTrack(reader, sb, "    ");
                 }
+
+                ReadMontageEvents(reader, sb);
+                ReadCueBindings(reader, sb);
 
                 sb.AppendLine("========== End ==========");
                 Aquila.Toolkit.Tools.Logger.Info(sb.ToString());
@@ -229,6 +239,8 @@ namespace Editor.AbilityEditor.Tools
                 }
                 sb.AppendLine("]");
             }
+
+            sb.AppendLine($"{indent}FormulaID: {reader.ReadInt32()}");
         }
 
         private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)
@@ -291,8 +303,42 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
+        private static void ReadMontageEvents(BinaryReader reader, StringBuilder sb)
+        {
+            var count = reader.ReadInt32();
+            sb.AppendLine($"[Montage Events] Count: {count}");
+            for (var i = 0; i < count; i++)
+            {
+                var time = reader.ReadSingle();
+                var sequence = reader.ReadInt32();
+                var markerId = ReadString(reader);
+                var eventTag = ReadString(reader);
+                sb.AppendLine($"  [{i}] {time:F3}s #{sequence} {markerId} -> {eventTag}");
+            }
+        }
+
+        private static void ReadCueBindings(BinaryReader reader, StringBuilder sb)
+        {
+            var count = reader.ReadInt32();
+            sb.AppendLine($"[Cue Bindings] Count: {count}");
+            for (var i = 0; i < count; i++)
+            {
+                var eventTag = ReadString(reader);
+                var cueTag = ReadString(reader);
+                var eventType = reader.ReadByte();
+                var targetPolicy = reader.ReadByte();
+                var locationPolicy = reader.ReadByte();
+                var magnitude = reader.ReadSingle();
+                var x = reader.ReadSingle();
+                var y = reader.ReadSingle();
+                var z = reader.ReadSingle();
+                sb.AppendLine($"  [{i}] {eventTag} -> {cueTag}, event={eventType}, target={targetPolicy}, location={locationPolicy}, magnitude={magnitude}, offset=({x}, {y}, {z})");
+            }
+        }
+
         private const string MAGIC = "ABLT";
-        private static byte _currentVersion = 0x02;
+        private static byte _currentVersion = VERSION;
+        private const byte VERSION = 0x05;
         private const string CONTEXT_MENU_PATH = "Assets/AbilityEditor/ReadBinaryAbilityData";
     }
 }

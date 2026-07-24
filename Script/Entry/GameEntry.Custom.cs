@@ -89,6 +89,12 @@ namespace Aquila
             private set;
         }
 
+        public static Component_GameplayCue GameplayCue
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Impact组件
         /// </summary>
@@ -143,6 +149,7 @@ namespace Aquila
             GlobalVar = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GlobalVar>();
             CameraHub = EnsureCameraHubComponent();
             Timeline = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
+            GameplayCue = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GameplayCue>();
             Impact = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
             UI = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
             Async = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Async>();
@@ -177,6 +184,7 @@ namespace Aquila
 
             return cameraHub;
         }
+
     }
 }
 

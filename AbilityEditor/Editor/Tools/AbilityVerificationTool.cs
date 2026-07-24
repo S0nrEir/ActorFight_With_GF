@@ -19,7 +19,7 @@ namespace Editor.AbilityEditor.Tools
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "ABLT";
         // private const byte VERSION_2 = 0x02;
-        private const byte VERSION_4 = 0x04;
+        private const byte VERSION_5 = 0x05;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -95,7 +95,9 @@ namespace Editor.AbilityEditor.Tools
                 SelectRadius = data.SelectRadius,
                 TimelineID = data.TimelineID,
                 TimelineDuration = data.TimelineDuration,
-                Tracks = new List<CachedTrackData>()
+                Tracks = new List<CachedTrackData>(),
+                MontageEvents = new List<MontageEventData>(data.MontageEvents),
+                CueBindings = new List<AbilityCueBindingData>(data.CueBindings)
             };
 
             if (data.Tracks != null)
@@ -279,6 +281,37 @@ namespace Editor.AbilityEditor.Tools
                 for (int t = 0; t < trackCount; t++)
                     data.Tracks.Add(ReadTrack(reader));
 
+                var montageCount = reader.ReadInt32();
+                data.MontageEvents = new List<MontageEventData>(montageCount);
+                for (var i = 0; i < montageCount; i++)
+                {
+                    data.MontageEvents.Add(new MontageEventData(
+                        reader.ReadSingle(),
+                        reader.ReadInt32(),
+                        reader.ReadString(),
+                        reader.ReadString()));
+                }
+
+                var bindingCount = reader.ReadInt32();
+                data.CueBindings = new List<AbilityCueBindingData>(bindingCount);
+                for (var i = 0; i < bindingCount; i++)
+                {
+                    var eventTag = reader.ReadString();
+                    var cueTag = reader.ReadString();
+                    var eventType = (GameplayCueEventType)reader.ReadByte();
+                    var targetPolicy = (GameplayCueTargetPolicy)reader.ReadByte();
+                    var locationPolicy = (GameplayCueLocationPolicy)reader.ReadByte();
+                    var magnitude = reader.ReadSingle();
+                    data.CueBindings.Add(new AbilityCueBindingData(
+                        eventTag,
+                        cueTag,
+                        targetPolicy,
+                        locationPolicy,
+                        magnitude,
+                        reader.ReadVector3(),
+                        eventType));
+                }
+
                 return data;
             }
         }
@@ -347,6 +380,8 @@ namespace Editor.AbilityEditor.Tools
                     {
                         ((CachedEffectClipData)clip).AwakeEffects[i] = reader.ReadInt32();
                     }
+
+                    ((CachedEffectClipData)clip).FormulaID = reader.ReadInt32();
 
                     // ((CachedEffectClipData)clip).FormulaID = version >= VERSION_3
                     //     ? reader.ReadInt32()
@@ -418,6 +453,9 @@ namespace Editor.AbilityEditor.Tools
             if (!FloatEquals(expected.TimelineDuration, actual.TimelineDuration))
                 differences.Add($"Field: TimelineDuration | Expected: {expected.TimelineDuration} | Actual: {actual.TimelineDuration}");
 
+            CompareMontageEvents(expected.MontageEvents, actual.MontageEvents, differences);
+            CompareCueBindings(expected.CueBindings, actual.CueBindings, differences);
+
             // Compare tracks
             if (expected.Tracks.Count != actual.Tracks.Count)
             {
@@ -444,6 +482,55 @@ namespace Editor.AbilityEditor.Tools
             }
 
             return differences;
+        }
+
+        private static void CompareMontageEvents(
+            List<MontageEventData> expected,
+            List<MontageEventData> actual,
+            List<string> differences)
+        {
+            if (expected.Count != actual.Count)
+            {
+                differences.Add($"Field: Montage Event Count | Expected: {expected.Count} | Actual: {actual.Count}");
+                return;
+            }
+
+            for (var i = 0; i < expected.Count; i++)
+            {
+                if (!FloatEquals(expected[i].Time, actual[i].Time) ||
+                    expected[i].Sequence != actual[i].Sequence ||
+                    expected[i].MarkerId != actual[i].MarkerId ||
+                    expected[i].EventTag != actual[i].EventTag)
+                {
+                    differences.Add($"MontageEvent[{i}] differs");
+                }
+            }
+        }
+
+        private static void CompareCueBindings(
+            List<AbilityCueBindingData> expected,
+            List<AbilityCueBindingData> actual,
+            List<string> differences)
+        {
+            if (expected.Count != actual.Count)
+            {
+                differences.Add($"Field: Cue Binding Count | Expected: {expected.Count} | Actual: {actual.Count}");
+                return;
+            }
+
+            for (var i = 0; i < expected.Count; i++)
+            {
+                if (expected[i].EventTag != actual[i].EventTag ||
+                    expected[i].CueTag != actual[i].CueTag ||
+                    expected[i].EventType != actual[i].EventType ||
+                    expected[i].TargetPolicy != actual[i].TargetPolicy ||
+                    expected[i].LocationPolicy != actual[i].LocationPolicy ||
+                    !FloatEquals(expected[i].Magnitude, actual[i].Magnitude) ||
+                    !Vector3Equals(expected[i].LocationOffset, actual[i].LocationOffset))
+                {
+                    differences.Add($"CueBinding[{i}] differs");
+                }
+            }
         }
 
         private static List<string> CompareClipData(CachedClipData expected, CachedClipData actual, int trackIndex, int clipIndex)
@@ -699,6 +786,8 @@ namespace Editor.AbilityEditor.Tools
             public int TimelineID;
             public float TimelineDuration;
             public List<CachedTrackData> Tracks;
+            public List<MontageEventData> MontageEvents;
+            public List<AbilityCueBindingData> CueBindings;
         }
 
         internal class CachedTrackData
@@ -761,7 +850,7 @@ namespace Editor.AbilityEditor.Tools
 
         private static bool IsSupportedVersion(byte version)
         {
-            return version == VERSION_4;
+            return version == VERSION_5;
         }
 
         #endregion

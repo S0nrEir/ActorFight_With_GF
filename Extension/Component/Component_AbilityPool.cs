@@ -420,9 +420,9 @@ namespace Aquila.AbilityPool
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
             byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_4)
+            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_5)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, version={version}) in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, actualVersion={version}, expectedVersion={ABILITY_VERSION_5}) in {filePath}");
                 return false;
             }
 
@@ -463,6 +463,9 @@ namespace Aquila.AbilityPool
                 }
             }
 
+            var montageEvents = ReadMontageEvents(reader);
+            var cueBindings = ReadCueBindings(reader);
+
             data = new AbilityData(
                 abilityId,
                 costEffectId,
@@ -472,7 +475,9 @@ namespace Aquila.AbilityPool
                 selectRadius,
                 timelineId,
                 duration,
-                effectList.ToArray()
+                effectList.ToArray(),
+                montageEvents,
+                cueBindings
             );
             return true;
         }
@@ -585,6 +590,47 @@ namespace Aquila.AbilityPool
             return Encoding.UTF8.GetString(reader.ReadBytes(length));
         }
 
+        private MontageEventData[] ReadMontageEvents(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            var events = new MontageEventData[count];
+            for (var i = 0; i < count; i++)
+            {
+                events[i] = new MontageEventData(
+                    reader.ReadSingle(),
+                    reader.ReadInt32(),
+                    ReadString(reader),
+                    ReadString(reader));
+            }
+
+            return events;
+        }
+
+        private AbilityCueBindingData[] ReadCueBindings(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            var bindings = new AbilityCueBindingData[count];
+            for (var i = 0; i < count; i++)
+            {
+                var eventTag = ReadString(reader);
+                var cueTag = ReadString(reader);
+                var eventType = (GameplayCueEventType)reader.ReadByte();
+                var targetPolicy = (GameplayCueTargetPolicy)reader.ReadByte();
+                var locationPolicy = (GameplayCueLocationPolicy)reader.ReadByte();
+                var magnitude = reader.ReadSingle();
+                bindings[i] = new AbilityCueBindingData(
+                    eventTag,
+                    cueTag,
+                    targetPolicy,
+                    locationPolicy,
+                    magnitude,
+                    new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                    eventType);
+            }
+
+            return bindings;
+        }
+
         //----------------------- fields -----------------------
 
         private bool _initialized;
@@ -608,7 +654,7 @@ namespace Aquila.AbilityPool
         
         //#todo 删掉effect version和ability version
         private const byte EFFECT_VERSION_3  = 0x03;
-        private const byte ABILITY_VERSION_4 = 0x04;
+        private const byte ABILITY_VERSION_5 = 0x05;
 
         private const int CLIP_TYPE_EFFECT = 1;
         private const int CLIP_TYPE_AUDIO  = 2;

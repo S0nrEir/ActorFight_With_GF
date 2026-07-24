@@ -8,171 +8,213 @@ using UnityGameFramework.Runtime;
 
 namespace Aquila.Extension
 {
-    /// <summary>
-    /// timeline缁勪欢
-    /// </summary>
+    public readonly struct TimelinePlayRequestHandle
+    {
+        internal TimelinePlayRequestHandle(Component_Timeline owner, long requestId, int generation)
+        {
+            Owner = owner;
+            RequestId = requestId;
+            Generation = generation;
+        }
+
+        public bool IsValid => Owner != null && RequestId > 0;
+
+        public void Cancel()
+        {
+            Owner?.Cancel(this);
+        }
+
+        internal Component_Timeline Owner { get; }
+        internal long RequestId { get; }
+        internal int Generation { get; }
+    }
+
     public class Component_Timeline : GameFrameworkComponent
     {
-        public void Play( string assetPath, PlayableDirector director )
+        public TimelinePlayRequestHandle Play(string assetPath, PlayableDirector director)
         {
-            if ( string.IsNullOrEmpty( assetPath ) )
+            if (string.IsNullOrEmpty(assetPath))
             {
-                Tools.Logger.Warning( "<color=yellow>Compoent_Timeline.Play()--->string.IsNullOrEmpty( path )</color>" );
-                return;
+                Tools.Logger.Warning("<color=yellow>Component_Timeline.Play()--->asset path is empty</color>");
+                return default;
             }
 
-            if ( _assetCache.TryGetValue( assetPath, out var cachedAsset ) )
+            if (director == null)
             {
-                PlayWithDirector( assetPath, cachedAsset, director );
-                return;
+                Tools.Logger.Warning($"<color=yellow>Component_Timeline.Play()--->director is null, asset:{assetPath}</color>");
+                return default;
             }
 
-            var timelineObject = _assetPool.Spawn( assetPath );
-            if ( timelineObject == null )
+            var handle = new TimelinePlayRequestHandle(this, ++_nextRequestId, _generation);
+            if (_assetCache.TryGetValue(assetPath, out var cachedAsset))
             {
-                EnqueuePendingPlayRequest( assetPath, director );
-                if ( !_loadingAssetNames.Add( assetPath ) )
-                {
-                    return;
-                }
-
-                // 池里没有就加载
-                GameEntry.Resource.LoadAsset( assetPath, _loadAssetCallBack, null );
-                return;
+                PlayWithDirector(assetPath, cachedAsset, director);
+                return handle;
             }
 
-            var pooledAsset = timelineObject.Target as PlayableAsset;
-            if ( pooledAsset != null && !_assetCache.ContainsKey( assetPath ) )
+            var timelineObject = _assetPool.Spawn(assetPath);
+            if (timelineObject != null)
             {
-                _assetCache.Add( assetPath, pooledAsset );
-                _registeredAssets.Add( pooledAsset );
+                var pooledAsset = timelineObject.Target as PlayableAsset;
+                RegisterPlayableAssetIfNeeded(assetPath, pooledAsset);
+                PlayWithDirector(assetPath, pooledAsset, director);
+                return handle;
             }
 
-            PlayWithDirector( assetPath, pooledAsset, director );
+            EnqueuePendingPlayRequest(handle, assetPath, director);
+            if (_loadingAssetNames.Add(assetPath))
+                GameEntry.Resource.LoadAsset(assetPath, _loadAssetCallBack, null);
+
+            return handle;
         }
 
-        private void OnLoadAssetSucc( string assetName, object asset, float duration, object userData )
+        public void Stop(TimelinePlayRequestHandle handle, PlayableDirector director)
+        {
+            Cancel(handle);
+            if (director != null)
+                director.Stop();
+        }
+
+        internal void Cancel(TimelinePlayRequestHandle handle)
+        {
+            if (handle.Owner != this || handle.Generation != _generation)
+                return;
+
+            _pendingRequests.Remove(handle.RequestId);
+        }
+
+        private void OnLoadAssetSucc(string assetName, object asset, float duration, object userData)
         {
             var playableAsset = asset as PlayableAsset;
-            if ( playableAsset is null )
+            if (playableAsset == null)
             {
-                Tools.Logger.Warning( "<color=yellow>Component_Timeline.OnLoadAssetSucc()--->playableAsset is null </color>" );
-                ClearLoadingState( assetName );
+                Tools.Logger.Warning("<color=yellow>Component_Timeline.OnLoadAssetSucc()--->playableAsset is null</color>");
+                ClearLoadingState(assetName);
                 return;
             }
 
-            RegisterPlayableAssetIfNeeded( assetName, playableAsset );
-            DrainPendingPlayRequests( assetName );
+            RegisterPlayableAssetIfNeeded(assetName, playableAsset);
+            DrainPendingPlayRequests(assetName);
         }
 
-        private void RegisterPlayableAssetIfNeeded( string assetName, PlayableAsset playableAsset )
+        private void RegisterPlayableAssetIfNeeded(string assetName, PlayableAsset playableAsset)
         {
-            if ( _assetCache.TryGetValue( assetName, out var cachedAsset ) )
-            {
-                if ( !ReferenceEquals( cachedAsset, playableAsset ) )
-                {
-                    Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->duplicate asset callback ignored, asset:{assetName}</color>" );
-                }
-
+            if (playableAsset == null || _assetCache.ContainsKey(assetName))
                 return;
+
+            if (_registeredAssets.Add(playableAsset))
+            {
+                var obj = Object_PlayableAsset.Create(assetName, playableAsset);
+                _assetPool.Register(obj, false);
             }
 
-            if ( _registeredAssets.Add( playableAsset ) )
-            {
-                var obj = Object_PlayableAsset.Create( assetName, playableAsset );
-                _assetPool.Register( obj, false );
-            }
-            else
-            {
-                Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetSucc()--->asset target already registered, asset:{assetName}</color>" );
-            }
-
-            _assetCache.Add( assetName, playableAsset );
+            _assetCache.Add(assetName, playableAsset);
         }
 
-        private void PlayWithDirector( string assetName, PlayableAsset playableAsset, PlayableDirector director )
+        private static void PlayWithDirector(string assetName, PlayableAsset playableAsset, PlayableDirector director)
         {
-            if ( director == null )
-            {
-                Tools.Logger.Warning( $"<color=yellow>Component_Timeline.Play()--->director is null, asset:{assetName}</color>" );
-                return;
-            }
-
             director.playableAsset = playableAsset;
-            if ( director.playableAsset is null )
+            if (director.playableAsset == null)
             {
-                Tools.Logger.Warning( "<color=yellow>Component_Timeline.Play()--->director.playableAsset is null </color>" );
+                Tools.Logger.Warning($"<color=yellow>Component_Timeline.Play()--->playable asset is null, asset:{assetName}</color>");
                 return;
             }
 
             director.Play();
         }
 
-        private void OnLoadAssetFaild( string assetName, LoadResourceStatus status, string errorMessage, object userData )
+        private void OnLoadAssetFaild(string assetName, LoadResourceStatus status, string errorMessage, object userData)
         {
-            Tools.Logger.Warning( $"<color=yellow>Component_Timeline.OnLoadAssetFaild()--->asset:{assetName},status:{status},error:{errorMessage}</color>" );
-            ClearLoadingState( assetName );
+            Tools.Logger.Warning($"<color=yellow>Component_Timeline.OnLoadAssetFaild()--->asset:{assetName},status:{status},error:{errorMessage}</color>");
+            ClearLoadingState(assetName);
         }
 
         protected override void Awake()
         {
             base.Awake();
+            _generation++;
         }
 
         private void Start()
         {
-            _assetPool = GameEntry.ObjectPool.CreateMultiSpawnObjectPool<Object_PlayableAsset>( nameof( Object_PlayableAsset ) );
+            _assetPool = GameEntry.ObjectPool.CreateMultiSpawnObjectPool<Object_PlayableAsset>(nameof(Object_PlayableAsset));
             _assetPool.ExpireTime = 3600f;
-            _loadAssetCallBack = new LoadAssetCallbacks( OnLoadAssetSucc, OnLoadAssetFaild );
+            _loadAssetCallBack = new LoadAssetCallbacks(OnLoadAssetSucc, OnLoadAssetFaild);
         }
 
-        private Dictionary<string, PlayableAsset> _assetCache = new Dictionary<string, PlayableAsset>();
+        private void OnDestroy()
+        {
+            _generation++;
+            _pendingRequests.Clear();
+            _pendingRequestIdsByAsset.Clear();
+            _loadingAssetNames.Clear();
+        }
+
+        private void EnqueuePendingPlayRequest(
+            TimelinePlayRequestHandle handle,
+            string assetPath,
+            PlayableDirector director)
+        {
+            _pendingRequests.Add(handle.RequestId, new PendingPlayRequest(assetPath, director));
+            if (!_pendingRequestIdsByAsset.TryGetValue(assetPath, out var requestIds))
+            {
+                requestIds = new List<long>();
+                _pendingRequestIdsByAsset.Add(assetPath, requestIds);
+            }
+
+            requestIds.Add(handle.RequestId);
+        }
+
+        private void DrainPendingPlayRequests(string assetPath)
+        {
+            _loadingAssetNames.Remove(assetPath);
+            if (!_pendingRequestIdsByAsset.TryGetValue(assetPath, out var requestIds))
+                return;
+
+            _pendingRequestIdsByAsset.Remove(assetPath);
+            for (var i = 0; i < requestIds.Count; i++)
+            {
+                var requestId = requestIds[i];
+                if (!_pendingRequests.TryGetValue(requestId, out var request))
+                    continue;
+
+                _pendingRequests.Remove(requestId);
+                if (_assetCache.TryGetValue(request.AssetPath, out var playableAsset))
+                    PlayWithDirector(request.AssetPath, playableAsset, request.Director);
+            }
+        }
+
+        private void ClearLoadingState(string assetPath)
+        {
+            _loadingAssetNames.Remove(assetPath);
+            if (!_pendingRequestIdsByAsset.TryGetValue(assetPath, out var requestIds))
+                return;
+
+            _pendingRequestIdsByAsset.Remove(assetPath);
+            for (var i = 0; i < requestIds.Count; i++)
+                _pendingRequests.Remove(requestIds[i]);
+        }
+
+        private sealed class PendingPlayRequest
+        {
+            public PendingPlayRequest(string assetPath, PlayableDirector director)
+            {
+                AssetPath = assetPath;
+                Director = director;
+            }
+
+            public string AssetPath { get; }
+            public PlayableDirector Director { get; }
+        }
+
+        private readonly Dictionary<string, PlayableAsset> _assetCache = new Dictionary<string, PlayableAsset>();
+        private readonly HashSet<string> _loadingAssetNames = new HashSet<string>();
+        private readonly Dictionary<long, PendingPlayRequest> _pendingRequests = new Dictionary<long, PendingPlayRequest>();
+        private readonly Dictionary<string, List<long>> _pendingRequestIdsByAsset = new Dictionary<string, List<long>>();
+        private readonly HashSet<PlayableAsset> _registeredAssets = new HashSet<PlayableAsset>();
         private IObjectPool<Object_PlayableAsset> _assetPool;
         private LoadAssetCallbacks _loadAssetCallBack;
-        private HashSet<string> _loadingAssetNames = new HashSet<string>();
-        private Dictionary<string, List<PlayableDirector>> _pendingPlayRequests = new Dictionary<string, List<PlayableDirector>>();
-        private HashSet<PlayableAsset> _registeredAssets = new HashSet<PlayableAsset>();
-
-        private void EnqueuePendingPlayRequest( string assetPath, PlayableDirector director )
-        {
-            if ( director == null )
-            {
-                return;
-            }
-
-            if ( !_pendingPlayRequests.TryGetValue( assetPath, out var pendingDirectors ) )
-            {
-                pendingDirectors = new List<PlayableDirector>();
-                _pendingPlayRequests.Add( assetPath, pendingDirectors );
-            }
-
-            pendingDirectors.Add( director );
-        }
-
-        private void DrainPendingPlayRequests( string assetPath )
-        {
-            _loadingAssetNames.Remove( assetPath );
-            if ( !_pendingPlayRequests.TryGetValue( assetPath, out var pendingDirectors ) )
-            {
-                return;
-            }
-
-            _pendingPlayRequests.Remove( assetPath );
-            foreach ( var pendingDirector in pendingDirectors )
-            {
-                if ( pendingDirector == null )
-                {
-                    continue;
-                }
-
-                Play( assetPath, pendingDirector );
-            }
-        }
-
-        private void ClearLoadingState( string assetPath )
-        {
-            _loadingAssetNames.Remove( assetPath );
-            _pendingPlayRequests.Remove( assetPath );
-        }
+        private long _nextRequestId;
+        private int _generation;
     }
 }

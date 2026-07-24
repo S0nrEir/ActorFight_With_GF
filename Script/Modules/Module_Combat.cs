@@ -66,15 +66,13 @@ namespace Aquila.Module
             if (canUse != CastRejectCode.None)
                 return RejectAndRelease(cmd, canUse, MapCodeToFlag(canUse));
 
-            var useAbilityResult = ReferencePool.Acquire<AbilityResult_Use>();
-            useAbilityResult._succ = true;
-            useAbilityResult._abilityID = cmd._abilityID;
-            useAbilityResult._castorID = cmd._castorInstanceId;
-            useAbilityResult._targetIDArr = cmd._targetInstanceIdArr;
-            castor.GetAddon<Addon_Behaviour>().Exec(ActorBehaviourTypeEnum.ABILITY,useAbilityResult);
-            
             EnqueueCast(cmd);
             return CastAcceptResult.Accept(cmd);
+        }
+
+        public bool InterruptCast(int castorActorId, CastInterruptReason reason)
+        {
+            return _abilityRuntimeService.InterruptCast(castorActorId, reason);
         }
 
         private static CastAcceptResult Reject(CastCmd cmd, CastRejectCode code, CastRejectFlags flags)

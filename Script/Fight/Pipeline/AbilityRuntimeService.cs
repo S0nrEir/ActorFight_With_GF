@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Aquila.Fight.Addon;
+using Aquila.Fight.FSM;
 using Aquila.Module;
 using Cfg.Enum;
 using GameFramework;
@@ -87,9 +88,20 @@ namespace Aquila.Combat
                 return false;
             }
 
-            var castInstance = CastRuntimeInstance.Create(cmd, abilityData, castor);
-            castInstance.StateMachine.EnterPreCast();
+            var castInstance = CastRuntimeInstance.Create(cmd, abilityData, castor, ++_nextActivationId);
             _activeRuntimeByCaster.Add(cmd._castorInstanceId, castInstance);
+            castInstance.StartPresentation();
+            castInstance.StateMachine.EnterPreCast();
+            EnterAbilityState(castor, cmd._abilityID);
+            return true;
+        }
+
+        public bool InterruptCast(int castorActorId, CastInterruptReason reason)
+        {
+            if (!_activeRuntimeByCaster.TryGetValue(castorActorId, out var runtime))
+                return false;
+
+            runtime.StateMachine.Interrupt(reason);
             return true;
         }
 
@@ -115,7 +127,7 @@ namespace Aquila.Combat
                 if (!TryRefreshTarget(castRuntimeInstance))
                 {
                     castRuntimeInstance.StateMachine.Interrupt(CastInterruptReason.TargetLost);
-//                    castRuntimeInstance.NotifyCastComplete();
+                    castRuntimeInstance.NotifyCastComplete();
                     _toRemoveCasterIds.Add(kv.Key);
                     continue;
                 }
@@ -290,8 +302,16 @@ namespace Aquila.Combat
             ReferencePool.Release(runtime);
         }
 
+        private static void EnterAbilityState(Module_ProxyActor.ActorInstance castor, int abilityId)
+        {
+            var fsm = castor.GetAddon<Addon_FSM_Hero>();
+            if (fsm != null)
+                fsm.SwitchTo(ActorStateTypeEnum.ABILITY_STATE, abilityId, null);
+        }
+
         private readonly Dictionary<int, CastRuntimeInstance> _activeRuntimeByCaster = new Dictionary<int, CastRuntimeInstance>(16);
         private readonly List<int> _readyTriggerIndices = new List<int>(8);
         private readonly List<int> _toRemoveCasterIds = new List<int>(8);
+        private long _nextActivationId;
     }
 }
