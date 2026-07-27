@@ -45,9 +45,7 @@ namespace Editor.AbilityEditor.Config
         /// <exception cref="InvalidOperationException">Thrown when timeline is invalid</exception>
         public static void ValidateTimeline(
             float timelineDuration,
-            List<EffectClipData> effects,
-            List<AudioClipData> audios,
-            List<VFXClipData> vfxs)
+            List<EffectClipData> effects)
         {
             if (timelineDuration <= 0)
             {
@@ -61,26 +59,6 @@ namespace Editor.AbilityEditor.Config
                 {
                     throw new InvalidOperationException(
                         $"Effect clip '{effect.ClipName}' at {effect.TriggerTime:F2}s exceeds timeline duration {timelineDuration:F2}s");
-                }
-            }
-            
-            // Check audio clips
-            foreach (var audio in audios)
-            {
-                if (audio.StartTime > timelineDuration)
-                {
-                    throw new InvalidOperationException(
-                        $"Audio clip '{audio.ClipName}' at {audio.StartTime:F2}s exceeds timeline duration {timelineDuration:F2}s");
-                }
-            }
-
-            // Check VFX clips
-            foreach (var vfx in vfxs)
-            {
-                if (vfx.StartTime > timelineDuration)
-                {
-                    throw new InvalidOperationException(
-                        $"VFX clip '{vfx.ClipName}' at {vfx.StartTime:F2}s exceeds timeline duration {timelineDuration:F2}s");
                 }
             }
         }
@@ -125,34 +103,6 @@ namespace Editor.AbilityEditor.Config
 
         #endregion
 
-        /// <summary>
-        /// Log warnings for incomplete VFX and Audio data
-        /// </summary>
-        public static void WarnIncompletePlaceholders(List<AudioClipData> audios, List<VFXClipData> vfxs)
-        {
-            // Check audio clips
-            foreach (var audio in audios)
-            {
-                if (audio.AudioId <= 0)
-                {
-                    Aquila.Toolkit.Tools.Logger.Warning(
-                        $"[AbilityConfig] Audio clip '{audio.ClipName}' at {audio.StartTime:F2}s has no AudioId assigned. " +
-                        "Remember to assign a SoundEffectMap ID later.");
-                }
-            }
-
-            // Check VFX clips
-            foreach (var vfx in vfxs)
-            {
-                if (string.IsNullOrWhiteSpace(vfx.VfxPath))
-                {
-                    Aquila.Toolkit.Tools.Logger.Warning(
-                        $"[AbilityConfig] VFX clip '{vfx.ClipName}' at {vfx.StartTime:F2}s has no asset path. " +
-                        "Remember to assign VFX assets later.");
-                }
-            }
-        }
-
         #region Comprehensive Validation
 
         /// <summary>
@@ -165,15 +115,13 @@ namespace Editor.AbilityEditor.Config
             float timelineDuration,
             List<EffectClipData> effects,
             // List<SkillClipData> skills,
-            List<AudioClipData> audios,
-            List<VFXClipData> vfxs,
             List<TriggerData> triggers)
         {
             // Metadata validation (throws exceptions on failure)
             ValidateAbilityMetadata(abilityID, name, timelineID);
 
             // Timeline validation (throws exceptions on failure)
-            ValidateTimeline(timelineDuration, effects,audios, vfxs);
+            ValidateTimeline(timelineDuration, effects);
 
             // Effect ID validation (throws exceptions on failure)
             if (effects != null && effects.Count > 0)
@@ -187,10 +135,6 @@ namespace Editor.AbilityEditor.Config
                 CheckTriggerCollisions(triggers);
             }
 
-            // Placeholder warnings (warning only)
-            WarnIncompletePlaceholders(
-                audios ?? new List<AudioClipData>(),
-                vfxs ?? new List<VFXClipData>());
         }
 
         #endregion

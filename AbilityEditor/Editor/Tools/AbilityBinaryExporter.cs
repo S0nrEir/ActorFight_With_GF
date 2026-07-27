@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
@@ -23,13 +24,9 @@ namespace Editor.AbilityEditor.Tools
 
             EnsureDirectoryExists(Misc.ABILITY_BIN_ASSET_PATH);
             string[] assetGuids = AssetDatabase.FindAssets("t:AbilityEditorSOData", new[] { Misc.ABILITY_ASSET_BASE_PATH });
-            int successCount = 0;
+            var abilities = new List<AbilityEditorSOData>(assetGuids.Length);
             int failCount = 0;
 
-            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"), "*.ablt");
-            foreach (var file in files)
-                File.Delete(file);
-            
             foreach (string guid in assetGuids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -48,13 +45,27 @@ namespace Editor.AbilityEditor.Tools
                     continue;
                 }
 
+                abilities.Add(abilityData);
+            }
+
+            if (failCount > 0 || abilities.Count == 0)
+            {
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryExporter] Export aborted before deleting existing files. Valid: {abilities.Count}, Failed: {failCount}");
+                return;
+            }
+
+            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"), "*.ablt");
+            foreach (var file in files)
+                File.Delete(file);
+
+            foreach (var abilityData in abilities)
+            {
                 string outputFile = Path.Combine(Misc.ABILITY_BIN_ASSET_PATH, $"{abilityData.Id}.ablt");
                 ExportAbility(abilityData, outputFile);
-                successCount++;
             }
 
             AssetDatabase.Refresh();
-            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Export complete. Success: {abilities.Count}, Failed: 0");
         }
 
         /// <summary>
@@ -111,8 +122,12 @@ namespace Editor.AbilityEditor.Tools
 
         private static void WriteClip(Aquila.Toolkit.Tools.ByteWriter writer, TimelineClipData clip)
         {
+            int clipType = (int)clip.ClipType;
+            if (clipType == 2 || clipType == 3)
+                throw new InvalidDataException($"[AbilityBinaryExporter] Retired clip type is not supported: {clipType}");
+
             // ClipType
-            writer.WriteInt32((int)clip.ClipType);
+            writer.WriteInt32(clipType);
             // Common fields
             writer.WriteSingle(clip.StartTime);
             writer.WriteSingle(clip.EndTime);
@@ -124,15 +139,7 @@ namespace Editor.AbilityEditor.Tools
                 case EffectClipData effectClip:
                     WriteEffectClip(writer, effectClip);
                     break;
-                
-                case AudioClipData audioClip:
-                    WriteAudioClip(writer, audioClip);
-                    break;
-                
-                case VFXClipData vfxClip:
-                    WriteVFXClip(writer, vfxClip);
-                    break;
-                
+
                 default:
                     Aquila.Toolkit.Tools.Logger.Warning($"[AbilityBinaryExporter] Unknown clip type: {clip.ClipType}");
                     break;
@@ -181,28 +188,6 @@ namespace Editor.AbilityEditor.Tools
                 writer.WriteInt32(effectId);
 
             writer.WriteInt32(clip.FormulaID);
-        }
-
-        private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
-        {
-            writer.WriteInt32(clip.AudioId);
-            writer.WriteSingle(clip.Volume);
-            writer.WriteBoolean(clip.Loop);
-            writer.WriteSingle(clip.FadeInDuration);
-            writer.WriteSingle(clip.FadeOutDuration);
-        }
-
-        private static void WriteVFXClip(Aquila.Toolkit.Tools.ByteWriter writer, VFXClipData clip)
-        {
-            writer.WriteString(clip.VfxPath);
-            writer.WriteString(clip.AttachPoint);
-            // PositionOffset
-            writer.WriteVector3(clip.PositionOffset);
-            // RotationOffset
-            writer.WriteVector3(clip.RotationOffset);
-            // Scale
-            writer.WriteVector3(clip.Scale);
-            writer.WriteBoolean(clip.FollowAttachPoint);
         }
 
         private static void WriteMontageEvents(

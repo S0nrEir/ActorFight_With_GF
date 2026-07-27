@@ -109,8 +109,6 @@ namespace Editor.AbilityEditor.Inspector
                 {
                     var menu = new GenericMenu();
                     menu.AddItem(new GUIContent("Effect Clip"), false, () => AddClip(clipsProp, typeof(EffectClipData)));
-                    menu.AddItem(new GUIContent("Audio Clip"), false, () => AddClip(clipsProp, typeof(AudioClipData)));
-                    menu.AddItem(new GUIContent("VFX Clip"), false, () => AddClip(clipsProp, typeof(VFXClipData)));
                     menu.ShowAsContext();
                 };
 

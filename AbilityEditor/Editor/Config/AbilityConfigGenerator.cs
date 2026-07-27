@@ -34,8 +34,6 @@ namespace Editor.AbilityEditor.Config
                 metadata.TimelineID,
                 metadata.TimelineDuration,
                 clipCollections.Effects,
-                clipCollections.Audios,
-                clipCollections.VFXs,
                 triggers);
 
             //create config
@@ -57,9 +55,7 @@ namespace Editor.AbilityEditor.Config
 
             config.Initialize(
                 triggers,
-                clipCollections.Effects,
-                clipCollections.Audios,
-                clipCollections.VFXs);
+                clipCollections.Effects);
 
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;
@@ -128,8 +124,6 @@ namespace Editor.AbilityEditor.Config
                 metadata.TimelineID,
                 metadata.TimelineDuration,
                 clipCollections.Effects,
-                clipCollections.Audios,
-                clipCollections.VFXs,
                 triggers);
 
             // Create config
@@ -151,9 +145,7 @@ namespace Editor.AbilityEditor.Config
 
             config.Initialize(
                 triggers,
-                clipCollections.Effects,
-                clipCollections.Audios,
-                clipCollections.VFXs);
+                clipCollections.Effects);
 
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;
@@ -285,8 +277,6 @@ namespace Editor.AbilityEditor.Config
         {
             public List<EffectClipData> Effects;
             // public List<SkillClipData> Skills;
-            public List<AudioClipData> Audios;
-            public List<VFXClipData> VFXs;
         }
 
         /// <summary>
@@ -296,9 +286,7 @@ namespace Editor.AbilityEditor.Config
         {
             var collections = new ClipCollections
             {
-                Effects = new List<EffectClipData>(),
-                Audios = new List<AudioClipData>(),
-                VFXs = new List<VFXClipData>()
+                Effects = new List<EffectClipData>()
             };
 
             // Access _timelineTrackItems using reflection
@@ -345,14 +333,6 @@ namespace Editor.AbilityEditor.Config
                         //     collections.Skills.Add(skillClip);
                         //     break;
 
-                        case AudioClipData audioClip:
-                            collections.Audios.Add(audioClip);
-                            break;
-
-                        case VFXClipData vfxClip:
-                            collections.VFXs.Add(vfxClip);
-                            break;
-
                         default:
                             Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
@@ -361,9 +341,7 @@ namespace Editor.AbilityEditor.Config
             }
 
             Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips: " +
-                                             $"Effects={collections.Effects.Count}, " +
-                                             $"Audios={collections.Audios.Count}, " +
-                                             $"VFXs={collections.VFXs.Count}");
+                                             $"Effects={collections.Effects.Count}");
 
             return collections;
         }
@@ -376,9 +354,7 @@ namespace Editor.AbilityEditor.Config
             var collections = new ClipCollections
             {
                 Effects = new List<EffectClipData>(),
-                // Skills = new List<SkillClipData>(),
-                Audios = new List<AudioClipData>(),
-                VFXs = new List<VFXClipData>()
+                // Skills = new List<SkillClipData>()
             };
 
             if (tracks == null || tracks.Count == 0)
@@ -436,14 +412,6 @@ namespace Editor.AbilityEditor.Config
                         //     collections.Skills.Add(skillClip);
                         //     break;
 
-                        case AudioClipData audioClip:
-                            collections.Audios.Add(audioClip);
-                            break;
-
-                        case VFXClipData vfxClip:
-                            collections.VFXs.Add(vfxClip);
-                            break;
-
                         default:
                             Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
@@ -452,10 +420,7 @@ namespace Editor.AbilityEditor.Config
             }
 
             Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips from serialized tracks: " +
-                                             $"Effects={collections.Effects.Count}, " +
-                                             // $"Skills={collections.Skills.Count}, " +
-                                             $"Audios={collections.Audios.Count}, " +
-                                             $"VFXs={collections.VFXs.Count}");
+                                             $"Effects={collections.Effects.Count}");
 
             return collections;
         }
@@ -468,9 +433,7 @@ namespace Editor.AbilityEditor.Config
             var collections = new ClipCollections
             {
                 Effects = new List<EffectClipData>(),
-                // Skills = new List<SkillClipData>(),
-                Audios = new List<AudioClipData>(),
-                VFXs = new List<VFXClipData>()
+                // Skills = new List<SkillClipData>()
             };
 
             if (trackItems == null || trackItems.Count == 0)
@@ -521,14 +484,6 @@ namespace Editor.AbilityEditor.Config
                         //     collections.Skills.Add(skillClip);
                         //     break;
 
-                        case AudioClipData audioClip:
-                            collections.Audios.Add(audioClip);
-                            break;
-
-                        case VFXClipData vfxClip:
-                            collections.VFXs.Add(vfxClip);
-                            break;
-
                         default:
                             Aquila.Toolkit.Tools.Logger.Warning($"[AbilityConfigGenerator] Unknown clip type: {clip.GetType().Name}");
                             break;
@@ -537,10 +492,7 @@ namespace Editor.AbilityEditor.Config
             }
 
             Aquila.Toolkit.Tools.Logger.Info("[AbilityConfigGenerator] Collected clips from track items: " +
-                                             $"Effects={collections.Effects.Count}, " +
-                                             // $"Skills={collections.Skills.Count}, " +
-                                             $"Audios={collections.Audios.Count}, " +
-                                             $"VFXs={collections.VFXs.Count}");
+                                             $"Effects={collections.Effects.Count}");
 
             return collections;
         }

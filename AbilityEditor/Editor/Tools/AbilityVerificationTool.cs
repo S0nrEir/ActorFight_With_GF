@@ -144,36 +144,6 @@ namespace Editor.AbilityEditor.Tools
                                     AwakeEffects = effectClip.AwakeEffects != null ? (int[])effectClip.AwakeEffects.Clone() : new int[0]
                                 };
                             }
-                            else if (clip is AudioClipData audioClip)
-                            {
-                                cachedClip = new CachedAudioClipData
-                                {
-                                    ClipType = TimelineClipType.Audio,
-                                    StartTime = audioClip.StartTime,
-                                    EndTime = audioClip.EndTime,
-                                    AudioId = audioClip.AudioId,
-                                    Volume = audioClip.Volume,
-                                    Loop = audioClip.Loop,
-                                    FadeInDuration = audioClip.FadeInDuration,
-                                    FadeOutDuration = audioClip.FadeOutDuration
-                                };
-                            }
-                            else if (clip is VFXClipData vfxClip)
-                            {
-                                cachedClip = new CachedVFXClipData
-                                {
-                                    ClipType = TimelineClipType.VFX,
-                                    StartTime = vfxClip.StartTime,
-                                    EndTime = vfxClip.EndTime,
-                                    VfxPath = vfxClip.VfxPath,
-                                    AttachPoint = vfxClip.AttachPoint,
-                                    PositionOffset = vfxClip.PositionOffset,
-                                    RotationOffset = vfxClip.RotationOffset,
-                                    Scale = vfxClip.Scale,
-                                    FollowAttachPoint = vfxClip.FollowAttachPoint
-                                };
-                            }
-
                             if (cachedClip != null)
                             {
                                 cachedTrack.Clips.Add(cachedClip);
@@ -388,35 +358,6 @@ namespace Editor.AbilityEditor.Tools
                     //     : -1;
                     break;
 
-                case 2: // Audio
-                    clip = new CachedAudioClipData
-                    {
-                        ClipType = TimelineClipType.Audio,
-                        StartTime = startTime,
-                        EndTime = endTime,
-                        AudioId = reader.ReadInt32(),
-                        Volume = reader.ReadSingle(),
-                        Loop = reader.ReadBoolean(),
-                        FadeInDuration = reader.ReadSingle(),
-                        FadeOutDuration = reader.ReadSingle()
-                    };
-                    break;
-
-                case 3: // VFX
-                    clip = new CachedVFXClipData
-                    {
-                        ClipType = TimelineClipType.VFX,
-                        StartTime = startTime,
-                        EndTime = endTime,
-                        VfxPath = reader.ReadString(),
-                        AttachPoint = reader.ReadString(),
-                        PositionOffset = reader.ReadVector3(),
-                        RotationOffset = reader.ReadVector3(),
-                        Scale = reader.ReadVector3(),
-                        FollowAttachPoint = reader.ReadBoolean()
-                    };
-                    break;
-
                 default:
                     throw new InvalidDataException($"Unknown clip type: {clipType}");
             }
@@ -624,44 +565,6 @@ namespace Editor.AbilityEditor.Tools
                 if (!ArrayEquals(expectedEffect.AwakeEffects, actualEffect.AwakeEffects))
                     differences.Add($"{prefix} (EffectClip) AwakeEffects | Expected: [{string.Join(", ", expectedEffect.AwakeEffects)}] | Actual: [{string.Join(", ", actualEffect.AwakeEffects)}]");
             }
-            else if (expected is CachedAudioClipData expectedAudio && actual is CachedAudioClipData actualAudio)
-            {
-                if (expectedAudio.AudioId != actualAudio.AudioId)
-                    differences.Add($"{prefix} (AudioClip) AudioId | Expected: {expectedAudio.AudioId} | Actual: {actualAudio.AudioId}");
-                
-                if (!FloatEquals(expectedAudio.Volume, actualAudio.Volume))
-                    differences.Add($"{prefix} (AudioClip) Volume | Expected: {expectedAudio.Volume} | Actual: {actualAudio.Volume}");
-                
-                if (expectedAudio.Loop != actualAudio.Loop)
-                    differences.Add($"{prefix} (AudioClip) Loop | Expected: {expectedAudio.Loop} | Actual: {actualAudio.Loop}");
-                
-                if (!FloatEquals(expectedAudio.FadeInDuration, actualAudio.FadeInDuration))
-                    differences.Add($"{prefix} (AudioClip) FadeInDuration | Expected: {expectedAudio.FadeInDuration} | Actual: {actualAudio.FadeInDuration}");
-                
-                if (!FloatEquals(expectedAudio.FadeOutDuration, actualAudio.FadeOutDuration))
-                    differences.Add($"{prefix} (AudioClip) FadeOutDuration | Expected: {expectedAudio.FadeOutDuration} | Actual: {actualAudio.FadeOutDuration}");
-            }
-            else if (expected is CachedVFXClipData expectedVFX && actual is CachedVFXClipData actualVFX)
-            {
-                if (expectedVFX.VfxPath != actualVFX.VfxPath)
-                    differences.Add($"{prefix} (VFXClip) VfxPath | Expected: {expectedVFX.VfxPath} | Actual: {actualVFX.VfxPath}");
-                
-                if (expectedVFX.AttachPoint != actualVFX.AttachPoint)
-                    differences.Add($"{prefix} (VFXClip) AttachPoint | Expected: {expectedVFX.AttachPoint} | Actual: {actualVFX.AttachPoint}");
-                
-                if (!Vector3Equals(expectedVFX.PositionOffset, actualVFX.PositionOffset))
-                    differences.Add($"{prefix} (VFXClip) PositionOffset | Expected: {expectedVFX.PositionOffset} | Actual: {actualVFX.PositionOffset}");
-                
-                if (!Vector3Equals(expectedVFX.RotationOffset, actualVFX.RotationOffset))
-                    differences.Add($"{prefix} (VFXClip) RotationOffset | Expected: {expectedVFX.RotationOffset} | Actual: {actualVFX.RotationOffset}");
-                
-                if (!Vector3Equals(expectedVFX.Scale, actualVFX.Scale))
-                    differences.Add($"{prefix} (VFXClip) Scale | Expected: {expectedVFX.Scale} | Actual: {actualVFX.Scale}");
-                
-                if (expectedVFX.FollowAttachPoint != actualVFX.FollowAttachPoint)
-                    differences.Add($"{prefix} (VFXClip) FollowAttachPoint | Expected: {expectedVFX.FollowAttachPoint} | Actual: {actualVFX.FollowAttachPoint}");
-            }
-
             return differences;
         }
 
@@ -827,25 +730,6 @@ namespace Editor.AbilityEditor.Tools
             public int IntParam4;
             public int[] DeriveEffects;
             public int[] AwakeEffects;
-        }
-
-        internal class CachedAudioClipData : CachedClipData
-        {
-            public int AudioId;
-            public float Volume;
-            public bool Loop;
-            public float FadeInDuration;
-            public float FadeOutDuration;
-        }
-
-        internal class CachedVFXClipData : CachedClipData
-        {
-            public string VfxPath;
-            public string AttachPoint;
-            public Vector3 PositionOffset;
-            public Vector3 RotationOffset;
-            public Vector3 Scale;
-            public bool FollowAttachPoint;
         }
 
         private static bool IsSupportedVersion(byte version)

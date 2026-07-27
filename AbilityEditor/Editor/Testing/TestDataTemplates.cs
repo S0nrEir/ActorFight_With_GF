@@ -106,53 +106,6 @@ namespace Editor.AbilityEditor.Testing
     }
 
     /// <summary>
-    /// Audio Clip 模板
-    /// </summary>
-    public class AudioClipTemplate : ClipTemplate
-    {
-        public int AudioId;
-
-        public AudioClipTemplate(string name, float startTime, int audioId = 0, bool enabled = true)
-            : base(name, startTime, enabled)
-        {
-            AudioId = audioId;
-        }
-
-        public override TimelineClipData CreateClipData()
-        {
-            var clip = new AudioClipData(ClipName, StartTime, StartTime + 1f, AudioId)
-            {
-                IsEnabled = IsEnabled
-            };
-            return clip;
-        }
-    }
-
-    /// <summary>
-    /// VFX Clip 模板
-    /// </summary>
-    public class VFXClipTemplate : ClipTemplate
-    {
-        public string VFXPath;
-
-        public VFXClipTemplate(string name, float startTime, string vfxPath = "", bool enabled = true)
-            : base(name, startTime, enabled)
-        {
-            VFXPath = vfxPath;
-        }
-
-        public override TimelineClipData CreateClipData()
-        {
-            var clip = new VFXClipData(ClipName, StartTime, StartTime + 1f, VFXPath)
-            {
-                IsEnabled = IsEnabled,
-                VfxPath = VFXPath
-            };
-            return clip;
-        }
-    }
-
-    /// <summary>
     /// 测试数据模板库
     /// </summary>
     public static class TestDataTemplates
@@ -187,8 +140,8 @@ namespace Editor.AbilityEditor.Testing
 
         /// <summary>
         /// 创建标准测试场景
-        /// - 3个轨道
-        /// - 包含 Effect, Audio, VFX 多种类型
+        /// - 1个轨道
+        /// - 包含多个 Effect Clip
         /// </summary>
         public static TestScenario CreateStandardScenario()
         {
@@ -196,7 +149,7 @@ namespace Editor.AbilityEditor.Testing
             {
                 AbilityID = 10002,
                 Name = "标准测试技能",
-                Description = "测试多轨道和多类型 Clip",
+                Description = "测试标准 Effect Clip 配置",
                 CostEffectID = 1001,
                 CoolDownEffectID = 1002,
                 TargetType = AbilityTargetType.Enemy,
@@ -209,24 +162,14 @@ namespace Editor.AbilityEditor.Testing
             track1.Clips.Add(new EffectClipTemplate("伤害效果1", 0.5f, 2001));
             track1.Clips.Add(new EffectClipTemplate("伤害效果2", 1.5f, 2002));
 
-            // Track 2: Audio Clip
-            var track2 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
-            track2.Clips.Add(new AudioClipTemplate("攻击音效", 1.0f, 0));
-
-            // Track 3: VFX Clip
-            var track3 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));
-            track3.Clips.Add(new VFXClipTemplate("爆炸特效", 2.0f, "VFX/Explosion_01"));
-
             scenario.Tracks.Add(track1);
-            scenario.Tracks.Add(track2);
-            scenario.Tracks.Add(track3);
 
             return scenario;
         }
 
         /// <summary>
         /// 创建复杂测试场景
-        /// - 5个轨道
+        /// - 3个轨道
         /// - 大量 Clip,包含相同时间点的多个 Effect (测试 Trigger 合并)
         /// </summary>
         public static TestScenario CreateComplexScenario()
@@ -257,30 +200,15 @@ namespace Editor.AbilityEditor.Testing
             track2.Clips.Add(new EffectClipTemplate("眩晕", 3.0f, 3002));
             track2.Clips.Add(new EffectClipTemplate("流血", 4.0f, 3003));
 
-            // Track 3: 多个音效
-            var track3 = new TrackTemplate("音效轨道", new Color(0.4f, 0.8f, 0.8f));
-            track3.Clips.Add(new AudioClipTemplate("蓄力音效", 0.0f, 0));
-            track3.Clips.Add(new AudioClipTemplate("释放音效", 0.5f, 0));
-            track3.Clips.Add(new AudioClipTemplate("爆炸音效", 2.0f, 0));
-
-            // Track 4: 多个特效
-            var track4 = new TrackTemplate("特效轨道", new Color(0.8f, 0.8f, 0.4f));
-            track4.Clips.Add(new VFXClipTemplate("蓄力光环", 0.0f, "VFX/ChargeAura"));
-            track4.Clips.Add(new VFXClipTemplate("冲击波", 0.5f, "VFX/Shockwave"));
-            track4.Clips.Add(new VFXClipTemplate("爆炸", 2.0f, "VFX/Explosion"));
-            track4.Clips.Add(new VFXClipTemplate("余波", 3.0f, "VFX/Aftershock"));
-
-            // Track 5: 额外效果
-            var track5 = new TrackTemplate("持续效果轨道", new Color(0.5f, 0.5f, 0.8f));
-            track5.Clips.Add(new EffectClipTemplate("持续伤害1", 5.0f, 4001));
-            track5.Clips.Add(new EffectClipTemplate("持续伤害2", 6.0f, 4002));
-            track5.Clips.Add(new EffectClipTemplate("持续伤害3", 7.0f, 4003));
+            // Track 3: 额外效果
+            var track3 = new TrackTemplate("持续效果轨道", new Color(0.5f, 0.5f, 0.8f));
+            track3.Clips.Add(new EffectClipTemplate("持续伤害1", 5.0f, 4001));
+            track3.Clips.Add(new EffectClipTemplate("持续伤害2", 6.0f, 4002));
+            track3.Clips.Add(new EffectClipTemplate("持续伤害3", 7.0f, 4003));
 
             scenario.Tracks.Add(track1);
             scenario.Tracks.Add(track2);
             scenario.Tracks.Add(track3);
-            scenario.Tracks.Add(track4);
-            scenario.Tracks.Add(track5);
 
             return scenario;
         }

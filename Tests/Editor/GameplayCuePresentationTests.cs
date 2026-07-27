@@ -118,7 +118,18 @@ namespace Aquila.Tests.Editor
             ability.Id = 9001;
             ability.TimelineID = 1;
             ability.TimelineDuration = 1f;
-            ability.SetTracks(new List<SerializedTrackData>());
+            var effect = new EffectClipData("SimulatedEffect", 0.1f, 7001)
+            {
+                ResolveTypeID = 1
+            };
+            ability.SetTracks(new List<SerializedTrackData>
+            {
+                new SerializedTrackData
+                {
+                    TrackName = "Effect Track",
+                    Clips = new List<TimelineClipData> { effect }
+                }
+            });
             ability.SetMontageEvents(new List<MontageEventData>
             {
                 new MontageEventData(0.2f, 5, "impact", "Event.Attack.Hit")
@@ -127,42 +138,92 @@ namespace Aquila.Tests.Editor
             {
                 new AbilityCueBindingData(
                     "Event.Attack.Hit",
-                    "GameplayCue.Attack.Hit",
+                    "GameplayCue.Attack.Hit.Vfx",
                     GameplayCueTargetPolicy.PrimaryTarget,
                     GameplayCueLocationPolicy.Target,
                     1.5f,
                     new Vector3(1f, 2f, 3f),
-                    GameplayCueEventType.Add)
+                    GameplayCueEventType.Execute),
+                new AbilityCueBindingData(
+                    "Event.Attack.Hit",
+                    "GameplayCue.Attack.Hit.Audio",
+                    GameplayCueTargetPolicy.PrimaryTarget,
+                    GameplayCueLocationPolicy.Target,
+                    0.75f,
+                    Vector3.zero,
+                    GameplayCueEventType.Execute)
             });
 
             var v5Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5.ablt");
             var v4Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v4.ablt");
+            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5-retired-clip.ablt");
             AbilityBinaryExporter.ExportAbility(ability, v5Path);
             File.WriteAllBytes(v4Path, new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T', 0x04 });
+            WriteRetiredClipV5(retiredPath);
 
             var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseAbilityBinary", BindingFlags.NonPublic | BindingFlags.Static);
             var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v5Path), new Dictionary<int, EffectData>() });
+            Assert.AreEqual(1, parsed.GetEffects().Count);
             Assert.AreEqual("Event.Attack.Hit", parsed.GetMontageEvents()[0].EventTag);
-            Assert.AreEqual("GameplayCue.Attack.Hit", parsed.GetCueBindings()[0].CueTag);
-            Assert.AreEqual(GameplayCueEventType.Add, parsed.GetCueBindings()[0].EventType);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Vfx", parsed.GetCueBindings()[0].CueTag);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Audio", parsed.GetCueBindings()[1].CueTag);
+            Assert.AreEqual(GameplayCueEventType.Execute, parsed.GetCueBindings()[0].EventType);
             LogAssert.ignoreFailingMessages = true;
             Assert.AreEqual(0, ((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v4Path), new Dictionary<int, EffectData>() })).GetId());
+            Assert.AreEqual(0, ((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(retiredPath), new Dictionary<int, EffectData>() })).GetId());
 
             var gameObject = new GameObject("AbilityPoolTest");
             var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
             var tryReadAbility = typeof(Component_AbilityPool).GetMethod("TryReadAbility", BindingFlags.NonPublic | BindingFlags.Instance);
             var v5Args = new object[] { v5Path, null };
             Assert.IsTrue((bool)tryReadAbility.Invoke(abilityPool, v5Args));
-            Assert.AreEqual("GameplayCue.Attack.Hit", ((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag);
-            Assert.AreEqual(GameplayCueEventType.Add, ((AbilityData)v5Args[1]).GetCueBindings()[0].EventType);
+            Assert.AreEqual(1, ((AbilityData)v5Args[1]).GetEffects().Count);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Vfx", ((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Audio", ((AbilityData)v5Args[1]).GetCueBindings()[1].CueTag);
+            Assert.AreEqual(GameplayCueEventType.Execute, ((AbilityData)v5Args[1]).GetCueBindings()[0].EventType);
             var v4Args = new object[] { v4Path, null };
             Assert.IsFalse((bool)tryReadAbility.Invoke(abilityPool, v4Args));
+            var retiredArgs = new object[] { retiredPath, null };
+            Assert.IsFalse((bool)tryReadAbility.Invoke(abilityPool, retiredArgs));
             LogAssert.ignoreFailingMessages = false;
 
             UnityEngine.Object.DestroyImmediate(gameObject);
             UnityEngine.Object.DestroyImmediate(ability);
             File.Delete(v5Path);
             File.Delete(v4Path);
+            File.Delete(retiredPath);
+        }
+
+        [Test]
+        public void AbilityBinaryAssets_AreCleanV5AndReadableByBothRuntimeReaders()
+        {
+            Assert.AreEqual(0, (int)TimelineClipType.Ability);
+            Assert.AreEqual(1, (int)TimelineClipType.Buff);
+            Assert.AreEqual(4, (int)TimelineClipType.Animation);
+            Assert.AreEqual(5, (int)TimelineClipType.Custom);
+
+            var paths = new List<string>(Directory.GetFiles("Assets/Res/Config/Ability", "*.ablt"));
+            paths.Add("Assets/AbilityEditor/SandBox/sand_box.ablt");
+            Assert.AreEqual(9, paths.Count);
+
+            var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseAbilityBinary", BindingFlags.NonPublic | BindingFlags.Static);
+            var gameObject = new GameObject("AbilityPoolAssetTest");
+            var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
+            var tryReadAbility = typeof(Component_AbilityPool).GetMethod("TryReadAbility", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            foreach (var path in paths)
+            {
+                AssertCleanV5File(path);
+
+                var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(path), new Dictionary<int, EffectData>() });
+                Assert.Greater(parsed.GetId(), 0, path);
+
+                var args = new object[] { path, null };
+                Assert.IsTrue((bool)tryReadAbility.Invoke(abilityPool, args), path);
+                Assert.AreEqual(parsed.GetId(), ((AbilityData)args[1]).GetId(), path);
+            }
+
+            UnityEngine.Object.DestroyImmediate(gameObject);
         }
 
         [Test]
@@ -224,6 +285,118 @@ namespace Aquila.Tests.Editor
             var notify = ScriptableObject.CreateInstance<TestGameplayCueNotify>();
             SetCueTag(notify, tag);
             return notify;
+        }
+
+        private static void WriteRetiredClipV5(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Create))
+            using (var writer = new BinaryWriter(stream))
+            {
+                writer.Write(new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T' });
+                writer.Write((byte)0x05);
+                writer.Write(9002);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0f);
+                writer.Write(1);
+                writer.Write(1f);
+                writer.Write(1);
+                writer.Write(1);
+                writer.Write(2);
+                writer.Write(0f);
+                writer.Write(0f);
+            }
+        }
+
+        private static void AssertCleanV5File(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new BinaryReader(stream))
+            {
+                Assert.AreEqual("ABLT", new string(reader.ReadChars(4)), path);
+                Assert.AreEqual(0x05, reader.ReadByte(), path);
+                reader.ReadInt32();
+                reader.ReadInt32();
+                reader.ReadInt32();
+                reader.ReadInt32();
+                reader.ReadInt32();
+                reader.ReadSingle();
+                reader.ReadInt32();
+                reader.ReadSingle();
+
+                var trackCount = reader.ReadInt32();
+                for (var trackIndex = 0; trackIndex < trackCount; trackIndex++)
+                {
+                    var clipCount = reader.ReadInt32();
+                    for (var clipIndex = 0; clipIndex < clipCount; clipIndex++)
+                    {
+                        Assert.AreEqual(1, reader.ReadInt32(), $"{path} track={trackIndex} clip={clipIndex}");
+                        reader.ReadSingle();
+                        reader.ReadSingle();
+                        SkipEffectClip(reader);
+                    }
+                }
+
+                var montageCount = reader.ReadInt32();
+                for (var i = 0; i < montageCount; i++)
+                {
+                    reader.ReadSingle();
+                    reader.ReadInt32();
+                    ReadLengthPrefixedString(reader);
+                    ReadLengthPrefixedString(reader);
+                }
+
+                var bindingCount = reader.ReadInt32();
+                for (var i = 0; i < bindingCount; i++)
+                {
+                    ReadLengthPrefixedString(reader);
+                    ReadLengthPrefixedString(reader);
+                    reader.ReadByte();
+                    reader.ReadByte();
+                    reader.ReadByte();
+                    reader.ReadSingle();
+                    reader.ReadSingle();
+                    reader.ReadSingle();
+                    reader.ReadSingle();
+                }
+
+                Assert.AreEqual(stream.Length, stream.Position, path);
+            }
+        }
+
+        private static void SkipEffectClip(BinaryReader reader)
+        {
+            reader.ReadInt32();
+            reader.ReadInt32();
+            reader.ReadBoolean();
+            reader.ReadInt32();
+            reader.ReadUInt16();
+            reader.ReadInt32();
+            reader.ReadInt32();
+            reader.ReadInt32();
+            reader.ReadSingle();
+            reader.ReadSingle();
+            reader.ReadUInt16();
+            reader.ReadBoolean();
+            for (var i = 0; i < 4; i++)
+                reader.ReadSingle();
+            for (var i = 0; i < 4; i++)
+                reader.ReadInt32();
+            var deriveCount = reader.ReadInt32();
+            for (var i = 0; i < deriveCount; i++)
+                reader.ReadInt32();
+            var awakeCount = reader.ReadInt32();
+            for (var i = 0; i < awakeCount; i++)
+                reader.ReadInt32();
+            reader.ReadInt32();
+        }
+
+        private static string ReadLengthPrefixedString(BinaryReader reader)
+        {
+            var length = reader.ReadInt32();
+            return length <= 0 ? string.Empty : System.Text.Encoding.UTF8.GetString(reader.ReadBytes(length));
         }
 
         private static void SetCueTag(GameplayCueNotifyBase notify, string tag)

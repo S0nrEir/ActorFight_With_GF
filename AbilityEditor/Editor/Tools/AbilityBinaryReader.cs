@@ -155,18 +155,9 @@ namespace Editor.AbilityEditor.Tools
                 case 1: // Buff/Effect
                     ReadEffectClip(reader, sb, indent);
                     break;
-                
-                case 2: // Audio
-                    ReadAudioClip(reader, sb, indent);
-                    break;
-                
-                case 3: // VFX
-                    ReadVFXClip(reader, sb, indent);
-                    break;
-                
+
                 default:
-                    sb.AppendLine($"{indent}[Unknown clip type data]");
-                    break;
+                    throw new InvalidDataException($"[AbilityBinaryReader] Unsupported clip type: {clipType}");
             }
         }
 
@@ -243,43 +234,6 @@ namespace Editor.AbilityEditor.Tools
             sb.AppendLine($"{indent}FormulaID: {reader.ReadInt32()}");
         }
 
-        private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)
-        {
-            int audioId = reader.ReadInt32();
-            float volume = reader.ReadSingle();
-            bool loop = reader.ReadBoolean();
-            float fadeIn = reader.ReadSingle();
-            float fadeOut = reader.ReadSingle();
-
-            sb.AppendLine($"{indent}AudioId: {audioId}");
-            sb.AppendLine($"{indent}Volume: {volume:F2}");
-            sb.AppendLine($"{indent}Loop: {loop}");
-            sb.AppendLine($"{indent}FadeIn: {fadeIn:F2}s, FadeOut: {fadeOut:F2}s");
-        }
-
-        private static void ReadVFXClip(BinaryReader reader, StringBuilder sb, string indent)
-        {
-            string vfxPath = ReadString(reader);
-            string attachPoint = ReadString(reader);
-            float posX = reader.ReadSingle();
-            float posY = reader.ReadSingle();
-            float posZ = reader.ReadSingle();
-            float rotX = reader.ReadSingle();
-            float rotY = reader.ReadSingle();
-            float rotZ = reader.ReadSingle();
-            float scaleX = reader.ReadSingle();
-            float scaleY = reader.ReadSingle();
-            float scaleZ = reader.ReadSingle();
-            bool followAttach = reader.ReadBoolean();
-
-            sb.AppendLine($"{indent}VfxPath: {vfxPath}");
-            sb.AppendLine($"{indent}AttachPoint: {attachPoint}");
-            sb.AppendLine($"{indent}Position: ({posX:F2}, {posY:F2}, {posZ:F2})");
-            sb.AppendLine($"{indent}Rotation: ({rotX:F2}, {rotY:F2}, {rotZ:F2})");
-            sb.AppendLine($"{indent}Scale: ({scaleX:F2}, {scaleY:F2}, {scaleZ:F2})");
-            sb.AppendLine($"{indent}FollowAttachPoint: {followAttach}");
-        }
-
         private static string ReadString(BinaryReader reader)
         {
             int length = reader.ReadInt32();
@@ -295,8 +249,6 @@ namespace Editor.AbilityEditor.Tools
             {
                 case 0: return "Ability";
                 case 1: return "Buff/Effect";
-                case 2: return "Audio";
-                case 3: return "VFX";
                 case 4: return "Animation";
                 case 5: return "Custom";
                 default: return "Unknown";

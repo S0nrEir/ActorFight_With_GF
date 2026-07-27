@@ -123,7 +123,18 @@ namespace Editor.AbilityEditor.Tools
             ability.Id = 9001;
             ability.TimelineID = 1;
             ability.TimelineDuration = 1f;
-            ability.SetTracks(new List<SerializedTrackData>());
+            var effect = new EffectClipData("SimulatedEffect", 0.1f, 7001)
+            {
+                ResolveTypeID = 1
+            };
+            ability.SetTracks(new List<SerializedTrackData>
+            {
+                new SerializedTrackData
+                {
+                    TrackName = "Effect Track",
+                    Clips = new List<TimelineClipData> { effect }
+                }
+            });
             ability.SetMontageEvents(new List<MontageEventData>
             {
                 new MontageEventData(0.2f, 5, "impact", "Event.Attack.Hit")
@@ -132,39 +143,57 @@ namespace Editor.AbilityEditor.Tools
             {
                 new AbilityCueBindingData(
                     "Event.Attack.Hit",
-                    "GameplayCue.Attack.Hit",
+                    "GameplayCue.Attack.Hit.Vfx",
                     GameplayCueTargetPolicy.PrimaryTarget,
                     GameplayCueLocationPolicy.Target,
                     1.5f,
                     new Vector3(1f, 2f, 3f),
-                    GameplayCueEventType.Add)
+                    GameplayCueEventType.Execute),
+                new AbilityCueBindingData(
+                    "Event.Attack.Hit",
+                    "GameplayCue.Attack.Hit.Audio",
+                    GameplayCueTargetPolicy.PrimaryTarget,
+                    GameplayCueLocationPolicy.Target,
+                    0.75f,
+                    Vector3.zero,
+                    GameplayCueEventType.Execute)
             });
 
             var v5Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5.ablt");
             var v4Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v4.ablt");
+            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5-retired-clip.ablt");
             AbilityBinaryExporter.ExportAbility(ability, v5Path);
             File.WriteAllBytes(v4Path, new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T', 0x04 });
+            WriteRetiredClipV5(retiredPath);
 
             var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseAbilityBinary", BindingFlags.NonPublic | BindingFlags.Static);
             var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v5Path), new Dictionary<int, EffectData>() });
+            Require(parsed.GetEffects().Count == 1, "Tools.Ability v5 effect roundtrip");
             Require(parsed.GetMontageEvents()[0].EventTag == "Event.Attack.Hit", "Tools.Ability v5 montage roundtrip");
-            Require(parsed.GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit", "Tools.Ability v5 cue roundtrip");
-            Require(parsed.GetCueBindings()[0].EventType == GameplayCueEventType.Add, "Tools.Ability v5 cue event type roundtrip");
+            Require(parsed.GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Tools.Ability v5 VFX cue roundtrip");
+            Require(parsed.GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Tools.Ability v5 Audio cue roundtrip");
+            Require(parsed.GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Tools.Ability v5 cue event type roundtrip");
             Require(((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v4Path), new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability v4 rejection");
+            Require(((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(retiredPath), new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability retired v5 clip rejection");
 
             var gameObject = new GameObject("AbilityPoolSelfTest");
             var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
             var tryReadAbility = typeof(Component_AbilityPool).GetMethod("TryReadAbility", BindingFlags.NonPublic | BindingFlags.Instance);
             var v5Args = new object[] { v5Path, null };
             Require((bool)tryReadAbility.Invoke(abilityPool, v5Args), "Component_AbilityPool v5 read");
-            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit", "Component_AbilityPool v5 cue roundtrip");
-            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].EventType == GameplayCueEventType.Add, "Component_AbilityPool v5 cue event type roundtrip");
+            Require(((AbilityData)v5Args[1]).GetEffects().Count == 1, "Component_AbilityPool v5 effect roundtrip");
+            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Component_AbilityPool v5 VFX cue roundtrip");
+            Require(((AbilityData)v5Args[1]).GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Component_AbilityPool v5 Audio cue roundtrip");
+            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Component_AbilityPool v5 cue event type roundtrip");
             var v4Args = new object[] { v4Path, null };
             Require(!(bool)tryReadAbility.Invoke(abilityPool, v4Args), "Component_AbilityPool v4 rejection");
+            var retiredArgs = new object[] { retiredPath, null };
+            Require(!(bool)tryReadAbility.Invoke(abilityPool, retiredArgs), "Component_AbilityPool retired v5 clip rejection");
 
             Destroy(gameObject, ability);
             File.Delete(v5Path);
             File.Delete(v4Path);
+            File.Delete(retiredPath);
         }
 
         private static void TestNotifies()
@@ -217,6 +246,29 @@ namespace Editor.AbilityEditor.Tools
             var notify = ScriptableObject.CreateInstance<GameplayCueSelfTestNotify>();
             SetCueTag(notify, cueTag);
             return notify;
+        }
+
+        private static void WriteRetiredClipV5(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Create))
+            using (var writer = new BinaryWriter(stream))
+            {
+                writer.Write(new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T' });
+                writer.Write((byte)0x05);
+                writer.Write(9002);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0);
+                writer.Write(0f);
+                writer.Write(1);
+                writer.Write(1f);
+                writer.Write(1);
+                writer.Write(1);
+                writer.Write(2);
+                writer.Write(0f);
+                writer.Write(0f);
+            }
         }
 
         private static void SetCueTag(GameplayCueNotifyBase notify, string cueTag)

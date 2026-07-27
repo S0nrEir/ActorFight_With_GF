@@ -71,8 +71,6 @@ namespace Editor.AbilityEditor.Config
                 {
                     if (clip is EffectClipData effectClip && effectClip.EffectId > 0)
                         ExportEffectClipAsAsset(effectClip, exportedIds);
-
-                    // 预留：其他类型 clip 的导出扩展点（如 AudioClipData）
                 }
             }
 

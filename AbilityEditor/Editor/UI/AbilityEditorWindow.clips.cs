@@ -13,7 +13,6 @@ namespace Editor.AbilityEditor
         private TimelineClipManager _clipManager;
         private TimelineClipUI _selectedClipUI;
         private EffectClipInspectorProxy _clipInspectorProxy;
-        private AudioClipInspectorProxy _audioClipInspectorProxy;
 
         /// <summary>
         /// 初始化Clip管理器
@@ -105,21 +104,9 @@ namespace Editor.AbilityEditor
                 Selection.activeObject = _clipInspectorProxy;
                 Aquila.Toolkit.Tools.Logger.Info($"Showing Effect Clip in Unity Inspector - ID: {effectClip.EffectId}, Timeline Duration: {_timelineDuration:F2}s");
             }
-            else if (clipUI.ClipData is AudioClipData audioClip)
-            {
-                if (_audioClipInspectorProxy == null)
-                {
-                    _audioClipInspectorProxy = CreateInstance<AudioClipInspectorProxy>();
-                    _audioClipInspectorProxy.name = "Audio Clip Inspector";
-                }
-
-                _audioClipInspectorProxy.BindAudioClipData(audioClip, clipUI, _timelineDuration);
-                Selection.activeObject = _audioClipInspectorProxy;
-                Aquila.Toolkit.Tools.Logger.Info($"Showing Audio Clip in Unity Inspector - AudioId: {audioClip.AudioId}, Timeline Duration: {_timelineDuration:F2}s");
-            }
             else
             {
-                // 不是EffectClip或AudioClip，清除选择
+                // 不是 EffectClip，清除选择
                 Selection.activeObject = null;
             }
         }
@@ -136,11 +123,6 @@ namespace Editor.AbilityEditor
                 {
                     _clipInspectorProxy.SyncFromClipData();
                     EditorUtility.SetDirty(_clipInspectorProxy);
-                }
-                else if (clipUI.ClipData is AudioClipData && _audioClipInspectorProxy != null)
-                {
-                    _audioClipInspectorProxy.SyncFromClipData();
-                    EditorUtility.SetDirty(_audioClipInspectorProxy);
                 }
             }
 

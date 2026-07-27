@@ -449,17 +449,15 @@ namespace Aquila.AbilityPool
                     float startTime = reader.ReadSingle();
                     float endTime = reader.ReadSingle();
 
-                    if (clipType == CLIP_TYPE_EFFECT)
+                    if (clipType != CLIP_TYPE_EFFECT)
                     {
-                        var effectData = ReadEffectClip(reader, startTime, endTime, version);
-                        if (effectData.HasValue)
-                            effectList.Add(effectData.Value);
+                        Tools.Logger.Error($"[AbilityPool] Unsupported clip type {clipType} in ability {abilityId}: {filePath}");
+                        return false;
                     }
-                    else
-                    {
-                        // 跳过非 Effect clip 的数据（Audio / VFX）
-                        SkipNonEffectClip(reader, clipType);
-                    }
+
+                    var effectData = ReadEffectClip(reader, startTime, endTime, version);
+                    if (effectData.HasValue)
+                        effectList.Add(effectData.Value);
                 }
             }
 
@@ -557,30 +555,6 @@ namespace Aquila.AbilityPool
             );
         }
 
-        /// <summary>
-        /// 跳过 Audio / VFX clip 的字节，保持 BinaryReader 位置正确
-        /// </summary>
-        private void SkipNonEffectClip(BinaryReader reader, int clipType)
-        {
-            if (clipType == CLIP_TYPE_AUDIO)
-            {
-                reader.ReadInt32();     // AudioId
-                reader.ReadSingle();    // Volume
-                reader.ReadBoolean();   // Loop
-                reader.ReadSingle();    // FadeIn
-                reader.ReadSingle();    // FadeOut
-            }
-            else if (clipType == CLIP_TYPE_VFX)
-            {
-                ReadString(reader);     // VfxPath
-                ReadString(reader);     // AttachPoint
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Position
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Rotation
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Scale
-                reader.ReadBoolean();   // FollowAttachPoint
-            }
-        }
-
         private string ReadString(BinaryReader reader)
         {
             int length = reader.ReadInt32();
@@ -657,8 +631,6 @@ namespace Aquila.AbilityPool
         private const byte ABILITY_VERSION_5 = 0x05;
 
         private const int CLIP_TYPE_EFFECT = 1;
-        private const int CLIP_TYPE_AUDIO  = 2;
-        private const int CLIP_TYPE_VFX    = 3;
         
     /// <summary>
     /// EffectSpec 统一初始化注册校验实现

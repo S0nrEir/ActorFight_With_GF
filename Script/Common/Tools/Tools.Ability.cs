@@ -286,24 +286,13 @@ namespace Aquila.Toolkit
                             float startTime = reader.ReadSingle();
                             float endTime = reader.ReadSingle();
 
-                            switch (clipType)
+                            if (clipType != 1)
                             {
-                                case 1:
-                                    ReadEffectClip(reader, startTime, endTime, effectTemplates, effectDataList);
-                                    break;
-                                
-                                case 2:
-                                    SkipAudioClip(reader);
-                                    break;
-                                
-                                case 3:
-                                    SkipVfxClip(reader);
-                                    break;
-                                
-                                default:
-                                    Logger.Warning($"Tools.Ability.ParseAbilityBinary: unknown clip type {clipType} in ability {id}");
-                                    break;
+                                Logger.Warning($"Tools.Ability.ParseAbilityBinary: unsupported clip type {clipType} in ability {id}");
+                                return default;
                             }
+
+                            ReadEffectClip(reader, startTime, endTime, effectTemplates, effectDataList);
                         }
                     }
 
@@ -440,25 +429,6 @@ namespace Aquila.Toolkit
                 }
 
                 effectDataList.Add(effectData);
-            }
-
-            private static void SkipAudioClip(ByteReader reader)
-            {
-                reader.ReadInt32();
-                reader.ReadSingle();
-                reader.ReadBoolean();
-                reader.ReadSingle();
-                reader.ReadSingle();
-            }
-
-            private static void SkipVfxClip(ByteReader reader)
-            {
-                reader.ReadString();
-                reader.ReadString();
-                reader.ReadVector3();
-                reader.ReadVector3();
-                reader.ReadVector3();
-                reader.ReadBoolean();
             }
 
             private static MontageEventData[] ReadMontageEvents(ByteReader reader)
