@@ -239,8 +239,9 @@ namespace Aquila.Tests.Editor
 
             var audioNotify = ScriptableObject.CreateInstance<TestGameplayCueAudioNotify>();
             SetCueTag(audioNotify, "Cue.Visual");
+            audioNotify.ResolvedAssetPath = "Assets/Test/Cue.wav";
             var audioObject = new SerializedObject(audioNotify);
-            audioObject.FindProperty("_assetPath").stringValue = "Assets/Test/Cue.wav";
+            audioObject.FindProperty("_soundEffectId").intValue = 20001;
             audioObject.FindProperty("_soundGroup").stringValue = "Effect";
             audioObject.FindProperty("_volume").floatValue = 0.75f;
             audioObject.ApplyModifiedPropertiesWithoutUndo();
@@ -265,6 +266,7 @@ namespace Aquila.Tests.Editor
             var vfxInstance = GameObject.Find("CueVfxPrefab(Clone)");
             Assert.IsNotNull(vfxInstance);
             Assert.AreEqual(1, audioNotify.PlayCount);
+            Assert.AreEqual(20001, audioNotify.ResolvedSoundEffectId);
             Assert.AreEqual("Assets/Test/Cue.wav", audioNotify.AssetPath);
             Assert.AreEqual("Effect", audioNotify.SoundGroup);
             Assert.AreEqual(0.75f, audioNotify.Volume);
@@ -278,6 +280,148 @@ namespace Aquila.Tests.Editor
             UnityEngine.Object.DestroyImmediate(throwingNotify);
             UnityEngine.Object.DestroyImmediate(afterFailureNotify);
             UnityEngine.Object.DestroyImmediate(prefab);
+        }
+
+        [Test]
+        public void GameplayCueAudioNotify_MissingSoundEffect_LogsAndSkipsPlayback()
+        {
+            var notify = ScriptableObject.CreateInstance<TestGameplayCueAudioNotify>();
+            SetCueTag(notify, "GameplayCue.Missing.Audio");
+            var notifyObject = new SerializedObject(notify);
+            notifyObject.FindProperty("_soundEffectId").intValue = 99999;
+            notifyObject.ApplyModifiedPropertiesWithoutUndo();
+
+            LogAssert.Expect(
+                LogType.Error,
+                "<color=orange>[GameplayCueAudioNotify] Sound effect lookup failed, SoundEffectId=99999, CueTag=GameplayCue.Missing.Audio</color>");
+            notify.Execute(new GameplayCueParameters { Location = Vector3.one });
+
+            Assert.AreEqual(99999, notify.ResolvedSoundEffectId);
+            Assert.AreEqual(0, notify.PlayCount);
+            UnityEngine.Object.DestroyImmediate(notify);
+        }
+
+        [Test]
+        public void PhysicalAttackAudioCue_SourceAssetsScenesAndSimulation_AreConfigured()
+        {
+            const string abilityPath = "Assets/AbilityEditor/Editor/Config/Ability/1000.asset";
+            const string notifyPath = "Assets/Res/GameplayCue/Skill/PhysicalAttackHitAudio.asset";
+            const string audioPath = "Assets/Res/Audio/Fight/hitted.mp3";
+            var ability = AssetDatabase.LoadAssetAtPath<AbilityEditorSOData>(abilityPath);
+            var notify = AssetDatabase.LoadAssetAtPath<GameplayCueAudioNotify>(notifyPath);
+
+            Assert.IsNotNull(ability);
+            Assert.AreEqual(1, ability.MontageEvents.Count);
+            Assert.AreEqual(2f, ability.MontageEvents[0].Time);
+            Assert.AreEqual(0, ability.MontageEvents[0].Sequence);
+            Assert.AreEqual("physical_attack_hit", ability.MontageEvents[0].MarkerId);
+            Assert.AreEqual("Event.Ability.PhysicalAttack.Hit", ability.MontageEvents[0].EventTag);
+            Assert.AreEqual(1, ability.CueBindings.Count);
+            Assert.AreEqual("Event.Ability.PhysicalAttack.Hit", ability.CueBindings[0].EventTag);
+            Assert.AreEqual("GameplayCue.Ability.PhysicalAttack.Hit", ability.CueBindings[0].CueTag);
+            Assert.AreEqual(GameplayCueEventType.Execute, ability.CueBindings[0].EventType);
+            Assert.AreEqual(GameplayCueTargetPolicy.PrimaryTarget, ability.CueBindings[0].TargetPolicy);
+            Assert.AreEqual(GameplayCueLocationPolicy.Target, ability.CueBindings[0].LocationPolicy);
+            Assert.AreEqual(1f, ability.CueBindings[0].Magnitude);
+            Assert.AreEqual(Vector3.zero, ability.CueBindings[0].LocationOffset);
+
+            Assert.IsNotNull(notify);
+            Assert.AreEqual("GameplayCue.Ability.PhysicalAttack.Hit", notify.CueTag);
+            var notifyObject = new SerializedObject(notify);
+            Assert.AreEqual(20001, notifyObject.FindProperty("_soundEffectId").intValue);
+            Assert.AreEqual("Effect", notifyObject.FindProperty("_soundGroup").stringValue);
+            Assert.AreEqual(1f, notifyObject.FindProperty("_volume").floatValue);
+
+            var soundEffectMap = new Cfg.Common.SoundEffectMap(
+                new Bright.Serialization.ByteBuf(File.ReadAllBytes("Assets/Res/DataTables/common_soundeffectmap.bytes")));
+            var soundEffect = soundEffectMap.GetOrDefault(20001);
+            Assert.IsNotNull(soundEffect);
+            Assert.AreEqual(audioPath, soundEffect.asset_path);
+            Assert.IsNotNull(AssetDatabase.LoadAssetAtPath<AudioClip>(audioPath));
+            CollectionAssert.Contains(AssetDatabase.GetDependencies("Assets/Res/Scene/Start.unity", true), notifyPath);
+            CollectionAssert.Contains(AssetDatabase.GetDependencies("Assets/AbilityEditor/AbilityEditorEntry.unity", true), notifyPath);
+
+            var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod(
+                "ParseAbilityBinary",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            var abilityPoolObject = new GameObject("PhysicalAttackAbilityPoolTest");
+            var abilityPool = abilityPoolObject.AddComponent<Component_AbilityPool>();
+            var tryReadAbility = typeof(Component_AbilityPool).GetMethod(
+                "TryReadAbility",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var binaryPath in new[]
+                     {
+                         "Assets/Res/Config/Ability/1000.ablt",
+                         "Assets/AbilityEditor/SandBox/sand_box.ablt"
+                     })
+            {
+                AssertCleanV5File(binaryPath);
+                var bytes = File.ReadAllBytes(binaryPath);
+                var parsed = (AbilityData)parseAbility.Invoke(
+                    null,
+                    new object[] { bytes, new Dictionary<int, EffectData>() });
+                AssertPhysicalAttackCueData(parsed, binaryPath);
+
+                var readArgs = new object[] { binaryPath, null };
+                Assert.IsTrue((bool)tryReadAbility.Invoke(abilityPool, readArgs), binaryPath);
+                AssertPhysicalAttackCueData((AbilityData)readArgs[1], binaryPath);
+            }
+            UnityEngine.Object.DestroyImmediate(abilityPoolObject);
+
+            var simulatedNotify = ScriptableObject.CreateInstance<TestGameplayCueAudioNotify>();
+            simulatedNotify.ResolvedAssetPath = soundEffect.asset_path;
+            var simulatedObject = new SerializedObject(simulatedNotify);
+            simulatedObject.FindProperty("_soundEffectId").intValue = 20001;
+            simulatedObject.FindProperty("_soundGroup").stringValue = "Effect";
+            simulatedObject.FindProperty("_volume").floatValue = 1f;
+            simulatedObject.ApplyModifiedPropertiesWithoutUndo();
+            var positions = new Dictionary<int, Vector3>
+            {
+                { 1, Vector3.zero },
+                { 2, new Vector3(3f, 4f, 5f) }
+            };
+            var montage = AbilityMontage.Create(ability.MontageEvents, ability.Id, 10, 1, new[] { 2 });
+            montage.GameplayEvent += gameplayEvent => AbilityCueRouter.Route(
+                ability.CueBindings,
+                gameplayEvent,
+                actorId => positions[actorId],
+                (cueTag, parameters) =>
+                {
+                    Assert.AreEqual("GameplayCue.Ability.PhysicalAttack.Hit", cueTag);
+                    simulatedNotify.Execute(parameters);
+                });
+            montage.Start();
+            montage.Advance(0f, 1.9f);
+            Assert.AreEqual(0, simulatedNotify.PlayCount);
+            montage.Advance(1.9f, 2.1f);
+            montage.Advance(2.1f, 5f);
+
+            Assert.AreEqual(1, simulatedNotify.PlayCount);
+            Assert.AreEqual(20001, simulatedNotify.ResolvedSoundEffectId);
+            Assert.AreEqual(audioPath, simulatedNotify.AssetPath);
+            Assert.AreEqual("Effect", simulatedNotify.SoundGroup);
+            Assert.AreEqual(1f, simulatedNotify.Volume);
+            Assert.AreEqual(new Vector3(3f, 4f, 5f), simulatedNotify.Location);
+            ReferencePool.Release(montage);
+            UnityEngine.Object.DestroyImmediate(simulatedNotify);
+        }
+
+        private static void AssertPhysicalAttackCueData(AbilityData ability, string source)
+        {
+            Assert.AreEqual(1000, ability.GetId(), source);
+            Assert.AreEqual(1, ability.GetMontageEvents().Count, source);
+            Assert.AreEqual(2f, ability.GetMontageEvents()[0].Time, source);
+            Assert.AreEqual(0, ability.GetMontageEvents()[0].Sequence, source);
+            Assert.AreEqual("physical_attack_hit", ability.GetMontageEvents()[0].MarkerId, source);
+            Assert.AreEqual("Event.Ability.PhysicalAttack.Hit", ability.GetMontageEvents()[0].EventTag, source);
+            Assert.AreEqual(1, ability.GetCueBindings().Count, source);
+            Assert.AreEqual("Event.Ability.PhysicalAttack.Hit", ability.GetCueBindings()[0].EventTag, source);
+            Assert.AreEqual("GameplayCue.Ability.PhysicalAttack.Hit", ability.GetCueBindings()[0].CueTag, source);
+            Assert.AreEqual(GameplayCueEventType.Execute, ability.GetCueBindings()[0].EventType, source);
+            Assert.AreEqual(GameplayCueTargetPolicy.PrimaryTarget, ability.GetCueBindings()[0].TargetPolicy, source);
+            Assert.AreEqual(GameplayCueLocationPolicy.Target, ability.GetCueBindings()[0].LocationPolicy, source);
+            Assert.AreEqual(1f, ability.GetCueBindings()[0].Magnitude, source);
+            Assert.AreEqual(Vector3.zero, ability.GetCueBindings()[0].LocationOffset, source);
         }
 
         private static TestGameplayCueNotify CreateNotify(string tag)
@@ -435,10 +579,18 @@ namespace Aquila.Tests.Editor
     public sealed class TestGameplayCueAudioNotify : GameplayCueAudioNotify
     {
         public int PlayCount { get; private set; }
+        public int ResolvedSoundEffectId { get; private set; }
+        public string ResolvedAssetPath { get; set; }
         public string AssetPath { get; private set; }
         public string SoundGroup { get; private set; }
         public float Volume { get; private set; }
         public Vector3 Location { get; private set; }
+
+        protected override string ResolveAssetPath(int soundEffectId)
+        {
+            ResolvedSoundEffectId = soundEffectId;
+            return ResolvedAssetPath;
+        }
 
         protected override void Play(string assetPath, string soundGroup, float volume, Vector3 location)
         {
