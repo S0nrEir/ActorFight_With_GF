@@ -7,6 +7,7 @@ using Aquila.Fight;
 using Aquila.Fight.Actor;
 using Aquila.Formula;
 using Aquila.Module;
+using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using GameFramework;
 using GameFramework.Event;
@@ -169,6 +170,16 @@ namespace Aquila.Procedure
             // 先加载InfoBoard项目，等待完成后再创建Actor
             GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
             GameEntry.InfoBoard.Preload();
+            Object_AbilitySelectorBase.Preload(OnAbilitySelectorPreloadFinished);
+        }
+
+        private void OnAbilitySelectorPreloadFinished(bool succeeded)
+        {
+            if (!succeeded || _owner == null)
+                return;
+
+            _loadFinishSign |= ABILITY_SELECTOR_LOAD_FLAG;
+            MarkLoadFinish(_owner);
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
@@ -184,8 +195,9 @@ namespace Aquila.Procedure
         }
 
         private IFsm<IProcedureManager> _owner;
-        private const int ALL_LOAD_FLAG = 0b1111;
-        private const int INFOBOARD_LOAD_FLAG = 0b1100;
+        private const int ALL_LOAD_FLAG = 0b1_1111;
+        private const int INFOBOARD_LOAD_FLAG = 0b0_1100;
+        private const int ABILITY_SELECTOR_LOAD_FLAG = 0b1_0000;
         private int _loadFinishSign;
         private bool _actorCreationStarted;
         private int _playerEntityID = -1;
