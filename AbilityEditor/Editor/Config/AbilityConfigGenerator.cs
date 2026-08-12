@@ -17,7 +17,9 @@ namespace Editor.AbilityEditor.Config
         /// <summary>
         /// Generate config from AbilityEditorWindow (legacy method)
         /// </summary>
-        public static AbilityConfig Generate(AbilityEditorWindow editor)
+        public static AbilityConfig Generate(
+            AbilityEditorWindow editor,
+            AbilityEditorSOData sourceData = null)
         {
             if (editor == null)
                 throw new ArgumentNullException(nameof(editor), "Editor window cannot be null");
@@ -55,7 +57,9 @@ namespace Editor.AbilityEditor.Config
 
             config.Initialize(
                 triggers,
-                clipCollections.Effects);
+                clipCollections.Effects,
+                sourceData?.MontageEvents,
+                sourceData?.CueBindings);
 
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;
@@ -145,7 +149,9 @@ namespace Editor.AbilityEditor.Config
 
             config.Initialize(
                 triggers,
-                clipCollections.Effects);
+                clipCollections.Effects,
+                sourceData.MontageEvents,
+                sourceData.CueBindings);
 
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityConfigGenerator] Successfully generated config: {config}");
             return config;

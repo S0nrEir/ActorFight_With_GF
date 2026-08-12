@@ -7,12 +7,15 @@ using Aquila.AbilityEditor;
 using Aquila.AbilityPool;
 using Aquila.Extension;
 using Aquila.Fight;
+using Editor.AbilityEditor;
+using Editor.AbilityEditor.Config;
 using Editor.AbilityEditor.Tools;
 using GameFramework;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 
 namespace Aquila.Tests.Editor
 {
@@ -112,7 +115,161 @@ namespace Aquila.Tests.Editor
         }
 
         [Test]
-        public void AbilityBinaryV5_RoundTripsMontageAndCueData_AndRejectsV4InBothRuntimeReaders()
+        public void AbilityPresentationData_FlowsThroughGeneratorAndExporter()
+        {
+            var source = ScriptableObject.CreateInstance<AbilityEditorSOData>();
+            source.Id = 9000;
+            source.Name = "Presentation Flow";
+            source.TimelineID = 1;
+            source.TimelineDuration = 1f;
+            source.SetTracks(new List<SerializedTrackData>
+            {
+                new SerializedTrackData
+                {
+                    TrackName = "Effect Track",
+                    Clips = new List<TimelineClipData>
+                    {
+                        new EffectClipData("SimulatedEffect", 0.1f, 7000) { ResolveTypeID = 1 }
+                    }
+                }
+            });
+            source.SetMontageEvents(new List<MontageEventData>
+            {
+                new MontageEventData(0.2f, 5, "impact", "Event.Attack.Hit"),
+                new MontageEventData(0.4f, 7, "finish", "Event.Attack.Finish")
+            });
+            source.SetCueBindings(new List<AbilityCueBindingData>
+            {
+                new AbilityCueBindingData(
+                    "Event.Attack.Hit",
+                    "GameplayCue.Attack.Hit.Vfx",
+                    GameplayCueTargetPolicy.PrimaryTarget,
+                    GameplayCueLocationPolicy.Target,
+                    1.5f,
+                    new Vector3(1f, 2f, 3f),
+                    GameplayCueEventType.Execute),
+                new AbilityCueBindingData(
+                    "Event.Attack.Finish",
+                    "GameplayCue.Attack.Finish.Audio",
+                    GameplayCueTargetPolicy.Caster,
+                    GameplayCueLocationPolicy.Source,
+                    0.75f,
+                    new Vector3(4f, 5f, 6f),
+                    GameplayCueEventType.Remove)
+            });
+
+            var config = AbilityConfigGenerator.Generate(source);
+            var tracks = new List<TimelineTrackItem> { source.Tracks[0].ToTrackItem() };
+            source.MontageEvents[1].MarkerId = "mutated";
+            source.CueBindings[1].CueTag = "GameplayCue.Mutated";
+            var exported = AbilityDataExporter.CreateAbilityData(config, tracks);
+
+            Assert.AreEqual(2, config.MontageEvents.Count);
+            Assert.AreEqual("finish", config.MontageEvents[1].MarkerId);
+            Assert.AreEqual(2, exported.MontageEvents.Count);
+            Assert.AreEqual(0.4f, exported.MontageEvents[1].Time);
+            Assert.AreEqual(7, exported.MontageEvents[1].Sequence);
+            Assert.AreEqual("finish", exported.MontageEvents[1].MarkerId);
+            Assert.AreEqual("Event.Attack.Finish", exported.MontageEvents[1].EventTag);
+            Assert.AreEqual(2, exported.CueBindings.Count);
+            Assert.AreEqual("Event.Attack.Finish", exported.CueBindings[1].EventTag);
+            Assert.AreEqual("GameplayCue.Attack.Finish.Audio", exported.CueBindings[1].CueTag);
+            Assert.AreEqual(GameplayCueEventType.Remove, exported.CueBindings[1].EventType);
+            Assert.AreEqual(GameplayCueTargetPolicy.Caster, exported.CueBindings[1].TargetPolicy);
+            Assert.AreEqual(GameplayCueLocationPolicy.Source, exported.CueBindings[1].LocationPolicy);
+            Assert.AreEqual(0.75f, exported.CueBindings[1].Magnitude);
+            Assert.AreEqual(new Vector3(4f, 5f, 6f), exported.CueBindings[1].LocationOffset);
+
+            UnityEngine.Object.DestroyImmediate(exported);
+            UnityEngine.Object.DestroyImmediate(source);
+        }
+
+        [Test]
+        public void AbilityConfigInitialize_ReplacesCollections_AndNullPresentationDataClearsThem()
+        {
+            var config = new AbilityConfig();
+            config.Initialize(
+                new List<TriggerData> { new TriggerData(0.1f, new List<int> { 7000 }) },
+                new List<EffectClipData> { new EffectClipData("FirstEffect", 0.1f, 7000) },
+                new[] { new MontageEventData(0.2f, 1, "first", "Event.First") },
+                new[]
+                {
+                    new AbilityCueBindingData(
+                        "Event.First",
+                        "GameplayCue.First",
+                        GameplayCueTargetPolicy.Caster,
+                        GameplayCueLocationPolicy.Source,
+                        1f,
+                        Vector3.zero)
+                });
+
+            config.Initialize(
+                new List<TriggerData> { new TriggerData(0.3f, new List<int> { 7001 }) },
+                new List<EffectClipData> { new EffectClipData("SecondEffect", 0.3f, 7001) },
+                new[] { new MontageEventData(0.4f, 2, "second", "Event.Second") },
+                new[]
+                {
+                    new AbilityCueBindingData(
+                        "Event.Second",
+                        "GameplayCue.Second",
+                        GameplayCueTargetPolicy.PrimaryTarget,
+                        GameplayCueLocationPolicy.Target,
+                        1f,
+                        Vector3.zero)
+                });
+
+            Assert.AreEqual(1, config.Triggers.Count);
+            Assert.AreEqual(0.3f, config.Triggers[0].TriggerTime);
+            Assert.AreEqual(1, config.Effects.Count);
+            Assert.AreEqual(7001, config.Effects[0].EffectId);
+            Assert.AreEqual(1, config.MontageEvents.Count);
+            Assert.AreEqual("second", config.MontageEvents[0].MarkerId);
+            Assert.AreEqual(1, config.CueBindings.Count);
+            Assert.AreEqual("GameplayCue.Second", config.CueBindings[0].CueTag);
+
+            config.Initialize(null, null, config.MontageEvents, config.CueBindings);
+
+            Assert.AreEqual("second", config.MontageEvents[0].MarkerId);
+            Assert.AreEqual("GameplayCue.Second", config.CueBindings[0].CueTag);
+
+            config.Initialize(null, null);
+
+            Assert.IsEmpty(config.Triggers);
+            Assert.IsEmpty(config.Effects);
+            Assert.IsEmpty(config.MontageEvents);
+            Assert.IsEmpty(config.CueBindings);
+        }
+
+        [Test]
+        public void AbilityPresentationData_IsEmptyWhenEditorHasNoCurrentAbilityData()
+        {
+            var editor = ScriptableObject.CreateInstance<AbilityEditorWindow>();
+            var editorType = typeof(AbilityEditorWindow);
+            editorType.GetField("_abilityIDTextField", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(editor, new TextField { value = "9003" });
+            editorType.GetField("_abilityDescTextField", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(editor, new TextField { value = "No Current Ability Data" });
+            editorType.GetField("_timelineIDTextField", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(editor, new TextField { value = "1" });
+            editorType.GetField("_durationTextField", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(editor, new TextField { value = "1" });
+            editorType.GetField("_timelineTrackItems", BindingFlags.NonPublic | BindingFlags.Instance)
+                .SetValue(editor, new List<TimelineTrackItem>());
+
+            var config = AbilityConfigGenerator.Generate(editor);
+            var exported = AbilityDataExporter.CreateAbilityData(config, null);
+
+            Assert.IsEmpty(config.MontageEvents);
+            Assert.IsEmpty(config.CueBindings);
+            Assert.IsEmpty(exported.MontageEvents);
+            Assert.IsEmpty(exported.CueBindings);
+
+            UnityEngine.Object.DestroyImmediate(exported);
+            UnityEngine.Object.DestroyImmediate(editor);
+        }
+
+        [Test]
+        public void AbilityBinary_ReservedByteIsIgnored_AndBadMagicIsRejectedByBothRuntimeReaders()
         {
             var ability = ScriptableObject.CreateInstance<AbilityEditorSOData>();
             ability.Id = 9001;
@@ -154,48 +311,104 @@ namespace Aquila.Tests.Editor
                     GameplayCueEventType.Execute)
             });
 
-            var v5Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5.ablt");
-            var v4Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v4.ablt");
-            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5-retired-clip.ablt");
-            AbilityBinaryExporter.ExportAbility(ability, v5Path);
-            File.WriteAllBytes(v4Path, new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T', 0x04 });
-            WriteRetiredClipV5(retiredPath);
+            var abilityPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-reserved.ablt");
+            var invalidMagicPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-invalid-magic.ablt");
+            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-retired-clip.ablt");
+            AbilityBinaryExporter.ExportAbility(ability, abilityPath);
+            var abilityBytes = File.ReadAllBytes(abilityPath);
+            abilityBytes[4] = 0xA7;
+            File.WriteAllBytes(abilityPath, abilityBytes);
+            var invalidMagicBytes = (byte[])abilityBytes.Clone();
+            invalidMagicBytes[0] = (byte)'X';
+            File.WriteAllBytes(invalidMagicPath, invalidMagicBytes);
+            WriteRetiredClip(retiredPath);
+
+            var verified = AbilityVerificationTool.ReadBinaryFile(abilityPath);
+            Assert.AreEqual(9001, verified.Id);
+            Assert.AreEqual("Event.Attack.Hit", verified.MontageEvents[0].EventTag);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Audio", verified.CueBindings[1].CueTag);
+            Assert.Throws<InvalidDataException>(() => AbilityVerificationTool.ReadBinaryFile(invalidMagicPath));
 
             var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseAbilityBinary", BindingFlags.NonPublic | BindingFlags.Static);
-            var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v5Path), new Dictionary<int, EffectData>() });
+            var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { abilityBytes, new Dictionary<int, EffectData>() });
             Assert.AreEqual(1, parsed.GetEffects().Count);
             Assert.AreEqual("Event.Attack.Hit", parsed.GetMontageEvents()[0].EventTag);
             Assert.AreEqual("GameplayCue.Attack.Hit.Vfx", parsed.GetCueBindings()[0].CueTag);
             Assert.AreEqual("GameplayCue.Attack.Hit.Audio", parsed.GetCueBindings()[1].CueTag);
             Assert.AreEqual(GameplayCueEventType.Execute, parsed.GetCueBindings()[0].EventType);
             LogAssert.ignoreFailingMessages = true;
-            Assert.AreEqual(0, ((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v4Path), new Dictionary<int, EffectData>() })).GetId());
+            Assert.AreEqual(0, ((AbilityData)parseAbility.Invoke(null, new object[] { invalidMagicBytes, new Dictionary<int, EffectData>() })).GetId());
             Assert.AreEqual(0, ((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(retiredPath), new Dictionary<int, EffectData>() })).GetId());
 
             var gameObject = new GameObject("AbilityPoolTest");
             var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
             var tryReadAbility = typeof(Component_AbilityPool).GetMethod("TryReadAbility", BindingFlags.NonPublic | BindingFlags.Instance);
-            var v5Args = new object[] { v5Path, null };
-            Assert.IsTrue((bool)tryReadAbility.Invoke(abilityPool, v5Args));
-            Assert.AreEqual(1, ((AbilityData)v5Args[1]).GetEffects().Count);
-            Assert.AreEqual("GameplayCue.Attack.Hit.Vfx", ((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag);
-            Assert.AreEqual("GameplayCue.Attack.Hit.Audio", ((AbilityData)v5Args[1]).GetCueBindings()[1].CueTag);
-            Assert.AreEqual(GameplayCueEventType.Execute, ((AbilityData)v5Args[1]).GetCueBindings()[0].EventType);
-            var v4Args = new object[] { v4Path, null };
-            Assert.IsFalse((bool)tryReadAbility.Invoke(abilityPool, v4Args));
+            var abilityArgs = new object[] { abilityPath, null };
+            Assert.IsTrue((bool)tryReadAbility.Invoke(abilityPool, abilityArgs));
+            Assert.AreEqual(1, ((AbilityData)abilityArgs[1]).GetEffects().Count);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Vfx", ((AbilityData)abilityArgs[1]).GetCueBindings()[0].CueTag);
+            Assert.AreEqual("GameplayCue.Attack.Hit.Audio", ((AbilityData)abilityArgs[1]).GetCueBindings()[1].CueTag);
+            Assert.AreEqual(GameplayCueEventType.Execute, ((AbilityData)abilityArgs[1]).GetCueBindings()[0].EventType);
+            var invalidMagicArgs = new object[] { invalidMagicPath, null };
+            Assert.IsFalse((bool)tryReadAbility.Invoke(abilityPool, invalidMagicArgs));
             var retiredArgs = new object[] { retiredPath, null };
             Assert.IsFalse((bool)tryReadAbility.Invoke(abilityPool, retiredArgs));
             LogAssert.ignoreFailingMessages = false;
 
             UnityEngine.Object.DestroyImmediate(gameObject);
             UnityEngine.Object.DestroyImmediate(ability);
-            File.Delete(v5Path);
-            File.Delete(v4Path);
+            File.Delete(abilityPath);
+            File.Delete(invalidMagicPath);
             File.Delete(retiredPath);
         }
 
         [Test]
-        public void AbilityBinaryAssets_AreCleanV5AndReadableByBothRuntimeReaders()
+        public void EffectBinary_ReservedByteIsIgnored_FormulaIdIsRead_AndBadMagicIsRejected()
+        {
+            var effect = new EffectClipData("FormulaEffect", 0.1f, 7002)
+            {
+                ResolveTypeID = 3,
+                FormulaID = 12345
+            };
+            var effectPath = Path.Combine(Path.GetTempPath(), "effect-reserved.efct");
+            var invalidMagicPath = Path.Combine(Path.GetTempPath(), "effect-invalid-magic.efct");
+            EffectBinaryExporter.ExportEffect(effect, effectPath);
+            var effectBytes = File.ReadAllBytes(effectPath);
+            effectBytes[6] = 0xD3;
+            File.WriteAllBytes(effectPath, effectBytes);
+            var invalidMagicBytes = (byte[])effectBytes.Clone();
+            invalidMagicBytes[0] = (byte)'X';
+            File.WriteAllBytes(invalidMagicPath, invalidMagicBytes);
+
+            var verified = EffectVerificationTool.ReadBinaryFile(effectPath);
+            Assert.AreEqual(7002, verified.Id);
+            Assert.AreEqual(12345, verified.FormulaID);
+            Assert.Throws<InvalidDataException>(() => EffectVerificationTool.ReadBinaryFile(invalidMagicPath));
+
+            var parseEffect = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseEffectBinary", BindingFlags.NonPublic | BindingFlags.Static);
+            var parsed = (EffectData)parseEffect.Invoke(null, new object[] { effectBytes });
+            Assert.AreEqual(7002, parsed.GetEffectId());
+            Assert.AreEqual(12345, parsed.GetFormulaID());
+            LogAssert.ignoreFailingMessages = true;
+            Assert.AreEqual(0, ((EffectData)parseEffect.Invoke(null, new object[] { invalidMagicBytes })).GetEffectId());
+
+            var gameObject = new GameObject("EffectPoolTest");
+            var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
+            var tryReadEffect = typeof(Component_AbilityPool).GetMethod("TryReadEffect", BindingFlags.NonPublic | BindingFlags.Instance);
+            var effectArgs = new object[] { effectPath, null };
+            Assert.IsTrue((bool)tryReadEffect.Invoke(abilityPool, effectArgs));
+            Assert.AreEqual(12345, ((EffectData)effectArgs[1]).GetFormulaID());
+            var invalidMagicArgs = new object[] { invalidMagicPath, null };
+            Assert.IsFalse((bool)tryReadEffect.Invoke(abilityPool, invalidMagicArgs));
+            LogAssert.ignoreFailingMessages = false;
+
+            UnityEngine.Object.DestroyImmediate(gameObject);
+            File.Delete(effectPath);
+            File.Delete(invalidMagicPath);
+        }
+
+        [Test]
+        public void AbilityBinaryAssets_HaveStableLayoutAndAreReadableByBothRuntimeReaders()
         {
             Assert.AreEqual(0, (int)TimelineClipType.Ability);
             Assert.AreEqual(1, (int)TimelineClipType.Buff);
@@ -213,7 +426,7 @@ namespace Aquila.Tests.Editor
 
             foreach (var path in paths)
             {
-                AssertCleanV5File(path);
+                AssertStableAbilityFileLayout(path);
 
                 var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(path), new Dictionary<int, EffectData>() });
                 Assert.Greater(parsed.GetId(), 0, path);
@@ -355,7 +568,7 @@ namespace Aquila.Tests.Editor
                          "Assets/AbilityEditor/SandBox/sand_box.ablt"
                      })
             {
-                AssertCleanV5File(binaryPath);
+                AssertStableAbilityFileLayout(binaryPath);
                 var bytes = File.ReadAllBytes(binaryPath);
                 var parsed = (AbilityData)parseAbility.Invoke(
                     null,
@@ -431,13 +644,13 @@ namespace Aquila.Tests.Editor
             return notify;
         }
 
-        private static void WriteRetiredClipV5(string path)
+        private static void WriteRetiredClip(string path)
         {
             using (var stream = new FileStream(path, FileMode.Create))
             using (var writer = new BinaryWriter(stream))
             {
                 writer.Write(new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T' });
-                writer.Write((byte)0x05);
+                writer.Write((byte)0x7F);
                 writer.Write(9002);
                 writer.Write(0);
                 writer.Write(0);
@@ -454,13 +667,13 @@ namespace Aquila.Tests.Editor
             }
         }
 
-        private static void AssertCleanV5File(string path)
+        private static void AssertStableAbilityFileLayout(string path)
         {
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (var reader = new BinaryReader(stream))
             {
                 Assert.AreEqual("ABLT", new string(reader.ReadChars(4)), path);
-                Assert.AreEqual(0x05, reader.ReadByte(), path);
+                reader.ReadByte();
                 reader.ReadInt32();
                 reader.ReadInt32();
                 reader.ReadInt32();

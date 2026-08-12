@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Aquila.AbilityEditor;
 using Aquila.AbilityEditor.Config;
+using Aquila.Fight;
 using Aquila.Procedure;
 using Editor.AbilityEditor.Tools;
 using UnityEditor;
@@ -222,7 +223,7 @@ namespace Editor.AbilityEditor.Config
         }
 
         // 从 AbilityConfig 和 Tracks 创建新的 AbilityData
-        private static AbilityEditorSOData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
+        internal static AbilityEditorSOData CreateAbilityData(AbilityConfig config, List<TimelineTrackItem> tracks)
         {
             var abilityData = ScriptableObject.CreateInstance<AbilityEditorSOData>();
             UpdateAbilityData(abilityData, config, tracks);
@@ -248,6 +249,8 @@ namespace Editor.AbilityEditor.Config
             // 转换 Tracks 数据
             var serializedTracks = ConvertTracksToSerialized(tracks);
             abilityData.SetTracks(serializedTracks);
+            abilityData.SetMontageEvents(new List<MontageEventData>(config.MontageEvents));
+            abilityData.SetCueBindings(new List<AbilityCueBindingData>(config.CueBindings));
         }
 
         // 将 TimelineTrackItem 转换为 SerializedTrackData

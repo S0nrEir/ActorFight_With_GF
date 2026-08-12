@@ -79,7 +79,7 @@ namespace Editor.AbilityEditor.Tools
                 {
                     //write Header
                     writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
-                    writer.WriteByte(VERSION);
+                    writer.WriteByte(RESERVED_HEADER_BYTE);
 
                     //write Basic Info
                     writer.WriteInt32(data.Id);
@@ -239,6 +239,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x05;
+        private const byte RESERVED_HEADER_BYTE = 0x05;
     }
 }

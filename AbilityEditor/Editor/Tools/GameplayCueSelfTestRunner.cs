@@ -6,6 +6,7 @@ using Aquila.AbilityEditor;
 using Aquila.AbilityPool;
 using Aquila.Extension;
 using Aquila.Fight;
+using Editor.AbilityEditor.Config;
 using GameFramework;
 using UnityEditor;
 using UnityEngine;
@@ -19,7 +20,8 @@ namespace Editor.AbilityEditor.Tools
             TestTagHierarchy();
             TestMontageMarkers();
             TestCueRouting();
-            TestBinaryV5();
+            TestBinaryContract();
+            TestEffectBinaryContract();
             TestPhysicalAttackConfiguration();
             TestNotifies();
 
@@ -118,7 +120,7 @@ namespace Editor.AbilityEditor.Tools
             Require(requests[2].Parameters.TargetActorId == 2 && requests[3].Parameters.TargetActorId == 3, "each target policy");
         }
 
-        private static void TestBinaryV5()
+        private static void TestBinaryContract()
         {
             var ability = ScriptableObject.CreateInstance<AbilityEditorSOData>();
             ability.Id = 9001;
@@ -160,41 +162,89 @@ namespace Editor.AbilityEditor.Tools
                     GameplayCueEventType.Execute)
             });
 
-            var v5Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5.ablt");
-            var v4Path = Path.Combine(Path.GetTempPath(), "gameplay-cue-v4.ablt");
-            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-v5-retired-clip.ablt");
-            AbilityBinaryExporter.ExportAbility(ability, v5Path);
-            File.WriteAllBytes(v4Path, new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T', 0x04 });
-            WriteRetiredClipV5(retiredPath);
+            var config = AbilityConfigGenerator.Generate(ability);
+            var tracks = new List<TimelineTrackItem> { ability.Tracks[0].ToTrackItem() };
+            var exported = AbilityDataExporter.CreateAbilityData(config, tracks);
+            Require(exported.MontageEvents[0].EventTag == "Event.Attack.Hit", "montage export flow");
+            Require(exported.CueBindings[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "cue export flow");
+
+            var abilityPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-reserved.ablt");
+            var invalidMagicPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-invalid-magic.ablt");
+            var retiredPath = Path.Combine(Path.GetTempPath(), "gameplay-cue-retired-clip.ablt");
+            AbilityBinaryExporter.ExportAbility(exported, abilityPath);
+            var abilityBytes = File.ReadAllBytes(abilityPath);
+            abilityBytes[4] = 0xA7;
+            File.WriteAllBytes(abilityPath, abilityBytes);
+            var invalidMagicBytes = (byte[])abilityBytes.Clone();
+            invalidMagicBytes[0] = (byte)'X';
+            File.WriteAllBytes(invalidMagicPath, invalidMagicBytes);
+            WriteRetiredClip(retiredPath);
 
             var parseAbility = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseAbilityBinary", BindingFlags.NonPublic | BindingFlags.Static);
-            var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v5Path), new Dictionary<int, EffectData>() });
-            Require(parsed.GetEffects().Count == 1, "Tools.Ability v5 effect roundtrip");
-            Require(parsed.GetMontageEvents()[0].EventTag == "Event.Attack.Hit", "Tools.Ability v5 montage roundtrip");
-            Require(parsed.GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Tools.Ability v5 VFX cue roundtrip");
-            Require(parsed.GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Tools.Ability v5 Audio cue roundtrip");
-            Require(parsed.GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Tools.Ability v5 cue event type roundtrip");
-            Require(((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(v4Path), new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability v4 rejection");
-            Require(((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(retiredPath), new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability retired v5 clip rejection");
+            var parsed = (AbilityData)parseAbility.Invoke(null, new object[] { abilityBytes, new Dictionary<int, EffectData>() });
+            Require(parsed.GetEffects().Count == 1, "Tools.Ability effect roundtrip");
+            Require(parsed.GetMontageEvents()[0].EventTag == "Event.Attack.Hit", "Tools.Ability montage roundtrip");
+            Require(parsed.GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Tools.Ability VFX cue roundtrip");
+            Require(parsed.GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Tools.Ability Audio cue roundtrip");
+            Require(parsed.GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Tools.Ability cue event type roundtrip");
+            Require(((AbilityData)parseAbility.Invoke(null, new object[] { invalidMagicBytes, new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability invalid magic rejection");
+            Require(((AbilityData)parseAbility.Invoke(null, new object[] { File.ReadAllBytes(retiredPath), new Dictionary<int, EffectData>() })).GetId() == 0, "Tools.Ability retired clip rejection");
 
             var gameObject = new GameObject("AbilityPoolSelfTest");
             var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
             var tryReadAbility = typeof(Component_AbilityPool).GetMethod("TryReadAbility", BindingFlags.NonPublic | BindingFlags.Instance);
-            var v5Args = new object[] { v5Path, null };
-            Require((bool)tryReadAbility.Invoke(abilityPool, v5Args), "Component_AbilityPool v5 read");
-            Require(((AbilityData)v5Args[1]).GetEffects().Count == 1, "Component_AbilityPool v5 effect roundtrip");
-            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Component_AbilityPool v5 VFX cue roundtrip");
-            Require(((AbilityData)v5Args[1]).GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Component_AbilityPool v5 Audio cue roundtrip");
-            Require(((AbilityData)v5Args[1]).GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Component_AbilityPool v5 cue event type roundtrip");
-            var v4Args = new object[] { v4Path, null };
-            Require(!(bool)tryReadAbility.Invoke(abilityPool, v4Args), "Component_AbilityPool v4 rejection");
+            var abilityArgs = new object[] { abilityPath, null };
+            Require((bool)tryReadAbility.Invoke(abilityPool, abilityArgs), "Component_AbilityPool read");
+            Require(((AbilityData)abilityArgs[1]).GetEffects().Count == 1, "Component_AbilityPool effect roundtrip");
+            Require(((AbilityData)abilityArgs[1]).GetCueBindings()[0].CueTag == "GameplayCue.Attack.Hit.Vfx", "Component_AbilityPool VFX cue roundtrip");
+            Require(((AbilityData)abilityArgs[1]).GetCueBindings()[1].CueTag == "GameplayCue.Attack.Hit.Audio", "Component_AbilityPool Audio cue roundtrip");
+            Require(((AbilityData)abilityArgs[1]).GetCueBindings()[0].EventType == GameplayCueEventType.Execute, "Component_AbilityPool cue event type roundtrip");
+            var invalidMagicArgs = new object[] { invalidMagicPath, null };
+            Require(!(bool)tryReadAbility.Invoke(abilityPool, invalidMagicArgs), "Component_AbilityPool invalid magic rejection");
             var retiredArgs = new object[] { retiredPath, null };
-            Require(!(bool)tryReadAbility.Invoke(abilityPool, retiredArgs), "Component_AbilityPool retired v5 clip rejection");
+            Require(!(bool)tryReadAbility.Invoke(abilityPool, retiredArgs), "Component_AbilityPool retired clip rejection");
 
-            Destroy(gameObject, ability);
-            File.Delete(v5Path);
-            File.Delete(v4Path);
+            Destroy(gameObject, exported, ability);
+            File.Delete(abilityPath);
+            File.Delete(invalidMagicPath);
             File.Delete(retiredPath);
+        }
+
+        private static void TestEffectBinaryContract()
+        {
+            var effect = new EffectClipData("FormulaEffect", 0.1f, 7002)
+            {
+                ResolveTypeID = 3,
+                FormulaID = 12345
+            };
+            var effectPath = Path.Combine(Path.GetTempPath(), "effect-reserved.efct");
+            var invalidMagicPath = Path.Combine(Path.GetTempPath(), "effect-invalid-magic.efct");
+            EffectBinaryExporter.ExportEffect(effect, effectPath);
+            var effectBytes = File.ReadAllBytes(effectPath);
+            effectBytes[6] = 0xD3;
+            File.WriteAllBytes(effectPath, effectBytes);
+            var invalidMagicBytes = (byte[])effectBytes.Clone();
+            invalidMagicBytes[0] = (byte)'X';
+            File.WriteAllBytes(invalidMagicPath, invalidMagicBytes);
+
+            var parseEffect = typeof(Aquila.Toolkit.Tools.Ability).GetMethod("ParseEffectBinary", BindingFlags.NonPublic | BindingFlags.Static);
+            var parsed = (EffectData)parseEffect.Invoke(null, new object[] { effectBytes });
+            Require(parsed.GetEffectId() == 7002, "Tools.Ability effect reserved byte");
+            Require(parsed.GetFormulaID() == 12345, "Tools.Ability effect FormulaID");
+            Require(((EffectData)parseEffect.Invoke(null, new object[] { invalidMagicBytes })).GetEffectId() == 0, "Tools.Ability effect invalid magic rejection");
+
+            var gameObject = new GameObject("EffectPoolSelfTest");
+            var abilityPool = gameObject.AddComponent<Component_AbilityPool>();
+            var tryReadEffect = typeof(Component_AbilityPool).GetMethod("TryReadEffect", BindingFlags.NonPublic | BindingFlags.Instance);
+            var effectArgs = new object[] { effectPath, null };
+            Require((bool)tryReadEffect.Invoke(abilityPool, effectArgs), "Component_AbilityPool effect read");
+            Require(((EffectData)effectArgs[1]).GetFormulaID() == 12345, "Component_AbilityPool effect FormulaID");
+            var invalidMagicArgs = new object[] { invalidMagicPath, null };
+            Require(!(bool)tryReadEffect.Invoke(abilityPool, invalidMagicArgs), "Component_AbilityPool effect invalid magic rejection");
+
+            Destroy(gameObject);
+            File.Delete(effectPath);
+            File.Delete(invalidMagicPath);
         }
 
         private static void TestNotifies()
@@ -372,13 +422,13 @@ namespace Editor.AbilityEditor.Tools
             return notify;
         }
 
-        private static void WriteRetiredClipV5(string path)
+        private static void WriteRetiredClip(string path)
         {
             using (var stream = new FileStream(path, FileMode.Create))
             using (var writer = new BinaryWriter(stream))
             {
                 writer.Write(new byte[] { (byte)'A', (byte)'B', (byte)'L', (byte)'T' });
-                writer.Write((byte)0x05);
+                writer.Write((byte)0x7F);
                 writer.Write(9002);
                 writer.Write(0);
                 writer.Write(0);

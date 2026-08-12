@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -335,12 +335,13 @@ namespace Aquila.AbilityPool
 
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(6));
-            byte version = reader.ReadByte();
-            if (magic != EFFECT_MAGIC || version != EFFECT_VERSION_3)
+            if (magic != EFFECT_MAGIC)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid effect header (magic={magic}, version={version}) in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect magic ({magic}) in {filePath}");
                 return false;
             }
+
+            reader.ReadByte();
 
             // Basic Info（顺序与 EffectBinaryExporter.ExportEffect 一致）
             int id = reader.ReadInt32();
@@ -419,12 +420,13 @@ namespace Aquila.AbilityPool
 
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
-            byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_5)
+            if (magic != ABILITY_MAGIC)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, actualVersion={version}, expectedVersion={ABILITY_VERSION_5}) in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability magic ({magic}) in {filePath}");
                 return false;
             }
+
+            reader.ReadByte();
 
             // Basic Info
             int abilityId = reader.ReadInt32();
@@ -455,7 +457,7 @@ namespace Aquila.AbilityPool
                         return false;
                     }
 
-                    var effectData = ReadEffectClip(reader, startTime, endTime, version);
+                    var effectData = ReadEffectClip(reader, startTime, endTime);
                     if (effectData.HasValue)
                         effectList.Add(effectData.Value);
                 }
@@ -483,7 +485,7 @@ namespace Aquila.AbilityPool
         /// <summary>
         /// 读取 Effect Clip 字段（顺序与 AbilityBinaryExporter.WriteEffectClip 一致）
         /// </summary>
-        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime, byte version)
+        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime)
         {
             int effectId = reader.ReadInt32();
             int stackLimit = reader.ReadInt32();
@@ -625,10 +627,6 @@ namespace Aquila.AbilityPool
 
         private const string EFFECT_MAGIC  = "EFFECT";
         private const string ABILITY_MAGIC = "ABLT";
-        
-        //#todo 删掉effect version和ability version
-        private const byte EFFECT_VERSION_3  = 0x03;
-        private const byte ABILITY_VERSION_5 = 0x05;
 
         private const int CLIP_TYPE_EFFECT = 1;
         

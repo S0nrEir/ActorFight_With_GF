@@ -60,7 +60,6 @@ namespace Editor.AbilityEditor.Tools
 
                 // Header
                 string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
-                byte version = reader.ReadByte();
 
                 if (magic != MAGIC)
                 {
@@ -68,15 +67,8 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
-
-                if (version != VERSION)
-                {
-                    Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryReader] Unsupported version: actual={version}, expected={VERSION}");
-                    return;
-                }
-
-                _currentVersion = version;
-                sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
+                reader.ReadByte();
+                sb.AppendLine($"[Header] Magic: {magic}");
 
                 // Basic Info
                 int abilityId = reader.ReadInt32();
@@ -289,8 +281,6 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "ABLT";
-        private static byte _currentVersion = VERSION;
-        private const byte VERSION = 0x05;
         private const string CONTEXT_MENU_PATH = "Assets/AbilityEditor/ReadBinaryAbilityData";
     }
 }

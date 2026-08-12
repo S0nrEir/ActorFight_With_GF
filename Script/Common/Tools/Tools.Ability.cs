@@ -182,13 +182,14 @@ namespace Aquila.Toolkit
                 using (var reader = new ByteReader(data))
                 {
                     string magic = reader.ReadFixedString(6);
-                    byte version = reader.ReadByte();
 
-                    if (magic != EFCT_MAGIC || version != BIN_VERSION_4)
+                    if (magic != EFCT_MAGIC)
                     {
-                        Logger.Warning($"Tools.Ability.ParseEffectBinary: invalid header (magic={magic}, version={version})");
+                        Logger.Warning($"Tools.Ability.ParseEffectBinary: invalid magic ({magic})");
                         return default;
                     }
+
+                    reader.ReadByte();
 
                     int id = reader.ReadInt32();
                     var type = (EffectType)reader.ReadInt32();
@@ -219,9 +220,7 @@ namespace Aquila.Toolkit
                     for (int i = 0; i < awakeCount; i++)
                         awakeEffects[i] = reader.ReadInt32();
 
-                    int formulaID = -1;
-                    if (version >= BIN_VERSION_4 && !reader.IsEnd)
-                        formulaID = reader.ReadInt32();
+                    int formulaID = reader.ReadInt32();
 
                     return new EffectData(
                         effectId: id,
@@ -257,13 +256,14 @@ namespace Aquila.Toolkit
                 using (var reader = new ByteReader(data))
                 {
                     string magic = reader.ReadFixedString(4);
-                    byte version = reader.ReadByte();
 
-                    if (magic != ABLT_MAGIC || version != ABLT_VERSION_5)
+                    if (magic != ABLT_MAGIC)
                     {
-                        Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid header (magic={magic}, actualVersion={version}, expectedVersion={ABLT_VERSION_5})");
+                        Logger.Warning($"Tools.Ability.ParseAbilityBinary: invalid magic ({magic})");
                         return default;
                     }
+
+                    reader.ReadByte();
 
                     int id = reader.ReadInt32();
                     int costEffectID = reader.ReadInt32();
@@ -478,9 +478,6 @@ namespace Aquila.Toolkit
             private const string EFFECT_BIN_DIR = "Res/Config/Effect";
             private const string ABLT_MAGIC = "ABLT";
             private const string EFCT_MAGIC = "EFFECT";
-            // private const byte BIN_VERSION_3 = 0x03;
-            private const byte BIN_VERSION_4 = 0x04;
-            private const byte ABLT_VERSION_5 = 0x05;
         }//end class Ability
     }//end class Tools
 }

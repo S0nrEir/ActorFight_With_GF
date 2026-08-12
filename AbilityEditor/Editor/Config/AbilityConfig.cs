@@ -118,6 +118,8 @@ namespace Editor.AbilityEditor.Config
 
         private readonly List<TriggerData> _triggers;
         private readonly List<EffectClipData> _effects;
+        private readonly List<MontageEventData> _montageEvents;
+        private readonly List<AbilityCueBindingData> _cueBindings;
         // private readonly List<SkillClipData> _skills;
 
         /// <summary>
@@ -129,6 +131,10 @@ namespace Editor.AbilityEditor.Config
         /// All effect clips
         /// </summary>
         public IReadOnlyList<EffectClipData> Effects => _effects.AsReadOnly();
+
+        public IReadOnlyList<MontageEventData> MontageEvents => _montageEvents.AsReadOnly();
+
+        public IReadOnlyList<AbilityCueBindingData> CueBindings => _cueBindings.AsReadOnly();
 
         /// <summary>
         /// All skill clips
@@ -144,6 +150,8 @@ namespace Editor.AbilityEditor.Config
             DataSource = "EditorMemory"; // Default value
             _triggers = new List<TriggerData>();
             _effects = new List<EffectClipData>();
+            _montageEvents = new List<MontageEventData>();
+            _cueBindings = new List<AbilityCueBindingData>();
             // _skills = new List<SkillClipData>();
         }
 
@@ -152,13 +160,40 @@ namespace Editor.AbilityEditor.Config
         /// </summary>
         public void Initialize(
             List<TriggerData> triggers,
-            List<EffectClipData> effects)
+            List<EffectClipData> effects,
+            IEnumerable<MontageEventData> montageEvents = null,
+            IEnumerable<AbilityCueBindingData> cueBindings = null)
         {
+            var montageSnapshot = montageEvents?.Select(marker => new MontageEventData(
+                marker.Time,
+                marker.Sequence,
+                marker.MarkerId,
+                marker.EventTag)).ToList();
+            var cueSnapshot = cueBindings?.Select(binding => new AbilityCueBindingData(
+                binding.EventTag,
+                binding.CueTag,
+                binding.TargetPolicy,
+                binding.LocationPolicy,
+                binding.Magnitude,
+                binding.LocationOffset,
+                binding.EventType)).ToList();
+
+            _triggers.Clear();
+            _effects.Clear();
+            _montageEvents.Clear();
+            _cueBindings.Clear();
+
             if (triggers != null)
                 _triggers.AddRange(triggers);
             
             if (effects != null) 
                 _effects.AddRange(effects);
+
+            if (montageSnapshot != null)
+                _montageEvents.AddRange(montageSnapshot);
+
+            if (cueSnapshot != null)
+                _cueBindings.AddRange(cueSnapshot);
         }
 
 
@@ -267,7 +302,8 @@ namespace Editor.AbilityEditor.Config
         public override string ToString()
         {
             return $"AbilityConfig[ID={AbilityID}, Name={Name}, DataSource={DataSource}, Duration={TimelineDuration}s, " +
-                   $"Triggers={_triggers.Count}, Effects={_effects.Count}]";
+                   $"Triggers={_triggers.Count}, Effects={_effects.Count}, MontageEvents={_montageEvents.Count}, " +
+                   $"CueBindings={_cueBindings.Count}]";
         }
     }
 }
