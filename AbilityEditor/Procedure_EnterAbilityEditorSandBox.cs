@@ -170,7 +170,9 @@ namespace Aquila.Procedure
             // 先加载InfoBoard项目，等待完成后再创建Actor
             GameEntry.Event.Subscribe( PreloadItemCompleteEventArgs.EventID, OnPreloadItemComplete );
             GameEntry.InfoBoard.Preload();
-            Object_AbilitySelectorBase.Preload(OnAbilitySelectorPreloadFinished);
+            // 技能系统测试期间临时停用选择器预加载。
+            // TODO: 技能系统测试结束后恢复下方预加载调用，并同步恢复 ALL_LOAD_FLAG 中的选择器位。
+            // Object_AbilitySelectorBase.Preload(OnAbilitySelectorPreloadFinished);
         }
 
         private void OnAbilitySelectorPreloadFinished(bool succeeded)
@@ -195,7 +197,10 @@ namespace Aquila.Procedure
         }
 
         private IFsm<IProcedureManager> _owner;
-        private const int ALL_LOAD_FLAG = 0b1_1111;
+        // 技能系统测试期间临时从完成掩码移除选择器位。
+        // TODO: 技能系统测试结束后删除临时掩码，并恢复下方原完成掩码。
+        // private const int ALL_LOAD_FLAG = 0b1_1111;
+        private const int ALL_LOAD_FLAG = 0b0_1111;
         private const int INFOBOARD_LOAD_FLAG = 0b0_1100;
         private const int ABILITY_SELECTOR_LOAD_FLAG = 0b1_0000;
         private int _loadFinishSign;

@@ -68,7 +68,9 @@ namespace Aquila.Procedure
             PreloadInfoBoard();
             PreloadAbilityPool();
             PreloadFormul();
-            PreloadAbilitySelectors();
+            // 技能系统测试期间临时停用选择器预加载。
+            // TODO: 技能系统测试结束后恢复下方预加载调用，并同步恢复完成掩码中的选择器位。
+            // PreloadAbilitySelectors();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -294,7 +296,10 @@ namespace Aquila.Procedure
         /// <summary>
         /// 加载完成状态
         /// </summary>
-        private const int _preloadStateFinish = 0b_0000_0001_1111;
+        // 技能系统测试期间临时从完成掩码移除选择器位。
+        // TODO: 技能系统测试结束后删除临时掩码，并恢复下方原完成掩码。
+        // private const int _preloadStateFinish = 0b_0000_0001_1111;
+        private const int _preloadStateFinish = 0b_0000_0000_1111;
 
         /// <summary>
         /// 保存未加载完成的数据表
