@@ -60,7 +60,6 @@ namespace Editor.AbilityEditor.Tools
 
                 // Header
                 string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
-                byte version = reader.ReadByte();
 
                 if (magic != MAGIC)
                 {
@@ -68,8 +67,8 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
-                _currentVersion = version;
-                sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
+                reader.ReadByte();
+                sb.AppendLine($"[Header] Magic: {magic}");
 
                 // Basic Info
                 int abilityId = reader.ReadInt32();
@@ -100,6 +99,9 @@ namespace Editor.AbilityEditor.Tools
                     sb.AppendLine($"  Track[{t}]:");
                     ReadTrack(reader, sb, "    ");
                 }
+
+                ReadMontageEvents(reader, sb);
+                ReadCueBindings(reader, sb);
 
                 sb.AppendLine("========== End ==========");
                 Aquila.Toolkit.Tools.Logger.Info(sb.ToString());
@@ -145,18 +147,9 @@ namespace Editor.AbilityEditor.Tools
                 case 1: // Buff/Effect
                     ReadEffectClip(reader, sb, indent);
                     break;
-                
-                case 2: // Audio
-                    ReadAudioClip(reader, sb, indent);
-                    break;
-                
-                case 3: // VFX
-                    ReadVFXClip(reader, sb, indent);
-                    break;
-                
+
                 default:
-                    sb.AppendLine($"{indent}[Unknown clip type data]");
-                    break;
+                    throw new InvalidDataException($"[AbilityBinaryReader] Unsupported clip type: {clipType}");
             }
         }
 
@@ -229,43 +222,8 @@ namespace Editor.AbilityEditor.Tools
                 }
                 sb.AppendLine("]");
             }
-        }
 
-        private static void ReadAudioClip(BinaryReader reader, StringBuilder sb, string indent)
-        {
-            int audioId = reader.ReadInt32();
-            float volume = reader.ReadSingle();
-            bool loop = reader.ReadBoolean();
-            float fadeIn = reader.ReadSingle();
-            float fadeOut = reader.ReadSingle();
-
-            sb.AppendLine($"{indent}AudioId: {audioId}");
-            sb.AppendLine($"{indent}Volume: {volume:F2}");
-            sb.AppendLine($"{indent}Loop: {loop}");
-            sb.AppendLine($"{indent}FadeIn: {fadeIn:F2}s, FadeOut: {fadeOut:F2}s");
-        }
-
-        private static void ReadVFXClip(BinaryReader reader, StringBuilder sb, string indent)
-        {
-            string vfxPath = ReadString(reader);
-            string attachPoint = ReadString(reader);
-            float posX = reader.ReadSingle();
-            float posY = reader.ReadSingle();
-            float posZ = reader.ReadSingle();
-            float rotX = reader.ReadSingle();
-            float rotY = reader.ReadSingle();
-            float rotZ = reader.ReadSingle();
-            float scaleX = reader.ReadSingle();
-            float scaleY = reader.ReadSingle();
-            float scaleZ = reader.ReadSingle();
-            bool followAttach = reader.ReadBoolean();
-
-            sb.AppendLine($"{indent}VfxPath: {vfxPath}");
-            sb.AppendLine($"{indent}AttachPoint: {attachPoint}");
-            sb.AppendLine($"{indent}Position: ({posX:F2}, {posY:F2}, {posZ:F2})");
-            sb.AppendLine($"{indent}Rotation: ({rotX:F2}, {rotY:F2}, {rotZ:F2})");
-            sb.AppendLine($"{indent}Scale: ({scaleX:F2}, {scaleY:F2}, {scaleZ:F2})");
-            sb.AppendLine($"{indent}FollowAttachPoint: {followAttach}");
+            sb.AppendLine($"{indent}FormulaID: {reader.ReadInt32()}");
         }
 
         private static string ReadString(BinaryReader reader)
@@ -283,16 +241,46 @@ namespace Editor.AbilityEditor.Tools
             {
                 case 0: return "Ability";
                 case 1: return "Buff/Effect";
-                case 2: return "Audio";
-                case 3: return "VFX";
                 case 4: return "Animation";
                 case 5: return "Custom";
                 default: return "Unknown";
             }
         }
 
+        private static void ReadMontageEvents(BinaryReader reader, StringBuilder sb)
+        {
+            var count = reader.ReadInt32();
+            sb.AppendLine($"[Montage Events] Count: {count}");
+            for (var i = 0; i < count; i++)
+            {
+                var time = reader.ReadSingle();
+                var sequence = reader.ReadInt32();
+                var markerId = ReadString(reader);
+                var eventTag = ReadString(reader);
+                sb.AppendLine($"  [{i}] {time:F3}s #{sequence} {markerId} -> {eventTag}");
+            }
+        }
+
+        private static void ReadCueBindings(BinaryReader reader, StringBuilder sb)
+        {
+            var count = reader.ReadInt32();
+            sb.AppendLine($"[Cue Bindings] Count: {count}");
+            for (var i = 0; i < count; i++)
+            {
+                var eventTag = ReadString(reader);
+                var cueTag = ReadString(reader);
+                var eventType = reader.ReadByte();
+                var targetPolicy = reader.ReadByte();
+                var locationPolicy = reader.ReadByte();
+                var magnitude = reader.ReadSingle();
+                var x = reader.ReadSingle();
+                var y = reader.ReadSingle();
+                var z = reader.ReadSingle();
+                sb.AppendLine($"  [{i}] {eventTag} -> {cueTag}, event={eventType}, target={targetPolicy}, location={locationPolicy}, magnitude={magnitude}, offset=({x}, {y}, {z})");
+            }
+        }
+
         private const string MAGIC = "ABLT";
-        private static byte _currentVersion = 0x02;
         private const string CONTEXT_MENU_PATH = "Assets/AbilityEditor/ReadBinaryAbilityData";
     }
 }

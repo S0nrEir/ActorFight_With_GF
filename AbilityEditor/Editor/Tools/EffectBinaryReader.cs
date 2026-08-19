@@ -60,7 +60,6 @@ namespace Editor.AbilityEditor.Tools
 
                 // Header
                 string magic = Encoding.ASCII.GetString(reader.ReadBytes(6));
-                byte version = reader.ReadByte();
 
                 if (magic != MAGIC)
                 {
@@ -68,8 +67,8 @@ namespace Editor.AbilityEditor.Tools
                     return;
                 }
 
-                _currentVersion = version;
-                sb.AppendLine($"[Header] Magic: {magic}, Version: {version}");
+                reader.ReadByte();
+                sb.AppendLine($"[Header] Magic: {magic}");
 
                 // Basic Info
                 int id = reader.ReadInt32();
@@ -143,13 +142,14 @@ namespace Editor.AbilityEditor.Tools
                     sb.AppendLine("[Awake Effects] Count: 0");
                 }
 
+                sb.AppendLine($"FormulaID: {reader.ReadInt32()}");
+
                 sb.AppendLine("========== End ==========");
                 Aquila.Toolkit.Tools.Logger.Info(sb.ToString());
             }
         }
 
         private const string MAGIC = "EFFECT";
-        private static byte _currentVersion = 0x00;
         private const string CONTEXT_MENU_PATH = "Assets/EffectEditor/ReadBinaryEffectData";
     }
 }

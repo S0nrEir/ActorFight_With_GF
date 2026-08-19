@@ -98,6 +98,15 @@ namespace Aquila.Fight.Addon
             return spec.UseAbility(triggerIndex, target );
         }
 
+        public void HandleGameplayEvent(in MontageGameplayEvent gameplayEvent)
+        {
+            var spec = GetAbilitySpec(gameplayEvent.AbilityId);
+            if (spec == null || !spec.Active)
+                return;
+
+            spec.HandleGameplayEvent(gameplayEvent);
+        }
+
         public void CastComplete(int abilityID)
         {
             OnCastComplete?.Invoke(abilityID);

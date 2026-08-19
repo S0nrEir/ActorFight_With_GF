@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -335,12 +335,13 @@ namespace Aquila.AbilityPool
 
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(6));
-            byte version = reader.ReadByte();
-            if (magic != EFFECT_MAGIC || version != EFFECT_VERSION_3)
+            if (magic != EFFECT_MAGIC)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid effect header (magic={magic}, version={version}) in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid effect magic ({magic}) in {filePath}");
                 return false;
             }
+
+            reader.ReadByte();
 
             // Basic Info（顺序与 EffectBinaryExporter.ExportEffect 一致）
             int id = reader.ReadInt32();
@@ -419,12 +420,13 @@ namespace Aquila.AbilityPool
 
             // Header
             string magic = Encoding.ASCII.GetString(reader.ReadBytes(4));
-            byte version = reader.ReadByte();
-            if (magic != ABILITY_MAGIC || version != ABILITY_VERSION_4)
+            if (magic != ABILITY_MAGIC)
             {
-                Tools.Logger.Error($"[AbilityPool] Invalid ability header (magic={magic}, version={version}) in {filePath}");
+                Tools.Logger.Error($"[AbilityPool] Invalid ability magic ({magic}) in {filePath}");
                 return false;
             }
+
+            reader.ReadByte();
 
             // Basic Info
             int abilityId = reader.ReadInt32();
@@ -449,19 +451,20 @@ namespace Aquila.AbilityPool
                     float startTime = reader.ReadSingle();
                     float endTime = reader.ReadSingle();
 
-                    if (clipType == CLIP_TYPE_EFFECT)
+                    if (clipType != CLIP_TYPE_EFFECT)
                     {
-                        var effectData = ReadEffectClip(reader, startTime, endTime, version);
-                        if (effectData.HasValue)
-                            effectList.Add(effectData.Value);
+                        Tools.Logger.Error($"[AbilityPool] Unsupported clip type {clipType} in ability {abilityId}: {filePath}");
+                        return false;
                     }
-                    else
-                    {
-                        // 跳过非 Effect clip 的数据（Audio / VFX）
-                        SkipNonEffectClip(reader, clipType);
-                    }
+
+                    var effectData = ReadEffectClip(reader, startTime, endTime);
+                    if (effectData.HasValue)
+                        effectList.Add(effectData.Value);
                 }
             }
+
+            var montageEvents = ReadMontageEvents(reader);
+            var cueBindings = ReadCueBindings(reader);
 
             data = new AbilityData(
                 abilityId,
@@ -472,7 +475,9 @@ namespace Aquila.AbilityPool
                 selectRadius,
                 timelineId,
                 duration,
-                effectList.ToArray()
+                effectList.ToArray(),
+                montageEvents,
+                cueBindings
             );
             return true;
         }
@@ -480,7 +485,7 @@ namespace Aquila.AbilityPool
         /// <summary>
         /// 读取 Effect Clip 字段（顺序与 AbilityBinaryExporter.WriteEffectClip 一致）
         /// </summary>
-        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime, byte version)
+        private EffectData? ReadEffectClip(BinaryReader reader, float startTime, float endTime)
         {
             int effectId = reader.ReadInt32();
             int stackLimit = reader.ReadInt32();
@@ -552,30 +557,6 @@ namespace Aquila.AbilityPool
             );
         }
 
-        /// <summary>
-        /// 跳过 Audio / VFX clip 的字节，保持 BinaryReader 位置正确
-        /// </summary>
-        private void SkipNonEffectClip(BinaryReader reader, int clipType)
-        {
-            if (clipType == CLIP_TYPE_AUDIO)
-            {
-                reader.ReadInt32();     // AudioId
-                reader.ReadSingle();    // Volume
-                reader.ReadBoolean();   // Loop
-                reader.ReadSingle();    // FadeIn
-                reader.ReadSingle();    // FadeOut
-            }
-            else if (clipType == CLIP_TYPE_VFX)
-            {
-                ReadString(reader);     // VfxPath
-                ReadString(reader);     // AttachPoint
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Position
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Rotation
-                reader.ReadSingle(); reader.ReadSingle(); reader.ReadSingle(); // Scale
-                reader.ReadBoolean();   // FollowAttachPoint
-            }
-        }
-
         private string ReadString(BinaryReader reader)
         {
             int length = reader.ReadInt32();
@@ -583,6 +564,47 @@ namespace Aquila.AbilityPool
                 return string.Empty;
             
             return Encoding.UTF8.GetString(reader.ReadBytes(length));
+        }
+
+        private MontageEventData[] ReadMontageEvents(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            var events = new MontageEventData[count];
+            for (var i = 0; i < count; i++)
+            {
+                events[i] = new MontageEventData(
+                    reader.ReadSingle(),
+                    reader.ReadInt32(),
+                    ReadString(reader),
+                    ReadString(reader));
+            }
+
+            return events;
+        }
+
+        private AbilityCueBindingData[] ReadCueBindings(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            var bindings = new AbilityCueBindingData[count];
+            for (var i = 0; i < count; i++)
+            {
+                var eventTag = ReadString(reader);
+                var cueTag = ReadString(reader);
+                var eventType = (GameplayCueEventType)reader.ReadByte();
+                var targetPolicy = (GameplayCueTargetPolicy)reader.ReadByte();
+                var locationPolicy = (GameplayCueLocationPolicy)reader.ReadByte();
+                var magnitude = reader.ReadSingle();
+                bindings[i] = new AbilityCueBindingData(
+                    eventTag,
+                    cueTag,
+                    targetPolicy,
+                    locationPolicy,
+                    magnitude,
+                    new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()),
+                    eventType);
+            }
+
+            return bindings;
         }
 
         //----------------------- fields -----------------------
@@ -605,14 +627,8 @@ namespace Aquila.AbilityPool
 
         private const string EFFECT_MAGIC  = "EFFECT";
         private const string ABILITY_MAGIC = "ABLT";
-        
-        //#todo 删掉effect version和ability version
-        private const byte EFFECT_VERSION_3  = 0x03;
-        private const byte ABILITY_VERSION_4 = 0x04;
 
         private const int CLIP_TYPE_EFFECT = 1;
-        private const int CLIP_TYPE_AUDIO  = 2;
-        private const int CLIP_TYPE_VFX    = 3;
         
     /// <summary>
     /// EffectSpec 统一初始化注册校验实现

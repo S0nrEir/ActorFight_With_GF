@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,8 +18,6 @@ namespace Editor.AbilityEditor.Tools
     {
         private const float FLOAT_TOLERANCE = 0.0001f;
         private const string MAGIC = "EFFECT";
-        // private const byte VERSION_2 = 0x02;
-        private const byte VERSION_3 = 0x03;
 
         /// <summary>
         /// 执行完整的验证流程
@@ -206,12 +204,11 @@ namespace Editor.AbilityEditor.Tools
             {
                 // Read Header
                 string magic = reader.ReadFixedString(6);
-                byte version = reader.ReadByte();
 
                 if (magic != MAGIC)
                     throw new InvalidDataException($"Invalid magic: {magic}");
-                if (!IsSupportedVersion(version))
-                    throw new InvalidDataException($"Unsupported version: {version}");
+
+                reader.ReadByte();
 
                 // Read Basic Info
                 var data = new CachedEffectData
@@ -252,8 +249,6 @@ namespace Editor.AbilityEditor.Tools
                     data.AwakeEffects[i] = reader.ReadInt32();
                 }
                 data.FormulaID = reader.ReadInt32();
-                // if (version >= VERSION_3)
-                //     data.FormulaID = reader.ReadInt32();
 
                 return data;
             }
@@ -469,10 +464,6 @@ namespace Editor.AbilityEditor.Tools
         }
 
 
-        private static bool IsSupportedVersion(byte version)
-        {
-            return version == VERSION_3;
-        }
         #endregion
     }
 }

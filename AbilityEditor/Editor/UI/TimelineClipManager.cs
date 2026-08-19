@@ -247,8 +247,6 @@ namespace Aquila.AbilityEditor
 
                 // evt.menu.AppendAction("Add Skill Clip", action => AddSkillClip(track, clickTime));
                 evt.menu.AppendAction("Add Effect Clip", action => AddEffectClip( track, clickTime));
-                evt.menu.AppendAction("Add Audio Clip", action => AddAudioClip(track, clickTime));
-                evt.menu.AppendAction("Add VFX Clip", action => AddVFXClip(track, clickTime));
             }));
         }
 
@@ -261,18 +259,6 @@ namespace Aquila.AbilityEditor
         private void AddEffectClip(TimelineTrackItem track, float startTime)
         {
             var clipData = new EffectClipData( "Effect", startTime, 1);
-            AddClip(track, clipData);
-        }
-
-        private void AddAudioClip(TimelineTrackItem track, float startTime)
-        {
-            var clipData = new AudioClipData("Audio", startTime, startTime + 1f, -1);
-            AddClip(track, clipData);
-        }
-
-        private void AddVFXClip(TimelineTrackItem track, float startTime)
-        {
-            var clipData = new VFXClipData("VFX", startTime, startTime + 1f, "vfx/default");
             AddClip(track, clipData);
         }
 

@@ -80,10 +80,18 @@ namespace Aquila.AbilityEditor
         [SerializeField]
         private List<SerializedTrackData> _tracks = new List<SerializedTrackData>();
 
+        [SerializeField]
+        private List<MontageEventData> _montageEvents = new List<MontageEventData>();
+
+        [SerializeField]
+        private List<AbilityCueBindingData> _cueBindings = new List<AbilityCueBindingData>();
+
         /// <summary>
         /// 只读访问 Track 列表
         /// </summary>
         public IReadOnlyList<SerializedTrackData> Tracks => _tracks.AsReadOnly();
+        public IReadOnlyList<MontageEventData> MontageEvents => _montageEvents.AsReadOnly();
+        public IReadOnlyList<AbilityCueBindingData> CueBindings => _cueBindings.AsReadOnly();
 
         /// <summary>
         /// 设置 Track 列表
@@ -97,6 +105,20 @@ namespace Aquila.AbilityEditor
             }
 
             _tracks = new List<SerializedTrackData>(tracks);
+        }
+
+        public void SetMontageEvents(List<MontageEventData> montageEvents)
+        {
+            _montageEvents = montageEvents == null
+                ? new List<MontageEventData>()
+                : new List<MontageEventData>(montageEvents);
+        }
+
+        public void SetCueBindings(List<AbilityCueBindingData> cueBindings)
+        {
+            _cueBindings = cueBindings == null
+                ? new List<AbilityCueBindingData>()
+                : new List<AbilityCueBindingData>(cueBindings);
         }
 
         /// <summary>

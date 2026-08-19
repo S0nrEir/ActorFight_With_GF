@@ -199,8 +199,6 @@ namespace Editor.AbilityEditor.Testing
 
             // 收集所有启用轨道的启用 Clip
             var allEffects = new List<EffectClipData>();
-            var allAudios = new List<AudioClipData>();
-            var allVFXs = new List<VFXClipData>();
 
             foreach (var track in tracks)
             {
@@ -214,10 +212,6 @@ namespace Editor.AbilityEditor.Testing
 
                     if (clip is EffectClipData effectClip)
                         allEffects.Add(effectClip);
-                    else if (clip is AudioClipData audioClip)
-                        allAudios.Add(audioClip);
-                    else if (clip is VFXClipData vfxClip)
-                        allVFXs.Add(vfxClip);
                 }
             }
 
@@ -225,7 +219,7 @@ namespace Editor.AbilityEditor.Testing
             var triggers = GenerateTriggers(allEffects);
 
             // 初始化配置
-            config.Initialize(triggers, allEffects, allAudios, allVFXs);
+            config.Initialize(triggers, allEffects);
 
             return config;
         }
@@ -375,8 +369,6 @@ namespace Editor.AbilityEditor.Testing
 
             // 计算期望的 Clip 数量
             int expectedEffects = 0;
-            int expectedAudios = 0;
-            int expectedVFXs = 0;
 
             foreach (var track in tracks)
             {
@@ -387,8 +379,6 @@ namespace Editor.AbilityEditor.Testing
                     if (!clip.IsEnabled) continue;
 
                     if (clip is EffectClipData) expectedEffects++;
-                    else if (clip is AudioClipData) expectedAudios++;
-                    else if (clip is VFXClipData) expectedVFXs++;
                 }
             }
 
@@ -401,28 +391,6 @@ namespace Editor.AbilityEditor.Testing
             else
             {
                 Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ EffectClips 验证通过: {config.Effects.Count}个</color>");
-            }
-
-            // 验证 AudioClips
-            if (config.Audios.Count != expectedAudios)
-            {
-                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ AudioClips 数量不匹配: 期望={expectedAudios}, 实际={config.Audios.Count}</color>");
-                passed = false;
-            }
-            else
-            {
-                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ AudioClips 验证通过: {config.Audios.Count}个</color>");
-            }
-
-            // 验证 VFXClips
-            if (config.VFXs.Count != expectedVFXs)
-            {
-                Aquila.Toolkit.Tools.Logger.Error($"<color=red>✗ VFXClips 数量不匹配: 期望={expectedVFXs}, 实际={config.VFXs.Count}</color>");
-                passed = false;
-            }
-            else
-            {
-                Aquila.Toolkit.Tools.Logger.Info($"<color=green>✓ VFXClips 验证通过: {config.VFXs.Count}个</color>");
             }
 
             return passed;

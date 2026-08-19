@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Aquila.Config;
 using Aquila.Formula;
+using Aquila.ObjectPool;
 using Aquila.Toolkit;
 using Cfg.Common;
 using GameFramework;
@@ -67,6 +68,9 @@ namespace Aquila.Procedure
             PreloadInfoBoard();
             PreloadAbilityPool();
             PreloadFormul();
+            // 技能系统测试期间临时停用选择器预加载。
+            // TODO: 技能系统测试结束后恢复下方预加载调用，并同步恢复完成掩码中的选择器位。
+            // PreloadAbilitySelectors();
         }
 
         protected override void OnLeave( IFsm<IProcedureManager> procedureOwner, bool isShutdown )
@@ -84,6 +88,20 @@ namespace Aquila.Procedure
         private void PreloadAbilityPool()
         {
             GameEntry.AbilityPool.Init();
+        }
+
+        private void PreloadAbilitySelectors()
+        {
+            Object_AbilitySelectorBase.Preload(OnAbilitySelectorPreloadFinished);
+        }
+
+        private void OnAbilitySelectorPreloadFinished(bool succeeded)
+        {
+            if (!succeeded || _handler == null)
+                return;
+
+            _handler.AbilitySelectorLoadFinish();
+            GoToNextProcedureIfFinished();
         }
 
         /// <summary>
@@ -198,6 +216,14 @@ namespace Aquila.Procedure
         }
 
         /// <summary>
+        /// 技能选择器加载完成
+        /// </summary>
+        public void AbilitySelectorLoadFinish()
+        {
+            _preloadFlag |= _abilitySelectorLoadFinish;
+        }
+
+        /// <summary>
         /// 内部数据表加载成功
         /// </summary>
         public void OnDataTableLoadSucc( string assetName )
@@ -263,8 +289,16 @@ namespace Aquila.Procedure
         public const int _infoboardHPBarLoadFinish = 0b_0000_0000_1000;
 
         /// <summary>
+        /// 技能选择器加载完成
+        /// </summary>
+        private const int _abilitySelectorLoadFinish = 0b_0000_0001_0000;
+
+        /// <summary>
         /// 加载完成状态
         /// </summary>
+        // 技能系统测试期间临时从完成掩码移除选择器位。
+        // TODO: 技能系统测试结束后删除临时掩码，并恢复下方原完成掩码。
+        // private const int _preloadStateFinish = 0b_0000_0001_1111;
         private const int _preloadStateFinish = 0b_0000_0000_1111;
 
         /// <summary>

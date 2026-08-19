@@ -236,31 +236,21 @@ namespace Aquila.AbilityEditor
         /// <summary>
         /// 技能/能力
         /// </summary>
-        Ability,
+        Ability = 0,
 
         /// <summary>
         /// Buff/效果
         /// </summary>
-        Buff,
-
-        /// <summary>
-        /// 音效
-        /// </summary>
-        Audio,
-
-        /// <summary>
-        /// 特效/VFX
-        /// </summary>
-        VFX,
+        Buff = 1,
 
         /// <summary>
         /// 动画
         /// </summary>
-        Animation,
+        Animation = 4,
 
         /// <summary>
         /// 自定义
         /// </summary>
-        Custom
+        Custom = 5
     }
 }

@@ -75,7 +75,7 @@ namespace Editor.AbilityEditor.Tools
                 {
                     // Write Header
                     writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
-                    writer.WriteByte(VERSION);
+                    writer.WriteByte(RESERVED_HEADER_BYTE);
 
                     // Write Basic Info
                     writer.WriteInt32(data.EffectId);
@@ -149,7 +149,7 @@ namespace Editor.AbilityEditor.Tools
                 {
                     // Write Header
                     writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
-                    writer.WriteByte(VERSION);
+                    writer.WriteByte(RESERVED_HEADER_BYTE);
 
                     // Write Basic Info
                     writer.WriteInt32(data.id);
@@ -222,6 +222,6 @@ namespace Editor.AbilityEditor.Tools
         }
 
         private const string MAGIC = "EFFECT";
-        private const byte VERSION = 0x03;
+        private const byte RESERVED_HEADER_BYTE = 0x03;
     }
 }

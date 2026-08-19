@@ -19,8 +19,8 @@ namespace Aquila.Fight
         private readonly int _timelineID;
         private readonly float _timelineDuration;
         private readonly IReadOnlyList<EffectData> _effects;
-        // private readonly IReadOnlyList<AudioData> _audios;
-        // private readonly IReadOnlyList<VFXData> _vfxs;
+        private readonly IReadOnlyList<MontageEventData> _montageEvents;
+        private readonly IReadOnlyList<AbilityCueBindingData> _cueBindings;
 
         public AbilityData(
             int id,
@@ -31,9 +31,9 @@ namespace Aquila.Fight
             float selectRadius,
             int timelineID,
             float timelineDuration,
-            EffectData[] effects)
-            // AudioData[] audios,
-            // VFXData[] vfxs)
+            EffectData[] effects,
+            MontageEventData[] montageEvents = null,
+            AbilityCueBindingData[] cueBindings = null)
         {
             _id = id;
             _costEffectID = costEffectID;
@@ -44,8 +44,8 @@ namespace Aquila.Fight
             _timelineID = timelineID;
             _timelineDuration = timelineDuration;
             _effects = effects?.ToArray() ?? Array.Empty<EffectData>();
-            // _audios = audios?.ToArray() ?? System.Array.Empty<AudioData>();
-            // _vfxs = vfxs?.ToArray() ?? System.Array.Empty<VFXData>();
+            _montageEvents = montageEvents?.ToArray() ?? Array.Empty<MontageEventData>();
+            _cueBindings = cueBindings?.ToArray() ?? Array.Empty<AbilityCueBindingData>();
         }
 
         // Getter 方法
@@ -58,7 +58,7 @@ namespace Aquila.Fight
         public int GetTimelineID() => _timelineID;
         public float GetTimelineDuration() => _timelineDuration;
         public IReadOnlyList<EffectData> GetEffects() => _effects;
-        // public IReadOnlyList<AudioData> GetAudios() => _audios;
-        // public IReadOnlyList<VFXData> GetVFXs() => _vfxs;
+        public IReadOnlyList<MontageEventData> GetMontageEvents() => _montageEvents;
+        public IReadOnlyList<AbilityCueBindingData> GetCueBindings() => _cueBindings;
     }
 }

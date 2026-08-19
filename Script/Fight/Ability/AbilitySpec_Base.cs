@@ -7,6 +7,7 @@ using Aquila.Toolkit;
 using Cfg.Enum;
 using Cfg.Fight;
 using GameFramework;
+using UnityEngine;
 
 namespace Aquila.Fight
 {
@@ -171,6 +172,15 @@ namespace Aquila.Fight
 
             return true;
         }
+
+        public virtual void HandleGameplayEvent(in MontageGameplayEvent gameplayEvent)
+        {
+            AbilityCueRouter.Route(
+                _data.GetCueBindings(),
+                gameplayEvent,
+                ResolveActorPosition,
+                ExecuteGameplayCue);
+        }
         /// <summary>
         /// 使用技能前置逻辑
         /// </summary>
@@ -261,6 +271,23 @@ namespace Aquila.Fight
         private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
         {
             Tools.Logger.Info( $"tag changed,tag:{changedTag}" );
+        }
+
+        private static Vector3 ResolveActorPosition(int actorId)
+        {
+            var actor = GameEntry.Module.GetModule<Module_ActorMgr>().Get(actorId);
+            return actor == null ? Vector3.zero : actor.Actor.transform.position;
+        }
+
+        private static void ExecuteGameplayCue(string cueTag, GameplayCueParameters parameters)
+        {
+            if (GameEntry.GameplayCue == null)
+            {
+                Tools.Logger.Error($"[GameplayCue] Component missing, cueTag={cueTag}, abilityId={parameters.AbilityId}, activationId={parameters.ActivationId}");
+                return;
+            }
+
+            GameEntry.GameplayCue.ExecuteGameplayCue(cueTag, parameters);
         }
 
         /// <summary>

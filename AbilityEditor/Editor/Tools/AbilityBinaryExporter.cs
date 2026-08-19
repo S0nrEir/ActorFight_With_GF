@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aquila.AbilityEditor;
@@ -23,13 +24,9 @@ namespace Editor.AbilityEditor.Tools
 
             EnsureDirectoryExists(Misc.ABILITY_BIN_ASSET_PATH);
             string[] assetGuids = AssetDatabase.FindAssets("t:AbilityEditorSOData", new[] { Misc.ABILITY_ASSET_BASE_PATH });
-            int successCount = 0;
+            var abilities = new List<AbilityEditorSOData>(assetGuids.Length);
             int failCount = 0;
 
-            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"));
-            foreach (var file in files)
-                File.Delete(file);
-            
             foreach (string guid in assetGuids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -48,13 +45,27 @@ namespace Editor.AbilityEditor.Tools
                     continue;
                 }
 
+                abilities.Add(abilityData);
+            }
+
+            if (failCount > 0 || abilities.Count == 0)
+            {
+                Aquila.Toolkit.Tools.Logger.Error($"[AbilityBinaryExporter] Export aborted before deleting existing files. Valid: {abilities.Count}, Failed: {failCount}");
+                return;
+            }
+
+            var files = Directory.GetFiles(Path.Combine(Application.dataPath, "Res/Config/Ability"), "*.ablt");
+            foreach (var file in files)
+                File.Delete(file);
+
+            foreach (var abilityData in abilities)
+            {
                 string outputFile = Path.Combine(Misc.ABILITY_BIN_ASSET_PATH, $"{abilityData.Id}.ablt");
                 ExportAbility(abilityData, outputFile);
-                successCount++;
             }
 
             AssetDatabase.Refresh();
-            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Export complete. Success: {successCount}, Failed: {failCount}");
+            Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Export complete. Success: {abilities.Count}, Failed: 0");
         }
 
         /// <summary>
@@ -68,7 +79,7 @@ namespace Editor.AbilityEditor.Tools
                 {
                     //write Header
                     writer.WriteBytes(Encoding.ASCII.GetBytes(MAGIC));
-                    writer.WriteByte(VERSION);
+                    writer.WriteByte(RESERVED_HEADER_BYTE);
 
                     //write Basic Info
                     writer.WriteInt32(data.Id);
@@ -89,6 +100,9 @@ namespace Editor.AbilityEditor.Tools
                         foreach (var track in tracks)
                             WriteTrack(writer, track);
                     }
+
+                    WriteMontageEvents(writer, data.MontageEvents);
+                    WriteCueBindings(writer, data.CueBindings);
                 }
             }
             Aquila.Toolkit.Tools.Logger.Info($"[AbilityBinaryExporter] Exported: {outputPath}");
@@ -108,8 +122,12 @@ namespace Editor.AbilityEditor.Tools
 
         private static void WriteClip(Aquila.Toolkit.Tools.ByteWriter writer, TimelineClipData clip)
         {
+            int clipType = (int)clip.ClipType;
+            if (clipType == 2 || clipType == 3)
+                throw new InvalidDataException($"[AbilityBinaryExporter] Retired clip type is not supported: {clipType}");
+
             // ClipType
-            writer.WriteInt32((int)clip.ClipType);
+            writer.WriteInt32(clipType);
             // Common fields
             writer.WriteSingle(clip.StartTime);
             writer.WriteSingle(clip.EndTime);
@@ -121,15 +139,7 @@ namespace Editor.AbilityEditor.Tools
                 case EffectClipData effectClip:
                     WriteEffectClip(writer, effectClip);
                     break;
-                
-                case AudioClipData audioClip:
-                    WriteAudioClip(writer, audioClip);
-                    break;
-                
-                case VFXClipData vfxClip:
-                    WriteVFXClip(writer, vfxClip);
-                    break;
-                
+
                 default:
                     Aquila.Toolkit.Tools.Logger.Warning($"[AbilityBinaryExporter] Unknown clip type: {clip.ClipType}");
                     break;
@@ -180,26 +190,43 @@ namespace Editor.AbilityEditor.Tools
             writer.WriteInt32(clip.FormulaID);
         }
 
-        private static void WriteAudioClip(Aquila.Toolkit.Tools.ByteWriter writer, AudioClipData clip)
+        private static void WriteMontageEvents(
+            Aquila.Toolkit.Tools.ByteWriter writer,
+            System.Collections.Generic.IReadOnlyList<Aquila.Fight.MontageEventData> events)
         {
-            writer.WriteInt32(clip.AudioId);
-            writer.WriteSingle(clip.Volume);
-            writer.WriteBoolean(clip.Loop);
-            writer.WriteSingle(clip.FadeInDuration);
-            writer.WriteSingle(clip.FadeOutDuration);
+            writer.WriteInt32(events?.Count ?? 0);
+            if (events == null)
+                return;
+
+            for (var i = 0; i < events.Count; i++)
+            {
+                var marker = events[i];
+                writer.WriteSingle(marker.Time);
+                writer.WriteInt32(marker.Sequence);
+                writer.WriteString(marker.MarkerId);
+                writer.WriteString(marker.EventTag);
+            }
         }
 
-        private static void WriteVFXClip(Aquila.Toolkit.Tools.ByteWriter writer, VFXClipData clip)
+        private static void WriteCueBindings(
+            Aquila.Toolkit.Tools.ByteWriter writer,
+            System.Collections.Generic.IReadOnlyList<Aquila.Fight.AbilityCueBindingData> bindings)
         {
-            writer.WriteString(clip.VfxPath);
-            writer.WriteString(clip.AttachPoint);
-            // PositionOffset
-            writer.WriteVector3(clip.PositionOffset);
-            // RotationOffset
-            writer.WriteVector3(clip.RotationOffset);
-            // Scale
-            writer.WriteVector3(clip.Scale);
-            writer.WriteBoolean(clip.FollowAttachPoint);
+            writer.WriteInt32(bindings?.Count ?? 0);
+            if (bindings == null)
+                return;
+
+            for (var i = 0; i < bindings.Count; i++)
+            {
+                var binding = bindings[i];
+                writer.WriteString(binding.EventTag);
+                writer.WriteString(binding.CueTag);
+                writer.WriteByte((byte)binding.EventType);
+                writer.WriteByte((byte)binding.TargetPolicy);
+                writer.WriteByte((byte)binding.LocationPolicy);
+                writer.WriteSingle(binding.Magnitude);
+                writer.WriteVector3(binding.LocationOffset);
+            }
         }
 
         private static void EnsureDirectoryExists(string path)
@@ -212,6 +239,6 @@ namespace Editor.AbilityEditor.Tools
         }
         
         private const string MAGIC = "ABLT";
-        private const byte VERSION = 0x04;
+        private const byte RESERVED_HEADER_BYTE = 0x05;
     }
 }

@@ -18,6 +18,8 @@ MonoBehaviour:
   CostEffectID: 1000
   CoolDownEffectID: 1001
   TargetType: 2
+  SelectType: 1
+  SelectRadius: 0
   TimelineID: 1000
   TimelineAssetPath: Assets/Res/Timeline/Common/Common_Ability_1002.playable
   TimelineDuration: 5
@@ -27,6 +29,19 @@ MonoBehaviour:
     IsEnabled: 1
     Clips:
     - rid: 6436510903891132416
+  _montageEvents:
+  - Time: 2
+    Sequence: 0
+    MarkerId: physical_attack_hit
+    EventTag: Event.Ability.PhysicalAttack.Hit
+  _cueBindings:
+  - EventTag: Event.Ability.PhysicalAttack.Hit
+    CueTag: GameplayCue.Ability.PhysicalAttack.Hit
+    EventType: 0
+    TargetPolicy: 1
+    LocationPolicy: 1
+    Magnitude: 1
+    LocationOffset: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:

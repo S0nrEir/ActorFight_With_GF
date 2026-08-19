@@ -1,101 +1,57 @@
+using Aquila.Combat;
 using Aquila.Fight.Addon;
-using Aquila.Toolkit;
-using Cfg.Fight;
+using Aquila.Module;
 using GameFramework;
-using UnityEngine.Playables;
 
 namespace Aquila.Fight.FSM
 {
-    /// <summary>
-    /// 使用技能状态：进入后播放技能 Timeline，时长到达后停止并退出到待机状态。仅仅作为表现
-    /// </summary>
     public class ActorState_HeroAbility : ActorState_Base
     {
         public override void OnEnter(object param)
         {
             base.OnEnter(param);
 
-            if (!(param is AbilityResult_Use abilityParam))
-                throw new GameFrameworkException("ActorState_HeroAbility.OnEnter param must be AbilityResult_Use.");
+            if (!(param is int abilityId))
+                throw new GameFrameworkException("ActorState_HeroAbility.OnEnter param must be an ability id.");
 
-            if (!GameEntry.AbilityPool.GetAbility(abilityParam._abilityID, out var abilityData))
-                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter ability not found, id={abilityParam._abilityID}.");
-
-            _timelineMeta = GameEntry.LuBan.Tables.AbilityTimeline.GetOrDefault(abilityData.GetTimelineID());
-            if (_timelineMeta == null)
-                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter timeline meta not found, timelineID={abilityData.GetTimelineID()}.");
-
-            if (string.IsNullOrEmpty(_timelineMeta.AssetPath))
-                throw new GameFrameworkException($"ActorState_HeroAbility.OnEnter timeline asset path is empty, timelineID={_timelineMeta.id}.");
-
-            _director = Tools.GetComponent<PlayableDirector>(_actor.transform);
-
-            _elapsed = 0f;
-            _isTimelinePlaying = true;
-            GameEntry.Timeline.Play(_timelineMeta.AssetPath, _director);
-        }
-
-        public override void OnUpdate(float deltaTime)
-        {
-            base.OnUpdate(deltaTime);
-
-            if (!_isTimelinePlaying || _timelineMeta == null)
-                return;
-
-            if (deltaTime > 0f)
-                _elapsed += deltaTime;
-
-            if (_elapsed < _timelineMeta.Duration)
-                return;
-
-            StopTimeline();
-            _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE, null, null);
+            _abilityId = abilityId;
+            _castCompleted = false;
+            _abilityAddon = GameEntry.Module.GetModule<Module_ActorMgr>().Get(_actor.ActorID).GetAddon<Addon_Ability>();
+            _abilityAddon.OnCastComplete += OnCastComplete;
         }
 
         public override void OnLeave(object param)
         {
             base.OnLeave(param);
 
-            StopTimeline();
-            _timelineMeta = null;
-            _director = null;
-            _elapsed = 0f;
-            _isTimelinePlaying = false;
+            _abilityAddon.OnCastComplete -= OnCastComplete;
+            _abilityAddon = null;
+
+            if (!_castCompleted)
+            {
+                var combat = GameEntry.Module.GetModule<Module_Combat>();
+                combat?.InterruptCast(_actor.ActorID, CastInterruptReason.StateChanged);
+            }
+
+            _abilityId = 0;
+            _castCompleted = false;
         }
 
-        public ActorState_HeroAbility(int state_id) : base(state_id)
+        public ActorState_HeroAbility(int stateId) : base(stateId)
         {
         }
 
-        private void StopTimeline()
+        private void OnCastComplete(int abilityId)
         {
-            if (!_isTimelinePlaying)
+            if (abilityId != _abilityId)
                 return;
 
-            if (_director != null)
-                _director.Stop();
-
-            _isTimelinePlaying = false;
+            _castCompleted = true;
+            _fsm.SwitchTo((int)ActorStateTypeEnum.IDLE_STATE, null, null);
         }
 
-        /// <summary>
-        /// 技能 Timeline 配置。
-        /// </summary>
-        private Table_AbilityTimeline _timelineMeta;
-
-        /// <summary>
-        /// 当前状态累计时间。
-        /// </summary>
-        private float _elapsed;
-
-        /// <summary>
-        /// 当前状态持有的 Timeline 播放组件。
-        /// </summary>
-        private PlayableDirector _director;
-
-        /// <summary>
-        /// 当前状态是否在播放 Timeline。
-        /// </summary>
-        private bool _isTimelinePlaying;
+        private Addon_Ability _abilityAddon;
+        private int _abilityId;
+        private bool _castCompleted;
     }
 }

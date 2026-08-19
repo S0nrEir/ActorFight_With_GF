@@ -497,16 +497,6 @@ namespace Editor.AbilityEditor.Tools
                         CompareEffectClipWithProduction(editorEffect, prodEffect, prefix, differences);
                         CrossCheckWithStandaloneEffect(prodEffect, productionEffects, editorEffects, prefix, differences);
                     }
-                    else if (editorClip is AudioClipData editorAudio &&
-                             prodClip is AbilityVerificationTool.CachedAudioClipData prodAudio)
-                    {
-                        CompareAudioClipWithProduction(editorAudio, prodAudio, prefix, differences);
-                    }
-                    else if (editorClip is VFXClipData editorVfx &&
-                             prodClip is AbilityVerificationTool.CachedVFXClipData prodVfx)
-                    {
-                        CompareVfxClipWithProduction(editorVfx, prodVfx, prefix, differences);
-                    }
                 }
             }
         }
@@ -756,65 +746,6 @@ namespace Editor.AbilityEditor.Tools
             }
         }
 
-        private static void CompareAudioClipWithProduction(
-            AudioClipData editor,
-            AbilityVerificationTool.CachedAudioClipData prod,
-            string prefix,
-            List<string> differences)
-        {
-            if (!FloatEquals(editor.StartTime, prod.StartTime))
-                differences.Add($"{prefix} (Audio) StartTime | Editor: {editor.StartTime} | Production: {prod.StartTime}");
-
-            if (!FloatEquals(editor.EndTime, prod.EndTime))
-                differences.Add($"{prefix} (Audio) EndTime | Editor: {editor.EndTime} | Production: {prod.EndTime}");
-
-            if (editor.AudioId != prod.AudioId)
-                differences.Add($"{prefix} (Audio) AudioId | Editor: {editor.AudioId} | Production: {prod.AudioId}");
-
-            if (!FloatEquals(editor.Volume, prod.Volume))
-                differences.Add($"{prefix} (Audio) Volume | Editor: {editor.Volume} | Production: {prod.Volume}");
-
-            if (editor.Loop != prod.Loop)
-                differences.Add($"{prefix} (Audio) Loop | Editor: {editor.Loop} | Production: {prod.Loop}");
-
-            if (!FloatEquals(editor.FadeInDuration, prod.FadeInDuration))
-                differences.Add($"{prefix} (Audio) FadeInDuration | Editor: {editor.FadeInDuration} | Production: {prod.FadeInDuration}");
-
-            if (!FloatEquals(editor.FadeOutDuration, prod.FadeOutDuration))
-                differences.Add($"{prefix} (Audio) FadeOutDuration | Editor: {editor.FadeOutDuration} | Production: {prod.FadeOutDuration}");
-        }
-
-        private static void CompareVfxClipWithProduction(
-            VFXClipData editor,
-            AbilityVerificationTool.CachedVFXClipData prod,
-            string prefix,
-            List<string> differences)
-        {
-            if (!FloatEquals(editor.StartTime, prod.StartTime))
-                differences.Add($"{prefix} (VFX) StartTime | Editor: {editor.StartTime} | Production: {prod.StartTime}");
-
-            if (!FloatEquals(editor.EndTime, prod.EndTime))
-                differences.Add($"{prefix} (VFX) EndTime | Editor: {editor.EndTime} | Production: {prod.EndTime}");
-
-            if (editor.VfxPath != prod.VfxPath)
-                differences.Add($"{prefix} (VFX) VfxPath | Editor: {editor.VfxPath} | Production: {prod.VfxPath}");
-
-            if (editor.AttachPoint != prod.AttachPoint)
-                differences.Add($"{prefix} (VFX) AttachPoint | Editor: {editor.AttachPoint} | Production: {prod.AttachPoint}");
-
-            if (!Vector3Equals(editor.PositionOffset, prod.PositionOffset))
-                differences.Add($"{prefix} (VFX) PositionOffset | Editor: {editor.PositionOffset} | Production: {prod.PositionOffset}");
-
-            if (!Vector3Equals(editor.RotationOffset, prod.RotationOffset))
-                differences.Add($"{prefix} (VFX) RotationOffset | Editor: {editor.RotationOffset} | Production: {prod.RotationOffset}");
-
-            if (!Vector3Equals(editor.Scale, prod.Scale))
-                differences.Add($"{prefix} (VFX) Scale | Editor: {editor.Scale} | Production: {prod.Scale}");
-
-            if (editor.FollowAttachPoint != prod.FollowAttachPoint)
-                differences.Add($"{prefix} (VFX) FollowAttachPoint | Editor: {editor.FollowAttachPoint} | Production: {prod.FollowAttachPoint}");
-        }
-
         #endregion
 
         #region Utility
@@ -822,11 +753,6 @@ namespace Editor.AbilityEditor.Tools
         private static bool FloatEquals(float a, float b)
         {
             return Mathf.Abs(a - b) < FLOAT_TOLERANCE;
-        }
-
-        private static bool Vector3Equals(Vector3 a, Vector3 b)
-        {
-            return FloatEquals(a.x, b.x) && FloatEquals(a.y, b.y) && FloatEquals(a.z, b.z);
         }
 
         private static bool ArrayEquals(int[] a, int[] b)

@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 
+using Aquila.Combat;
 using Aquila.Event;
 using Aquila.Module;
 using Aquila.ObjectPool;
@@ -97,7 +98,15 @@ namespace Aquila.AbilityEditor
                 return;
             }
 
-            Object_AbilitySelectorBase.StartSelection(_playerID, _abilityID);
+            // 技能系统测试期间临时绕过选择器，直接让 player 对 dummy 释放技能。
+            // TODO: 技能系统测试结束后恢复下方 StartSelection，并删除临时 RequestCast 路径。
+            // Object_AbilitySelectorBase.StartSelection(_playerID, _abilityID);
+            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithSingleTarget(_playerID,_dummyID,_abilityID));
+            if (!requestResult.Accepted)
+            {
+                Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags));
+                return;
+            }
         }
 
         /// <summary>

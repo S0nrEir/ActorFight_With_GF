@@ -71,13 +71,15 @@ namespace Aquila.UI
             //_abilityIdArr[4]:1004
             //_enemyActorIdArr[0]:1001
             
-            // var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
-            // if (!requestResult.Accepted)
-            // {
-            //     var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
-            //     Tools.Logger.Info(errorMsg);
-            // }
-            Object_AbilitySelectorBase.StartSelection(_actorID, abilityID);
+            // 技能系统测试期间临时绕过选择器，直接对全部测试敌人提交施法请求。
+            // TODO: 技能系统测试结束后恢复下方 StartSelection，并删除临时 RequestCast 路径。
+            // Object_AbilitySelectorBase.StartSelection(_actorID, abilityID);
+            var requestResult = GameEntry.Module.GetModule<Module_Combat>().RequestCast(CastCmd.CreateWithMultiTarget(_actorID,_enemyActorIdArr,abilityID));
+            if (!requestResult.Accepted)
+            {
+                var errorMsg = Tools.Fight.UsingAbilityFaildDescription_l10n((int)requestResult.ReasonFlags);
+                Tools.Logger.Info(errorMsg);
+            }
         }
         
         /// <summary>

@@ -377,7 +377,7 @@ namespace Editor.AbilityEditor
         private void OnClickGenConfigBtn()
         {
             Aquila.Toolkit.Tools.Logger.Info("[AbilityEditorWindow] 开始生成配置...");
-            var config = AbilityConfigGenerator.Generate(this);
+            var config = AbilityConfigGenerator.Generate(this, _currentAbilityData);
             // AbilityConfigAccessor.SetConfig(config);
             AbilityDataExporter.ExportToAsset(config, _timelineTrackItems);
             ShowNotification(new GUIContent($"✓ 配置已生成并保存 (ID: {config.AbilityID})"));

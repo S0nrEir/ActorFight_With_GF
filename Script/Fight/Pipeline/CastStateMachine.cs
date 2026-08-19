@@ -17,6 +17,7 @@ namespace Aquila.Combat
     {
         None = 0,
         TargetLost = 1,
+        StateChanged = 2,
         Unknown = 99,
     }
 
