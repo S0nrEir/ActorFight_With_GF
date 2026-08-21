@@ -35,7 +35,7 @@ namespace Aquila.ObjectPool
 
         protected override void OnConfirm()
         {
-            if (!TryGetMouseGroundPoint(out var groundPoint))
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var groundPoint))
             {
                 Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
                 ReleaseSelf();
@@ -52,7 +52,12 @@ namespace Aquila.ObjectPool
                 return;
             }
 
-            SubmitAndRelease(CastCmd.CreateWithMultiTarget(_castorId, _targetIds.ToArray(), _abilityId));
+            SubmitAndRelease(CastCmd.CreateWithMultiTarget(
+                _castorId,
+                _targetIds.ToArray(),
+                _abilityId,
+                castOrigin,
+                groundPoint));
         }
 
         protected override void OnUnspawn()

@@ -123,7 +123,39 @@ namespace Aquila.AbilityPool
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target)
         {
-            return EffectSpecFactory.CreateEffectSpecByReferencePool(data, castor, target);
+            return CreateEffectSpecByReferencePool(
+                data,
+                castor,
+                target,
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.zero,
+                false,
+                false,
+                false);
+        }
+
+        public EffectSpec_Base CreateEffectSpecByReferencePool(
+            EffectData data,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target,
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            Vector3 direction,
+            bool hasCastOrigin,
+            bool hasTargetPoint,
+            bool hasDirection)
+        {
+            return EffectSpecFactory.CreateEffectSpecByReferencePool(
+                data,
+                castor,
+                target,
+                castOrigin,
+                targetPoint,
+                direction,
+                hasCastOrigin,
+                hasTargetPoint,
+                hasDirection);
         }
 
         public T CreateEffectSpecByReferencePool<T>() where T : EffectSpec_Base
@@ -667,6 +699,29 @@ namespace Aquila.AbilityPool
             Module_ProxyActor.ActorInstance castor,
             Module_ProxyActor.ActorInstance target)
         {
+            return CreateEffectSpecByReferencePool(
+                data,
+                castor,
+                target,
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.zero,
+                false,
+                false,
+                false);
+        }
+
+        public static EffectSpec_Base CreateEffectSpecByReferencePool(
+            EffectData data,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target,
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            Vector3 direction,
+            bool hasCastOrigin,
+            bool hasTargetPoint,
+            bool hasDirection)
+        {
             EnsureInitialized();
 
             var effectType = data.GetEffectType();
@@ -684,7 +739,16 @@ namespace Aquila.AbilityPool
                 throw new InvalidOperationException(message);
             }
 
-            effect.Init(data, castor, target);
+            effect.Init(
+                data,
+                castor,
+                target,
+                castOrigin,
+                targetPoint,
+                direction,
+                hasCastOrigin,
+                hasTargetPoint,
+                hasDirection);
             return effect;
         }
 

@@ -21,5 +21,25 @@ namespace Cfg.Enum
         /// 圆形范围选择
         /// </summary>
         Circle = 2,
+        /// <summary>
+        /// 地面点选择
+        /// </summary>
+        Point = 3,
+        /// <summary>
+        /// 施法方向选择
+        /// </summary>
+        Direction = 4,
+        /// <summary>
+        /// 直线范围选择
+        /// </summary>
+        Line = 5,
+        /// <summary>
+        /// 全图角色目标选择
+        /// </summary>
+        GlobalActor = 6,
+        /// <summary>
+        /// 显式候选角色目标选择
+        /// </summary>
+        SecondaryActor = 7,
     }
 }

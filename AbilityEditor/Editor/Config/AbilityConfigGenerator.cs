@@ -118,8 +118,11 @@ namespace Editor.AbilityEditor.Config
             // Generate triggers
             var triggers = GenerateTriggers(clipCollections.Effects);
 
-            if (metadata.SelectType == AbilitySelectType.Circle && metadata.SelectRadius <= 0f)
-                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle");
+            if ((metadata.SelectType == AbilitySelectType.Circle || metadata.SelectType == AbilitySelectType.Line) &&
+                metadata.SelectRadius <= 0f)
+            {
+                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle or Line");
+            }
 
             // Validate
             AbilityConfigValidator.ValidateAll(
@@ -254,8 +257,11 @@ namespace Editor.AbilityEditor.Config
             if (selectRadiusTextField != null && float.TryParse(selectRadiusTextField.value, out float selectRadius))
                 metadata.SelectRadius = selectRadius;
 
-            if (metadata.SelectType == AbilitySelectType.Circle && metadata.SelectRadius <= 0f)
-                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle");
+            if ((metadata.SelectType == AbilitySelectType.Circle || metadata.SelectType == AbilitySelectType.Line) &&
+                metadata.SelectRadius <= 0f)
+            {
+                throw new ArgumentException("Select radius must be greater than 0 when select type is Circle or Line");
+            }
 
             // Parse Duration
             var durationField = editorType.GetField("_durationTextField",

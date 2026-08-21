@@ -159,9 +159,10 @@ namespace Aquila.AbilityEditor
                 return false;
             }
 
-            if (SelectType == AbilitySelectType.Circle && SelectRadius <= 0f)
+            if ((SelectType == AbilitySelectType.Circle || SelectType == AbilitySelectType.Line) &&
+                SelectRadius <= 0f)
             {
-                error = "Select radius must be greater than 0 when select type is Circle";
+                error = "Select radius must be greater than 0 when select type is Circle or Line";
                 return false;
             }
 

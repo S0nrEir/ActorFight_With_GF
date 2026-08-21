@@ -109,6 +109,12 @@ namespace Aquila.Combat
             AbilityData = default;
             Castor = null;
             Targets = null;
+            CastOrigin = Vector3.zero;
+            TargetPoint = Vector3.zero;
+            Direction = Vector3.zero;
+            HasCastOrigin = false;
+            HasTargetPoint = false;
+            HasDirection = false;
 
             Elapsed = 0f;
             PreCastEndTime = 0f;
@@ -132,7 +138,7 @@ namespace Aquila.Combat
 
         public void RefreshTargets(int[] targets)
         {
-            Targets = targets;
+            Targets = targets == null ? System.Array.Empty<int>() : (int[])targets.Clone();
         }
 
         public void Tick(float elapsed)
@@ -164,11 +170,26 @@ namespace Aquila.Combat
 
         public void ExecuteTrigger(int triggerIndex)
         {
-            // if (Targets == null || Targets.Length == 0)
-            //     return;
-
             var abilityAddon = Castor.GetAddon<Addon_Ability>();
             var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
+            if (Targets == null || Targets.Length == 0)
+            {
+                var succeeded = abilityAddon.UseAbility(
+                    CastCmd._abilityID,
+                    triggerIndex,
+                    null,
+                    CastOrigin,
+                    TargetPoint,
+                    Direction,
+                    HasCastOrigin,
+                    HasTargetPoint,
+                    HasDirection);
+                GameEntry.Event.Fire(
+                    this,
+                    EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, -1, CastCmd._abilityID, succeeded));
+                return;
+            }
+
             for (var i = 0; i < Targets.Length; i++)
             {
                 var targetActorId = Targets[i];
@@ -176,7 +197,16 @@ namespace Aquila.Combat
                 bool succ;
                 // using (ResolveSourceScope.EnterPipeline(CastCmd._abilityID, triggerIndex, CastCmd._castorInstanceId, targetActorId))
                 // {
-                    succ = abilityAddon.UseAbility(CastCmd._abilityID, triggerIndex, target);
+                    succ = abilityAddon.UseAbility(
+                        CastCmd._abilityID,
+                        triggerIndex,
+                        target,
+                        CastOrigin,
+                        TargetPoint,
+                        Direction,
+                        HasCastOrigin,
+                        HasTargetPoint,
+                        HasDirection);
                 // }
 
                 GameEntry.Event.Fire(this, EventArg_OnHitAbility.Create(CastCmd._castorInstanceId, targetActorId, CastCmd._abilityID, succ));
@@ -218,7 +248,13 @@ namespace Aquila.Combat
             CastCmd = castCmd;
             AbilityData = abilityData;
             Castor = castor;
-            Targets = targets;
+            Targets = targets == null ? System.Array.Empty<int>() : (int[])targets.Clone();
+            CastOrigin = castCmd._castOrigin;
+            TargetPoint = castCmd._targetPoint;
+            Direction = castCmd._direction;
+            HasCastOrigin = castCmd._hasCastOrigin;
+            HasTargetPoint = castCmd._hasTargetPoint;
+            HasDirection = castCmd._hasDirection;
             ActivationId = activationId;
             Elapsed = 0f;
             IsCompleted = false;
@@ -274,6 +310,12 @@ namespace Aquila.Combat
         public AbilityData AbilityData { get; private set; }
         public Module_ProxyActor.ActorInstance Castor { get; private set; }
         public int[] Targets { get; private set; }
+        public Vector3 CastOrigin { get; private set; }
+        public Vector3 TargetPoint { get; private set; }
+        public Vector3 Direction { get; private set; }
+        public bool HasCastOrigin { get; private set; }
+        public bool HasTargetPoint { get; private set; }
+        public bool HasDirection { get; private set; }
         public TriggerScheduler TriggerScheduler { get; private set; }
         public CastStateMachine StateMachine { get; private set; }
         public AbilityMontage Montage { get; private set; }

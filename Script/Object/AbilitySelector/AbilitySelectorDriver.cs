@@ -17,6 +17,8 @@ namespace Aquila.ObjectPool
             if (_selector == null)
                 return;
 
+            _selector.UpdateSelection();
+
             if (UnityEngine.Input.GetKeyDown(KeyCode.Escape) || UnityEngine.Input.GetMouseButtonDown(1))
             {
                 _selector.CancelSelection();

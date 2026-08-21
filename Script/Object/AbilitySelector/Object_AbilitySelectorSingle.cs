@@ -19,7 +19,19 @@ namespace Aquila.ObjectPool
                 return;
             }
 
-            SubmitAndRelease(CastCmd.CreateWithSingleTarget(_castorId, actor.Actor.ActorID, _abilityId));
+            if (!TryGetCastOrigin(out var castOrigin))
+            {
+                Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.CastorNotFound));
+                ReleaseSelf();
+                return;
+            }
+
+            SubmitAndRelease(CastCmd.CreateWithSingleTarget(
+                _castorId,
+                actor.Actor.ActorID,
+                _abilityId,
+                castOrigin,
+                actor.Actor.CachedTransform.position));
         }
 
         public static Object_AbilitySelectorSingle Gen(string name, GameObject go)

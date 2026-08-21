@@ -74,14 +74,20 @@ namespace Aquila.Combat
                 return false;
             }
 
-            if (cmd._targetInstanceIdArr.Length == 0)
+            var targetIds = cmd._targetInstanceIdArr ?? Array.Empty<int>();
+            cmd._targetInstanceIdArr = targetIds;
+            if (targetIds.Length == 0 && CastCmd.RequiresActorTargets(abilityData.GetSelectType()))
             {
                 rejectCode = CastRejectCode.TargetNotFound;
                 rejectFlags = CastRejectFlags.TargetNotFound;
                 return false;
             }
 
-            if (!IsTargetTypeValid(castor, cmd._targetInstanceIdArr, abilityData.GetTargetType()))
+            if (!IsTargetTypeValid(
+                    castor,
+                    targetIds,
+                    abilityData.GetTargetType(),
+                    abilityData.GetSelectType()))
             {
                 rejectCode = CastRejectCode.UnsupportedTargetType;
                 rejectFlags = CastRejectFlags.UnsupportedTargetType;
@@ -235,10 +241,14 @@ namespace Aquila.Combat
         private static bool IsTargetTypeValid(
             Module_ProxyActor.ActorInstance castor,
             List<Module_ProxyActor.ActorInstance> targets,
-            AbilityTargetType targetType)
+            AbilityTargetType targetType,
+            AbilitySelectType selectType)
         {
-            if (castor == null || targets == null || targets.Count == 0)
+            if (castor == null || targets == null)
                 return false;
+
+            if (targets.Count == 0)
+                return !CastCmd.RequiresActorTargets(selectType);
 
             if (targetType == AbilityTargetType.Self)
             {
@@ -253,10 +263,14 @@ namespace Aquila.Combat
         private static bool IsTargetTypeValid(
             Module_ProxyActor.ActorInstance castor,
             int[] targets,
-            AbilityTargetType targetType)
+            AbilityTargetType targetType,
+            AbilitySelectType selectType)
         {
-            if (castor == null || targets == null || targets.Length == 0)
+            if (castor == null || targets == null)
                 return false;
+
+            if (targets.Length == 0)
+                return !CastCmd.RequiresActorTargets(selectType);
 
             if (targetType == AbilityTargetType.Self)
             {
@@ -272,10 +286,10 @@ namespace Aquila.Combat
         private static bool TryRefreshTarget(CastRuntimeInstance instance)
         {
             // var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
-            var ids = instance.CastCmd._targetInstanceIdArr;
+            var ids = instance.Targets;
             
             if (ids == null || ids.Length == 0)
-                return false;
+                return !CastCmd.RequiresActorTargets(instance.AbilityData.GetSelectType());
 
             // var refreshed = new List<Module_ProxyActor.ActorInstance>(ids.Length);
             // for (var i = 0; i < ids.Length; i++)
@@ -287,7 +301,6 @@ namespace Aquila.Combat
             //     refreshed.Add(t);
             // }
 
-            instance.RefreshTargets(ids);
             return true;
         }
 

@@ -5,6 +5,7 @@ using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
+using UnityEngine;
 
 namespace Aquila.Fight.Addon
 {
@@ -82,6 +83,29 @@ namespace Aquila.Fight.Addon
         /// </summary>
         public bool UseAbility( int abilityID,int triggerIndex, Module_ProxyActor.ActorInstance target )
         {
+            return UseAbility(
+                abilityID,
+                triggerIndex,
+                target,
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.zero,
+                false,
+                false,
+                false);
+        }
+
+        public bool UseAbility(
+            int abilityID,
+            int triggerIndex,
+            Module_ProxyActor.ActorInstance target,
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            Vector3 direction,
+            bool hasCastOrigin,
+            bool hasTargetPoint,
+            bool hasDirection)
+        {
             var spec = GetAbilitySpec( abilityID );
             if ( spec is null )
             {           
@@ -95,7 +119,15 @@ namespace Aquila.Fight.Addon
                 return false;
             }
 
-            return spec.UseAbility(triggerIndex, target );
+            return spec.UseAbility(
+                triggerIndex,
+                target,
+                castOrigin,
+                targetPoint,
+                direction,
+                hasCastOrigin,
+                hasTargetPoint,
+                hasDirection);
         }
 
         public void HandleGameplayEvent(in MontageGameplayEvent gameplayEvent)

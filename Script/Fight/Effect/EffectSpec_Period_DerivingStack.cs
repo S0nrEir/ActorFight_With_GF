@@ -25,7 +25,16 @@ namespace Aquila.Fight
             {
                 if (GameEntry.AbilityPool.TryGetEffect(effectID, out var effectData))
                 {
-                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, castor, target);
+                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(
+                        effectData,
+                        castor,
+                        target,
+                        CastOrigin,
+                        TargetPoint,
+                        Direction,
+                        HasCastOrigin,
+                        HasTargetPoint,
+                        HasDirection);
                 }
                 else
                 {

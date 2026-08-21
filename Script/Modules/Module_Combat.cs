@@ -27,11 +27,27 @@ namespace Aquila.Module
             if (cmd._abilityID <= 0)
                 argFlags |= CastRejectFlags.InvalidAbilityId;
 
-            if (cmd._targetInstanceIdArr is null || cmd._targetInstanceIdArr.Length <= 0)
-                argFlags |= CastRejectFlags.TargetNotFound;
-
             if (argFlags != CastRejectFlags.None)
                 return RejectAndRelease(cmd, ResolvePrimaryCode(argFlags), argFlags);
+
+            if (GameEntry.AbilityPool == null ||
+                !GameEntry.AbilityPool.TryGetAbility(cmd._abilityID, out var abilityData))
+            {
+                return RejectAndRelease(
+                    cmd,
+                    CastRejectCode.AbilitySpecMissing,
+                    CastRejectFlags.AbilitySpecMissing);
+            }
+
+            var targetIds = cmd._targetInstanceIdArr;
+            if (targetIds == null)
+            {
+                targetIds = Array.Empty<int>();
+                cmd._targetInstanceIdArr = targetIds;
+            }
+
+            if (targetIds.Length == 0 && CastCmd.RequiresActorTargets(abilityData.GetSelectType()))
+                return RejectAndRelease(cmd, CastRejectCode.TargetNotFound, CastRejectFlags.TargetNotFound);
 
             var actorMgr = GameEntry.Module.GetModule<Module_ActorMgr>();
             if (actorMgr == null)
@@ -44,7 +60,7 @@ namespace Aquila.Module
                 actorFlags |= CastRejectFlags.CastorNotFound;
 
             Module_ProxyActor.ActorInstance target = null;
-            foreach (var targetID in cmd._targetInstanceIdArr)
+            foreach (var targetID in targetIds)
             {
                 target = actorMgr.Get(targetID);
 

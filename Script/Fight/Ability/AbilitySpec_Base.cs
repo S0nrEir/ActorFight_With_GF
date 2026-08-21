@@ -128,6 +128,27 @@ namespace Aquila.Fight
         /// </summary>
         public virtual bool UseAbility(int triggerIndex, Module_ProxyActor.ActorInstance target )
         {
+            return UseAbility(
+                triggerIndex,
+                target,
+                Vector3.zero,
+                Vector3.zero,
+                Vector3.zero,
+                false,
+                false,
+                false);
+        }
+
+        public virtual bool UseAbility(
+            int triggerIndex,
+            Module_ProxyActor.ActorInstance target,
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            Vector3 direction,
+            bool hasCastOrigin,
+            bool hasTargetPoint,
+            bool hasDirection)
+        {
             if (!Active)
                 return false;
 
@@ -141,7 +162,16 @@ namespace Aquila.Fight
             var effects = _data.GetEffects();
                 
             var effectData = effects[triggerIndex];
-            var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool( effectData, _owner, target );
+            var tempEffect = Tools.Ability.CreateEffectSpecByReferencePool(
+                effectData,
+                _owner,
+                target,
+                castOrigin,
+                targetPoint,
+                direction,
+                hasCastOrigin,
+                hasTargetPoint,
+                hasDirection);
             if ( tempEffect == null )
             {
                 Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->Failed to create effect {effectData.GetEffectId()}" );
@@ -153,6 +183,7 @@ namespace Aquila.Fight
                 if ( target == null )
                 {
                     Tools.Logger.Warning( $"AbilitySpec_Base.UseAbility()--->target is null for non-instant effect, effectID:{effectData.GetEffectId()}" );
+                    ReferencePool.Release(tempEffect);
                     return false;
                 }
 

@@ -70,6 +70,14 @@ namespace Aquila.ObjectPool
 
         public static bool StartSelection(int castorId, int abilityId)
         {
+            return StartSelection(castorId, abilityId, null);
+        }
+
+        public static bool StartSelection(
+            int castorId,
+            int abilityId,
+            IEnumerable<int> secondaryCandidateActorIds)
+        {
             if (!GameEntry.AbilityPool.TryGetAbility(abilityId, out var abilityData))
             {
                 Tools.Logger.Warning($"<color=yellow>Ability selector start failed, ability not found:{abilityId}</color>");
@@ -78,24 +86,63 @@ namespace Aquila.ObjectPool
 
             if (abilityData.GetTargetType() == AbilityTargetType.Self)
             {
-                SubmitCast(CastCmd.CreateWithSingleTarget(castorId, castorId, abilityId));
+                var castor = GameEntry.Module.GetModule<Module_ActorMgr>()?.Get(castorId);
+                var castOrigin = castor?.Actor?.CachedTransform != null
+                    ? castor.Actor.CachedTransform.position
+                    : Vector3.zero;
+                SubmitCast(CastCmd.CreateWithSingleTarget(castorId, castorId, abilityId, castOrigin, castOrigin));
                 return true;
+            }
+
+            HashSet<int> secondaryCandidates = null;
+            if (abilityData.GetSelectType() == AbilitySelectType.SecondaryActor)
+            {
+                secondaryCandidates = secondaryCandidateActorIds == null
+                    ? null
+                    : new HashSet<int>(secondaryCandidateActorIds);
+                if (secondaryCandidates == null || secondaryCandidates.Count == 0)
+                {
+                    Tools.Logger.Error(
+                        "[AbilitySelector] SecondaryActor selection requires an explicit non-empty candidate actor ID set.");
+                    return false;
+                }
             }
 
             var selector = Spawn(abilityData.GetSelectType());
             if (selector == null)
                 return false;
 
-            selector.Begin(castorId, abilityId, abilityData);
+            selector.Begin(castorId, abilityId, abilityData, secondaryCandidates);
             return true;
         }
 
         public void Begin(int castorId, int abilityId, AbilityData abilityData)
         {
+            Begin(castorId, abilityId, abilityData, null);
+        }
+
+        public void Begin(
+            int castorId,
+            int abilityId,
+            AbilityData abilityData,
+            IEnumerable<int> secondaryCandidateActorIds)
+        {
             _castorId = castorId;
             _abilityId = abilityId;
             _abilityData = abilityData;
+            _secondaryCandidateActorIds.Clear();
+            if (secondaryCandidateActorIds != null)
+            {
+                foreach (var actorId in secondaryCandidateActorIds)
+                    _secondaryCandidateActorIds.Add(actorId);
+            }
             OnBegin();
+        }
+
+        public void UpdateSelection()
+        {
+            if (!_isReleased)
+                OnUpdateSelection();
         }
 
         public void ConfirmSelection()
@@ -112,6 +159,10 @@ namespace Aquila.ObjectPool
         }
 
         protected virtual void OnBegin()
+        {
+        }
+
+        protected virtual void OnUpdateSelection()
         {
         }
 
@@ -160,8 +211,22 @@ namespace Aquila.ObjectPool
                 return false;
 
             var actorBase = hit.collider.GetComponentInParent<Actor_Base>();
+            if (actorBase == null)
+                return false;
+
             actor = GameEntry.Module.GetModule<Module_ActorMgr>().Get(actorBase.ActorID);
             return actor != null;
+        }
+
+        protected bool TryGetCastOrigin(out Vector3 castOrigin)
+        {
+            castOrigin = Vector3.zero;
+            var castor = GameEntry.Module.GetModule<Module_ActorMgr>()?.Get(_castorId);
+            if (castor?.Actor?.CachedTransform == null)
+                return false;
+
+            castOrigin = castor.Actor.CachedTransform.position;
+            return true;
         }
 
         protected bool TryGetMouseGroundPoint(out Vector3 point)
@@ -188,19 +253,58 @@ namespace Aquila.ObjectPool
 
         protected void CollectLegalTargetsInCircle(Vector3 center, float radius, List<int> results)
         {
-            results.Clear();
+            CombatTargetQueryService.QueryCircle(
+                GameEntry.Module.GetModule<Module_ActorMgr>(),
+                center,
+                radius,
+                IsLegalTarget,
+                results);
+        }
 
-            var radiusSqr = radius * radius;
-            foreach (var actor in GameEntry.Module.GetModule<Module_ActorMgr>().AllActorInstances())
-            {
-                if (!IsLegalTarget(actor))
-                    continue;
+        protected void CollectLegalTargetsInLine(
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            float halfWidth,
+            List<int> results)
+        {
+            CombatTargetQueryService.QueryLine(
+                GameEntry.Module.GetModule<Module_ActorMgr>(),
+                castOrigin,
+                targetPoint,
+                halfWidth,
+                IsLegalTarget,
+                results);
+        }
 
-                var delta = actor.Actor.CachedTransform.position - center;
-                delta.y = 0f;
-                if (delta.sqrMagnitude <= radiusSqr)
-                    results.Add(actor.Actor.ActorID);
-            }
+        protected void CollectLegalTargetsGlobal(List<int> results)
+        {
+            CombatTargetQueryService.QueryGlobal(
+                GameEntry.Module.GetModule<Module_ActorMgr>(),
+                IsLegalTarget,
+                results);
+        }
+
+        protected bool IsSecondaryCandidate(int actorId)
+        {
+            return _secondaryCandidateActorIds.Contains(actorId);
+        }
+
+        protected static LineRenderer SetupLineRenderer(GameObject go, bool loop)
+        {
+            var lineRenderer = go.GetComponent<LineRenderer>();
+            if (lineRenderer == null)
+                lineRenderer = go.AddComponent<LineRenderer>();
+
+            lineRenderer.enabled = true;
+            lineRenderer.useWorldSpace = false;
+            lineRenderer.loop = loop;
+            lineRenderer.startWidth = 0.04f;
+            lineRenderer.endWidth = 0.04f;
+            if (lineRenderer.sharedMaterial == null)
+                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            lineRenderer.startColor = new Color(0.2f, 0.75f, 1f, 0.9f);
+            lineRenderer.endColor = lineRenderer.startColor;
+            return lineRenderer;
         }
 
         protected void SubmitAndRelease(CastCmd cmd)
@@ -248,6 +352,7 @@ namespace Aquila.ObjectPool
             _castorId = -1;
             _abilityId = -1;
             _abilityData = default;
+            _secondaryCandidateActorIds.Clear();
             _isReleased = true;
             base.OnUnspawn();
         }
@@ -407,12 +512,33 @@ namespace Aquila.ObjectPool
             if (selectType == AbilitySelectType.Circle)
                 return Object_AbilitySelectorCircle.Gen(selectorName, go);
 
+            if (selectType == AbilitySelectType.Point)
+                return Object_AbilitySelectorPoint.Gen(selectorName, go);
+
+            if (selectType == AbilitySelectType.Direction)
+                return Object_AbilitySelectorDirection.Gen(selectorName, go);
+
+            if (selectType == AbilitySelectType.Line)
+                return Object_AbilitySelectorLine.Gen(selectorName, go);
+
+            if (selectType == AbilitySelectType.GlobalActor)
+                return Object_AbilitySelectorGlobalActor.Gen(selectorName, go);
+
+            if (selectType == AbilitySelectType.SecondaryActor)
+                return Object_AbilitySelectorSecondaryActor.Gen(selectorName, go);
+
             return null;
         }
 
         private static bool IsSupportedSelectorType(AbilitySelectType selectType)
         {
-            return selectType == AbilitySelectType.Single || selectType == AbilitySelectType.Circle;
+            return selectType == AbilitySelectType.Single ||
+                   selectType == AbilitySelectType.Circle ||
+                   selectType == AbilitySelectType.Point ||
+                   selectType == AbilitySelectType.Direction ||
+                   selectType == AbilitySelectType.Line ||
+                   selectType == AbilitySelectType.GlobalActor ||
+                   selectType == AbilitySelectType.SecondaryActor;
         }
 
         private static string GetSelectorAssetPath(AbilitySelectType selectType)
@@ -469,6 +595,7 @@ namespace Aquila.ObjectPool
         protected int _castorId = -1;
         protected int _abilityId = -1;
         protected AbilityData _abilityData;
+        private readonly HashSet<int> _secondaryCandidateActorIds = new HashSet<int>();
 
         private const string SelectorPrefabDirectory = "Assets/Res/Prefab/AbilitySelector";
         private const string SelectorPrefabPrefix = "Object_AbilitySelector";
@@ -484,5 +611,303 @@ namespace Aquila.ObjectPool
 
         private AbilitySelectorDriver _driver;
         private bool _isReleased;
+    }
+
+    public sealed class Object_AbilitySelectorPoint : Object_AbilitySelectorBase
+    {
+        public override void Setup(GameObject go)
+        {
+            base.Setup(go);
+            _lineRenderer = SetupLineRenderer(go, true);
+            _lineRenderer.positionCount = MarkerSegmentCount;
+            for (var i = 0; i < MarkerSegmentCount; i++)
+            {
+                var angle = i / (float)MarkerSegmentCount * Mathf.PI * 2f;
+                _lineRenderer.SetPosition(
+                    i,
+                    new Vector3(Mathf.Cos(angle) * MarkerRadius, 0.03f, Mathf.Sin(angle) * MarkerRadius));
+            }
+        }
+
+        protected override void OnUpdateSelection()
+        {
+            if (TryGetMouseGroundPoint(out var targetPoint))
+                _targetGameObject.transform.position = targetPoint;
+        }
+
+        protected override void OnConfirm()
+        {
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var targetPoint))
+            {
+                RejectSelection();
+                return;
+            }
+
+            SubmitAndRelease(CastCmd.CreateWithPointTarget(_castorId, _abilityId, castOrigin, targetPoint));
+        }
+
+        public static Object_AbilitySelectorPoint Gen(string name, GameObject go)
+        {
+            var obj = ReferencePool.Acquire<Object_AbilitySelectorPoint>();
+            obj.Initialize(name, go);
+            return obj;
+        }
+
+        protected override void Release(bool isShutdown)
+        {
+            _lineRenderer = null;
+            base.Release(isShutdown);
+        }
+
+        private void RejectSelection()
+        {
+            Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+            ReleaseSelf();
+        }
+
+        private const int MarkerSegmentCount = 32;
+        private const float MarkerRadius = 0.15f;
+        private LineRenderer _lineRenderer;
+    }
+
+    public sealed class Object_AbilitySelectorDirection : Object_AbilitySelectorBase
+    {
+        public override void Setup(GameObject go)
+        {
+            base.Setup(go);
+            _lineRenderer = SetupLineRenderer(go, false);
+            _lineRenderer.positionCount = 2;
+        }
+
+        protected override void OnUpdateSelection()
+        {
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var targetPoint))
+                return;
+
+            DrawDirection(castOrigin, targetPoint);
+        }
+
+        protected override void OnConfirm()
+        {
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var targetPoint))
+            {
+                RejectSelection();
+                return;
+            }
+
+            var direction = targetPoint - castOrigin;
+            direction.y = 0f;
+            if (direction.sqrMagnitude <= 0f)
+            {
+                RejectSelection();
+                return;
+            }
+
+            SubmitAndRelease(CastCmd.CreateWithDirectionTarget(_castorId, _abilityId, castOrigin, targetPoint));
+        }
+
+        protected override void Release(bool isShutdown)
+        {
+            _lineRenderer = null;
+            base.Release(isShutdown);
+        }
+
+        private void DrawDirection(Vector3 castOrigin, Vector3 targetPoint)
+        {
+            _targetGameObject.transform.position = castOrigin;
+            _lineRenderer.SetPosition(0, Vector3.zero);
+            _lineRenderer.SetPosition(1, targetPoint - castOrigin);
+        }
+
+        private void RejectSelection()
+        {
+            Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+            ReleaseSelf();
+        }
+
+        public static Object_AbilitySelectorDirection Gen(string name, GameObject go)
+        {
+            var obj = ReferencePool.Acquire<Object_AbilitySelectorDirection>();
+            obj.Initialize(name, go);
+            return obj;
+        }
+
+        private LineRenderer _lineRenderer;
+    }
+
+    public sealed class Object_AbilitySelectorLine : Object_AbilitySelectorBase
+    {
+        public override void Setup(GameObject go)
+        {
+            base.Setup(go);
+            _lineRenderer = SetupLineRenderer(go, true);
+            _lineRenderer.positionCount = 4;
+        }
+
+        protected override void OnUpdateSelection()
+        {
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var targetPoint))
+                return;
+
+            DrawLine(castOrigin, targetPoint, _abilityData.GetSelectRadius());
+        }
+
+        protected override void OnConfirm()
+        {
+            if (!TryGetCastOrigin(out var castOrigin) || !TryGetMouseGroundPoint(out var targetPoint))
+            {
+                RejectSelection();
+                return;
+            }
+
+            var direction = targetPoint - castOrigin;
+            direction.y = 0f;
+            if (direction.sqrMagnitude <= 0f)
+            {
+                RejectSelection();
+                return;
+            }
+
+            direction.Normalize();
+            CollectLegalTargetsInLine(
+                castOrigin,
+                targetPoint,
+                _abilityData.GetSelectRadius(),
+                _targetIds);
+            SubmitAndRelease(CastCmd.CreateWithMultiTarget(
+                _castorId,
+                _targetIds.ToArray(),
+                _abilityId,
+                castOrigin,
+                targetPoint,
+                direction));
+        }
+
+        protected override void OnUnspawn()
+        {
+            _targetIds.Clear();
+            base.OnUnspawn();
+        }
+
+        protected override void Release(bool isShutdown)
+        {
+            _lineRenderer = null;
+            _targetIds.Clear();
+            base.Release(isShutdown);
+        }
+
+        private void DrawLine(Vector3 castOrigin, Vector3 targetPoint, float halfWidth)
+        {
+            var offset = targetPoint - castOrigin;
+            offset.y = 0f;
+            if (offset.sqrMagnitude <= 0f)
+                return;
+
+            var right = Vector3.Cross(Vector3.up, offset.normalized) * Mathf.Max(0f, halfWidth);
+            _targetGameObject.transform.position = castOrigin;
+            _lineRenderer.SetPosition(0, right);
+            _lineRenderer.SetPosition(1, offset + right);
+            _lineRenderer.SetPosition(2, offset - right);
+            _lineRenderer.SetPosition(3, -right);
+        }
+
+        private void RejectSelection()
+        {
+            Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+            ReleaseSelf();
+        }
+
+        public static Object_AbilitySelectorLine Gen(string name, GameObject go)
+        {
+            var obj = ReferencePool.Acquire<Object_AbilitySelectorLine>();
+            obj.Initialize(name, go);
+            return obj;
+        }
+
+        private readonly List<int> _targetIds = new List<int>(16);
+        private LineRenderer _lineRenderer;
+    }
+
+    public sealed class Object_AbilitySelectorGlobalActor : Object_AbilitySelectorBase
+    {
+        protected override void OnConfirm()
+        {
+            if (!TryGetCastOrigin(out var castOrigin))
+            {
+                RejectSelection();
+                return;
+            }
+
+            CollectLegalTargetsGlobal(_targetIds);
+            if (_targetIds.Count == 0)
+            {
+                RejectSelection();
+                return;
+            }
+
+            SubmitAndRelease(CastCmd.CreateWithMultiTarget(
+                _castorId,
+                _targetIds.ToArray(),
+                _abilityId,
+                castOrigin));
+        }
+
+        protected override void OnUnspawn()
+        {
+            _targetIds.Clear();
+            base.OnUnspawn();
+        }
+
+        protected override void Release(bool isShutdown)
+        {
+            _targetIds.Clear();
+            base.Release(isShutdown);
+        }
+
+        private void RejectSelection()
+        {
+            Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+            ReleaseSelf();
+        }
+
+        public static Object_AbilitySelectorGlobalActor Gen(string name, GameObject go)
+        {
+            var obj = ReferencePool.Acquire<Object_AbilitySelectorGlobalActor>();
+            obj.Initialize(name, go);
+            return obj;
+        }
+
+        private readonly List<int> _targetIds = new List<int>(32);
+    }
+
+    public sealed class Object_AbilitySelectorSecondaryActor : Object_AbilitySelectorBase
+    {
+        protected override void OnConfirm()
+        {
+            if (!TryPickActor(out var actor) ||
+                !IsSecondaryCandidate(actor.Actor.ActorID) ||
+                !IsLegalTarget(actor) ||
+                !TryGetCastOrigin(out var castOrigin))
+            {
+                Tools.Logger.Info(Tools.Fight.UsingAbilityFaildDescription_l10n((int)CastRejectFlags.TargetNotFound));
+                ReleaseSelf();
+                return;
+            }
+
+            var targetPoint = actor.Actor.CachedTransform.position;
+            SubmitAndRelease(CastCmd.CreateWithSingleTarget(
+                _castorId,
+                actor.Actor.ActorID,
+                _abilityId,
+                castOrigin,
+                targetPoint));
+        }
+
+        public static Object_AbilitySelectorSecondaryActor Gen(string name, GameObject go)
+        {
+            var obj = ReferencePool.Acquire<Object_AbilitySelectorSecondaryActor>();
+            obj.Initialize(name, go);
+            return obj;
+        }
     }
 }

@@ -4,6 +4,7 @@ using Aquila.Numric;
 using Aquila.Toolkit;
 using Cfg.Enum;
 using GameFramework;
+using UnityEngine;
 
 namespace Aquila.Fight
 {
@@ -49,6 +50,7 @@ namespace Aquila.Fight
         {
             _effectData = meta;
             _modifier = default;
+            ClearCastContext();
             // EffectId = data.GetEffectId();
             // EffectType = data.GetEffectType();
             // Policy = data.GetPolicy();
@@ -79,6 +81,26 @@ namespace Aquila.Fight
             // for (int i = 0; i < awakes.Count; i++)
             //     AwakeEffects[i] = awakes[i];
 
+        }
+
+        public void Init(
+            EffectData meta,
+            Module_ProxyActor.ActorInstance castor,
+            Module_ProxyActor.ActorInstance target,
+            Vector3 castOrigin,
+            Vector3 targetPoint,
+            Vector3 direction,
+            bool hasCastOrigin,
+            bool hasTargetPoint,
+            bool hasDirection)
+        {
+            Init(meta, castor, target);
+            CastOrigin = castOrigin;
+            TargetPoint = targetPoint;
+            Direction = direction;
+            HasCastOrigin = hasCastOrigin;
+            HasTargetPoint = hasTargetPoint;
+            HasDirection = hasDirection;
         }
 
         /// <summary>
@@ -124,7 +146,16 @@ namespace Aquila.Fight
             {
                 if (GameEntry.AbilityPool.TryGetEffect(effectID, out var effectData))
                 {
-                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(effectData, castor, target);
+                    newEffect = Tools.Ability.CreateEffectSpecByReferencePool(
+                        effectData,
+                        castor,
+                        target,
+                        CastOrigin,
+                        TargetPoint,
+                        Direction,
+                        HasCastOrigin,
+                        HasTargetPoint,
+                        HasDirection);
                 }
                 else
                 {
@@ -183,6 +214,17 @@ namespace Aquila.Fight
             // _impactEntityIndex = 0;
             ResetWhenOverride  = false;
             _effectData = default;
+            ClearCastContext();
+        }
+
+        private void ClearCastContext()
+        {
+            CastOrigin = Vector3.zero;
+            TargetPoint = Vector3.zero;
+            Direction = Vector3.zero;
+            HasCastOrigin = false;
+            HasTargetPoint = false;
+            HasDirection = false;
         }
 
         /// <summary>
@@ -272,6 +314,12 @@ namespace Aquila.Fight
         protected EffectData _effectData;
         protected ushort _stackCount;
         public EffectData Meta => _effectData;
+        public Vector3 CastOrigin { get; private set; }
+        public Vector3 TargetPoint { get; private set; }
+        public Vector3 Direction { get; private set; }
+        public bool HasCastOrigin { get; private set; }
+        public bool HasTargetPoint { get; private set; }
+        public bool HasDirection { get; private set; }
     }
 }
 

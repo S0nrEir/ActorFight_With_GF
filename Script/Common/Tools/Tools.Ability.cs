@@ -73,13 +73,45 @@ namespace Aquila.Toolkit
             /// </summary>
             public static EffectSpec_Base CreateEffectSpecByReferencePool(EffectData data, Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
             {
+                return CreateEffectSpecByReferencePool(
+                    data,
+                    castor,
+                    target,
+                    Vector3.zero,
+                    Vector3.zero,
+                    Vector3.zero,
+                    false,
+                    false,
+                    false);
+            }
+
+            public static EffectSpec_Base CreateEffectSpecByReferencePool(
+                EffectData data,
+                Module_ProxyActor.ActorInstance castor,
+                Module_ProxyActor.ActorInstance target,
+                Vector3 castOrigin,
+                Vector3 targetPoint,
+                Vector3 direction,
+                bool hasCastOrigin,
+                bool hasTargetPoint,
+                bool hasDirection)
+            {
                 if (GameEntry.AbilityPool == null)
                 {
                     Logger.Error("Tools.Ability.CreateEffectSpecByReferencePool()--->GameEntry.AbilityPool is null");
                     return null;
                 }
 
-                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool(data, castor, target);
+                return GameEntry.AbilityPool.CreateEffectSpecByReferencePool(
+                    data,
+                    castor,
+                    target,
+                    castOrigin,
+                    targetPoint,
+                    direction,
+                    hasCastOrigin,
+                    hasTargetPoint,
+                    hasDirection);
             }
                 #region nouse
 
