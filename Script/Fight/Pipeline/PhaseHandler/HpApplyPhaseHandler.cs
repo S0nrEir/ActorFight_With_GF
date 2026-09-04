@@ -28,15 +28,15 @@ namespace Aquila.Combat.Resolve
             }
 
             var currHp = addon.GetCurrHPCorrection();
-            var finalDelta = context.FinalDelta < 1f ? 1f : Mathf.FloorToInt(context.FinalDelta);
-            var hpToSet = (currHp - finalDelta);
+            var finalDelta = CombatDamageCalculator.NormalizeDamage(context.FinalDelta);
+            var hpToSet = currHp - finalDelta;
             var succAndVal = addon.SetCurrHP(hpToSet);
             if (!succAndVal.setSucc)
             {
                 result.SetInterrupt("hp_apply_failed_to_set_hp");
                 return;
             }
-            
+
             context.HpApplyIo.Output = finalDelta;
             context.AppliedHpDelta = hpToSet;
             context.HasApplied = true;

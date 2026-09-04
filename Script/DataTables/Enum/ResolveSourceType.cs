@@ -33,5 +33,9 @@ namespace Cfg.Enum
         /// True damage that ignores armor / 真实伤害，无视护甲
         /// </summary>
         TrueDamage = 4,
+        /// <summary>
+        /// 魔法伤害
+        /// </summary>
+        MagicDamage = 5,
     }
 }

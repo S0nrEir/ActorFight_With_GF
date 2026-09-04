@@ -116,6 +116,22 @@ namespace Aquila.Formula
                 value = attr.GetCorrectionValue(actor_attribute.DEF, 0f);
                 return true;
             };
+            redirectors["castor.mdef"] = (object context, out double value) =>
+            {
+                value = 0d;
+                var resolveCtx = context as ResolveContext;
+                if (resolveCtx?.Request?.Castor == null)
+                    return false;
+
+                var attr = resolveCtx.Request.Castor.GetAddon<Addon_BaseAttrNumric>();
+                if (attr == null)
+                    return false;
+
+                value = attr.GetCorrectionValue(actor_attribute.MDEF, 0f);
+                return true;
+            };
+
+
 
             redirectors["castor.spd"] = (object context, out double value) =>
             {
@@ -280,6 +296,20 @@ namespace Aquila.Formula
                     return false;
 
                 value = attr.GetCorrectionValue(actor_attribute.DEF, 0f);
+                return true;
+            };
+            redirectors["target.mdef"] = (object context, out double value) =>
+            {
+                value = 0d;
+                var resolveCtx = context as ResolveContext;
+                if (resolveCtx?.Request?.Target == null)
+                    return false;
+
+                var attr = resolveCtx.Request.Target.GetAddon<Addon_BaseAttrNumric>();
+                if (attr == null)
+                    return false;
+
+                value = attr.GetCorrectionValue(actor_attribute.MDEF, 0f);
                 return true;
             };
 

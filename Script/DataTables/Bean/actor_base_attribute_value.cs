@@ -29,6 +29,7 @@ public sealed partial class actor_base_attribute_value :  Bright.Config.BeanBase
         str = _buf.ReadInt();
         agi = _buf.ReadInt();
         spw = _buf.ReadInt();
+        mdef = _buf.ReadInt();
         PostInit();
     }
 
@@ -55,6 +56,10 @@ public sealed partial class actor_base_attribute_value :  Bright.Config.BeanBase
     public int str { get; private set; }
     public int agi { get; private set; }
     public int spw { get; private set; }
+    /// <summary>
+    /// 魔法防御力
+    /// </summary>
+    public int mdef { get; private set; }
 
     public const int __ID__ = 528390536;
     public override int GetTypeId() => __ID__;
@@ -80,6 +85,7 @@ public sealed partial class actor_base_attribute_value :  Bright.Config.BeanBase
         + "str:" + str + ","
         + "agi:" + agi + ","
         + "spw:" + spw + ","
+        + "mdef:" + mdef + ","
         + "}";
     }
     

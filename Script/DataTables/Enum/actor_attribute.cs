@@ -62,8 +62,12 @@ namespace Cfg.Enum
         /// </summary>
         SPW = 10,
         /// <summary>
+        /// 魔法防御力
+        /// </summary>
+        MDEF = 11,
+        /// <summary>
         /// 最大值，所有的新增属性都添加在它之前，不要超过此值
         /// </summary>
-        Max = 11,
+        Max = 12,
     }
 }

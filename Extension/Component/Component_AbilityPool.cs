@@ -774,6 +774,8 @@ namespace Aquila.AbilityPool
             Register<EffectSpec_Period_CoolDown>(EffectType.Period_CoolDown);
             Register<EffectSpec_Instant_Cost>(EffectType.Instant_Cost);
             Register<EffectSpec_Instant_PhyDamage>(EffectType.Instant_PhyDamage);
+            Register<EffectSpec_Instant_MagicDamage>(EffectType.Instant_MagicDamage);
+            Register<EffectSpec_Instant_TrueDamage>(EffectType.Instant_TrueDamage);
             Register<EffectSpec_Instant_Summon_Projectile>(EffectType.Instant_Summon_Projectile);
             Register<EffectSpec_Period_FixedDamage>(EffectType.Period_FixedDamage);
             Register<EffectSpec_Instant_PercentageRemoveHealth>(EffectType.Instant_PercentageRemoveHealth);

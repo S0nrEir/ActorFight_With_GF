@@ -13,14 +13,34 @@ namespace Aquila.Combat.Resolve
         public override void Execute(ResolveContext context, ResolvePhaseDefinition definition, PhaseExecutionResult result)
         {
             context.DefenseModsIo.Input = context.FinalDelta;
-            // if (!TryEvaluatePhaseFormula(context, result, out var computed))
-            //     return;
+
+            if (context.Request.SourceType == ResolveSourceType.TrueDamage)
+            {
+                context.DefenseModsIo.Output = context.DefenseModsIo.Input;
+                context.FinalDelta = context.DefenseModsIo.Output;
+                context.DefenseReduction = 0f;
+                result.SetContinue();
+                return;
+            }
 
             var attrAddon = context.Request.Target.GetAddon<Addon_BaseAttrNumric>();
-            var def = attrAddon.GetCorrectionValue(actor_attribute.DEF, 0);
-            context.DefenseModsIo.Output = context.FinalDelta - def;
-            context.FinalDelta = context.DefenseModsIo.Output;
-            context.DefenseReduction = context.DefenseModsIo.Input - context.DefenseModsIo.Output;
+            if (attrAddon == null)
+            {
+                result.SetInterrupt("defense_mods_missing_addon");
+                return;
+            }
+
+            var physicalDefense = attrAddon.GetCorrectionValue(actor_attribute.DEF, 0f);
+            var magicDefense = attrAddon.GetCorrectionValue(actor_attribute.MDEF, 0f);
+            var output = CombatDamageCalculator.ApplyDefense(
+                context.DefenseModsIo.Input,
+                physicalDefense,
+                magicDefense,
+                context.Request.SourceType);
+
+            context.DefenseModsIo.Output = output;
+            context.FinalDelta = output;
+            context.DefenseReduction = context.DefenseModsIo.Input - output;
             result.SetContinue();
         }
     }

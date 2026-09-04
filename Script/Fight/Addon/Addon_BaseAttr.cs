@@ -186,6 +186,8 @@ namespace Aquila.Fight.Addon
             SetBaseValue( actor_attribute.STR, meta.str_factor * meta.base_attr_value.str );
             //def
             SetBaseValue( actor_attribute.DEF, meta.def_factor * meta.base_attr_value.def );
+            //mdef
+            SetBaseValue(actor_attribute.MDEF, meta.mdef_factor * meta.base_attr_value.mdef);
             //agi
             SetBaseValue( actor_attribute.AGI, meta.agi_factor * meta.base_attr_value.agi );
             //spd

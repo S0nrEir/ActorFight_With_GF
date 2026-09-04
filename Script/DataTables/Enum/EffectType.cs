@@ -61,5 +61,13 @@ namespace Cfg.Enum
         /// 受击修改属性effect
         /// </summary>
         OnHitted_Trigger_ModifyAttr = 11,
+        /// <summary>
+        /// 魔法伤害
+        /// </summary>
+        Instant_MagicDamage = 12,
+        /// <summary>
+        /// 纯粹伤害
+        /// </summary>
+        Instant_TrueDamage = 13,
     }
 }

@@ -54,8 +54,12 @@ namespace Cfg.Enum
         /// </summary>
         SPW = 8,
         /// <summary>
+        /// 魔法防御力系数
+        /// </summary>
+        MDEF = 9,
+        /// <summary>
         /// 最大值
         /// </summary>
-        Max = 9,
+        Max = 10,
     }
 }

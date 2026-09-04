@@ -43,4 +43,31 @@ namespace Aquila.Combat.Resolve
             result.SetContinue();
         }
     }
+
+    /// <summary>
+    /// 伤害结算中的无状态数值规则。
+    /// </summary>
+    public static class CombatDamageCalculator
+    {
+        public static float ApplyDefense(
+            float inputDelta,
+            float physicalDefense,
+            float magicDefense,
+            ResolveSourceType sourceType)
+        {
+            var damage = Mathf.Max(0f, inputDelta);
+            if (sourceType == ResolveSourceType.TrueDamage)
+                return damage;
+
+            var defense = sourceType == ResolveSourceType.MagicDamage
+                ? magicDefense
+                : physicalDefense;
+            return Mathf.Max(0f, damage - defense);
+        }
+
+        public static float NormalizeDamage(float inputDelta)
+        {
+            return Mathf.Floor(Mathf.Max(0f, inputDelta));
+        }
+    }
 }
