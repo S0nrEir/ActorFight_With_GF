@@ -34,6 +34,7 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         {int n = System.Math.Min(_buf.ReadSize(), _buf.Size);AbilityBaseID = new int[n];for(var i = 0 ; i < n ; i++) { int _e;_e = _buf.ReadInt(); AbilityBaseID[i] = _e;}}
         RoleType = (Enum.RoleType)_buf.ReadInt();
         AssetPath = _buf.ReadString();
+        mdef_factor = _buf.ReadFloat();
         PostInit();
     }
 
@@ -107,6 +108,10 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
     /// 资产路径
     /// </summary>
     public string AssetPath { get; private set; }
+    /// <summary>
+    /// 魔法防御力系数
+    /// </summary>
+    public float mdef_factor { get; private set; }
 
     public const int __ID__ = -525201020;
     public override int GetTypeId() => __ID__;
@@ -142,6 +147,7 @@ public sealed partial class Table_RoleMeta :  Bright.Config.BeanBase
         + "AbilityBaseID:" + Bright.Common.StringUtil.CollectionToString(AbilityBaseID) + ","
         + "RoleType:" + RoleType + ","
         + "AssetPath:" + AssetPath + ","
+        + "mdef_factor:" + mdef_factor + ","
         + "}";
     }
     
