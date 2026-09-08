@@ -21,7 +21,8 @@ namespace Aquila.Fight.Actor
 
             blockedMainType = ActorTagType.Ability;
             blockedSubType = (int)ActorTagSubType_Ability.Stun;
-
+            
+            //#todo:这块考虑改成lua，更灵活
             return GameEntry.Tag.HasTag(
                 castor.Actor.ActorID,
                 ActorTagType.Ability,
