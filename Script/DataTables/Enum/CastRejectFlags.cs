@@ -62,5 +62,9 @@ namespace Cfg.Enum
         /// target type not supported
         /// </summary>
         UnsupportedTargetType = 1024,
+        /// <summary>
+        /// castor is blocked by an actor tag
+        /// </summary>
+        ActorTagBlocked = 2048,
     }
 }

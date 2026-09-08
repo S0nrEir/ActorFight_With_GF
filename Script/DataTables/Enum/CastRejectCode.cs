@@ -65,5 +65,9 @@ namespace Cfg.Enum
         /// unknown reject reason
         /// </summary>
         Unknown = 9000,
+        /// <summary>
+        /// castor is blocked by an actor tag
+        /// </summary>
+        ActorTagBlocked = 1203,
     }
 }

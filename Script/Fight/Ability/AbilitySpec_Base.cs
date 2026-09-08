@@ -1,7 +1,5 @@
-using System;
 using Aquila.Event;
 using Aquila.Fight.Addon;
-using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
@@ -40,30 +38,6 @@ namespace Aquila.Fight
         /// </summary>
         public EffectSpec_Period_CoolDown CoolDown => _cdEffect;
 
-        /// <summary>
-        /// 移除 Tag
-        /// </summary>
-        public void RemoveTag( ushort bitToRemove ,Action<UInt32, int , bool> callBack = null)
-        {
-            _tagContainer.Remove( bitToRemove ,callBack);
-        }
-
-        /// <summary>
-        /// 添加 Tag
-        /// </summary>
-        public void AddTag( ushort bitToAdd,Action<UInt32, int , bool> callBack = null)
-        {
-            _tagContainer.Add( bitToAdd,callBack);
-        }
-
-        /// <summary>
-        /// 是否包含指定 Tag
-        /// </summary>
-        public bool ContainsTag( ushort bitTag )
-        {
-            // return _tagContainer.Contains( bitTag );
-            return _tagContainer.HasFlag(bitTag);
-        }
         
         /// <summary>
         /// 使用 AbilityData 设置技能信息（新数据源）
@@ -256,8 +230,6 @@ namespace Aquila.Fight
             Active        = true;
             _costEffect?.Clear();
             _cdEffect?.Clear();
-            // _tagContainer = null;
-            _tagContainer.Reset();
             _cdEffect     = null;
             _costEffect   = null;
             _owner        = null;
@@ -296,13 +268,6 @@ namespace Aquila.Fight
             return _costEffect.Calc( cur_mp ) >= 0;
         }
 
-        /// <summary>
-        /// Tag 变化回调
-        /// </summary>
-        private void OnTagChange( Int64 tagAfterChange, Int64 changedTag, bool isAdd )
-        {
-            Tools.Logger.Info( $"tag changed,tag:{changedTag}" );
-        }
 
         private static Vector3 ResolveActorPosition(int actorId)
         {
@@ -337,12 +302,6 @@ namespace Aquila.Fight
         public int AbilityId => _data.GetId() != 0 ? _data.GetId() : (Meta?.id ?? 0);
 
         /// <summary>
-        /// 该技能持有的 Tag
-        /// </summary>
-        // private TagContainer _tagContainer = null;
-        private TagContainer _tagContainer;
-        
-        /// <summary>
         /// 技能 CD
         /// </summary>
         private EffectSpec_Period_CoolDown _cdEffect;
@@ -359,11 +318,6 @@ namespace Aquila.Fight
 
         public bool Active { get; private set; } = true;
         
-        public AbilitySpecBase()
-        {
-            // _tagContainer = new TagContainer( OnTagChange );
-            _tagContainer = new TagContainer();
-        }
 
         /// <summary>
         /// 根据 AbilityData 生成一个 Spec 实例

@@ -41,7 +41,11 @@ namespace Aquila.Fight.Impact
             {
                 //回收池有，先从回收池拿
                 if ( _recycleImpactDataCount > 0 )
-                    return ref _impactDataArr[_recycleImpactDataArr[--_recycleImpactDataCount]];
+                {
+                    var recycledEntity = _recycleImpactDataArr[--_recycleImpactDataCount];
+                    _attachedEntityArr[entity] = _attachedEntityArr[recycledEntity];
+                    return ref _impactDataArr[_attachedEntityArr[entity]];
+                }
 
                 if ( _impactDataCount == _impactDataArr.Length )
                     Array.Resize( ref _impactDataArr, _impactDataArr.Length << 1 );

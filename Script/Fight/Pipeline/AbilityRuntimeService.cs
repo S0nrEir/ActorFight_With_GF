@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Aquila.Fight.FSM;
 using Aquila.Module;
 using Cfg.Enum;
 using GameFramework;
-
 namespace Aquila.Combat
 {
     public class AbilityRuntimeService
@@ -91,6 +91,13 @@ namespace Aquila.Combat
             {
                 rejectCode = CastRejectCode.UnsupportedTargetType;
                 rejectFlags = CastRejectFlags.UnsupportedTargetType;
+                return false;
+            }
+
+            if (ActorActionRestrictionRules.IsCastBlocked(castor, out _, out _))
+            {
+                rejectCode = CastRejectCode.ActorTagBlocked;
+                rejectFlags = CastRejectFlags.ActorTagBlocked;
                 return false;
             }
 
@@ -233,6 +240,8 @@ namespace Aquila.Combat
                     return CastRejectFlags.AbilityInactive;
                 case CastRejectCode.UnsupportedTargetType:
                     return CastRejectFlags.UnsupportedTargetType;
+                case CastRejectCode.ActorTagBlocked:
+                    return CastRejectFlags.ActorTagBlocked;
                 default:
                     return CastRejectFlags.None;
             }

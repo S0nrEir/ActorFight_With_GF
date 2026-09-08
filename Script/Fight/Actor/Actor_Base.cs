@@ -1,6 +1,4 @@
-using System;
 using Aquila.Fight.Addon;
-using Aquila.GameTag;
 using Aquila.Module;
 using Aquila.Toolkit;
 using Cfg.Enum;
@@ -18,40 +16,29 @@ namespace Aquila.Fight.Actor
     {
         #region public methods
 
+
         /// <summary>
-        /// 移除tag
+        /// 为 Actor 获取一个带来源的 Tag。
         /// </summary>
-        public void RemoveTag( ActorTagType mainType, int tagToRemove ,Action<UInt32, int, bool> callBack = null)
+        public bool AcquireTag(ActorTagType mainType, ushort subType, int sourceHashCode)
         {
-            var intType = (int)mainType;
-            if (intType >= (int)ActorTagType.Max || intType < 0)
-                throw new GameFrameworkException($"Actor_Base.RemoveTag()--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
-            
-            _tagContainer[intType].Remove(tagToRemove,callBack);
+            return GameEntry.Tag != null && GameEntry.Tag.AcquireTag(ActorID, mainType, subType, sourceHashCode);
         }
 
         /// <summary>
-        /// 添加tag
+        /// 释放 Actor 的一个来源式 Tag。
         /// </summary>
-        public void AddTag( ActorTagType mainType, ushort tagToAdd ,Action<UInt32, int, bool> callBack = null)
+        public bool ReleaseTag(ActorTagType mainType, ushort subType, int sourceHashCode)
         {
-            var intType = (int)mainType;
-            if (intType >= (int)ActorTagType.Max || intType < 0)
-                throw new GameFrameworkException($"Actor_Base.AddTag()--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
-            
-            _tagContainer[intType].Add( tagToAdd ,callBack);
+            return GameEntry.Tag != null && GameEntry.Tag.ReleaseTag(ActorID, mainType, subType, sourceHashCode);
         }
 
         /// <summary>
-        /// 获取actor身上的一个tag
+        /// 查询 Actor 是否持有指定 Tag。
         /// </summary>
-        public bool HasTag(ActorTagType mainType,ushort tagToQuery)
+        public bool HasTag(ActorTagType mainType, ushort subType)
         {
-            var intType = (int)mainType;
-            if (intType >= (int)ActorTagType.Max || intType < 0)
-                throw new GameFrameworkException($"Actor_Base.HasTag--->intType >= (int)ActorTagType.Max || intType < 0 , mainType:{intType}");
-            
-            return _tagContainer[intType].HasFlag(tagToQuery);
+            return GameEntry.Tag != null && GameEntry.Tag.HasTag(ActorID, mainType, subType);
         }
 
         /// <summary>
@@ -178,6 +165,12 @@ namespace Aquila.Fight.Actor
                 return;
             }
 
+            if ( !GameEntry.Tag.RegisterActor( ActorID ) )
+            {
+                Tools.Logger.Error( $"Actor_Base.OnShow()---->failed to register actor tag state, actor id:{ActorID}" );
+                return;
+            }
+
             _instance = regSucc.instance;
             OnInitActor( userData );
             AddAddon();
@@ -194,26 +187,22 @@ namespace Aquila.Fight.Actor
 
         protected override void OnHide( bool isShutdown, object userData )
         {
-            SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
-
-            if (_tagContainer != null)
-            {
-                foreach (var container in _tagContainer)
-                    container.Reset();
-            }
-
-            
-            _eventAddon.UnRegisterAll();
-
-            ExtensionRecycle();
-            SetRoleMetaID( -1 );
+            GameEntry.Impact.ClearEffectsForActor( ActorID );
+            GameEntry.Tag.UnregisterActor( ActorID );
 
             //Module_ProxyActor注销和注册的逻辑请依赖entity的回调来调用（比如onHide，onShow，onInit，onRecycle等），
             //这样可以避免Module_ProxyActor主动清掉actor实例数据，然后entity访问不到的问题
             var unRegSucc = GameEntry.Module.GetModule<Module_ActorMgr>().UnRegister( ActorID );
             if (!unRegSucc)
                 Tools.Logger.Warning($"Actor_Base.OnHide()---->!unRegSucc,actor id:{ActorID}");
-                
+
+            SetWorldPosition( new Vector3( 999f, 999f, 999f ) );
+
+            _eventAddon.UnRegisterAll();
+
+            ExtensionRecycle();
+            SetRoleMetaID( -1 );
+
             base.OnHide( isShutdown, userData );
         }
 
@@ -222,31 +211,9 @@ namespace Aquila.Fight.Actor
         /// </summary>
         protected override void OnRecycle()
         {
-            // Aquila.Toolkit.Tools.Logger.Info("111111111111111111111111111");
-            // _tagContainer = null;
             base.OnRecycle();
         }
 
-        protected override void OnInit( object userData )
-        {
-            base.OnInit( userData );
-
-            // if ( _tagContainer is null )
-            //     _tagContainer = new TagContainer( OnTagChange );
-            
-            _tagContainer = new TagContainer[(int)ActorTagType.Max];
-        }
-
-        /// <summary>
-        /// Tag改变
-        /// </summary>
-        protected virtual void OnTagChange( Int64 tag, Int64 changedTag, bool isADD )
-        {
-        }
-
-        /// <summary>
-        /// 重置自己和addon的数据为初始值
-        /// </summary>
         public virtual void Reset()
         {
             var addons = _instance.AllAddons();
@@ -346,12 +313,6 @@ namespace Aquila.Fight.Actor
         /// actor实例
         /// </summary>
         private ActorInstance _instance;
-
-        /// <summary>
-        /// tag管理器
-        /// </summary>
-        // protected TagContainer _tagContainer = null;
-        protected TagContainer[] _tagContainer;
 
         #endregion
     }

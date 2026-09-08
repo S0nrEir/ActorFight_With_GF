@@ -37,7 +37,7 @@ namespace Aquila.Toolkit
                 if ( flags.HasFlag( CastRejectFlags.CooldownNotReady ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
 
-                if ( flags.HasFlag( CastRejectFlags.AbilityInactive ) )
+                if ( flags.HasFlag( CastRejectFlags.AbilityInactive ) || flags.HasFlag( CastRejectFlags.ActorTagBlocked ) )
                     return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
 
                 if ( flags.HasFlag( CastRejectFlags.MissingAbilityAddon ) || flags.HasFlag( CastRejectFlags.AbilitySpecMissing ) )
@@ -63,6 +63,7 @@ namespace Aquila.Toolkit
                     case CastRejectCode.CooldownNotReady:
                         return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
                     case CastRejectCode.AbilityInactive:
+                    case CastRejectCode.ActorTagBlocked:
                         return GameEntry.LuBan.Tables.GameText.AbilityUsingResult_NotReady;
                     case CastRejectCode.MissingAbilityAddon:
                     case CastRejectCode.AbilitySpecMissing:

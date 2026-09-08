@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Aquila.Combat;
 using Aquila.Extension;
-using Aquila.Fight;
+using Aquila.Fight.Actor;
 using Aquila.Fight.Addon;
 using Cfg.Enum;
 using GameFramework;
@@ -82,6 +82,9 @@ namespace Aquila.Module
             if (canUse != CastRejectCode.None)
                 return RejectAndRelease(cmd, canUse, MapCodeToFlag(canUse));
 
+            if (ActorActionRestrictionRules.IsCastBlocked(castor, out _, out _))
+                return RejectAndRelease(cmd, CastRejectCode.ActorTagBlocked, CastRejectFlags.ActorTagBlocked);
+
             EnqueueCast(cmd);
             return CastAcceptResult.Accept(cmd);
         }
@@ -140,6 +143,8 @@ namespace Aquila.Module
 
                 case CastRejectCode.UnsupportedTargetType:
                     return CastRejectFlags.UnsupportedTargetType;
+                case CastRejectCode.ActorTagBlocked:
+                    return CastRejectFlags.ActorTagBlocked;
 
                 default:
                     return CastRejectFlags.None;
@@ -180,6 +185,9 @@ namespace Aquila.Module
 
             if ((flags & CastRejectFlags.UnsupportedTargetType) != 0)
                 return CastRejectCode.UnsupportedTargetType;
+
+            if ((flags & CastRejectFlags.ActorTagBlocked) != 0)
+                return CastRejectCode.ActorTagBlocked;
 
             return CastRejectCode.Unknown;
         }

@@ -76,10 +76,6 @@ namespace Aquila.Fight.Actor
         {
         }
         
-        protected override void OnTagChange( long tag, long changedTag, bool isADD )
-        {
-            Tools.Logger.Info( $"<color=green>tag changed!,tag:{tag},changedTag:{changedTag},is add:{isADD}</color>" );
-        }
 
         //----------------addon----------------
         /// <summary>

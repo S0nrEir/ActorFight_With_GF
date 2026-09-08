@@ -1,5 +1,6 @@
 using Aquila.Event;
 using Aquila.Module;
+using Aquila.Toolkit;
 using Cfg.Enum;
 
 namespace Aquila.Fight
@@ -11,59 +12,67 @@ namespace Aquila.Fight
     {
         public override void OnEffectAwake(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //吟唱生效时，添加吟唱tag
-            //找目标身上是否有windup tag，有就不添加
-            var mainType = ActorTagType.Ability;
-            var tagToAdd = (ushort)ActorTagSubType_Ability.WindUp;
-            if(target.Actor.HasTag(mainType,tagToAdd))
+            if (_awakeProcessed)
                 return;
-            
-            target.Actor.AddTag(mainType,tagToAdd);
-            GameEntry.Event.Fire(this,EventArg_WindUp.CreateStartEventArg(_effectData.GetDuration(),target.Actor.ActorID));
+
+            _awakeProcessed = true;
+            if (target == null || target.Actor == null || GameEntry.Tag == null)
+            {
+                Tools.Logger.Warning($"[EffectSpec_Period_WindUp] Invalid target/tag component, effectId:{_effectData.GetEffectId()}");
+                return;
+            }
+
+            var sourceHashCode = GetHashCode();
+            var actorId = target.Actor.ActorID;
+            if (actorId <= 0 || sourceHashCode == 0)
+            {
+                Tools.Logger.Warning($"[EffectSpec_Period_WindUp] Invalid target/source, effectId:{_effectData.GetEffectId()}, actorId:{actorId}");
+                return;
+            }
+
+            _targetActorId = actorId;
+            _sourceHashCode = sourceHashCode;
+            _mainType = ActorTagType.Ability;
+            _subType = (ushort)ActorTagSubType_Ability.WindUp;
+
+            var wasPresent = GameEntry.Tag.HasTag(_targetActorId, _mainType, _subType);
+            _tagAcquired = GameEntry.Tag.AcquireTag(_targetActorId, _mainType, _subType, _sourceHashCode);
+            if (_tagAcquired && !wasPresent)
+                GameEntry.Event.Fire(this, EventArg_WindUp.CreateStartEventArg(_effectData.GetDuration(), _targetActorId));
         }
 
-        public override void Apply( Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target )
+        public override void Apply(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            OnEffectAwake( castor, target );
+            OnEffectAwake(castor, target);
         }
 
         public override void OnEffectEnd(Module_ProxyActor.ActorInstance castor, Module_ProxyActor.ActorInstance target)
         {
-            //检查角色身上的所有tag，如果自己是最后一个才移除tag
-            if (!GameEntry.Impact.FilterSpecEffect(target.Actor.ActorID, FindOtherWindUpEffect))
-            {
-                var mainType = ActorTagType.Ability;
-                var tagToRemove = (ushort)ActorTagSubType_Ability.WindUp;
-                target.Actor.RemoveTag(mainType,tagToRemove);
-                GameEntry.Event.Fire(this,EventArg_WindUp.CreateStopEventArg());
-            }
+            if (!_tagAcquired || GameEntry.Tag == null)
+                return;
+
+            var released = GameEntry.Tag.ReleaseTag(_targetActorId, _mainType, _subType, _sourceHashCode);
+            _tagAcquired = false;
+            if (released && !GameEntry.Tag.HasTag(_targetActorId, _mainType, _subType))
+                GameEntry.Event.Fire(this, EventArg_WindUp.CreateStopEventArg());
         }
 
-        /// <summary>
-        /// 筛选函数，找出带有附加WindUp tag的effect，有返回true
-        /// </summary>
-        private bool FindOtherWindUpEffect(EffectSpec_Base effect)
+        public override void Clear()
         {
-            if (effect is null)
-                return false;
-
-            //跳过自己
-            //如果还有同类型的effect
-            if (effect == this)
-                return false;
-            
-            if (effect is EffectSpec_Period_ActorTag)
-            {
-                //wind up 身上还有wind up类型的effect，返回true，表示有
-                var mainType = effect.Meta.GetFloatParam1();
-                var subType =  effect.Meta.GetFloatParam2();
-                
-                if (mainType == (int)ActorTagType.Ability && subType == (int)ActorTagSubType_Ability.WindUp)
-                    return true;
-            }
-            
-            return false;
+            _targetActorId = 0;
+            _mainType = default;
+            _subType = 0;
+            _sourceHashCode = 0;
+            _tagAcquired = false;
+            _awakeProcessed = false;
+            base.Clear();
         }
+
+        private int _targetActorId;
+        private ActorTagType _mainType;
+        private ushort _subType;
+        private int _sourceHashCode;
+        private bool _tagAcquired;
+        private bool _awakeProcessed;
     }
-   
 }

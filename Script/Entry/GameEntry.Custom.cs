@@ -3,6 +3,7 @@ using Aquila.AbilityPool;
 using Aquila.Extension;
 using Aquila.Fight.Impact;
 using Aquila.Toolkit;
+using GameFramework;
 
 namespace Aquila
 {
@@ -105,6 +106,15 @@ namespace Aquila
         }
 
         /// <summary>
+        /// Actor Tag 组件
+        /// </summary>
+        public static TagComponent Tag
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// UI组件
         /// </summary>
         public static Component_UI UI
@@ -151,6 +161,9 @@ namespace Aquila
             Timeline = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Timeline>();
             GameplayCue = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_GameplayCue>();
             Impact = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Impact>();
+            Tag = UnityGameFramework.Runtime.GameEntry.GetComponent<TagComponent>();
+            if (Tag == null)
+                throw new GameFrameworkException("GameEntry.InitCustomComponents()--->TagComponent is missing");
             UI = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_UI>();
             Async = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_Async>();
             AbilityPool = UnityGameFramework.Runtime.GameEntry.GetComponent<Component_AbilityPool>();
